@@ -1,7 +1,8 @@
 ---
 layout: post
-title:  "Chapter X Spinoza 1:1 - 4:6"
+title:  "러셀 서양철학사 10장 스피노자 1:1 - 4:6"
 date:   2014-11-11
+description: "스피노자에 대한 총괄적인 평가"
 categories: philosophy
 tags : [Spinoza, 스피노자]
 ---
@@ -10,17 +11,21 @@ tags : [Spinoza, 스피노자]
 
 1:1 Spinoza(1634-77) is the noblest and most lovable of the great philosophers. 
 
+스피노자(1634-77)는 위대한 철학자들 가운데 가장 고결하고 **사랑스럽다**.
+
 1:2 Intellectually, some others have surpassed him, but ethically he is supreme. 
 
+지적인 면에서는 다른 철학자들이 그보다 뛰어났지만 도덕적인 면에서는 그가 최고다.
+
 1:3 As a natural consequence, he was considered, during his lifetime and for a century after his death, a man of appalling[^terrible and shocking] wickedness. 
+
+**당연히도 그가 살았을 당시나 죽은 뒤 백년이 지나기까지도 사악한 사람으로 여겨졌다.** 
 
 1:4 He was born a Jew, but the Jews excommunicated[^파문하다] him. 
 
 1:5 Christians abhorred[^hate something because you think it is morally wrong] him equally; although his whole philosophy is dominated by the idea of God, the orthodox accused him of atheism. 
 
 1:6 Leibniz, who owed much to him, concealed his debt, and carefully abstained from saying a word in his praise[^스피노자를 칭찬하는 말]; he even went so far as to lie about the extent[^심지어 그는 그와 개인적인 친분 정도에 대해 거짓말을 하기까지 했다] of his personal acquaintance with the heretic[^이단자] Jew.
-
-스피노자(1634-77)는 위대한 철학자들 가운데 가장 고결하고 **사랑스럽다**. 지적인 면에서는 다른 철학자들이 그보다 뛰어났지만 도덕적인 면에서는 그가 최고다. **당연히도 그가 살았을 당시나 죽은 뒤 백년이 지나기까지도 사악한 사람으로 여겨졌다.** 
 
 2:1 The life of Spinoza was very simple. 
 

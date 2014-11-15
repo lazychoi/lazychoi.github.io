@@ -1,11 +1,13 @@
 # Site settings
-title: LAZYCHOI'S FOOTNOTE
-# email: eduroad@gmail.com
+title: LAZY CHOI'S FOOTNOTE
+email: 
 description: > # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog/
 url: "http://lazychoi.github.io" # the base hostname & protocol for your site
-# twitter_username: eduroad
-# github_username: eduroad
+twitter_username: 
+github_username: 
 
 # Build settings
 markdown: kramdown
+paginate: 7
+paginate_path: "blog/page:num"
