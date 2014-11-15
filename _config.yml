@@ -9,5 +9,5 @@ github_username:
 
 # Build settings
 markdown: kramdown
-paginate: 7
+paginate: 6
 paginate_path: "blog/page:num"
