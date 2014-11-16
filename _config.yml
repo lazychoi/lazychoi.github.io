@@ -11,3 +11,5 @@ github_username:
 markdown: kramdown
 paginate: 6
 paginate_path: "blog/page:num"
+highlighter: pygments
+
