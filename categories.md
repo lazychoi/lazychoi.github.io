@@ -1,5 +1,6 @@
 ---
 layout: default
+title: category
 ---
 
 <div class="potal-list">

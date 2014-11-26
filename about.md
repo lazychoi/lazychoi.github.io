@@ -1,7 +1,6 @@
 ---
 layout: page
-title: About
-permalink: /about/
+title: about
 ---
 
 동양철학과 인지과학을 공부했습니다.
