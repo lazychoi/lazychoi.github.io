@@ -8,6 +8,11 @@ tags : [Sublime text, plugin]
 
 입력한 단어로 시작하는 문장을 찾아 그것으로 단어를 대치하는 기능을 하는 Sublime Text 3 플러그인 Compline을 수정했다. 이름도 ComplineWithKeyword로 변경했다. 변경된 기능은 입력한 키워드로 시작하는 문장 대신 그것을 포함한 문장을 찾아, 그 문장으로 키워드를 대치하는 것이다. 샘플 문장을 차곡차곡 쌓아 놓으면 새로운 문장을 만드는데 큰 도움이 될 것 같다.
 
+
+* Table of Contents Placeholder
+{:toc}
+
+
 ### 코드 분석
 
 실제 작동 시작점은 아래부터다.
