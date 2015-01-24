@@ -75,3 +75,5 @@ published: True
 
 스니펫을 만들고 나서 혹시나 하는 마음에 서블라임 패키지 컨트롤에 지킬 관련 플러그인이 있는지 검색해 보았다. 과연 있다. [jekyll](https://packagecontrol.io/packages/Jekyll)이다. 아래 처럼 command palette를 이용해도 되고, 단축키를 활용해도 된다.
 
+![서블라임 텍스트 지킬 블로그 플러그인](https://farm8.staticflickr.com/7320/16352454451_2489a1a7df.jpg)
+
