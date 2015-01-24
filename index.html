@@ -9,7 +9,8 @@ layout: default
     <p>
       <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
       <span>{{ post.date | date: "%m월 %d일, %Y년" }}</span><br />
-      <span>{{ post.excerpt | strip_html}}&hellip; ( <a href="{{ post.url }}">더 읽기</a> )</span>
+      <span>{{ post.excerpt | strip_html}}&hellip;</span>
+      <!-- <span>{{ post.excerpt | strip_html}}&hellip; ( <a href="{{ post.url }}">더 읽기</a> )</span> -->
 <!--       <span>{{ post.description}}</span> -->
     </p>
   </div>
