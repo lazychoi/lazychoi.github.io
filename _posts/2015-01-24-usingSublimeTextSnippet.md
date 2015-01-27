@@ -1,4 +1,5 @@
 ---
+layout: post
 title: "서블라임 텍스트(sublime text) 3 스니펫(snippet) 이용하기"
 categories: [computer]
 tags: [서블라임 텍스트, 스니펫, sublime text, snippet, 지킬 블로그, jekyll blog]

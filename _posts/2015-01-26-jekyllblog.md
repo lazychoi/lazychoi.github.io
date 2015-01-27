@@ -1,5 +1,6 @@
 ---
-title: 지킬 블로그 공부 1
+layout: post
+title: 지킬 블로그 공부 1 - 참고서, 결과 확인, 리퀴드 태그, 환경설정
 categories: 컴퓨터
 tags: [지킬, 깃허브, jekyll, github]
 published: True
@@ -57,20 +58,9 @@ published: True
 layout은 `_layouts`폴더에 있는 파일명을 사용한다(확장자 제외). 이곳의 파일들은 문서의 모양을 지정한다. title은 현재 문서의 제목이다. 그런데 매번 똑같은 내용을 입력하기가 아주 번거롭다. 블로그 글에 자주 사용되는 값을 루트 디렉토리에 있는 `_config.yml`파일에 입력한다. 
 
     title: "게으른 최선생의 생활 도구"
-    
-    defaults:
-      -
-        scope:
-          path: ""
-          type: "posts"
-        values:
-          layout: "post"
-    
-    kramdown:
-      input: GFM
 
 - `title`은 블로그 제목으로 사용할 이름이다. 
-- `path`를 공백으로 정의하면 모든 문서를 대상으로 한다.
-- `type: "posts"`는 문서 중 포스트 형식의 문서에만 적용된다.
-- `layout: "post"`는 레이아웃 형식 중 post형식을 적용한다.
+
+
+
 
