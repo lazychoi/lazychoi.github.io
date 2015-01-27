@@ -3,10 +3,3 @@ title: "게으른 최선생의 생활 도구"
 kramdown:
   input: GFM
 highlighter: pygments
-
-# paginate: 6
-# paginate_path: "blog/page:num"
-
-
-
-
