@@ -1,11 +1,20 @@
-title: 게으른 최선생의 생활 도구
-baseurl: 
-url: "http://lazychoi.github.io"
+title: "게으른 최선생의 생활 도구"
 
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
 
-paginate: 6
-paginate_path: "blog/page:num"
+kramdown:
+  input: GFM
 highlighter: pygments
 
-markdown: kramdown
+# paginate: 6
+# paginate_path: "blog/page:num"
+
+
+
 

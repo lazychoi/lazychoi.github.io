@@ -2,22 +2,31 @@
 layout: default
 ---
 
+<ul>
+  {% for post in site.posts %}
+    <li>
+      {{ post.date | date: "[ %Y. %m. %d. ]" }}
+      <a href="{{ post.url }}">{{ post.title }}</a>
+    </li>
+  {% endfor %}
+</ul>
+
 
 <!-- This loops through the paginated posts -->
-{% for post in paginator.posts %}
+<!-- {% for post in paginator.posts %}
   <div class="potal-list">
     <p>
       <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
       <span>{{ post.date | date: "%m월 %d일, %Y년" }}</span><br />
-      <span>{{ post.excerpt | strip_html}}&hellip;</span>
-      <!-- <span>{{ post.excerpt | strip_html}}&hellip; ( <a href="{{ post.url }}">더 읽기</a> )</span> -->
-<!--       <span>{{ post.description}}</span> -->
+      <div class="content">{{ post.content }}</div>
+      <span>{{ post.excerpt | strip_html}}&hellip; ( <a href="{{ post.url }}">더 읽기</a> )</span>
+            <span>{{ post.description}}</span>
     </p>
   </div>
-{% endfor %}
+{% endfor %} -->
 
 <!-- Pagination links -->
-{% if paginator.total_pages > 1 %}
+<!-- {% if paginator.total_pages > 1 %}
 <div class="pagination">
   {% if paginator.previous_page %}
     <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
@@ -42,24 +51,14 @@ layout: default
   {% endif %}
 </div>
 {% endif %}
-
+ -->
 <!-- <div class="home"> -->
 
 <!-- <h1 class="page-heading">Posts</h1> -->
 
-<!--   <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
 
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+ <!--  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 
   <ul class="post-list">
   {% for post in paginator.posts %}
