@@ -1,5 +1,0 @@
-title: "게으른 최선생의 생활 도구"
-markdown:    kramdown
-kramdown:
-  input: GFM
-highlighter: pygments
