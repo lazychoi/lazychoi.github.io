@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>생기부 특기사항 byte 계산</title>
+    <style>
+        a:link { text-decoration: none; }
+        a:hover { color:darkcyan; font-weight: bold;}
+        #content {
+            width: 98%; min-height: 400px;
+            font-family: '나눔고딕';
+            font-size: 1em;
+            line-height: 1.3em;
+            border: 1px solid black;
+            padding: 0.2em;
+            margin-bottom: 2px;
+        }
+        .viewResults {
+            width: 98%;
+        }
+        #viewByte { color: red; font-weight: bold;}
+        small { font-size: 0.9rem;}
+        table, tr, th, td {
+            border: 1px solid;
+            border-collapse: collapse;
+            padding: 0.3em;
+            text-align: center;
+        }
+    </style>
+</head>
+<body onload="setfocus()">
+    <div class="wrap">
+        <div contenteditable="true" id="content"></div>
+        <button onclick="delContent()">지우기</button>
+        <button onclick="handlePaste()">클립보드에서 붙여넣기</button>
+        <button onclick="copyToClipboard()">글 전체 복사</button>
+        <button onclick="goSpellCheck()">맞춤법 검사하러 가기</button>
+        <strong>총 <span id="viewByte"></span> byte</strong>(조금 오차 있음)
+    </div>
+    <div class="viewResults">
+        <ul>
+            <li>가운데점(&middot;) 쉽게 입력: Alt+183(숫자키패드)</li>
+            <!-- <li>굵게: CTRL + b | 밑줄: CTRL + u | 기울임: CTRL + i</li> -->
+            <li><a href="http://bigtree.tistory.com/245" target="_blank">맞춤법검사기 사용법 보러 가기</a></li>
+        </ul>
+         
+        <table>
+            <tr><th>항목</th><td>자율</td><td>봉사</td><td>동아리</td><td>진로</td><td>교과세특</td><td>개인별세특</td><td>행동발달</td><td>진로희망사항</td></tr>
+            <tr><th>바이트</th><td>3,000</td><td>1,500</td><td>1,500</td><td>3,000</td><td>1,500</td><td>1,500</td><td>3,000</td><td>600</td></tr>
+        </table>
+    </div>
+    <script>
+        //입력란에 포커스
+        function setfocus(){
+            document.getElementById("content").focus();
+        }
+
+        // 글자 byte 계산
+        document.addEventListener('keyup', function(e){
+            var input = document.getElementById("content")
+            input.onkeyup = function(){
+                var byteLength = 0;
+                var string = input.innerText;
+                var stringLength = string.length;
+                localStorage.setItem('temp', string);
+                for(var i=0; i<stringLength; i++) {
+                    // console.log(escape(string.charAt(i)));
+                    if(escape(string.charAt(i)).length >= 4) // 2바이트 문자
+                        byteLength += 3;
+                    else if(escape(string.charAt(i)) == "%B7") //가운데점
+                        byteLength += 3;
+                    else if(escape(string.charAt(i)) == "%A7")
+                        byteLength += 3;
+                    else if(escape(string.charAt(i)) == "%0A") //줄바꿈(LF)
+                        byteLength +=2;
+                    else
+                        if(escape(string.charAt(i)) != "%0D") //캐리지 리턴(CR)
+                            byteLength++;
+                }
+                document.getElementById("viewByte").innerHTML = byteLength;
+            }
+        });
+        // paste from clipboard
+        function handlePaste(e){
+            var clipboardData, pastedData;
+            e.stopPropagation();
+            e.preventDefault();
+
+            clipboardData = e.clipboardData || window.clipboardData
+            pastedData = clipboardData.getData('Text');
+            document.getElementById('content').addEventListener('paste', handlePaste);
+        }
+
+        // 클립보드로 복사
+        function copyToClipboard(){
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = document.getElementById("content").innerText;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            alert('복사되었습니다');
+        }
+        
+        function goSpellCheck(){
+            var dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = document.getElementById("content").innerText;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            window.open('http://speller.cs.pusan.ac.kr', '_blank')
+        }
+
+        // 삭제
+        function delContent(){
+            document.getElementById("content").innerText = "";
+        }
+    </script>
+</body>
+</html>
