@@ -17,6 +17,17 @@
             text-align: center;
             background-color: #f8f6f0;
         }
+        .quizBox{
+            width: 60%;
+            text-align: left;
+            margin: 0 auto;
+        }
+        .correctAns{
+            display: inline-block;
+            text-align: left;
+            line-height: 130%;
+            margin: 0 auto;
+        }
         h1{
             font-weight: bold;
             margin: 0px;
@@ -32,7 +43,7 @@
         }
         input[type=text], select {
             font-size: 20px;
-            width: 50%;
+            width: 100%;
             padding: 12px 20px;
             margin: 8px 0;
             display: inline-block;
@@ -73,7 +84,9 @@
 <body>
     <!-- 기본 UI -->
     <h1>생활과윤리 2차 퀴즈</h1>
-    <div id="quiz"></div>
+    <div class="quizBox">
+        <div id="quiz"></div>
+    </div>
     <button id="submit">결과 보기</button>
     <button id="reload">새 문제</button>
     <div id="results"></div>
@@ -292,6 +305,7 @@
                 <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question}</div>
                 <div class="answer">${answer}</div>
                 `);
+                console.log(output);
             });
             quizContainer.innerHTML = output.join('');
 
@@ -333,10 +347,11 @@
             });
 
             // 점수와 정답 표시
-            score = `<div>${myQuestions.length}문제 중 ${numCorrect}문제 맞췄습니다.</div><br>`
+            score = `<div>${myQuestions.length}문제 중 ${numCorrect}문제 맞췄습니다.</div><div class="correctAns"><ul>`
             for(var k=0; k < correctAnswers.length; k++){
-                score = score + `<div>${k+1}번 정답 : ${correctAnswers[k]}</div>`;
+                score = score + `<li>${k+1}번 정답 : ${correctAnswers[k]}</li>`;
             }
+            score = score + '</ul></div>'
             resultsContainer.innerHTML = score;
             resultsContainer.style.visibility = "visible";
             reloadButton.style.visibility = "visible";
