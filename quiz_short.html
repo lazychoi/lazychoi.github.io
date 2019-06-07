@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>생활과윤리 퀴즈</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Work+Sans:300,600);
+
+        body{
+            font-size: 20px;
+            font-family: 'Work Sans', sans-serif;
+            color: #333;
+            font-weight: 300;
+            text-align: center;
+            background-color: #f8f6f0;
+        }
+        h1{
+            font-weight: bold;
+            margin: 0px;
+            padding: 10px;
+            font-size: 25px;
+            background-color: #444;
+            color: #fff;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin: 10px;
+        }
+        input[type=text], select {
+            font-size: 20px;
+            width: 50%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+       
+        button{
+            font-size: 20px;
+            background-color: #279;
+            color: #fff;
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        button:hover{
+            background-color: #38a;
+        }
+        button#reload{
+            background-color: orange;
+        }
+        button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+        #results{
+            font-size: 30px;
+            font-weight: bold;
+            color: red;
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>생활과윤리 2차 퀴즈</h1>
+    <div id="quiz"></div>
+    <button id="submit">결과 보기</button>
+    <button id="reload">다시 풀기</button>
+    <div id="results"></div>
+
+    <script>
+        // 전체 문제 데이터
+        var data = [];
+
+        // 파일에서 문제 데이터 읽어오기
+        function loadJSON(callback) {   
+            var xobj = new XMLHttpRequest();
+            xobj.overrideMimeType("application/json");
+            xobj.open('GET', 'data.json', true); // Replace 'my_data' with the path to your file
+            xobj.onreadystatechange = function () {
+                if (xobj.readyState == 4 && xobj.status == "200") {
+                    // Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+                    callback(xobj.responseText);
+                }
+            };
+            xobj.send(null);  
+        }
+
+        function init() {
+            loadJSON(function(json) {
+                // Parse JSON string into object
+                data = JSON.parse(json);
+            });
+        }
+
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(data, numQuestion){
+            // 출제 문제 저장
+            var result = [];
+            
+            for(var  i=0; i < numQuestion; i++){
+                // 데이터 크기 내에서 무작위 숫자를 뽑아 해당 요소를 저장
+                var randomNum = Math.floor(Math.random() * data.length);
+                // console.log(randomNum);
+                result[i] = data[randomNum];
+                // console.log(result[i]);
+                //중복 검사
+                for(var  j=0; j < i; j++){
+                    if(result[j]==result[i]){
+                        i--;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+        
+        
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        
+        // 출제 문제 개수
+        var numQuestion = 3;
+        
+        // 문제 만들기
+        var myQuestions = [];
+        
+        function buildQuiz(){
+
+            init();
+    
+            myQuestions = randomQuestion(data, numQuestion);
+            
+            // 3문제를 저장할 변수
+            var output = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가
+            myQuestions.forEach(function(currentQuestion, questionNumber){
+
+                //각 문제에 붙일 사용자 응답 저장 변수
+                var answer = `
+                <input type="text" name="question${questionNumber}">
+                `;
+
+                // 문제와 사용자 응답 박스 붙이기
+                output.push(`
+                <div class="question" id="question${questionNumber}">${currentQuestion.question}</div>
+                <div class="answer">${answer}</div>
+                `);
+            });
+            quizContainer.innerHTML = output.join('');
+
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+        }
+
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+
+            // 사용자 응답 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+            // 확인
+            // answerContainers.forEach((a,b)=>{
+            //     console.log(a);
+            // })
+
+            // 정답 개수
+            var numCorrect = 0;
+            var correctAnswers = [];
+            var score;
+
+            myQuestions.forEach(function(currentQuestion, questionNumber){
+                // 문제별 사용자 응답
+                var answerContainer = answerContainers[questionNumber];
+                var selector = 'input[name=question'+questionNumber+']';
+                var userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+                // 정답 여부 체크
+                if(userAnswer.replace(/(\s*)/g,"")===currentQuestion.correctAnswer.replace(/(\s*)/g,"")){
+                    // add to the number of correct answers
+                    numCorrect++;
+                    correctAnswers.push(currentQuestion.correctAnswer);
+                } else {
+                    document.getElementById("question"+questionNumber).style.color = 'red';
+                    correctAnswers.push(currentQuestion.correctAnswer);
+                }
+            });
+
+            // 점수와 정답 표시
+            score = `<div>${myQuestions.length}문제 중 ${numCorrect}문제 맞췄습니다.</div>`
+            for(var k=0; k < correctAnswers.length; k++){
+                score = score + `<div>${k+1}번 째 문제의 답 : ${correctAnswers[k]}</div>`;
+            }
+            resultsContainer.innerHTML = score;
+            resultsContainer.style.visibility = "visible";
+            reloadButton.style.visibility = "visible";
+            // 다시 풀기
+            
+        }
+
+
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
