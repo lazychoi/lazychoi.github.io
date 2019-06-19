@@ -15,9 +15,15 @@
             background-color: #f8f6f0;
         }
         .quizBox{
-            width: 80%;
+            float: left;
+            width: 60%;
             text-align: left;
             margin: 0 auto;
+            margin-left: 20px;
+        }
+        .resultBox{
+            float: left;
+            margin-left: 20px;
         }
         .correctAns{
             display: inline-block;
@@ -36,19 +42,19 @@
         .question{
             font-weight: bold;
             font-size: 20px;
-            margin: 10px;
+            margin: 5px;
             padding-left: 1em;
             text-indent: -1em;
         }
         input[type=text], select {
-            font-size: 20px;
+            display: inline-block;
+            box-sizing: border-box;
+            font-size: 15px;
             width: 100%;
             padding: 12px 20px;
-            margin: 8px 0;
-            display: inline-block;
+            margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-sizing: border-box;
         }
         button{
             font-size: 20px;
@@ -80,17 +86,27 @@
         #results, #reload{
             visibility: hidden;
         }
+        #timer {
+            display: inline-block;
+            background-color: red;
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
     <!-- 기본 UI -->
-    <h1>생활과윤리 2차 퀴즈</h1>
+    <h1>생활과윤리 2차 퀴즈<span id="timer"></span></h1>
     <div class="quizBox">
         <div id="quiz"></div>
     </div>
-    <button id="submit">결과 보기</button>
-    <button id="reload">새 문제</button>
-    <div id="results"></div>
+    <div class="resultBox">
+        <button id="submit">결과 보기</button>
+        <button id="reload">새 문제</button>
+        <div id="results"></div>
+    </div>
+
 
     <script>
         // 전체 문제 데이터
@@ -311,11 +327,16 @@
 
             resultsContainer.style.visibility = "hidden";
             reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
         }
 
 
         // 사용자 응답 처리 = 결과 표시
         function showResults(){
+            
+            clearInterval(timer);
 
             // 사용자 응답 저장
             var answerContainers = quizContainer.querySelectorAll('.answer');
@@ -347,15 +368,50 @@
             });
 
             // 점수와 정답 표시
-            score = `<div>${myQuestions.length}문제 중 <span class="red">${numCorrect}문제 </span> 맞췄습니다.</div><div class="correctAns"><ul>`
-            for(var k=0; k < correctAnswers.length; k++){
-                score = score + `<li>${k+1}번 정답 : ${correctAnswers[k]}</li>`;
-            }
+            score = `<div>${myQuestions.length}문제 중 <span class="red">${numCorrect}문제 </span> 맞췄습니다.</div>
+                <div class="correctAns"><ul>`
+                for(var k=0; k < correctAnswers.length; k++){
+                    score = score + `<li>${k+1}번 정답 : ${correctAnswers[k]}</li>`;
+                }
             score = score + '</ul></div>'
             resultsContainer.innerHTML = score;
             resultsContainer.style.visibility = "visible";
             // 다시 풀기
             reloadButton.style.visibility = "visible";
+        }
+
+        // 타이머
+        // 1초마다 countdown함수 실행
+        var timer;
+        var time;
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 120;
+
+
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayOutput = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var output = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+            }
+
+            displayOutput.textContent = output;
         }
 
         // 퀴즈 실행

@@ -30,11 +30,11 @@
         }
     </style>
 </head>
-<body onload="setfocus()">
+<body>
     <div class="wrap">
-        <div contenteditable="true" id="content"></div>
+        <div contenteditable="plaintext-only" id="content"></div>
+        <button onclick="handlePaste()">붙여넣기</button>
         <button onclick="delContent()">지우기</button>
-        <button onclick="handlePaste()">클립보드에서 붙여넣기</button>
         <button onclick="copyToClipboard()">글 전체 복사</button>
         <button onclick="goSpellCheck()">맞춤법 검사하러 가기</button>
         <strong>총 <span id="viewByte"></span> byte</strong>(조금 오차 있음)
@@ -53,36 +53,9 @@
     </div>
     <script>
         //입력란에 포커스
-        function setfocus(){
+        window.onload= function setfocus(){
             document.getElementById("content").focus();
         }
-
-        function insertTextAtCursor(text) {
-            var sel, range, html;
-            if (window.getSelection) {
-                sel = window.getSelection();
-                if (sel.getRangeAt && sel.rangeCount) {
-                range = sel.getRangeAt(0);
-                range.deleteContents();
-                range.insertNode(document.createTextNode(text));
-                }
-            } else if (document.selection && document.selection.createRange) {
-                document.selection.createRange().text = text;
-            }
-        }
-
-        document.querySelector(".content[contenteditable]").addEventListener("paste", function(e) {
-            e.preventDefault();
-            if (e.clipboardData && e.clipboardData.getData) {
-                var text = e.clipboardData.getData("text/plain");
-                document.execCommand("insertHTML", false, text);
-            } else if (window.clipboardData && window.clipboardData.getData) {
-                var text = window.clipboardData.getData("Text");
-                insertTextAtCursor(text);
-            }
-        });
-
-
 
         // 글자 byte 계산
         document.addEventListener('keyup', function(e){
@@ -109,16 +82,22 @@
                 document.getElementById("viewByte").innerHTML = byteLength;
             }
         });
-        // // paste from clipboard
-        // function handlePaste(e){
-        //     var clipboardData, pastedData;
-        //     e.stopPropagation();
-        //     e.preventDefault();
+        
+        // paste from clipboard
+        function handlePaste(e){
+            var clipboardData, pastedData;
+            e.stopPropagation();
+            e.preventDefault();
 
-        //     clipboardData = e.clipboardData || window.clipboardData
-        //     pastedData = clipboardData.getData('Text');
-        //     document.getElementById('content').addEventListener('paste', handlePaste);
-        // }
+            clipboardData = e.clipboardData || window.clipboardData
+            pastedData = clipboardData.getData('Text');
+            document.getElementById('content').addEventListener('paste', handlePaste);
+        }
+
+        // 삭제
+        function delContent(){
+            document.getElementById("content").innerText = "";
+        }
 
         // 클립보드로 복사
         function copyToClipboard(){
@@ -130,7 +109,8 @@
             document.body.removeChild(dummy);
             alert('복사되었습니다');
         }
-        
+
+        //맞춤법 검사하러 가기
         function goSpellCheck(){
             var dummy = document.createElement("textarea");
             document.body.appendChild(dummy);
@@ -139,12 +119,7 @@
             document.execCommand("copy");
             document.body.removeChild(dummy);
             window.open('http://speller.cs.pusan.ac.kr', '_blank')
-        }
-
-        // 삭제
-        function delContent(){
-            document.getElementById("content").innerText = "";
-        }
+        }        
     </script>
 </body>
 </html>
