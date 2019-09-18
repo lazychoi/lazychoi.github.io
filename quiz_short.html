@@ -97,7 +97,7 @@
 </head>
 <body>
     <!-- 기본 UI -->
-    <h1>생활과윤리 2차 퀴즈<span id="timer"></span></h1>
+    <h1>생활과윤리 2학기 1차 퀴즈<span id="timer"></span></h1>
     <div class="quizBox">
         <div id="quiz"></div>
     </div>
@@ -111,160 +111,47 @@
     <script>
         // 전체 문제 데이터
         var data = [
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 생명을 책임 있게 다루기 위한 윤리학적 숙고이다.", 
-                "correctAnswer": "생명 윤리"
-            },
-            {
-                "question": "불교에서는 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 가르침을 통해 생명의 상호 의존 관계를 강조한다.",
-                "correctAnswer": "연기"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 여러 종류의 신체 조직으로 분화할 수 있는 능력을 가진 세포이다.",
-                "correctAnswer": "줄기세포"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 동일한 유전 형질을 가진 생명체를 만들어 내는 기술을 의미한다.",
-                "correctAnswer": "생명 복제"
-            },
-                {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 질병을 치료하기 위해 체세포 또는 생식 세포 안에 정상유전자를 넣어 유전자의 기능을 바로잡거나 이상 유전자 자체를 바꾸는 치료법이다.",
-                "correctAnswer": "유전자 치료"
-            },
-                {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 임신부에게 나타나는 메스꺼움을 치료하기 위해 개발된 약이다.",
-                "correctAnswer": "탈리도마이드"
-            },
-                {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 동물을 ‘자동인형’ 또는 ‘움직이는 기계’에 불과하다고 보았다.",
-                "correctAnswer": "데카르트"
-            },
-            {
-                "question": "동물 실험의 ‘3아르(R)’ 원칙은 감소, 개선, (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 말한다.",
-                "correctAnswer": "대체"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 사랑이 보호, 책임, 존경, 이해의 요소를 포함한다고 보았다.",
-                "correctAnswer": "프롬"
-            },
-            {
-                "question": "인간의 성은 생식적 가치, 쾌락적 가치, (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 가진다.",
-                "correctAnswer": "인격적 가치"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 입장은 사랑 중심의 성 윤리를 제시한다.",
-                "correctAnswer": "중도주의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 성의 자기 결정권을 남용하는 대표적인 사례이다.",
-                "correctAnswer": "성폭력"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 성 자체를 상품처럼 사고팔거나, 다른 상품을 팔기 위한 수단으로 성을 이용하는 행위를 뜻한다.",
-                "correctAnswer": "성 상품화"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 외모의 아름다움을 지나치게 추구하고 사람의 평가기준을 외모에만 두는 태도를 말한다.",
-                "correctAnswer": "외모 지상주의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 한 나라의 남녀 성 평등 정도를 가늠할 수 있는 지표로 지수가 낮을수록 성차별이 심하다는 것을 보여 준다.",
-                "correctAnswer": "유리 천장 지수"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 혼인, 혈연, 입양 등으로 이루어진 공동체이다.",
-                "correctAnswer": "가족"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 남녀가 부부가 되어 평생 기쁨과 슬픔을 함께하며 서로에게 헌신하고 봉사하겠다는 약속을 한다는 의미이다.",
-                "correctAnswer": "백년가약"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 형은 동생을 사랑하고, 동생은 형을 공경한다는 의미이다.",
-                "correctAnswer": "형우제공"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 개인의 도덕성보다 사회 제도의 도덕성을 강조하였다.",
-                "correctAnswer": "니부어"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 사회 구성원에게 여러 가지 사회적·경제적 가치를 공정하게 분배함으로써 실현된다.",
-                "correctAnswer": "분배적 정의"
-            },
-            {
-                "question": "사회 구성원의 합의를 끌어내기 어렵다는 분배적 정의의 한계 때문에 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)이/가 제안되었다.",
-                "correctAnswer": "절차적 정의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 입장에서는 절차나 과정이 공정하면 결과의 공정성도 보장된다고 본다.",
-                "correctAnswer": "절차적 정의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 원초적 입장의 당사자들이 타인과 자신이 처한 상황에 관해서 알지 못한다고 가정하기 위한 장치이다.",
-                "correctAnswer": "무지의 베일"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 국가가 재화의 분배에 관여해서는 안 된다고 주장하였다.",
-                "correctAnswer": "노직"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 처벌의 경중을 범죄의 해악 정도에 비례하여 정해야 한다고 주장한다.",
-                "correctAnswer": "응보주의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 사형 제도가 범죄 예방에 효과적이라고 보지 않았다.",
-                "correctAnswer": "베카리아"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 관점에서는 사회 전체의 이익을 처벌의 근거로 삼는다.",
-                "correctAnswer": "공리주의"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 관점에서는 형벌의 목적이 범죄자를 재사회화하여 더는 죄를 짓지 않도록 예방하는 것이다.",
-                "correctAnswer": "특수 예방주의"
-            },
-            {
-                "question": "국가가 가지는 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 통치를 할 수 있는 권리이다.",
-                "correctAnswer": "권위"
-            },
-            {
-                "question": "사회 계약론에 따르면 개인의 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 얻은 국가는 각 개인에게 국가의 명령을 내리거나 통치할 수 있는 권리를 갖게 된다.",
-                "correctAnswer": "동의"
-            },
-            {
-                "question": "아리스토텔레스는 국가가 인간의 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)에 의해 형성된다고 보았다.",
-                "correctAnswer": "본성"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 국방, 경찰, 소방, 도로 등 모든 사람이 공동으로 이용할 수 있는 재화나 서비스를 의미한다.",
-                "correctAnswer": "공공재"
-            },
-            {
-                "question": "동양에서는 국가의 권위를 민의에 기초한 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 관점에서 본다.",
-                "correctAnswer": "천명"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 항산이 없으면 항심을 유지하지 못한다고 보았다.",
-                "correctAnswer": "맹자"
-            },
-            {
-                "question": "시민 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 대표적인 방법으로 선거가 있다.",
-                "correctAnswer": "참여"
-            },
-            {
-                "question": "동양에서는 군주에게 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 올리는 제도가 있어서, 제한적이기는 하지만 참여가 이루어졌다.",
-                "correctAnswer": "상소문"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 정의롭지 못한 법을 개정하거나 정부 정책을 변혁하려는 목적으로 행하는 의도적인 위법 행위이다.",
-                "correctAnswer": "시민 불복종"
-            },
-            {
-                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 비폭력적이고 평화적인 방법으로 소금법이 부당하다는 것을 보여 주었다.",
-                "correctAnswer": "간디"
-            },
-            
-        ];
+                { "question" : "한자어 직업(職業)의 ‘직(職)’은 생계를 유지하는 노동을 뜻한다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "칼뱅은 직업을 ‘신으로부터 부름을 받은 자기 몫의 일’이라고 주장하였다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "직업은 우리에게 경제적 기반을 마련해 주는 데 그친다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "직업 윤리는 일반성과 특수성을 동시에 지닌다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "장인 정신이란 자신의 일에 긍지를 가지고 전념하거나 모든 직업에서 필요한 기술에 정통하려고 노력하는 것을 말한다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "기업가의 이윤 추구는 자본주의 사회에서 자연스러운 일이므로 기업가는 오직 이윤 추구에만 관심을 가져야 한다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "기업가와 근로자는 근로 조건 등과 같은 쟁점에서 대립하기도 하지만 개인과 사회의 발전을 위하여 함께 협력하는 상생적 관계이기도 하다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "공직자는 국민 삶의 질 향상, 국가 유지 및 발전에 중요한 역할을 담당한다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "전문직은 전문성이나 독점성의 특징을 갖지만 자율성의 특징을 가지지는 않는다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "내부 공익 신고는 공공의 안전과 권익을 지키고, 국민의 알 권리를 보호하는 행위이다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "판옵티콘은 죄수를 교화할 목적으로 설계된 벤담의 원형 감옥이다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "과학 기술의 부정적인 면에만 주목하는 과학 기술 혐오주의 태도를 버리고, 긍정적인 면만 강조하는 과학 기술 지상주의 태도를 가져야 한다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "과학 기술을 중립적으로 보는 입장은 사실과 가치의 영역을 명확히 구분한다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "과학 기술의 자유도 다른 자유와 마찬가지로 자기 정당화의 의무와 윤리적 책임이 뒤따라야 한다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "과학 기술의 윤리적인 목적은 연구자의 지적 호기심을 채우는 것이다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "과학 기술 연구 윤리란 과학 기술 연구 과정에서 나타날 수 있는 비윤리적 문제를 해결하고자 하는 규범이다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "표절이란 연구 재료와 절차 등을 조작하는 것이다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "과학 기술 연구자는 연구 결과를 완전히 공표해서는 안 된다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "적정 기술은 그 기술이 사용되는 사회 공동체의 조건을 고려하여 해당지역에서 지속적인 생산과 소비를 할 수 있게 한 것이다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "요나스는 윤리적 책임의 범위를 자연은 물론 미래 세대로까지 확장해야 할 필요가 있다고 보았다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "( )은/는 개인적인 삶의 영역으로 다른 사람에게 방해받고 싶지 않은 나만의 고유 영역이다.", "correctAnswer" : "사생활", "questionType" : "blank" },
+                { "question" : "저작권 침해는 저작권법에 의해 배타적으로 보호되는 ( )을/를 무단으로 이용해 저작권자의 권리를 침해하는 행위이다.", "correctAnswer" : "저작물", "questionType" : "blank" },
+                { "question" : "( )은/는 정보 공유 권리에 반대하는 입장이다.", "correctAnswer" : "저작권 보호", "questionType" : "blank" },
+                { "question" : "정보 ( )은/는 교육, 소득 수준, 지역 등의 차이로 정보에 대한 접근과 이용이 차별되고, 그 결과 경제적·사회적 불균형이 발생하는 현상이다.", "correctAnswer" : "격차", "questionType" : "blank" },
+                { "question" : "기존의 매체들이 제공하던 정보를 인터넷을 통해 가공, 전달, 소비하는 포괄적 융합 매체인 ( )이/가 등장하였다.", "correctAnswer" : "뉴 미디어", "questionType" : "blank" },
+                { "question" : "( )은/는 정보를 생산하고 동시에 유통, 소비하는 주체이다.", "correctAnswer" : "생산적 소비자", "questionType" : "blank" },
+                { "question" : "( )은/는 사람들이 정보를 자유롭게 알 수 있는 권리이다.", "correctAnswer" : "알 권리", "questionType" : "blank" },
+                { "question" : "( )에는 성명권, 초상권, 사생활권 등이 있다.", "correctAnswer" : "인격권", "questionType" : "blank" },
+                { "question" : "( )은/는 공론장이 여론을 형성하는 사회생활의 영역이라고 보았다.", "correctAnswer" : "하버마스", "questionType" : "blank" },
+                { "question" : "매체 ( )은/는 매체가 형성하는 현실을 비판적으로 읽어 내면서 매체를 제대로 사용하고 바람직하게 표현하는 능력이다.", "correctAnswer" : "이해력", "questionType" : "blank" },
+                { "question" : "아리스토텔레스는 동물은 인간을 위해서 만들어진 것이라고 주장하였다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "도가에서는 인간이 자연을 본받아 다른 존재와 타인에게 인(仁)을 실천해야 한다고 보았다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "칸트는 이성적 존재만이 도덕적 주체가 될 수 있다고 보았다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "싱어는 이익 평등 고려의 원칙에 근거하여 동물의 고통을 무시하는 행위는 일종의 ‘종 차별주의’라고 비판하였다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "레건은 모든 생명체가 자신의 고유한 방식으로 자신의 선(善)을 추구하기 때문에 도덕적으로 고려되어야 한다고 주장하였다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "생태 중심주의는 도덕적 고려의 범위를 개별 생명체가 아닌 생태계 전체로 보아야 한다는 전일론적 입장을 취한다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "네스는 세계관과 생활 양식 자체를 생태 중심적으로 바꾸는 심층적 생태주의를 주장하였다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "기후 정의는 기후 변화에 따른 불평등을 해소함으로써 실현되는 정의로 기후 변화 문제를 형평성의 관점에서 바라본다.", "correctAnswer" : "예", "questionType" : "ox" },
+                { "question" : "탄소 배출권 거래 제도는 파리 협정에서 제안되었다.", "correctAnswer" : "아니오", "questionType" : "ox" },
+                { "question" : "요나스는 현세대가 지녀야 할 덕목으로 두려움, 겸손, 검소, 절제 등을 제시하였다.", "correctAnswer" : "예", "questionType" : "ox" }
+                ];
 
         // 전체 데이터에서 출제 문제 뽑기
         function randomQuestion(data, numQuestion){
@@ -297,7 +184,7 @@
         
         
         // 출제 문제 개수
-        var numQuestion = 4;
+        var numQuestion = 3;
         
         // 문제 저장 변수
         var myQuestions = [];
@@ -306,22 +193,39 @@
             // 출제 문제 무작위 추출
             myQuestions = randomQuestion(data, numQuestion);
             
+            console.log(myQuestions);
+
             // 3문제를 저장할 변수
             var output = [];
 
-            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
             myQuestions.forEach(function(currentQuestion, questionNumber){
 
-                //각 문제에 붙일 사용자 응답 저장 변수
-                var answer = `
-                <input type="text" name="question${questionNumber}">
-                `;
+                //문제 유형 확인
+                if(currentQuestion.questionType == 'ox') {
+                    console.log('ox');
+                    //각 문제에 붙일 사용자 응답 저장 변수
+                    // var answer = `<ul style="list-style-type:none;">
+                    // <li><input type="radio" name="question${questionNumber}" value="o">O</li>
+                    // <li><input type="radio" name="question${questionNumber}" value="x">X</li>
+                    // </ul>`;
+    
+                    var answer = `<input type="text" name="question${questionNumber}">`;
 
-                // 문제와 사용자 응답 박스 붙이기
-                output.push(`
-                <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question}</div>
-                <div class="answer">${answer}</div>
-                `);
+                    // 문제와 사용자 응답 박스 붙이기
+                    output.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question} (예, 아니오) </div>
+                    <div class="answer">${answer}</div>
+                    `);
+                } else if(currentQuestion.questionType == 'blank') {
+                    console.log('blank');
+                    console.log(currentQuestion.question.replace('( )', '<input type="text" size="20">'));
+                    var answer = `<input type="text" name="question${questionNumber}">`;
+                    output.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question.replace('( )', '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)')}</div>
+                    <div class="answer">${answer}</div>
+                    `);
+                };
             });
             quizContainer.innerHTML = output.join('');
 
@@ -352,9 +256,16 @@
 
             myQuestions.forEach(function(currentQuestion, questionNumber){
                 // 문제별 사용자 응답
+                
                 var answerContainer = answerContainers[questionNumber];
                 var selector = 'input[name=question'+questionNumber+']';
                 var userAnswer = (answerContainer.querySelector(selector) || {}).value;
+
+                console.log('answerContainer: ', answerContainer);
+                console.log('selector: ', selector);
+                console.log('userAnswer', userAnswer);
+                console.log('currentQuestion.correctAnswer', currentQuestion.correctAnswer);
+
 
                 // 정답 여부 체크
                 if(userAnswer.replace(/(\s*)/g,"")===currentQuestion.correctAnswer.replace(/(\s*)/g,"")){
