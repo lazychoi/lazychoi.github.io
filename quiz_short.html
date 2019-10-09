@@ -126,47 +126,327 @@
     <script>
         // 전체 문제 데이터
         var data = [
-                { "question" : "한자어 직업(職業)의 ‘직(職)’은 생계를 유지하는 노동을 뜻한다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "칼뱅은 직업을 ‘신으로부터 부름을 받은 자기 몫의 일’이라고 주장하였다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "직업은 우리에게 경제적 기반을 마련해 주는 데 그친다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "직업 윤리는 일반성과 특수성을 동시에 지닌다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "장인 정신이란 자신의 일에 긍지를 가지고 전념하거나 모든 직업에서 필요한 기술에 정통하려고 노력하는 것을 말한다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "기업가의 이윤 추구는 자본주의 사회에서 자연스러운 일이므로 기업가는 오직 이윤 추구에만 관심을 가져야 한다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "기업가와 근로자는 근로 조건 등과 같은 쟁점에서 대립하기도 하지만 개인과 사회의 발전을 위하여 함께 협력하는 상생적 관계이기도 하다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "공직자는 국민 삶의 질 향상, 국가 유지 및 발전에 중요한 역할을 담당한다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "전문직은 전문성이나 독점성의 특징을 갖지만 자율성의 특징을 가지지는 않는다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "내부 공익 신고는 공공의 안전과 권익을 지키고, 국민의 알 권리를 보호하는 행위이다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "판옵티콘은 죄수를 교화할 목적으로 설계된 벤담의 원형 감옥이다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "과학 기술의 부정적인 면에만 주목하는 과학 기술 혐오주의 태도를 버리고, 긍정적인 면만 강조하는 과학 기술 지상주의 태도를 가져야 한다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "과학 기술을 중립적으로 보는 입장은 사실과 가치의 영역을 명확히 구분한다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "과학 기술의 자유도 다른 자유와 마찬가지로 자기 정당화의 의무와 윤리적 책임이 뒤따라야 한다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "과학 기술의 윤리적인 목적은 연구자의 지적 호기심을 채우는 것이다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "과학 기술 연구 윤리란 과학 기술 연구 과정에서 나타날 수 있는 비윤리적 문제를 해결하고자 하는 규범이다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "표절이란 연구 재료와 절차 등을 조작하는 것이다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "과학 기술 연구자는 연구 결과를 완전히 공표해서는 안 된다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "적정 기술은 그 기술이 사용되는 사회 공동체의 조건을 고려하여 해당지역에서 지속적인 생산과 소비를 할 수 있게 한 것이다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "요나스는 윤리적 책임의 범위를 자연은 물론 미래 세대로까지 확장해야 할 필요가 있다고 보았다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "( )은/는 개인적인 삶의 영역으로 다른 사람에게 방해받고 싶지 않은 나만의 고유 영역이다.", "correctAnswer" : "사생활", "questionType" : "blank" },
-                { "question" : "저작권 침해는 저작권법에 의해 배타적으로 보호되는 ( )을/를 무단으로 이용해 저작권자의 권리를 침해하는 행위이다.", "correctAnswer" : "저작물", "questionType" : "blank" },
-                { "question" : "( )은/는 정보 공유 권리에 반대하는 입장이다.", "correctAnswer" : "저작권 보호", "questionType" : "blank" },
-                { "question" : "정보 ( )은/는 교육, 소득 수준, 지역 등의 차이로 정보에 대한 접근과 이용이 차별되고, 그 결과 경제적·사회적 불균형이 발생하는 현상이다.", "correctAnswer" : "격차", "questionType" : "blank" },
-                { "question" : "기존의 매체들이 제공하던 정보를 인터넷을 통해 가공, 전달, 소비하는 포괄적 융합 매체인 ( )이/가 등장하였다.", "correctAnswer" : "뉴 미디어", "questionType" : "blank" },
-                { "question" : "( )은/는 정보를 생산하고 동시에 유통, 소비하는 주체이다.", "correctAnswer" : "생산적 소비자", "questionType" : "blank" },
-                { "question" : "( )은/는 사람들이 정보를 자유롭게 알 수 있는 권리이다.", "correctAnswer" : "알 권리", "questionType" : "blank" },
-                { "question" : "( )에는 성명권, 초상권, 사생활권 등이 있다.", "correctAnswer" : "인격권", "questionType" : "blank" },
-                { "question" : "( )은/는 공론장이 여론을 형성하는 사회생활의 영역이라고 보았다.", "correctAnswer" : "하버마스", "questionType" : "blank" },
-                { "question" : "매체 ( )은/는 매체가 형성하는 현실을 비판적으로 읽어 내면서 매체를 제대로 사용하고 바람직하게 표현하는 능력이다.", "correctAnswer" : "이해력", "questionType" : "blank" },
-                { "question" : "아리스토텔레스는 동물은 인간을 위해서 만들어진 것이라고 주장하였다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "도가에서는 인간이 자연을 본받아 다른 존재와 타인에게 인(仁)을 실천해야 한다고 보았다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "칸트는 이성적 존재만이 도덕적 주체가 될 수 있다고 보았다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "싱어는 이익 평등 고려의 원칙에 근거하여 동물의 고통을 무시하는 행위는 일종의 ‘종 차별주의’라고 비판하였다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "레건은 모든 생명체가 자신의 고유한 방식으로 자신의 선(善)을 추구하기 때문에 도덕적으로 고려되어야 한다고 주장하였다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "생태 중심주의는 도덕적 고려의 범위를 개별 생명체가 아닌 생태계 전체로 보아야 한다는 전일론적 입장을 취한다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "네스는 세계관과 생활 양식 자체를 생태 중심적으로 바꾸는 심층적 생태주의를 주장하였다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "기후 정의는 기후 변화에 따른 불평등을 해소함으로써 실현되는 정의로 기후 변화 문제를 형평성의 관점에서 바라본다.", "correctAnswer" : "o", "questionType" : "ox" },
-                { "question" : "탄소 배출권 거래 제도는 파리 협정에서 제안되었다.", "correctAnswer" : "x", "questionType" : "ox" },
-                { "question" : "요나스는 현세대가 지녀야 할 덕목으로 두려움, 겸손, 검소, 절제 등을 제시하였다.", "correctAnswer" : "o", "questionType" : "ox" }
-                ];
+            {
+            "index": 1,
+            "question": "한자어 직업(職業)의 ‘직(職)’은 생계를 유지하는 노동을 뜻한다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 2,
+            "question": "칼뱅은 직업을 ‘신으로부터 부름을 받은 자기 몫의 일’이라고 주장하였다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 3,
+            "question": "직업은 우리에게 경제적 기반을 마련해 주는 데 그친다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 4,
+            "question": "직업 윤리는 일반성과 특수성을 동시에 지닌다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 5,
+            "question": "장인 정신이란 자신의 일에 긍지를 가지고 전념하거나 모든 직업에서 필요한 기술에 정통하려고 노력하는 것을 말한다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 6,
+            "question": "기업가의 이윤 추구는 자본주의 사회에서 자연스러운 일이므로 기업가는 오직 이윤 추구에만 관심을 가져야 한다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 7,
+            "question": "기업가와 근로자는 근로 조건 등과 같은 쟁점에서 대립하기도 하지만 개인과 사회의 발전을 위하여 함께 협력하는 상생적 관계이기도 하다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 8,
+            "question": "공직자는 국민 삶의 질 향상, 국가 유지 및 발전에 중요한 역할을 담당한다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 9,
+            "question": "전문직은 전문성이나 독점성의 특징을 갖지만 자율성의 특징을 가지지는 않는다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 10,
+            "question": "내부 공익 신고는 공공의 안전과 권익을 지키고, 국민의 알 권리를 보호하는 행위이다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 11,
+            "question": "판옵티콘은 죄수를 교화할 목적으로 설계된 벤담의 원형 감옥이다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 12,
+            "question": "과학 기술의 부정적인 면에만 주목하는 과학 기술 혐오주의 태도를 버리고, 긍정적인 면만 강조하는 과학 기술 지상주의 태도를 가져야 한다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 13,
+            "question": "과학 기술을 중립적으로 보는 입장은 사실과 가치의 영역을 명확히 구분한다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 14,
+            "question": "과학 기술의 자유도 다른 자유와 마찬가지로 자기 정당화의 의무와 윤리적 책임이 뒤따라야 한다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 15,
+            "question": "과학 기술의 윤리적인 목적은 연구자의 지적 호기심을 채우는 것이다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 16,
+            "question": "과학 기술 연구 윤리란 과학 기술 연구 과정에서 나타날 수 있는 비윤리적 문제를 해결하고자 하는 규범이다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 17,
+            "question": "표절이란 연구 재료와 절차 등을 조작하는 것이다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 18,
+            "question": "과학 기술 연구자는 연구 결과를 완전히 공표해서는 안 된다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 19,
+            "question": "적정 기술은 그 기술이 사용되는 사회 공동체의 조건을 고려하여 해당지역에서 지속적인 생산과 소비를 할 수 있게 한 것이다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 20,
+            "question": "요나스는 윤리적 책임의 범위를 자연은 물론 미래 세대로까지 확장해야 할 필요가 있다고 보았다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 21,
+            "question": "( )은/는 개인적인 삶의 영역으로 다른 사람에게 방해받고 싶지 않은 나만의 고유 영역이다.",
+            "correctAnswer": "사생활",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 22,
+            "question": "저작권 침해는 저작권법에 의해 배타적으로 보호되는 ( )을/를 무단으로 이용해 저작권자의 권리를 침해하는 행위이다.",
+            "correctAnswer": "저작물",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 23,
+            "question": "( )은/는 정보 공유 권리에 반대하는 입장이다.",
+            "correctAnswer": "저작권 보호",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 24,
+            "question": "정보 ( )은/는 교육, 소득 수준, 지역 등의 차이로 정보에 대한 접근과 이용이 차별되고, 그 결과 경제적·사회적 불균형이 발생하는 현상이다.",
+            "correctAnswer": "격차",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 25,
+            "question": "기존의 매체들이 제공하던 정보를 인터넷을 통해 가공, 전달, 소비하는 포괄적 융합 매체인 ( )이/가 등장하였다.",
+            "correctAnswer": "뉴 미디어",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 26,
+            "question": "( )은/는 정보를 생산하고 동시에 유통, 소비하는 주체이다.",
+            "correctAnswer": "생산적 소비자",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 27,
+            "question": "( )은/는 사람들이 정보를 자유롭게 알 수 있는 권리이다.",
+            "correctAnswer": "알 권리",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 28,
+            "question": "( )에는 성명권, 초상권, 사생활권 등이 있다.",
+            "correctAnswer": "인격권",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 29,
+            "question": "( )은/는 공론장이 여론을 형성하는 사회생활의 영역이라고 보았다.",
+            "correctAnswer": "하버마스",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 30,
+            "question": "매체 ( )은/는 매체가 형성하는 현실을 비판적으로 읽어 내면서 매체를 제대로 사용하고 바람직하게 표현하는 능력이다.",
+            "correctAnswer": "이해력",
+            "questionType": "blank",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 31,
+            "question": "아리스토텔레스는 동물은 인간을 위해서 만들어진 것이라고 주장하였다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 32,
+            "question": "도가에서는 인간이 자연을 본받아 다른 존재와 타인에게 인(仁)을 실천해야 한다고 보았다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 33,
+            "question": "칸트는 이성적 존재만이 도덕적 주체가 될 수 있다고 보았다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 34,
+            "question": "싱어는 이익 평등 고려의 원칙에 근거하여 동물의 고통을 무시하는 행위는 일종의 ‘종 차별주의’라고 비판하였다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 35,
+            "question": "레건은 모든 생명체가 자신의 고유한 방식으로 자신의 선(善)을 추구하기 때문에 도덕적으로 고려되어야 한다고 주장하였다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 36,
+            "question": "생태 중심주의는 도덕적 고려의 범위를 개별 생명체가 아닌 생태계 전체로 보아야 한다는 전일론적 입장을 취한다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 37,
+            "question": "네스는 세계관과 생활 양식 자체를 생태 중심적으로 바꾸는 심층적 생태주의를 주장하였다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 38,
+            "question": "기후 정의는 기후 변화에 따른 불평등을 해소함으로써 실현되는 정의로 기후 변화 문제를 형평성의 관점에서 바라본다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 39,
+            "question": "탄소 배출권 거래 제도는 파리 협정에서 제안되었다.",
+            "correctAnswer": "x",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            },
+            {
+            "index": 40,
+            "question": "요나스는 현세대가 지녀야 할 덕목으로 두려움, 겸손, 검소, 절제 등을 제시하였다.",
+            "correctAnswer": "o",
+            "questionType": "ox",
+            "tested": 0,
+            "corrected": 0
+            }
+        ];
 
         // UI를 변수로
         var quizContainer = document.getElementById("quiz");
@@ -184,10 +464,11 @@
         var answers = [];
 
         // 전체 데이터에서 출제 문제 뽑기
-        function randomQuestion(data, questionNums, oxNums, blankNums){
+        function randomQuestion(){
             //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
-            var numbers = Array(data.length).fill().map(function(element, index){
-                return index;
+            var numbers = [];
+            data.forEach(function(element){
+                numbers.push(element.index-1);
             });
             var shuffleNumbers = [];
             while(numbers.length > 0){
@@ -221,10 +502,10 @@
             answers = [];
 
             // 출제 문제 무작위 추출
-            questions = randomQuestion(data, questionNums, oxNums, blankNums);
+            questions = randomQuestion();
 
-            // 3문제를 저장할 변수
-            var output = [];
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
 
             // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
             questions.forEach(function(currentQuestion, questionNumber){
@@ -240,19 +521,19 @@
                     </div>`;
     
                     // 문제와 사용자 응답 박스 붙이기
-                    output.push(`
+                    questionsHtml.push(`
                     <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question}</div>
                     <div class="answer">${answer}</div>
                     `);
                 } else if(currentQuestion.questionType == 'blank') {
                     var answer = `<input type="text" name="blank${questionNumber}">`;
-                    output.push(`
+                    questionsHtml.push(`
                     <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question.replace('( )', '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)')}</div>
                     <div class="answer">${answer}</div>
                     `);
                 };
             });
-            quizContainer.innerHTML = output.join('');
+            quizContainer.innerHTML = questionsHtml.join('');
 
             resultsContainer.style.visibility = "hidden";
             reloadButton.style.visibility = "hidden";
@@ -265,7 +546,7 @@
 
         // 사용자 응답 처리 = 결과 표시
         function showResults(){
-            
+            //타이머 정지
             clearInterval(timer);
 
             // 사용자 응답 클래스 저장
@@ -277,26 +558,41 @@
 
             //사용자 응답 저장
             for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
                 var answerContainer = answerContainers[i];
+                //ox 클래스 코드가 있으면
                 if(answerContainer.querySelector('.ox')){
                     var radioBtn = document.getElementsByName('ox'+i);
+                    var temp = '';
                     for(var j=0; j < radioBtn.length; j++){
                         if(radioBtn[j].checked){
-                            userAnswers.push(radioBtn[j].value);
+                            var temp = radioBtn[j].value
                         }
+                    }
+                    //사용자가 응답하지 않으면
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
                     }
                 } else if(answerContainer.querySelector('input[name=blank'+i+']')){
                     userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
                 }
-                // console.log('사용자 응답', userAnswers);
             }
 
+            // 채점
             for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
                 if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
                     correctNums++;
+                    data[questionIndex].tested += 1;
+                    data[questionIndex].corrected += 1;
                 } else {
                     document.getElementById("question"+k).style.color = 'red';
+                    data[questionIndex].tested += 1;
                 }
+            console.log(data[questionIndex].index,'번 출제횟수', data[questionIndex].tested);
+            console.log(data[questionIndex].index,'번 맞춘횟수', data[questionIndex].corrected);
             }
 
             // 점수와 정답 표시
@@ -313,28 +609,28 @@
         }
 
         // 타이머
-        // 1초마다 countdown함수 실행
-        var timer;
-        var time;
+        var time;   //현재 시간
+        var timer;  //타이머
 
         // 타이머 시간 설정 - 초단위
         var setTime = 120;
 
 
+        // 1초마다 countdown함수 실행
         function startTimer(){ 
             time = setTime;      
             timer = setInterval("countdown()", 1000); 
         }
 
         function countdown(){
-            var displayOutput = document.getElementById('timer');
+            var displayTimer = document.getElementById('timer');
             
             var min = Math.floor(time / 60);
             var sec = time - min*60;
 
             if( min < 10 ){ min = "0" + min; }
             if( sec < 10 ){ sec = "0" + sec; }
-            var output = min + ":" + sec;
+            var questionsHtml = min + ":" + sec;
 
             if ( time > 0 ) time--;
             else { 
@@ -343,7 +639,7 @@
                 time = setTime;
             }
 
-            displayOutput.textContent = output;
+            displayTimer.textContent = questionsHtml;
         }
 
         // 퀴즈 실행
