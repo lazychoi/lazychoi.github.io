@@ -95,10 +95,6 @@
         }
         .ox {
             display: flex;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
         }
         .ox > label {
             width: 50%;
@@ -239,8 +235,8 @@
                 if(currentQuestion.questionType == 'ox') {
                     //각 문제에 붙일 사용자 응답 저장 변수
                     var answer = `<div  class="ox">
-                    <input type="radio" name="ox${questionNumber}" value="o"><label>예</label></li>
-                    <input type="radio" name="ox${questionNumber}" value="x"><label>아니오</label></li>
+                    <input type="radio" id="ox${questionNumber}o" name="ox${questionNumber}" value="o"><label for="ox${questionNumber}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${questionNumber}x" name="ox${questionNumber}" value="x"><label for="ox${questionNumber}x" style=cursor:pointer>아니오</label>
                     </div>`;
     
                     // 문제와 사용자 응답 박스 붙이기
