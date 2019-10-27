@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>생활과윤리 퀴즈</title>
+    <style>
+        body{
+            font-size: 20px;
+            line-height: 160%;
+            color: #333;
+            font-weight: 300;
+            text-align: center;
+            background-color: #f8f6f0;
+        }
+        .quizBox{
+            float: left;
+            width: 60%;
+            text-align: left;
+            margin: 0 auto;
+            margin-left: 20px;
+        }
+        .resultBox{
+            float: left;
+            margin-left: 20px;
+        }
+        .correctAns{
+            display: inline-block;
+            text-align: left;
+            line-height: 130%;
+            margin: 0 auto;
+        }
+        h1{
+            font-weight: bold;
+            margin: 0px;
+            padding: 10px;
+            font-size: 25px;
+            background-color: #444;
+            color: #fff;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin: 5px;
+            padding-left: 1em;
+            text-indent: -1em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            box-sizing: border-box;
+            font-size: 15px;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button{
+            font-size: 20px;
+            background-color: #279;
+            color: #fff;
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        button:hover{
+            background-color: #38a;
+        }
+        button#reload{
+            background-color: orange;
+        }
+        button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+        #results{
+            font-size: 30px;
+            font-weight: bold;
+            color:blue;
+        }
+        .red{
+            color: red;
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        #timer {
+            display: inline-block;
+            background-color: red;
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        .ox > input[type="radio"]{ 
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>생활과윤리 2학기 1차 퀴즈<span id="timer"></span></h1>
+    <div class="quizBox">
+        <div id="quiz"></div>
+    </div>
+    <div class="resultBox">
+        <button id="submit">결과 보기</button>
+        <button id="reload">새 문제</button>
+        <div id="results"></div>
+    </div>
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+            {
+                "index": 1,
+                "question": "한자어 ‘갈등(葛藤)’은 칡이나 등나무가 얽혀 있는 모습에서 유래하였다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 2,
+                "question": "지역 갈등은 이념의 차이를 흑백 논리로 구분할 때 발생한다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 3,
+                "question": "세대 갈등은 우리 사회에만 존재하는 현상이다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 4,
+                "question": "이해관계의 대립이 원인일 때에만 사회 갈등이라고 할 수 있다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 5,
+                "question": "전체주의 사회는 통제와 지시로 일사불란하게 운영되기 때문에 진정한 사회 통합이 이루어졌다고 볼 수 있다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 6,
+                "question": "담론이란 갈등이나 문제를 해결하기 위한 이성적 의사소통 행위로 주로 토론의 형태로 이루어진다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 7,
+                "question": "맹자가 제시한 피사란 한쪽으로 치우쳐 공정하지 못하고 편파적인 말을 뜻한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 8,
+                "question": "하버마스는 이상적 담화 조건으로 이해 가능성, 진실성, 정당성, 진리성을 제시하였다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 9,
+                "question": "원효는 모든 종파와 사상을 분리시켜 고집하지 말고, 더 높은 차원에서 하나로 종합해야 한다는 화쟁 사상을 주장하였다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 10,
+                "question": "심의 민주주의는 사회적 쟁점에 관해 전문가에게 의존하지 않고 시민들이 직접 심의를 진행하고 합의를 이끌어 내는 정책 결정 방식이다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.1.갈등해결과소통의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 11,
+                "question": "통일 비용에는 제도 통합 비용은 포함되지만 생산·생활 기반 구축 비용 등 경제적 투자 비용은 포함되지 않는다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 12,
+                "question": "분단 비용에는 군사비, 전쟁 가능성에 대한 공포, 이산가족의 고통 등이 포함된다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 13,
+                "question": "통일에 드는 막대한 비용으로 조세 부담이 커지기 때문에 통일을 반대하는 사람들도 있다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 14,
+                "question": "통일 편익은 통일 이후 1세대 동안만 발생하는 경제적 편익만을 말하는 것이다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 15,
+                "question": "남북한이 지출하는 막대한 군사비는 분단이 지속되는 동안 영구적으로 발생한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 16,
+                "question": "분단 비용은 통일 한국의 번영을 위한 투자적인 성격의 비용으로 다양한 통일 편익으로 이어질 수 있다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 17,
+                "question": "북한의 정치범 수용소에서 이루어지는 강제 노동, 구금 등을 해결하기 위해 통일 한국은 인권의 가치를 지향해야 한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 18,
+                "question": "남한 사회에서는 사회적 약자나 소수자 차별이 오래전에 사라졌다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 19,
+                "question": "북한은 표현의 자유, 경제 활동의 자유 등 기본권을 보장하고 있다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 20,
+                "question": "북한 사회에서 직장 배치의 가장 핵심적 판단 기준은 성분과 당성이라는 이른바 정치적 기준이다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "6.2.민족통합의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 21,
+                "question": "국제 분쟁은 영토, 영해, 영공을 포함한 국가의 영역과 자국의 영역에서 획득할 수 있는 다양한 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 둘러싼 갈등 때문에 일어난다.",
+                "correctAnswer": "자원",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 22,
+                "question": "칸트는 평화를 실현하는 방안으로 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)을/를 강조하였다.",
+                "correctAnswer": "환대권",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 23,
+                "question": "묵자는 ‘자국을 사랑하듯이 타국을 사랑하라.’라는 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 사상을 주장하였다.",
+                "correctAnswer": "겸애",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 24,
+                "question": "국제(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 집단 살해죄 등 반인도적 범죄를 저지른 가해자를 처벌하기 위한 상설 국제 재판소이다.",
+                "correctAnswer": "형사재판소",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 25,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 국가 간 빈부 격차와 절대 빈곤 등의 문제를 발생시키기도 한다.",
+                "correctAnswer": "세계화",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 26,
+                "question": "롤스는 해외 원조가 정의 실현을 위한 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)임을 강조하였다.",
+                "correctAnswer": "의무",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 27,
+                "question": "노직은 해외 원조에 대해 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 관점을 제시한다.",
+                "correctAnswer": "자선",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 28,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 도움을 줄 대상을 자신이 속한 공동체, 민족, 국경 내부로 한정하지 말아야 한다고 주장하였다.",
+                "correctAnswer": "싱어",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 29,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 해외 원조의 목적이 질서 정연한 사회가 되도록 돕는 것이라고 보았다.",
+                "correctAnswer": "롤스",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 30,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 개발 원조는 증여·차관·배상·기술 원조 등의 형태를 취한다.",
+                "correctAnswer": "공적",
+                "questionType": "blank",
+                "unit": "6.3.지구촌평화의윤리",
+                "tested": 0,
+                "corrected": 0
+            }
+        ];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 2;       //ox 문제 개수
+        var blankNums = 1;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제와 정답 저장 변수
+        var questions = [];
+        var answers = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            var numbers = [];
+            data.forEach(function(element){
+                numbers.push(element.index-1);
+            });
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답 지우기
+            questions = [];
+            answers = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(currentQuestion, questionNumber){
+                //정답 변수에 입력
+                answers.push(currentQuestion.correctAnswer);
+
+                //문제 유형 확인
+                if(currentQuestion.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수
+                    var answer = `<div  class="ox">
+                    <input type="radio" id="ox${questionNumber}o" name="ox${questionNumber}" value="o"><label for="ox${questionNumber}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${questionNumber}x" name="ox${questionNumber}" value="x"><label for="ox${questionNumber}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question}</div>
+                    <div class="answer">${answer}</div>
+                    `);
+                } else if(currentQuestion.questionType == 'blank') {
+                    var answer = `<input type="text" name="blank${questionNumber}">`;
+                    questionsHtml.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question.replace('( )', '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)')}</div>
+                    <div class="answer">${answer}</div>
+                    `);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+                //ox 클래스 코드가 있으면
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);
+                    var temp = '';
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value
+                        }
+                    }
+                    //사용자가 응답하지 않으면
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                    correctNums++;
+                    data[questionIndex].tested += 1;
+                    data[questionIndex].corrected += 1;
+                } else {
+                    document.getElementById("question"+k).style.color = 'red';
+                    data[questionIndex].tested += 1;
+                }
+            console.log(data[questionIndex].index,'번 출제횟수', data[questionIndex].tested);
+            console.log(data[questionIndex].index,'번 맞춘횟수', data[questionIndex].corrected);
+            }
+
+            // 점수와 정답 표시
+            displayResult = `<div>${questions.length}문제 중 <span class="red">${correctNums}문제 </span> 맞췄습니다.</div>
+                <div class="correctAns"><ul>`
+                for(var l=0; l < answers.length; l++){
+                    displayResult = displayResult + `<li>${l+1}번 정답 : ${answers[l]}</li>`;
+                }
+            displayResult = displayResult + '</ul></div>'
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 120;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>

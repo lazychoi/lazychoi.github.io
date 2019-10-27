@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>생활과윤리 퀴즈</title>
+    <style>
+        body{
+            font-size: 20px;
+            line-height: 160%;
+            color: #333;
+            font-weight: 300;
+            text-align: center;
+            background-color: #f8f6f0;
+        }
+        .quizBox{
+            float: left;
+            width: 60%;
+            text-align: left;
+            margin: 0 auto;
+            margin-left: 20px;
+        }
+        .resultBox{
+            float: left;
+            margin-left: 20px;
+        }
+        .correctAns{
+            display: inline-block;
+            text-align: left;
+            line-height: 130%;
+            margin: 0 auto;
+        }
+        h1{
+            font-weight: bold;
+            margin: 0px;
+            padding: 10px;
+            font-size: 25px;
+            background-color: #444;
+            color: #fff;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin: 5px;
+            padding-left: 1em;
+            text-indent: -1em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            box-sizing: border-box;
+            font-size: 15px;
+            width: 100%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button{
+            font-size: 20px;
+            background-color: #279;
+            color: #fff;
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        button:hover{
+            background-color: #38a;
+        }
+        button#reload{
+            background-color: orange;
+        }
+        button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+        #results{
+            font-size: 30px;
+            font-weight: bold;
+            color:blue;
+        }
+        .red{
+            color: red;
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        #timer {
+            display: inline-block;
+            background-color: red;
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        .ox > input[type="radio"]{ 
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>생활과윤리 2학기 1차 퀴즈<span id="timer"></span></h1>
+    <div class="quizBox">
+        <div id="quiz"></div>
+    </div>
+    <div class="resultBox">
+        <button id="submit">결과 보기</button>
+        <button id="reload">새 문제</button>
+        <div id="results"></div>
+    </div>
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+            {
+                "index": 1,
+                "question": "한자어 예술(藝術)의 ‘예(藝)’는 어떤 곤란한 과제를 능숙하게 해결할 수 있는 능력을 의미한다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 2,
+                "question": "예술 지상주의는 미적 가치와 윤리적 가치의 관련성을 낮게 본다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 3,
+                "question": "참여 예술론은 예술이 사회의 모순을 지적하고 사회의 도덕적 성숙에 기여해야 한다고 주장한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 4,
+                "question": "미적 가치와 윤리적 가치는 불가분의 관계이다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 5,
+                "question": "와일드는 미가 도덕성의 실현에 기여할 수 있다고 보았다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 6,
+                "question": "예술의 상업화란 상품을 사고파는 행위를 통해 이윤을 얻는 일이 예술작품에도 적용되는 현상을 말한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 7,
+                "question": "앤디 워홀은 상업화된 예술을 ‘문화 산업’이라고 비판하였다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 8,
+                "question": "대중문화란 영화, 음악, 드라마, 공연, 게임 등 다수의 사람이 공통으로 쉽게 접하고 즐기는 문화를 말한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 9,
+                "question": "대중문화를 향유하는 소비자들의 이목을 끌기 위해 과도하게 자극적인 요소를 포함할 경우 성의 쾌락적 가치를 훼손시킬 수 있다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 10,
+                "question": "성적인 요소나 폭력적인 내용을 이유로 가하는 대중문화에 대한 규제는 자유롭게 표현할 자유를 침해할 수 있다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.1.예술과대중문화윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 11,
+                "question": "패스트패션이란 최신 유행을 반영하여 짧은 주기로 대량 생산하여 판매하는 의류를 말한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 12,
+                "question": "과시적 소비는 가격이 오르고 있음에도 불구하고 과시욕 때문에 수요가 증가하는 현상으로 ‘베블런 효과’라고도 한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 13,
+                "question": "음식은 사회의 도덕성 및 건강한 생태계 유지에 영향을 준다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 14,
+                "question": "로컬푸드 운동은 장거리 운송을 거치지 않은 안전하고 건강한 지역 농산물을 구매하려는 운동이다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 15,
+                "question": "집을 부의 축적 수단으로만 여겨야 한다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 16,
+                "question": "합리적 소비를 통해 부적절한 원료 사용 문제, 환경 오염 문제 등을 해결하려고 노력해야 한다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 17,
+                "question": "윤리적 소비란 윤리적인 가치 판단에 따라 상품이나 서비스를 구매하고 사용하는 것을 뜻한다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 18,
+                "question": "사회적 기업은 영리적인 기업 활동을 하지 않는다.",
+                "correctAnswer": "x",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 19,
+                "question": "공정 무역은 개발 도상국 노동자들의 인권 향상에 기여할 수 있다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 20,
+                "question": "친환경 제품 인증과 환경 마크는 윤리적 소비의 확산을 위한 제도적 장치이다.",
+                "correctAnswer": "o",
+                "questionType": "ox",
+                "unit": "5.2.의식주윤리와윤리적소비",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 21,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 소수 문화를 주류 문화에 통합시키려는 입장이다.",
+                "correctAnswer": "동화주의",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 22,
+                "question": "동화주의에는 대표적으로 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 이론이 있다.",
+                "correctAnswer": "용광로",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 23,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 이주민의 고유한 문화와 자율성을 존중하여 문화 다양성을 실현하려는 입장이다.",
+                "correctAnswer": "다문화주의",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 24,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 이론은 한 국가 안에 있는 다양한 문화를 평등하게 인정한다.",
+                "correctAnswer": "샐러드 볼",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 25,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 이론은 문화의 다양성을 인정하면서도 주류 문화의 역할을 강조한다.",
+                "correctAnswer": "국수 대접",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 26,
+                "question": "다문화에 대한 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 자신과 다른 문화적 배경을 가진 사람의 가치관이나 생각 등을 존중하는 이성적 태도이다.",
+                "correctAnswer": "관용",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 27,
+                "question": "윤리 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)의 관점에서는 노예 제도나 인종 차별도 하나의 문화로 인정하고 존중해야 하는 모순이 생겨난다.",
+                "correctAnswer": "상대주의",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 28,
+                "question": "관용의 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 관용을 무제한 허용한 결과로 나타나는 현상이다.",
+                "correctAnswer": "역설",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 29,
+                "question": "(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)은/는 인간을 ‘종교적 존재’로 규정하며, 종교적 지향성을 인간의 근본적인 성향이라고 보았다.",
+                "correctAnswer": "엘리아데",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            },
+            {
+                "index": 30,
+                "question": "큉은 ‘종교 간의 (&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;) 없이 종교 간의 평화 없고, 종교 평화 없이는 세계 평화도 없다.’라고 하였다.",
+                "correctAnswer": "대화",
+                "questionType": "blank",
+                "unit": "5.3.다문화사회의윤리",
+                "tested": 0,
+                "corrected": 0
+            }
+        ];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 2;       //ox 문제 개수
+        var blankNums = 1;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제와 정답 저장 변수
+        var questions = [];
+        var answers = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            var numbers = [];
+            data.forEach(function(element){
+                numbers.push(element.index-1);
+            });
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답 지우기
+            questions = [];
+            answers = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(currentQuestion, questionNumber){
+                //정답 변수에 입력
+                answers.push(currentQuestion.correctAnswer);
+
+                //문제 유형 확인
+                if(currentQuestion.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수
+                    var answer = `<div  class="ox">
+                    <input type="radio" id="ox${questionNumber}o" name="ox${questionNumber}" value="o"><label for="ox${questionNumber}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${questionNumber}x" name="ox${questionNumber}" value="x"><label for="ox${questionNumber}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question}</div>
+                    <div class="answer">${answer}</div>
+                    `);
+                } else if(currentQuestion.questionType == 'blank') {
+                    var answer = `<input type="text" name="blank${questionNumber}">`;
+                    questionsHtml.push(`
+                    <div class="question" id="question${questionNumber}">${questionNumber+1}. ${currentQuestion.question.replace('( )', '(&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;)')}</div>
+                    <div class="answer">${answer}</div>
+                    `);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+                //ox 클래스 코드가 있으면
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);
+                    var temp = '';
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value
+                        }
+                    }
+                    //사용자가 응답하지 않으면
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                    correctNums++;
+                    data[questionIndex].tested += 1;
+                    data[questionIndex].corrected += 1;
+                } else {
+                    document.getElementById("question"+k).style.color = 'red';
+                    data[questionIndex].tested += 1;
+                }
+            console.log(data[questionIndex].index,'번 출제횟수', data[questionIndex].tested);
+            console.log(data[questionIndex].index,'번 맞춘횟수', data[questionIndex].corrected);
+            }
+
+            // 점수와 정답 표시
+            displayResult = `<div>${questions.length}문제 중 <span class="red">${correctNums}문제 </span> 맞췄습니다.</div>
+                <div class="correctAns"><ul>`
+                for(var l=0; l < answers.length; l++){
+                    displayResult = displayResult + `<li>${l+1}번 정답 : ${answers[l]}</li>`;
+                }
+            displayResult = displayResult + '</ul></div>'
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 120;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
