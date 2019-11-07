@@ -535,14 +535,14 @@
                 var questionIndex = questions[k].index;
                 if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
                     correctNums++;
-                    data[questionIndex].tested += 1;
-                    data[questionIndex].corrected += 1;
+                    // data[questionIndex].tested += 1;
+                    // data[questionIndex].corrected += 1;
                 } else {
                     document.getElementById("question"+k).style.color = 'red';
-                    data[questionIndex].tested += 1;
+                    // data[questionIndex].tested += 1;
                 }
-            console.log(data[questionIndex].index,'번 출제횟수', data[questionIndex].tested);
-            console.log(data[questionIndex].index,'번 맞춘횟수', data[questionIndex].corrected);
+            // console.log(data[questionIndex].index,'번 출제횟수', data[questionIndex].tested);
+            // console.log(data[questionIndex].index,'번 맞춘횟수', data[questionIndex].corrected);
             }
 
             // 점수와 정답 표시
