@@ -6,120 +6,166 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>생활과윤리 퀴즈</title>
     <style>
-        body{
-            font-size: 20px;
-            line-height: 160%;
-            color: #333;
-            font-weight: 300;
-            text-align: center;
-            background-color: #f8f6f0;
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
         }
-        .quizBox{
-            float: left;
-            width: 60%;
-            text-align: left;
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        .container { 
+            width: 90%; margin: 0 auto; 
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .box {
+            width: 100%;
             margin: 0 auto;
-            margin-left: 20px;
+            position: relative;
         }
-        .resultBox{
-            float: left;
-            margin-left: 20px;
-        }
-        .correctAns{
-            display: inline-block;
-            text-align: left;
-            line-height: 130%;
-            margin: 0 auto;
-        }
+
+        /* TITLE */
         h1{
-            font-weight: bold;
-            margin: 0px;
-            padding: 10px;
             font-size: 25px;
-            background-color: #444;
-            color: #fff;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
         }
         .question{
             font-weight: bold;
             font-size: 20px;
-            margin: 5px;
-            padding-left: 1em;
-            text-indent: -1em;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
         }
         input[type=text], select {
             display: inline-block;
-            box-sizing: border-box;
             font-size: 15px;
-            width: 100%;
+            width: 80%;
             padding: 12px 20px;
             margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
         }
-        button{
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin-right: 20px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
             font-size: 20px;
-            background-color: #279;
-            color: #fff;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
             border: 0px;
             border-radius: 3px;
             padding: 10px;
             cursor: pointer;
             margin: 20px;
         }
-        button:hover{
+        .button:hover{
             background-color: #38a;
         }
-        button#reload{
+        .button#reload{
             background-color: orange;
         }
-        button#reload:hover{
+        .button#reload:hover{
             background-color: rgb(238, 114, 13);
         }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
         #results{
-            font-size: 30px;
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
             font-weight: bold;
-            color:blue;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 20px 50px;
         }
         .red{
-            color: red;
+            color:var(--main-accent);
         }
         #results, #reload{
             visibility: hidden;
         }
+
         #timer {
             display: inline-block;
-            background-color: red;
+            background-color: var(--main-accent);
             color:white;
             padding: 0px 10px;
             margin-left: 20px;
-        }
-        .ox {
-            display: flex;
-        }
-        .ox > label {
-            width: 50%;
-            font-size: 20px;
-            font-weight: bold;
-            vertical-align: middle;
-        }
-        .ox > input[type="radio"]{ 
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 10px;
         }
     </style>
 </head>
 <body>
     <!-- 기본 UI -->
     <h1>생활과윤리 단원마무리 퀴즈 1단원<span id="timer"></span></h1>
-    <div class="quizBox">
-        <div id="quiz"></div>
-    </div>
-    <div class="resultBox">
-        <button id="submit">결과 보기</button>
-        <button id="reload">새 문제</button>
-        <div id="results"></div>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+        </div>
+        <div class="box">
+            <div id="results"></div>
+        </div>
     </div>
 
 
@@ -381,22 +427,22 @@
                     </div>`;
     
                     // 문제와 사용자 응답 박스 붙이기
-                    questionsHtml.push(`
+                    questionsHtml.push(`<div class="qaSet">
                     <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
                     <div class="answer">${answerHtml}</div>
-                    `);
+                    </div>`);
                 } else if(questionsObject.questionType == 'blank') {
                     var answerHtml = `<input type="text" name="blank${index}">`;
-                    questionsHtml.push(`
+                    questionsHtml.push(`<div class="qaSet">
                     <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
                     <div class="answer">${answerHtml}</div>
-                    `);
+                    </div>`);
                 };
             });
             quizContainer.innerHTML = questionsHtml.join('');
 
             // console.log('정답', answers);
-
+            submitButton.style.visibility = "visible";
             resultsContainer.style.visibility = "hidden";
             reloadButton.style.visibility = "hidden";
             
@@ -459,7 +505,7 @@
             }
 
             // 점수와 정답 표시
-            displayResult = `<div><span class="red">${correctNums}문제 </span> 맞췄습니다 (총 ${questions.length}문제)</div>
+            displayResult = `<div class="point">${correctNums} 문제 맞췄습니다<br>(총 ${questions.length}문제 중)</div>
                 <div class="correctAns"><ul>`
                 for(var l=0; l < answers.length; l++){
                     displayResult = displayResult + `<li>${l+1}번 정답 : ${answers[l]}</li>`;
@@ -469,6 +515,7 @@
             resultsContainer.style.visibility = "visible";
             // 다시 풀기
             reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
         }
 
         // 타이머
@@ -500,6 +547,7 @@
                 clearInterval(timer); 
                 alert('시험이 종료되었습니다.');
                 time = setTime;
+                showResults();
             }
 
             displayTimer.textContent = questionsHtml;

@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>윤리와사상 퀴즈</title>
+    <style>
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        @media screen and (max-width: 500px){
+            .container { 
+                width: 90%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+        }    
+        
+        .container { 
+            width: 90%; 
+            margin: 0 auto; 
+            display: flex;
+            justify-content: stretch;
+            flex: 2;
+        }
+        
+        .box {
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* TITLE */
+        h1{
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            font-size: 15px;
+            width: 80%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin-right: 20px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            width: 20px;
+            height: 20px;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
+            font-size: 20px;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .button:hover{
+            background-color: #38a;
+        }
+        .button#reload{
+            background-color: orange;
+        }
+        .button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
+        #results{
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 10px 20px;
+        }
+        .red{
+            color:var(--main-accent);
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        ul{
+            list-style: none;
+        }
+
+        #timer {
+            display: inline-block;
+            background-color: var(--main-accent);
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>윤리와사상 퀴즈 1차<span id="timer"></span></h1>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+            <div id="results"></div>
+        </div>
+        <!-- <div class="box">
+        </div> -->
+    </div>
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+            {
+            "num": 15,
+            "question": "사욕을 이기고 예로 돌아가야 인이 이루어진다. 하루만이라도 사욕을 이기고 예로 돌아가면 천하가 모두 인으로 귀결될 것이니, 인을 실현하는 것이 나로 말미암은 것이지 어찌 남에게 달렸겠는가?'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "공자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 16,
+            "question": "측은하게 여기는 마음은 인(仁)의 단(端)이고, 부끄러워하고 미워하는 마음은 의(義)의 단이며, 사양하는 마음은 예(禮)의 단이고, 시비를 가리는 마음은 지(智)의 단이다. 사람이 이 사단(四端)을 가지고 있는 것은 그가 두 팔과 두 다리를 가지고 있는 것과 같다. 인은 사람이 기거해야 할 안전한 집이고 의는 사람이 따라야 할 바른길이다. 안전한 집을 비워 둔 채 기거하지 않고 바른길을 버려둔 채 따르지 않으니 참으로 슬픈 일이다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 17,
+            "question": "군자(君子)와 소인(小人)의 본성[性]은 다르지 않다. 그럼에도 군자를 귀하게 여기는 것은 그가 사회 규범을 제정하고 본성을 교화할 수 있기 때문이다. 소인을 천하게 여기는 것은 그가 본성을 따르고 감정[情]에 순응해서 멋대로 성내고 이익을 탐하며 다투고 빼앗기 때문이다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자에 따르면 군자와 소인의 본성[性]은 다르지 않다. 이때의 본성은 타고난 그대로의 것 으로서, 이기적인 욕망이다. 만약 사람이 그 본성을 따르면 반드시 다투고 빼앗으며 분수를 어기고 이치를 어지럽혀 난폭함으로 귀결될 수밖에 없다. 그러나 스승과 법도에 따른 교화와 예의에 의한 교도가 있으면 사람들은 서로 사양하게 되고 규범을 따르게 되어 다스림이 가능해진다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 18,
+            "question": "군주가 어질면 어질지 않은 사람이 없게 되고, 군주가 의로우면 의롭지 않은 사람이 없게 되며, 군주가 바르면 바르지 않은 사람이 없게 된다. 인(仁)에 기거하고 의(義)를 따르면 대인(大人)의 일이 갖추어진 것이다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 19,
+            "question": "스승과 법도가 있는 사람은 커다란 보배를 지닌 사람이며, 스승과 법도가 없는 사람은 큰 재앙을 만난 사람이다. 스승과 법도가 없다면 사람은 타고난 성(性)을 존중할 것이며, 스승과 법도가 있다면 노력을 쌓는 것을 존중할 것이다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자에 따르면 인간의 본성은 악하다. 그러므로 사람이 본성을 그대로 따라서 멋대로 행동하고 제대로 학문을 하지 않으면 소인(小人)이 된다. 그러나 스승과 법도에 따른 교화와 예(禮)에 의한 교도가 있을 경우 인간의 본성은 변화될 수 있다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 20,
+            "question": "“정치[政]의 기본은 바르게 하는 것[正]이다. 만약 군주가 솔선하여 바르게 하면 누가 감히 부정을 저지르겠는가? 군주가 선하고자 하면 백성들은 자연히 선하게 될 것이다. 군주는 예(禮)와 의(義)와 신(信)을 좋아해야 한다. 그러면 백성들이 감히 공경하지 않을 수 없고, 복종하지 않을 수 없으며, 진실하지 않을 수 없다.'라고 주장한 고대 동양 사상가는?",
+            "correctAnswer": "공자",
+            "explanation": "공자는 통치자의 덕성과 예의로 백성을 교화하는 덕치(德治)를 추구하였다. 그리고 ‘명분을 바로잡는 것[正名(정명)]’을 정치의 1차적인 과제로 보았다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 21,
+            "question": "사람이 김매고 밭 가는 일을 쌓으면 농부가 된다. 자르고 깎는 일을 쌓으면 목수가 된다. 물건 파는 일을 쌓으면 장사꾼이 된다. 예의를 쌓으면 군자(君子)가 된다. 그러나 성정(性情)을 따라 멋대로 행동하고 제대로 학문을 하지 않으면 소인(小人)이 된다.'라고 주장한 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자는 인간의 타고난 성정은 악하지만 인위적인 노력을 통해 교화할 수 있다고 보았다. 그래서 예의를 쌓기를 온전하게 하면 누구나 군자가 될 수 있다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 22,
+            "question": "다음 글에서 ‘을’과 같이 주장한 고대 중국 사상가는? '갑: 신하였던 무(武)가 주(紂)를 정벌하였다고 하는데, 신하가 그 군주를 죽여도 되는 것입니까? 을: 인(仁)을 해치는 자를 적(賊)이라 하고 의(義)를 해치는 자를 잔(殘)이라고 하며 잔적(殘賊)한 자를 일개 사내라 하는데, 일개 사내에 불과한 주(紂)를 베었다는 말은 들었어도 신하가 군주를 죽였다는 말은 듣지 못하였습니다.'",
+            "correctAnswer": "맹자",
+            "explanation": "맹자는 왕도 정치를 추구하였으며, 민본주의적 혁명론을 제시하였다. 왕도 정치란 간단히 말해 ‘인의(仁義)에 기반을 둔 정치’라고 할 수 있다. 민본주의적 혁명론이란 백성이 가장 귀하고 사직(社稷)이 다음이며 군주는 가벼운 존재이므로 군주가 군주답지 못하여 인의를 해치고 백성을 고통에 빠뜨리면 바꿀 수 있다는 입장이다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 23,
+            "question": "성(性)은 고여서 맴돌고 있는 물과 같아서 동쪽으로 터 주면 동쪽으로 흐르고 서쪽으로 터 주면 서쪽으로 흐른다. 인성이 선(善)과 불선(不善)으로 나누어지지 않는 것은 물이 동서로 나누어지지 않는 것과 같다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "고자",
+            "explanation": "고자는 인간의 본성에 선이나 악이 없다는 성무선악설(性無善惡說)을 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 24,
+            "question": "성(性)을 따르고 정(情)에 순응하면 사람들은 반드시 다투고 빼앗게 되며 분수를 어기고 이치를 어지럽혀 난폭함으로 귀결될 것이다. 그러므로 반드시 스승과 법도에 의한 교화와 예의를 통한 교도가 있어야 한다.'고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자는 인간의 타고난 성정(性情)은 악하다는 성악설을 제시하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 25,
+            "question": "사람은 누구나 나면서부터 욕망을 가지고 있다. 이런 까닭에 바라면서도 얻지 못하면 추구하지 않을 수 없고 추구함에 일정한 기준과 한계가 없으면 다투지 않을 수 없다. 다투면 어지러워지고 어지러워지면 궁해진다. 선왕(先王)은 그 어지러움을 싫어했기 때문에 예의를 제정해서 사람들이 추구하는 것을 얻을 수 있게 해 주었다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자에 따르면 인간의 본성은 악하다. 그러므로 사람들이 본성을 따라서 멋대로 행동하면 반드시 세상이 어지러워진다. 그러나 고대의 선왕(先王)이 제정한 예의를 통해 성정을 교화하고 재화를 분배하면 세상이 평화롭게 될 수 있다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 26,
+            "question": "사람은 누구나 남에게 차마 어찌하지 못하는 마음[不忍人之心]을 가지고 있다. 선왕이 그 마음을 가지고 남에게 차마 어찌하지 못하는 정치를 베풀었다. 남에게 차마 어찌하지 못하는 마음을 가지고 남에게 차마 어찌하지 못하는 정치를 하면 천하를 다스리는 것은 손바닥 위에 물건을 올려놓고 주무르듯이 쉬운 일이다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "맹자에 따르면 인간의 본성은 선하다. 그리고 그 선한 본성에 기반을 둔 정치를 하면 천하를 쉽게 다스릴 수 있다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 27,
+            "question": "왕자(王者)는 패자(覇者)와 달리 큰 나라를 가지려고 하지 않으며, 덕에 의지해서 인(仁)을 행하려고 한다. 그리고 사람들을 덕으로 복종시키려고 한다. 그래서 사람들이 기뻐하며 진심으로 복종한다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "맹자는 인(仁)과 의(義)에 기반을 둔 왕도 정치를 이상적인 정치로 보았다. 이러한 왕도 정치는 불인인지심(不忍人之心), 즉 남에게 차마 어찌하지 못하는 마음을 정치에 적용한 것이라고 할 수 있다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 28,
+            "question": "왕자가 되려면 예(禮)를 높이고 현자(賢者)를 존중해야 한다. 법을 중시하고 백성을 사랑하면 패자가 되며, 이익을 좋아하고 거짓을 일삼으면 위태로워진다. 예를 닦아야 왕자가 될 수 있다.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자는 예(禮)와 예치(禮治)를 강조하였다. 예는 고대의 성왕(聖王)이 사람들의 성정(性情)을 교화하고 재화를 공정하게 분배하기 위해 만든 사회 규범이다. 예치란 이러한 예에 기반을 둔 정치를 가리킨다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 29,
+            "question": "천하를 얻을 수 있는 길이 있다. 백성을 얻으면 천하를 얻은 것이다. 백성을 얻을 수 있는 길이 있다. 백성의 마음[心]을 얻으면 백성을 얻은 것이다. 백성의 마음을 얻을 수 있는 길이 있다. 백성이 진실로 소망하는 것을 주고 그들이 진실로 싫어하는 것을 행하지 않는 것이다. 성인(聖人)이 천하를 다스리면 곡식이 물과 불처럼 풍족해질 것이다. 곡식이 물과 불처럼 많은데 어찌 백성들 중에 어질지 않은 자가 있겠는가.'라고 주장한 고대 중국 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "왕도 정치를 추구한 맹자는 천하를 얻으려면 백성의 마음을 얻어야 하고, 백성의 마음을 얻으려면 백성이 소망하는 것을 주고 싫어하는 것을 행하지 않아야 한다고 주장하였다. 그래서 성인이 천하를 다스리면 백성이 소망하는 곡식이 풍족해질 것이라고 보았다. 그래야만 백성이 부모를 잘 섬기고 처자를 제대로 거느릴 수 있을 것이기 때문이다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 30,
+            "question": "공자는 인을 실현하기 위해서는 누구나 사욕을 극복하고 ( ···· )(으)로 돌아가야 한다고 주장하였다.",
+            "correctAnswer": "예",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 31,
+            "question": "공자의 ( ···· )사상이란 사회 성원 각자가 자신의 신분과 지위에 알맞은 역할을 다할 것을 강조하는 사상이다.",
+            "correctAnswer": "정명",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 32,
+            "question": "공자에 따르면 통치자의 덕성과 예의에 의한 교화를 추구하는 ( ···· )이/가 이상적인 정치이다.",
+            "correctAnswer": "덕치",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 33,
+            "question": "맹자에 따르면 인간은 누구나 선천적으로 사덕의 단인 ( ···· )을/를 지니고 있다.",
+            "correctAnswer": "사단",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 34,
+            "question": "맹자는 집의를 통해 길러지는 ( ···· )을/를 갖춘 대장부를 이상적 인간상으로 보았다.",
+            "correctAnswer": "호연지기",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 35,
+            "question": "맹자는 인의의 덕으로 다스리는 ( ···· )을/를 이상적인 정치 형태로 보았다.",
+            "correctAnswer": "왕도 정치",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 36,
+            "question": "맹자는 인의를 해치고 사직을 위태롭게 하는 군주는 바꿀 수 있다는 ( ···· ) 사상을 제시하였다.",
+            "correctAnswer": "역성혁명",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 37,
+            "question": "맹자는 백성들의 ( ···· )을/를 보장하는 것을 통치의 우선적인 과제로 보았다.",
+            "correctAnswer": "항산",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 38,
+            "question": "순자에 따르면 인간의 성정은 악하지만 ( ···· )을/를 통해 선하게 변화시킬 수 있다.",
+            "correctAnswer": "예",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 39,
+            "question": "사람이 죽기 직전에는 마땅히 눈물을 흘리며 두려운 마음을 지니고 다행히 살아날지도 모른다는 마음을 버리지 말아야 한다. 그리고 살아 있을 때의 일들을 중단하지 않아야 한다. 돌아간 뒤에야 필요한 것을 만들고 갖추되, 마치 죽은 사람을 살아 있는 듯이 섬기고, 생존해 있는 듯이 섬기어 마지막이나 처음이나 한결같이 해야 한다.'라고 주장한 동양 사상은?",
+            "correctAnswer": "유교;유학",
+            "explanation": "유교에서는 사람의 죽음을 애도해야 한다고 보았으며, 죽은 사람에 대해 지극하게 상례(喪禮)를 치러 주어야 한다고 보았다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 40,
+            "question": "성인은 이익이 될 것을 살펴 백성들을 이롭게 하면서 은혜를 베푼다. 백성들 가운데 일할 만한 사람을 가려서 일을 시키고 백성들로부터 원망을 얻지 않는다. 인(仁)을 하고자 하여 인을 얻는데 누가 탐낸다고 욕하겠는가?'라고 주장한 동양 사상은?",
+            "correctAnswer": "유교;유학",
+            "explanation": "공자는 사람들이 인간다움인 인(仁)을 회복할 때 사회가 안정될 수 있다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 41,
+            "question": "죽음에 관해 다음과 같이 주장한 동양 사상은?\n'군자가 상(喪)을 입었을 때는 맛있는 음식을 먹어도 달지 않고, 음악을 들어도 즐겁지 않으며, 거처함에 편안하지 않기 때문에 일년상으로 하지 않는 것이다. 자식은 삼 년 된 뒤라야 부모의 품에서 벗어난다. 삼년상은 천하의 공통적인 상례(喪禮)이다.'",
+            "correctAnswer": "유교;유학",
+            "explanation": "공자는 죽은 사람을 위해 애도하며 예(禮)에 따라 상(喪)을 치러야 한다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 42,
+            "question": "옹기장이가 진흙을 쳐서 질그릇을 만드는데, 질그릇은 옹기장이의 작위에서 생기는 것이지 본디 본성으로부터 생겨나는 것은 아니다. 또 목수가 나무를 깎아 그릇을 만드는데, 그릇은 목수의 작위에 의해 생겨나는 것이지 본성으로부터 생겨나는 것은 아니다. 성인이 생각을 쌓고 작위를 오랫동안 익혀 예의(禮儀)를 만들어 내고 법도를 제정하였다.'라고 주장한 동양 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "순자는 인위적인 노력을 통하여 타고난 사람의 악한 본성[性]을 교화시켜야 한다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 43,
+            "question": "부유함과 높은 지위는 누구나 원하는 바지만, 정당한 방법으로 얻은 것이 아니면 거기에 머물러 있지 않는다. 가난함과 비천함은 누구나 싫어하는 바지만, 정당한 방법으로 벗어나지 못하면 그것을 떠나지 않는다. 군자가 인(仁)을 버리면 어디에서 명예를 이루겠는가? 군자는 밥 먹는 사이라도 인을 떠나지 않으니, 아무리 황급한 때라도 여기에 있으며, 아무리 어려운 상황에서도 반드시 여기에 있다.'라고 주장한 동양 사상은?",
+            "correctAnswer": "유교;유학",
+            "explanation": "공자는 아무리 외부적 환경이 어렵더라도 인의(仁義)와 같은 인간이 지켜야 할 도리는 반드시 지켜야 한다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 44,
+            "question": "“백성이 가장 귀중하고, 사직(社稷)이 그다음이며, 임금은 가벼운 것이다.”라고 주장한 사상가는 ( ···· )이다.",
+            "correctAnswer": "맹자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 45,
+            "question": "측은해하는 마음이 없으면 사람이 아니고, 잘못을 부끄러워하고 미워하는 마음이 없으면 사람이 아니며, 사양하는 마음이 없으면 사람이 아니고, 시비를 가리는 마음이 없으면 사람이 아니다. 진실로 이 네 가지 마음을 계발하여 채워 갈 수 있다면, 온 세상을 보호할 수 있다.'라고 주장한 고대 동양 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "성선설을 주장한 동양 사상가 맹자의 주장이다. 맹자는 측은지심, 수오지심, 사양지심, 시비지심, 즉 사단(四端)을 계발하고 넓혀 충실하게 할 것을 강조하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 46,
+            "question": "인간의 본성은 고여서 맴도는 물과 같아서 동쪽으로 터 주면 동으로 흐르고, 서쪽으로 터 주면 서로 흐른다. 인간의 본성을 선(善)과 불선(不善)으로 나눌 수 없는 것은 물에 동과 서의 구분이 없는 것과 같다.'라고 주장한 동양 사상가는?",
+            "correctAnswer": "고자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 47,
+            "question": "물에 동서의 구분은 없지만 상하의 구분도 없겠는가? 인간의 본성이 선하다는 것은 물이 아래로 흐르는 것과 같다. 인간의 본성은 선하지 않음이 없고, 물은 아래로 흐르지 않음이 없다.'라고 주장한 동양 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 48,
+            "question": "측은해하는 마음은 인(仁)이고, 잘못을 부끄러워하고 미워하는 마음은 의(義)이며, 공경하는 마음은 예(禮)이고, 옳고 그름을 판단하는 마음은 지(智)이다. 인의예지는 다른 사람이 나에게 준 것이 아니라 내가 본래 가지고 있는 것이지만 사람들은 그것을 생각하고 있지 않을 뿐이다.'라고 주장한 고대 동양 사상가는?",
+            "correctAnswer": "맹자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 49,
+            "question": "이익을 좋아하는 마음이 인간의 본성이다. 이 본성을 따르면 쟁탈하는 데로 나아가 직분을 무시하고 도리를 어지럽혀 폭력으로 귀결된다. 따라서 스승에 의한 감화와 예의(禮義)에 의한 교도가 있은 후에야 사양하는 데로 나아가 사회가 안정된다.'라고 주장한 고대 동양 사상가는?",
+            "correctAnswer": "순자",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 50,
+            "question": "공자는 인을 실천하려면 모든 사람을 무조건적으로 똑같이 사랑해야 한다고 했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "공자가 강조한 인은 무분별적이고 무조건적인 사랑이 아니라, 시비선악을 분별하고 옳음과 선함을 좋아하고 옳지 않음과 악함을 미워하는 사람이 행하는 분별적 사랑이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 51,
+            "question": "공자에 따르면 인을 실천하기 위해 부모에게 효도하고 형제간에 우애를 나눠야 한다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "공자는 효제(孝悌)를 인을 실천하는 첫걸음으로 보았다. 효는 부모를 공경하는 것이며, 제는 형제간에 우애 있게 지내는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 52,
+            "question": "공자에 따르면 인을 실천하기 위해 사람을 대하거나 일을 할 때 정성을 다해야 한다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "공자는 효제와 함께 충서(忠恕)를 인을 실천하는 기본 덕목으로 보았다. 충은 사람을 대하거나 일을 할 때 조금의 속임이나 꾸밈이 없이 정성을 다하는 것이다. ",
+            "questionType": "ox"
+            },
+            {
+            "num": 53,
+            "question": "공자에 따르면 인을 실천하기 위해 내가 하기 싫은 일을 남에게 시키지 않아야 한다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "공자는 효제와 함께 충서(忠恕)를 인을 실천하는 기본 덕목으로 보았다. 서는 내가 하기 싫은 일을 남에게 시키지 않는 것, 또는 나의 마음을 미루어 남의 마음을 헤아리는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 54,
+            "question": "공자는 인을 실천하기 위해 예가 아니면 보지도 듣지도 말하지도 말아야 한다고 주장했다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 55,
+            "question": "공자는 인을 실천하기 위해 주체적으로 예를 제정하고 자발적으로 따라야 한다고 주장했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "공자는 사람들이 주체적으로 예를 제정해야 인이 실현된다고 주장하지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 56,
+            "question": "공자는 인을 실천하기 위해 예를 배우고 익힘으로써 모든 욕망을 제거해야 한다고 주장했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "공자는 모든 욕망을 제거해야 인이 실현된다고 주장하지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 57,
+            "question": "공자는 인을 실천하기 위해 본성을 변화시킬 수 있도록 예를 열심히 배워야 한다고 주장했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "공자는 본성의 변화를 주장하지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 58,
+            "question": "공자는 인을 실천하기 위해 예를 버리고 자연의 흐름과 이치에 따라 행동해야 한다고 주장했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "공자는 예를 철저히 따를 것을 주장하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 59,
+            "question": "맹자에 따르면 인은 정의를 추구하는 인간의 본성이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자가 강조한 인은 따뜻하고 포용적인 사랑을 의미한다",
+            "questionType": "ox"
+            },
+            {
+            "num": 60,
+            "question": "맹자에 따르면 의는 따뜻하고 포용적인 사랑의 정신이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자가 강조한 의는 옳고 그름을 명확하게 구별하는 정의를 가리킨다",
+            "questionType": "ox"
+            },
+            {
+            "num": 61,
+            "question": "맹자는 인과 의가 예를 익혀 갖게 된 도덕적 성품이라고 본다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자에 따르면 인과 의는 예를 익혀 갖게 된 것이 아니라 본성을 이루고 있는 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 62,
+            "question": "맹자는 인과 의가 이상적인 정치의 기초가 되는 덕성이라고 본다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "맹자에 따르면 인과 의는 왕도정치의 기초가 되는 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 63,
+            "question": "맹자에 따르면 인은 인간의 내면적 덕성이고, 의는 외면적 규범이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자에 따르면 인과 의는 모두 내면적 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 64,
+            "question": "순자에 따르면 군자는 성정(性情)에 따라 도덕적인 삶을 살아간다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "순자는 인간의 본성이 악하다고 보았다. 그에 따르면 인간의 본성은 우리가 따르거나 확충하거나 실현해야 할 것이 아니라 교화해야 할 대상이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 65,
+            "question": "순자에 따르면 군자는 사회 규범을 제정하고 본성을 교화한다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "군자는 요임금이나 우임금과 마찬가지로 폭군인 걸왕이나 큰 도둑인 도척 그리고 이익을 좇는 소인의 반대편에 있는 사람이다. 순자에 따르면 군자와 요임금과 우임금은 인위를 일으켜 예(禮)를 제정해서 인간의 본성을 교화할 수 있는 사람들이기 때문에 귀하게 여겨진다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 66,
+            "question": "순자에 따르면 군자는 본성을 확충하는 데 있어서 타인의 모범이 된다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "순자는 인간의 본성이 악하다고 보았다. 그에 따르면 인간의 본성은 우리가 따르거나 확충하거나 실현해야 할 것이 아니라 교화해야 할 대상이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 67,
+            "question": "순자에 따르면 군자는 예의를 배워 사욕을 이기고 본성을 실현한다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "순자는 인간의 본성이 악하다고 보았다. 그에 따르면 인간의 본성은 우리가 따르거나 확충하거나 실현해야 할 것이 아니라 교화해야 할 대상이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 68,
+            "question": "순자에 따르면 군자는 모든 사람을 똑같이 사랑하고[兼愛] 이로움을 나눈다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "‘겸애(兼愛)’를 강조한 사상가는 묵자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 69,
+            "question": "맹자는 이로움의 증진보다 백성의 성정(性情) 변화를 추구해야 함을 강조했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 성선설을 주장하였다. 그러므로 백성의 본성[性]의 변화를 추구하지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 70,
+            "question": "맹자는 인위 규범과 제도가 필요 없는 소박한 사회가 실현되야 함을 강조했다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 인위 규범과 제도가 필요하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 71,
+            "question": "맹자는 이로움이 아니라 인의(仁義)에 우선적인 관심을 기울여야 함을 강조했다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 72,
+            "question": "순자에 따르면 사람이 성을 기르는 것은 곧 하늘을 섬기는 것이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자의 주장이다. 그에 따르면 “마음을 다 발휘하는 사람은 성(性)을 알게 되고, 성을 알면 하늘을 알게 된다. 마음을 보존하여 성을 기르는 것[存心養性(존심양성)]은 하늘을 섬 기는 것이다.”",
+            "questionType": "ox"
+            },
+            {
+            "num": 73,
+            "question": "순자에 따르면 사람이 부모를 공경하는 것은 성에 일치하는 것이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "순자에 따르면 아들이 아버지에게 양보하고 아우가 형에게 양보하는 것과 아들이 아버지를 대신하여 수고하고 아우가 형을 대신하여 수고하는 것은 모두 인간의 악한 본성에 어긋나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 74,
+            "question": "순자에 따르면 사람은 성에 예의가 없기 때문에 애써 배우고자 한다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "순자에 따르면 사람들이 선해지고자 하는 것은 본성이 악하기 때문이다. 사람들의 본성에는 본래 예의가 없기 때문에 애써 배워 그것을 지니기를 바란다는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 75,
+            "question": "순자에 따르면 사람은 노력을 쌓아 나가면 누구나 성인이 될 수 있다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "순자에 따르면 본성을 교화하려는 노력을 쌓아 나가면 누구나 성인이 될 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 76,
+            "question": "공자가 군주가 선하고자 하면 백성들은 자연히 선하게 될 것이라고 본 근거는 군자(君子)의 덕은 바람과 같고 소인의 덕은 풀과 같다고 할 수 있기 때문이다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "덕치란 덕으로 백성을 인도하고 예(禮)로써 질서를 잡는 것이다. 공자는 “정치적 명령[政(정)]으로 백성을 이끌고 형벌[刑(형)]로써 질서를 잡으려고 하면 백성들은 형벌을 피하고자 할 뿐 부끄러워하는 마음이 없게 된다. 그러나 덕으로 인도하고 예로써 질서를 잡으려고 하면 백성들은 부끄러워하는 마음을 가질 뿐만 아니라 바르게 된다.”라고 하였다. 즉 군자의 덕은 바람과 같고 소인의 덕은 풀과 같은 것이어서 풀 위로 바람이 지나가면 풀은 반드시 한쪽으로 눕게 된다는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 77,
+            "question": "공자에 따르면 도(道)를 행하는 것은 날마다 덜어 내어 무위(無爲)에 이르는 것이다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "무위의 정치[無爲之治(무위지치)]를 추구한 노자의 입장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 78,
+            "question": "공자에 따르면 성인(聖人)은 분별심을 갖지 않으며 백성을 어린아이처럼 되게 한다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "무위의 정치[無爲之治(무위지치)]를 추구한 노자의 입장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 79,
+            "question": "공자에 따르면 최상의 선은 겸허(謙虛)와 부쟁(不爭)의 덕을 지니고 있는 물과 같다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "물을 도(道)에 가장 가까운 사물로 본 노자의 입장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 80,
+            "question": "공자에 따르면 인(仁)을 끊고 의(義)를 버리면 백성이 다시 효도하고 자애롭게 된다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "무위의 정치[無爲之治(무위지치)]를 추구한 노자의 입장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 81,
+            "question": "순자는 예가 타고난 순선한 마음을 확충할 때 실현되는 덕이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "순자는 인간의 본성이 악하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 82,
+            "question": "순자는 예가 사회 혼란의 중요한 원인이 되는 강압적인 규범이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "유교의 예에 대한 노자와 장자의 입장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 83,
+            "question": "순자는 예가 사단(四端)을 일상에서 실천함으로써 형성되는 덕이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "순자는 사단의 실천을 주장하지 않았으며, 예를 덕이 아닌 사회 규범으로 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 84,
+            "question": "순자는 예가 인성(人性)을 교화하기 위해 제정된 인위적인 규범이라고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "순자에 따르면 예는 고대의 성인(聖人)이 사람들의 성정(性情)을 교화하기 위해 만든 사회 규범이다. 이와 관련하여 순자는 다음과 같이 주장하였다. “성인이 생각을 거듭하고 오랫 동안 작위(作爲)를 익혀 예의를 만들고 법도를 제정하였다. 이처럼 예의와 법도는 성인의 작위에 의해서 만들어진 것이지 사람의 성(性)으로부터 생겨난 것이 아니다.”",
+            "questionType": "ox"
+            },
+            {
+            "num": 85,
+            "question": "순자는 예가 선천적인 도덕성을 실현하기 위해 필요한 사회 규범이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "순자는 인간의 본성이 악하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 86,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 혁명을 통해 인의를 실현할 수 있는 군주를 세워야 한다고 주장하였다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "맹자는 폭군이었던 걸(桀)과 주(紂)는 임금이 아니라 인의를 해친 일개 사내에 불과하며, 그런 자를 제거한 것은 잘못된 일이 아니라는 입장을 피력하였다. 이러한 맹자의 입장에는 인의를 해친 군주는 바꿀 수 있다는 그의 혁명론이 담겨 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 87,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 사회 질서 유지를 위한 강력한 규범과 제도를 만들어야 한다고 주장하였다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "문제 사태의 주된 원인은 백성이 아니라 군 주에게 있다. 그러므로 맹자가 제시할 적절한 방안이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 88,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 군주가 인의의 덕을 갖추도록 예로써 본성을 교화해야 한다고 주장하였다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 군주를 비롯한 모든 인간의 본성이 선하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 89,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 백성들이 타고난 도덕성을 상실하지 않도록 교육을 해야 한다고 주장하였다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "문제 사태의 주된 원인은 백성이 아니라 군 주에게 있다. 그러므로 맹자가 제시할 적절한 방안이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 90,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 도덕적 타락과 혼란의 원인이 되는 인위 규범을 제거해야 한다고 주장하였다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "무위자연을 추구한 노자나 장자가 제시할 수 있는 방안이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 91,
+            "question": "고자와 순자는 인간의 본성에 선이나 악이 내재한다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "성악설을 제시한 순자만이 긍정한다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 92,
+            "question": "고자와 순자는 본성을 보존하고 함양해야 도덕적인 인간이 될 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "성선설을 주장하는 사상가가 긍정할 주장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 93,
+            "question": "고자와 순자는 인간의 행동은 오직 상과 벌을 통해서만 통제될 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "고자와 순자에 따르면 인간의 행동은 좋은 환경이나 교육에 의해서도 제어될 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 94,
+            "question": "고자와 순자는 인위적인 노력이 있어야만 악한 본성을 변화시킬 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "성악설을 제시한 순자만이 긍정한다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 95,
+            "question": "고자와 순자는 예의와 법도를 배우고 익히면 도덕적인 행동을 할 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "고자에 따르면 인간이 선하거나 악해지는 것은 환경이나 교육에 달려 있다. 순자에 따르면 인간의 성정은 고대의 성왕(聖王)이 제정한 예를 통해 교화될 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 96,
+            "question": "맹자와 순자는 인간의 본성은 선하거나 악하게 변화될 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자는 인간의 본성이 선하다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 97,
+            "question": "맹자와 순자는 도덕적인 인간이 되려면 인위적인 노력이 필요하다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "성악설을 주장한 순자는 물론이고 맹자 역시 인위적인 수양을 해야 도덕적인 인간이 될 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 98,
+            "question": "맹자와 순자는 모든 사람들은 서로 다르지 않은 본성을 타고난다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "순자는 모든 사람의 본성이 악하다고 보았고, 맹자는 선하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 99,
+            "question": "맹자와 순자는 타고난 마음은 바람직한 정치의 기반이 될 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자의 주장이다. 맹자에 따르면 인간은 누구나 날 때부터 불인인지심(不忍人之心), 즉 남에게 차마 어찌하지 못하는 선한 마음을 가지고 있다. 이 마음을 가지고 사람들을 다스리면 이상적인 정치를 할 수 있다. 맹자가 추구한 왕도 정치는 이 마음에 기반을 둔 정치라고 할 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 100,
+            "question": "맹자와 순자는 선왕이 본성을 교화하기 위해 인위 규범을 제정했다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "순자의 주장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 101,
+            "question": "순자는 배우고 익힌 예(禮)를 일상에서 실천한 행위를 선한 행위로 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "순자의 입장에서 볼 때 인간의 선행은 선왕이 제정한 예의를 배우고 익힌 결과로 나타난 것이다.다시 말해 선행은 배우고 익힌 예의를 일상에서 실천한 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 102,
+            "question": "순자는 아무런 조건 없이 타고난 마음을 표현한 행위를 선한 행위로 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "순자는 성악설을 제시하였다. 그에 따르면 타고난 마음을 표현할 경우 악행을 저지르게 된다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 103,
+            "question": "맹자는 본성의 교화를 위해 제정된 규범을 따른 행위를 선한 행위로 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 성선설을 제시하였다. 그에 따르면 본성은 교화의 대상이 아니라 일상에서 실현해야 할 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 104,
+            "question": "맹자는 사단(四端)이 갖추어지게 해 주는 도덕적인 행위를 선한 행위로 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자에 따르면 사단은 갖추어지는 것이 아니라 타고나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 105,
+            "question": "맹자와 순자는 마음의 자연적 경향성을 모두 이기고 한 행위를 선한 행위로 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자에 따르면 선행은 사단이라는 마음의 자연적 경향성을 따른 행위이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 106,
+            "question": "맹자와 순자는 소국 과민(小國寡民)은 이상 사회의 필수 조건이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 소국과민, 즉 작은 영토와 적은 백성을 이상사회의 필수조건으로 보지 않았다. 소국과민을 중시한 대표적인 사상가는 노자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 107,
+            "question": "맹자와 순자는 통치자는 자신을 수양하고 백성들을 다스려야 한다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "맹자와 순자는 모두 통치자의 자기 수양을 통치의 전제 조건으로 본 유교 사상가들이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 108,
+            "question": "맹자와 순자는 인위적인 노력을 통해 왕도(王道)를 실현할 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "맹자와 순자는 모두 왕도를 추구하였으며, 그것의 실현을 위해 도덕적 수양이나 제도의 개선과 같은 인위적인 노력이 필요하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 109,
+            "question": "맹자와 순자는 무력보다 예법을 더 나은 통치 수단으로 보아야 한다고 주장했다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "맹자와 순자의 공통 입장이다. 맹자는 왕도를 추구하고 패도(覇道)를 배척하였다. 왕도가 덕에 기반을 둔 통치를 추구한다면 패도는 무력에 의존해서 통치하려고 하는 것이다. 맹자는 예법을 무력보다 더 나은 통치 수단으로 보았다. 순자는 예치를 강조하였다. 그에 따르면 예치가 최고의 통치 형태이고, 법을 중시하고 백성을 사랑하는 패도 정치가 다음이며, 권모술수나 힘에 의존하는 통치는 바람직하지 않다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 110,
+            "question": "맹자에 따르면 백성의 물질적 풍요의 향상이 정치[政]의 궁극적 목표이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 백성의 물질적 풍요의 향상을 정치의 궁극적 목표로 보지 않았다. 맹자는 평화로운 도덕 사회의 실현을 추구하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 111,
+            "question": "맹자에 따르면 백성은 일정한 생업이 없으면 항심(恒心)을 지니기 어렵다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "맹자에 따르면 왕도 정치를 실현하기 위해서는 무엇보다 먼저 백성들의 생업을 보장해 주어야 한다. 백성들은 ‘일정한 생업[恒産(항산)]’이 없으면 ‘변치 않는 떳떳한 마음[恒心(항심)]’을 지닐 수 없기 때문이다. 항산이 없어도 항심을 지니는 것은 오직 선비에게나 가능한 일이다. 항산이 없을 경우 일반 백성들은 방탕해지거나 사악해지고 사치하는 등 못하는 것이 없게 되어 도덕과 예의를 통한 교화가 불가능해진다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 112,
+            "question": "맹자에 따르면 백성은 항산(恒産)이 없으면 본성의 변화를 추구할 수 없다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 백성의 본성을 변화시키려고 하지 않았다. 성선설을 주장했기 때문이다. 악한 본성의 변화를 추구한 대표적인 사상가는 성악설을 제시한 순자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 113,
+            "question": "맹자에 따르면 백성의 생업이 보장되어야 무위(無爲)의 정치가 가능해진다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 무위의 정치를 추구하지 않았다. 무위의 정치는 노자와 장자 같은 도가 사상가들이 추구한 정치이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 114,
+            "question": "맹자에 따르면 백성의 경제적 이익을 증진하는 것이 다름 아닌 의(義)이다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "맹자는 경제적 이익의 증진이 곧 의라고 주장하지 않았다. 맹자의 의란 옳고 그름을 명확하게 분별하고 옳음을 실현하려는 정의감과 직접적으로 관련된 덕이라고 할 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 115,
+            "question": "유교에서는 내생의 좋은 삶을 위해 평소에 덕목을 실천해야 한다고 본다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "유교는 내생에 대해 관심을 기울이지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 116,
+            "question": "유교에서는 사람은 자신이 행한 행동의 과보(果報)로 죽음을 맞게 된다고 본다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "유교는 업보(業報)에 따라 죽음을 맞이하게 된다고 주장하지는 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 117,
+            "question": "공자는 인간이 인간다움을 실현하려면 외적인 조건에 지배당하지 않아야 한다고 본다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 118,
+            "question": "공자는 인간이 사사로운 욕구를 충족하고자 하면 어짊을 실현하기 어렵게 된다고 본다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 119,
+            "question": "노자와 공자는 타고난 수명을 보존하기 위해 시비(是非)를 바르게 분별해야 한다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "노자는 타고난 수명의 보존을 중시하였지만, 시비를 분별해야 한다고 주장하지는 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 120,
+            "question": "맹자는 인간은 본성을 유지하고 확충해야 한다고 본다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "맹자는 인간이 선한 본성을 유지하고 확충해야 한다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 121,
+            "question": "맹자는 인간의 타고난 마음에는 선과 악이 없다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "성무선악설을 주장한 고자가 긍정할 진술이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 122,
+            "question": "맹자는 인간의 선한 마음은 후천적으로 형성된다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인간의 선한 마음은 선천적으로 타고나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 123,
+            "question": "맹자는 인간의 본성은 악하나 선한 마음을 가질 수 있다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자는 성선설을 주장한 사상가이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 124,
+            "question": "맹자는 인간은 본성이 선하므로 어떤 경우에도 선을 행한다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인간은 선한 성품을 가지고 태어나지만 욕망 등에 의해 악을 저지를 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 125,
+            "question": "고자는 맹자와 달리 수양으로 악한 본성을 극복할 수 있다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "순자의 주장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 126,
+            "question": "고자와 맹자는 환경에 의해 악한 행위를 저지를 수 있다고 본다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "고자와 맹자는 모두 인간이 환경에 의해 악한 행위를 저지를 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 127,
+            "question": "고자와 맹자는 도덕적인 삶을 살기 위해 노력이 필요하다고 본다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "고자와 맹자는 모두 도덕적인 삶을 살기 위해 노력이 필요하다고 보았다. 가령 맹자는 인간이 자신의 본성을 유지하고 확충하는 노력을 해야 한다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 128,
+            "question": "맹자는 고자와 달리 선한 본성은 후천적인 인격 수양을 통해 형성된다고 본다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 선한 본성은 선천적으로 타고난 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 129,
+            "question": "순자에 따르면 맹자는 인간의 본성을 선과 악으로 규정할 수 없음을 모르고 있다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "성무선악설을 주장한 고자가 맹자와 순자 모두에게 제기할 수 있는 반론이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 130,
+            "question": "순자에 따르면 맹자는 인간의 본성을 변화시키기 위해 노력해야 함을 모르고 있다. ( O, X )",
+            "correctAnswer": "O",
+            "explanation": "성악설을 주장한 순자가 성선설을 주장한 맹자에게 제기할 수 있는 적절한 반론이다. 순자는 인간의 본성은 악하며, 인위적인 노력을 통해 악한 본성을 교화(敎化)할 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 131,
+            "question": "순자에 따르면 맹자는 도덕 교육을 통해 인간의 본성을 확충해야 함을 모르고 있다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "인간의 본성을 확충할 것을 강조한 사상가는 맹자이므로 적절한 반론이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 132,
+            "question": "순자에 따르면 맹자는 인간의 선한 본성은 하늘로부터 부여받은 것임을 모르고 있다. ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "맹자가 순자에 대해 제기할 수 있는 반론이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 133,
+            "question": "순자에 따르면 맹자는 예의는 인간이 태어나면서부터 갖추고 있는 덕임을 모르고 있다 ( O, X )",
+            "correctAnswer": "X",
+            "explanation": "순자에 따르면 예의는 성왕(聖王)이 후천적으로 만든 것이므로 적절한 반론이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 134,
+            "question": "마음[心]은 본래 한 사람의 몸을 주재하는 것이지만 허령(虛靈)한 그 본체[體]는 천하의 이치[理]를 모두 아우를 수 있다. 이치는 비록 모든 사물에 흩어져 있지만 미묘한 그 작용[用]은 실로 한 사람의 마음 바깥에 있지 않다.'라고 주장한 중국 유교 사상은?",
+            "correctAnswer": "성리학;주자학;성학;도학",
+            "explanation": "주희는 이치는 하나이지만 세상 만물에 부여되어 있다[理一分殊(이일분수)]고 보았다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 135,
+            "question": "마음의 본체가 성(性)이며 성은 곧 이치[理]이다. 부모에게 효도하는 마음이 있으면 곧 효의 이치가 있고 효도하는 마음이 없으면 효의 이치가 없다. 임금에게 충성하는 마음이 있으면 곧 충의 이치가 있고 충성하는 마음이 없으면 충의 이치가 없다.'라고 주장한 중국 유교 사상은?",
+            "correctAnswer": "양명학",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 136,
+            "question": "성리학은 ( ···· ) 이/가 되는 것을 학문의 목표로 삼는다.",
+            "correctAnswer": "성인",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 137,
+            "question": "성리학에서는 인간의 본성이 곧 ( ···· )(이)라고 주장한다.",
+            "correctAnswer": "이;리",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 138,
+            "question": "주희에 따르면 ( ···· ) (이)란 사물의 이치를 탐구하여 나의 앎을 극진히 하는 것이다.",
+            "correctAnswer": "격물치지",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 139,
+            "question": "주희는 사덕은 ( ···· ) (이)고 사단은 정이며, 마음은 ( ···· ) 와/과 정을 통괄한다고 주장하였다. 괄호에 공통으로 들어가는 말은?",
+            "correctAnswer": "성",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 140,
+            "question": "주희가 강조한 ( ···· ) 은/는 사물의 이치를 깊이 있게 탐구하는 것이다.",
+            "correctAnswer": "궁리",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 141,
+            "question": "다음 빈 칸에 공통으로 들어갈 개념은? 왕수인은 ( ···· )이/가 곧 이치이며, ( ···· ) 밖에는 이치가 없다고 주장하였다.",
+            "correctAnswer": "마음",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 142,
+            "question": "왕수인은 ( ···· ) 을/를 마음의 본체이자 하늘의 이치로 보았다.",
+            "correctAnswer": "양지",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 143,
+            "question": "주희는 선지후행을 주장한 데 비해 왕수인은 ( ···· ) 을/를 강조하였다.",
+            "correctAnswer": "지행합일",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 144,
+            "question": "왕수인은 격물치지를 내 마음의 ( ···· ) 을/를 각각의 사물에 온전하게 실현하는 것으로 보았다.",
+            "correctAnswer": "양지",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 145,
+            "question": "개별 사물에서 이치[理]를 찾으려고 하는 것은 부질없는 일이다. 격물(格物)의 ‘격’은 ‘바로잡는다[正]’로 해석해야 하고, 치지(致知)의 ‘지’는 ‘양지(良知)’로 보아야 한다. 지적인 공부를 먼저 한 다음에 그것을 행하려고 하면 죽을 때까지 결코 행할 수 없고, 또한 참된 앎에 이를수도없다.'라고 주장한 중국 유교 사상가는?",
+            "correctAnswer": "왕수인;왕양명",
+            "explanation": "",
+            "questionType": "blank"
+            },
+            {
+            "num": 146,
+            "question": "사람의 마음은 텅 비고 영명(靈明)하여 어둡지 않다. 모든 이치[理]가 갖추어져 있고 만사가 거기서 출현한다. 그럼에도 마음 밖에서 이치를 구하기 때문에 어두워 이르지 못하는 곳이 있게 된다.'고 주장한 중국 유교 사상은?",
+            "correctAnswer": "양명학",
+            "explanation": "왕수인은 마음이 곧 이이고 마음 밖에는 이가 없다고 보았다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 147,
+            "question": "사람의 마음은 영명(靈明)하여 모두 지(知)를 지니고 있고, 천하의 사물은 모두 다 이치[理]를 가지고 있다. 그런데 모든 이치를 다 궁구하지 않음이 있기 때문에 우리의 앎이 극진하지 못하게 된다.'고 주장한 중국 유교 사상은?",
+            "correctAnswer": "성리학;주자학;성학;도학",
+            "explanation": "주희는 마음과 개별 사물들 모두에 이치가 부여되어 있다고 보았다. 그리고 우리의 앎을 극진히 하려면 개별 사물의 이치를 탐구해야 한다고 주장하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 148,
+            "question": "일이 없으면 마음을 담담하게 하며 안정하고 고요히 하여 활동하지 않고, 일이 있으면 그에 따라 변화에 대응하고 다른 데로 나아가지 않아야 한다. 일이 지나갔는데도 마음이 산란하여 멋대로 하면 주일무적(主一無適)에 어긋나게 된다. 그러므로 마음을 한곳에 집중하여 경(敬)을 실천해야 한다.'라고 주장한 동양 사상은?",
+            "correctAnswer": "성리학",
+            "explanation": "성리학은 도덕 본성의 실현을 위한 수양으로 마음을 한곳에 집중하는 경(敬)을 강조하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 149,
+            "question": "사람의 마음은 성(性)과 정(情)을 통괄한다. 성은 이(理)의 총칭이고 인의예지는 성 중의 각 이를 가리키는 이름이며, 측은·수오·사양·시비는 발동된 정을 가리키는 이름이다. 이정은 성에서 나왔기 때문에 선하다.'라고 주장한 중국 사상가는?",
+            "correctAnswer": "주희;주자",
+            "explanation": "주희는 성즉리(性卽理), 심통성정(心統性情), 지행병진(知行竝進) 등의 학설을 제시하면서 성리학을 체계화하였다.",
+            "questionType": "blank"
+            },
+            {
+            "num": 150,
+            "question": "주희는 격물을 개개 사물에 나아가 그 이치를 탐구하는 것이라고 보았다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "주희는 ‘격물’의 ‘격’을 ‘도달하다’ 또는 ‘이르다[至(지)]’로, ‘물’을 ‘이치를 지닌 일[事(사)]’로 해석하였다. 그래서 격물을 개별 사물에 나아가 그 이치를 탐구하는 것으로 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 151,
+            "question": "주희는 격물을 마음을 집중하고 엄숙한 태도를 유지하는 것이라고 보았다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "주희가 강조한 경(敬)에 관한 진술이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 152,
+            "question": "주희는 격물을 뜻[意]을 성실히 하여 마음을 바르게 하는 것이라고 보았다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "성의와 정심의 의미이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 153,
+            "question": "주희는 격물을 타고난 참된 앎을 개별 사물에서 실현하는 것이라고 보았다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "‘치지’에 대한 왕수인의 해석이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 154,
+            "question": "주희는 격물을 양지(良知)를 발휘하여 마음의 일을 바로잡는 것이라고 보았다. ( O, X ) ",
+            "correctAnswer": "X",
+            "explanation": "‘격물’에 대한 왕수인의 해석이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 155,
+            "question": "주희는 본성을 함양하고 사물의 이치를 탐구해야 한다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "주희는 선한 본성의 함양과 사물의 이치 탐구를 이상적 인간이 되기 위한 필수 조건으로 보았다. 이와 관련하여 그는 거경 궁리(居敬窮理)를 강조하였다. 그가 말하는 거경은 공부나 일을 할 때 늘 경의 자세를 유지하는 것이며, 궁리는 사물의 이치를 깊이 있게 탐구하는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 156,
+            "question": "왕수인은 타고난 앎을 발휘하여 본성을 변화시켜야 한다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "주희와 왕수인은 모두 성선설을 지지했다. 그러므로 ‘본성을 변화시킨다’는 말은 두 사상가의 입장과 어울리지 않는다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 157,
+            "question": "주희와 왕수인은 천리를 보존하고 인욕(人欲)을 극복해야 한다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "주희와 왕수인은 모두 천리(天理)의 보존과 인욕(人欲)의 극복을 강조하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 158,
+            "question": "주희와 왕수인은 본성이 선해질 수 있게 궁리(窮理)를 해야 한다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "주희와 왕수인은 모두 성선설을 지지했다. 그러므로 ‘본성이 선해지게 한다’는 말은 두 사상가의 입장과 어울리지 않는다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 159,
+            "question": "주희는 치지란 양지를 개별 사물에서 실현하는 것이라고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "왕수인의 입장이다. 주희는 치지를 ‘나의 앎을 극진히 하는 것’으로 해석하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 160,
+            "question": "주희는 마음과 개별 사물들 모두에 이치가 부여되어 있다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 161,
+            "question": "주희는 이치를 궁구했다는 것은 그것을 실천했다는 말과 같다고 보았다. ( O, X )",
+            "correctAnswer": "X ",
+            "explanation": "왕수인의 입장이다. 주희는 지행합일설(知行合一說)을 주장한 왕수인과 달리 지와 행을 하나로 보지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 162,
+            "question": "주희는 사물에 나아가 그 이치를 탐구해야 앎이 극진해질 수 있다고 보았다. ( O, X )",
+            "correctAnswer": "O ",
+            "explanation": "주희는 격물을 ‘사물에 나아가 그 이치를 탐구하는 것’으로 해석하였다. 그에 따르면 격물은 나의 앎을 극진히 하기 위한 필수 조건이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 163,
+            "question": "왕수인은 마음이 곧 이치이며, 마음 밖에는 이치가 없다고 주장하였다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "왕수인은 심즉리(心卽理), 심외무리(心外無理), 즉 마음이 곧 이치이고 마음 밖에는 이치가 없다고 주장하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 164,
+            "question": "왕수인은 양지를 마음의 본체이자 하늘의 이치라고 보았다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 165,
+            "question": "주희는 성이 곧 하늘의 이치이며, 성에는 인의예지가 갖추어져 있다고 보았다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 166,
+            "question": "주희는 양지는 모두에게 있는 것이지만 완전한 앎은 아니라고 보았다. ( O, X ) ",
+            "correctAnswer": "O ",
+            "explanation": "주희는 왕수인과 마찬가지로 양지가 마음에 내재한다고 보았다. 그러나 그는 왕수인과 달리 양지를 완전한 앎으로 보지 않았다. 그래서 그는 사물에 나아가 그 이치를 탐구할 것을 강조하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 167,
+            "question": "주희와 왕수인은 마음의 본체가 드러나게 하려면 사물에 대한 지식의 축적이 필요하다고 보았다. ( O, X ) ",
+            "correctAnswer": "X ",
+            "explanation": "이상적인 경지에 이르기 위해 사물에 대한 지식의 축적이 필요하다고 본 사상가는 주희이다. 마음 밖에는 이치가 없다고 본 왕수인은 참된 앎이자 마음의 본체인 양지(良知)를 적극적이고 구체적으로 발휘하면 누구나 성인의 경지에 이를 수 있다고 보았다.",
+            "questionType": "ox"
+            }
+        ];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 2;       //ox 문제 개수
+        var blankNums = 1;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제, 정답, 해설 저장 변수
+        var questions = [];
+        var answers = [];
+        var explanation = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
+            var numbers = [];
+            data.forEach(function(element, index){
+                numbers.push(index);
+            });
+            
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답, 해설 지우기
+            questions = [];
+            answers = [];
+            explanation = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(questionsObject, index){
+                //정답 변수에 입력
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
+
+                //문제 유형 확인
+                if(questionsObject.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수. // id는 label과 연결 위해 설정
+                    var answerHtml = `<div  class="ox">
+                    <input type="radio" id="ox${index}o" name="ox${index}" value="O"><label for="ox${index}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${index}x" name="ox${index}" value="X"><label for="ox${index}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                } else if(questionsObject.questionType == 'blank') {
+                    var answerHtml = `<input type="text" name="blank${index}">`;
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            // console.log('정답', answers);
+            submitButton.style.visibility = "visible";
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+
+                //ox 클래스 코드가 있으면[사용자의 ox퀴즈 응답 저장]
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);  // 라디오버튼 이름 저장
+                    var temp = '';
+                    // 사용자가 ox문제를 풀었으면(체크했으면)
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value            // 체크된 라디오 버튼의 value 저장
+                        }
+                    }
+                    //사용자가 ox문제를 안 풀었으면 공백 저장, 풀었으면 temp 저장
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                // 단답형 퀴즈 응답 저장
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // console.log('사용자 응답 모음: ', userAnswers);
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                    }
+                } else {
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                    }
+                }
+            }
+
+            // 점수 표시 만들기
+            displayResult = `<div class="point">${correctNums} 문제 맞췄습니다<br>(총 ${questions.length}문제 중)</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
+            displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 90;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+                showResults();
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
