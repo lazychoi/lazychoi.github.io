@@ -25,27 +25,29 @@
         a:hover { cursor: pointer; }
 
         /* 가운데 정렬 */
-        @media screen and (max-width: 500px){
+        @media screen and (max-width: 721px){
             .container { 
                 width: 90%; 
                 margin: 0 auto; 
                 display: flex;
                 flex-direction: column;
             }
+            .box {
+                margin: 0 auto;
+                position: relative;
+            }
         }    
-        
-        .container { 
-            width: 90%; 
-            margin: 0 auto; 
-            display: flex;
-            justify-content: stretch;
-            flex: 2;
-        }
-        
-        .box {
-            margin: 0 auto;
-            position: relative;
-        }
+            .container { 
+                width: 90%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
 
         /* TITLE */
         h1{
