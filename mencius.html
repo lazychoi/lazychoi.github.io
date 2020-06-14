@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>윤리와사상 퀴즈</title>
+    <style>
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        @media screen and (max-width: 721px){
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+        }    
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                width: 100%;
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
+
+        /* TITLE */
+        h1{
+            width: 100%;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            font-size: 15px;
+            width: 80%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            display: none;
+        }
+        .ox > input[type="radio"]:checked + label {
+            display: inline-block;
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
+            font-size: 20px;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .button:hover{
+            background-color: #38a;
+        }
+        .button#reload{
+            background-color: orange;
+        }
+        .button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
+        #results{
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 10px 20px;
+        }
+        .red{
+            color:var(--main-accent);
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        ul{
+            list-style: none;
+        }
+
+        #timer {
+            display: inline-block;
+            background-color: var(--main-accent);
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        hr { width: 98%; margin: 0 auto; color: var(--light-accent-color);}
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>맹자 퀴즈<span id="timer"></span></h1>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+            <div id="results"></div>
+        </div>
+        <!-- <div class="box">
+        </div> -->
+    </div>
+
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+            {
+            "num": 1,
+            "question": "맹자에 따르면 인은 정의를 추구하는 인간의 본성이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자가 강조한 인은 따뜻하고 포용적인 사랑을 의미한다",
+            "questionType": "ox"
+            },
+            {
+            "num": 2,
+            "question": "맹자에 따르면 의는 따뜻하고 포용적인 사랑의 정신이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자가 강조한 의는 옳고 그름을 명확하게 구별하는 정의를 가리킨다",
+            "questionType": "ox"
+            },
+            {
+            "num": 3,
+            "question": "맹자는 인과 의가 예를 익혀 갖게 된 도덕적 성품이라고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인과 의는 예를 익혀 갖게 된 것이 아니라 본성을 이루고 있는 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 4,
+            "question": "맹자는 인과 의가 이상적인 정치의 기초가 되는 덕성이라고 본다.",
+            "correctAnswer": "O",
+            "explanation": "맹자에 따르면 인과 의는 왕도정치의 기초가 되는 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 5,
+            "question": "맹자에 따르면 인은 인간의 내면적 덕성이고, 의는 외면적 규범이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인과 의는 모두 내면적 덕성이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 6,
+            "question": "맹자는 이로움의 증진보다 백성의 성정(性情) 변화를 추구해야 함을 강조했다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 성선설을 주장하였다. 그러므로 백성의 본성[性]의 변화를 추구하지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 7,
+            "question": "맹자는 인위 규범과 제도가 필요 없는 소박한 사회가 실현되야 함을 강조했다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 인위 규범과 제도가 필요하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 8,
+            "question": "맹자는 이로움이 아니라 인의(仁義)에 우선적인 관심을 기울여야 함을 강조했다.",
+            "correctAnswer": "O",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 9,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 혁명을 통해 인의를 실현할 수 있는 군주를 세워야 한다고 주장하였다.",
+            "correctAnswer": "O",
+            "explanation": "맹자는 폭군이었던 걸(桀)과 주(紂)는 임금이 아니라 인의를 해친 일개 사내에 불과하며, 그런 자를 제거한 것은 잘못된 일이 아니라는 입장을 피력하였다. 이러한 맹자의 입장에는 인의를 해친 군주는 바꿀 수 있다는 그의 혁명론이 담겨 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 10,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 사회 질서 유지를 위한 강력한 규범과 제도를 만들어야 한다고 주장하였다.",
+            "correctAnswer": "X",
+            "explanation": "문제 사태의 주된 원인은 백성이 아니라 군주에게 있다. 그러므로 맹자가 제시할 적절한 방안이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 11,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 군주가 인의의 덕을 갖추도록 예로써 본성을 교화해야 한다고 주장하였다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 군주를 비롯한 모든 인간의 본성이 선하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 12,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 백성들이 타고난 도덕성을 상실하지 않도록 교육을 해야 한다고 주장하였다.",
+            "correctAnswer": "X",
+            "explanation": "문제 사태의 주된 원인은 백성이 아니라 군주에게 있다. 그러므로 맹자가 제시할 적절한 방안이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 13,
+            "question": "군자가 자신의 배부름만 생각하고 백성의 고통에는 신경을 쓰지 않아 군주의 푸줏간에는 고기가 넘쳐 나지만, 들판에는 굶어 죽은 백성들의 시체가 잔뜩 널려 있는 상황을 해결하기 위해 맹자는 도덕적 타락과 혼란의 원인이 되는 인위 규범을 제거해야 한다고 주장하였다.",
+            "correctAnswer": "X",
+            "explanation": "무위자연을 추구한 노자나 장자가 제시할 수 있는 방안이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 14,
+            "question": "맹자와 순자는 인간의 본성은 선하거나 악하게 변화될 수 있다고 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 인간의 본성이 선하다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 15,
+            "question": "맹자와 순자는 도덕적인 인간이 되려면 인위적인 노력이 필요하다고 보았다.",
+            "correctAnswer": "O",
+            "explanation": "성악설을 주장한 순자는 물론이고 맹자 역시 인위적인 수양을 해야 도덕적인 인간이 될 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 16,
+            "question": "맹자와 순자는 모든 사람들은 서로 다르지 않은 본성을 타고난다고 보았다.",
+            "correctAnswer": "O",
+            "explanation": "순자는 모든 사람의 본성이 악하다고 보았고, 맹자는 선하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 17,
+            "question": "맹자와 순자는 타고난 마음은 바람직한 정치의 기반이 될 수 있다고 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자의 주장이다. 맹자에 따르면 인간은 누구나 날 때부터 불인인지심(不忍人之心), 즉 남에게 차마 어찌하지 못하는 선한 마음을 가지고 있다. 이 마음을 가지고 사람들을 다스리면 이상적인 정치를 할 수 있다. 맹자가 추구한 왕도 정치는 이 마음에 기반을 둔 정치라고 할 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 18,
+            "question": "맹자와 순자는 선왕이 본성을 교화하기 위해 인위 규범을 제정했다고 보았다.",
+            "correctAnswer": "X",
+            "explanation": "순자의 주장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 19,
+            "question": "맹자는 본성의 교화를 위해 제정된 규범을 따른 행위를 선한 행위로 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 성선설을 제시하였다. 그에 따르면 본성은 교화의 대상이 아니라 일상에서 실현해야 할 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 20,
+            "question": "맹자는 사단(四端)이 갖추어지게 해 주는 도덕적인 행위를 선한 행위로 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 사단은 갖추어지는 것이 아니라 타고나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 21,
+            "question": "맹자와 순자는 마음의 자연적 경향성을 모두 이기고 한 행위를 선한 행위로 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 선행은 사단이라는 마음의 자연적 경향성을 따른 행위이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 22,
+            "question": "맹자와 순자는 소국 과민(小國寡民)은 이상 사회의 필수 조건이라고 보았다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 소국과민, 즉 작은 영토와 적은 백성을 이상사회의 필수조건으로 보지 않았다. 소국과민을 중시한 대표적인 사상가는 노자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 23,
+            "question": "맹자와 순자는 통치자는 자신을 수양하고 백성들을 다스려야 한다고 보았다.",
+            "correctAnswer": "O",
+            "explanation": "맹자와 순자는 모두 통치자의 자기 수양을 통치의 전제 조건으로 본 유교 사상가들이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 24,
+            "question": "맹자와 순자는 인위적인 노력을 통해 왕도(王道)를 실현할 수 있다고 보았다.",
+            "correctAnswer": "O",
+            "explanation": "맹자와 순자는 모두 왕도를 추구하였으며, 그것의 실현을 위해 도덕적 수양이나 제도의 개선과 같은 인위적인 노력이 필요하다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 25,
+            "question": "맹자와 순자는 무력보다 예법을 더 나은 통치 수단으로 보아야 한다고 주장했다.",
+            "correctAnswer": "O",
+            "explanation": "맹자와 순자의 공통 입장이다. 맹자는 왕도를 추구하고 패도(覇道)를 배척하였다. 왕도가 덕에 기반을 둔 통치를 추구한다면 패도는 무력에 의존해서 통치하려고 하는 것이다. 맹자는 예법을 무력보다 더 나은 통치 수단으로 보았다. 순자는 예치를 강조하였다. 그에 따르면 예치가 최고의 통치 형태이고, 법을 중시하고 백성을 사랑하는 패도 정치가 다음이며, 권모술수나 힘에 의존하는 통치는 바람직하지 않다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 26,
+            "question": "맹자에 따르면 백성의 물질적 풍요의 향상이 정치[政]의 궁극적 목표이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 백성의 물질적 풍요의 향상을 정치의 궁극적 목표로 보지 않았다. 맹자는 평화로운 도덕 사회의 실현을 추구하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 27,
+            "question": "맹자에 따르면 백성은 일정한 생업이 없으면 항심(恒心)을 지니기 어렵다.",
+            "correctAnswer": "O",
+            "explanation": "맹자에 따르면 왕도 정치를 실현하기 위해서는 무엇보다 먼저 백성들의 생업을 보장해 주어야 한다. 백성들은 ‘일정한 생업[恒産(항산)]’이 없으면 ‘변치 않는 떳떳한 마음[恒心(항심)]’을 지닐 수 없기 때문이다. 항산이 없어도 항심을 지니는 것은 오직 선비에게나 가능한 일이다. 항산이 없을 경우 일반 백성들은 방탕해지거나 사악해지고 사치하는 등 못하는 것이 없게 되어 도덕과 예의를 통한 교화가 불가능해진다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 28,
+            "question": "맹자에 따르면 백성은 항산(恒産)이 없으면 본성의 변화를 추구할 수 없다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 백성의 본성을 변화시키려고 하지 않았다. 성선설을 주장했기 때문이다. 악한 본성의 변화를 추구한 대표적인 사상가는 성악설을 제시한 순자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 29,
+            "question": "맹자에 따르면 백성의 생업이 보장되어야 무위(無爲)의 정치가 가능해진다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 무위의 정치를 추구하지 않았다. 무위의 정치는 노자와 장자 같은 도가 사상가들이 추구한 정치이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 30,
+            "question": "맹자에 따르면 백성의 경제적 이익을 증진하는 것이 다름 아닌 의(義)이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 경제적 이익의 증진이 곧 의라고 주장하지 않았다. 맹자의 의란 옳고 그름을 명확하게 분별하고 옳음을 실현하려는 정의감과 직접적으로 관련된 덕이라고 할 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 31,
+            "question": "맹자는 인간은 본성을 유지하고 확충해야 한다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "맹자는 인간이 선한 본성을 유지하고 확충해야 한다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 32,
+            "question": "맹자는 인간의 타고난 마음에는 선과 악이 없다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "성무선악설을 주장한 고자가 긍정할 진술이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 33,
+            "question": "맹자는 인간의 선한 마음은 후천적으로 형성된다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인간의 선한 마음은 선천적으로 타고나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 34,
+            "question": "맹자는 인간의 본성은 악하나 선한 마음을 가질 수 있다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 성선설을 주장한 사상가이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 35,
+            "question": "맹자는 인간은 본성이 선하므로 어떤 경우에도 선을 행한다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 인간은 선한 성품을 가지고 태어나지만 욕망 등에 의해 악을 저지를 수 있다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 36,
+            "question": "고자는 맹자와 달리 수양으로 악한 본성을 극복할 수 있다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "순자의 주장이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 37,
+            "question": "고자와 맹자는 환경에 의해 악한 행위를 저지를 수 있다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "고자와 맹자는 모두 인간이 환경에 의해 악한 행위를 저지를 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 38,
+            "question": "고자와 맹자는 도덕적인 삶을 살기 위해 노력이 필요하다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "고자와 맹자는 모두 도덕적인 삶을 살기 위해 노력이 필요하다고 보았다. 가령 맹자는 인간이 자신의 본성을 유지하고 확충하는 노력을 해야 한다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 39,
+            "question": "맹자는 고자와 달리 선한 본성은 후천적인 인격 수양을 통해 형성된다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자에 따르면 선한 본성은 선천적으로 타고난 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 40,
+            "question": "순자에 따르면 맹자는 인간의 본성을 선과 악으로 규정할 수 없음을 모르고 있다.",
+            "correctAnswer": "X",
+            "explanation": "성무선악설을 주장한 고자가 맹자와 순자 모두에게 제기할 수 있는 반론이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 41,
+            "question": "순자에 따르면 맹자는 인간의 본성을 변화시키기 위해 노력해야 함을 모르고 있다.",
+            "correctAnswer": "O",
+            "explanation": "성악설을 주장한 순자가 성선설을 주장한 맹자에게 제기할 수 있는 적절한 반론이다. 순자는 인간의 본성은 악하며, 인위적인 노력을 통해 악한 본성을 교화(敎化)할 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 42,
+            "question": "순자에 따르면 맹자는 도덕 교육을 통해 인간의 본성을 확충해야 함을 모르고 있다.",
+            "correctAnswer": "X",
+            "explanation": "인간의 본성을 확충할 것을 강조한 사상가는 맹자이므로 적절한 반론이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 43,
+            "question": "순자에 따르면 맹자는 인간의 선한 본성은 하늘로부터 부여받은 것임을 모르고 있다.",
+            "correctAnswer": "X",
+            "explanation": "맹자가 순자에 대해 제기할 수 있는 반론이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 44,
+            "question": "순자에 따르면 맹자는 예의가 인간이 태어나면서부터 갖추고 있는 덕임을 모르고 있다",
+            "correctAnswer": "X",
+            "explanation": "순자에 따르면 예의는 성왕(聖王)이 후천적으로 만든 것이므로 적절한 반론이 아니다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 45,
+            "question": "맹자에 따르면 가족 공동체 윤리와 통치의 원리는 서로 별개의 것이다.",
+            "correctAnswer": "X",
+            "explanation": "맹자와 같은 유교 사상가는 국가를 가족 공동체의식에 바탕을 둔 공동체로 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 46,
+            "question": "맹자에 따르면 군주의 참된 도리는 덕으로 사람을 따르게 하는 것이다.",
+            "correctAnswer": "O",
+            "explanation": "맹자는 힘으로 사람을 다스리기보다 덕으로 사람을 따르게 하는 것을 군주의 참된 도리로 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 47,
+            "question": "맹자에 따르면 예로써 백성의 본성을 변화시켜야 도덕적 사회가 된다.",
+            "correctAnswer": "X",
+            "explanation": "인간의 본성을 예로 변화시켜야 한다고 본 사상가는 순자이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 48,
+            "question": "맹자에 따르면 형벌과 세금을 모두 없애야 군주가 올바른 정치를 할 수 있다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 형벌을 줄이고 세금을 가볍게 하여 민생을 안정시키고 백성에게 사람의 도리를 가르쳐 인간다운 삶을 살게 하는 것을 올바른 정치로 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 49,
+            "question": "맹자에 따르면 백성은 일정한 생활 근거가 없어도 일정한 마음을 가질 수 있다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 백성이 일정한 생활 근거가 없으면 일정한 마음도 없게 된다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 50,
+            "question": "맹자는 백성들이 교대로 번갈아 가며 통치에 참여해야 한다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 모두가 번갈아 가며 통치해야 한다고 보지 않았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 51,
+            "question": "맹자는 통치자의 궁극적 목표가 백성의 생계를 책임지는 것이라고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 통치자가 힘써야 할 우선적 과제는 항산의 보장이지만 궁극적으로는 백성의 도덕적 교화를 목표로 삼아야 한다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 52,
+            "question": "맹자와 아리스토텔레스는 국가가 사람들이 도덕적 삶을 살 수 있도록 해야 한다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "맹자는 국가가 백성의 도덕성을 함양하고 덕을 기르는 역할을 해야 한다고 보았고, 아리스토텔레스도 국가의 존립 근거는 구성원들이 도덕적 삶을 살 수 있도록 하는 데 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 53,
+            "question": "맹자와 로크는 통치자가 제 역할을 하지 못하면 교체될 수 있다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "맹자는 백성들이 신뢰하지 못하는 군주는 내쫓을 수 있다고 보았고, 로크도 통치 권력이 개인의 안전과 자유를 보장하지 못하면 신탁을 철회하고 새로운 입법부를 구성할 수 있다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 54,
+            "question": "맹자와 로크는 통치자는 덕보다 법을 바탕으로 권력을 행사해야 한다고 본다.",
+            "correctAnswer": "X",
+            "explanation": "맹자는 군주가 법령이나 형벌보다 도덕과 예의로 백성을 다스려야 한다고 주장하였고, 로크는 법에 의한 통치를 주장하였다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 55,
+            "question": "맹자와 로크는 통치자는 구성원이 안전하고 평화롭게 살아가게 해야 한다고 본다.",
+            "correctAnswer": "O",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 56,
+            "question": "맹자는 타고난 마음을 확충해야 사단을 형성할 수 있다고 본다.",
+            "correctAnswer": "x",
+            "explanation": "사단은 형성하는 것이 아니라 타고나는 것이다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 57,
+            "question": "맹자는 순자와 달리 통치의 목적이 인의의 실현에 있다고 본다.",
+            "correctAnswer": "x",
+            "explanation": "맹자와 순자 모두 통치의 목적이 인의의 실현에 있다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 58,
+            "question": "순자는 맹자와 달리 백성과 성인(聖人)의 본성은 같다고 본다.",
+            "correctAnswer": "x",
+            "explanation": "맹자와 순자 모두 백성과 성인의 본성은 같다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 59,
+            "question": "맹자와 순자는 인간에게 도덕적 인식 능력이 주어져 있다고 본다.",
+            "correctAnswer": "o",
+            "explanation": "두 사상가 모두 인간이 도덕적 옳음을 알 수 있는 능력을 타고난다고 보았다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 60,
+            "question": "맹자에 따르면 인간은 하늘이 부여한 도덕 규범을 실천해야 한다고 본다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 61,
+            "question": "맹자에 따르면 인간은 불인인지심(不忍人之心)을 가지고 태어난다고 본다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 62,
+            "question": "맹자와 순자는 인간마다 본성은 다르지만 타고난 본성을 확충해야 한다고 본다.",
+            "correctAnswer": "x",
+            "explanation": "순자는 타고난 본성을 변화시켜야 한다고 주장한다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 63,
+            "question": "맹자에 따르면 인간은 천부적으로 선한 본성을 갖추고 있다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 64,
+            "question": "맹자에 따르면 본성이 선해도 욕망에 의해 악을 행할 수도 있다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 65,
+            "question": "맹자에 따르면 사람에 따라 선한 본성과 악한 본성을 따로 부여받는다.",
+            "correctAnswer": "x",
+            "explanation": "맹자는 모든 사람이 선한 본성을 부여받는다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 66,
+            "question": "맹자에 따르면 선이나 악은 본성의 영향이 아니라 환경에 따라 결정된다.",
+            "correctAnswer": "x",
+            "explanation": "맹자는 선이 본성의 영향을 받는다고 본다.",
+            "questionType": "ox"
+            },
+            {
+            "num": 67,
+            "question": "맹자에 따르면 타고난 본성이 변화되지 않으면 선행을 할 수 없다.",
+            "correctAnswer": "x",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 68,
+            "question": "고자와 맹자에 따르면 악행을 억제하는 데 환경과 교육이 영향을 미친다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            },
+            {
+            "num": 69,
+            "question": "고자와 맹자에 따르면 옳은 행위를 하기 위해서는 후천적인 노력이 요구된다.",
+            "correctAnswer": "o",
+            "explanation": "",
+            "questionType": "ox"
+            }];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 5;       //ox 문제 개수
+        var blankNums = 0;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제, 정답, 해설 저장 변수
+        var questions = [];
+        var answers = [];
+        var explanation = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
+            var numbers = [];
+            data.forEach(function(element, index){
+                numbers.push(index);
+            });
+            
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답, 해설 지우기
+            questions = [];
+            answers = [];
+            explanation = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(questionsObject, index){
+                //정답 변수에 입력
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
+
+                //문제 유형 확인
+                if(questionsObject.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수. // id는 label과 연결 위해 설정
+                    var answerHtml = `<div  class="ox">
+                    <input type="radio" id="ox${index}o" name="ox${index}" value="O"><label for="ox${index}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${index}x" name="ox${index}" value="X"><label for="ox${index}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                } else if(questionsObject.questionType == 'blank') {
+                    var answerHtml = `<input type="text" name="blank${index}">`;
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            // console.log('정답', answers);
+            submitButton.style.visibility = "visible";
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+            var rightNum = []; //맞춘 번호(저장용)
+            var wrongNum = []; //틀린 번호(저장용)
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+
+                //ox 클래스 코드가 있으면[사용자의 ox퀴즈 응답 저장]
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);  // 라디오버튼 이름 저장
+                    var temp = '';
+                    // 사용자가 ox문제를 풀었으면(체크했으면)
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value            // 체크된 라디오 버튼의 value 저장
+                        }
+                    }
+                    //사용자가 ox문제를 안 풀었으면 공백 저장, 풀었으면 temp 저장
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                // 단답형 퀴즈 응답 저장
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // console.log('사용자 응답 모음: ', userAnswers);
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                } else {
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                }
+            }
+
+            // console.log('정답 번호', rightNum);
+            // console.log('오답 번호', wrongNum);
+            
+            // 점수 표시 만들기
+            displayResult = `<div class="point">${correctNums} 점 (총 ${questions.length} 문제)</div>`
+            // displayResult = `<div class="point">${correctNums} 점</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
+            displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
+
+            saveResult(rightNum, wrongNum);
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 90;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+                showResults();
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        function saveResult(rightNum, wrongNum){
+
+        }
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
