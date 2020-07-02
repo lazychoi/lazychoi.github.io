@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>윤리와사상 퀴즈</title>
+    <style>
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        @media screen and (max-width: 721px){
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+        }    
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                width: 100%;
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
+
+        /* TITLE */
+        h1{
+            width: 100%;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            font-size: 15px;
+            width: 80%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            display: none;
+        }
+        .ox > input[type="radio"]:checked + label {
+            display: inline-block;
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
+            font-size: 20px;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .button:hover{
+            background-color: #38a;
+        }
+        .button#reload{
+            background-color: orange;
+        }
+        .button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
+        #results{
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 10px 20px;
+        }
+        .red{
+            color:var(--main-accent);
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        ul{
+            list-style: none;
+        }
+
+        #timer {
+            display: inline-block;
+            background-color: var(--main-accent);
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        hr { width: 98%; margin: 0 auto; color: var(--light-accent-color);}
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>윤리와사상 퀴즈 1차<span id="timer"></span></h1>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+            <div id="results"></div>
+        </div>
+        <!-- <div class="box">
+        </div> -->
+    </div>
+
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+  {
+    "num": 618,
+    "question": "고대 그리스의 ( ···· ) 철학자들은 세계의 기원과 자연의 변화에 대해 이성적으로 설명하고자 하였다.",
+    "correctAnswer": "자연",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 619,
+    "question": "소피스트들은 인간의 ( ···· )을/를 지식과 도덕의 근원으로 보았다.",
+    "correctAnswer": "감각적 경험",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 620,
+    "question": "고르기아스는 ( ···· )적 관점에서 절대적 존재와 진리, 그에 대한 객관적 인식을 부정하였다.",
+    "correctAnswer": "회의주의",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 621,
+    "question": "소크라테스는 보편타당한 진리와 윤리가 존재하며 ( ···· )을/를 통해 이를 파악할 수 있다고 보았다.",
+    "correctAnswer": "이성",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 622,
+    "question": "소크라테스는 모든 악행의 원인은 ( ···· )이며, 인간은 본성상 선이 무엇인지 알면서 자발적으로 악을 행할 수 없다고 주장하였다.",
+    "correctAnswer": "무지",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 623,
+    "question": "소크라테스에 따르면 인간에게 가장 중요한 일은 각자의 ( ···· )을/를 최상의 상태로 가꾸는 것이다.",
+    "correctAnswer": "영혼",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 624,
+    "question": "고대 그리스 사상은 자연에 대한 관심에서 출발하였다. ‘철학의 아버지’로 불리는 탈레스를 비롯한 소크라테스 이전의 그리스 사상가들을 지칭하는 말은?",
+    "correctAnswer": "자연 철학자",
+    "explanation": "자연 철학자들은 세계의 기원이나 자연의 변화에 대해 신화(神話)에 의존하지 않고 이성적이고 논리적으로 설명하고자 노력하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 625,
+    "question": "자신이 모르면서 알고 있다고 믿는 것이 인간이 가진 무지 중에 가장 큰 무지이다. 신체나 재산이 아니라 영혼을 최상의 상태로 가꿔야 한다. 올바른 영혼은 훌륭하게 살게 되고, 올바르지 않은 영혼은 잘못 살게 된다. 훌륭하게 사는 사람은 행복할 것이나, 그렇지 못한 사람은 그 반대이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "소크라테스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 626,
+    "question": "어떤 인간도 나쁘다고 믿는 바를 행하지 않는다. 자신이 나쁘다고 생각하는 것을 행하려는 것은 인간의 본성에 맞지 않다. 그러므로 악은 무지로부터 비롯된 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "소크라테스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 627,
+    "question": "인간은 모든 것의 척도이다. 존재하는 것에 대해서는 그것이 존재한다는 척도이며, 존재하지 않는 것에 대해서는 그것이 존재하지 않는다는 척도이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "프로타고라스; 소피스트",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 628,
+    "question": "어떤 것들이 나에게 나타나는 대로 그것은 나에게는 그렇게 존재하며, 어떤 것들이 당신에게 나타나는 대로  것들은 당신에게 그렇게 존재한다. 인간이 만물의 척도이다.'라고 주장한 서양 사상가는?",
+    "correctAnswer": "프로타고라스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 629,
+    "question": "그대는 가장 위대하고 슬기와 힘으로 이름이 나 있는 아테네의 시민이다. 그런데 그대는 재물에 대해서는 되도록 많았으면 하고 관심을 쏟고, 평판과 명예에 대해서도 마음을 쓰고 있다. 그러나 지혜와 진리에 관해서 그리고 자신의 영혼이 온전해지도록 마음을 쓰거나 생각해 보지 않고 있으니, 이를 부끄러워해야 하지 않겠는가? 검토되지 않은 삶은 살아갈 가치가 없다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "소크라테스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 630,
+    "question": "고대 그리스 자연 철학자들은 신화적 세계관에 의존하여 세계를 탐구하였다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "자연 철학자들은 신화적 세계관에서 벗어나 인간의 경험과 이성에 기초하여 합리적으로 세계를 탐구하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 631,
+    "question": "고대 그리스 자연 철학자들은 자연의 다양한 현상 속에서 보편성에 주목하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "자연 철학자들은 변화무쌍한 세계에서 변하지 않는 본질적이고 보편적인 것에 관심을 갖고 탐구하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 632,
+    "question": "고대 그리스 자연 철학자들은 세계의 기원을 논리적으로 설명하고자 노력하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "자연 철학자들은 세계가 물, 불, 흙, 공기 등의 요소로 이루어졌다고 보았으며, 이를 논리적으로 설명하고자 노력하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 633,
+    "question": "고대 그리스 자연 철학자들은 물, 불, 흙, 공기 등으로 사물의 본질을 설명하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "자연 철학자들은 세계가 물, 불, 흙, 공기 등의 요소로 이루어졌다고 보았으며, 이를 논리적으로 설명하고자 노력하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 634,
+    "question": "소크라테스에 따르면 지식과 덕을 갖춘 사람이라도 불행할 수 있다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스에 따르면 앎과 덕과 행복은 필연적 관계이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 635,
+    "question": "소크라테스에 따르면 그릇된 행위는 언제나 자발적으로 이루어진다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스에 따르면 인간은 선이 무엇인지 알면서 자발적으로 악을 행할 수 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 636,
+    "question": "소크라테스에 따르면 영혼을 돌보는 궁극적인 목적은 무지의 자각이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스에 따르면 무지를 자각함으로써 참된 앎을 얻을 수 있으며 영혼을 잘 돌볼 수 있다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 637,
+    "question": "소크라테스에 따르면 덕은 실천 의지로써 선행을 반복해야만 갖춰진다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스에 따르면 앎이 곧 덕이다. 따라서 덕을 갖추기 위해 선의지와 그에 따른 행위의 반복이 꼭 필요한 것은 아니다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 638,
+    "question": "소크라테스에 따르면 이성적 숙고는 참된 앎을 얻기 위한 필수 조건이다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "소크라테스에 따르면 객관적이고 보편적인 진리와 윤리가 존재하며 이것은 이성을 통해 파악될 수 있다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 639,
+    "question": "프로타고라스는 소크라테스보다 감각적 경험을 지식의 근원으로 더욱 강조한다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "프로타고라스가 감각적 경험을 지식과 도덕의 근원으로 본반면, 소크라테스는 감각적 경험보다는 이성을 강조했다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 640,
+    "question": "프로타고라스는 소크라테스보다 도덕규범의 다양성을 더욱 강조한다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "프로타고라스가 개인과 사회, 시대에 따라 도덕규범이 달라질 수 있다고 본 반면, 소크라테스는 누구에게나 타당한 도덕규범이 존재하며 이를 따라야 한다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 641,
+    "question": "프로타고라스는 소크라테스보다 덕의 보편적 정의를 더욱 강조한다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "프로타고라스는 좋음과 옳음 등에 관해 보편적인 판단을 내릴 수 없다고 본 반면, 소크라테스는 그것들에 대한 보편적 정의(定義)가 존재한다고 보고 그것을 추구했다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 642,
+    "question": "프로타고라스에 따르면 인간이 인식할 수 있는 진리는 존재하지 않는다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "고르기아스의 입장이다. 프로타고라스는 진리를 상대적인 것으로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 643,
+    "question": "프로타고라스에 따르면 사회나 시대에 따라 진리가 달라지는 것은 아니다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "프로타고라스는 진리는 사회나 시대마다 달라질 수 있다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 644,
+    "question": "소크라테스는 자신이 속한 사회의 관습을 무조건 따라야 한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스는 자신이 속한 사회의 관습을 무조건 따라야 한다고 주장하지 않았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 645,
+    "question": "소크라테스는 자신의 삶을 성찰하고 진리 탐구에 힘써야 한다고 본다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "소크라테스는 자신의 삶을 성찰하고 검토하며, 자신의 무지를 깨닫고 진리 탐구에 힘쓸 것을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 646,
+    "question": "소크라테스는 유덕한 삶에 이르기 위해 부와 명예를 쌓아야 한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스가 유덕한 삶을 중시한 것은 맞지만, 그러한 삶을 위해 부와 명예를 쌓아야 한다고 주장하지는 않았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 647,
+    "question": "소크라테스는 정신적 쾌락을 버리고 육체적 쾌락을 향유해야 한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스는 정신적 쾌락을 버리고 육체적 쾌락을 향유해야 한다고 주장하지 않았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 648,
+    "question": "소크라테스는 지식은 참된 행복을 방해하므로 무지를 추구해야 한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스는 진리 탐구에 힘쓸 것을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 649,
+    "question": "플라톤에 따르면 이데아계는  오직 ( ···· )에 이해서만 파악되는 반면 현상계는 감각적 경험에 의해 파악된다.",
+    "correctAnswer": "이성",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 650,
+    "question": "플라톤에 따르면 최고의 이데아는 ( ···· )의 이데아이며, 이상적인 삶은 이데아를 모방하며 실현하는 삶이다.",
+    "correctAnswer": "선",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 651,
+    "question": "플라톤에 따르면 영혼의 ( ···· )(이)란 영혼의 각 부분이 각자의 덕을 갖추어 전체적으로 조화를 이룬 상태이다.",
+    "correctAnswer": "정의",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 652,
+    "question": "플라톤에 따르면 국가의 정의도 ( ···· )의 정의가 실현되는 방식과 같이 국가를 이루는 세 부분, 즉 세 계층이 조화를 이룰 때 실현된다.",
+    "correctAnswer": "영혼",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 653,
+    "question": "플라톤에 따르면 국가는 ( ···· ), 방위자, 생산자 계층으로 구성된다.",
+    "correctAnswer": "통치자",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 654,
+    "question": "플라톤에 따르면 선의 이데아를 인식하여 지혜의 덕을 갖추고 인격과 실무적 경험을 갖춘 ( ···· )이/가 통치하지 않는 한, 악은 사라지지 않는다.",
+    "correctAnswer": "철학자; 철인",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 655,
+    "question": "인간의 영혼은 온순한 말과 제멋대로 날뛰는 말이 끄는 마차에 비유될 수 있다. 마차가 잘 굴러가려면 마부가 두 마리의 말을 잘 조절해서 보조를 맞춰야 하듯, 영혼이 이상적인 상태를 이루려면 영혼의 이성적인 부분이 비이성적인 두 부분을 잘 다스려야 한다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "플라톤",
+    "explanation": "플라톤은 이성이 기개와 욕구을 지배할 때 영혼이 최상의 상태를 유지할 수 있다고 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 656,
+    "question": "그의 주장이 의미하는 바는 분명하다. ‘각자에게 나타난 것이 그에게 사실상 그렇게 존재한다.’라는 것이다. 만약 그렇다면 이로부터 '옳음과 그름이 동일한 상황에서 동시에 존재할 수 있다'는 결론이 도출되는데, 이것은 불합리하다. 우리는 언제나 동일한 상태에 있으면서 어떤 변화도 겪지 않는 것들을 출발점으로 삼아 진리를 탐구해야 하기 때문이다.'에서 서양 사상가인 그는 누구인가?",
+    "correctAnswer": "프로타고라스; 소피스트",
+    "explanation": "프로타고라스는 ‘인간은 만물의 척도이다.’라고 주장하였다. 이 주장은 각 개인의 감각적 경험이 진위뿐 아니라 가치 판단의 기준임을 의미하며, 윤리적 상대주의 입장을 보여 준다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 657,
+    "question": "그는 자연 전체에 대해서는 많은 관심을 갖지 않았다. 그러나 그가 품성의 탁월함에 관심을 기울였을 때, 그는 이것들과 관련해 처음으로 보편적 정의(定義)의 문제를 제기한 사람이 되었다. 그가 본질을 추구한 것은 자연스러운 일이었다. 왜냐하면 그는 추론하기를 추구했고, 본질을 파악하는 것은 추론의원리이기 때문이다. 그의 공적으로 돌려서 옳은 것들이 두 가지가 있는데, 그것은 귀납적 추론과 보편적 정의이다.'에서 고대 서양 사상가인 그는 누구인가?",
+    "correctAnswer": "소크라테스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 658,
+    "question": "정의(正義)란 더 강한 자 및 통치자의 편익이지만, 복종하고 섬기는 자의 경우 ‘자신에게 해(害)가 되는 것’이며 부정의는 그와 반대된다. 이것은 모든 정치 체제에 있어서 동일하다.라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "트라시마코스; 소피스트",
+    "explanation": "트라시마코스는 정의(正義)를 강자의 이익으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 659,
+    "question": "정의란 훌륭함이며 지혜이지만 불의는 나쁨이며 무지이다. 영혼이 불의에 의해 해를 입는다면 살 가치가 있겠는가? 영혼의 상태를 살펴야 한다. 검토되지 않은 삶은 살 가치가 없다.라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "소크라테스",
+    "explanation": "소크라테스는 덕과 앎을 동일시하는 주지주의 입장에서 정의를 일종의 앎으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 660,
+    "question": "정의란 인간관계에 있어서 서로 해를 주고받지 않으려는 계약이다. 우리는 쾌락을 타고난 첫번째 선(善)으로 인식하며, 선택하고 기피하는 모든 행동을 쾌락으로부터 시작한다.라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스는 쾌락주의 입장에서 정의를 인간관계 속에서 맺어지는 상호이득을 위한 협정으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 661,
+    "question": "나라 안에 있는 것들과 똑같은 부류의 것들이 개개인의 영혼 안에도 있고, 그 수(數)도 똑같다. 그러므로 나라를 지혜롭게 하는 방식 및 부류와 같은 방식 및 같은 부류에 의해서 개인도 지혜롭게 되는 것임은 필연적이며, 다른 모든 덕의 경우에 있어서도 양자(兩者)는 마찬가지이다 .'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "플라톤",
+    "explanation": "플라톤은 정의를 일종의 조화로운 상태로 보았으며, 개인이 정의롭게 되는 방식과 국가가 정의롭게 되는 방식이 같다고 보았다. 즉 개인 차원에서의 정의란 영혼의 세 부분인 이성, 기개, 욕구가 전체적으로 조화를 이룬 상태이며, 국가 차원에서의 정의란 국가의 세 계층인 통치자, 방위자, 생산자 계층이 조화를 이룬 상태이다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 662,
+    "question": "인간의 모든 행위가 추구하는 최고선은 행복이다. 행복이 덕에 따르는 영혼의 활동이라면 최고의 덕을 따라야 한다. 최고의 덕은 우리가 가진 최선의 부분, 즉 자연이나 신적인 부분과 관련되는 덕이다. 이 덕에 따르는 활동은 지성의 활동으로서 관조이다. 따라서 지성에 따라 관조적 활동을 하는 사람이 최선의 상태에 있으며 신들로부터 가장 많은 사랑을 받는 사람이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스에 따르면 행복이란 덕에 따르는 영혼의 활동이며, 행복을 실현하기 위한 최고의 덕은 신이나 자연과 같이 고귀한 대상들을 이성적으로 관조하는 활동의 덕인 철학적 지혜이다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 663,
+    "question": "플라톤에 따르면 ‘좋음 자체’는 감각적 경험으로는 파악되지 않는다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 ‘좋음 자체’를 비롯한 이데아들은 오직 이성에 의해서만 파악된다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 664,
+    "question": "플라톤에 따르면 ‘좋음 자체’는 초월적인 실재로서 영원하고 불변하다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 ‘좋음 자체’를 비롯한 이데아들은 개별 사물이 사라지더라도 실재하는 보편적이고 초월적인 형상이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 665,
+    "question": "플라톤에 따르면 ‘좋음 자체’는 개별 사물의 원형들 중 최상의 것이다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 ‘좋음 자체’는 이데아들 중 최상의 이데아이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 666,
+    "question": "플라톤에 따르면 ‘좋음 자체’는 현상계의 ‘좋은 것들’을 모방한 것이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 ‘좋음 자체’는 현상계에 존재하는 모든 존재와 인식의 근거이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 667,
+    "question": "플라톤에 따르면 ‘좋음 자체’는 인간이 추구해야 하는 궁극적 목표이다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 ‘좋음 자체’는 모든 존재와 인식의 근거로서 인간이 추구해야 하는 궁극적 목표이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 668,
+    "question": "플라톤에 따르면 절제란 기개와 욕구, 이성이 서로 반목하지 않는 것이다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 절제란 지배하는 부분과 지배받는 두 부분들 사이에 반목이 없는 것이며, 영혼과 관련해서는 기개와 욕구, 이성이 서로 반목하지 않는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 669,
+    "question": "플라톤에 따르면 절제란 한 사물의 보편적인 형상으로서 초월적 실재이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "이데아에 대한 설명이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 670,
+    "question": "플라톤에 따르면 절제란 두려움과 관련된 덕으로 비겁과 무모의 중간이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "중용으로서의 용기에 대한 설명이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 671,
+    "question": "플라톤에 따르면 절제란 인간의 최고선이며 덕에 따르는 영혼의 활동이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스의 행복에 대한 정의이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 672,
+    "question": "플라톤에 따르면 절제란 모든 구성원들에게 필요한 지혜에 대한 사랑이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "지혜에 대한 사랑은 철학을 가리킨다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 673,
+    "question": "소피스트들은 옳음이 개인의 입장과 무관하게 객관적으로 존재한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "윤리적 보편주의 입장이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 674,
+    "question": "소피스트들은 옳음과 그름이 동일한 상황에서 동시에 존재할 수 있다고 본다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "프로타고라스의 입장처럼 옳고 그름이 개인에 따라 달라진다면, 동일 상황에 대해서도 옳음과 그름이 동시에 존재할 수 있게 된다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 675,
+    "question": "소피스트들은 옳음 자체에 대한 앎은 옳은 행위를 보장하지 못한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "프로타고라스에 따르면 ‘옳음 자체’는 존재하지 않는다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 676,
+    "question": "소피스트들은 옳음은 공감으로부터 비롯된 사회적 승인의 표현이다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "흄의 입장이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 677,
+    "question": "소피스트들은 옳음의 원형은 현상계를 초월한 이데아계에 존재한다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤의 입장이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 678,
+    "question": "프로타고라스는 같은 사물이라도 사람에 따라 다르게 존재할 수 있다고 주장하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "프로타고라스에 따르면 각 개인이 모든 판단의 기준이다. 따라서 같은 사물이라도 사람에 따라 다르게 존재할 수 있다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 679,
+    "question": "소크라테스는 인간에게 가장 중요한 일은 자신의 영혼을 돌보는 것이라고 보았다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "소크라테스에 따르면 인간에게 가장 중요한 일은 참된 앎에 기초하여 자신의 영혼을 돌보는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 680,
+    "question": "프로타고라스는 소크라테스와 달리 좋고 나쁨을 판단하는 기준이 존재하지 않는다고 보았다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "프로타고라스는 개인의 감각적 경험을 좋고 나쁨을 판단하는 기준으로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 681,
+    "question": "소크라테스는 프로타고라스와 달리 감각적 경험은 참된 지식의 근원이 될 수 없다고 보았다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "소크라테스는 감각적 경험을 강조한 프로타고라스와 달리 이성을 통해 참된 앎에 이를 것을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 682,
+    "question": "프로타고라스과 소크라테스는 자연의 본질보다는 인간의 좋은 삶에 대한 탐구를 중시하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "프로타고라스와 소크라테스 모두 자연에 대한 탐구보다는 인간과 사회에 대한 탐구를 중시하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 683,
+    "question": "소피스트는 덕은 일종의 앎이며 행복의 실현과 불가분의 관계라고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "소크라테스가 긍정할 진술이다. 그에 따르면 덕과 앎, 행복은 필연적 관계이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 684,
+    "question": "소크라테스와 소피스트는 옳음에 대한 규정이 정치권력에 의해 좌우되어서는 안 된다고 본다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "트라시마코스는 부정, 소크라테스는 긍정할 진술이다. 트라시마코스는 누가 권력을 획득하여 지배자가 되느냐에 따라 옳음이 달라진다고 보았다. 반면 소크라테스는 시대와 상황에 관계없이 보편타당한 도덕규범이 존재한다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 685,
+    "question": "소크라테스는 인간은 본성상 자신에게 좋은 것은 택하고 나쁜 것을 피한다고 본다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "소크라테스가 긍정할 진술이다. 그에 따르면 인간의 이러한 특성 때문에 어느 누구도 선이 무엇인지 알면서 고의로 악을 행하지 않는다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 686,
+    "question": "플라톤에 따르면 나라는 통치자, 방위자, 수호자 세 계층으로 구성되어 있고, 영혼은 이성, 기개, 욕구 세 부분으로 구성되어 있다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 이상적인 국가는 통치자, 방위자, 생산자 세 계층으로 구성된다. 수호자는 통치자와 방위자를 아울러 이르는 말이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 687,
+    "question": "플라톤에 따르면 통치자와 방위자의 공통된 일은 국가를 지키는 일이고, 이성과 욕구의 공통된 일은 기개를 다스리는 일이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 기개와 욕구는 이성의 지배를 받아야 하는 부분이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 688,
+    "question": "플라톤에 따르면 나라의 정의란 세 계층이 협력하여 다른 계층의 일을 분담하는 것이고, 영혼의 정의란 세 부분이 각자의 덕을 갖춰 조화를 이룬 것이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 정의를 실현하려면 세 계층이 자신의 일에만 종사하며 다른 계층의 일에 간섭하지 않아야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 689,
+    "question": "플라톤에 따르면 통치자가 철학적 지혜를 갖춰야 국가의 악이 종식될 수 있고, 이성이 지혜의 덕을 갖춰야 영혼의 훌륭한 상태를 유지할 수 있다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "플라톤에 따르면 정의를 실현하려면 통치자와 이성이 모두 지혜를 갖추어야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 690,
+    "question": "플라톤에 따르면 나라는 모든 구성원이 재산을 공유함으로써 사유로 인한 갈등을 해소해야 하고, 영혼은 모든 부분이 절제의 덕을 갖춤으로써 갈등이 발생하지 않도록 해야 한다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 재산의 공유는 수호자들에게만 해당된다.",
+    "questionType": "ox"
+  }
+];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 2;       //ox 문제 개수
+        var blankNums = 1;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제, 정답, 해설 저장 변수
+        var questions = [];
+        var answers = [];
+        var explanation = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
+            var numbers = [];
+            data.forEach(function(element, index){
+                numbers.push(index);
+            });
+            
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답, 해설 지우기
+            questions = [];
+            answers = [];
+            explanation = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(questionsObject, index){
+                //정답 변수에 입력
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
+
+                //문제 유형 확인
+                if(questionsObject.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수. // id는 label과 연결 위해 설정
+                    var answerHtml = `<div  class="ox">
+                    <input type="radio" id="ox${index}o" name="ox${index}" value="O"><label for="ox${index}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${index}x" name="ox${index}" value="X"><label for="ox${index}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                } else if(questionsObject.questionType == 'blank') {
+                    var answerHtml = `<input type="text" name="blank${index}">`;
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            // console.log('정답', answers);
+            submitButton.style.visibility = "visible";
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+            var rightNum = []; //맞춘 번호(저장용)
+            var wrongNum = []; //틀린 번호(저장용)
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+
+                //ox 클래스 코드가 있으면[사용자의 ox퀴즈 응답 저장]
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);  // 라디오버튼 이름 저장
+                    var temp = '';
+                    // 사용자가 ox문제를 풀었으면(체크했으면)
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value            // 체크된 라디오 버튼의 value 저장
+                        }
+                    }
+                    //사용자가 ox문제를 안 풀었으면 공백 저장, 풀었으면 temp 저장
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                // 단답형 퀴즈 응답 저장
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // console.log('사용자 응답 모음: ', userAnswers);
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                } else {
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                }
+            }
+
+            console.log('정답 번호', rightNum);
+            console.log('오답 번호', wrongNum);
+            
+            // 점수 표시 만들기
+            // displayResult = `<div class="point">${correctNums} 점 (총 ${questions.length} 문제)</div>`
+            displayResult = `<div class="point">${correctNums} 점</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
+            displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
+
+            saveResult(rightNum, wrongNum);
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 90;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+                showResults();
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        function saveResult(rightNum, wrongNum){
+
+        }
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
