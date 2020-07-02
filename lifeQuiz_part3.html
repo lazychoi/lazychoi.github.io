@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>생활과윤리 퀴즈 3단원</title>
+    <style>
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        @media screen and (max-width: 721px){
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+        }    
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                width: 100%;
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
+
+        /* TITLE */
+        h1{
+            width: 100%;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            font-size: 15px;
+            width: 80%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            display: none;
+        }
+        .ox > input[type="radio"]:checked + label {
+            display: inline-block;
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
+            font-size: 20px;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .button:hover{
+            background-color: #38a;
+        }
+        .button#reload{
+            background-color: orange;
+        }
+        .button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
+        #results{
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 10px 20px;
+        }
+        .red{
+            color:var(--main-accent);
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        ul{
+            list-style: none;
+        }
+
+        #timer {
+            display: inline-block;
+            background-color: var(--main-accent);
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        hr { width: 98%; margin: 0 auto; color: var(--light-accent-color);}
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>생활과윤리 퀴즈 3단원<span id="timer"></span></h1>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+            <div id="results"></div>
+        </div>
+        <!-- <div class="box">
+        </div> -->
+    </div>
+
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+  {
+    "num": 61,
+    "question": "한자어 직업(職業)의 ‘직(職)’은 생계를 유지하는 노동을 뜻한다.",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 62,
+    "question": "칼뱅은 직업을 ‘신으로부터 부름을 받은 자기 몫의 일’이라고 주장하였다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 63,
+    "question": "직업은 우리에게 경제적 기반을 마련해 주는 데 그친다.",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 64,
+    "question": "직업 윤리는 일반성과 특수성을 동시에 지닌다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 65,
+    "question": "장인 정신이란 자신의 일에 긍지를 가지고 전념하거나 모든 직업에서 필요한 기술에 정통하려고 노력하는 것을 말한다.",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 66,
+    "question": "기업가의 이윤 추구는 자본주의 사회에서 자연스러운 일이므로 기업가는 오직 이윤 추구에만 관심을 가져야 한다.",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 67,
+    "question": "기업가와 근로자는 근로 조건 등과 같은 쟁점에서 대립하기도 하지만 개인과 사회의 발전을 위하여 함께 협력하는 상생적 관계이기도 하다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 68,
+    "question": "공직자는 국민 삶의 질 향상, 국가 유지 및 발전에 중요한 역할을 담당한다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 69,
+    "question": "전문직은 전문성이나 독점성의 특징을 갖지만 자율성의 특징을 가지지는 않는다.",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 70,
+    "question": "내부 공익 신고는 공공의 안전과 권익을 지키고, 국민의 알 권리를 보호하는 행위이다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 71,
+    "question": "니부어는 사회 제도의 도덕성보다 개인의 도덕성을 강조하였다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 72,
+    "question": "분배적 정의는 사회 구성원에게 여러 가지 사회적·경제적 가치를 공정하게 분배함으로써 실현된다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 73,
+    "question": "절차적 정의의 한계 때문에 분배적 정의의 기준으로 절대적 평등, 업적, 능력, 필요 등이 제안되었다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 74,
+    "question": "절차적 정의의 입장에서는 절차나 과정이 공정하면 결과의 공정성도 보장된다고 본다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 75,
+    "question": "무지의 베일이란 원초적 입장의 당사자들이 자신에 관해서는 잘 알지만 타인과 자신이 처한 상황에 관해서는 알지 못한다고 가정하기 위한 장치이다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 76,
+    "question": "노직은 국가가 재화의 분배에 관여해서는 안 된다고 주장하였다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 77,
+    "question": "응보주의는 처벌의 경중을 범죄의 해악 정도에 비례하여 정해야 한다고 주장한다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 78,
+    "question": "베카리아는 사형 제도가 범죄 예방에 효과적이라고 보았다. ( O, X )",
+    "correctAnswer": "X",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 79,
+    "question": "공리주의 관점에서는 사회 전체의 이익을 처벌의 근거로 삼는다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 80,
+    "question": "특수 예방주의 관점에서는 형벌의 목적이 범죄자를 재사회화하여 더는 죄를 짓지 않도록 예방하는 것이다. ( O, X )",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 81,
+    "question": "국가가 가지는 OO은/는 통치를 할 수 있는 권리이다.",
+    "correctAnswer": "권위",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 82,
+    "question": "사회 계약론에 따르면 개인의 OO을/를 얻은 국가는 각 개인에게 국가의 명령을 내리거나 통치할 수 있는 권리를 갖게 된다.",
+    "correctAnswer": "동의",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 83,
+    "question": "아리스토텔레스는 국가가 인간의 OO에 의해 형성된다고 보았다.",
+    "correctAnswer": "본성",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 84,
+    "question": "OOO란 국방, 경찰, 소방, 도로 등 모든 사람이 공동으로 이용할 수 있는 재화나 서비스를 말한다.",
+    "correctAnswer": "공공재",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 85,
+    "question": "동양에서는 국가의 권위를 민의에 기초한 OO의 관점에서 본다.",
+    "correctAnswer": "천명",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 86,
+    "question": "OO은/는 항산이 없으면 항심을 유지하지 못한다고 보았다.",
+    "correctAnswer": "맹자",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 87,
+    "question": "시민 OO의 대표적인 방법으로 선거가 있다.",
+    "correctAnswer": "참여",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 88,
+    "question": "동양에서는 군주에게 OOO을/를 올리는 제도가 있어서, 제한적이기는 하지만 참여가 이루어졌다.",
+    "correctAnswer": "상소문",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 89,
+    "question": "시민 OOO은/는 정의롭지 못한 법을 개정하거나 정부 정책을 변혁하려는 목적으로 행하는 의도적인 위법 행위이다.",
+    "correctAnswer": "불복종",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 90,
+    "question": "OO은/는 비폭력적이고 평화적인 방법으로 소금 법이 부당하다는 것을 보여 주었다.",
+    "correctAnswer": "간디",
+    "explanation": "",
+    "questionType": "blank"
+  }
+];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 2;       //ox 문제 개수
+        var blankNums = 1;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제, 정답, 해설 저장 변수
+        var questions = [];
+        var answers = [];
+        var explanation = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
+            var numbers = [];
+            data.forEach(function(element, index){
+                numbers.push(index);
+            });
+            
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답, 해설 지우기
+            questions = [];
+            answers = [];
+            explanation = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(questionsObject, index){
+                //정답 변수에 입력
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
+
+                //문제 유형 확인
+                if(questionsObject.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수. // id는 label과 연결 위해 설정
+                    var answerHtml = `<div  class="ox">
+                    <input type="radio" id="ox${index}o" name="ox${index}" value="O"><label for="ox${index}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${index}x" name="ox${index}" value="X"><label for="ox${index}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                } else if(questionsObject.questionType == 'blank') {
+                    var answerHtml = `<input type="text" name="blank${index}">`;
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            // console.log('정답', answers);
+            submitButton.style.visibility = "visible";
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+            var rightNum = []; //맞춘 번호(저장용)
+            var wrongNum = []; //틀린 번호(저장용)
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+
+                //ox 클래스 코드가 있으면[사용자의 ox퀴즈 응답 저장]
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);  // 라디오버튼 이름 저장
+                    var temp = '';
+                    // 사용자가 ox문제를 풀었으면(체크했으면)
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value            // 체크된 라디오 버튼의 value 저장
+                        }
+                    }
+                    //사용자가 ox문제를 안 풀었으면 공백 저장, 풀었으면 temp 저장
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                // 단답형 퀴즈 응답 저장
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // console.log('사용자 응답 모음: ', userAnswers);
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                } else {
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                }
+            }
+
+            console.log('정답 번호', rightNum);
+            console.log('오답 번호', wrongNum);
+            
+            // 점수 표시 만들기
+            // displayResult = `<div class="point">${correctNums} 점 (총 ${questions.length} 문제)</div>`
+            displayResult = `<div class="point">${correctNums} 점</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
+            displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
+
+            saveResult(rightNum, wrongNum);
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 90;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+                showResults();
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        function saveResult(rightNum, wrongNum){
+
+        }
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
