@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>윤리와사상 퀴즈</title>
+    <style>
+        /* Variables */
+        :root {
+            --main-accent: #fc575e;
+            --light-accent-color: #f0f1f5;
+            --dark-accent-color: #279;
+            --main-gray: #555;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+            font-family: 나눔고딕, Arial, Helvetica, sans-serif;
+            box-sizing: border-box;
+        }
+        /* Global */
+        body { background-color: var(--light-accent-color);}
+        a { text-decoration: none; }
+        a:hover { cursor: pointer; }
+
+        /* 가운데 정렬 */
+        @media screen and (max-width: 721px){
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+        }    
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                width: 100%;
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
+
+        /* TITLE */
+        h1{
+            width: 100%;
+            font-size: 25px;
+            font-weight: bold;
+            padding: 10px;
+            background-color:var(--main-gray);
+            color:var(--light-accent-color);
+        }
+        /* QUESTIONS */
+        .qaSet{
+            background-color: var(--light-accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .question{
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+            line-height: 160%;
+            text-indent: -1.2em;
+        }
+        input[type=text], select {
+            display: inline-block;
+            font-size: 15px;
+            width: 80%;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border: 1px solid var(--main-gray);
+            border-radius: 5px;
+        }
+        .ox {
+            display: flex;
+        }
+        .ox > label {
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            font-weight: bold;
+            background-color: lightgray;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .ox > input[type="radio"]{ 
+            display: none;
+        }
+        .ox > input[type="radio"]:checked + label {
+            display: inline-block;
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* BUTTONS */
+        .button{
+            font-size: 20px;
+            width: 120px;
+            background-color: var(--dark-accent-color);
+            color: var(--light-accent-color);
+            border: 0px;
+            border-radius: 3px;
+            padding: 10px;
+            cursor: pointer;
+            margin: 20px;
+        }
+        .button:hover{
+            background-color: #38a;
+        }
+        .button#reload{
+            background-color: orange;
+        }
+        .button#reload:hover{
+            background-color: rgb(238, 114, 13);
+        }
+
+        #reload{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+        }
+
+        /* 점수와 정답 */
+        #results{
+            color: var(--light-accent-color);
+            background-color: var(--main-gray);
+            border-radius: 5px;
+        }
+        .point{
+            font-size: 25px;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            border-radius: 5px 5px 0px 0px;
+        }
+        .correctAns{
+            font-size: 20px;
+            display: inline-block;
+            line-height: 160%;
+            margin: 10px 20px;
+        }
+        .red{
+            color:var(--main-accent);
+        }
+        #results, #reload{
+            visibility: hidden;
+        }
+        ul{
+            list-style: none;
+        }
+
+        #timer {
+            display: inline-block;
+            background-color: var(--main-accent);
+            color:white;
+            padding: 0px 10px;
+            margin-left: 20px;
+        }
+        hr { width: 98%; margin: 0 auto; color: var(--light-accent-color);}
+    </style>
+</head>
+<body>
+    <!-- 기본 UI -->
+    <h1>윤리와사상 퀴즈 2차<span id="timer"></span></h1>
+    <div class="container">
+        <div class="box" id="quiz">
+            <!-- <div id="quiz"></div> -->
+        </div>
+        <div class="box">
+            <button class="button" id="submit">결과 보기</button>
+            <button class="button" id="reload">새 문제</button>
+            <div id="results"></div>
+        </div>
+        <!-- <div class="box">
+        </div> -->
+    </div>
+
+
+
+    <script>
+        // 전체 문제 데이터
+        var data = [
+  {
+    "num": 691,
+    "question": "아리스토텔레스에 따르면 ( ···· )은/는 이데아의 세계가 아니라 현실 세계에 존재하며 현실 세계에서 실현되어야 한다.",
+    "correctAnswer": "좋음; 선",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 692,
+    "question": "아리스토텔레스에 따르면 인간 행위의 궁극적인 목적은 ( ···· )이다.",
+    "correctAnswer": "행복",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 693,
+    "question": "아리스토텔레스에 따르면 행복이란 ( ···· )에 따르는 정신의 활동이다.",
+    "correctAnswer": "덕",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 694,
+    "question": "아리스토텔레스에 따르면 덕에는 두 종류가 있다. 하나는 교육에 의해 길러지는 지성적 덕이며, 다른 하나는 습관의 결과로 생겨난 ( ···· )적 덕이다.",
+    "correctAnswer": "품성",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 695,
+    "question": "아리스토텔레스에 따르면 ( ···· )(이)란 지나침과 모자람의 중간 상태를 의미한다. 이는 산술적 중간이 아니라 가장 적절한 상태이다.",
+    "correctAnswer": "중용",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 696,
+    "question": "매킨타이어에 따르면 공동체가 공유하는 ( ···· )은/는 개인의 행동을 판단하는 기준이다.",
+    "correctAnswer": "덕",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 697,
+    "question": "스승님께서는 ‘좋음 자체’란 모든 존재와 인식의 근원으로서 ‘좋은 것들’과 구분된다고 가르쳐 주셨습니다. 그러나 제가 보기에 ‘좋음 자체’나 ‘좋음’ 역시 좋음인 한에서 아무 차이가 없어 보입니다. 왜냐하면 ‘인간 자체’에 있어서나 ‘인간’에 있어서나 하나의 동일한 설명, 즉 인간에 대한 설명이 적용되는 한, ‘인간 자체’나 ‘인간’은 아무런 차이가 없기 때문입니다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "가상 편지는 아리스토텔레스의 글이며, 편지 속 ‘스승’은 플라톤이다. 플라톤은 개별 사물에는 그것의 이데아가 존재한다고 보았으며, 이데아들 사이에는 위계가 존재한다고 보았다. 또한 그것들 중 최고의 이데아는 ‘좋음[善]의 이데아’, 즉 ‘좋음 자체’라고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 698,
+    "question": "덕이란 인간의 고유한 기능인 이성이 탁월하게 발휘되는 상태이다. 덕에는 철학적 지혜와 실천적 지혜와 같은 지성적 덕과 용기, 절제와 같은 품성적 덕이 있다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스는 덕을 지성적 덕과 품성적 덕으로 구분하였으며, 전자는 주로 교육과 탐구를 통해, 후자는 중용을 반복하여 실천함으로써 획득된다고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 699,
+    "question": "아리스토텔레스에 따르면 덕은 합리적 선택과 결부된 품성적 상태로 ( ···· )에 의존한다. 이것은 너무 많지도 않고 너무 모자라지도 않는 것을 말하며, 모든 사람에게 하나가 아니고 동일하지도 않다. 또한 이것은 이성에 의해, 실천적 지혜를 가진 사람이 규정할 방식으로 규정된 것이다.",
+    "correctAnswer": "중용",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 700,
+    "question": "덕은 여러 기술과 마찬가지로 실천함으로써 얻어진다. 집을 지어 봄으로써 건축가가 되며, 거문고를 탐으로써 악사가 되듯, 절제 있는 행위를 함으로써 절제 있게 된다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 701,
+    "question": "덕은 획득된 자질이다. 덕을 소유하고 실행함으로써 어떤 실천 안에 들어 있는 선(善)을 실현할 수 있게 되며, 덕을 결여하게 될 때 그러한 선을 실현할 수 없게 된다.'라고 주장한 현대 서양 사상가는?",
+    "correctAnswer": "매킨타이어",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 702,
+    "question": "만일 덕이 영혼 안에 있는 것들 중 하나이고 유익한 것임에 틀림없다면, 그것은 마땅히 지식이어야만 한다. 영혼과 관련된 것, 예를 들어 절제, 정의, 용기, 잘 배우는 능력, 기억력, 대범함 등은 그 자체로 유익하지도 해롭지도 않지만, 지식을 동반하느냐 어리석음을 동반하느냐에 따라 유익하게 되기도 해롭게 되기도 하기 때문이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "소크라테스",
+    "explanation": "소크라테스에 따르면 덕이 유익하려면 올바르게 사용되어야 하고 그러려면 옳고 그름에 대한 앎의 안내를 받아야 한다. 따라서 앎이 곧 덕이다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 703,
+    "question": "만일 덕이 자연과 마찬가지로 어떤 기술보다도 정밀하고 좋은 것이라면, 그것은 중간을 지향하는 것이어야 한다. 분노나 연민, 고통과 쾌락을 느끼는 일에는 과도와 부족이 있을 수 있는데, 그 어느 경우나 잘하는 것이 아니다. 마땅한 때에 마땅한 일에 대해 마땅한 동기와 태도로 이러한 것을 느끼는 것은 중간적이며 동시에 최선이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스에 따르면 분노나 연민, 고통과 쾌락 등과 관련된 덕은 중용을 특징으로 한다. 그러나 중용을 알아도 ‘의지의 나약함’이나 ‘자제력 없음’ 때문에 행위로 이어지지 않을 수 있으므로 실천 의지를 길러야 한다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 704,
+    "question": "용기는 두려워할 것들과 두려워하지 않을 것들에 관한 소신에 짙게 물들여져 있는 군인들이 쾌락이나 고통, 공포 및 욕망 등과 같은 그 어떤 세제(洗劑)에 의해서도 탈색되지 못하도록 하기 위한 것이다. 용기란 성향에 따라 수립된 나라에 속한 군인들의 소신을 보전하게 해 주는 능력이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "플라톤",
+    "explanation": "플라톤은 용기를 영혼의 기개와 국가의 군인들이 갖추어야 할 덕으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 705,
+    "question": "용기는 두려운 것들과 대담함을 불러일으키는 것들에 관련한 덕이다. 비겁한 사람, 무모한 사람, 용감한 사람 모두 동일한 것들에 관련하지만, 그것들에 대해 서로 다른 방식으로 관련한다. 앞의 두 사람은 지나치거나 모자라는 반면, 나머지 사람은 중간의 방식으로 관계를 맺는다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스는 용기를 무모와 비겁의 중용에 해당하는 품성적 덕으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 706,
+    "question": "정의로운 사람이나 절제 있는 사람은 어떤 일들을 단순히 행하는 사람이 아니고, 마치 정의로운 사람들이나 절제 있는 사람들이 행하는 바로 그런 방식으로 일들을 행하는 사람들이다. 그러므로 정의로운 일을 행하는 것으로부터 정의로운 사람이 되고, 절제 있는 일들을 행하는 것으로부터 절제 있는 사람이 된다. 이러한 일들을 행하지 않고서는 그 누구도 좋은 사람이 되지 못하며 될 가망성조차 가지지 못할 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스는 덕에 대한 앎을 가진 사람과 덕 있는 사람을 동일시한 소크라테스와 달리, 덕 있는 사람이 되기 위해서는 덕 있는 사람의 행위를 본받아 이를 반복해야 한다고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 707,
+    "question": "아무것도 존재하지 않는다. 만일 무엇인가가 존재한다 하더라도 우리 인간에게는 알려질 수 없다. 비록 무엇인가가 알려질 수 있다 하더라도 그것을 우리의 이웃에게 표현하고 전달할 수 없다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "고르기아스; 소피스트",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 708,
+    "question": "존재하는 것들에는 두 종류가 있다. 하나는 보이는 것이고 다른 하나는 보이지 않는 것이다. 후자는 사물의 원형(Idea)으로서 영혼이 감각적 지각의 힘을 빌리지 않고 자체의 힘으로 이해하게 되는 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "플라톤",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 709,
+    "question": "좋음[善]은 무엇임에 있어서도, 어떠함에 있어서도, 관계에 있어서도 이야기된다. 좋음은 단일한 보편자로 존재하지 않는다. ‘좋음 자체’와 ‘좋음’은 좋음인 한에서 아무런 차이가 없다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 710,
+    "question": "지혜란 영혼의 세 부분 각각뿐 아니라 세 부분으로 이루어진 전체를 위해 무엇이 유익한 것인지 아는 덕이며, 용기란 이성이 지시하는 대로 두려워할 것과 두려워하지 않을 것을 끝까지 보전하는 것이다. 절제는 지배하는 부분과 지배받는 두 부분들 사이에 의견의 일치를 보고 반목하지 않는 것이며, 정의란 각 부분들이 조화를 이루어 하나가 된 상태를 이루고 유지하는 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "플라톤",
+    "explanation": "플라톤은 행복의 실현을 위한 덕으로 지혜와 용기, 절제, 정의를 제시하였으며, 특히 이성이 기개와 욕구를 잘 다스려야 함을 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 711,
+    "question": "인간의 행복이 덕에 따르는 활동이라면, 행복은 최고의 덕을 따라야 할 것이다. 최고의 덕은 고귀하고 신적인 것들을 관조하는 이성의 덕이기 때문에, 이성의 관조적인 활동이 완전한 행복이다. 이성은 우리 안에 있는 것들 중 최선의 것이며, 이성이 상대하는 대상은 앎의 대상들 중 최선의 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스는 진리에 대한 이성적 관조를 인간이 추구해야 할 최고의 행복으로 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 712,
+    "question": "인간의 모든 행동의 궁극 목적은 행복이다. 행복에 이르기 위해서는 덕을 갖추어야 한다. 덕은 지성적 덕과 품성적 덕으로 나뉘는데, 지성적 덕은 주로 교육을 통해, 품성적 덕은 올바른 행동을 습관화함으로써 길러진다. 구체적 상황에서 올바른 행동이 무엇인지 알기 위해서는 실천적 지혜라는 지성적 덕을 발휘해야 한다.'라고 주장한 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 713,
+    "question": "아리스토텔레스에 따르면 품성적 덕을 갖추려면 감정과 욕구가 이성의 명령을 따르도록 해야 한다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 품성적 덕의 특징인 중용은 이성에 의해 감정과 충동을 억제함으로써 어떤 극단에 치우치지 않는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 714,
+    "question": "아리스토텔레스에 따르면 품성적 덕을 갖추려면 과도함과 부족함의 중간에 맞는 행동을 해야 한다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 품성적 덕의 특징인 중용은 이성에 의해 감정과 충동을 억제함으로써 어떤 극단에 치우치지 않는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 715,
+    "question": "아리스토텔레스에 따르면 품성적 덕을 갖추려면 유덕한 사람의 행동을 본받고 직접 해 보아야 한다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 유덕한 사람이 되기 위해서는 유덕한 사람의 행동을 본받고 직접 해 보아야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 716,
+    "question": "아리스토텔레스에 따르면 품성적 덕을 갖추려면 합리적 숙고를 추구하고 실천 의지를 길러야 한다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 앎과 행위 사이에는 ‘의지의 나약함’또는 ‘자제력 없음’의 문제가 있다. 따라서 이성에 부합한 사고를 추구할 뿐 아니라 실천 의지를 길러야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 717,
+    "question": "아리스토텔레스에 따르면 품성적 덕을 갖추려면 철학적 지혜로써 삶 속에서 중용을 발견해야 한다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스에 따르면 철학적 지혜는 신이나 자연 등과 같이 영원하고 고귀한 대상들을 이성적으로 관조하는 활동의 덕이며, 구체적인 상황에서 중용이 무엇인지 알려 주는 덕은 실천적 지혜이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 718,
+    "question": "아리스토텔레스에 따르면 중용은 지성적 덕을 갖추어야만 발견할 수 있다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 중용은 지성적 덕인 실천적 지혜에 의해 발견된다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 719,
+    "question": "아리스토텔레스에 따르면 중용은 산술적 평균으로서 덕과 악덕의 중간 상태이다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스에 따르면 품성적 덕으로서의 중용은 단순한 산술적 평균이 아니다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 720,
+    "question": "아리스토텔레스에 따르면 중용은 모든 덕 중 가장 높은 수준의 행복을 보장한다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스에 따르면 모든 덕 중 가장 높은 수준의 행복을 보장하는 덕은 지성적 덕 중 하나인 철학적 지혜이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 721,
+    "question": "아리스토텔레스에 따르면 중용은 그 자체로 나쁜 행위 및 감정과 관련해서는 존재하지 않는다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 절도와 질투 등 그 자체로 이미 나쁜 행위나 감정에는 중용이 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 722,
+    "question": "아리스토텔레스와 매킨타이어는 옳음을 자연스럽게 행하려면 유덕한 성품을 길러야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "두 사상가 모두 유덕한 성품을 갖춰야 옳고 선한 행위를 자연스럽게 할 수 있다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 723,
+    "question": "아리스토텔레스와 매킨타이어는 유덕한 성품을 기르려면 옳은 행위를 습관화해야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "두 사상가 모두 덕을 습관적 행위의 결과로서 형성되는 성품의 훌륭함으로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 724,
+    "question": "아리스토텔레스와 매킨타이어는 옳은 행위를 분별하는 능력은 공동체적 삶 속에서 비롯된다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "두 사상가 모두 덕의 소유와 실현은 공동체적 삶을 통해서 가능하다고 보았다. 아리스토텔레스는 유덕한 사람이 되기 위해서는 사회적 책무에 충실해야 한다고 보았으며, 매킨타이어 또한 공동체가 공유하는 덕을 개인의 행동을 지도하고 판단하는 기준으로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 725,
+    "question": "아리스토텔레스와 매킨타이어는 유덕한 사람이 되기 위해서는 일체의 감정을 초월해야 한다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "두 사상가는 모두 덕이 인간의 감정과 무관하지 않다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 726,
+    "question": "소크라테스는 덕이 무지를 자각하고 영혼을 수련함으로써 형성할 수 있다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "소크라테스에 따르면 앎이 곧 덕이며, 앎은 무지의 자각과 영혼의 수련을 통해 얻을 수 있다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 727,
+    "question": "소크라테스는 덕이 구체적으로 여러 개이지만 모두 공통된 특징을 갖는다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "소크라테스에 따르면 덕은 곧 지식이다. 즉 서로 구별되는 여러 덕들(절제, 용기 등)은 사실상 하나, 즉 지식(또는 지혜)이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 728,
+    "question": "아리스토텔레스는 덕이 인간이 가진 고유한 기능을 탁월하게 발휘하는 것이다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 729,
+    "question": "아리스토텔레스는 덕이 자제력을 지니고 있다면 실천적 지혜 없이도 형성된다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스에 따르면 분노나 연민, 고통과 쾌락 등과 관련된 덕은 중용을 특징으로 하며, 중용은 실천적 지혜에 의해 발견된다. 따라서 실천적 지혜를 갖추지 못한다면 자제력을 가지고 있어도 덕을 형성할 수 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 730,
+    "question": "소크라테스와 아리스토텔레스는 덕이 행복한 사람이라면 누구나 필연적으로 갖추고 있다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 731,
+    "question": "플라톤과 아리스토텔레스에 따르면 용기를 실현하는 것은 행복한 삶을 위한 필수 조건이다.",
+    "correctAnswer": "O",
+    "explanation": "",
+    "questionType": "ox"
+  },
+  {
+    "num": 732,
+    "question": "플라톤에 따르면 용기는 수호자 집단 내의 방위자들만이 갖추는 덕이다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 통치자는 지혜뿐 아니라 용기와 절제 모두를 갖춰야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 733,
+    "question": "플라톤에 따르면 용기의 원형은 인간의 감각적 경험을 통해 파악된다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 용기의 원형(Idea)은 이성에 의해서만 파악된다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 734,
+    "question": "아리스토텔레스에 따르면 용기는 어떠한 것도 두려워하지 않는 품성적인 덕이다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스에 따르면 용기는 두려움과 관련된 중용이다. 따라서 용기는 모든 두려움에서 벗어나는 것이 아니다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 735,
+    "question": "아리스토텔레스에 따르면 용기는 지성적 덕인 실천적 지혜에 의해서 파악된다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 용기는 무모와 비겁의 중용이며, 지성적 덕인 실천적 지혜에 의해서 파악된다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 736,
+    "question": "에피쿠로스는 행복의 실현을 위해 삶에 대한 이성적 숙고가 반드시 필요하다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스가 긍정할 진술이다. 그에 따르면 행복한 삶의 시작과 끝은 쾌락이고 참된 쾌락은 고통의 부재이다. 따라서 쾌락과 고통을 가져오는 욕구와 행위 등에 대한 이성적 숙고가 필요하다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 737,
+    "question": "에피쿠로스는 현실적인 선보다는 이상적이고 초월적인 선 자체를 추구해야 한다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스가 부정할 진술이다. 그가 추구한 쾌락은 몸의 고통과 마음의 불안이 없는 상태로서 현실 속에서 경험되는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 738,
+    "question": "소크라테스와 아리스토텔레스는 정의가 무엇인지 정확히 아는 사람도 부정의한 행위를 할 수 있다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스가 긍정의 대답을 할 진술이다. 그는 앎과 행위 사이에 ‘의지의 나약함’ 또는 ‘자제력 없음’의 문제가 있다고 보았으며, 앎이 행위로 이어지기 위해서는 실천 의지를 길러야 한다고 주장하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 739,
+    "question": "소크라테스와 아리스토텔레스는 정의에 대한 지식을 가지면 필연적으로 모든 덕을 실현할 수 있다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "소크라테스가 긍정의 대답을 할 진술이다. 하나의 덕에 대한 참된 앎을 가진 사람은 덕 자체에 대한 앎을 가지게 되므로 필연적으로 모든 덕을 갖출 수 있다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 740,
+    "question": "소크라테스와 아리스토텔레스는 정의는 보편타당한 덕이며 인간만의 고유한 기능에 의해 파악된다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "소크라테스와 아리스토텔레스 모두가 긍정의 대답을 할 진술이다. 두 사상가 모두 덕을 인간의 고유한 기능인 이성이 탁월하게 발휘된 상태로 보았다",
+    "questionType": "ox"
+  },
+  {
+    "num": 741,
+    "question": "소크라테스와 아리스토텔레스는 정의는 철학적 지혜에 따라 선을 인식하고 반복함으로써 형성된다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "두 사상가 모두 부정의 대답을 할 진술이다. 소크라테스에 따르면 덕은 행위의 반복에 의한 결과라기보다는 일종의 앎이다. 또한 아리스토텔레스에 따르면 정의는 품성적 덕의 하나로 지성적 덕인 실천적 지혜에 의해 파악되는 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 742,
+    "question": "고르기아스, 플라톤, 아리스토텔레스는 모두 감각에 의존해서는 참된 지식을 얻을 수 없다고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스가 부정의 대답을 할 진술이다. 아리스토텔레스는 감각적 경험에서 출발하여 일반적인 원리로 나아가는 귀납법도 참된 지식을 추구하는 방법이 될 수 있다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 743,
+    "question": "고르기아스, 플라톤, 아리스토텔레스는 모두 보편타당한 진리와 도덕규범은 존재하지 않다고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤과 아리스토텔레스가 부정할 진술이다. 모든 존재와 인식의 근원이자 실현되어야 할 이상인 선의 이데아는 보편타당한 실재이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 744,
+    "question": "고르기아스, 플라톤, 아리스토텔레스는 모두 사물의 원형은 초월적 세계에 실재하며 인식 가능하다고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤은 긍정, 고르기아스와 아리스토텔레스는 부정할 진술이다. 플라톤은 모든 존재의 인식의 근거가 되는 선의 이데아가 이데아계에 실재한다고 보았다. 반면 아리스토텔레스는 이데아계의 존재를 부정하였으며, 고르기아스는 회의주의 입장에서 절대적인 존재와 진리 및 그에 대한 객관적 인식을 부정하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 745,
+    "question": "고르기아스, 플라톤, 아리스토텔레스는 모두 아름다운 것들과 아름다움 자체는 구분될 수 있다고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "고르기아스와 플라톤이 긍정할 진술이다. 플라톤에 따르면 ‘아름다움 자체’, 즉 아름다움의 원형(Idea)은 이데아계에 존재하며, ‘아름다운 것들’은 현실 세계에 존재한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 746,
+    "question": "고르기아스, 플라톤, 아리스토텔레스는 모두 세계는 개별 실체들로 이루어진 하나의 세계뿐이라고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "고리기아스와 플라톤은 부정, 아리스토텔레스는 긍정할 진술이다. 아리스토텔레스는 이데아계와 현상계를 구분한 플라톤과 달리, 세계를 개별 실체들로 이루어진 하나의 세계로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 747,
+    "question": "플라톤에 따르면 영혼의 비이성적 부분에 해당하는 덕은 존재하지 않는다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 기개와 욕구는 영혼의 비이성적 부분이며 용기는 기개에 해당하는 덕이고 절제는 욕구뿐 아니라 이성과 기개에도 해당하는 덕이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 748,
+    "question": "플라톤에 따르면 이성에 따른 욕구 충족도 영혼의 탁월성 함양에 방해가 된다.",
+    "correctAnswer": "X",
+    "explanation": "플라톤에 따르면 이성에 따라 욕구를 충족함으로써 절제의 덕을 함양할 수 있다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 749,
+    "question": "아리스토텔레스가 강조한 삶의 태도는 지성을 계발하고 올바른 행동을 반복하여 실천하는 것이다.",
+    "correctAnswer": "O",
+    "explanation": "아리스토텔레스에 따르면 행복에 이르기 위해서는 지성적 덕과 품성적 덕을 갖추어야 하며, 품성적 덕은 올바른 행동을 습관화함으로써 길러진다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 750,
+    "question": "아리스토텔레스가 강조한 삶의 태도는 유일신에게 모든 것을 내맡기는 독실한 신앙생활을 하는 것이다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스가 강조한 삶의 태도로 보기 어렵다. 그는 이성적 삶을 중시하고 덕을 갖추려는 인간의 노력을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 751,
+    "question": "아리스토텔레스가 강조한 삶의 태도는 이성보다 감각적 경험으로 중용을 파악하고 그대로 따르는 것이다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스는 중용이 실천적 지혜라는 지성적 덕에 의해 파악된다고 하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 752,
+    "question": "아리스토텔레스가 강조한 삶의 태도는 행복한 삶의 시작이자 끝인 쾌락을 최대한 누리도록 힘쓰는 것이다.",
+    "correctAnswer": "X",
+    "explanation": "쾌락을 행복한 삶의 시작이자 끝이라고 본 사상가는 에피쿠로스이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 753,
+    "question": "아리스토텔레스가 강조한 삶의 태도는 마음의 평화를 위해 공적인 삶에서 벗어나 자연에 은둔하는 것이다.",
+    "correctAnswer": "X",
+    "explanation": "아리스토텔레스가 강조한 삶의 태도로 보기 어렵다. 공적인 삶에서 벗어나 은둔할 것을 권장한 사상가는 에피쿠로스이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 754,
+    "question": "에피쿠로스는 ( ···· )을/를 모든 가치를 평가하는 최고선이라고 보았다.",
+    "correctAnswer": "쾌락",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 755,
+    "question": "에피쿠로스에 따르면 참된 쾌락이란 몸의 고통과 마음의 불안이 모두 소멸된 상태, 즉 ( ···· )이다.",
+    "correctAnswer": "평정심",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 756,
+    "question": "에피쿠로스는 평정심에 이르기 위해 ( ···· )적이고 ( ···· )적인 욕구만은 최소한으로 충족하는 소박한 삶을 살아야 한다고 주장하였다.",
+    "correctAnswer": "자연, 필수",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 757,
+    "question": "쾌락은 우리에게 타고난 첫 번째 선(善)이며, 우리의 행위에 있어 선택과 기피의 근원이다. 우리는 모든 선을 구별하는 기준으로서 느낌을 사용하면서 쾌락으로 돌아간다. 맛의 즐거움, 사랑의 쾌락, 듣는 즐거움 등을 모두 제외한다면 선이라고 할 수 있는 것이 없다. 아름다움과 탁월함 등도 우리에게 쾌락을 제공할 때 가치를 지닌다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스에 따르면 쾌락은 유일한 선이고 고통은 유일한 악이며, 쾌락이 모든 가치를 결정하는 기준이다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 758,
+    "question": "우리가 선택과 기피를 함에 있어 자연의 목적에 비추어 보지 않고 다른 어떤 기준에 호소한다면, 그행동은 사리에 맞지 않을 것이다. 우리는 자연에 거역해서는 안 되며 자연에 복종해야 한다. 이것은 우리에게 해를 끼치지 않는 욕망들은 충족하는 반면, 해로운 욕망들은 완강히 거부하는 것을 의미한다. 참된 쾌락이란 몸의 고통과 마음의 불안으로부터의 자유이다. 쾌락적인 삶을 만들어 주는 것은 술을 마시고 흥청거리는 것이나 풍성한 식탁을 가지는 것이 아니라 모든 선택과 기피의 근거를 파악하고 영혼을 뒤흔드는 광기를 몰아내는 명료한 사고뿐이기 때문이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스는 인간이 본성적으로 쾌락을 추구하고 고통을 회피한다고 보았으며, 지속적으로 쾌락을 얻기 위해서는 욕구를 충족하기에 앞서 그 욕구의 충족이 고통을 야기하지 않는지 살펴보아야 한다고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 759,
+    "question": "빵과 물은 배고프고 갈증을 느끼는 사람에게 가장 큰 쾌락을 제공한다. 결핍으로 인한 고통이 일단 제거되고 나면 육체의 쾌락은 더 이상 증가하지 않는다. 한편 정신적 쾌락의 한계는 쾌락들에 대한 숙고를 통해 얻어진다. 이런 까닭에 우리는 모든 쾌락을 선택하지 않으며, 많은 고통들이 쾌락보다 낫다고 생각한다. 왜냐하면 오랫동안 고통을 참으면 더 큰 쾌락이 오기도 하기 때문이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스에 따르면 적극적인 욕구의 충족에 따른 쾌락이 아니라 고통을 제거함으로써 주어지는 쾌락을 추구할 때 마음의 안정과 행복을 누릴 수 있다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 760,
+    "question": "덕은 쾌락과 고통에 관련된다. 우리가 나쁜 일들을 행하는 것은 즐거움 때문이며, 고귀한 일들을 멀리하는 것은 그것이 고통이기 때문이다. 그러므로 어렸을 때부터 마땅히 기뻐해야 할 것에 기뻐하고 마땅히 괴로워해야 할 것에 고통을 느끼도록 어떤 방식으로 교육되어야 한다. 일반적으로 쾌락과 고통은 너무 많이 혹은 너무 적게 느껴질 수 있는 것인데, 그 어느 경우에도 좋은 일이 못된다. 덕은 과도와 부족의 중간을 목표로 삼는 성질을 가져야 한다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "아리스토텔레스",
+    "explanation": "아리스토텔레스는 지나침과 모자람 사이의 중용을 덕의 특징으로 보았다. 예를들어 쾌락과 관련하여 지나침은 방종이며 모자람은 둔감이고 중용은 절제이다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 761,
+    "question": "쾌락은 행복한 삶의 시작이자 끝이다. 그런데 우리가 추구하는 쾌락은 방탕한 자의 쾌락이나 육체적 쾌락이 아니라, 몸에 고통이 없고 마음에 불안이 없는 것이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 762,
+    "question": "덕은 본성적으로 즐거운 삶과 연결되어 있고, 즐거운 삶은 덕에서 분리할 수 없다. 사려 깊고 아름답고 정의롭게 살지 않고서 즐겁게 사는 것은 불가능하며, 즐겁게 살지 않고서 사려 깊고 아름답고 정의롭게 사는 것도 불가능하다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스는 몸에 고통이 없고 마음에 불안이 없는 상태를 추구하였다. 그는 덕과 즐거운 삶이 연결되어 있다고 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 763,
+    "question": "에피쿠로스는 쾌락은 유일한 선이며 덕과 불가분의 관계라고 보았다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 사려 깊고 정의롭게 살지 않고는 쾌락을 누릴 수 없으며, 쾌락을 누리지 못하면서 사려 깊고 정의롭게 살 수 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 764,
+    "question": "에피쿠로스는 쾌락은 인간에게 행복한 삶의 시작이자 끝이라고 보았다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 인간은 고통을 느끼지 않는다면 더 이상의 쾌락을 필요로 하지 않는다. 따라서 쾌락은 인간에게 행복한 삶의 시작이자 끝이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 765,
+    "question": "에피쿠로스는 쾌락의 추구와 고통의 회피는 인간의 본성이라고 보았다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 쾌락은 인간에게 타고난 첫 번째 선(善)이며, 인간은 본성적으로 쾌락을 추구하고 고통을 회피한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 766,
+    "question": "에피쿠로스는 쾌락을 얻으려면 모든 욕구를 충족해야 한라고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스는 고통의 부재(不在)를 쾌락으로 보았으며, 자연적이고 필수적인 욕구만을 최소한으로 충족할 것을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 767,
+    "question": "에피쿠로스는 쾌락을 추구할 때에도 사려 깊음이 요구된다고 보았다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 사려 깊고 정의롭게 살지 않고는 쾌락을 누릴 수 없으며, 쾌락을 누리지 못하면서 사려 깊고 정의롭게 살 수 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 768,
+    "question": "에피쿠로스는 자연적이고 필수적인 욕망만을 최소한으로 충족하며 살아야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 필수적이지 않은 욕망은 충족되지 않아도 고통을 발생시키지 않으며, 오히려 충족할수록 더 큰 고통을 발생시킨다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 769,
+    "question": "에피쿠로스는 운명의 존재를 인정함으로써 불필요한 두려움에서 벗어나야 한다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스에 따르면 신은 인간의 일에 관여하지 않으며 운명은 존재하지 않고 죽음은 우리에게 아무것도 아니다. 따라서 이것들에 대해 두려워할 필요가 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 770,
+    "question": "에피쿠로스는 공적인 인간관계와 삶을 멀리하고 친구와의 우정을 중시해야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 공적인 삶은 집착, 좌절, 다툼, 분노 등을 일으켜 육체적, 정신적 고통을 가져온다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 771,
+    "question": "에피쿠로스는 서로가 피해를 주고받지 않기 위한 협정인 정의를 실현해야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 참된 쾌락에 이르려면 안전한 삶이 보장되어야 하는데, 안전한 삶을 위한 상호 협정이 정의이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 772,
+    "question": "에피쿠로스는 행위가 산출할 쾌락과 고통을 숙고하고 이에 따라 행위 해야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스는 쾌락주의 사상가로서 행위가 산출할 쾌락과 고통에 대해 숙고할 것을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 773,
+    "question": "에피쿠로스학파는 자연적인 욕구들 중 필수적이지 않은 욕구는 극복해야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스에 따르면 필수적이지 않은 욕구는 충족하지 않아도 고통을 일으키지 않으며 오히려 충족할수록 고통을 발생시킨다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 774,
+    "question": "아리스토텔레스에 따르면 에피쿠로스는 고통과 쾌락이 이성적 숙고의 대상임을 모르고 있다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스는 쾌락과 고통을 야기할 욕구 충족에 대한 이성적 숙고를 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 775,
+    "question": "아리스토텔레스에 따르면 에피쿠로스는 고통의 부재가 최고선이 아닐 수 있음을 모르고 있다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스는 고통의 부재, 즉 어떠한 고통이 없는 상태를 참된 쾌락이자 최고선으로 보았다. 한편 아리스토텔레스는 쾌락 및 고통과 관련하여 지나침과 모자람의 중용을 품성적 덕의 특징으로 보았다. 아리스토텔레스에게 최고선은 행복이며 행복은 덕에 따른 영혼의 활동이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 776,
+    "question": "아리스토텔레스에 따르면 에피쿠로스는 어떠한 쾌락도 그 자체로 나쁘지 않음을 모르고 있다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스에 따르면 쾌락은 유일한 선이며 어떠한 쾌락도 그자체로 나쁘지 않다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 777,
+    "question": "아리스토텔레스에 따르면 에피쿠로스는 쾌락은 본성적으로 덕과 분리될 수 없음을 모르고 있다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스에 따르면 유덕한 삶은 쾌락 없이 불가능하며, 쾌락은 유덕한 삶 없이 불가능하다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 778,
+    "question": "아리스토텔레스에 따르면 에피쿠로스는 고통이 없다면 더 이상의 쾌락은 불필요함을 모르고 있다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스는 욕구를 적극적으로 충족하는 것이 아니라 고통을 제거함으로써 주어지는 쾌락을 추구하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 779,
+    "question": "스토아학파 사상가들은 어떤 상황에서도 동요하지 않는 정신 상태, 즉 정념의 지배로부터 벗어난 상태인 ( ···· )을/를 추구하였다.",
+    "correctAnswer": "부동심",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 780,
+    "question": "스토아학파 사상에 따르면 ( ···· )(이)란 우주 만물의 본질이자 만물의 생성과 변화를 이끌어가는 힘으로, '신', '자연' 등으로 표현되기도 한다.",
+    "correctAnswer": "이성",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 781,
+    "question": "스토아학파 사상가들은 각자에게 주어진 조건과 상황을 변화시키기보다 그것을 자신의 ( ···· )(으)로 받아들여야 한다고 주장하였다.",
+    "correctAnswer": "운명",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 782,
+    "question": "세계가 하나이고 그 자체 안에 모든 존재자들을 포함하고 있으며, 자연적으로 살아 있고 이성적으로 조직되어 있다고 보았다. 그리고 운명 자체와 자연, 이성을 신이라고 불렀는데, 신은 모든 존재자들 속에 그리고 일어나는 모든 일들에 현존하는 것이다. 인생의 목적은 자연에 따른 삶이다. 이것은 각자가 자신의 자연적 본성을 따르는 것이며, 공통된 법, 즉 만물에 퍼져 있는 올바른 이성이 금지하는 그 어떤 행위도 하지 않는 것이다.'라고 주장한 학파는?",
+    "correctAnswer": "스토아학파",
+    "explanation": "스토아학파에 따르면 우주 만물의 본질은 이성(lOgOs)이며, 신과 자연, 인간은 이성에 의해 연결되어 있다. 또한 모든 일은 이성에 의해 필연적으로 일어나므로 이성에 따라 살아야 한다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 783,
+    "question": "많은 사람들은 죽음을 가장 큰 악으로 생각하고 두려워한다. 반면 현자(賢者)는 죽음을 악으로 생각하지 않으며 두려워하지 않는다. 악이란 몸과 마음의 고통이며 쾌락만이 유일한 선이다.'라고 주장한 고대 서양 사상가는?",
+    "correctAnswer": "에피쿠로스",
+    "explanation": "에피쿠로스는 평정심에 이르려면 신이나 운명, 죽음 등에 대한 잘못된 믿음을 없애야 한다고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 784,
+    "question": "사람들을 심란하게 하는 것은 어떤 일 자체가 아니라, 그 일에 대한 그들의 판단이다. 마찬가지로 죽음을 두려운 것으로 만드는 유일한 것은 그것이 두렵다는 우리의 판단이다.'라고 주장한 고대 서양 사상은?",
+    "correctAnswer": "에픽테토스; 스토아학파",
+    "explanation": "스토아학파의 에픽테토스는 부동심에 이르려면 주어진 조건이나 상황이 아니라 생각과 욕구, 감정 등을 바꿔야 한다고 주장하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 785,
+    "question": "빵을 구울 때 표면의 갈라진 부분들은 빵을 굽는 사람의 의도와 기술에 어긋나기는 해도, 그 나름대로의 아름다움을 지니며 먹고 싶은 욕망을 자극한다. 이와 같이 자연의 순리에 따른 것이라면 아무것도 나쁘지 않다. 우주에서 생성되는 사건과 사물에 대해 깊은 통찰력을 지닌 사람에게는, 어떤 결과로서 일어나는 사건과 사물들 중 그 어떤 것도 기쁨을 제공하도록 창조되지 않은 것이 없다.'라고 주장한 고대 서양 사상은?",
+    "correctAnswer": "스토아학파",
+    "explanation": "스토아학파에 따르면 세계 안의 모든 일은 자연의 인과 법칙에 따라 필연적으로 일어난다. 따라서 모든 것이 자연의 순리대로 되었음을 이성적으로 통찰하고 자연의 순리에 따를 때 마음의 안정과 행복을 누릴 수 있다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 786,
+    "question": "지혜란 어떻게 쾌락을 추구하는 것이 좋은지를 제시해 주는 삶의 기예이며, 절제란 이성에 따라 욕구할 것과 기피할 것으로 판정한 바를 고수하는 덕이다. 용기란 근심이나 공포를 이겨 내고 고통에서 벗어나 평온한 삶을 지켜 내는 덕이다. 이러한 덕의 바탕은 욕구를 이성에 순종하게 하는 것인데, 이성은 신과 인간, 세계에 공통된 것이며 신 자신도 이성에 순종한다.'라고 주장한 고대 서양 사상은?",
+    "correctAnswer": "스토아학파",
+    "explanation": "스토아학파 역시 행복의 실현을 위한 덕으로 지혜와 용기, 절제 등을 강조하였으며, 이러한 덕의 본질은 이성(lOgOs)의 명령에 따라 자연의 필연성을 기꺼이 받아들이는 것이라고 보았다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 787,
+    "question": "세상에서 일어나는 모든 일들을 받아들여야 한다. 그 일들은 우주의 건강과 번영, 지복(至福)을 가져오는 것이기 때문이다. 너에게 무슨 일이 일어나든 그 일은 아득한 옛날부터 준비되어 있었고, 여러 원인들이 서로 관련을 맺으며 그 일을 만들어 왔다. 우주를 지배하는 이성에는 악을 행할 원인이 있지 않으며, 이성은 어떤 것에도 해를 입히지 않는다. 신과 인간에게 공통된 이성에 따라 일을 하는 경우에는 두려워할 것이 없다.'라고 주장한 고대 서양 사상은?",
+    "correctAnswer": "스토아학파",
+    "explanation": "",
+    "questionType": "blank"
+  },
+  {
+    "num": 788,
+    "question": "우리를 심란하게 하는 것은 사건 자체가 아니라 그 사건에 대한 우리의 믿음이다. 세상의 사건은 실제로 일어나는 대로 일어나기를 원해야 한다. 모든 것에서 이성 이외의 다른 어떤 것에도 주목하지 않고 자신을 이끌어 감으로써 소크라테스는 완전하게 되었다. 우리는 소크라테스가 되고자 원하는 듯이 살아야 한다.'라고 주장한 고대 서양 사상은?",
+    "correctAnswer": "스토아학파",
+    "explanation": "스토아학파의 사상가 에픽테토스의 주장이다. 스토아학파는 운명에 순응하는 삶과 이성에 따르는 삶을 중시하였다.",
+    "questionType": "blank"
+  },
+  {
+    "num": 789,
+    "question": "스토아학파에 따르면 바람직한 삶이란 자신과 신, 세계의 공통된 본성을 따르는 것이다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파에 따르면 이성은 인간과 신, 세계의 공통된 본성이며, 이성에 따른 삶이 바람직한 삶이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 790,
+    "question": "스토아학파에 따르면 바람직한 삶이란 자연 속에 은둔하여 소박하게 살아가는 것이다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스학파가 주장하는 바람직한 삶의 모습이다. 스토아학파는 공적인 삶과 의무를 중시하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 791,
+    "question": "스토아학파에 따르면 바람직한 삶이란 자신의 외적 조건을 운명으로 수용하는 것이다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파에 따르면 외적 조건은 신의 예정과 섭리에 의해 결정된 운명이므로 바꿀 수도 없고 바꿀 필요도 없다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 792,
+    "question": "스토아학파에 따르면 바람직한 삶이란 자연적 정념과 비자연적 정념에 초연한 것이다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파에 따르면 이상적 경지인 부동심에 이르기 위해서는 자연적 정념과 비자연적 정념 모두에 대해 초연해야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 793,
+    "question": "스토아학파에 따르면 바람직한 삶이란 자연의 필연적인 질서와 법칙을 따르는 것이다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파에 따르면 모든 것은 필연적인 질서와 법칙에 따라 일어나므로 자연에 따른 삶을 살아야 한다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 794,
+    "question": "에피쿠로스는 욕망의 적극적 충족보다 고통의 제거를 추구하였다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스는 소극적 쾌락주의 입장을 견지하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 795,
+    "question": "에피쿠로스는 몸과 마음에 고통이 없는 평정심에 이르고자 하였다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스는 몸과 마음에 고통이 없는 상태를 참된 쾌락으로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 796,
+    "question": "스토아학파는 내면의 동기나 의지와 달리 주어진 조건이나 상황은 바꿀 수 있다고 보았다.",
+    "correctAnswer": "X",
+    "explanation": "스토아학파의 에픽테토스에 따르면 인간이 바꿀 수 있는 것은 주어진 조건이나 상황이 아니라 내면의 동기나 의지 등 마음과 관련된 것이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 797,
+    "question": "스토아학파는 어떤 상황에서도 동요하지 않는 부동심에 이르고자 하였다.",
+    "correctAnswer": "O",
+    "explanation": "에픽테토스는 어떤 상황에도 동요하지 않는 부동심을 이상적 경지로 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 798,
+    "question": "에피쿠로스와 스토아학파는 모두 욕망을 절제하고 검소하게 살아가는 삶의 태도를 강조하였다.",
+    "correctAnswer": "O",
+    "explanation": "에피쿠로스와 에픽테토스 모두 평온한 삶을 살기 위해 욕망을 절제하고 검소한 삶을 살아야 한다고 주장하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 799,
+    "question": "스토아학파와 에피쿠로스학파는 모두 평온한 삶을 위해 자연의 질서에 대한 이해를 갖춰야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파는 자연의 필연적 질서를 인식함으로써 정념의 지배에서 벗어날 수 있다고 보았으며, 에피쿠로스학파는 자연에 대한 이해를 통해 신, 운명, 죽음 등에 대한 잘못된 믿음을 없앰으로써 두려움에서 벗어날 수 있다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 800,
+    "question": "스토아학파와 에피쿠로스학파는 모두 공동선을 실현하기 위한 활동에 적극적으로 참여해야 한다고 본다.",
+    "correctAnswer": "X",
+    "explanation": "스토아학파는 긍정, 에피쿠로스학파는 부정할 진술이다. 스토아학파는 공적인 삶과 의무를 강조하였으나, 에피쿠로스학파는 공적인 삶보다는 은둔하는 삶을 강조하였다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 801,
+    "question": "스토아학파는 정념의 속박으로부터 벗어나기 위하여 이성을 따라야 한다고 본다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파는 평온한 삶을 위해 이성에 따름으로써 모든 정념에 대해 초연해야 한다고 보았다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 802,
+    "question": "스토아학파에 따르면 덕 있는 삶을 살기 위해 자연의 필연성에서 벗어나야 한다.",
+    "correctAnswer": "X",
+    "explanation": "스토아학파에 따르면 인간의 본성은 이성이며, 이성에 따른 삶은 곧 자연의 필연성에 순응하는 삶이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 803,
+    "question": "스토아학파에 따르면 인간의 본성을 따르는 것과 덕을 따르는 것은 서로 다르지 않다.",
+    "correctAnswer": "O",
+    "explanation": "스토아학파에 따르면 신과 세계와 인간의 본성은 이성이며, 이성에 따른 삶은 곧 자연에 따른 삶이자 덕에 따른 삶이다.",
+    "questionType": "ox"
+  },
+  {
+    "num": 804,
+    "question": "플라톤과 스토아학파에 따르면 최고선은 쾌락이며 덕 있는 삶은 쾌락과 분리될 수 없다.",
+    "correctAnswer": "X",
+    "explanation": "에피쿠로스학파의 입장이다. 플라톤이나 스토아학파는 쾌락을 최고선으로 보지 않는다.",
+    "questionType": "ox"
+  }
+];
+
+        // UI를 변수로
+        var quizContainer = document.getElementById("quiz");
+        var resultsContainer = document.getElementById("results");
+        var submitButton = document.getElementById("submit");        
+        var reloadButton = document.getElementById("reload");
+        
+        // 출제 문제 개수
+        var oxNums = 3;       //ox 문제 개수
+        var blankNums = 0;    //단답형 문제 개수
+        var questionNums = oxNums + blankNums;
+
+        // 문제, 정답, 해설 저장 변수
+        var questions = [];
+        var answers = [];
+        var explanation = [];
+
+        // 전체 데이터에서 출제 문제 뽑기
+        function randomQuestion(){
+            //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
+            var numbers = [];
+            data.forEach(function(element, index){
+                numbers.push(index);
+            });
+            
+            var shuffleNumbers = [];
+            while(numbers.length > 0){
+                var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
+                shuffleNumbers.push(temp);
+            }
+
+            //문제 유형 개수 저장
+            var tempOx = 0;
+            var tempBlank = 0;
+
+            // 출제 문제 저장
+            var result = [];
+            var i = 0;
+            while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
+                if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
+                    result.push(data[shuffleNumbers[i]]);
+                    tempOx+=1;
+                } else if (data[shuffleNumbers[i]].questionType === 'blank' && tempBlank < blankNums){
+                    result.push(data[shuffleNumbers[i]]);
+                    tempBlank+=1;
+                }
+                i++;
+            }
+            return result;
+        }
+
+        function buildQuiz(){
+            //기존 문제, 정답, 해설 지우기
+            questions = [];
+            answers = [];
+            explanation = [];
+
+            // 출제 문제 무작위 추출
+            questions = randomQuestion();
+
+            // 문제를 HTML로 변환
+            var questionsHtml = [];
+
+            // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
+            questions.forEach(function(questionsObject, index){
+                //정답 변수에 입력
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
+
+                //문제 유형 확인
+                if(questionsObject.questionType == 'ox') {
+                    //각 문제에 붙일 사용자 응답 저장 변수. // id는 label과 연결 위해 설정
+                    var answerHtml = `<div  class="ox">
+                    <input type="radio" id="ox${index}o" name="ox${index}" value="O"><label for="ox${index}o" style=cursor:pointer>예</label>
+                    <input type="radio" id="ox${index}x" name="ox${index}" value="X"><label for="ox${index}x" style=cursor:pointer>아니오</label>
+                    </div>`;
+    
+                    // 문제와 사용자 응답 박스 붙이기
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                } else if(questionsObject.questionType == 'blank') {
+                    var answerHtml = `<input type="text" name="blank${index}">`;
+                    questionsHtml.push(`<div class="qaSet">
+                    <div class="question" id="question${index}">${index+1}. ${questionsObject.question}</div>
+                    <div class="answer">${answerHtml}</div>
+                    </div>`);
+                };
+            });
+            quizContainer.innerHTML = questionsHtml.join('');
+
+            // console.log('정답', answers);
+            submitButton.style.visibility = "visible";
+            resultsContainer.style.visibility = "hidden";
+            reloadButton.style.visibility = "hidden";
+            
+            // 타이머 실행
+            startTimer();
+            // console.log('문제',questions);
+            // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
+        }
+
+        // 사용자 응답 처리 = 결과 표시
+        function showResults(){
+            //타이머 정지
+            clearInterval(timer);
+
+            // 사용자 응답 클래스 저장
+            var answerContainers = quizContainer.querySelectorAll('.answer');
+
+            // 정답 개수
+            var userAnswers = []; //사용자 응답
+            var correctNums = 0; //맞춘 문제 개수
+            var displayResult; //결과 표시
+            var rightNum = []; //맞춘 번호(저장용)
+            var wrongNum = []; //틀린 번호(저장용)
+
+            //사용자 응답 저장
+            for(var i = 0; i < questionNums; i++ ){
+                //answer 클래스 내의 코드 하나씩 가져오기
+                var answerContainer = answerContainers[i];
+
+                //ox 클래스 코드가 있으면[사용자의 ox퀴즈 응답 저장]
+                if(answerContainer.querySelector('.ox')){
+                    var radioBtn = document.getElementsByName('ox'+i);  // 라디오버튼 이름 저장
+                    var temp = '';
+                    // 사용자가 ox문제를 풀었으면(체크했으면)
+                    for(var j=0; j < radioBtn.length; j++){
+                        if(radioBtn[j].checked){
+                            var temp = radioBtn[j].value            // 체크된 라디오 버튼의 value 저장
+                        }
+                    }
+                    //사용자가 ox문제를 안 풀었으면 공백 저장, 풀었으면 temp 저장
+                    if(temp === ''){
+                        userAnswers.push('');
+                    } else {
+                        userAnswers.push(temp);
+                    }
+                // 단답형 퀴즈 응답 저장
+                } else if(answerContainer.querySelector('input[name=blank'+i+']')){
+                    userAnswers.push((answerContainer.querySelector('input[name=blank'+i+']') || {}).value);
+                }
+            }
+
+            // console.log('사용자 응답 모음: ', userAnswers);
+
+            // 채점
+            for(var k=0; k < answers.length; k++){
+                var questionIndex = questions[k].index;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                } else {
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
+                }
+            }
+
+            console.log('정답 번호', rightNum);
+            console.log('오답 번호', wrongNum);
+            
+            // 점수 표시 만들기
+            // displayResult = `<div class="point">${correctNums} 점 (총 ${questions.length} 문제)</div>`
+            displayResult = `<div class="point">${correctNums} 점</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
+            displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
+            resultsContainer.innerHTML = displayResult;
+            resultsContainer.style.visibility = "visible";
+            // 다시 풀기
+            reloadButton.style.visibility = "visible";
+            submitButton.style.visibility = "hidden";
+
+            saveResult(rightNum, wrongNum);
+        }
+
+        // 타이머
+        var time;   //현재 시간
+        var timer;  //타이머
+
+        // 타이머 시간 설정 - 초단위
+        var setTime = 90;
+
+
+        // 1초마다 countdown함수 실행
+        function startTimer(){ 
+            time = setTime;      
+            timer = setInterval("countdown()", 1000); 
+        }
+
+        function countdown(){
+            var displayTimer = document.getElementById('timer');
+            
+            var min = Math.floor(time / 60);
+            var sec = time - min*60;
+
+            if( min < 10 ){ min = "0" + min; }
+            if( sec < 10 ){ sec = "0" + sec; }
+            var questionsHtml = min + ":" + sec;
+
+            if ( time > 0 ) time--;
+            else { 
+                clearInterval(timer); 
+                alert('시험이 종료되었습니다.');
+                time = setTime;
+                showResults();
+            }
+
+            displayTimer.textContent = questionsHtml;
+        }
+
+        function saveResult(rightNum, wrongNum){
+
+        }
+        // 퀴즈 실행
+        buildQuiz();
+        submitButton.addEventListener('click', showResults);
+        reloadButton.addEventListener('click', buildQuiz);
+
+    </script>
+</body>
+</html>
