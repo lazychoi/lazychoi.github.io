@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>생활과윤리 퀴즈</title>
+    <title>생활과윤리 퀴즈 3단원</title>
     <style>
         /* Variables */
         :root {
@@ -25,20 +25,35 @@
         a:hover { cursor: pointer; }
 
         /* 가운데 정렬 */
-        .container { 
-            width: 90%; margin: 0 auto; 
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .box {
-            width: 100%;
-            margin: 0 auto;
-            position: relative;
-        }
+        @media screen and (max-width: 721px){
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                flex-direction: column;
+            }
+            .box {
+                width: 100%;
+                margin: 0 auto;
+                position: relative;
+            }
+        }    
+            .container { 
+                width: 80%; 
+                margin: 0 auto; 
+                display: flex;
+                justify-content: stretch;
+            }
+            .box {
+                width: 100%;
+                flex: 1;
+                margin: 0 auto;
+                position: relative;
+            }
 
         /* TITLE */
         h1{
+            width: 100%;
             font-size: 25px;
             font-weight: bold;
             padding: 10px;
@@ -73,7 +88,7 @@
         }
         .ox > label {
             width: 40%;
-            margin-right: 20px;
+            margin: 0px 10px;
             font-size: 17px;
             font-weight: bold;
             background-color: lightgray;
@@ -81,10 +96,17 @@
             border-radius: 5px;
         }
         .ox > input[type="radio"]{ 
-            width: 20px;
-            height: 20px;
-            vertical-align: middle;
-            margin-right: 5px;
+            display: none;
+        }
+        .ox > input[type="radio"]:checked + label {
+            display: inline-block;
+            width: 40%;
+            margin: 0px 10px;
+            font-size: 17px;
+            background-color: var(--main-accent);
+            color: var(--light-accent-color);
+            padding: 10px;
+            border-radius: 5px;
         }
 
         /* BUTTONS */
@@ -134,13 +156,16 @@
             font-size: 20px;
             display: inline-block;
             line-height: 160%;
-            margin: 20px 50px;
+            margin: 10px 20px;
         }
         .red{
             color:var(--main-accent);
         }
         #results, #reload{
             visibility: hidden;
+        }
+        ul{
+            list-style: none;
         }
 
         #timer {
@@ -150,11 +175,12 @@
             padding: 0px 10px;
             margin-left: 20px;
         }
+        hr { width: 98%; margin: 0 auto; color: var(--light-accent-color);}
     </style>
 </head>
 <body>
     <!-- 기본 UI -->
-    <h1>생활과윤리 단원마무리 퀴즈 1단원<span id="timer"></span></h1>
+    <h1>생활과윤리 퀴즈 3단원<span id="timer"></span></h1>
     <div class="container">
         <div class="box" id="quiz">
             <!-- <div id="quiz"></div> -->
@@ -162,11 +188,12 @@
         <div class="box">
             <button class="button" id="submit">결과 보기</button>
             <button class="button" id="reload">새 문제</button>
-        </div>
-        <div class="box">
             <div id="results"></div>
         </div>
+        <!-- <div class="box">
+        </div> -->
     </div>
+
 
 
     <script>
@@ -176,180 +203,210 @@
                 "index": 1,
                 "question": "동양에서 윤리란 인간관계의 이치와 도리를 뜻한다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 2,
                 "question": "윤리학은 인간이 살아가면서 지켜야 할 도덕적인 행동의 기준이나 규범을 탐구하는 학문이다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 3,
                 "question": "정보화된 현대 사회에서는 발생한 윤리 문제의 책임이 누구에게 혹은 어디에 있는지 명확하게 알 수 있다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 4,
                 "question": "자살, 안락사, 뇌사 등은 죽음과 관련된 것이므로 생명 윤리 영역에서는 문제 삼지 않는다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 5,
                 "question": "과학 윤리 영역에서는 과학 기술의 가치중립성과 사회적 책임 문제, 정보 기술과 매체의 발달에 따른 문제 등이 발생하고 있다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 6,
                 "question": "메타 윤리학은 도덕적 언어의 의미 분석과 도덕적 추론의 정당성을 검증하기 위한 논리 분석에 주된 관심을 둔다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 7,
                 "question": "기술 윤리학은 도덕 문제를 기술하고 명확한 해결 방안을 제시한다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 8,
                 "question": "이론 윤리학에는 의무론, 공리주의, 덕 윤리 등이 있다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 9,
                 "question": "‘학제적’이란 둘 이상의 학문 분야가 복합적으로 관계된 것을 말한다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 10,
                 "question": "실천 윤리학은 윤리 문제에 대한 해결책을 마련하기 위해 다양한 분야와 소통하고 협력하려고 한다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 11,
                 "question": "맹자는 OO(으)로 측은지심, 수오지심, 사양지심, 시비지심을 말했다.",
                 "correctAnswer": "사단",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 12,
                 "question": "유교 윤리는 이상 사회로서 OO OO을/를 제시한다.",
                 "correctAnswer": "대동 사회",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 13,
                 "question": "OO란 모든 존재와 현상에는 일정한 원인[因]과 조건[緣]이 있다는 것을 의미한다.",
                 "correctAnswer": "연기",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 14,
                 "question": "대승 불교에서는 깨달음을 얻어 중생을 구제하고자 하는 OO을/를 이상적 인간상으로 제시한다.",
                 "correctAnswer": "보살",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 15,
                 "question": "노자는 도의 특성이 인위적으로 강제하고 않고 자연스러움을 따르는 OOOO(이)라고 주장하였다.",
                 "correctAnswer": "무위자연",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 16,
                 "question": "OO은/는 도덕 법칙과 구별되는 개인적 행위 규칙으로 ‘격률’이라고도 한다.",
                 "correctAnswer": "준칙",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 17,
                 "question": "OOOO은/는 인간의 자연적 성향으로 자기 보존, 종족 보존, 신과 사회에 대한 진리 파악을 제시하였다.",
                 "correctAnswer": "아퀴나스",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 18,
                 "question": "OO은/는 ‘최대 다수의 최대 행복’을 도덕 원리로 제시하였다.",
                 "correctAnswer": "벤담",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 19,
                 "question": "현대의 O OO은/는 아리스토텔레스의 사상에 뿌리를 둔다.",
                 "correctAnswer": "덕 윤리",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 20,
                 "question": "윤리학의 도덕 과학적 접근에는 OO OOO와/과 진화 윤리학 등이 있다.",
                 "correctAnswer": "신경 윤리학",
+                "explanation": "",
                 "questionType": "blank"
             },
             {
                 "index": 21,
                 "question": "윤리적 딜레마란 윤리적 문제 상황에서 두 가지 이상의 도덕적 의무와 도덕 원칙 사이에 갈등과 충돌이 전개되는 상황을 말한다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 22,
                 "question": "도덕적 탐구도 일반적인 탐구와 같이 탐구의 결과를 위해 정서적 측면을 제거해야 한다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 23,
                 "question": "도덕적 탐구를 할 때는 가장 먼저 윤리적 쟁점 또는 딜레마가 무엇인지 확인해야 한다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 24,
                 "question": "도덕적 탐구에서는 정당화 근거의 타당성을 확보하기 위해 역할 교환탐색과 보편화 가능성 탐색을 적용할 필요가 있다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 25,
                 "question": "토론 결과의 정확성을 높이기 위해서는 상호 간에 인간의 오류 가능성을 배제하고 토론에 임해야 한다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 26,
                 "question": "인간은 자신의 삶을 성찰하고 변화시킬 수 있는 존재이다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 27,
                 "question": "윤리적 성찰은 윤리적 딜레마를 활용한 도덕적 추론을 중시한다. [ O, X ]",
                 "correctAnswer": "X",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 28,
                 "question": "유교의 윤리적 성찰 방법으로 증자가 제시한 일일삼성과 거경이 있다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 29,
                 "question": "산파술은 끊임없는 질문을 통해 자신의 무지를 자각할 수 있도록 돕는 방법이다. [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             },
             {
                 "index": 30,
                 "question": "도덕적 탐구와 윤리적 성찰을 바탕으로 도덕적 행위를 실천으로 옮기는 일체의 활동 과정을 ‘윤리함’이라고 한다.  [ O, X ]",
                 "correctAnswer": "O",
+                "explanation": "",
                 "questionType": "ox"
             }
         ];
@@ -365,17 +422,20 @@
         var blankNums = 1;    //단답형 문제 개수
         var questionNums = oxNums + blankNums;
 
-        // 문제와 정답 저장 변수
+        // 문제, 정답, 해설 저장 변수
         var questions = [];
         var answers = [];
+        var explanation = [];
 
         // 전체 데이터에서 출제 문제 뽑기
         function randomQuestion(){
             //데이터 개수만큼 연속된 숫자를 가진 배열 변수 만들어 무작위로 섞기
+            
             var numbers = [];
-            data.forEach(function(element){
-                numbers.push(element.index-1);
+            data.forEach(function(element, index){
+                numbers.push(index);
             });
+            
             var shuffleNumbers = [];
             while(numbers.length > 0){
                 var temp = numbers.splice(Math.floor(Math.random()*numbers.length), 1)[0];
@@ -390,6 +450,10 @@
             var result = [];
             var i = 0;
             while(result.length < questionNums){
+                // console.log([shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]]);
+                // console.log(data[shuffleNumbers[i]].questionType);
+                
                 if(data[shuffleNumbers[i]].questionType === 'ox' && tempOx < oxNums) {
                     result.push(data[shuffleNumbers[i]]);
                     tempOx+=1;
@@ -403,9 +467,10 @@
         }
 
         function buildQuiz(){
-            //기존 문제, 정답 지우기
+            //기존 문제, 정답, 해설 지우기
             questions = [];
             answers = [];
+            explanation = [];
 
             // 출제 문제 무작위 추출
             questions = randomQuestion();
@@ -416,7 +481,16 @@
             // 문제 객체의 각 문제에 사용자 응답을 받을 텍스트박스 추가. currentQuestion은 문제, questionNumber은 배열의 요소번호
             questions.forEach(function(questionsObject, index){
                 //정답 변수에 입력
-                answers.push(questionsObject.correctAnswer.toUpperCase());
+                if(questionsObject.correctAnswer.indexOf(';') === -1){            // 정답이 여러 개면
+                    answers.push(questionsObject.correctAnswer.toUpperCase());
+                } else {
+                    var tmpAn = [];
+                    tmpAn.push(questionsObject.correctAnswer.toUpperCase().split(';'));
+                    answers.push(tmpAn);
+                }
+                // 해설 변수에 입력
+                explanation.push(questionsObject.explanation);
+                // console.log('해설', explanation);
 
                 //문제 유형 확인
                 if(questionsObject.questionType == 'ox') {
@@ -450,6 +524,8 @@
             startTimer();
             // console.log('문제',questions);
             // console.log('정답',answers);
+
+            // console.log('정답은 ', answers);
         }
 
         // 사용자 응답 처리 = 결과 표시
@@ -464,6 +540,8 @@
             var userAnswers = []; //사용자 응답
             var correctNums = 0; //맞춘 문제 개수
             var displayResult; //결과 표시
+            var rightNum = []; //맞춘 번호(저장용)
+            var wrongNum = []; //틀린 번호(저장용)
 
             //사용자 응답 저장
             for(var i = 0; i < questionNums; i++ ){
@@ -497,25 +575,65 @@
             // 채점
             for(var k=0; k < answers.length; k++){
                 var questionIndex = questions[k].index;
-                if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
-                    correctNums++;
+                if(Array.isArray(answers[k]) === false){
+                    if(answers[k].replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){  // 띄어쓰기 채점 오류 피하기 위해 빈칸 모두 제거
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    } else {
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
                 } else {
-                    document.getElementById("question"+k).style.color = 'red';
+                    var tmpCorrect = 0;
+                    answers[k].forEach(function(element){
+                        element.forEach(function(el){
+                            if(el.replace(/(\s*)/g,"")===userAnswers[k].replace(/(\s*)/g,"")){
+                                tmpCorrect++;       //복수정답 중 하나라도 맞추면 +1
+                            }       
+                        })
+                    })
+                    // console.log('복수 정답 ', tmpCorrect);
+                    
+                    if(tmpCorrect > 0){     // 복수 정답 중 하나라도 맞췄으면 점수 올림
+                        correctNums++;
+                        rightNum.push(questions[k].num);
+                    }else{
+                        document.getElementById("question"+k).style.color = 'red';
+                        wrongNum.push(questions[k].num);
+                    }
                 }
             }
 
-            // 점수와 정답 표시
-            displayResult = `<div class="point">${correctNums} 문제 맞췄습니다<br>(총 ${questions.length}문제 중)</div>
-                <div class="correctAns"><ul>`
-                for(var l=0; l < answers.length; l++){
-                    displayResult = displayResult + `<li>${l+1}번 정답 : ${answers[l]}</li>`;
-                }
+            console.log('정답 번호', rightNum);
+            console.log('오답 번호', wrongNum);
+            
+            // 점수 표시 만들기
+            // displayResult = `<div class="point">${correctNums} 점 (총 ${questions.length} 문제)</div>`
+            displayResult = `<div class="point">${correctNums} 점</div>`
+            // 정답 표시 만들기
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            for(var l=0; l < answers.length; l++){
+                displayResult = displayResult + `<li>[${l+1}번 정답] ${answers[l]}</li>`;
+            }
             displayResult = displayResult + '</ul></div>'
+            // 해설 표시 만들기
+            displayResult = displayResult + '<hr>'
+            displayResult = displayResult + `<div class="correctAns"><ul>`;
+            explanation.forEach(function(element, index){
+                if(element != ""){
+                    displayResult = displayResult + `<li>[${index+1}번 해설] ${element}</li>`;
+                }
+            })
+            displayResult = displayResult + '</ul></div>'
+
+            // 점수, 정답, 해설 모두 표시
             resultsContainer.innerHTML = displayResult;
             resultsContainer.style.visibility = "visible";
             // 다시 풀기
             reloadButton.style.visibility = "visible";
             submitButton.style.visibility = "hidden";
+
+            saveResult(rightNum, wrongNum);
         }
 
         // 타이머
@@ -553,6 +671,9 @@
             displayTimer.textContent = questionsHtml;
         }
 
+        function saveResult(rightNum, wrongNum){
+
+        }
         // 퀴즈 실행
         buildQuiz();
         submitButton.addEventListener('click', showResults);
