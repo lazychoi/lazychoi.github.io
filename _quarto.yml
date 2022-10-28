@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "👀"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - pkm.qmd
+      - python.qmd
+      - visualization.qmd
+      - de.qmd
+      - book.qmd
+      - about.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+
+
+
