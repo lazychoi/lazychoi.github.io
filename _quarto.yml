@@ -3,23 +3,78 @@ project:
   output-dir: docs
 
 website:
-  title: "👀"
+  title: 👀
   navbar:
+    background: primary
+    search: true
     left:
-      - href: index.qmd
-        text: Home
-      - pkm.qmd
-      - python.qmd
-      - visualization.qmd
-      - de.qmd
-      - book.qmd
-      - about.qmd
+      - text: "Home"
+        file: index.md
+      - text: "읽은 책"
+        file: books.md
+      - text: "지식관리"
+        file: pkm.md
+      - text: "개발환경"
+        file: de.md
+      - text: "오답노트"
+        file: review.md
+      - text: "시각화"
+        file: visualization.md
+      - text: "블로그"
+        file: blog/index.md
+      - about.md
+    right: 
+      - icon: github
+        href: https://github.com/lazychoi
+
+  sidebar:
+    - title: "읽은 책"
+      style: "docked"
+      background: light
+      contents:
+        - books.md
+        - section: "이것이 코딩 테스트다"
+          contents: 
+            - books/This_is_coding_test.md
+        - section: "21가지 작고 재미난 파이썬 프로젝트"
+          contents: 
+            - books/tiny_python_project.md
+        - section: "판다스 인 액션"
+          contents: 
+            - books/pandas_in_action.md
+
+    - title: "지식관리"
+      contents:
+        - pkm.md
+        # navigation items
+
+    - title: "개발환경"
+      contents:
+        - de.md
+        # navigation items
+
+    - title: "오답노트"
+      contents:
+        - review.md
+        - section: "파이썬"
+          contents: 
+            - review/python.md
+        - section: "알고리즘"
+          contents:
+            - review/algorithm.md
+    
+    - title: "시각화"
+      contents:
+        - visualization.md
+
+
 
 format:
   html:
     theme: cosmo
     css: styles.css
     toc: true
+    # number-sections: true
+    # code-fold: true
 
-
-
+lang: kr
