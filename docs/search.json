@@ -851,21 +851,21 @@
     "href": "blog/posts/22-10-30.html",
     "title": "22-10-30(일)",
     "section": "",
-    "text": "도전 과제\n\nqmd 파일이 md 파일과 다른 점 찾기\n웹사이트에 블로그 페이지를 포함시키는 방법\n리스트 페이지가 설명서대로 출력되지 않는 문제 해결\nyml 파일에 설정하지 않고 링크로 연결된 파일에서는 사이드바가 뜨지 않는 문제 해결"
+    "text": "기존 깃허브 페이지 quarto로 옮기기\n\n과제\n\nqmd 파일이 md 파일과 다른 점 찾기\n웹사이트에 블로그 페이지를 포함시키는 방법\n리스트 페이지가 설명서대로 출력되지 않는 문제 해결: 문서 yml 설정에 date를 추가하니 해결됨\nyml 파일에 설정하지 않고 링크로 연결된 파일에서는 사이드바가 뜨지 않는 문제 해결"
   },
   {
     "objectID": "blog/posts/22-10-30.html#알고리즘-3문제-풀기",
     "href": "blog/posts/22-10-30.html#알고리즘-3문제-풀기",
     "title": "22-10-30(일)",
     "section": "알고리즘 3문제 풀기",
-    "text": "알고리즘 3문제 풀기"
+    "text": "알고리즘 3문제 풀기\n가끔 주피터 노트북이 아무런 이상이 없는데도 오류는 뿜는 경우가 있다. 그럴 때는 같은 행동을 반복하며 울화통을 키우지 말고 커널을 죽이고 재실행한다."
   },
   {
-    "objectID": "blog/posts/22-10-30.html#빅분기-단답형-문제-정리",
-    "href": "blog/posts/22-10-30.html#빅분기-단답형-문제-정리",
+    "objectID": "blog/posts/22-10-30.html#빅분기-단답형-문제-anki-정리",
+    "href": "blog/posts/22-10-30.html#빅분기-단답형-문제-anki-정리",
     "title": "22-10-30(일)",
-    "section": "빅분기 단답형 문제 정리",
-    "text": "빅분기 단답형 문제 정리"
+    "section": "빅분기 단답형 문제 Anki 정리",
+    "text": "빅분기 단답형 문제 Anki 정리"
   },
   {
     "objectID": "blog/posts/22-10-04.html",
@@ -1103,7 +1103,7 @@
     "href": "blog/index.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "Oct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 28, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 27, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 25, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 24, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 22, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 21, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 20, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 19, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 16, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 5, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 4, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2012\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
+    "text": "Oct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 28, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 27, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 25, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 24, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 22, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 21, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 20, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 19, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 16, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 5, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 4, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "index.html",
@@ -1159,7 +1159,7 @@
     "href": "review/python.html",
     "title": "파이썬 오답노트",
     "section": "",
-    "text": "lazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
+    "text": "lazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/python/class.html",
@@ -1232,6 +1232,13 @@
     "text": "옵션 있으면 리스트 정렬, 없으면 입력 순으로\nparser.add_argument(\n    '-s', \n    '--sorted',\n    help='sort items',\n    action='store_true'  # 옵션이 지정되면 arg.sorted 값에 True 입력. 지정하지 않으면 False 입력\n)\n\nargs = parser.parse_args()\nif args.sorted:\n    items = sorted(args.items)\nelse:\n    items = args.items"
   },
   {
+    "objectID": "review/python/regular_expression.html",
+    "href": "review/python/regular_expression.html",
+    "title": "👀",
+    "section": "",
+    "text": "html 페이지에서 태그 삭제: <([^>]+)>"
+  },
+  {
     "objectID": "review/python/str-translate.html",
     "href": "review/python/str-translate.html",
     "title": "str.translate()",
@@ -1241,9 +1248,44 @@
   {
     "objectID": "review/python/string.html",
     "href": "review/python/string.html",
-    "title": "문자열",
+    "title": "👀",
     "section": "",
-    "text": "kdfjlskfd"
+    "text": "---\ntitle: \"문자열\"\ndate: 2022-10-30\nupdated: last-modified\n---"
+  },
+  {
+    "objectID": "review/python/string.html#문자열---문자-리스트",
+    "href": "review/python/string.html#문자열---문자-리스트",
+    "title": "👀",
+    "section": "문자열 <-> 문자 리스트",
+    "text": "문자열 <-> 문자 리스트\n문자열 -> 개별 문자 리스트로 변환\n\nn = 'abcdef'\nlist(str(n))\n\n['a', 'b', 'c', 'd', 'e', 'f']\n\n\n개별 문자 리스트 -> 문자열로 변환\n\nnlist = ['a', 'b', 'c', 'd', 'e', 'f']\n''.join(nlist)\n\n'abcdef'"
+  },
+  {
+    "objectID": "review/python/string.html#정렬",
+    "href": "review/python/string.html#정렬",
+    "title": "👀",
+    "section": "정렬",
+    "text": "정렬\n문자열 정렬. 오름차순 or 내림차순\n\nn = 'goodafternoon'\nprint('오름차순', sorted(n))\nprint('내림차순', sorted(n, reverse=True))\nprint('오름차순', ''.join(sorted(n)))\nprint('내림차순', ''.join(sorted(n, reverse=True)))\n\n오름차순 ['a', 'd', 'e', 'f', 'g', 'n', 'n', 'o', 'o', 'o', 'o', 'r', 't']\n내림차순 ['t', 'r', 'o', 'o', 'o', 'o', 'n', 'n', 'g', 'f', 'e', 'd', 'a']\n오름차순 adefgnnoooort\n내림차순 troooonngfeda\n\n\n문자열 거꾸로 뒤집기\n\n''.join(list(reversed('hello')))\n\n'olleh'"
+  },
+  {
+    "objectID": "review/python/string.html#자료형-확인",
+    "href": "review/python/string.html#자료형-확인",
+    "title": "👀",
+    "section": "자료형 확인",
+    "text": "자료형 확인\nis로 시작하는 함수가 꽤 많다. 천천히 하나씩 익히자\n\nn, m = '123', 'abc'\nn.isdigit(), m.isdigit()\n\n(True, False)"
+  },
+  {
+    "objectID": "review/python/list_comprehension.html",
+    "href": "review/python/list_comprehension.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: 리스트 내장 함수\ndate: 2022-10-31\nupdated: last-modified\n---"
+  },
+  {
+    "objectID": "review/python/list_comprehension.html#리스트-컴프리헨션",
+    "href": "review/python/list_comprehension.html#리스트-컴프리헨션",
+    "title": "👀",
+    "section": "리스트 컴프리헨션",
+    "text": "리스트 컴프리헨션\n\nif문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n예제\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '우', '가', '양', '가', '수', '우', '우', '미']"
   },
   {
     "objectID": "review/python/show_line.html",
@@ -1400,6 +1442,20 @@
     "text": "created: 2022-10-07\n출처: w3school\n\n\n\n\n\n\n\n\n\n메서드\n설명\n\n\n\n\nclear()\n모든 요소 삭제. 빈 딕셔너리변수는 남김\n\n\nget()\n지정한 key의 value 가져오기. ==없는 key를 지정해도 오류 미반환==\n\n\nitems()\n(key, value) 쌍 반환.\n\n\nkeys()\n변수 내의 모든 key 반환\n\n\nupdates()\n한 개 이상의 요소 추가. 인수는 딕서녀리형 또는 2차원 리스트\n\n\nvalues()\n변수 내의 모든 value 반환\n\n\n\n==주의!!==\n- dict.key(), dict.values(), dict.items() 모두 ==메모리 낭비를 줄이기== 위해 list 아닌 iterable views를 반환한다. - eg. dict_keys([…]), dict_values([…]), dict_items([…]) - 반환값을 반복문을 써서 각 요소 출력 또는 - 반환값을 리스트 자료형으로 변환해서 사용"
   },
   {
+    "objectID": "review/python/list_reverse.html",
+    "href": "review/python/list_reverse.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: 리스트 내장 함수\ndate: 2022-10-30\nupdated: last-modified\n---"
+  },
+  {
+    "objectID": "review/python/list_reverse.html#요소-순서를-거꾸로-뒤집기",
+    "href": "review/python/list_reverse.html#요소-순서를-거꾸로-뒤집기",
+    "title": "👀",
+    "section": "요소 순서를 거꾸로 뒤집기",
+    "text": "요소 순서를 거꾸로 뒤집기\n리스트변수.reverse() 함수는 반환값이 없고 자신을 변경하는 점을 주의해야 한다.\n\na = [1, 4, 2,3, 5]\na.reverse()\n\n\na\n\n[5, 3, 2, 4, 1]"
+  },
+  {
     "objectID": "review/python/meaning_of_a_is_1.html",
     "href": "review/python/meaning_of_a_is_1.html",
     "title": "a = 1의 의미 요약",
@@ -1421,11 +1477,46 @@
     "text": "설명\na=1\n\n특정 메모리 주소에 1이라는 정수를 데이터로서 저장하는 명령\n실제로 사용되는 메모리주소는 프로그래머가 특별히 신경쓸 필요는 없음\na는 그 메모리를 대표하는 이름\n따라서 ’변수’는 일종의 오역입니다. 대신 식별자(identifier)라는 말을 사용하는 사람도 많음\n\n==‘a=1’==이라는 명령을 파이썬 인터프리터가 실행하는 순간\n\n컴퓨터는 일정한 메모리 공간을 확보한 후\n그 공간 중 일정한 위치에는 그것이 담게되는 ==데이터의 종류==에 대한 정보를,\n또 다른 일정한 위치에는 ==데이터 내용==을,\n그리고 역시 또 다른 일정한 위치에는 ==그밖에 다른 정보==를 담게 되는 것임\n\n변수나 함수나 모두 ’힙(heap)’이라고 불리는 메모리 영역에 일정한 주소를 차지하고 있는 데이터들을 ==가리킨다==.\n컴퓨터 사이언스에서 ‘힙’이라는 메모리 영역에 생성되는 한 단위의 데이터를’객체(object)’라고 부른다.\n변수명이 가리키는 데이터의 종류는 결국 객체의 종류\n\n파이썬이라는 인터프리터가 가지고 있는 중요한 설계상의 특징\n모든 객체는 클래스라고 불리는 특수한 함수의 출력값\n파이썬에서 객체의 종류는 그것을 리턴해주는 클래스에 따라 정해짐\n\n클래스: 새로운 객체를 만들어 반환하는 함수\n\n객체의 종류, 즉 그 클래스를 확인하는 함수: ==type()== 또는 ==isinstance()==\n객체의 ‘힙’ 공간내 위치를 확인하는 내장함수: ==id()=="
   },
   {
+    "objectID": "review/algorithm/basic_30/16_lv2.html",
+    "href": "review/algorithm/basic_30/16_lv2.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: 문자열 다루기 기본\ndate: 2022-10-30\nupdated: last-modified\n---"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/16_lv2.html#내-풀이",
+    "href": "review/algorithm/basic_30/16_lv2.html#내-풀이",
+    "title": "👀",
+    "section": "내 풀이",
+    "text": "내 풀이\n문제 링크 https://school.programmers.co.kr/learn/courses/30/lessons/12918\n\nord(‘0’) = 48, ord(‘9’) = 57 이용한다.\n첫 번째에 0이 와 3자리 숫자가 되는 경우는 모두 문자 취급하기 때문에 고려할 필요 없다.\n48에서 57 사이의 값이 나오면 True 반환하는 리스트를 만들다.\nTrue는 1과 같기 때문에 sum()을 해서 4나 6이 나오면 True를 반환한다.\n\n\n틀린 이유\n3, 4번에서 True만 반환하여 더하기 때문에 틀린 게 있어도 True 개수만 4개나 6개면 조건에 맞는 것으로 잘못 생각했다. 만약 ’a1234’가 주어지면 a가 False인데도 [True, True, True, True]가 되어 True를 반환한다.\n\n\n바꾼 것\n\n3번에 False도 리스트에 추가되도록 변경했다.\n4번 조건문에 False not in a 추가하여 False가 있는 리스트를 걸러내도록 했다.\n\n\ns = \"-4.01E-2\"\nanswer = False\n\na = [ True if ord(i) > 47 and ord(i) < 58 else False for i in s]\n\nprint(a)\nif False not in a and sum(a) == 4 or sum(a) == 6:\n    answer = True\nanswer\n\n[False, True, False, True, True, False, False, True]\n\n\nFalse"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/16_lv2.html#다른-사람-풀이-보고-배운-것",
+    "href": "review/algorithm/basic_30/16_lv2.html#다른-사람-풀이-보고-배운-것",
+    "title": "👀",
+    "section": "다른 사람 풀이 보고 배운 것",
+    "text": "다른 사람 풀이 보고 배운 것\n리스트의 isdigit() 함수를 써서 코드를 한 줄로 구현했다.\n\ns.isdigit() and len(s) in (4, 6)\n\nFalse\n\n\n정규표현식을 사용한 것도 인상적이다.\n\nimport re\nbool(re.match(\"^(\\d{4}|\\d{6})$\", s))\n\nFalse"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/17_lv2.html",
+    "href": "review/algorithm/basic_30/17_lv2.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: 정수 내림차순으로 배치하기\ndate: 2022-10-30\nupdated: last-modified\n---\nhttps://school.programmers.co.kr/learn/courses/30/lessons/12933"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/17_lv2.html#다른-사람-풀이-보고-알게-된-점",
+    "href": "review/algorithm/basic_30/17_lv2.html#다른-사람-풀이-보고-알게-된-점",
+    "title": "👀",
+    "section": "다른 사람 풀이 보고 알게 된 점",
+    "text": "다른 사람 풀이 보고 알게 된 점\n문자열을 리스트로 형변환하면 낱개의 문자가 요소로 저장된다.\n\nlist(str(n))\n\n['1', '1', '8', '3', '7', '2']\n\n\n문자를 요소로 가진 리스트를 join 하면 문자열로 합칠 수 있다.\n\n''.join(list(str(n)))\n\n'118372'"
+  },
+  {
     "objectID": "review/algorithm/basic_30/11_lv2.html",
     "href": "review/algorithm/basic_30/11_lv2.html",
-    "title": "행렬의 덧셈",
+    "title": "👀",
     "section": "",
-    "text": "# 내가 푼 코드\narr1 = [[1, 2], [2, 3]]\narr2 = [[3, 4], [5, 6]]\n\nanswer = [i.copy() for i in arr1]\nfor i in range(len(arr1)):\n    for j in range(len(arr1[i])):\n        answer[i][j] = arr1[i][j] + arr2[i][j]\n\nanswer\n\n[[4, 6], [7, 9]]\n\n\n\n# 다른 사람 코드\n[[c + d for c, d in zip(a, b)] for a, b in zip(arr1, arr2)]\n\n[[4, 6], [7, 9]]\n\n\n\nfor a, b in zip(arr1, arr2):\n    print(a, b)\n    for c, d in zip(a, b):\n        print(c, '+', d, '=', c+d)\n\n[1, 2] [3, 4]\n1 + 3 = 4\n2 + 4 = 6\n[2, 3] [5, 6]\n2 + 5 = 7\n3 + 6 = 9\n\n\n\n# 위 보다 좀 더 간단한 코드\n[list(map(sum, zip(*x))) for x in zip(arr1, arr2)]\n\n[[4, 6], [7, 9]]"
+    "text": "문제 보기 https://programmers.co.kr/learn/courses/30/lessons/12950\n\n# 내가 푼 코드\narr1 = [[1, 2], [2, 3]]\narr2 = [[3, 4], [5, 6]]\n\nanswer = [i.copy() for i in arr1]\nfor i in range(len(arr1)):\n    for j in range(len(arr1[i])):\n        answer[i][j] = arr1[i][j] + arr2[i][j]\n\nanswer\n\n[[4, 6], [7, 9]]\n\n\n\n# 다른 사람 코드\n[[c + d for c, d in zip(a, b)] for a, b in zip(arr1, arr2)]\n\n[[4, 6], [7, 9]]\n\n\n\nfor a, b in zip(arr1, arr2):\n    print(a, b)\n    for c, d in zip(a, b):\n        print(c, '+', d, '=', c+d)\n\n[1, 2] [3, 4]\n1 + 3 = 4\n2 + 4 = 6\n[2, 3] [5, 6]\n2 + 5 = 7\n3 + 6 = 9\n\n\n\n# 위 보다 좀 더 간단한 코드\n[list(map(sum, zip(*x))) for x in zip(arr1, arr2)]\n\n[[4, 6], [7, 9]]"
   },
   {
     "objectID": "review/algorithm/basic_30/primer_number.html",
@@ -1437,44 +1528,79 @@
   {
     "objectID": "review/algorithm/basic_30/14_lv2.html",
     "href": "review/algorithm/basic_30/14_lv2.html",
-    "title": "최대공약수 최소공배수 구하기",
+    "title": "👀",
     "section": "",
-    "text": "문제 보기 https://school.programmers.co.kr/learn/courses/30/lessons/12940"
+    "text": "---\ntitle: \"최대공약수 최소공배수 구하기\"\ndate: 2022-10-29\n---\n문제 보기 https://school.programmers.co.kr/learn/courses/30/lessons/12940"
   },
   {
     "objectID": "review/algorithm/basic_30/14_lv2.html#유클리드-호제법",
     "href": "review/algorithm/basic_30/14_lv2.html#유클리드-호제법",
-    "title": "최대공약수 최소공배수 구하기",
+    "title": "👀",
     "section": "유클리드 호제법",
     "text": "유클리드 호제법\n\n호제법: 서로 나눈다\na를 b로 나눈 나머지를 r이라고 하면 a와 b의 최대공약수 = b와 r의 최대공약수\n\n\n구현\n\na % b = r\nb % r = r2\nr % r2 = r3\n….\nif rn = 0, then rn = 최대공약수\n\n큰 수와 작은 수의 순서는 고려하지 않아도 된다. 왜냐하면, 작은 수를 큰 수로 나누면 나머지가 작은 수가 되고 이를 재귀함수로 넘기면 큰 수가 앞에 오기 때문이다. eg. gcd(8, 40) -> 나머지 8 -> gcd(40, 8)\n\n\n최소공배수\ngcd * a/gcd * b/gcd = a*b/gcd\n\n\n# 유클리드 호제법을 다시 공부한 뒤 짠 코드\ndef gcd(n, m):\n    r = n % m\n    if r == 0:\n        return m\n    else:\n        return gcd(m , r)\ngcd(8, 40)\n\n8\n\n\n\n# 다른 사람 코드. 아이디어는 같고 람다 함수로 짧게 구현\ngcd = lambda a,b : b if not a%b else gcd(b, a%b)\nlcm = lambda a,b : a*b//gcd(a,b)"
   },
   {
+    "objectID": "review/algorithm/basic_30/18_lv2.html",
+    "href": "review/algorithm/basic_30/18_lv2.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: 자연수 뒤집어 배열로 만들기\ndate: 2022-10-30\nupdated: last-modified\n---"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/18_lv2.html#접근-과정",
+    "href": "review/algorithm/basic_30/18_lv2.html#접근-과정",
+    "title": "👀",
+    "section": "접근 과정",
+    "text": "접근 과정\nhttps://school.programmers.co.kr/learn/courses/30/lessons/12932\n\n자연수를 문자열로 변환\n문자열을 sorted(reverse=) 함수로 정렬\n각 요소를 숫자형으로 변환\n\n\n틀린 이유\n문제를 잘못 이해했다. 역순으로 정렬하는 문제가 아니라 단순하게 순서만 뒤집는 문제였다. 힌트를 보고 알았다. 예시가 함정이었다. 다소 야비한 문제다.\n리스트변수.reverse()는 반환값이 없지만, reversed(iterable)는 reversed object 반환\n\nn = 14235\na = list(str(n))\na.reverse()\nanswer = [int(i) for i in a] \nanswer\n\n[5, 3, 2, 4, 1]\n\n\n\nprint(reversed('12134'))\n[int(i) for i in reversed('12134')]\n\n<reversed object at 0x105a0ed60>\n\n\n[4, 3, 1, 2, 1]"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/18_lv2.html#다른-사람-코드",
+    "href": "review/algorithm/basic_30/18_lv2.html#다른-사람-코드",
+    "title": "👀",
+    "section": "다른 사람 코드",
+    "text": "다른 사람 코드\nmap 함수를 쓰는 게 간편하다.\n\nlist(map(int, reversed(str(n))))\n\n[5, 3, 2, 4, 1]\n\n\n슬라이싱을 이용할 수도 있구나\n\nn = 14235\n[int(i) for i in str(n)][::-1]\n\n[5, 3, 2, 4, 1]"
+  },
+  {
     "objectID": "review/algorithm/basic_30/15_lv2.html",
     "href": "review/algorithm/basic_30/15_lv2.html",
-    "title": "정수 제곱근 판별",
+    "title": "👀",
     "section": "",
-    "text": "# 제곱근이 정수인지 아닌지 판단해야 하는데\n# 파이썬에서는 나누셈의 반환값은 무조건 실수형이다.\n# 그래서 소숫점 아래 값이 있는 수와 없는 수를 구분하여 소숫점이 없는 수만 골라내야 한다.\n# 생각한 방법은 소숫점 이하를 반올림한 수와 원래 수가 일치하는 것만 정수로 판단하는 것이다.\n\nn = 3\na = n**(1/2)\n\nif a > 0 and a == round(a):\n    answer = (a + 1) ** 2\nelse:\n    answer = -1\n\nanswer\n\n-1\n\n\n\n# 다른 사람 풀이 \n# 정수 여부 판단 방법은 1로 나눈 나머지가 0인지 판단하는 것\n\nn = 121\nsqrt = n**.5\nif sqrt % 1 == 0:\n    answer = (sqrt + 1)**2\nanswer\n\n144.0"
+    "text": "문제 보기 https://school.programmers.co.kr/learn/courses/30/lessons/12934\n\n# 제곱근이 정수인지 아닌지 판단해야 하는데\n# 파이썬에서는 나누셈의 반환값은 무조건 실수형이다.\n# 그래서 소숫점 아래 값이 있는 수와 없는 수를 구분하여 소숫점이 없는 수만 골라내야 한다.\n# 생각한 방법은 소숫점 이하를 반올림한 수와 원래 수가 일치하는 것만 정수로 판단하는 것이다.\n\nn = 3\na = n**(1/2)\n\nif a > 0 and a == round(a):\n    answer = (a + 1) ** 2\nelse:\n    answer = -1\n\nanswer\n\n-1\n\n\n\n# 다른 사람 풀이 \n# 정수 여부 판단 방법은 1로 나눈 나머지가 0인지 판단하는 것\n\nn = 121\nsqrt = n**.5\nif sqrt % 1 == 0:\n    answer = (sqrt + 1)**2\nanswer\n\n144.0"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/\bdoksan_algorithm.html",
+    "href": "review/algorithm/basic_30/\bdoksan_algorithm.html",
+    "title": "독산 플레이데이터 알고리즘 학습 안내표",
+    "section": "",
+    "text": "제한시간\n난이도\n문제\n힌트\n확인\n\n\n\n\n1\n30분\nLV1\n두 정수 사이의 합\nfor\nO\n\n\n2\n30분\nLV1\n수박수박수박수?\nstring\nO\n\n\n3\n30분\nLV1\n서울에서 김서방 찾기\nmethod\nO\n\n\n4\n30분\nLV2\n약수의 합\nfor, if\nO\n\n\n5\n30분\nLV2\n문자열 내 p와 y의 개수\nmethod 한줄로 풀어보기\nO\n\n\n6\n30분\nLV2\n같은 숫자는 싫어\nfor, if\nO\n\n\n7\n30분\nLV1\n가운데 글자 가져오기\nmath\nO\n\n\n8\n30분\nLV1\nx만큼 간격이 있는 n개의 숫자\nfor\nO\n\n\n9\n30분\nLV2\n직사각형 별찍기\nfor\nO\n\n\n10\n30분\nLV1\n평균 구하기\nmethod 한줄로 풀어보기\nO\n\n\n11\n30분\nLV2\n행렬의 덧셈\nmethod 한줄로 풀어보기\nO\n\n\n12\n30분\nLV1\n짝수와 홀수\nfor, if\nO\n\n\n13\n30분\nLV2\n자릿수 더하기\nmath\nO\n\n\n14\n30분\nLV2\n최대공약수와 최소공배수\n변수, 수학\nO\n\n\n15\n30분\nLV2\n정수 제곱근 판별\nMath 한줄로 풀어보기\nO\n\n\n16\n30분\nLV2\n문자열 다루기 기본\n지수표기법\n\n\n\n17\n30분\nLV2\n정수 내림차순으로 배치하기\n형변환 한줄로 풀어보기\n\n\n\n18\n30분\nLV2\n자연수 뒤집어 배열로 만들기\n형변환 / 숫자\n\n\n\n19\n30분\nLV2\n핸드폰 번호 가리기\nstring 한줄로 풀어보기\n\n\n\n20\n30분\nLV2\nK 번째 수\nmethod\n\n\n\n21\n30분\nLV2\n하샤드 수\n형변환\n\n\n\n22\n30분\nLV2\n나누어 떨어지는 숫자 배열\narray\n\n\n\n23\n1시간\nLV3\n모의고사\n종합\n\n\n\n24\n30분\nLV2\n완주하지 못한 선수\nfor,if\n\n\n\n25\n1시간\nLV2\n2016년\nif\n\n\n\n26\n1시간\nLV3\n소수찾기\n수학\n\n\n\n27\n30분\nLV2\n예산\nfor\n\n\n\n28\n1시간\nLV3\n체육복\nfor, if\n\n\n\n29\n30분\nLV2\n시저암호\nfor, if\n\n\n\n30\n2시간\nLV2\n비밀지도\n진법"
+  },
+  {
+    "objectID": "review/algorithm/basic_30/\bdoksan_algorithm.html#자료구조와-알고리즘",
+    "href": "review/algorithm/basic_30/\bdoksan_algorithm.html#자료구조와-알고리즘",
+    "title": "독산 플레이데이터 알고리즘 학습 안내표",
+    "section": "자료구조와 알고리즘",
+    "text": "자료구조와 알고리즘\n\n\n\n주제\n문제\n확인\n\n\n\n\n스택\n괄호\n\n\n\n\n크레인 인형뽑기 게임\n\n\n\n큐\n카드2\n\n\n\n\n프린터\n\n\n\n재귀함수\n이진수 변환\n\n\n\n\n팩토리얼\n\n\n\n\n괄호변환\n\n\n\n트리/그래프\n트리의 부모 찾기\n\n\n\n\n순위\n\n\n\n\n가장 먼 노드\n\n\n\n완전탐색/이분탐색\n연산자 끼워넣기\n\n\n\n\n체스판 다시 칠하기\n\n\n\n\n숫자카드 2\n\n\n\nBFS/DFS\nDFS 와 BFS\n\n\n\n\n미로 탐색\n\n\n\n진법변환/비트연산\n팩토리얼 진법\n\n\n\n\n진법 변환\n\n\n\n\n비밀지도\n\n\n\n해시\nHashing\n\n\n\n\n완주하지 못한 선수\n\n\n\n\n전화번호목록\n\n\n\n동적계획법\n1로 만들기\n\n\n\n\n가장 긴 증가하는 부분 수열\n\n\n\n다익스트라\n최단경로\n\n\n\n\n최소비용 구하기\n\n\n\n탐욕법\n거스름돈\n\n\n\n\n전자레인지\n\n\n\n\n체육복\n\n\n\n\n회의실 배정\n\n\n\n연결리스트/트리구조\n더 맵게\n\n\n\n\n이중우선순위큐\n\n\n\n순열/조합\nN과M 시리즈 15649 ~\n\n\n\n\n암호 만들기\n\n\n\n부분집합\n일곱 난쟁이\n\n\n\n최소신장트리\n상근이의 여행\n\n\n\n\n최소 스패닝 트리"
   },
   {
     "objectID": "review/algorithm/basic_30/12_lv1.html",
     "href": "review/algorithm/basic_30/12_lv1.html",
-    "title": "짝수와 홀수",
+    "title": "👀",
     "section": "",
-    "text": "# 내가 푼 코드\nnum = 4\nanswer = 'Odd' if num % 2 == 1 else 'Even'\nanswer\n\n'Even'\n\n\n\n# 다른 사람 코드\n[\"Even\", \"Odd\"][num & 1]\n\n'Even'\n\n\n\n# 비트 연산\n# 1과 & 연산을 하면 오른쪽 끝자리가 1이기 때문에\n# 연산 대상 숫자의 오른쪽 끝자리가 1이면 1, 0이면 0이 된다.\n# 10진수 짝수는 2진수 오른쪽 끝자리가 0, 홀수는 1이다.\n# 따라서 짝수와 1의 &연산은 0, 홀수와의 연산은 1이 된다. \n\n4 & 1, 3 & 1, 0 & 1\n\n# 4 = 000 0100\n# 1 = 000 0001\n# ------------\n# 0 = 000 0000\n\n(0, 1, 0)"
+    "text": "문제 보기 https://programmers.co.kr/learn/courses/30/lessons/12937\n\n# 내가 푼 코드\nnum = 4\nanswer = 'Odd' if num % 2 == 1 else 'Even'\nanswer\n\n'Even'\n\n\n\n# 다른 사람 코드\n[\"Even\", \"Odd\"][num & 1]\n\n'Even'\n\n\n\n# 비트 연산\n# 1과 & 연산을 하면 오른쪽 끝자리가 1이기 때문에\n# 연산 대상 숫자의 오른쪽 끝자리가 1이면 1, 0이면 0이 된다.\n# 10진수 짝수는 2진수 오른쪽 끝자리가 0, 홀수는 1이다.\n# 따라서 짝수와 1의 &연산은 0, 홀수와의 연산은 1이 된다. \n\n4 & 1, 3 & 1, 0 & 1\n\n# 4 = 000 0100\n# 1 = 000 0001\n# ------------\n# 0 = 000 0000\n\n(0, 1, 0)"
   },
   {
     "objectID": "review/algorithm/basic_30/13_lv2.html",
     "href": "review/algorithm/basic_30/13_lv2.html",
-    "title": "자릿수 더하기",
+    "title": "👀",
     "section": "",
-    "text": "# 숫자 자리수 각각을 분리하는 방법\nn = 123\nsum([ int(i) for i in str(n)])\n\n6\n\n\n\n# 다른 사람 코드\nsum(map(int, str(n)))\n\n6"
+    "text": "문제 보기 https://school.programmers.co.kr/learn/courses/30/lessons/12931\n\n# 숫자 자리수 각각을 분리하는 방법\nn = 123\nsum([ int(i) for i in str(n)])\n\n6\n\n\n\n# 다른 사람 코드\nsum(map(int, str(n)))\n\n6"
   },
   {
     "objectID": "review/algorithm.html",
     "href": "review/algorithm.html",
     "title": "알고리즘",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\nOct 14, 2022\n\n\n소수 찾기\n\n\n\n\n\n\n\n\n자릿수 더하기\n\n\n\n\n\n\n\n\n정수 제곱근 판별\n\n\n\n\n\n\n\n\n짝수와 홀수\n\n\n\n\n\n\n\n\n최대공약수 최소공배수 구하기\n\n\n\n\n\n\n\n\n행렬의 덧셈\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n         \n          Author\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\nAuthor\n\n\n\n\n\n\n\n\n내 풀이\n\n\n\n\n\n\n\n\n다른 사람 풀이 보고 알게 된 점\n\n\n\n\n\n\nOct 30, 2022\n\n\n독산 플레이데이터 알고리즘 학습 안내표\n\n\n\n\n\n\nOct 14, 2022\n\n\n소수 찾기\n\n\n\n\n\n\n\n\n유클리드 호제법\n\n\n\n\n\n\n\n\n접근 과정\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "de/wsl2.html",

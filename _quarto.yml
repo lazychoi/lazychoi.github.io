@@ -25,7 +25,7 @@ website:
       - about.md
     right: 
       - icon: github
-        href: https://github.com/lazychoi
+        href: https://github.com/lazychoi/lazychoi.github.io/issues
 
   sidebar:
     - title: "읽은 책"
