@@ -30,6 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -58,12 +60,43 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script>
 
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      page: 10,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -98,6 +131,9 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="./visualization.html">시각화</a>
   </li>  
   <li class="nav-item">
+    <a class="nav-link" href="./project.html">프로젝트</a>
+  </li>  
+  <li class="nav-item">
     <a class="nav-link" href="./blog/index.html">블로그</a>
   </li>  
   <li class="nav-item">
@@ -115,29 +151,10 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">지식 관리</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
-      </button>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./pkm.html" class="sidebar-item-text sidebar-link active">지식 관리</a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
@@ -147,7 +164,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">지식 관리</h1>
+<h1 class="title">지식 관리</h1>
 </div>
 
 
@@ -161,11 +178,344 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<p>개인 지식 관리</p>
 
 
 
-</main> <!-- /main -->
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1665500400000" data-listing-file-modified-sort="1667099915209" data-listing-reading-time-sort="0.755">
+<div class="thumbnail">
+<a href="./pkm/Material_for_MkDocs.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/Material_for_MkDocs.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/Material_for_MkDocs.html">
+<h3 class="no-anchor listing-title">
+Material for MkDocs
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<code>$ mkdir 폴더이름</code> : 사이트로 구성할 폴더 만들기
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/Material_for_MkDocs.html">
+<div class="listing-date">
+Oct 12, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1667187311969" data-listing-reading-time-sort="0.515">
+<div class="thumbnail">
+<p><a href="./pkm/obsidian_template.html"> <img src="./pkm/100722_022320.jpg" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pkm/obsidian_template.html">
+<h3 class="no-anchor listing-title">
+Obsidian template 사용
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<img src="100722_022320.jpg" class="img-fluid">
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/obsidian_template.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1664982000000" data-listing-file-modified-sort="1667105334925" data-listing-reading-time-sort="0.335">
+<div class="thumbnail">
+<p><a href="./pkm/obsidian to github.html"> <img src="./pkm/20221006093140.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pkm/obsidian to github.html">
+<h3 class="no-anchor listing-title">
+Obsidian to github pages
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+obsidian-publish-mkdocs 에서 초록색 ‘Use this template’ 버튼 눌러 깃허브 페이지로 사용할 레포지토리 생성(복사할 때는 main 브랜치만 복사한다.)
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/obsidian to github.html">
+<div class="listing-date">
+Oct 6, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1665932400000" data-listing-file-modified-sort="1667105510139" data-listing-reading-time-sort="1.605">
+<div class="thumbnail">
+<a href="./pkm/vundle.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/vundle.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/vundle.html">
+<h3 class="no-anchor listing-title">
+VI Vundle
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+Vundle 홈페이지
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/vundle.html">
+<div class="listing-date">
+Oct 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1666450800000" data-listing-file-modified-sort="1667104037937" data-listing-reading-time-sort="1.1">
+<div class="thumbnail">
+<p><a href="./pkm/create_vscode_snippets.html"> <img src="./pkm/2022-10-23-16-46-27.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pkm/create_vscode_snippets.html">
+<h3 class="no-anchor listing-title">
+VS Code에서 snippets 만들기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+공식 설명서(영문){target:_blank}
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/create_vscode_snippets.html">
+<div class="listing-date">
+Oct 23, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1666710000000" data-listing-file-modified-sort="1667105199188" data-listing-reading-time-sort="0.395">
+<div class="thumbnail">
+<a href="./pkm/ananconda_settings_in_window.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/ananconda_settings_in_window.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/ananconda_settings_in_window.html">
+<h3 class="no-anchor listing-title">
+ananconda settings in window
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+C: C: C:
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/ananconda_settings_in_window.html">
+<div class="listing-date">
+Oct 26, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1667055600000" data-listing-file-modified-sort="1667105239064" data-listing-reading-time-sort="0.355">
+<div class="thumbnail">
+<a href="./pkm/git.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/git.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/git.html">
+<h3 class="no-anchor listing-title">
+git
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/git.html">
+<div class="listing-date">
+Oct 30, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1665241200000" data-listing-file-modified-sort="1667105271042" data-listing-reading-time-sort="0.09">
+<div class="thumbnail">
+<a href="./pkm/gitignore_not_working.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/gitignore_not_working.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/gitignore_not_working.html">
+<h3 class="no-anchor listing-title">
+gitignore가 적용 안 될 때
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+문제 상황: <code>.gitignore</code> 파일에 기록했는데도 Untracted files로 보이는 경우
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/gitignore_not_working.html">
+<div class="listing-date">
+Oct 9, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1666450800000" data-listing-file-modified-sort="1667103954511" data-listing-reading-time-sort="0.31">
+<div class="thumbnail">
+<a href="./pkm/markdown_link_new_window.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/markdown_link_new_window.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/markdown_link_new_window.html">
+<h3 class="no-anchor listing-title">
+mkdocs에서 링크된 문서를 새 창으로 열기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+mkdocs로 만든 웹사이트에서 링크를 클릭하면 현재 창에 연결된 문서가 뜬다. 가끔 불편한 점은 외부 문서나 주피터 노트북을 변환한 html 파일을 링크하면 내 홈페이지를 벗어나 버려 돌아오기가 번거롭다. 일부 링크는 새 창으로 띄우면 더 편리할 것 같아 찾아보았다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/markdown_link_new_window.html">
+<div class="listing-date">
+Oct 23, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="9" data-listing-date-sort="1666710000000" data-listing-file-modified-sort="1667104381622" data-listing-reading-time-sort="0.905">
+<div class="thumbnail">
+<p><a href="./pkm/quarto.html"> <img src="./pkm/2022-10-26-09-40-33.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pkm/quarto.html">
+<h3 class="no-anchor listing-title">
+quarto
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+공식 문서
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/quarto.html">
+<div class="listing-date">
+Oct 26, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-listing-date-sort="1665500400000" data-listing-file-modified-sort="1667099903486" data-listing-reading-time-sort="0.58">
+<div class="thumbnail">
+<p><a href="./pkm/vscode_extension.html"> <img data-src="./images/2022-10-22-12-57-02.png" class="thumnail-image"> </a></p>
+</div>
+<div class="body">
+<a href="./pkm/vscode_extension.html">
+<h3 class="no-anchor listing-title">
+vscode extension
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+설정 방법:
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/vscode_extension.html">
+<div class="listing-date">
+Oct 12, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="11" data-listing-date-sort="1664982000000" data-listing-file-modified-sort="1667105409363" data-listing-reading-time-sort="0.32">
+<div class="thumbnail">
+<a href="./pkm/PATH.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="./pkm/PATH.html"></a></p>
+</div>
+<div class="body">
+<a href="./pkm/PATH.html">
+<h3 class="no-anchor listing-title">
+리눅스 PATH
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="./pkm/PATH.html">
+<div class="listing-date">
+Oct 6, 2022
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">
+No matching items
+</div>
+<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
+</div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

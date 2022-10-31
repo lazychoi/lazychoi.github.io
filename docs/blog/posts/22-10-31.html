@@ -65,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -88,16 +88,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../../books.html">읽은 책</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pkm.html">지식관리</a>
-  </li>  
-  <li class="nav-item">
-    <a class="nav-link" href="../../de.html">개발환경</a>
-  </li>  
-  <li class="nav-item">
     <a class="nav-link" href="../../review.html">오답노트</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../visualization.html">시각화</a>
+    <a class="nav-link" href="../../project.html">프로젝트</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../blog/index.html">블로그</a>
@@ -119,66 +113,71 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">22-10-31(월)</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 31, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
   <li><a href="#to-do" id="toc-to-do" class="nav-link active" data-scroll-target="#to-do">to do</a></li>
-  <li><a href="#qmd의-기능" id="toc-qmd의-기능" class="nav-link" data-scroll-target="#qmd의-기능">qmd의 기능</a></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
   <li><a href="#빅분기-단답형-기출" id="toc-빅분기-단답형-기출" class="nav-link" data-scroll-target="#빅분기-단답형-기출">빅분기 단답형 기출</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">22-10-31(월)</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>lazychoi </p>
-          </div>
-  </div>
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 31, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
+<p>미니 프로젝트를 다시 돌아보다 인구 계산에 오류가 있었다는 걸 발견했다. csv 파일을 자세히 살피지 않은 것이 원인이다. 시군구 데이터가 읍면동 데이터를 포함한 값인 것을 모르고 그냥 합쳐버려 인구가 두 배로 뛰었다. 더 황당한 것은 어디가 잘못됐는지 수원시 인구가 천 만명이 넘게 나왔다. 그래프 그리는 연습을 하다 발견했다. 테이블로만 작업할 때는 전혀 알아채지 못한 잘못이 그래프를 그리니 확연하게 드러났다. 시각화의 중요성을 체험했다.</p>
 <section id="to-do" class="level2">
 <h2 class="anchored" data-anchor-id="to-do">to do</h2>
-<ul>
-<li>알고리즘 3문제 풀기</li>
-<li>이것이 코딩 테스트다 10장</li>
-<li>Anki에 빅분기 실기 단답형 입력</li>
-<li>미니 프로젝트 정리</li>
-<li>Quarto 설명서 읽기</li>
+<ul class="task-list">
+<li><input type="checkbox" disabled="" checked="">알고리즘 3문제 풀기</li>
+<li><input type="checkbox" disabled="">이것이 코딩 테스트다 10장</li>
+<li><input type="checkbox" disabled="" checked="">Anki에 빅분기 실기 단답형 입력</li>
+<li><input type="checkbox" disabled="" checked="">미니 프로젝트 정리</li>
+<li><input type="checkbox" disabled="">Quarto 설명서 읽기</li>
 </ul>
 </section>
-<section id="qmd의-기능" class="level2">
-<h2 class="anchored" data-anchor-id="qmd의-기능">qmd의 기능</h2>
-<ul>
-<li>코드 블록에 언어를 중괄호로 감싸 선언하면(eg. {python}), 코드를 실행할 수 있다.</li>
-</ul>
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<p>qmd가 md와 다른 주요한 기능은 코드 블록에 언어를 중괄호로 감싸 선언하면(eg. {python}) 코드를 실행할 수 있다는 점이다. 주 작업이 문서 작성이고 코드를 간간히 입력할 때 편리하다.</p>
+<p>주피터 노트북은 변환할 때 상단의 yml을 마크다운 블록에 넣어야 한다. 코드 블록에 넣으면 yml 내용이 그대로 웹 페이지에 보인다.</p>
+<p>리스트에 표시되는 제목은 yml의 title에 입력한 값이다. 리스트 제목 밑의 내용은 헤더가 아닌 첫 번째 문단이 나타난다.</p>
 </section>
 <section id="빅분기-단답형-기출" class="level2">
 <h2 class="anchored" data-anchor-id="빅분기-단답형-기출">빅분기 단답형 기출</h2>

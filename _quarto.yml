@@ -12,14 +12,10 @@ website:
         file: index.md
       - text: "읽은 책"
         file: books.md
-      - text: "지식관리"
-        file: pkm.md
-      - text: "개발환경"
-        file: de.md
       - text: "오답노트"
         file: review.md
-      - text: "시각화"
-        file: visualization.md
+      - text: "프로젝트"
+        file: project.md
       - text: "블로그"
         file: blog/index.md
       - about.md
@@ -42,17 +38,6 @@ website:
         - section: "판다스 인 액션"
           contents: 
             - books/pandas_in_action.md
-
-    - title: "지식관리"
-      contents:
-        - pkm.md
-        # navigation items
-
-    - title: "개발환경"
-      contents:
-        - de.md
-        # navigation items
-
     - title: "오답노트"
       contents:
         - review.md
@@ -62,10 +47,21 @@ website:
         - section: "알고리즘"
           contents:
             - review/algorithm.md
-    
-    - title: "시각화"
-      contents:
-        - visualization.md
+        - section: "지식관리"
+          contents:
+            - review/pkm.md
+        - section: "개발환경"
+          contents:
+            - review/de.md
+        - section: "시각화"
+          contents:
+            - review/visualization.md
+
+
+
+    # - title: "시각화"
+    #   contents:
+    #     - visualization.md
 
 
 

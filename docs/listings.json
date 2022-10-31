@@ -128,5 +128,66 @@
       "/review/algorithm/basic_30/19_lv2.html",
       "/review/algorithm/basic_30/11_lv2.html"
     ]
+  },
+  {
+    "listing": "/de.html",
+    "items": [
+      "/de/shell_prompt.html",
+      "/de/wsl2.html"
+    ]
+  },
+  {
+    "listing": "/pkm.html",
+    "items": [
+      "/pkm/Material_for_MkDocs.html",
+      "/pkm/obsidian_template.html",
+      "/pkm/obsidian to github.html",
+      "/pkm/vundle.html",
+      "/pkm/create_vscode_snippets.html",
+      "/pkm/ananconda_settings_in_window.html",
+      "/pkm/git.html",
+      "/pkm/gitignore_not_working.html",
+      "/pkm/markdown_link_new_window.html",
+      "/pkm/quarto.html",
+      "/pkm/vscode_extension.html",
+      "/pkm/PATH.html"
+    ]
+  },
+  {
+    "listing": "/project.html",
+    "items": [
+      "/project/2210_pet_choropleth.html"
+    ]
+  },
+  {
+    "listing": "/review/de.html",
+    "items": [
+      "/review/de/shell_prompt.html",
+      "/review/de/wsl2.html"
+    ]
+  },
+  {
+    "listing": "/review/pkm.html",
+    "items": [
+      "/review/pkm/Material_for_MkDocs.html",
+      "/review/pkm/obsidian_template.html",
+      "/review/pkm/obsidian to github.html",
+      "/review/pkm/vundle.html",
+      "/review/pkm/create_vscode_snippets.html",
+      "/review/pkm/ananconda_settings_in_window.html",
+      "/review/pkm/git.html",
+      "/review/pkm/gitignore_not_working.html",
+      "/review/pkm/markdown_link_new_window.html",
+      "/review/pkm/quarto.html",
+      "/review/pkm/vscode_extension.html",
+      "/review/pkm/PATH.html"
+    ]
+  },
+  {
+    "listing": "/review/visualization.html",
+    "items": [
+      "/review/visualization/folium.html",
+      "/review/visualization/pyplot.html"
+    ]
   }
 ]

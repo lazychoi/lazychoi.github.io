@@ -4,13 +4,15 @@
 freeze: false
 
 # Enable banner style title blocks
-title-block-banner: false
+title-block-banner: true
+# title-block-banner-color: body
 
 # Author name of all blog posts
 author: 'lazychoi'
 
 # Table of content settings
 toc: true
+toc-location: left
 toc-depth: 3
 
 page-layout: article

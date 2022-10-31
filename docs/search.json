@@ -39,14 +39,14 @@
     "href": "de.html",
     "title": "개발 환경",
     "section": "",
-    "text": "개발 환경"
+    "text": "Oct 14, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "pkm.html",
     "href": "pkm.html",
     "title": "지식 관리",
     "section": "",
-    "text": "개인 지식 관리"
+    "text": "Oct 12, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "books/tiny_python_project.html",
@@ -760,7 +760,7 @@
     "href": "pkm/obsidian_template.html#templater-plugin-사용",
     "title": "Obsidian template 사용",
     "section": "templater plugin 사용",
-    "text": "templater plugin 사용\n\nSettings >>> Community Plugins >>> Templater\nTemplate folder location 지정\nTrigger Templater on new file creation 활성화\n\n\n\n\n100722_022320_PM.jpg\n\n\n\n특정 폴더에서 새 노트를 만들 때 적용할 템플릿 파일 지정\n\n\n\n\n100722_022519_PM.jpg"
+    "text": "templater plugin 사용\n\nSettings >>> Community Plugins >>> Templater\nTemplate folder location 지정\nTrigger Templater on new file creation 활성화\n\n\n\n특정 폴더에서 새 노트를 만들 때 적용할 템플릿 파일 지정"
   },
   {
     "objectID": "blog/posts/22-10-25.html",
@@ -809,7 +809,7 @@
     "href": "blog/posts/22-10-31.html",
     "title": "22-10-31(월)",
     "section": "",
-    "text": "알고리즘 3문제 풀기\n이것이 코딩 테스트다 10장\nAnki에 빅분기 실기 단답형 입력\n미니 프로젝트 정리\nQuarto 설명서 읽기"
+    "text": "미니 프로젝트를 다시 돌아보다 인구 계산에 오류가 있었다는 걸 발견했다. csv 파일을 자세히 살피지 않은 것이 원인이다. 시군구 데이터가 읍면동 데이터를 포함한 값인 것을 모르고 그냥 합쳐버려 인구가 두 배로 뛰었다. 더 황당한 것은 어디가 잘못됐는지 수원시 인구가 천 만명이 넘게 나왔다. 그래프 그리는 연습을 하다 발견했다. 테이블로만 작업할 때는 전혀 알아채지 못한 잘못이 그래프를 그리니 확연하게 드러났다. 시각화의 중요성을 체험했다."
   },
   {
     "objectID": "blog/posts/22-10-31.html#qmd의-기능",
@@ -1684,7 +1684,7 @@
     "href": "about.html",
     "title": "Contact",
     "section": "",
-    "text": "https://github.com/lazychoi/lazychoi.github.io"
+    "text": "https://github.com/lazychoi/lazychoi.github.io/issues"
   },
   {
     "objectID": "books.html",
@@ -1692,5 +1692,502 @@
     "title": "읽은 책",
     "section": "",
     "text": "이것이 코딩 테스트다\n21가지 작고 재밌는 파이썬 프로젝트\n판다스 인 액션"
+  },
+  {
+    "objectID": "project.html",
+    "href": "project.html",
+    "title": "프로젝트",
+    "section": "",
+    "text": "Oct 27, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "blog/posts/22-10-31.html#quarto",
+    "href": "blog/posts/22-10-31.html#quarto",
+    "title": "22-10-31(월)",
+    "section": "Quarto",
+    "text": "Quarto\nqmd가 md와 다른 주요한 기능은 코드 블록에 언어를 중괄호로 감싸 선언하면(eg. {python}) 코드를 실행할 수 있다는 점이다. 주 작업이 문서 작성이고 코드를 간간히 입력할 때 편리하다.\n주피터 노트북은 변환할 때 상단의 yml을 마크다운 블록에 넣어야 한다. 코드 블록에 넣으면 yml 내용이 그대로 웹 페이지에 보인다.\n리스트에 표시되는 제목은 yml의 title에 입력한 값이다. 리스트 제목 밑의 내용은 헤더가 아닌 첫 번째 문단이 나타난다."
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html",
+    "href": "project/2210_pet_choropleth.html",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "",
+    "text": "Code\nimport numpy as np\nimport pandas as pd\nimport json\nimport folium\nfrom branca.colormap import linear\nprint('folium version: ', folium.__version__)\n\n\nfolium version:  0.13.0"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#데이터-확인",
+    "href": "project/2210_pet_choropleth.html#데이터-확인",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "데이터 확인",
+    "text": "데이터 확인\n\n\nCode\npet = pd.read_csv('data/반려동물등록현황.csv')\ngov = pd.read_csv('data/경기도청사및출장소현황.csv')\npopu = pd.read_csv('data/주민등록인구집계현황.csv')\n\n\n\n\nCode\npet.shape\n\n\n(729, 14)\n\n\n\n\nCode\npet.head(3)\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      (등록주체)시군구등록\n      (등록주체)대행업체등록\n      (등록주체)기타\n      (RFID종류)내장형\n      (RFID종류)외장형\n      (RFID종류)인식표\n      등록품종수\n      등록소유자수\n      동물소유자당등록동물수\n      해당동의등록대행업체수\n      데이터기준일자\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      NaN\n      NaN\n      NaN\n      596\n      294\n      51\n      NaN\n      85.0\n      NaN\n      3.0\n      2022-06-14\n    \n    \n      1\n      가평군\n      북면\n      289\n      NaN\n      NaN\n      NaN\n      176\n      93\n      20\n      NaN\n      185.0\n      NaN\n      0.0\n      2022-06-14\n    \n    \n      2\n      가평군\n      상면\n      399\n      NaN\n      NaN\n      NaN\n      217\n      153\n      29\n      NaN\n      243.0\n      NaN\n      0.0\n      2022-06-14\n    \n  \n\n\n\n\n\n\nCode\n# 시군 31개\nlen(pet['시군명'].unique())\n\n\n31\n\n\n\n\nCode\n# 데이터 수집 기간 확인\npet['데이터기준일자'] = pd.to_datetime(pet['데이터기준일자'])\npet['데이터기준일자'].dt.year.unique()\n\n\narray([2022, 2020, 2021])\n\n\n\n\nCode\n# 2021년 이후 데이터만 필터링\n\npet = pet[pet['데이터기준일자'].dt.year >= 2021]\npet.info()\n\n\n<class 'pandas.core.frame.DataFrame'>\nInt64Index: 714 entries, 0 to 728\nData columns (total 14 columns):\n #   Column        Non-Null Count  Dtype         \n---  ------        --------------  -----         \n 0   시군명           714 non-null    object        \n 1   읍면동명          712 non-null    object        \n 2   등록동물수(마리)     714 non-null    int64         \n 3   (등록주체)시군구등록   708 non-null    float64       \n 4   (등록주체)대행업체등록  708 non-null    float64       \n 5   (등록주체)기타      697 non-null    float64       \n 6   (RFID종류)내장형   714 non-null    int64         \n 7   (RFID종류)외장형   714 non-null    int64         \n 8   (RFID종류)인식표   714 non-null    int64         \n 9   등록품종수         708 non-null    float64       \n 10  등록소유자수        713 non-null    float64       \n 11  동물소유자당등록동물수   707 non-null    float64       \n 12  해당동의등록대행업체수   405 non-null    float64       \n 13  데이터기준일자       714 non-null    datetime64[ns]\ndtypes: datetime64[ns](1), float64(7), int64(4), object(2)\nmemory usage: 83.7+ KB\n\n\n\n\nCode\n# 2021년 이후에 미등록 시군이 있어 전체 자료를 모두 사용\nlen(pet['시군명'].unique())\n\n\n30\n\n\n\n\nCode\npet = pd.read_csv('data/반려동물등록현황.csv', encoding='cp949')"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#필요한-컬럼-선택",
+    "href": "project/2210_pet_choropleth.html#필요한-컬럼-선택",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "필요한 컬럼 선택",
+    "text": "필요한 컬럼 선택\n\n\nCode\npet.columns\n\n\nIndex(['시군명', '읍면동명', '등록동물수(마리)', '(등록주체)시군구등록', '(등록주체)대행업체등록', '(등록주체)기타',\n       '(RFID종류)내장형', '(RFID종류)외장형', '(RFID종류)인식표', '등록품종수', '등록소유자수',\n       '동물소유자당등록동물수', '해당동의등록대행업체수', '데이터기준일자'],\n      dtype='object')\n\n\n\n\nCode\npet = pet.loc[ :, ['시군명', '읍면동명', '등록동물수(마리)', '등록소유자수']]\npet.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      85.0\n    \n    \n      1\n      가평군\n      북면\n      289\n      185.0\n    \n    \n      2\n      가평군\n      상면\n      399\n      243.0\n    \n    \n      3\n      가평군\n      설악면\n      1111\n      625.0\n    \n    \n      4\n      가평군\n      조종면\n      416\n      274.0"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#결측치-확인",
+    "href": "project/2210_pet_choropleth.html#결측치-확인",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "결측치 확인",
+    "text": "결측치 확인\n\n결측치가 있는 행 출력해서 따로 처리해야 할 사항이 있는지 확인\ndf.isna().sum() -> 열별로 결측치 개수 출력\n[결측치 있는 열].isna() 들를 |(or)로 묶어 boolean indexing\n\n\n\nCode\npet.isna().sum()\n\n\n시군명          0\n읍면동명         2\n등록동물수(마리)    0\n등록소유자수       1\ndtype: int64\n\n\n\n\nCode\n# 결측치가 분석에 큰 영향을 주지 않아 그대로 남김\npet[pet['읍면동명'].isna() | pet['등록소유자수'].isna()]\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      106\n      군포시\n      NaN\n      15480\n      12226.0\n    \n    \n      537\n      의정부시\n      NaN\n      58997\n      NaN"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#시군-단위로-분석-범위-제한",
+    "href": "project/2210_pet_choropleth.html#시군-단위로-분석-범위-제한",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "시군 단위로 분석 범위 제한",
+    "text": "시군 단위로 분석 범위 제한\n\n시간이 부족해 읍면동 단위까지 데이터를 정제하고 시각화하기 어려워 시군 단위까지로 분석 범위를 제한함\n지도에 등록반려동물수 마커를 표시하는 지점을 시군청 위치로 정함\n관공서 위경도 파일과 병합하기 위해 시군청명을 만들어 별도의 컬럼으로 붙임\n\n\n\nCode\nprint('전체 읍면동 개수: ', len(pet['읍면동명'].unique()))\n\n\n전체 읍면동 개수:  675\n\n\n\n\nCode\nprint(pet['시군명'].unique())\nprint('시군 개수: ', len(pet['시군명'].unique()))\n\n\n['가평군' '고양시' '과천시' '광명시' '광주시' '구리시' '군포시' '김포시' '남양주시' '동두천시' '부천시' '성남시'\n '수원시' '시흥시' '안산시' '안성시' '안양시' '양주시' '양평군' '여주시' '연천군' '오산시' '용인시' '의왕시'\n '의정부시' '이천시' '파주시' '평택시' '포천시' '하남시' '화성시']\n시군 개수:  31\n\n\n시군 단위로 groupby -> 시군별 등록 반려동물 수 합계\n\n\nCode\npet_group = pet.groupby('시군명')\npet_num_si = pet_group[['등록동물수(마리)', '등록소유자수']].sum()\npet_num_si = pet_num_si.reset_index()\npet_num_si.head(5)\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n    \n    \n      4\n      광주시\n      29042\n      19368.0"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#관공서-주소와-위경도-추가",
+    "href": "project/2210_pet_choropleth.html#관공서-주소와-위경도-추가",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "관공서 주소와 위경도 추가",
+    "text": "관공서 주소와 위경도 추가\n\n지도의 시군청사 위치에 반려동물 숫자를 표시하기로 함.\n그러기 위해서는 시군청사 위도, 경도 데이터를 기존 데이터프레임 기준으로 병합해야 함.\ncsv 파일에 위경도 데이터가 없는 곳은 다울 주소변환 사이트에서 가져옴\n\n\n\nCode\ngov = pd.read_csv('data/경기도청사및출장소현황.csv')\ngov.head(3)\n\n\n\n\n\n\n  \n    \n      \n      집계일자\n      시군명\n      구분명\n      전화번호안내\n      소재지우편번호\n      소재지도로명주소\n      소재지지번주소\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      0\n      2022-05-06\n      광명시\n      철산2동\n      02-2680-6609\n      14215\n      경기도 광명시 시청로 61\n      경기도 광명시 철산동 160-4번지\n      37.484689\n      126.866622\n    \n    \n      1\n      2022-05-06\n      광명시\n      일직동\n      02-2680-5800\n      14345\n      경기도 광명시 양지로 19 6층\n      경기도 광명시 일직동 512-3번지 6층\n      37.418938\n      126.882693\n    \n    \n      2\n      2022-04-16\n      오산시\n      남촌동행정복지센터\n      031-8036-6260\n      18119\n      경기도 오산시 청학로 55-5 (청학동)\n      경기도 오산시 청학동 16-6\n      37.154587\n      127.063455\n    \n  \n\n\n\n\n\n기존 pet_num_si 데이터프레임과 위경도가 있는 gov 데이터프레임을 left join\njoin 기준 열의 데이터를 맞추기 위해 시군명 뒤에 ‘청’ 단어를 붙임\n\n\n\nCode\npet_num_si['관공서'] = pet_num_si['시군명'] + '청'\n\n\n\n기존 데이터프레임 기준으로 left join 후 컬럼명 확인\n\n\n\nCode\ntmp = pet_num_si.merge(gov, how='left', left_on='관공서', right_on='구분명')\ntmp.columns\n\n\nIndex(['시군명_x', '등록동물수(마리)', '등록소유자수', '관공서', '집계일자', '시군명_y', '구분명', '전화번호안내',\n       '소재지우편번호', '소재지도로명주소', '소재지지번주소', 'WGS84위도', 'WGS84경도'],\n      dtype='object')\n\n\n\n필요한 컬럼만 뽑아서 기존 데이터프레임을 덮어씀\n\n\n\nCode\npet_num_si = tmp.loc[:, ['시군명_x', '등록동물수(마리)', '등록소유자수', '관공서', 'WGS84위도', 'WGS84경도']]\npet_num_si.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명_x\n      등록동물수(마리)\n      등록소유자수\n      관공서\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n    \n  \n\n\n\n\n\n다시 결측치 확인 -> 위, 경도에 결측치 존재\n\n\n\nCode\npet_num_si.isna().sum()\n\n\n시군명_x        0\n등록동물수(마리)    0\n등록소유자수       0\n관공서          0\nWGS84위도      3\nWGS84경도      3\ndtype: int64\n\n\n\n위도, 경도가 없는 행만 출력\n\n\n\nCode\npet_num_si[ (pet_num_si['WGS84위도'].isna()) | (pet_num_si['WGS84경도'].isna()) ]\n\n\n\n\n\n\n  \n    \n      \n      시군명_x\n      등록동물수(마리)\n      등록소유자수\n      관공서\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      8\n      남양주시\n      42957\n      31542.0\n      남양주시청\n      NaN\n      NaN\n    \n    \n      10\n      부천시\n      113892\n      86532.0\n      부천시청\n      NaN\n      NaN\n    \n    \n      30\n      화성시\n      48264\n      35496.0\n      화성시청\n      NaN\n      NaN\n    \n  \n\n\n\n\n\n다올 주소변환 사이트에서 위경도를 가져와 입력함\n\n\n\nCode\npet_num_si.iloc[8, [4, 5]] = 37.6366920245, 127.2174958647  # 남양주1청사\npet_num_si.iloc[10, [4, 5]] = 37.5029019, 126.765889 # 부천시청\npet_num_si.iloc[30, [4, 5]] = 37.1994150, 126.831523  # 화성시청\n\n\n\n\nCode\npet_num_si = pet_num_si.rename(columns = {'시군명_x':'시군명', })\npet_num_si\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수(마리)\n      등록소유자수\n      관공서\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      0\n      가평군\n      4017.0\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n    \n    \n      1\n      고양시\n      73477.0\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n    \n    \n      2\n      과천시\n      2974.0\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n    \n    \n      3\n      광명시\n      20161.0\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n    \n    \n      4\n      광주시\n      29042.0\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n    \n    \n      5\n      구리시\n      12381.0\n      9279.0\n      구리시청\n      37.594412\n      127.130783\n    \n    \n      6\n      군포시\n      15480.0\n      12226.0\n      군포시청\n      37.361254\n      126.936150\n    \n    \n      7\n      김포시\n      7912.0\n      6388.0\n      김포시청\n      37.615224\n      126.715705\n    \n    \n      8\n      남양주시\n      42957.0\n      31542.0\n      남양주시청\n      NaN\n      NaN\n    \n    \n      9\n      동두천시\n      6998.0\n      4827.0\n      동두천시청\n      37.903411\n      127.061541\n    \n    \n      10\n      부천시\n      113892.0\n      86532.0\n      부천시청\n      NaN\n      NaN\n    \n    \n      11\n      성남시\n      55728.0\n      43137.0\n      성남시청\n      37.420177\n      127.126282\n    \n    \n      12\n      수원시\n      65330.0\n      50256.0\n      수원시청\n      37.263446\n      127.028727\n    \n    \n      13\n      시흥시\n      30539.0\n      22994.0\n      시흥시청\n      37.380422\n      126.804063\n    \n    \n      14\n      안산시\n      86158.0\n      64634.0\n      안산시청\n      37.322131\n      126.830243\n    \n    \n      15\n      안성시\n      19950.0\n      13610.0\n      안성시청\n      37.008015\n      127.280487\n    \n    \n      16\n      안양시\n      35644.0\n      28091.0\n      안양시청\n      37.395206\n      126.958288\n    \n    \n      17\n      양주시\n      11848.0\n      8581.0\n      양주시청\n      37.785349\n      127.044919\n    \n    \n      18\n      양평군\n      13291.0\n      7308.0\n      양평군청\n      37.491741\n      127.487682\n    \n    \n      19\n      여주시\n      5252.0\n      3365.0\n      여주시청\n      37.298214\n      127.636623\n    \n    \n      20\n      연천군\n      2020.0\n      1384.0\n      연천군청\n      38.096517\n      127.075228\n    \n    \n      21\n      오산시\n      14471.0\n      11004.0\n      오산시청\n      37.149035\n      127.077665\n    \n    \n      22\n      용인시\n      50227.0\n      38348.0\n      용인시청\n      37.240867\n      127.177969\n    \n    \n      23\n      의왕시\n      6590.0\n      5082.0\n      의왕시청\n      37.345319\n      126.967989\n    \n    \n      24\n      의정부시\n      58997.0\n      0.0\n      의정부시청\n      37.738063\n      127.033840\n    \n    \n      25\n      이천시\n      13147.0\n      9180.0\n      이천시청\n      37.272374\n      127.435044\n    \n    \n      26\n      파주시\n      24057.0\n      16584.0\n      파주시청\n      37.760041\n      126.779877\n    \n    \n      27\n      평택시\n      60468.0\n      43718.0\n      평택시청\n      36.992300\n      127.112527\n    \n    \n      28\n      포천시\n      11168.0\n      5719.0\n      포천시청\n      37.894701\n      127.200341\n    \n    \n      29\n      하남시\n      17634.0\n      13085.0\n      하남시청\n      37.539057\n      127.215530\n    \n    \n      30\n      화성시\n      48264.0\n      35496.0\n      화성시청\n      NaN\n      NaN\n    \n    \n      남양주시\n      NaN\n      NaN\n      NaN\n      NaN\n      37.636692\n      127.217496\n    \n    \n      부천시\n      NaN\n      NaN\n      NaN\n      NaN\n      37.502902\n      126.765889\n    \n    \n      화성시\n      NaN\n      NaN\n      NaN\n      NaN\n      37.199415\n      126.831523\n    \n  \n\n\n\n\n\n\nCode\ndel pet_num_si[['남양주시', '부천시', '화성시'] axis=0]\n\n\nSyntaxError: invalid syntax (3234565599.py, line 1)"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#인구-정보-추가",
+    "href": "project/2210_pet_choropleth.html#인구-정보-추가",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "인구 정보 추가",
+    "text": "인구 정보 추가\n\n인구가 많은 지역에 등록반려동물수도 많기 때문에 인구수로 나눠 1인당 마리수를 구함\n최신 인구현황인 2022년 9월 데이터만 남김\n데이터를 보니 중복값이 있고 시군구까지 표시된 행이 하위 읍면동의 인구를 포함하고 있음\n따라서 먼저 중복값을 삭제하고\n시군구까지 표시된 행만 추려내야 함\n\n\n\nCode\npopu = pd.read_csv('data/주민등록인구집계현황.csv')\npopu.info()\n\n\n<class 'pandas.core.frame.DataFrame'>\nRangeIndex: 107486 entries, 0 to 107485\nData columns (total 40 columns):\n #   Column       Non-Null Count   Dtype \n---  ------       --------------   ----- \n 0   연도           107486 non-null  int64 \n 1   월            107486 non-null  int64 \n 2   행정구역구분명      107486 non-null  object\n 3   행정구역명        107486 non-null  object\n 4   총 인구수        107486 non-null  int64 \n 5   0~9세         107486 non-null  int64 \n 6   10~19세       107486 non-null  int64 \n 7   20~29세       107486 non-null  int64 \n 8   30~39세       107486 non-null  int64 \n 9   40~49세       107486 non-null  int64 \n 10  50~59세       107486 non-null  int64 \n 11  60~69세       107486 non-null  int64 \n 12  70~79세       107486 non-null  int64 \n 13  80~89세       107486 non-null  int64 \n 14  90~99세       107486 non-null  int64 \n 15  100세 이상      107486 non-null  int64 \n 16  총 인구수 (남)    107486 non-null  int64 \n 17  0~9세 (남)     107486 non-null  int64 \n 18  10~19세 (남)   107486 non-null  int64 \n 19  20~29세 (남)   107486 non-null  int64 \n 20  30~39세 (남)   107486 non-null  int64 \n 21  40~49세 (남)   107486 non-null  int64 \n 22  50~59세 (남)   107486 non-null  int64 \n 23  60~69세 (남)   107486 non-null  int64 \n 24  70~79세 (남)   107486 non-null  int64 \n 25  80~89세 (남)   107486 non-null  int64 \n 26  90~99세 (남)   107486 non-null  int64 \n 27  100세 이상 (남)  107486 non-null  int64 \n 28  총 인구수 (여)    107486 non-null  int64 \n 29  0~9세 (여)     107486 non-null  int64 \n 30  10~19세 (여)   107486 non-null  int64 \n 31  20~29세 (여)   107486 non-null  int64 \n 32  30~39세 (여)   107486 non-null  int64 \n 33  40~49세 (여)   107486 non-null  int64 \n 34  50~59세 (여)   107486 non-null  int64 \n 35  60~69세 (여)   107486 non-null  int64 \n 36  70~79세 (여)   107486 non-null  int64 \n 37  80~89세 (여)   107486 non-null  int64 \n 38  90~99세 (여)   107486 non-null  int64 \n 39  100세 이상 (여)  107486 non-null  int64 \ndtypes: int64(38), object(2)\nmemory usage: 32.8+ MB\n\n\n\n최신 데이터인 2022년 9월의 총 인구수만 남김\n\n\n\nCode\npopu = popu[(popu['연도'] == 2022) & (popu['월'] == 9)][['행정구역명', '총 인구수']]\npopu.head(5)\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      총 인구수\n    \n  \n  \n    \n      0\n      경기도\n      13574353\n    \n    \n      1\n      경기도 가평군\n      62168\n    \n    \n      2\n      경기도 가평군 가평읍\n      19532\n    \n    \n      3\n      경기도 가평군 북면\n      3821\n    \n    \n      4\n      경기도 가평군 상면\n      5688\n    \n  \n\n\n\n\n\n첫 번째 행 삭제. 경기도 전체 인구이기 때문에\n\n\n\nCode\npopu = popu.drop(0, axis=0)\npopu.head(3)\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      총 인구수\n    \n  \n  \n    \n      1\n      경기도 가평군\n      62168\n    \n    \n      2\n      경기도 가평군 가평읍\n      19532\n    \n    \n      3\n      경기도 가평군 북면\n      3821\n    \n  \n\n\n\n\n\n총 인구수가 0인 행 삭제\n\n\nCode\nprint('총 인구수가 0인 행 개수: ', len(popu[popu['총 인구수'] == 0]))\n\n\n총 인구수가 0인 행 개수:  5\n\n\n\n\nCode\nmask = popu['총 인구수'] == 0\npopu = popu[~mask]\nprint('총 인구수가 0인 행 개수: ', len(popu[popu['총 인구수'] == 0]))\n\n\n총 인구수가 0인 행 개수:  0\n\n\n\n\n중복값 여부 확인\n\n\nCode\npopu['행정구역명'].duplicated().sum()\n\n\n0\n\n\n\n\n시군구 문자열을 공백으로 분리 <- 취소\n\n문자열을 공백으로 분리한 후 별도의 데이터프레임으로 반환\n행정구역명에서 시군명만 빼내기 위해 공백을 기준으로 분리한 후 별도의 데이터프레임으로 만듦\n0번 열에는 경기도, 1번 열에는 시군명, 2번 열에는 읍면동\n1번 열만 내용 확인\n\n프로젝트가 끝나고 다시 보다 잘못 처리한 걸 발견함. 시군구 데이터가 아래 읍면동 데이터를 포함하고 있는 것을 간과하고 모두 합함 즉, 인구가 2배가 됨\n\n\nCode\n# tmp = popu['행정구역명'].str.split(pat=' ', expand=True)\n# tmp[1].unique() , len(tmp[1].unique())\n\n\n\n\n행정구역명이 3단어로 되어 있는 행(읍면동까지 있는 것)에 false를 부여하여 제외함\n\napply 함수로 ‘행정구역명’ 열의 문자열을 split으로 분리해 반환된 리스트 요소 개수가 2인 것만 True 부여\nboolean indexing으로 시군까지의 인구통계만 남김\n\n\n\nCode\npopu = popu[popu['행정구역명'].apply(lambda x: len(x.split())) == 2]\npopu\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      총 인구수\n    \n  \n  \n    \n      1\n      경기도 가평군\n      62168\n    \n    \n      8\n      경기도 고양시\n      1079277\n    \n    \n      56\n      경기도 과천시\n      78301\n    \n    \n      63\n      경기도 광명시\n      290756\n    \n    \n      83\n      경기도 광주시\n      388893\n    \n    \n      97\n      경기도 구리시\n      191011\n    \n    \n      106\n      경기도 군포시\n      267493\n    \n    \n      119\n      경기도 김포시\n      485609\n    \n    \n      134\n      경기도 남양주시\n      734642\n    \n    \n      153\n      경기도 동두천시\n      93260\n    \n    \n      162\n      경기도 부천시\n      801503\n    \n    \n      173\n      경기도 성남시\n      928267\n    \n    \n      228\n      경기도 수원시\n      1188234\n    \n    \n      277\n      경기도 시흥시\n      512721\n    \n    \n      297\n      경기도 안산시\n      650708\n    \n    \n      325\n      경기도 안성시\n      189772\n    \n    \n      341\n      경기도 안양시\n      549724\n    \n    \n      376\n      경기도 양주시\n      236142\n    \n    \n      388\n      경기도 양평군\n      121789\n    \n    \n      401\n      경기도 여주시\n      112410\n    \n    \n      414\n      경기도 연천군\n      42731\n    \n    \n      425\n      경기도 오산시\n      230028\n    \n    \n      432\n      경기도 용인시\n      1075877\n    \n    \n      474\n      경기도 의왕시\n      162137\n    \n    \n      481\n      경기도 의정부시\n      464358\n    \n    \n      496\n      경기도 이천시\n      222722\n    \n    \n      511\n      경기도 파주시\n      486515\n    \n    \n      529\n      경기도 평택시\n      569369\n    \n    \n      555\n      경기도 포천시\n      148469\n    \n    \n      571\n      경기도 하남시\n      323558\n    \n    \n      586\n      경기도 화성시\n      892038\n    \n  \n\n\n\n\n\n행정구역명 문자열을 빈 칸 기준으로 나눠 두 번째 값만 다시 행정구역명으로 입력\n\n\n\nCode\npopu['행정구역명'] = popu['행정구역명'].apply(lambda x: x.split()[1])\npopu.head()\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      총 인구수\n    \n  \n  \n    \n      1\n      가평군\n      62168\n    \n    \n      8\n      고양시\n      1079277\n    \n    \n      56\n      과천시\n      78301\n    \n    \n      63\n      광명시\n      290756\n    \n    \n      83\n      광주시\n      388893\n    \n  \n\n\n\n\n\n\n기존 데이터프레임과 inner join\n\n기존 데이터프레임에 인구 데이터프레임 병합\n\n\n\nCode\ndf = pet_num_si.merge(popu, how='inner', left_on='시군명', right_on='행정구역명')\ndf.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      행정구역명\n      총 인구수\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n      가평군\n      62168\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n      고양시\n      1079277\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n      과천시\n      78301\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n      광명시\n      290756\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n      광주시\n      388893\n    \n  \n\n\n\n\n\n중복 열 삭제\n\n\n\nCode\ndf = df.drop('행정구역명', axis=1)\ndf.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총 인구수\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n      62168\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n      1079277\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n      78301\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n      290756\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n      388893\n    \n  \n\n\n\n\n\n\n인구 당 등록 반려동물수\n\n\nCode\n( df['등록동물수'] / df['총 인구수'] )\n\n\n0     0.064615\n1     0.068080\n2     0.037982\n3     0.069340\n4     0.074679\n5     0.064818\n6     0.057871\n7     0.016293\n8     0.058473\n9     0.075038\n10    0.142098\n11    0.060034\n12    0.054981\n13    0.059563\n14    0.132407\n15    0.105126\n16    0.064840\n17    0.050173\n18    0.109131\n19    0.046722\n20    0.047272\n21    0.062910\n22    0.046685\n23    0.040645\n24    0.127051\n25    0.059029\n26    0.049448\n27    0.106202\n28    0.075221\n29    0.054500\n30    0.054105\ndtype: float64\n\n\n\n숫자 크기가 너무 작아 인구 1000명 당 마리수 산출\n가장 숫자가 많은 5개 시군만 출력 df.nlargest(개수, ‘열이름’)\n\n\n\nCode\ndf['1000명당마리수'] = np.round( (df['등록동물수'] / df['총 인구수']) * 1000, 2)\ndf.nlargest(5, '1000명당마리수')\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총 인구수\n      1000명당마리수\n    \n  \n  \n    \n      10\n      부천시\n      113892\n      86532.0\n      부천시청\n      37.502902\n      126.765889\n      801503\n      142.10\n    \n    \n      14\n      안산시\n      86158\n      64634.0\n      안산시청\n      37.322131\n      126.830243\n      650708\n      132.41\n    \n    \n      24\n      의정부시\n      58997\n      0.0\n      의정부시청\n      37.738063\n      127.033840\n      464358\n      127.05\n    \n    \n      18\n      양평군\n      13291\n      7308.0\n      양평군청\n      37.491741\n      127.487682\n      121789\n      109.13\n    \n    \n      27\n      평택시\n      60468\n      43718.0\n      평택시청\n      36.992300\n      127.112527\n      569369\n      106.20\n    \n  \n\n\n\n\n\n소유자 당 마리 수\n의정부시는 소유자 정보가 없음\n\n\n\nCode\ndf['1소유자당마리수'] = np.round(df['등록동물수'] / df['등록소유자수'], 2)\ndf.nlargest(5, '1소유자당마리수')\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총 인구수\n      1000명당마리수\n      1소유자당마리수\n    \n  \n  \n    \n      24\n      의정부시\n      58997\n      0.0\n      의정부시청\n      37.738063\n      127.033840\n      464358\n      127.05\n      inf\n    \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n      62168\n      64.62\n      2.00\n    \n    \n      28\n      포천시\n      11168\n      5719.0\n      포천시청\n      37.894701\n      127.200341\n      148469\n      75.22\n      1.95\n    \n    \n      18\n      양평군\n      13291\n      7308.0\n      양평군청\n      37.491741\n      127.487682\n      121789\n      109.13\n      1.82\n    \n    \n      19\n      여주시\n      5252\n      3365.0\n      여주시청\n      37.298214\n      127.636623\n      112410\n      46.72\n      1.56\n    \n  \n\n\n\n\n\n\n가로 막대그래프로 시각화\n\nsubplots 그래프 그리기\n\n\n\nCode\npetall_graph = df.sort_values('등록동물수')\npet_graph = df.sort_values('1000명당마리수')\n\nfig, ax = plt.subplots(nrows=1, ncols=2, figsize=(20,10))\n\nax[0].barh(petall_graph['시군명'], petall_graph['등록동물수'])\nax[0].set_title('등록 반려동물수')\n\nax[1].barh(pet_graph['시군명'], pet_graph['1000명당마리수'])\nax[1].set_title('1000명 당 마리수')\n\nplt.show()"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#코로플레스-지도choropleth-map-만들기",
+    "href": "project/2210_pet_choropleth.html#코로플레스-지도choropleth-map-만들기",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "코로플레스 지도(Choropleth map) 만들기",
+    "text": "코로플레스 지도(Choropleth map) 만들기\n\n데이터프레임의 ‘시군명’과 json 파일의 ’sggnm’ 키의 값이 같아야 지도에 표시됨. 그렇지 않으면 까맣게 나옴\n\n\n경기도 시군별 등록된 반려동물수\n\n\nCode\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/kyeong.geojson'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '등록동물수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '시군별 등록 반려동물수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n\n\n경기도 시군별 인구 1000명 당 등록된 반려동물수\n\n\nCode\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>1000명 당 반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/kyeong.geojson'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '1000명당마리수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '인구 1000명 당 등록 반려동물 수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#시군별-데이터-표시-추가",
+    "href": "project/2210_pet_choropleth.html#시군별-데이터-표시-추가",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "시군별 데이터 표시 추가",
+    "text": "시군별 데이터 표시 추가\n\n등록반려동물수, 인구수, 1000명당마리수 표지 추가\n\n\n\nCode\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(pet_per_man['WGS84위도'])\nlong = list(pet_per_man['WGS84경도'])\nname = list(pet_per_man['등록동물수(마리)'])\nsi = list(pet_per_man['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>1000명 당 반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/kyeong.geojson'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = pet_per_man,\n    columns= ['시군명', '1000명당마리수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '인구 1000명 당 등록 반려동물 수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#시군별-평균-연령-데이터-추가",
+    "href": "project/2210_pet_choropleth.html#시군별-평균-연령-데이터-추가",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "시군별 평균 연령 데이터 추가",
+    "text": "시군별 평균 연령 데이터 추가\n\n\nCode\nage = pd.read_csv('data/평균연령집계현황.csv')\nage.head()\n\n\n\n\n\n\n  \n    \n      \n      연도\n      월\n      행정구역구분명\n      행정구역명\n      남자 평균연령\n      여자 평균연령\n      평균연령\n    \n  \n  \n    \n      0\n      2022\n      9\n      도\n      경기도\n      41.4\n      43.2\n      42.3\n    \n    \n      1\n      2022\n      9\n      시군\n      경기도 가평군\n      49.1\n      51.6\n      50.3\n    \n    \n      2\n      2022\n      9\n      읍면동\n      경기도 가평군 가평읍\n      46.9\n      49.7\n      48.3\n    \n    \n      3\n      2022\n      9\n      읍면동\n      경기도 가평군 북면\n      55.0\n      57.9\n      56.4\n    \n    \n      4\n      2022\n      9\n      읍면동\n      경기도 가평군 상면\n      52.8\n      56.9\n      54.7\n    \n  \n\n\n\n\n\n결측치 확인\n\n\n\nCode\nage.isna().sum()\n\n\n연도         0\n월          0\n행정구역구분명    0\n행정구역명      0\n남자 평균연령    0\n여자 평균연령    0\n평균연령       0\ndtype: int64\n\n\n\n2022년 9월의 일부 컬럼만 선택\n\n\n\nCode\nage = age[(age['연도'] == 2022) & (age['월'] == 9)][['행정구역명', '평균연령', '남자 평균연령', '여자 평균연령']]\nage.head(5)\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n  \n  \n    \n      0\n      경기도\n      42.3\n      41.4\n      43.2\n    \n    \n      1\n      경기도 가평군\n      50.3\n      49.1\n      51.6\n    \n    \n      2\n      경기도 가평군 가평읍\n      48.3\n      46.9\n      49.7\n    \n    \n      3\n      경기도 가평군 북면\n      56.4\n      55.0\n      57.9\n    \n    \n      4\n      경기도 가평군 상면\n      54.7\n      52.8\n      56.9\n    \n  \n\n\n\n\n\n시군구까지의 행정구역명만 남기고 모두 삭제\n\n\n\nCode\nage = age[age['행정구역명'].apply(lambda x: len(x.split())) == 2]\nage.head()\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n  \n  \n    \n      1\n      경기도 가평군\n      50.3\n      49.1\n      51.6\n    \n    \n      8\n      경기도 고양시\n      42.9\n      42.0\n      43.9\n    \n    \n      56\n      경기도 과천시\n      41.5\n      40.4\n      42.5\n    \n    \n      63\n      경기도 광명시\n      42.7\n      41.6\n      43.8\n    \n    \n      83\n      경기도 광주시\n      42.6\n      42.0\n      43.3\n    \n  \n\n\n\n\n\n행정구역명에서 경기도 삭제\n\n\n\nCode\nage['행정구역명'] = age['행정구역명'].apply(lambda x: x.split()[1])\nage.tail()\n\n\n\n\n\n\n  \n    \n      \n      행정구역명\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n  \n  \n    \n      509\n      파주시\n      41.7\n      40.8\n      42.7\n    \n    \n      527\n      평택시\n      40.9\n      40.0\n      41.9\n    \n    \n      553\n      포천시\n      47.5\n      46.4\n      48.8\n    \n    \n      568\n      하남시\n      40.7\n      40.2\n      41.2\n    \n    \n      583\n      화성시\n      38.1\n      37.7\n      38.5\n    \n  \n\n\n\n\n\n기존 데이터프레임과 inner join\n\n\nCode\npet_man = df.merge(age, how='inner', left_on='시군명', right_on='행정구역명')\npet_man.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총 인구수\n      1000명당마리수\n      1소유자당마리수\n      행정구역명\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n      62168\n      64.62\n      2.00\n      가평군\n      50.3\n      49.1\n      51.6\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n      1079277\n      68.08\n      1.35\n      고양시\n      42.9\n      42.0\n      43.9\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n      78301\n      37.98\n      1.28\n      과천시\n      41.5\n      40.4\n      42.5\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n      290756\n      69.34\n      1.28\n      광명시\n      42.7\n      41.6\n      43.8\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n      388893\n      74.68\n      1.50\n      광주시\n      42.6\n      42.0\n      43.3\n    \n  \n\n\n\n\n\n행정구역명 열 삭제 후 ’시군명’을 인덱스로 설정\n\n\n\nCode\npet_man = pet_man.drop('행정구역명', axis=1)\npet_man = pet_man.set_index('시군명')\npet_man.tail()\n\n\n\n\n\n\n  \n    \n      \n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총 인구수\n      1000명당마리수\n      1소유자당마리수\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n    \n      시군명\n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n      \n    \n  \n  \n    \n      파주시\n      24057\n      16584.0\n      파주시청\n      37.760041\n      126.779877\n      486515\n      49.45\n      1.45\n      41.7\n      40.8\n      42.7\n    \n    \n      평택시\n      60468\n      43718.0\n      평택시청\n      36.992300\n      127.112527\n      569369\n      106.20\n      1.38\n      40.9\n      40.0\n      41.9\n    \n    \n      포천시\n      11168\n      5719.0\n      포천시청\n      37.894701\n      127.200341\n      148469\n      75.22\n      1.95\n      47.5\n      46.4\n      48.8\n    \n    \n      하남시\n      17634\n      13085.0\n      하남시청\n      37.539057\n      127.215530\n      323558\n      54.50\n      1.35\n      40.7\n      40.2\n      41.2\n    \n    \n      화성시\n      48264\n      35496.0\n      화성시청\n      37.199415\n      126.831523\n      892038\n      54.11\n      1.36\n      38.1\n      37.7\n      38.5\n    \n  \n\n\n\n\n\n\n상관관계\n\n상관관계를 보니 흥미로운 점이 몇 가지 보인다.\n등록된 반려동물수가 경도와 40% 역의 상관관계를 보인다. 동쪽보다는 서쪽에서 많이 키운다는 건가? 인구가 서쪽에 몰려있으니 그럴 수도 있겠다.\n평균 연령과 33% 역의 상관관계를 보인다. 나이가 어릴수록 동물을 등록해서 키우는 경향이 있다고 볼 수도 있겠다.\n남녀 성별 차이는 없다\n\n\n\nCode\npet_man.corr()\n\n\n\n\n\n\n  \n    \n      \n      등록동물수\n      등록소유자수\n      위도\n      경도\n      총 인구수\n      1000명당마리수\n      1소유자당마리수\n      평균연령\n      남자 평균연령\n      여자 평균연령\n    \n  \n  \n    \n      등록동물수\n      1.000000\n      0.929165\n      -0.258325\n      -0.400649\n      0.801469\n      0.603257\n      -0.320633\n      -0.337281\n      -0.335284\n      -0.336903\n    \n    \n      등록소유자수\n      0.929165\n      1.000000\n      -0.326905\n      -0.404202\n      0.802641\n      0.444666\n      -0.352341\n      -0.355903\n      -0.351853\n      -0.354996\n    \n    \n      위도\n      -0.258325\n      -0.326905\n      1.000000\n      -0.054979\n      -0.287853\n      -0.132644\n      0.376955\n      0.531682\n      0.521886\n      0.535785\n    \n    \n      경도\n      -0.400649\n      -0.404202\n      -0.054979\n      1.000000\n      -0.406309\n      0.010427\n      0.624281\n      0.573513\n      0.594505\n      0.554759\n    \n    \n      총 인구수\n      0.801469\n      0.802641\n      -0.287853\n      -0.406309\n      1.000000\n      0.084719\n      -0.428738\n      -0.529098\n      -0.522676\n      -0.530333\n    \n    \n      1000명당마리수\n      0.603257\n      0.444666\n      -0.132644\n      0.010427\n      0.084719\n      1.000000\n      0.197501\n      0.184070\n      0.188544\n      0.180885\n    \n    \n      1소유자당마리수\n      -0.320633\n      -0.352341\n      0.376955\n      0.624281\n      -0.428738\n      0.197501\n      1.000000\n      0.756414\n      0.785313\n      0.735683\n    \n    \n      평균연령\n      -0.337281\n      -0.355903\n      0.531682\n      0.573513\n      -0.529098\n      0.184070\n      0.756414\n      1.000000\n      0.996922\n      0.997771\n    \n    \n      남자 평균연령\n      -0.335284\n      -0.351853\n      0.521886\n      0.594505\n      -0.522676\n      0.188544\n      0.785313\n      0.996922\n      1.000000\n      0.989792\n    \n    \n      여자 평균연령\n      -0.336903\n      -0.354996\n      0.535785\n      0.554759\n      -0.530333\n      0.180885\n      0.735683\n      0.997771\n      0.989792\n      1.000000"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#차후-과제",
+    "href": "project/2210_pet_choropleth.html#차후-과제",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "차후 과제",
+    "text": "차후 과제\n\n전국 데이터로 작업을 하면 더 재미있는 결과를 볼 수 있을 것 같다.\n펫카페 또는 반려동물 동반 관광지 정보를 지도에 표시하면 반려동물을 키우는 사람에게도 사업을 하려는 사람에게도 도움이 될 것 같다.\n부천, 안산, 의정부가 타 시군에 비해 등록된 반려동물이 많은 이유가 뭘까? 유기동물 보호소가 있나?"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#그래프-한글-글꼴-깨짐-방지-코드",
+    "href": "project/2210_pet_choropleth.html#그래프-한글-글꼴-깨짐-방지-코드",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "그래프 한글 글꼴 깨짐 방지 코드",
+    "text": "그래프 한글 글꼴 깨짐 방지 코드\n\n\nCode\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\n# 한글폰트 처리 \nplt.rcParams['font.size'] = 11.0\nplt.rcParams['font.family'] = ['Malgun Gothic', 'AppleGothic']\n\n# 그래프에서 마이너스 폰트 깨지는 문제에 대한 대처\nplt.rcParams['axes.unicode_minus'] = False"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#반려동물-등록현황-데이터-불러오고-확인하기",
+    "href": "project/2210_pet_choropleth.html#반려동물-등록현황-데이터-불러오고-확인하기",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "반려동물 등록현황 데이터 불러오고 확인하기",
+    "text": "반려동물 등록현황 데이터 불러오고 확인하기\n\n\nCode\npet = pd.read_csv('data/반려동물등록현황.csv')\n\nprint('pet data shape: ', pet.shape)\n\n\npet data shape:  (729, 14)\n\n\n\n\nCode\npet.head(2)\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      (등록주체)시군구등록\n      (등록주체)대행업체등록\n      (등록주체)기타\n      (RFID종류)내장형\n      (RFID종류)외장형\n      (RFID종류)인식표\n      등록품종수\n      등록소유자수\n      동물소유자당등록동물수\n      해당동의등록대행업체수\n      데이터기준일자\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      NaN\n      NaN\n      NaN\n      596\n      294\n      51\n      NaN\n      85.0\n      NaN\n      3.0\n      2022-06-14\n    \n    \n      1\n      가평군\n      북면\n      289\n      NaN\n      NaN\n      NaN\n      176\n      93\n      20\n      NaN\n      185.0\n      NaN\n      0.0\n      2022-06-14\n    \n  \n\n\n\n\n\n\nCode\nprint('시군 개수: ', len(pet['시군명'].unique()))\n\n\n시군 개수:  31\n\n\n\n\nCode\npet['데이터기준일자'] = pd.to_datetime(pet['데이터기준일자'])\nprint('데이터 수집 기간: ', pet['데이터기준일자'].dt.year.unique())\n\n\n데이터 수집 기간:  [2022 2020 2021]\n\n\n\n\nCode\n# 2021년 이후 데이터만 필터링\n\npet = pet[pet['데이터기준일자'].dt.year >= 2021]\npet.info()\n\n\n<class 'pandas.core.frame.DataFrame'>\nInt64Index: 714 entries, 0 to 728\nData columns (total 14 columns):\n #   Column        Non-Null Count  Dtype         \n---  ------        --------------  -----         \n 0   시군명           714 non-null    object        \n 1   읍면동명          712 non-null    object        \n 2   등록동물수(마리)     714 non-null    int64         \n 3   (등록주체)시군구등록   708 non-null    float64       \n 4   (등록주체)대행업체등록  708 non-null    float64       \n 5   (등록주체)기타      697 non-null    float64       \n 6   (RFID종류)내장형   714 non-null    int64         \n 7   (RFID종류)외장형   714 non-null    int64         \n 8   (RFID종류)인식표   714 non-null    int64         \n 9   등록품종수         708 non-null    float64       \n 10  등록소유자수        713 non-null    float64       \n 11  동물소유자당등록동물수   707 non-null    float64       \n 12  해당동의등록대행업체수   405 non-null    float64       \n 13  데이터기준일자       714 non-null    datetime64[ns]\ndtypes: datetime64[ns](1), float64(7), int64(4), object(2)\nmemory usage: 83.7+ KB\n\n\n\n\nCode\n# 2021년 이후에 미등록 시군이 있어 전체 자료를 모두 사용\nlen(pet['시군명'].unique())\n\n\n30\n\n\n\n\nCode\npet = pd.read_csv('data/반려동물등록현황.csv', encoding='cp949')"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#반려동물-등록현황-데이터-불러오고-내용-확인하기",
+    "href": "project/2210_pet_choropleth.html#반려동물-등록현황-데이터-불러오고-내용-확인하기",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "반려동물 등록현황 데이터 불러오고 내용 확인하기",
+    "text": "반려동물 등록현황 데이터 불러오고 내용 확인하기\n\n\nCode\npet = pd.read_csv('data/반려동물등록현황.csv')\n\nprint('pet data shape: ', pet.shape)\n\n\npet data shape:  (729, 14)\n\n\n\n\nCode\npet.head(2)\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      (등록주체)시군구등록\n      (등록주체)대행업체등록\n      (등록주체)기타\n      (RFID종류)내장형\n      (RFID종류)외장형\n      (RFID종류)인식표\n      등록품종수\n      등록소유자수\n      동물소유자당등록동물수\n      해당동의등록대행업체수\n      데이터기준일자\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      NaN\n      NaN\n      NaN\n      596\n      294\n      51\n      NaN\n      85.0\n      NaN\n      3.0\n      2022-06-14\n    \n    \n      1\n      가평군\n      북면\n      289\n      NaN\n      NaN\n      NaN\n      176\n      93\n      20\n      NaN\n      185.0\n      NaN\n      0.0\n      2022-06-14\n    \n  \n\n\n\n\n\n\nCode\npet['데이터기준일자'] = pd.to_datetime(pet['데이터기준일자'])\nprint('데이터 수집 기간: ', pet['데이터기준일자'].dt.year.unique())\n\n\n데이터 수집 기간:  [2022 2020 2021]\n\n\n\n필요한 컬럼만 선택\n\n\nCode\nprint('전체 컬럼명: ', pet.columns)\n\n\n전체 컬럼명:  Index(['시군명', '읍면동명', '등록동물수(마리)', '(등록주체)시군구등록', '(등록주체)대행업체등록', '(등록주체)기타',\n       '(RFID종류)내장형', '(RFID종류)외장형', '(RFID종류)인식표', '등록품종수', '등록소유자수',\n       '동물소유자당등록동물수', '해당동의등록대행업체수', '데이터기준일자'],\n      dtype='object')\n\n\n\n\nCode\nprint('사용할 컬럼만 골라 데이터프레임에 덮어 씌움')\npet = pet.loc[ :, ['시군명', '읍면동명', '등록동물수(마리)', '등록소유자수']]\npet.head()\n\n\n사용할 컬럼만 골라 데이터프레임에 덮어 씌움\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      85.0\n    \n    \n      1\n      가평군\n      북면\n      289\n      185.0\n    \n    \n      2\n      가평군\n      상면\n      399\n      243.0\n    \n    \n      3\n      가평군\n      설악면\n      1111\n      625.0\n    \n    \n      4\n      가평군\n      조종면\n      416\n      274.0\n    \n  \n\n\n\n\n\n\n결측치 확인\n\n결측치가 있는 행 출력해서 따로 처리해야 할 사항이 있는지 확인\ndf.isna().sum() -> 열별로 결측치 개수 출력\n[결측치 있는 열].isna() 들를 |(or)로 묶어 boolean indexing\n\n\n\nCode\npet.isna().sum()\n\n\n시군명          0\n읍면동명         2\n등록동물수(마리)    0\n등록소유자수       1\ndtype: int64\n\n\n\n\nCode\n# 결측치가 분석에 큰 영향을 주지 않아 그대로 남김\npet[pet['읍면동명'].isna() | pet['등록소유자수'].isna()]\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      106\n      군포시\n      NaN\n      15480\n      12226.0\n    \n    \n      537\n      의정부시\n      NaN\n      58997\n      NaN\n    \n  \n\n\n\n\n\n\n시군 단위로 분석 범위 제한 groupby\n\n시간이 부족해 읍면동 단위까지 데이터를 정제하고 시각화하기 어려워 시군 단위까지로 분석 범위를 제한함\n지도에 등록반려동물수 마커를 표시하는 지점을 시군청 위치로 정함\n관공서 위경도 파일과 병합하기 위해 시군청명을 만들어 별도의 컬럼으로 붙임\n\n\n\nCode\nprint('전체 읍면동 개수: ', len(pet['읍면동명'].unique()))\n\n\n전체 읍면동 개수:  675\n\n\n\n\nCode\nprint(pet['시군명'].unique())\nprint('시군 개수: ', len(pet['시군명'].unique()))\n\n\n['가평군' '고양시' '과천시' '광명시' '광주시' '구리시' '군포시' '김포시' '남양주시' '동두천시' '부천시' '성남시'\n '수원시' '시흥시' '안산시' '안성시' '안양시' '양주시' '양평군' '여주시' '연천군' '오산시' '용인시' '의왕시'\n '의정부시' '이천시' '파주시' '평택시' '포천시' '하남시' '화성시']\n시군 개수:  31\n\n\n\n시군 단위로 groupby -> 시군별 등록 반려동물 수 합계\n시군별 등록동물수와 등록소유자수 데이터프레임 생성\n아래 관공서 데이터와 병합 위해 reset_index\n\n\n\nCode\npet_group = pet.groupby('시군명')\npet_num = pet_group[['등록동물수(마리)', '등록소유자수']].sum()\npet_num = pet_num.reset_index()\npet_num.head(5)\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n    \n  \n\n\n\n\n\n\n가로 막대그래프 시각화\n\n등록동물수(마리) 기준 내림차순으로 데이터프레임 정렬: df.sort_values(‘열이름’)\n가로 막대그래프: bars = ax.barh(indexes, values)\n막대 그래프 끝에 값 표시: ax.bar_label(bars)\n값에는 1000 단위마다 쉼표 추가: ax.bar_label(bars, labels=[f’{x:,.0f}’ for x in bars.datavalues])\n\n\n\nCode\npet_graph = pet_num.sort_values('등록동물수(마리)')\n\nfig, ax = plt.subplots(figsize=(10,7))\nbarh = ax.barh(pet_graph['시군명'], pet_graph['등록동물수(마리)'])\nax.bar_label(barh, labels=[f'{x:,.0f}' for x in barh.datavalues])\nax.set_xlim(right=130000) # x축 최대값 설정. 설정하지 않으면 부천시 숫자값이 테두리 밖으로 튀어나옴\nplt.show()\n\n\n\n\n\n\nbars 안에는 xy좌표 튜플, 막대 넓이(width, 여기서는 반려동물수), 막대 높이(height, 여기서는 막대두께), angle은 0도 값이 담겨 있다.\n\n\n\nCode\nfor bar in barh:\n    print(bar)\n\n\nRectangle(xy=(0, -0.4), width=2020, height=0.8, angle=0)\nRectangle(xy=(0, 0.6), width=2974, height=0.8, angle=0)\nRectangle(xy=(0, 1.6), width=4017, height=0.8, angle=0)\nRectangle(xy=(0, 2.6), width=5252, height=0.8, angle=0)\nRectangle(xy=(0, 3.6), width=6590, height=0.8, angle=0)\nRectangle(xy=(0, 4.6), width=6998, height=0.8, angle=0)\nRectangle(xy=(0, 5.6), width=7912, height=0.8, angle=0)\nRectangle(xy=(0, 6.6), width=11168, height=0.8, angle=0)\nRectangle(xy=(0, 7.6), width=11848, height=0.8, angle=0)\nRectangle(xy=(0, 8.6), width=12381, height=0.8, angle=0)\nRectangle(xy=(0, 9.6), width=13147, height=0.8, angle=0)\nRectangle(xy=(0, 10.6), width=13291, height=0.8, angle=0)\nRectangle(xy=(0, 11.6), width=14471, height=0.8, angle=0)\nRectangle(xy=(0, 12.6), width=15480, height=0.8, angle=0)\nRectangle(xy=(0, 13.6), width=17634, height=0.8, angle=0)\nRectangle(xy=(0, 14.6), width=19950, height=0.8, angle=0)\nRectangle(xy=(0, 15.6), width=20161, height=0.8, angle=0)\nRectangle(xy=(0, 16.6), width=24057, height=0.8, angle=0)\nRectangle(xy=(0, 17.6), width=29042, height=0.8, angle=0)\nRectangle(xy=(0, 18.6), width=30539, height=0.8, angle=0)\nRectangle(xy=(0, 19.6), width=35644, height=0.8, angle=0)\nRectangle(xy=(0, 20.6), width=42957, height=0.8, angle=0)\nRectangle(xy=(0, 21.6), width=48264, height=0.8, angle=0)\nRectangle(xy=(0, 22.6), width=50227, height=0.8, angle=0)\nRectangle(xy=(0, 23.6), width=55728, height=0.8, angle=0)\nRectangle(xy=(0, 24.6), width=58997, height=0.8, angle=0)\nRectangle(xy=(0, 25.6), width=60468, height=0.8, angle=0)\nRectangle(xy=(0, 26.6), width=65330, height=0.8, angle=0)\nRectangle(xy=(0, 27.6), width=73477, height=0.8, angle=0)\nRectangle(xy=(0, 28.6), width=86158, height=0.8, angle=0)\nRectangle(xy=(0, 29.6), width=113892, height=0.8, angle=0)\n\n\n\n\n세로 막대그래프로 표현\n\n세로 막대그래프일 때는 막대 높이(height)에 반려동물수가 담겨 있고, angle은 0으로 같다.\n\n\n\nCode\npet_graph = pet_num.sort_values('등록동물수(마리)', ascending=False)\nfig, ax = plt.subplots(figsize=(15,7))\nbar = ax.bar(pet_graph['시군명'], pet_graph['등록동물수(마리)'])\nax.bar_label(bar, labels=[f'{x:,.0f}' for x in bar.datavalues]) # 막대그래프 값을 30도로 돌리는 방법은???\nplt.setp(ax.get_xticklabels(), rotation=30) # x출 레이블 30도로 돌리기\nplt.show()"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#필요한-컬럼만-선택",
+    "href": "project/2210_pet_choropleth.html#필요한-컬럼만-선택",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "필요한 컬럼만 선택",
+    "text": "필요한 컬럼만 선택\n\n\nCode\nprint('전체 컬럼명: ', pet.columns)\n\n\n전체 컬럼명:  Index(['시군명', '읍면동명', '등록동물수(마리)', '(등록주체)시군구등록', '(등록주체)대행업체등록', '(등록주체)기타',\n       '(RFID종류)내장형', '(RFID종류)외장형', '(RFID종류)인식표', '등록품종수', '등록소유자수',\n       '동물소유자당등록동물수', '해당동의등록대행업체수', '데이터기준일자'],\n      dtype='object')\n\n\n\n\nCode\nprint('사용할 컬럼만 골라 데이터프레임에 덮어 씌움')\npet = pet.loc[ :, ['시군명', '읍면동명', '등록동물수(마리)', '등록소유자수']]\npet.head()\n\n\n사용할 컬럼만 골라 데이터프레임에 덮어 씌움\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      읍면동명\n      등록동물수(마리)\n      등록소유자수\n    \n  \n  \n    \n      0\n      가평군\n      가평읍\n      941\n      85.0\n    \n    \n      1\n      가평군\n      북면\n      289\n      185.0\n    \n    \n      2\n      가평군\n      상면\n      399\n      243.0\n    \n    \n      3\n      가평군\n      설악면\n      1111\n      625.0\n    \n    \n      4\n      가평군\n      조종면\n      416\n      274.0"
+  },
+  {
+    "objectID": "blog/posts/22-10-31.html#to-do",
+    "href": "blog/posts/22-10-31.html#to-do",
+    "title": "22-10-31(월)",
+    "section": "to do",
+    "text": "to do\n\n알고리즘 3문제 풀기\n이것이 코딩 테스트다 10장\nAnki에 빅분기 실기 단답형 입력\n미니 프로젝트 정리\nQuarto 설명서 읽기"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#관공서-위경도-추가",
+    "href": "project/2210_pet_choropleth.html#관공서-위경도-추가",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "관공서 위경도 추가",
+    "text": "관공서 위경도 추가\n\n지도의 시군청사 위치에 반려동물 숫자를 표시하기로 함.\n그러기 위해서는 시군청사 위도, 경도 데이터를 기존 데이터프레임 기준으로 병합해야 함.\ncsv 파일에 위경도 데이터가 없는 곳은 다울 주소변환 사이트에서 가져옴\n\n\n\nCode\ngov = pd.read_csv('data/경기도청사및출장소현황.csv')\ngov.head(3)\n\n\n\n\n\n\n  \n    \n      \n      집계일자\n      시군명\n      구분명\n      전화번호안내\n      소재지우편번호\n      소재지도로명주소\n      소재지지번주소\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      0\n      2022-05-06\n      광명시\n      철산2동\n      02-2680-6609\n      14215\n      경기도 광명시 시청로 61\n      경기도 광명시 철산동 160-4번지\n      37.484689\n      126.866622\n    \n    \n      1\n      2022-05-06\n      광명시\n      일직동\n      02-2680-5800\n      14345\n      경기도 광명시 양지로 19 6층\n      경기도 광명시 일직동 512-3번지 6층\n      37.418938\n      126.882693\n    \n    \n      2\n      2022-04-16\n      오산시\n      남촌동행정복지센터\n      031-8036-6260\n      18119\n      경기도 오산시 청학로 55-5 (청학동)\n      경기도 오산시 청학동 16-6\n      37.154587\n      127.063455\n    \n  \n\n\n\n\n\n반려동물 데이터프레임과 left join\n\n기존 pet_num_si 데이터프레임과 위경도가 있는 gov 데이터프레임을 left join\njoin 기준 열의 데이터를 맞추기 위해 시군명 뒤에 ‘청’ 단어를 붙임\n\n\n\nCode\npet_num['관공서'] = pet_num['시군명'] + '청'\n\n\n\n기존 데이터프레임 기준으로 left join 후 컬럼명 확인\n\n\n\nCode\ntmp = pet_num.merge(gov, how='left', left_on='관공서', right_on='구분명')\ntmp.columns\n\n\nIndex(['시군명_x', '등록동물수(마리)', '등록소유자수', '관공서', '집계일자', '시군명_y', '구분명', '전화번호안내',\n       '소재지우편번호', '소재지도로명주소', '소재지지번주소', 'WGS84위도', 'WGS84경도'],\n      dtype='object')\n\n\n\n필요한 컬럼만 뽑아서 기존 데이터프레임을 덮어씀\n\n\n\nCode\npet_num_si = tmp.loc[:, ['시군명_x', '등록동물수(마리)', '등록소유자수', '관공서', 'WGS84위도', 'WGS84경도']]\npet_num_si.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명_x\n      등록동물수(마리)\n      등록소유자수\n      관공서\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n    \n  \n\n\n\n\n\n다시 결측치 확인 -> 위, 경도에 결측치 존재\n\n\n\nCode\npet_num_si.isna().sum()\n\n\n시군명_x        0\n등록동물수(마리)    0\n등록소유자수       0\n관공서          0\nWGS84위도      3\nWGS84경도      3\ndtype: int64\n\n\n\n위도, 경도가 없는 행만 출력\n\n\n\nCode\npet_num_si[ (pet_num_si['WGS84위도'].isna()) | (pet_num_si['WGS84경도'].isna()) ]\n\n\n\n\n\n\n  \n    \n      \n      시군명_x\n      등록동물수(마리)\n      등록소유자수\n      관공서\n      WGS84위도\n      WGS84경도\n    \n  \n  \n    \n      8\n      남양주시\n      42957\n      31542.0\n      남양주시청\n      NaN\n      NaN\n    \n    \n      10\n      부천시\n      113892\n      86532.0\n      부천시청\n      NaN\n      NaN\n    \n    \n      30\n      화성시\n      48264\n      35496.0\n      화성시청\n      NaN\n      NaN\n    \n  \n\n\n\n\n\n다올 주소변환 사이트에서 위경도를 가져와 입력함\n\n\n\nCode\npet_num_si.iloc[8, [4, 5]] = 37.6366920245, 127.2174958647  # 남양주1청사\npet_num_si.iloc[10, [4, 5]] = 37.5029019, 126.765889 # 부천시청\npet_num_si.iloc[30, [4, 5]] = 37.1994150, 126.831523  # 화성시청\n\n\n\n다시 결측치 확인 -> 없음\n\n\n\nCode\npet_num_si.isna().sum()\n\n\n시군명_x        0\n등록동물수(마리)    0\n등록소유자수       0\n관공서          0\nWGS84위도      0\nWGS84경도      0\ndtype: int64\n\n\n\n\n사용하기 편하게 열이름(컬럼명) 바꾸기\n\n\nCode\npet_num_si = pet_num_si.rename(columns = \n                               {'시군명_x':'시군명', \n                                '등록동물수(마리)':'등록동물수', \n                                'WGS84위도':'위도', \n                                'WGS84경도':'경도'})\npet_num_si.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084"
+  },
+  {
+    "objectID": "project/2210_pet_choropleth.html#최종-데이터프레임-csv-파일로-저장",
+    "href": "project/2210_pet_choropleth.html#최종-데이터프레임-csv-파일로-저장",
+    "title": "경기도 지역 내 등록반려동물수 코로플레스 맵",
+    "section": "최종 데이터프레임 csv 파일로 저장",
+    "text": "최종 데이터프레임 csv 파일로 저장\n\n\nCode\npet_man.to_csv('pet_man.csv', encoding='utf-8-sig')"
+  },
+  {
+    "objectID": "review/visualization/folium.html",
+    "href": "review/visualization/folium.html",
+    "title": "folium 기본 지식 공유",
+    "section": "",
+    "text": "공식 문서\nconda install folium -c conda-forge <- 아나콘다 사용자 추천\n또는 pip install folium"
+  },
+  {
+    "objectID": "review/visualization/folium.html#일단-지도를-띄워보자",
+    "href": "review/visualization/folium.html#일단-지도를-띄워보자",
+    "title": "folium 기본 지식 공유",
+    "section": "일단 지도를 띄워보자",
+    "text": "일단 지도를 띄워보자\n\n\nCode\nimport folium\n\nm = folium.Map()\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/folium.html#내가-있는-위치를-띄워보자",
+    "href": "review/visualization/folium.html#내가-있는-위치를-띄워보자",
+    "title": "folium 기본 지식 공유",
+    "section": "내가 있는 위치를 띄워보자",
+    "text": "내가 있는 위치를 띄워보자\n위도, 경도 구하기\n\n다른 나라: 구글맵스에서 우측 버튼으로 클릭하면 보임\n우리나라: 구글어스 주소창. geoplaner.com\n주소 -> 위경도: 다울주소전환서비스\n\n지도 표시 옵션\n\nlocation = [위도, 경도]\nwidth, height 기본값 100%. pixel 단위로 입력 가능\nzoom_start 기본값 10, 0 ~ 18\n\n\n\nCode\nm = folium.Map(location=[37.46854308,126.88626333], zoom_start=15, width=1024, height=600)\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/folium.html#내가-있는-위치에-마커-표시하기",
+    "href": "review/visualization/folium.html#내가-있는-위치에-마커-표시하기",
+    "title": "folium 기본 지식 공유",
+    "section": "내가 있는 위치에 마커 표시하기",
+    "text": "내가 있는 위치에 마커 표시하기\n\n\nCode\nm = folium.Map(location=[37.46854308,126.88626333], zoom_start=15)\n\nfolium.Marker([37.46854308,126.88626333]).add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n\n마커 옵션\nMarker(location=None, popup=None, tooltip=None, icon=None, draggable=False, **kwargs)\n\npopup: 마커 이름. 클릭하면 나타남. html 태그 사용 가능\ntooltip: 마우스를 올렸을 때 나타나는 문자열. html 태그 사용 가능\nicon: 아이콘 모양, 색상. prefix=‘fa’ 설정하면 fontawesome의 아이콘 사용할 수 있음\ndraggable: True -> 마커를 움직일 수 있음\n\n\n\nCode\nm = folium.Map(location=[37.46854308,126.88626333], zoom_start=15)\n\nfolium.Marker([37.46854308,126.88626333], icon=folium.Icon(color='red', icon='car', prefix='fa'), popup='<h1>독산</h1>', tooltip='빅데이터반', draggable=True).add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n\n\n마커 여러 개 추가하기\n\n\nCode\nm = folium.Map(location=[37.46854308,126.88626333], zoom_start=10)\n\nfolium.Marker([37.46854308,126.88626333], icon=folium.Icon(color='red', icon='car', prefix='fa'), popup='<h1>독산</h1>', tooltip='독산').add_to(m)\nfolium.Marker([37.55277,126.98969], icon=folium.Icon(color='red', icon='home', prefix='fa'), tooltip='남산').add_to(m)\nfolium.Marker([37.57101,126.89623], icon=folium.Icon(color='red', icon='car', prefix='fa'), tooltip='마포').add_to(m)\nfolium.Marker([37.50721,126.76684], icon=folium.Icon(color='red', icon='car', prefix='fa'), tooltip='부천').add_to(m)\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/folium.html#원-모양-마커-그리기",
+    "href": "review/visualization/folium.html#원-모양-마커-그리기",
+    "title": "folium 기본 지식 공유",
+    "section": "원 모양 마커 그리기",
+    "text": "원 모양 마커 그리기\n\nCircle(location=None, radius=50, popup=None, tooltip=None, **kwargs)¶\n\n\n\nCode\nm = folium.Map(location=[37.46854308,126.88626333], zoom_start=10)\n\nfolium.CircleMarker([37.46854308,126.88626333], radius=10, popup='<h1>독산</h1>', tooltip='10').add_to(m)\nfolium.CircleMarker([37.55277,126.98969], radius=30, tooltip='30').add_to(m)\nfolium.CircleMarker([37.57101,126.89623], radius=50, tooltip='50').add_to(m)\nfolium.CircleMarker([37.50721,126.76684], radius=70, tooltip='70').add_to(m)\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/folium.html#표시할-마커가-100개라면-어떻게-할까",
+    "href": "review/visualization/folium.html#표시할-마커가-100개라면-어떻게-할까",
+    "title": "folium 기본 지식 공유",
+    "section": "표시할 마커가 100개라면 어떻게 할까?",
+    "text": "표시할 마커가 100개라면 어떻게 할까?\n\n데이터프레임에 위경도를 입력한 후 for문을 이용해 마커 찍기\n\n\n\nCode\nimport pandas as pd\n\ndf = pd.read_csv('data/pet_man.csv')\ndf.head()\n\n\n\n\n\n\n  \n    \n      \n      시군명\n      등록동물수\n      등록소유자수\n      관공서\n      위도\n      경도\n      총인구수\n      1000명당마리수\n      1소유자당마리수\n      평균연령\n      남자평균연령\n      여자평균연령\n    \n  \n  \n    \n      0\n      가평군\n      4017\n      2006.0\n      가평군청\n      37.831318\n      127.509706\n      62168\n      64.62\n      2.00\n      50.3\n      49.1\n      51.6\n    \n    \n      1\n      고양시\n      73477\n      54580.0\n      고양시청\n      37.658422\n      126.831964\n      1079277\n      68.08\n      1.35\n      42.9\n      42.0\n      43.9\n    \n    \n      2\n      과천시\n      2974\n      2325.0\n      과천시청\n      37.429812\n      126.986963\n      78301\n      37.98\n      1.28\n      41.5\n      40.4\n      42.5\n    \n    \n      3\n      광명시\n      20161\n      15698.0\n      광명시청\n      37.479097\n      126.864846\n      290756\n      69.34\n      1.28\n      42.7\n      41.6\n      43.8\n    \n    \n      4\n      광주시\n      29042\n      19368.0\n      광주시청\n      37.429433\n      127.255084\n      388893\n      74.68\n      1.50\n      42.6\n      42.0\n      43.3\n    \n  \n\n\n\n\n\n관공서 위치에 마커를 달고 툴팁에 시군명과 총인구수를 표시하자.\n\n\nCode\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nsi = list(df['시군명'])\npopulation = list(df['총인구수'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>총인구수: {str(population[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/folium.html#코로플레스-맵-만들기",
+    "href": "review/visualization/folium.html#코로플레스-맵-만들기",
+    "title": "folium 기본 지식 공유",
+    "section": "코로플레스 맵 만들기",
+    "text": "코로플레스 맵 만들기\n\n준비물1: 행정구역경계 정보가 담긴 geojson 파일\n준비물2: 지도에 표시할 데이터(행정구역명, 숫자)\n\n중요!! 데이터의 행정구역명과 geojson 파일의 행정구역명이 같아야 함\ngeojson 파일 받은 곳: 대한민국 행정동 경계 파일\ngeojson 데이터에 관한 설명\n\ngeojson 파일 구조\n{\n\"type\": \"FeatureCollection\",\n\"name\": \"20220701\",\n\"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\" } },\n\"features\": [\n{ \"type\": \"Feature\", \"properties\": { \"OBJECTID\": 1, \"adm_nm\": \"서울특별시 종로구 사직동\", \"adm_cd\": \"1101053\", \"adm_cd2\": \"1111053000\", \"sgg\": \"11110\", \"sido\": \"11\", \"sidonm\": \"서울특별시\", \"sggnm\": \"종로구\", \"adm_cd8\": \"11010530\" }, \"geometry\": { \"type\": \"MultiPolygon\", \"coordinates\": [ [ [ [ 126.976888842748167, 37.575650779448786 ], [ 126.977034498877501, 37.569194530054553 ], [ 126.975974728212492, 37.569336299425764 ], [ 126.975374709912543, 37.569315567021562 ], [ 126.974331935623255, 37.569261800517531 ], [ 126.969048370018541, 37.568194417708334 ], [ 126.968544936033837, 37.568427679612761 ], [ 126.966649959821197, 37.569491655206583 ], [ 126.966281750244846, 37.569700734798701 ], [ 126.966097327080405, 37.569856509723699 ], [ 126.965728529225771, 37.570183936115114 ], [ 126.965926998221278, 37.570318805686199 ], [ 126.96601094018429, 37.571548395577466 ], [ 126.963659220521961, 37.575174660660373 ], [ 126.963086004345101, 37.576485920015543 ], [ 126.962840990511978, 37.57666158609274 ], [ 126.962810410472628, 37.579448809656775 ], [ 126.967424315843317, 37.579601537124489 ], [ 126.967421763026508, 37.579263521441646 ], [ 126.967430060184597, 37.579192577998604 ], [ 126.967457090095607, 37.578975250585437 ], [ 126.968066046996256, 37.578246780467872 ], [ 126.968955116954774, 37.577935262340283 ], [ 126.969212842969057, 37.577935299309388 ], [ 126.969414538865792, 37.578121124142164 ], [ 126.969664426694706, 37.578531136682209 ], [ 126.969667219148718, 37.578736205134931 ], [ 126.969668773533087, 37.578992879009881 ], [ 126.969669499103631, 37.57911252674959 ], [ 126.969904573616262, 37.579301753628734 ], [ 126.97135197544759, 37.57951327793981 ], [ 126.973819257844539, 37.579372140302631 ], [ 126.973917363383421, 37.578487073041011 ], [ 126.973939619980882, 37.578240429978088 ], [ 126.974331538357575, 37.575749906299862 ], [ 126.975803789978045, 37.575649468824203 ], [ 126.976888842748167, 37.575650779448786 ] ] ] ] } },\n]}\n\n\nCode\nimport json\n\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/HangJeongDong_ver20220701.geojson'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '등록동물수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '시군별 등록 반려동물수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n위에서 까맣게 표시되는 이유는 geojson 파일에 있는 행정구역명칭이 데이터프레임의 ‘시군명’ 컬럼에는 없기 때문이다.\n따라서 geojson 파일을 편집하여 데이터프레임에 있는 ’시군명’만 남기고 삭제한다.\n그렇게 편집한 파일이 ’kyeong.geojson’이다. 이 파일을 불러와서 다시 지도를 띄우자\n\n\nCode\nimport json\n\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/kyeong.geojson'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '등록동물수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '시군별 등록 반려동물수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook"
+  },
+  {
+    "objectID": "review/visualization/pyplot.html",
+    "href": "review/visualization/pyplot.html",
+    "title": "pyplot",
+    "section": "",
+    "text": "권철민, 파이썬 머신러닝 완벽 가이드\nmatplotlib tutorial\nIntroduction to Plotting in Python Using Matplotlib"
+  },
+  {
+    "objectID": "review/visualization/pyplot.html#주피터-노트북에서-한글-표시-설정",
+    "href": "review/visualization/pyplot.html#주피터-노트북에서-한글-표시-설정",
+    "title": "pyplot",
+    "section": "주피터 노트북에서 한글 표시 설정",
+    "text": "주피터 노트북에서 한글 표시 설정"
+  },
+  {
+    "objectID": "review/visualization/pyplot.html#figure-axes-객체",
+    "href": "review/visualization/pyplot.html#figure-axes-객체",
+    "title": "pyplot",
+    "section": "Figure, Axes 객체",
+    "text": "Figure, Axes 객체\n\nFigure 객체: 그림 그리기 위한 캔버스 역할. 그림판 크기 조절, 그림을 최종적으로 화면에 나타내는 역할 수행. 실제 그림을 그리지는 않음\nAxes 객체: 실제 그림을 그리는 메서드 보유. X축, Y축, 타이틀, 범례 등의 속성 설정\n\n\n\n\nFigure, Axis\n\n\nFigure 객체\n\n전체 그림판의 크기를 조절: plt.figure(figsize=(가로길이, 세로길이)) 길이 단위는 인치 -> figure 객체 반환\n그림판 배경색 설정: plt.figure(facecolor=‘색상명’) -> Axes 영역 제외\n\n\n\n\n배경색상 설정\n\n\nAxes 객체\nplt.axes() -> 현재 사용중인 Axes 객체 반환(AxesSubplot)\nplt.subplots() -> Figure와 Axes 객체를 함께 반환\nfig, ax = plt.subplots()\nprint('fig type', type(fig), '\\nax type', type(ax))\n# fig type <class 'matplotlib.figure.Figure'> \n# ax type <class 'matplotlib.axes._subplots.AxesSubplot'>\n\nAxes 객체를 이용해 선 그래프 그리기: ax.plot([1, 2, 3], [2, 4, 6]) = pyplot 모듈의 plt.plot()\nAxes 객체를 이용해 타이틀 설정: ax.title(‘title’) = pyplot 모듈의 plt.title()"
+  },
+  {
+    "objectID": "review/visualization/pyplot.html#subplots-만들기",
+    "href": "review/visualization/pyplot.html#subplots-만들기",
+    "title": "pyplot",
+    "section": "subplots 만들기",
+    "text": "subplots 만들기\n\nfig, (ax1, ax2, …) = plt.subplots(nrows = n, ncols = m, figsize = (x, y))\nax의 개수는 n * m"
+  },
+  {
+    "objectID": "review/visualization/pyplot.html#선-그래프",
+    "href": "review/visualization/pyplot.html#선-그래프",
+    "title": "pyplot",
+    "section": "선 그래프",
+    "text": "선 그래프\n\n공식 문서\nplt.plot( x_value, y_value, color=, marker=, linestyle=, linewidth=, markersize=)\n축 명칭: plt.xlabel(‘x축 이름’), plt.ylabel(‘y축 이름’)\n축 눈금값 등: plt.xticks(ticks=np.arange(a, b, c), rotation=n) -> 최솟값, 최댓값, 간격"
+  },
+  {
+    "objectID": "review/de.html",
+    "href": "review/de.html",
+    "title": "개발 환경",
+    "section": "",
+    "text": "Oct 14, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "review/pkm.html",
+    "href": "review/pkm.html",
+    "title": "지식 관리",
+    "section": "",
+    "text": "Oct 12, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "review/pkm/gitignore_not_working.html",
+    "href": "review/pkm/gitignore_not_working.html",
+    "title": "gitignore가 적용 안 될 때",
+    "section": "",
+    "text": "원인: 캐시\n해결: 캐시를 삭제한다. $ git rm -r --cached ."
+  },
+  {
+    "objectID": "review/pkm/ananconda_settings_in_window.html",
+    "href": "review/pkm/ananconda_settings_in_window.html",
+    "title": "ananconda settings in window",
+    "section": "",
+    "text": "윈도우 키 >>> 설정 >>> 시스템 >>> 정보 >>> 고급 시스템 설정 >>> ‘환경변수’ 버튼 클릭\n상단의 사용자 변수 블록 >>> 변수 열의 Path 선택 >>> ‘편집’ 버튼 클릭\n‘새로만들기’ 버튼 클릭 후 아래 경로 입력\n\nC: C: C:\n주의!!! 시스템에 따라 설치 경로가 다를 수 있으니, ananconda 설치 과정에서 보여지는 경로를 잘 기억하자.\n\n‘확인’ 버튼을 누르고 나온다."
+  },
+  {
+    "objectID": "review/pkm/ananconda_settings_in_window.html#powershell에서-작업",
+    "href": "review/pkm/ananconda_settings_in_window.html#powershell에서-작업",
+    "title": "ananconda settings in window",
+    "section": "powershell에서 작업",
+    "text": "powershell에서 작업\n\n윈도우 기본 파워셀에서 작업하면 conda 가상환경이 실행되지 않았다.\n아나콘다파워셀을 실행시켜서 작업한다.\nvscode를 실행할 때도 아나콘다파워셀에서 coda .을 입력해 실행해야 터미널에서 아나콘다파워셀이 뜬다."
+  },
+  {
+    "objectID": "review/pkm/PATH.html",
+    "href": "review/pkm/PATH.html",
+    "title": "리눅스 PATH",
+    "section": "",
+    "text": "의미: OS가 특정 프로그램을 찾기 위해 사용하는 디렉토리들의 집합\n현재 PATH에 잡혀있는 디렉토리 보기: $ echo $PATH\n특정 폴더(eg. ~/bin)를 PATH에 추가하기: $ PATH=~/bin:$PATH or $ export $PATH=/bin\n특정 폴더를 영구적으로 PATH에 포함하려면 ~/.bashrc에 추가"
+  },
+  {
+    "objectID": "review/pkm/PATH.html#기능",
+    "href": "review/pkm/PATH.html#기능",
+    "title": "리눅스 PATH",
+    "section": "기능",
+    "text": "기능\n\n파일을 $PATH에 지정한 경로 중 한 곳에 놓으면 어느 경로에서든 실행할 수 있다.\n대부분 프로그램은 /usr/local/bin/에 설치된다.\nPATH 경로에 놓인 프로그램은 $ which 명령으로 위치를 찾을 수 있다."
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html",
+    "href": "review/pkm/Material_for_MkDocs.html",
+    "title": "Material for MkDocs",
+    "section": "",
+    "text": "conda 가상환경 만들기: $ conda create -n mkdocs\n가상환경 들어가기: $ conda activate mkdocs\n설치: $ pip install mkdocs-material"
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html#사이트-만들기",
+    "href": "review/pkm/Material_for_MkDocs.html#사이트-만들기",
+    "title": "Material for MkDocs",
+    "section": "사이트 만들기",
+    "text": "사이트 만들기\n$ mkdir 폴더이름 : 사이트로 구성할 폴더 만들기\n$ cd 폴더이름\n$ mkdocs new . : 사이트 기본 파일 생성. 아래와 같은 폴더와 파일을 만든다.\n.\n├─ docs/\n│  └─ index.md\n└─ mkdocs.yml"
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html#mkdocs.yml-설정",
+    "href": "review/pkm/Material_for_MkDocs.html#mkdocs.yml-설정",
+    "title": "Material for MkDocs",
+    "section": "mkdocs.yml 설정",
+    "text": "mkdocs.yml 설정\nvscode에 Yaml extension 설치\nsettings >>> yaml.schemas 아래 코드 추가\n{\n  \"yaml.schemas\": {\n    \"https://squidfunk.github.io/mkdocs-material/schema.json\": \"mkdocs.yml\"\n  }\n}"
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html#사이트-미리보기",
+    "href": "review/pkm/Material_for_MkDocs.html#사이트-미리보기",
+    "title": "Material for MkDocs",
+    "section": "사이트 미리보기",
+    "text": "사이트 미리보기\n$ mkdocs serve\nINFO - Option search.lang ‘kr’ is not supported, falling back to ‘en’ ERROR - Config value: ‘plugins’. Error: The “roamlinks” plugin is not installed Aborted with 1 Configuration Errors!\n=> 해당 코드 모두 주석처리한 뒤 실행하니 일단 뜨기는 함"
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html#사이트-만들기-1",
+    "href": "review/pkm/Material_for_MkDocs.html#사이트-만들기-1",
+    "title": "Material for MkDocs",
+    "section": "사이트 만들기",
+    "text": "사이트 만들기\n\ngithub actions 이용하기(선택)\n설명서\n\n\n로컬에서 build한 후에 올리기\n$ mkdocs build\n=> site/ 폴더가 만들어진 뒤 그 안에 변환된 html 파일을 넣음 => site/ 폴더를 깃허브에 올리면 됨."
+  },
+  {
+    "objectID": "review/pkm/Material_for_MkDocs.html#기타-설정-방법",
+    "href": "review/pkm/Material_for_MkDocs.html#기타-설정-방법",
+    "title": "Material for MkDocs",
+    "section": "기타 설정 방법",
+    "text": "기타 설정 방법\n\n링크 문서 새 창으로 열기"
+  },
+  {
+    "objectID": "review/pkm/vscode_extension.html",
+    "href": "review/pkm/vscode_extension.html",
+    "title": "vscode extension",
+    "section": "",
+    "text": "캡처한 이미지를 문서에 붙여넣을 때 경로와 파일명 자동 작성됨.\n\n일반 붙여넣기 단축키 말고 vscode 안에서 설정한 단축키로 붙여넣어야 한다.\n\n설정 방법:\n\nPaste Image: Base Path -> 문서 파일에 입력할 경로 -> 이미지가 저장된 위치를 현재 파일 기준으로 상대경로로 입력하려면 ${currentFileDir}를 입력하고, 프로젝트 루트부터 절대경로로 입력하려면 ${projectRoot}를 입력한다.\nPaste Image: Path -> 이미지 파일이 저장될 위치  -> 모든 이미지를 한 폴더 저장하려면 ${projectRoot}/docs/images처럼 프로젝트 루트부터 경로를 입력한다. 현재 문서 파일과 같은 위치에 이미지 파일을 저장하려면 ${currentFileDir}를 입력하고, 현재 문서 파일 아래에 images 폴더를 만들어 저장하려면 ${currentFileDir}/images를 입력한다.\n\n \n\n\n\nxclip 클론하고 그 폴더를 PATH에 포함\n\n> cd ~/bin\n> git clone https://github.com/Konfekt/win-bash-xclip-xsel\n> cp xclip ~/bin"
+  },
+  {
+    "objectID": "review/pkm/obsidian to github.html",
+    "href": "review/pkm/obsidian to github.html",
+    "title": "Obsidian to github pages",
+    "section": "",
+    "text": "Pasted image 20221006093140.png\n\n\n나의 레포지토리에 가서 깃헙 페이지로 설정\n\n\n\nPasted image 20221006092242.png\n\n\n이 레포지토리를 pc로 clone 한다.\ndocs 폴더를 옵시디언 볼트로 지정한다.\ndocs 폴더 안에 공개하려고 하는 노트를 넣는다.\ngit commit, git push 하면 Github actions가 웹페이지를 만든다.\nActions 버튼을 누르면 변환 과정을 확인할 수 있다.\n깃헙 주소로 가면 웹페이지 볼 수 있다."
+  },
+  {
+    "objectID": "review/pkm/vundle.html",
+    "href": "review/pkm/vundle.html",
+    "title": "VI Vundle",
+    "section": "",
+    "text": "Vundle 홈페이지"
+  },
+  {
+    "objectID": "review/pkm/vundle.html#vundle-설치",
+    "href": "review/pkm/vundle.html#vundle-설치",
+    "title": "VI Vundle",
+    "section": "Vundle 설치",
+    "text": "Vundle 설치\ngit clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim"
+  },
+  {
+    "objectID": "review/pkm/vundle.html#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다",
+    "href": "review/pkm/vundle.html#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다",
+    "title": "VI Vundle",
+    "section": "설정: 아래 코드를 .vimrc 파일의 맨 위에 추가한다",
+    "text": "설정: 아래 코드를 .vimrc 파일의 맨 위에 추가한다\nset nocompatible              \" be iMproved, required\nfiletype off                  \" required\n\n\" set the runtime path to include Vundle and initialize\nset rtp+=~/.vim/bundle/Vundle.vim\ncall vundle#begin()\n\" alternatively, pass a path where Vundle should install plugins\n\"call vundle#begin('~/some/path/here')\n\n\" let Vundle manage Vundle, required\nPlugin 'VundleVim/Vundle.vim'\n\n\" The following are examples of different formats supported.\n\" Keep Plugin commands between vundle#begin/end.\n\" plugin on GitHub repo\nPlugin 'tpope/vim-fugitive'\n\" plugin from http://vim-scripts.org/vim/scripts.html\n\" Plugin 'L9'\n\" Git plugin not hosted on GitHub\nPlugin 'git://git.wincent.com/command-t.git'\n\" git repos on your local machine (i.e. when working on your own plugin)\nPlugin 'file:///home/playdata/path/to/plugin'\n\" The sparkup vim script is in a subdirectory of this repo called vim.\n\" Pass the path to set the runtimepath properly.\nPlugin 'rstacruz/sparkup', {'rtp': 'vim/'}\n\" Install L9 and avoid a Naming conflict if you've already installed a\n\" different version somewhere else.\n\" Plugin 'ascenator/L9', {'name': 'newL9'}\n\n\" All of your Plugins must be added before the following line\ncall vundle#end()            \" required\nfiletype plugin indent on    \" required\n\" To ignore plugin indent changes, instead use:\n\"filetype plugin on\n\"\n\" Brief help\n\" :PluginList       - lists configured plugins\n\" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate\n\" :PluginSearch foo - searches for foo; append `!` to refresh local cache\n\" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal\n\"\n\" see :h vundle for more details or wiki for FAQ\n\" Put your non-Plugin stuff after this line\ncall vundle#begin()과 call vundle#end() 사이에 설치할 Plugin을 지정한다."
+  },
+  {
+    "objectID": "review/pkm/vundle.html#플러그인-설치-vim-실행-후-plugininstall",
+    "href": "review/pkm/vundle.html#플러그인-설치-vim-실행-후-plugininstall",
+    "title": "VI Vundle",
+    "section": "플러그인 설치: vim 실행 후 :PluginInstall",
+    "text": "플러그인 설치: vim 실행 후 :PluginInstall\n에러 발생: Plugin ‘file:///home/playdata/path/to/plugin’"
+  },
+  {
+    "objectID": "review/pkm/vundle.html#추가한-플러그인",
+    "href": "review/pkm/vundle.html#추가한-플러그인",
+    "title": "VI Vundle",
+    "section": "추가한 플러그인",
+    "text": "추가한 플러그인\n\nnerdtree: .vimrc의 플러그인 정의 영역에 Plugin ‘scrooloose/nerdtree’ 추가 -> 단축키 설정(.vimrc에 추가) nmap nerd :NERDTreeToggle -> vi 명령모드에서 ’nerd’를 키보드로 치면 실행됨"
+  },
+  {
+    "objectID": "review/pkm/git.html",
+    "href": "review/pkm/git.html",
+    "title": "git",
+    "section": "",
+    "text": "기존 환경 설정 파일 삭제: git config --unset 이메일 주소\n이메일 주소는 git이 개발자를 구별하는 고유의 키 값으로 사용: git config user.email \"이메일 주소\"\n환경설정 파일 보기: 먼저 ls .git 명령으로 config 파일 존재 유무 확인 >>> vi .git/config 글로벌 사용자 등록을 했다면 vi ~/.gitconfig"
+  },
+  {
+    "objectID": "review/pkm/git.html#로그",
+    "href": "review/pkm/git.html#로그",
+    "title": "git",
+    "section": "로그",
+    "text": "로그\n\n로그 보기 명령: git log --graph --pretty=oneline >>> show-grpah 별칭으로 등록: git config --global alias.show-graph 'log --graph --pretty=oneline'"
+  },
+  {
+    "objectID": "review/pkm/git.html#기타",
+    "href": "review/pkm/git.html#기타",
+    "title": "git",
+    "section": "기타",
+    "text": "기타\n\ngitignore가 적용 안 될 때"
+  },
+  {
+    "objectID": "review/pkm/quarto.html",
+    "href": "review/pkm/quarto.html",
+    "title": "quarto",
+    "section": "",
+    "text": "quarto 홈페이지에서 운영체제에 맞는 파일을 받아 실행\n맥 Homebrew 설치: brew install --cask quarto"
+  },
+  {
+    "objectID": "review/pkm/quarto.html#vscode에서-사용-tutorial",
+    "href": "review/pkm/quarto.html#vscode에서-사용-tutorial",
+    "title": "quarto",
+    "section": "vscode에서 사용 tutorial",
+    "text": "vscode에서 사용 tutorial\n공식 문서\n\nvscode에서 quarto vscode extension 설치\n\n\n\n\n익스텐션 설치\n\n\n\nquarto 문서 만들기\n\n\n\n\n새 문서 만들기\n\n\nwalkthrough.qmd 문서가 열린다.\n\nwalkthrough.qmd 파일을 렌더링하여 html 파일로 변환한다.\n\n\n\n\n변환\n\n\n변환하면 같은 폴더에 walkthrough.html 파일과 walkthrough_files 폴더가 만들어진다."
+  },
+  {
+    "objectID": "review/pkm/quarto.html#주피터-노트북-사용-tutorial",
+    "href": "review/pkm/quarto.html#주피터-노트북-사용-tutorial",
+    "title": "quarto",
+    "section": "주피터 노트북 사용 tutorial",
+    "text": "주피터 노트북 사용 tutorial\n\nyml 설정\n\n코드 블록 숨기기/보이기 설정\n코드 블록 숨기기/보이기 버튼 우측 상단에 보이게 설정"
+  },
+  {
+    "objectID": "review/pkm/quarto.html#웹사이트-만들기",
+    "href": "review/pkm/quarto.html#웹사이트-만들기",
+    "title": "quarto",
+    "section": "웹사이트 만들기",
+    "text": "웹사이트 만들기\n\n공식 문서\n\n==주의할 점!!!== 나는 깃허브에 quarto 리포를 먼저 만들고 로컬에 클론했다. 그래서 Website Project를 선택한 뒤 나타는 창에서 반드시 quarto 폴더의 부모 폴더를 선택해야 한다. 그러고 나서 뜨는 입력 창에 웹사이트의 홈 폴더로 사용할 깃허브 폴더명인 quarto를 입력한다. 그러면 quarto 폴더 안에 아래처럼 _quarto.yml, index.qmd, about.qmd, style.css 파일이 만들어진다.\n\n\n\n폴더명 입력\n\n\n\n미리보기 : 문서 우측 위의 render 버튼 클릭한다. 변경한 후 다시 render 버튼을 눌러야 반영된다.\n최종 html 파일 만들기: 터미널에서 quarto render -> _site 폴더에 html 파일이 만들어진다."
+  },
+  {
+    "objectID": "review/pkm/quarto.html#깃허브-페이지를-호스팅-서버로-사용하기",
+    "href": "review/pkm/quarto.html#깃허브-페이지를-호스팅-서버로-사용하기",
+    "title": "quarto",
+    "section": "깃허브 페이지를 호스팅 서버로 사용하기",
+    "text": "깃허브 페이지를 호스팅 서버로 사용하기\n공식 문서\n3가지 방법이 있다.\n\ndocs 폴더에 사이트 문서들을 렌더링하고 깃허브가 docs 폴더를 웹페이지로 출판하도록 설정\nquarto publish 명령으로 직접 웹페이지로 출판\n코드를 깃허브에 올리면 자동으로 깃허브 액션이 렌더링해서 출판하도록 설정\n\n\ndocs 폴더 이용 방법"
+  },
+  {
+    "objectID": "review/pkm/create_vscode_snippets.html",
+    "href": "review/pkm/create_vscode_snippets.html",
+    "title": "VS Code에서 snippets 만들기",
+    "section": "",
+    "text": "vscode에서 user snippet(사용자 코드 조각)을 입력할 yml 파일을 연다.\n\n\n\n사용자 코드 조각 구성\n\n\n마크다운 파일에 사용할 코드 조각을 작성할 예정이므로 markdown.json을 선택한다.\n아래와 같이 yaml 양식으로 작성한다.\n\n전체 설정은 중괄호{} 안에 snippet 단위로 입력한다.\n무엇에 관한 코드 조각인지 간결하지만 알기 쉬울만큼 자세하게 이름을 적는다. 아래는 “today’s log”, “python code block” 두 개의 이름을 만들었다.\n각 이름 뒤에 콜론을 붙이고 다시 중괄호를 쓴다. {“today’s log”:{}, “python code block”:{}}. 중괄호 안에 구체적인 설정 사항을 입력한다.\n“prefix”에는 전체 코드의 약자로 사용할 문자열을 입력한다. 아래에서는 tlog와 cpy로 정의했다. tlog는 today’s log를, cpy는 code block python을 줄인 것이다.\n“body”에는 실제로 입력될 문자열을 입력한다. 위의 공식 설명서를 열면 사용할 수 있는 변수 목록과 설명을 볼 수 있다.\n아래와 같이 설정한 뒤 마크다운 문서에서 tlog를 입력하고 ctrl+spacebar를 누르면 body에 정의한 내용대로 입력된다.\n\n{\n  \"today's log\":{\n    \"prefix\": \"tlog\",\n    \"body\": [\n      \"# $TM_FILENAME_BASE($CURRENT_DAY_NAME_SHORT)\",\n      \"created: $CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE\",\n      \"\\n\\n## \"\n    ]\n  },\n  \"python code block\":{\n    \"prefix\": \"cpy\",\n    \"body\": [\n      \"```python\",\n      \"${1}\",\n      \"```\",\n      \"\"\n    ]\n  }\n}\ncpy 입력 후 ctrl + spacebar를 누른 뒤 엔터를 치면 아래처럼 입력된다.\n커서가 여기에 위치함"
+  },
+  {
+    "objectID": "review/pkm/markdown_link_new_window.html",
+    "href": "review/pkm/markdown_link_new_window.html",
+    "title": "mkdocs에서 링크된 문서를 새 창으로 열기",
+    "section": "",
+    "text": "먼저 mkdocs.yml 파일을 수정한다. markdown_extensions 부분에 attr_list를 추가한다.\n\nmarkdown_extensions: \n  - attr_list\n\n마크다운 문서에서 새 창으로 띄울 문서의 링크를 아래처럼 뒤에 {target=_blank}를 추가한다.\n\n[내 홈페이지](https://lazychoi.github.io){target=_blank}"
+  },
+  {
+    "objectID": "review/pkm/obsidian_template.html",
+    "href": "review/pkm/obsidian_template.html",
+    "title": "Obsidian template 사용",
+    "section": "",
+    "text": "기본 템플릿 문법\ntemplater plugin 문법"
+  },
+  {
+    "objectID": "review/pkm/obsidian_template.html#기본-template-사용",
+    "href": "review/pkm/obsidian_template.html#기본-template-사용",
+    "title": "Obsidian template 사용",
+    "section": "기본 template 사용",
+    "text": "기본 template 사용\n\n환경 설정\n\nSettings >>> Core plugins >>> Templates 활성화\n템플릿 파일 저장할 폴더 만들기. eg. DOCS/templates\n\n\n\n수동으로 템플릿 적용\n\n문서를 만들고\n왼쪽 사이드바에서 “insert template” 아이콘 선택\n삽입할 템플릿 선택(템플릿이 2개 이상인 경우)\n\n\n\n틀정 폴더에 자동으로 템플릿 적용\n\nOptions(톱니 버튼) >>> Template folder location 에 1번에서 만들 폴더 지정\ntemplates 폴더 .gitignore에 추가\ntemplates 폴더에 템플릿으로 사용할 파일 작성\n로그 템플릿 작성 dailylog"
+  },
+  {
+    "objectID": "review/pkm/obsidian_template.html#templater-plugin-사용",
+    "href": "review/pkm/obsidian_template.html#templater-plugin-사용",
+    "title": "Obsidian template 사용",
+    "section": "templater plugin 사용",
+    "text": "templater plugin 사용\n\nSettings >>> Community Plugins >>> Templater\nTemplate folder location 지정\nTrigger Templater on new file creation 활성화\n\n\n\n특정 폴더에서 새 노트를 만들 때 적용할 템플릿 파일 지정"
+  },
+  {
+    "objectID": "review/de/wsl2.html",
+    "href": "review/de/wsl2.html",
+    "title": "wsl2",
+    "section": "",
+    "text": "wsl에서 윈도우 파일에 접근:\n\n/mnt에 마운트되어 있음 >>> $ cd /mnt/c 명령으로 이동\n$ explorer . 명령으로 윈도우 탐색기를 열어 GUI 화면으로 사용\n\nwsl 저장 위치:\n\nC:\\Users\\사용자명\\AppData\\Local\\Packages\\ 폴더 >>> CanonicalGroupLimited.Ubuntu22.04LTS_79rhkp1fndgsc\\ 처럼 ubuntu 단어가 포함된 폴더 >>> LocalState 안\next4.vhdx라는 이미지 파일로 저장되어 있음\n\nanaconda 설치\njupyter notebook 설정\n$ jupyter notebook --generate-config\nWriting default config to: /home/playdata/.jupyter/jupyter_notebook_config.py\n$ cd .jupyter\n$ vi jupyter_notebook_config.py\n# c.NotebookApp.open_browser = False <– 주석 삭제 후 False로 변경"
+  },
+  {
+    "objectID": "review/de/shell_prompt.html",
+    "href": "review/de/shell_prompt.html",
+    "title": "shell prompt",
+    "section": "",
+    "text": "출처: How To Customize Bash Prompt in Linux"
+  },
+  {
+    "objectID": "review/de/shell_prompt.html#bash-prompt-기본값",
+    "href": "review/de/shell_prompt.html#bash-prompt-기본값",
+    "title": "shell prompt",
+    "section": "bash prompt 기본값",
+    "text": "bash prompt 기본값\n\neg. (base) aaa@DESKTOP:~$ 또는 aaa@DESKTOP:~$\n의미: (아나콘다 가상환경) 사용자명@호스트명:\n~: 사용자의_루트디렉토리\n$: 일반 사용자 표시\n#: root 사용자 표시"
+  },
+  {
+    "objectID": "review/de/shell_prompt.html#bash-prompt-변경-.bashrc-파일",
+    "href": "review/de/shell_prompt.html#bash-prompt-변경-.bashrc-파일",
+    "title": "shell prompt",
+    "section": "bash prompt 변경: ~/.bashrc 파일",
+    "text": "bash prompt 변경: ~/.bashrc 파일\n\n~/.bashrc 파일 변경. 만일을 위해 백업 파일 만들기(~/.bashrc.bak)\n==파일 내용을 변경한 뒤에는 재실행==하여 변경사항 반영: source ~/.bashrc\n\n특정 문자를 프롬프트에 표시\n\n.bashrc 파일 마지막에 PS1=\"MyTestPrompt> \" 추가\n결과: MyTestPrompt>\n\n임시로 프롬프트 변경하기: export command\n\n현재 사용자가 로그아웃할 때까지 유지됨\nMyTestPrompt> export PS1=\"\\u >\"\n결과: aaa >\n\\u: 현재 사용자명을 프롬프트에 표시\n\n사용자명과 도메인명 표시\n\nexport PS1=\"\\u\\H \"\n결과: aaaDESKTOP\n\\H: 전체 hostname 표시\n\n특수문자 표시\n\nexport PS1=\"\\u@\\H :\"\n결과: aaa@DESKTOP :\n프롬프트 끝은 사용자가 입력한 명령과 구분하기 위해 특수문자를 배치하는 게 좋다.\n\n사용자명과 셀이름, 버전 표시\n\nexport PS1=\"\\u@\\s\\v> \"\n결과: aaa@bash5.1>\n\n사용자명과 요일 월 일 표시\n\nexport PS1=\"\\u(\\d)>\n결과: aaa(Fri Oct 07)>\n\n사용자명과 시:분:초 표시\n\nexport PS1=\"\\u(\\t)>\"\n결과: aaa(17:25:07)>\n12시간제로 표시하려면 \\T 사용\n“시간:분”만 표시하려면 \\A 사용\n\n프롬프트의 모든 정보 감추기(디렉토리만 표시)\n\nexport PS1=\"\\W >\"\n결과: ~ >\n\nroot 사용자와 일반 사용자 구분\n\nexport PS1=\"\\W$ \"\n결과: ~$\n~$ sudo su 명령어로 root 사용자로 전환하면 프롬프트가 #으로 바뀜\n# exit 명령어로 로그아웃하면 다시 일반 사용자 프롬프트로 전환됨\n\n글자색 바꾸기\n\nexport PS1=\"\\e[0;32m[\\u: \\W]\\$ \\e[0m\"\n결과: [playdata: ~]$ (초록색)\n\\e[: 색상 지정 시작\n\\e[0m: 색상 지정 끝\n색상코드의 첫 번째 숫자\n\n0 : Normal\n- 1 : Bold (bright)\n- 2 : Dim\n- 4 : Underlined\n\n두 번째 숫자\n\n30 : Black\n31 : Red\n32 : Green\n33 : Brown\n34 : Blue\n35 : Purple\n36 : Cyan\n37 : Light gray"
+  },
+  {
+    "objectID": "review/de/shell_prompt.html#유용한-사이트",
+    "href": "review/de/shell_prompt.html#유용한-사이트",
+    "title": "shell prompt",
+    "section": "유용한 사이트",
+    "text": "유용한 사이트\n\n기타 다른 명령어 보기\nPS1 명령어 생성기 : 드래그 앤 드랍으로 .bashrc에 입력할 속성값을 쉽게 만들 수 있다."
+  },
+  {
+    "objectID": "review/visualization.html",
+    "href": "review/visualization.html",
+    "title": "시각화",
+    "section": "",
+    "text": "lazychoi\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nOct 25, 2022\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
