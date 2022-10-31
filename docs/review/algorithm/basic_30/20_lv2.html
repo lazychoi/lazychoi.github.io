@@ -6,10 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="lazychoi">
-<meta name="dcterms.date" content="2022-10-30">
+<meta name="dcterms.date" content="2022-10-31">
 
-<title>👀 - 리스트 내장 함수</title>
+<title>👀 - K 번째 수</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -88,22 +87,22 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
-<script src="../../site_libs/clipboard/clipboard.min.js"></script>
-<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="../../site_libs/quarto-search/fuse.min.js"></script>
-<script src="../../site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-html/quarto.js"></script>
-<script src="../../site_libs/quarto-html/popper.min.js"></script>
-<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="../../site_libs/quarto-html/anchor.min.js"></script>
-<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -125,7 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 }</script>
 
 
-<link rel="stylesheet" href="../../styles.css">
+<link rel="stylesheet" href="../../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -135,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <nav class="navbar navbar-expand-lg navbar-dark ">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
-    <a class="navbar-brand" href="../../index.html">
+    <a class="navbar-brand" href="../../../index.html">
     <span class="navbar-title">👀</span>
     </a>
   </div>
@@ -145,28 +144,28 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../index.html">Home</a>
+    <a class="nav-link" href="../../../index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../books.html">읽은 책</a>
+    <a class="nav-link" href="../../../books.html">읽은 책</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../pkm.html">지식관리</a>
+    <a class="nav-link" href="../../../pkm.html">지식관리</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../de.html">개발환경</a>
+    <a class="nav-link" href="../../../de.html">개발환경</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../review.html">오답노트</a>
+    <a class="nav-link" href="../../../review.html">오답노트</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../visualization.html">시각화</a>
+    <a class="nav-link" href="../../../visualization.html">시각화</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog/index.html">블로그</a>
+    <a class="nav-link" href="../../../blog/index.html">블로그</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">Contact</a>
+    <a class="nav-link" href="../../../about.html">Contact</a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
@@ -190,7 +189,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#요소-순서를-거꾸로-뒤집기" id="toc-요소-순서를-거꾸로-뒤집기" class="nav-link active" data-scroll-target="#요소-순서를-거꾸로-뒤집기">요소 순서를 거꾸로 뒤집기</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link active" data-scroll-target="#접근-과정">접근 과정</a></li>
+  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드">다른 사람 코드</a></li>
   </ul>
 </nav>
     </div>
@@ -199,24 +199,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">리스트 내장 함수</h1>
+<h1 class="title">K 번째 수</h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>lazychoi </p>
-          </div>
-  </div>
     
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2022</p>
+      <p class="date">October 31, 2022</p>
     </div>
   </div>
     
@@ -225,17 +219,47 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="요소-순서를-거꾸로-뒤집기" class="level2">
-<h2 class="anchored" data-anchor-id="요소-순서를-거꾸로-뒤집기">요소 순서를 거꾸로 뒤집기</h2>
-<p>리스트변수.reverse() 함수는 반환값이 없고 자신을 변경하는 점을 주의해야 한다.</p>
+<section id="접근-과정" class="level2">
+<h2 class="anchored" data-anchor-id="접근-과정">접근 과정</h2>
+<p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/42748">https://school.programmers.co.kr/learn/courses/30/lessons/42748</a></p>
+<p>기본 알고리즘. 인덱스가 1부터 시작한다는 것을 주의한다.</p>
+<ol type="1">
+<li>슬라이싱으로 i부터 j까지 숫자를 별도의 리스트로 뽑아낸다.</li>
+<li>이 리스트를 정렬한다.</li>
+<li>k-1 인덱스에 해당하는 값을 반환한다.</li>
+</ol>
+<p>commands 변수가 2차원 리스트다. 2차원에 i, j, k 값이 담겨 있다. for문을 사용해 1차원을 벗겨내고 2차원 각 인덱스 값을 한 번에 변수에 담은다. 그러고 나서 위 번호대로 구현한다.</p>
 <div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>,<span class="dv">3</span>, <span class="dv">5</span>]</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>a.reverse()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>array, commands <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">4</span>], [[<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">3</span>]]</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> []</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> item <span class="kw">in</span> commands:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    i, j, k <span class="op">=</span> item[<span class="dv">0</span>]<span class="op">-</span><span class="dv">1</span>, item[<span class="dv">1</span>], item[<span class="dv">2</span>]<span class="op">-</span><span class="dv">1</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    temp <span class="op">=</span> <span class="bu">sorted</span>(array[i:j])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    answer.append(temp[k])</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>[5, 6, 3]</code></pre>
 </div>
+</div>
+</section>
+<section id="다른-사람-코드" class="level2">
+<h2 class="anchored" data-anchor-id="다른-사람-코드">다른 사람 코드</h2>
+<p>인덱스를 지정하지 않아도 리스트 내 각 요소를 각각 변수로 받을 수 있다.</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>[5, 3, 2, 4, 1]</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>commands <span class="op">=</span> [[<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">3</span>]]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> item <span class="kw">in</span> commands:</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    i, j, k <span class="op">=</span> commands</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(i, j, k)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[2, 5, 3] [4, 4, 1] [1, 7, 3]</code></pre>
+</div>
+</div>
+<p>map과 lambda 함수를 이용해 한 줄로 구현한 코드다. map이 많이도 활용되는구나.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>array, commands <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">2</span>, <span class="dv">6</span>, <span class="dv">3</span>, <span class="dv">7</span>, <span class="dv">4</span>], [[<span class="dv">2</span>, <span class="dv">5</span>, <span class="dv">3</span>], [<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">1</span>], [<span class="dv">1</span>, <span class="dv">7</span>, <span class="dv">3</span>]]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x:<span class="bu">sorted</span>(array[x[<span class="dv">0</span>]<span class="op">-</span><span class="dv">1</span>:x[<span class="dv">1</span>]])[x[<span class="dv">2</span>]<span class="op">-</span><span class="dv">1</span>], commands))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>[5, 6, 3]</code></pre>
 </div>
 </div>
 

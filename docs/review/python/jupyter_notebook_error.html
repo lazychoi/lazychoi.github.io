@@ -219,15 +219,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<p><code>jupyter nbconvert --to markdown 06court_sort.ipynb</code></p>
+<p>jupyter nbconvert –to markdown 06court_sort.ipynb</p>
 <p>주피터 노트북 파일을 마크다운 파일로 변환할 때 쓰는 nbconvert를 실행할 때 아나콘다 내의 파이썬이 실행되지 않고 우분투 내의 파이썬이 실행되어 오류를 내뿜는다. 그래서 우분투 내의 파이썬 삭제. 참조한 사이트는 <a href="https://gist.github.com/zhensongren/811dcf2471f663ed3148a272f1faa957" target="_blank">여기</a>다.</p>
-<p>우분투에 깔린 파이썬을 삭제하면 아나콘다 버전이 사용될 줄 알았는데, <code>-bash: /home/playdata/.local/bin/jupyter: /usr/bin/python3: bad interpreter: No such file or directory</code> 요렇게 파이썬 인터프리터가 없다는 메시지가 나온다. 그러면 주피터도 아나콘다 버전이 아닌 우분투 자체에 설치된 것이 사용되는가 싶어 주피터 위치를 확인해 보았다.</p>
+<p>우분투에 깔린 파이썬을 삭제하면 아나콘다 버전이 사용될 줄 알았는데, -bash: /home/playdata/.local/bin/jupyter: /usr/bin/python3: bad interpreter: No such file or directory 요렇게 파이썬 인터프리터가 없다는 메시지가 나온다. 그러면 주피터도 아나콘다 버전이 아닌 우분투 자체에 설치된 것이 사용되는가 싶어 주피터 위치를 확인해 보았다.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> which <span class="ex">-a</span> jupyter</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/playdata/.local/bin/jupyter</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/playdata/anaconda3/bin/jupyter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>역시나 두 군데 깔려있다. local에 설치된 주피터를 삭제(<code>sudo rm -rf /home/playdata/.local/bin/jupyter</code>)하니 아나콘다에 깔린 주피터가 실행되긴 한다. 하지만 또 다시 에러</p>
-<p><code>ImportError: cannot import name 'contextfilter' from 'jinja2'</code></p>
-<p>이래저래 안 돼 conda 명령어로 주피터를 재설치하니 성공 <code>conda install jupyter</code></p>
+<p>역시나 두 군데 깔려있다. local에 설치된 주피터를 삭제(sudo rm -rf /home/playdata/.local/bin/jupyter)하니 아나콘다에 깔린 주피터가 실행되긴 한다. 하지만 또 다시 에러</p>
+<p>ImportError: cannot import name ‘contextfilter’ from ‘jinja2’</p>
+<p>이래저래 안 돼 conda 명령어로 주피터를 재설치하니 성공 conda install jupyter</p>
 <p>주피터도 한 개만 나온다.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> which <span class="ex">-a</span> jupyter</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/home/playdata/anaconda3/bin/jupyter</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

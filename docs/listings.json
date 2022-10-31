@@ -62,6 +62,7 @@
   {
     "listing": "/blog/index.html",
     "items": [
+      "/blog/posts/22-10-31.html",
       "/blog/posts/22-10-30.html",
       "/blog/posts/22-10-29.html",
       "/blog/posts/22-10-28.html",
@@ -102,28 +103,30 @@
       "/review/python/class.html",
       "/review/python/shallow_copy-deep_copy.html",
       "/review/python/list_comprehension.html",
-      "/review/python/string.html",
       "/review/python/list_reverse.html",
+      "/review/python/string.html",
       "/review/python/jupyter_notebook_error.html",
       "/review/python/show_line.html",
       "/review/python/crawling_in_wsl.html",
-      "/review/python/all_object.html",
-      "/review/python/regular_expression.html"
+      "/review/python/all_object.html"
     ]
   },
   {
     "listing": "/review/algorithm.html",
     "items": [
-      "/review/algorithm/basic_30/16_lv2.html",
-      "/review/algorithm/basic_30/17_lv2.html",
+      "/review/algorithm/basic_30/20_lv2.html",
       "/review/algorithm/basic_30/\bdoksan_algorithm.html",
+      "/review/algorithm/basic_30/16_lv2.html",
       "/review/algorithm/basic_30/primer_number.html",
-      "/review/algorithm/basic_30/14_lv2.html",
+      "/review/algorithm/basic_30/13_lv2.html",
       "/review/algorithm/basic_30/18_lv2.html",
-      "/review/algorithm/basic_30/11_lv2.html",
+      "/review/algorithm/basic_30/17_lv2.html",
       "/review/algorithm/basic_30/15_lv2.html",
       "/review/algorithm/basic_30/12_lv1.html",
-      "/review/algorithm/basic_30/13_lv2.html"
+      "/review/algorithm/basic_30/14_lv2.html",
+      "/review/algorithm/basic_30/21_lv2.html",
+      "/review/algorithm/basic_30/19_lv2.html",
+      "/review/algorithm/basic_30/11_lv2.html"
     ]
   }
 ]

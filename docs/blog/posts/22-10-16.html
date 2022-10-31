@@ -241,19 +241,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 class="anchored" data-anchor-id="오늘-만난-오류-메시지">오늘 만난 오류 메시지</h2>
 <section id="중요-사항" class="level3">
 <h3 class="anchored" data-anchor-id="중요-사항">중요 사항</h3>
-<p>주피터 노트북 확장 프로그램(.js) 위치: <code>/opt/homebrew/lib/python3.9/site-packages/widgetsnbextension/static</code></p>
-<p>주피터 노트북 경로 출력 명령어: <code>$ jupyter --path</code></p>
+<p>주피터 노트북 확장 프로그램(.js) 위치: /opt/homebrew/lib/python3.9/site-packages/widgetsnbextension/static</p>
+<p>주피터 노트북 경로 출력 명령어: jupyter –path</p>
 </section>
 <section id="주피터-노트북-관련-오류" class="level3">
 <h3 class="anchored" data-anchor-id="주피터-노트북-관련-오류">주피터 노트북 관련 오류</h3>
-<section id="config-option-template_path-not-recognized-by-exportercollapsibleheadings.-did-you-mean-one-of-extra_template_paths-template_name-template_paths" class="level4">
-<h4 class="anchored" data-anchor-id="config-option-template_path-not-recognized-by-exportercollapsibleheadings.-did-you-mean-one-of-extra_template_paths-template_name-template_paths">Config option <code>template_path</code> not recognized by <code>ExporterCollapsibleHeadings</code>. Did you mean one of: <code>extra_template_paths, template_name, template_paths</code>?</h4>
+<p>Config option template_path not recognized by ExporterCollapsibleHeadings. Did you mean one of: extra_template_paths, template_name, template_paths?</p>
 <p><a href="https://github.com/ipython-contrib/jupyter_contrib_nbextensions/issues/1529" target="_blank">해결책 출처</a></p>
-<p>오류 원인은 nbconvert가 6 버전으로 업데이트 되면서 ’template_path’를 ’template_paths’로 변경했기 때문이라고 한다. 6 버전을 삭제하고(<code>conda uninstall nbconvert</code>) 6 이하 버전을 설치하니 오류가 사라졌다.(<code>conda install "nbconvert&lt;6"</code>)</p>
-</section>
-<section id="get-nbextensionswidgetsnotebookjsextension.js-1-5.700000ms-refererhttplocalhost8888notebooksdoksanbookec9db4eab283ec9db420ecbd94eb94a920ed858cec8aa4ed8ab8eb8ba4bfs.ipynb" class="level4">
-<h4 class="anchored" data-anchor-id="get-nbextensionswidgetsnotebookjsextension.js-1-5.700000ms-refererhttplocalhost8888notebooksdoksanbookec9db4eab283ec9db420ecbd94eb94a920ed858cec8aa4ed8ab8eb8ba4bfs.ipynb">404 GET /nbextensions/widgets/notebook/js/extension.js (::1) 5.700000ms referer=http://localhost:8888/notebooks/doksan/book/%EC%9D%B4%EA%B2%83%EC%9D%B4%20%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8B%A4/bfs.ipynb</h4>
-<p>원인 모를 오류가 발생해 <code>~/.jupyter</code> 폴더를 통째로 삭제한 게 원인인 듯하다. 그런데, extension.js 파일을 찾는 설정 파일은 어디에 있지?</p>
+<p>오류 원인은 nbconvert가 6 버전으로 업데이트 되면서 ’template_path’를 ’template_paths’로 변경했기 때문이라고 한다. 6 버전을 삭제하고(conda uninstall nbconvert) 6 이하 버전을 설치하니 오류가 사라졌다.(conda install “nbconvert&lt;6”)</p>
+<p>404 GET /nbextensions/widgets/notebook/js/extension.js (::1) 5.700000ms referer=http://localhost:8888/notebooks/doksan/book/%EC%9D%B4%EA%B2%83%EC%9D%B4%20%EC%BD%94%EB%94%A9%20%ED%85%8C%EC%8A%A4%ED%8A%B8%EB%8B%A4/bfs.ipynb</p>
+<p>원인 모를 오류가 발생해 ~/.jupyter 폴더를 통째로 삭제한 게 원인인 듯하다. 그런데, extension.js 파일을 찾는 설정 파일은 어디에 있지?</p>
 <p>[시도1]jupyter notebook config 파일 만들기 =&gt; 해결 안 됨</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> jupyter notebook <span class="at">--generate-config</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">Writing</span> default config to: /Users/jun/.jupyter/jupyter_notebook_config.py</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -278,7 +275,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ex">❯</span> jupyter nbextension enable widgetsnbextension <span class="at">--user</span> <span class="at">--py</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ex">Enabling</span> notebook extension jupyter-js-widgets/extension...</span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      <span class="ex">-</span> Validating: OK</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
 <section id="jupyter-notebook-extension-작동-안-됨" class="level4">
 <h4 class="anchored" data-anchor-id="jupyter-notebook-extension-작동-안-됨">jupyter notebook extension 작동 안 됨</h4>
 <p>[시도1] jupyter-contrib-nbextensions 삭제 후 conda로 재설치 =&gt; 확장 탭이 나타나지 않음</p>
@@ -286,10 +282,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> conda <span class="fu">install</span> <span class="at">-c</span> conda-forge jupyter_contrib_nbextensions</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> jupyter <span class="ex">notebook</span> <span class="at">--version</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="ex">6.3.0</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>[시도2] <code>&gt; jupyter contrib nbextension install --sys-prefix</code> -&gt; 해결 안 됨</p>
+<p>[시도2] jupyter contrib nbextension install –sys-prefix -&gt; 해결 안 됨</p>
 <p>[해결] 아나콘다 삭제 후 재설치 =&gt;</p>
-<p><code>conda install -c conda-forge jupyter_contrib_nbextensions</code> -&gt; Solving environment: failed with initial frozen solve. Retrying with flexible solve. Soving environment: 무한루프</p>
-<p><code>pip install jupyter_contrib_nbextensions</code> -&gt; 성공</p>
+<p>conda install -c conda-forge jupyter_contrib_nbextensions -&gt; Solving environment: failed with initial frozen solve. Retrying with flexible solve. Soving environment: 무한루프</p>
+<p>pip install jupyter_contrib_nbextensions -&gt; 성공</p>
 <p>아나콘다를 삭제하지 않고 pip로 재설치했으면 되지 않았을까?</p>
 
 
