@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.242">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-10-26">
+
+<title>👀 - quarto</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/index.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#설치" id="toc-설치" class="nav-link active" data-scroll-target="#설치">설치</a></li>
+  <li><a href="#vscode에서-사용-tutorial" id="toc-vscode에서-사용-tutorial" class="nav-link" data-scroll-target="#vscode에서-사용-tutorial">vscode에서 사용 tutorial</a></li>
+  <li><a href="#주피터-노트북-사용-tutorial" id="toc-주피터-노트북-사용-tutorial" class="nav-link" data-scroll-target="#주피터-노트북-사용-tutorial">주피터 노트북 사용 tutorial</a>
+  <ul class="collapse">
+  <li><a href="#yml-설정" id="toc-yml-설정" class="nav-link" data-scroll-target="#yml-설정">yml 설정</a></li>
+  </ul></li>
+  <li><a href="#웹사이트-만들기" id="toc-웹사이트-만들기" class="nav-link" data-scroll-target="#웹사이트-만들기">웹사이트 만들기</a></li>
+  <li><a href="#깃허브-페이지를-호스팅-서버로-사용하기" id="toc-깃허브-페이지를-호스팅-서버로-사용하기" class="nav-link" data-scroll-target="#깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</a>
+  <ul class="collapse">
+  <li><a href="#docs-폴더-이용-방법" id="toc-docs-폴더-이용-방법" class="nav-link" data-scroll-target="#docs-폴더-이용-방법">docs 폴더 이용 방법</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">quarto</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">공개</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 26, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="설치" class="level2">
+<h2 class="anchored" data-anchor-id="설치">설치</h2>
+<ul>
+<li><a href="https://quarto.org/docs/get-started/">quarto 홈페이지</a>에서 운영체제에 맞는 파일을 받아 실행</li>
+<li>맥 Homebrew 설치: <code>brew install --cask quarto</code></li>
+</ul>
+</section>
+<section id="vscode에서-사용-tutorial" class="level2">
+<h2 class="anchored" data-anchor-id="vscode에서-사용-tutorial">vscode에서 사용 tutorial</h2>
+<p><a href="https://quarto.org/docs/get-started/hello/vscode.html" target="_blank">공식 문서</a></p>
+<ol type="1">
+<li>vscode에서 quarto vscode extension 설치</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./2022-10-26-09-40-33.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">익스텐션 설치</figcaption><p></p>
+</figure>
+</div>
+<ol start="2" type="1">
+<li>quarto 문서 만들기</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./2022-10-26-09-43-11.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">새 문서 만들기</figcaption><p></p>
+</figure>
+</div>
+<p>walkthrough.qmd 문서가 열린다.</p>
+<ol start="3" type="1">
+<li>walkthrough.qmd 파일을 렌더링하여 html 파일로 변환한다.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./2022-10-26-11-03-55.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">변환</figcaption><p></p>
+</figure>
+</div>
+<p>변환하면 같은 폴더에 walkthrough.html 파일과 walkthrough_files 폴더가 만들어진다.</p>
+</section>
+<section id="주피터-노트북-사용-tutorial" class="level2">
+<h2 class="anchored" data-anchor-id="주피터-노트북-사용-tutorial">주피터 노트북 사용 tutorial</h2>
+<section id="yml-설정" class="level3">
+<h3 class="anchored" data-anchor-id="yml-설정">yml 설정</h3>
+<ul>
+<li>코드 블록 숨기기/보이기 설정</li>
+<li>코드 블록 숨기기/보이기 버튼 우측 상단에 보이게 설정</li>
+</ul>
+</section>
+</section>
+<section id="웹사이트-만들기" class="level2">
+<h2 class="anchored" data-anchor-id="웹사이트-만들기">웹사이트 만들기</h2>
+<ul>
+<li><a href="https://quarto.org/docs/websites/">공식 문서</a></li>
+</ul>
+<p>==주의할 점!!!== 나는 깃허브에 quarto 리포를 먼저 만들고 로컬에 클론했다. 그래서 Website Project를 선택한 뒤 나타는 창에서 반드시 quarto 폴더의 <strong>부모 폴더</strong>를 선택해야 한다. 그러고 나서 뜨는 입력 창에 웹사이트의 홈 폴더로 사용할 깃허브 폴더명인 quarto를 입력한다. 그러면 quarto 폴더 안에 아래처럼 _quarto.yml, index.qmd, about.qmd, style.css 파일이 만들어진다.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./2022-10-28-11-40-25.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">폴더명 입력</figcaption><p></p>
+</figure>
+</div>
+<ul>
+<li>미리보기 : 문서 우측 위의 render 버튼 클릭한다. 변경한 후 다시 render 버튼을 눌러야 반영된다.</li>
+<li>최종 html 파일 만들기: 터미널에서 quarto render -&gt; _site 폴더에 html 파일이 만들어진다.</li>
+</ul>
+</section>
+<section id="깃허브-페이지를-호스팅-서버로-사용하기" class="level2">
+<h2 class="anchored" data-anchor-id="깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</h2>
+<p><a href="https://quarto.org/docs/publishing/github-pages.html">공식 문서</a></p>
+<p>3가지 방법이 있다.</p>
+<ul>
+<li>docs 폴더에 사이트 문서들을 렌더링하고 깃허브가 docs 폴더를 웹페이지로 출판하도록 설정</li>
+<li><code>quarto publish</code> 명령으로 직접 웹페이지로 출판</li>
+<li>코드를 깃허브에 올리면 자동으로 깃허브 액션이 렌더링해서 출판하도록 설정</li>
+</ul>
+<section id="docs-폴더-이용-방법" class="level3">
+<h3 class="anchored" data-anchor-id="docs-폴더-이용-방법">docs 폴더 이용 방법</h3>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
