@@ -1,5 +1,5 @@
 ---
-title: 5장 BFS
+title: 05장 BFS
 date: 2022-10-16
 ---
 

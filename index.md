@@ -53,7 +53,7 @@ Obsidian
 ::: {.g-col-4}
 ## 시각화
 
-[folium Choropleth Map]()
+[folium Choropleth Map](review/visualization/folium.qmd)
 
 :::
 

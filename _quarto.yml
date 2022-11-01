@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  # render:              # 요거를 추가하면 메뉴가 뜨지 않는다.
+  #   - "!notebooks/"
 
 website:
   title: 👀
@@ -29,15 +31,16 @@ website:
       background: light
       contents:
         - books.md
-        - section: "이것이 코딩 테스트다"
-          contents: 
-            - books/This_is_coding_test.md
-        - section: "21가지 작고 재미난 파이썬 프로젝트"
-          contents: 
-            - books/tiny_python_project.md
-        - section: "판다스 인 액션"
-          contents: 
-            - books/pandas_in_action.md
+        - books/This_is_coding_test.md
+        - books/tiny_python_project.md
+        - books/pandas_in_action.md
+        - books/numpy_for_ml_dl.md
+        # - section: "이것이 코딩 테스트다"
+        #   contents: 
+        # - section: "21가지 작고 재미난 파이썬 프로젝트"
+        #   contents: 
+        # - section: "판다스 인 액션"
+        #   contents: 
     - title: "오답노트"
       contents:
         - review.md
@@ -56,13 +59,6 @@ website:
         - section: "시각화"
           contents:
             - review/visualization.md
-
-
-
-    # - title: "시각화"
-    #   contents:
-    #     - visualization.md
-
 
 
 format:

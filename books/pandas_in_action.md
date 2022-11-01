@@ -1,7 +1,7 @@
 ---
-title: "목차"
+title: "판다스 인 액션"
 listing:
-  contents: This_is_coding_test
+  contents: pandas_in_action
   sort: "title"
   type: default
   page-size: 31
