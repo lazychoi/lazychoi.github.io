@@ -5,12 +5,12 @@ date: 2022-10-06
 
 [obsidian-publish-mkdocs](https://github.com/jobindjohn/obsidian-publish-mkdocs){target=_blank} 에서 초록색 'Use this template' 버튼 눌러 깃허브 페이지로 사용할 레포지토리 생성(복사할 때는 main 브랜치만 복사한다.)
 
-![Pasted image 20221006093140.png](./20221006093140.png)
+![Pasted image 20221006093140.png](images/20221006093140.png)
 
 
 나의 레포지토리에 가서 깃헙 페이지로 설정
 
-![Pasted image 20221006092242.png](./20221006092242.png)
+![Pasted image 20221006092242.png](images/20221006092242.png)
 
 이 레포지토리를 pc로 clone 한다.  
 

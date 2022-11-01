@@ -4,5 +4,4 @@ listing:
   contents: de
   sort: "title"
   type: default
-  page-size: 10
 ---

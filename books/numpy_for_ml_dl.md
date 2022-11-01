@@ -4,6 +4,5 @@ listing:
   contents: numpy_for_ml_dl
   sort: "title"
   type: default
-  page-size: 31
 ---
 

@@ -4,5 +4,4 @@ listing:
   contents: pandas_in_action
   sort: "title"
   type: default
-  page-size: 31
 ---

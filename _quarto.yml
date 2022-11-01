@@ -1,8 +1,7 @@
 project:
   type: website
   output-dir: docs
-  # render:              # 요거를 추가하면 메뉴가 뜨지 않는다.
-  #   - "!notebooks/"
+
 
 website:
   title: 👀
@@ -44,21 +43,21 @@ website:
     - title: "오답노트"
       contents:
         - review.md
-        - section: "파이썬"
-          contents: 
-            - review/python.md
-        - section: "알고리즘"
-          contents:
-            - review/algorithm.md
-        - section: "지식관리"
-          contents:
-            - review/pkm.md
-        - section: "개발환경"
-          contents:
-            - review/de.md
-        - section: "시각화"
-          contents:
-            - review/visualization.md
+        - review/python.md
+        - review/algorithm.md
+        - review/pkm.md
+        - review/de.md
+        - review/visualization.md
+        # - section: "파이썬"
+        #   contents: 
+        # - section: "알고리즘"
+        #   contents:
+        # - section: "지식관리"
+        #   contents:
+        # - section: "개발환경"
+        #   contents:
+        # - section: "시각화"
+        #   contents:
 
 
 format:

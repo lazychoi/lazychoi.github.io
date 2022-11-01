@@ -6,7 +6,7 @@ title: ""
  
 ::: {.grid}
 
-::: {.g-col-4}
+::: {.g-col-5}
 ## 읽고 있는 책
 
 이것이 취업을 위한 코딩 테스트다
@@ -17,7 +17,7 @@ title: ""
 
 :::
 
-::: {.g-col-4}
+::: {.g-col-5}
 ## 오답노트
 
 파이썬
@@ -28,7 +28,11 @@ title: ""
 
 :::
 
-::: {.g-col-4}
+:::
+
+::: {.grid}
+
+::: {.g-col-5}
 ## 지식관리
 
 Quarto
@@ -37,11 +41,7 @@ Obsidian
 
 :::
 
-:::
-
-::: {.grid}
-
-::: {.g-col-4}
+::: {.g-col-5}
 ## 개발환경
 
 맥 & 리눅스
@@ -49,15 +49,18 @@ Obsidian
 도커
 
 :::
+:::
 
-::: {.g-col-4}
+::: {.grid}
+
+::: {.g-col-5}
 ## 시각화
 
 [folium Choropleth Map](review/visualization/folium.qmd)
 
 :::
 
-::: {.g-col-4}
+::: {.g-col-5}
 ## 일일로그
 
 [2022년 10월](blog/index.md)

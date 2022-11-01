@@ -34,8 +34,8 @@ updated: last-modified
 3. Trigger Templater on new file creation 활성화
 
  
-![](100722_022320.jpg)
+![](images/100722_022320.jpg)
 
 4. 특정 폴더에서 새 노트를 만들 때 적용할 템플릿 파일 지정
 
-![](./100722_022519.jpg)
+![](images/100722_022519.jpg)

@@ -4,5 +4,4 @@ listing:
   contents: visualization
   sort: "title"
   type: grid
-  page-size: 12
 ---

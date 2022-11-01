@@ -4,5 +4,4 @@ listing:
   contents: pkm
   sort: "title"
   type: default
-  page-size: 10
 ---
