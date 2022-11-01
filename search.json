@@ -987,11 +987,18 @@
     "text": "folium 코로플레스 지도 만들기 개요\n\n설치:\n기본 지도 띄우기\n원하는 지역의 지도 띄우기\n지도에 마커 표시하기\n코로플레스 지도 만들기\n\n행정구역 경계 정보 파일 구하기\n지도에 표시할 데이터 만들기\n코드로 구현하기"
   },
   {
+    "objectID": "blog/posts/22-11-02.html",
+    "href": "blog/posts/22-11-02.html",
+    "title": "22-11-02(수)",
+    "section": "",
+    "text": "Quarto callout 사용법"
+  },
+  {
     "objectID": "blog/index.html",
     "href": "blog/index.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "Nov 1, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 28, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 27, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 25, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 24, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 22, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 21, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 20, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 19, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 16, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 5, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 4, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
+    "text": "2022-11\n\n\n\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-11\n\n\n\n\n\n\n\n\n\n\n\nNov 1, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 28, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 27, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 25, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 24, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 22, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 21, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 20, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 19, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 16, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 5, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n2022-10\n\n\n\n\n\n\n\n\n\n\n\nOct 4, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "project/2210_pet_choropleth.html",
@@ -1064,39 +1071,25 @@
     "text": "기대와 불안, 희망과 염려 없이 그저 불확실함 속으로, 뚜벅 뚜벅"
   },
   {
-    "objectID": "index.html#읽고-있는-책",
-    "href": "index.html#읽고-있는-책",
+    "objectID": "index.html#읽은-책",
+    "href": "index.html#읽은-책",
     "title": "👀",
-    "section": "읽고 있는 책",
-    "text": "읽고 있는 책\n이것이 취업을 위한 코딩 테스트다\n21개의 작고 재미난 파이썬 프로젝트\n판다스 인 액선"
+    "section": "읽은 책",
+    "text": "읽은 책\n\n이것이 취업을 위한 코딩 테스트다\n21개의 작고 재미난 파이썬 프로젝트\n판다스 인 액선\n딥러닝 머신러닝을 위한 넘파이"
   },
   {
     "objectID": "index.html#오답노트",
     "href": "index.html#오답노트",
     "title": "👀",
     "section": "오답노트",
-    "text": "오답노트\n파이썬\n판다스\n넘파이"
+    "text": "오답노트\n\n파이썬\n알고리즘\n개발환경\n지식관리\n시각화"
   },
   {
-    "objectID": "index.html#지식관리",
-    "href": "index.html#지식관리",
+    "objectID": "index.html#프로젝트",
+    "href": "index.html#프로젝트",
     "title": "👀",
-    "section": "지식관리",
-    "text": "지식관리\nQuarto\nObsidian"
-  },
-  {
-    "objectID": "index.html#개발환경",
-    "href": "index.html#개발환경",
-    "title": "👀",
-    "section": "개발환경",
-    "text": "개발환경\n맥 & 리눅스\n도커"
-  },
-  {
-    "objectID": "index.html#시각화",
-    "href": "index.html#시각화",
-    "title": "👀",
-    "section": "시각화",
-    "text": "시각화\nfolium Choropleth Map"
+    "section": "프로젝트",
+    "text": "프로젝트\n\n경기도 시군별 등록 반려동물수 EDA"
   },
   {
     "objectID": "index.html#일일로그",
@@ -1201,7 +1194,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '미', '가', '가', '우', '미', '양', '우', '우', '미']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '우', '우', '우', '가', '수', '미', '가', '우', '우']"
   },
   {
     "objectID": "review/python/class.html",

@@ -70,10 +70,10 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       page: 25,
     pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
-      searchColumns: ["listing-date","listing-title","listing-author","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -149,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(28)</span></div><div class="category" data-category="2022-10">2022-10 <span class="quarto-category-count">(26)</span></div><div class="category" data-category="2022-11">2022-11 <span class="quarto-category-count">(2)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -175,7 +175,39 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1667228400000" data-listing-file-modified-sort="1667299050504" data-listing-reading-time-sort="0.865">
+<div class="quarto-post image-right" data-index="0" data-categories="2022-11" data-listing-date-sort="1667314800000" data-listing-file-modified-sort="1667342539773" data-listing-reading-time-sort="0.015">
+<div class="body">
+<a href="../blog/posts/22-11-02.html">
+<h3 class="no-anchor listing-title">
+22-11-02(수)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-11'); return false;">
+2022-11
+</div>
+</div>
+<a href="../blog/posts/22-11-02.html">
+<div class="listing-description">
+Quarto callout 사용법
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../blog/posts/22-11-02.html">
+<div class="listing-date">
+Nov 2, 2022
+</div>
+<div class="listing-author">
+lazychoi
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="2022-11" data-listing-date-sort="1667228400000" data-listing-file-modified-sort="1667341398129" data-listing-reading-time-sort="0.865">
 <div class="body">
 <a href="../blog/posts/22-11-01.html">
 <h3 class="no-anchor listing-title">
@@ -184,6 +216,13 @@ ul.task-list li input[type="checkbox"] {
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-11'); return false;">
+2022-11
+</div>
+</div>
+<a href="../blog/posts/22-11-01.html">
 <div class="listing-description">
 프로젝트 때 jeojson 파일을 불러들였을 때 발생한 cp949 인코딩 오류를 해결했다. open() 함수 안에 encoding=’utf8’만 넣으면 되는 거였다. 검색하면 바로 나오는 것을 그때는 왜 안 보였을까?
 </div>
@@ -200,7 +239,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1667142000000" data-listing-file-modified-sort="1667215115016" data-listing-reading-time-sort="1.52">
+<div class="quarto-post image-right" data-index="2" data-categories="2022-10" data-listing-date-sort="1667142000000" data-listing-file-modified-sort="1667341390771" data-listing-reading-time-sort="1.52">
 <div class="body">
 <a href="../blog/posts/22-10-31.html">
 <h3 class="no-anchor listing-title">
@@ -209,6 +248,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-31.html">
 <div class="listing-description">
 미니 프로젝트를 다시 돌아보다 인구 계산에 오류가 있었다는 걸 발견했다. csv 파일을 자세히 살피지 않은 것이 원인이다. 시군구 데이터가 읍면동 데이터를 포함한 값인 것을 모르고 그냥 합쳐버려 인구가 두 배로 뛰었다. 더 황당한 것은 어디가 잘못됐는지 수원시 인구가 천 만명이 넘게 나왔다. 그래프 그리는 연습을 하다 발견했다. 테이블로만 작업할 때는 전혀 알아채지 못한 잘못이 그래프를 그리니 확연하게 드러났다. 시각화의 중요성을 체험했다.
 </div>
@@ -225,7 +271,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1667055600000" data-listing-file-modified-sort="1667175005324" data-listing-reading-time-sort="0.385">
+<div class="quarto-post image-right" data-index="3" data-categories="2022-10" data-listing-date-sort="1667055600000" data-listing-file-modified-sort="1667341386303" data-listing-reading-time-sort="0.385">
 <div class="body">
 <a href="../blog/posts/22-10-30.html">
 <h3 class="no-anchor listing-title">
@@ -234,6 +280,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-30.html">
 <div class="listing-description">
 가끔 주피터 노트북이 아무런 이상이 없는데도 오류는 뿜는 경우가 있다. 그럴 때는 같은 행동을 반복하며 울화통을 키우지 말고 커널을 죽이고 재실행한다.
 </div>
@@ -250,7 +303,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1666969200000" data-listing-file-modified-sort="1667096484689" data-listing-reading-time-sort="0.51">
+<div class="quarto-post image-right" data-index="4" data-categories="2022-10" data-listing-date-sort="1666969200000" data-listing-file-modified-sort="1667341382713" data-listing-reading-time-sort="0.51">
 <div class="body">
 <a href="../blog/posts/22-10-29.html">
 <h3 class="no-anchor listing-title">
@@ -259,6 +312,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-29.html">
 <div class="listing-description">
 Quarto가 R 계열에서 만든 도구라고 한다. 다른 도구에 비해 사용하기 쉽게 만들어져 있다. yml 파일로 원하는 기능을 설정하는 건 다른 도구와 같지만 훨씬 직관적이고 예상대로 작동했다.
 </div>
@@ -275,7 +335,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1666882800000" data-listing-file-modified-sort="1667104423121" data-listing-reading-time-sort="0.91">
+<div class="quarto-post image-right" data-index="5" data-categories="2022-10" data-listing-date-sort="1666882800000" data-listing-file-modified-sort="1667341377690" data-listing-reading-time-sort="0.91">
 <div class="body">
 <a href="../blog/posts/22-10-28.html">
 <h3 class="no-anchor listing-title">
@@ -284,6 +344,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-28.html">
 <div class="listing-description">
 지금 사용 중인 mkdocs는 주피터 노트북을 매번 마크다운 파일로 변환해야 하는 게 번거롭다. 게다가 링크로 연결할 수 있지만 메뉴가 나오지 않아 전혀 다른 페이지로 보인다. 웹 검색 중에 간간히 주피터 노트북으로 만든 웹 페이지가 보여 방법을 찾아봤다. 깃허브의 기본 블로그 제작 도구인 지킬로 만든 것은 제외하고 찾은 게 Quarto다. 쿠알토로 읽어야 하나? 인쇄 용어이고 우리말로는 두번 접기라고 한다.(출처) 인쇄백과사전에 인쇄물을 두번 돌려가며 직각으로 접어서 8페이지 접장이 되게 하는 것이라고 풀이되어 있다. 개발자가 왜 이름을 붙였는지 궁금하다. Quarto는 주피터 노트북 파일을 별도로 조작하지 않고 바로 깃허브 페이지로 바꿀 수 있다. 홈페이지에 설명이 비교적 상세하게 되어있어 쉽게 주피터 노트북 파일을 html로 바꿀 수 있게 됐다.
 </div>
@@ -300,7 +367,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1666796400000" data-listing-file-modified-sort="1667104411194" data-listing-reading-time-sort="0.865">
+<div class="quarto-post image-right" data-index="6" data-categories="2022-10" data-listing-date-sort="1666796400000" data-listing-file-modified-sort="1667341374057" data-listing-reading-time-sort="0.865">
 <div class="body">
 <a href="../blog/posts/22-10-27.html">
 <h3 class="no-anchor listing-title">
@@ -309,6 +376,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-27.html">
 <div class="listing-description">
 
 </div>
@@ -325,7 +399,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="6" data-listing-date-sort="1666710000000" data-listing-file-modified-sort="1667306489114" data-listing-reading-time-sort="0.34">
+<div class="quarto-post image-right" data-index="7" data-categories="2022-10" data-listing-date-sort="1666710000000" data-listing-file-modified-sort="1667341369789" data-listing-reading-time-sort="0.34">
 <div class="body">
 <a href="../blog/posts/22-10-26.html">
 <h3 class="no-anchor listing-title">
@@ -334,6 +408,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-26.html">
 <div class="listing-description">
 주제 논의
 </div>
@@ -350,7 +431,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="7" data-listing-date-sort="1666623600000" data-listing-file-modified-sort="1667228002103" data-listing-reading-time-sort="0.065">
+<div class="quarto-post image-right" data-index="8" data-categories="2022-10" data-listing-date-sort="1666623600000" data-listing-file-modified-sort="1667341365526" data-listing-reading-time-sort="0.065">
 <div class="body">
 <a href="../blog/posts/22-10-25.html">
 <h3 class="no-anchor listing-title">
@@ -359,6 +440,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-25.html">
 <div class="listing-description">
 pandas
 </div>
@@ -375,7 +463,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1666537200000" data-listing-file-modified-sort="1667104078484" data-listing-reading-time-sort="0.035">
+<div class="quarto-post image-right" data-index="9" data-categories="2022-10" data-listing-date-sort="1666537200000" data-listing-file-modified-sort="1667341362090" data-listing-reading-time-sort="0.035">
 <div class="body">
 <a href="../blog/posts/22-10-24.html">
 <h3 class="no-anchor listing-title">
@@ -384,6 +472,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-24.html">
 <div class="listing-description">
 pandas
 </div>
@@ -400,7 +495,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="9" data-listing-date-sort="1666450800000" data-listing-file-modified-sort="1667299050504" data-listing-reading-time-sort="0.165">
+<div class="quarto-post image-right" data-index="10" data-categories="2022-10" data-listing-date-sort="1666450800000" data-listing-file-modified-sort="1667341358757" data-listing-reading-time-sort="0.165">
 <div class="body">
 <a href="../blog/posts/22-10-23.html">
 <h3 class="no-anchor listing-title">
@@ -409,6 +504,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-23.html">
 <div class="listing-description">
 
 </div>
@@ -425,7 +527,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="10" data-listing-date-sort="1666364400000" data-listing-file-modified-sort="1667103637453" data-listing-reading-time-sort="0.09">
+<div class="quarto-post image-right" data-index="11" data-categories="2022-10" data-listing-date-sort="1666364400000" data-listing-file-modified-sort="1667341355565" data-listing-reading-time-sort="0.09">
 <div class="body">
 <a href="../blog/posts/22-10-22.html">
 <h3 class="no-anchor listing-title">
@@ -434,6 +536,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-22.html">
 <div class="listing-description">
 
 </div>
@@ -450,7 +559,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="11" data-listing-date-sort="1666278000000" data-listing-file-modified-sort="1667103428795" data-listing-reading-time-sort="0.3">
+<div class="quarto-post image-right" data-index="12" data-categories="2022-10" data-listing-date-sort="1666278000000" data-listing-file-modified-sort="1667341352334" data-listing-reading-time-sort="0.3">
 <div class="body">
 <a href="../blog/posts/22-10-21.html">
 <h3 class="no-anchor listing-title">
@@ -459,6 +568,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-21.html">
 <div class="listing-description">
 
 </div>
@@ -475,7 +591,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1666191600000" data-listing-file-modified-sort="1667103184570" data-listing-reading-time-sort="0.44">
+<div class="quarto-post image-right" data-index="13" data-categories="2022-10" data-listing-date-sort="1666191600000" data-listing-file-modified-sort="1667341348862" data-listing-reading-time-sort="0.44">
 <div class="body">
 <a href="../blog/posts/22-10-20.html">
 <h3 class="no-anchor listing-title">
@@ -484,6 +600,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-20.html">
 <div class="listing-description">
 
 </div>
@@ -500,7 +623,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1666105200000" data-listing-file-modified-sort="1667102762938" data-listing-reading-time-sort="0.325">
+<div class="quarto-post image-right" data-index="14" data-categories="2022-10" data-listing-date-sort="1666105200000" data-listing-file-modified-sort="1667341344602" data-listing-reading-time-sort="0.325">
 <div class="body">
 <a href="../blog/posts/22-10-19.html">
 <h3 class="no-anchor listing-title">
@@ -509,6 +632,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-19.html">
 <div class="listing-description">
 
 </div>
@@ -525,7 +655,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-listing-date-sort="1666018800000" data-listing-file-modified-sort="1667102726814" data-listing-reading-time-sort="0.3">
+<div class="quarto-post image-right" data-index="15" data-categories="2022-10" data-listing-date-sort="1666018800000" data-listing-file-modified-sort="1667341341548" data-listing-reading-time-sort="0.3">
 <div class="body">
 <a href="../blog/posts/22-10-18.html">
 <h3 class="no-anchor listing-title">
@@ -534,6 +664,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-18.html">
 <div class="listing-description">
 
 </div>
@@ -550,7 +687,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1665932400000" data-listing-file-modified-sort="1667102235186" data-listing-reading-time-sort="0.345">
+<div class="quarto-post image-right" data-index="16" data-categories="2022-10" data-listing-date-sort="1665932400000" data-listing-file-modified-sort="1667341303560" data-listing-reading-time-sort="0.345">
 <div class="body">
 <a href="../blog/posts/22-10-17.html">
 <h3 class="no-anchor listing-title">
@@ -559,6 +696,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-17.html">
 <div class="listing-description">
 
 </div>
@@ -575,7 +719,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1665846000000" data-listing-file-modified-sort="1667156118596" data-listing-reading-time-sort="1.565">
+<div class="quarto-post image-right" data-index="17" data-categories="2022-10" data-listing-date-sort="1665846000000" data-listing-file-modified-sort="1667341294907" data-listing-reading-time-sort="1.565">
 <div class="body">
 <a href="../blog/posts/22-10-16.html">
 <h3 class="no-anchor listing-title">
@@ -584,6 +728,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-16.html">
 <div class="listing-description">
 주피터 노트북 확장 프로그램(.js) 위치: /opt/homebrew/lib/python3.9/site-packages/widgetsnbextension/static
 </div>
@@ -600,7 +751,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="17" data-listing-date-sort="1665673200000" data-listing-file-modified-sort="1667228014877" data-listing-reading-time-sort="0.225">
+<div class="quarto-post image-right" data-index="18" data-categories="2022-10" data-listing-date-sort="1665673200000" data-listing-file-modified-sort="1667341289881" data-listing-reading-time-sort="0.225">
 <div class="body">
 <a href="../blog/posts/22-10-14.html">
 <h3 class="no-anchor listing-title">
@@ -609,6 +760,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-14.html">
 <div class="listing-description">
 
 </div>
@@ -625,7 +783,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1665586800000" data-listing-file-modified-sort="1667100076079" data-listing-reading-time-sort="0.28">
+<div class="quarto-post image-right" data-index="19" data-categories="2022-10" data-listing-date-sort="1665586800000" data-listing-file-modified-sort="1667341286254" data-listing-reading-time-sort="0.28">
 <div class="body">
 <a href="../blog/posts/22-10-13.html">
 <h3 class="no-anchor listing-title">
@@ -634,6 +792,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-13.html">
 <div class="listing-description">
 
 </div>
@@ -650,7 +815,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-listing-date-sort="1665500400000" data-listing-file-modified-sort="1667306449718" data-listing-reading-time-sort="0.255">
+<div class="quarto-post image-right" data-index="20" data-categories="2022-10" data-listing-date-sort="1665500400000" data-listing-file-modified-sort="1667341281715" data-listing-reading-time-sort="0.255">
 <div class="body">
 <a href="../blog/posts/22-10-12.html">
 <h3 class="no-anchor listing-title">
@@ -659,6 +824,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-12.html">
 <div class="listing-description">
 
 </div>
@@ -675,7 +847,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1665414000000" data-listing-file-modified-sort="1667106638451" data-listing-reading-time-sort="0.275">
+<div class="quarto-post image-right" data-index="21" data-categories="2022-10" data-listing-date-sort="1665414000000" data-listing-file-modified-sort="1667341277158" data-listing-reading-time-sort="0.275">
 <div class="body">
 <a href="../blog/posts/22-10-11.html">
 <h3 class="no-anchor listing-title">
@@ -684,6 +856,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-11.html">
 <div class="listing-description">
 
 </div>
@@ -700,7 +879,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="21" data-listing-date-sort="1665327600000" data-listing-file-modified-sort="1667096987201" data-listing-reading-time-sort="0.04">
+<div class="quarto-post image-right" data-index="22" data-categories="2022-10" data-listing-date-sort="1665327600000" data-listing-file-modified-sort="1667341270064" data-listing-reading-time-sort="0.04">
 <div class="body">
 <a href="../blog/posts/22-10-10.html">
 <h3 class="no-anchor listing-title">
@@ -709,6 +888,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-10.html">
 <div class="listing-description">
 공휴일로 수업이 없다. “Tiny Python Project(켄 유엔스-클락)”을 읽는다.
 </div>
@@ -725,7 +911,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="22" data-listing-date-sort="1665241200000" data-listing-file-modified-sort="1667096966784" data-listing-reading-time-sort="0.555">
+<div class="quarto-post image-right" data-index="23" data-categories="2022-10" data-listing-date-sort="1665241200000" data-listing-file-modified-sort="1667341266934" data-listing-reading-time-sort="0.555">
 <div class="body">
 <a href="../blog/posts/22-10-09.html">
 <h3 class="no-anchor listing-title">
@@ -734,6 +920,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-09.html">
 <div class="listing-description">
 이틀 내내 obsidian을 github pages에 올릴려고 삽질했다. 하지만 금요일에 구현한 방법으로 되돌아왔다. 이틀 동안의 고생이 성과 없이 끝났지만, mkdocs가 어떻게 작동하는지 조금 알았다.
 </div>
@@ -750,7 +943,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="23" data-listing-date-sort="1665068400000" data-listing-file-modified-sort="1667228810795" data-listing-reading-time-sort="0.13">
+<div class="quarto-post image-right" data-index="24" data-categories="2022-10" data-listing-date-sort="1665068400000" data-listing-file-modified-sort="1667341263551" data-listing-reading-time-sort="0.13">
 <div class="body">
 <a href="../blog/posts/22-10-07.html">
 <h3 class="no-anchor listing-title">
@@ -759,6 +952,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-07.html">
 <div class="listing-description">
 
 </div>
@@ -775,7 +975,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="24" data-listing-date-sort="1664982000000" data-listing-file-modified-sort="1667096868301" data-listing-reading-time-sort="0.28">
+<div class="quarto-post image-right" data-index="25" data-categories="2022-10" data-listing-date-sort="1664982000000" data-listing-file-modified-sort="1667341258996" data-listing-reading-time-sort="0.28">
 <div class="body">
 <a href="../blog/posts/22-10-06.html">
 <h3 class="no-anchor listing-title">
@@ -784,6 +984,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-06.html">
 <div class="listing-description">
 
 </div>
@@ -800,7 +1007,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="25" data-listing-date-sort="1664895600000" data-listing-file-modified-sort="1667096853341" data-listing-reading-time-sort="0.365">
+<div class="quarto-post image-right" data-index="26" data-categories="2022-10" data-listing-date-sort="1664895600000" data-listing-file-modified-sort="1667341255698" data-listing-reading-time-sort="0.365">
 <div class="body">
 <a href="../blog/posts/22-10-05.html">
 <h3 class="no-anchor listing-title">
@@ -809,6 +1016,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-05.html">
 <div class="listing-description">
 
 </div>
@@ -825,7 +1039,7 @@ lazychoi
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="26" data-listing-date-sort="1664809200000" data-listing-file-modified-sort="1667096820510" data-listing-reading-time-sort="0.185">
+<div class="quarto-post image-right" data-index="27" data-categories="2022-10" data-listing-date-sort="1664809200000" data-listing-file-modified-sort="1667341252474" data-listing-reading-time-sort="0.185">
 <div class="body">
 <a href="../blog/posts/22-10-04.html">
 <h3 class="no-anchor listing-title">
@@ -834,6 +1048,13 @@ lazychoi
 <div class="listing-subtitle">
 
 </div>
+</a>
+<div class="listing-categories">
+<div class="listing-category" onclick="window.quartoListingCategory('2022-10'); return false;">
+2022-10
+</div>
+</div>
+<a href="../blog/posts/22-10-04.html">
 <div class="listing-description">
 
 </div>
