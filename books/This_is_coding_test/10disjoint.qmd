@@ -76,7 +76,11 @@ for i in range(1, v + 1):
 
 ### union 연산 수행할 값 입력
 
-1 4, 2 3, 2 4, 5 6
+- 입력 -> 기본 부모 테이블 값 -> 새로 입력한 부모 테이블 값
+- 1 4 -> parent[1] = 1, parent[4] = 4 -> parent[4] = 1
+- 2 3 -> parent[2] = 2, parent[3] = 3 -> parent[3] = 2
+- 2 4 -> parent[2] = 2, parent[4] = 1 -> parent[2] = 1
+- 5 6 -> parent[5] = 5, parent[6] = 6 -> parent[6] = 5
 
 ```{python}
 # for i in range(e):
@@ -86,6 +90,15 @@ for i in range(1, v + 1):
 parent = [0, 1, 1, 2, 1, 5, 5]
 ```
 
+union 연산 후 그래프
+
+```{mermaid}
+graph LR
+    1 --- 2
+    3 --- 2
+    1 --- 4
+    5 --- 6
+```
 
 ### 각 원소가 속한 집합 출력
 
