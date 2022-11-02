@@ -213,7 +213,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <p>파이썬 리스트는 실제 원소의 객체를 저장하는 것이 아니라 객체의 레퍼런스를 저장한다. <strong>넘파이 모듈의 기본 배열은 다원 배열인 ndarray 클래스의 객체다.</strong> 이 배열은 하나의 자료형으로 만들어진 원소들을 보관하는 컨테이너이다.</p>
-<p><img src="https://numpy.org/doc/stable/_images/threefundamental.png" class="img-fluid"></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ndarray_list.jpg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">ndarray vs python list</figcaption><p></p>
+</figure>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/ndarray_data_structure.jpg" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">ndarray_data_structure</figcaption><p></p>
+</figure>
+</div>
 <p>넘파이는 위 그림처럼 일렬로 원소를 관리한다. 구체적인 설명이 없어 이해가 안 된다.</p>
 <p>버전 확인: <code>__version__</code></p>
 <div class="cell" data-execution_count="1">
@@ -276,7 +287,7 @@ strides</code></pre>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'type(arr.data.obj): '</span>, <span class="bu">type</span>(arr.data.obj))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>type(arr):  &lt;class 'numpy.ndarray'&gt;
-arr.data:  &lt;memory at 0x1081fca00&gt;
+arr.data:  &lt;memory at 0x1058e8a00&gt;
 arr.data.obj:  [1 2 3 4]
 type(arr.data.obj):  &lt;class 'numpy.ndarray'&gt;</code></pre>
 </div>
@@ -297,6 +308,168 @@ None None</code></pre>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>c</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>array([1., 2., 3., 4.])</code></pre>
+</div>
+</div>
+<p>차원별 원소 개수, 차원 개수, 타입, 원소의 길이(byte), 원소의 총개수, strides 조회.</p>
+<p><strong>itemsize</strong>란 원소의 저장 공간 크기를 말하고 바이트 단위이다. 여기는 4byte이고 32 비트이다.</p>
+<p><strong>strides</strong>는 차원 별 크기를 반환한다. 2차원 배열에서 1차원은 한 행에 속하는 원소의 개수 * 4바이트. 2차원은 1개 원소의 바이트 크기다. 예를 들어 (2, 4) 배열에서 한 행에 속하는 원소의 개수는 4이므로 한 행의 크기는 4 * 4 = 16, 2차원에 속하는 원소의 크기는 4바이트이다. 요약하면 반환값은 (16, 4). 3차원 배열인 (2, 2, 2)의 strides는 (4 * 4, 2 * 4, 4). 요령은 바깥부터 시작해서 대괄호를 벗긴 원소의 개수 * 4바이트, 그 다음 대괄호 안의 개수 * 4바이트 식으로 계산하는 것이다.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'==== 2차원 ======'</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>], [<span class="dv">5</span>, <span class="dv">6</span>, <span class="dv">7</span>, <span class="dv">8</span>]])</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape ='</span>, a.shape)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ndim ='</span>, a.ndim)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'dtype ='</span>, a.dtype)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'itemsize ='</span>, a.itemsize)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'size ='</span>, a.size)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'strides ='</span>, a.strides)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'==== 3차원 ======'</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]], [[<span class="dv">5</span>, <span class="dv">6</span>], [<span class="dv">7</span>, <span class="dv">8</span>]]])</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'shape ='</span>, a.shape)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ndim ='</span>, a.ndim)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'dtype ='</span>, a.dtype)</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'itemsize ='</span>, a.itemsize)</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'size ='</span>, a.size)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'strides ='</span>, a.strides)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>==== 2차원 ======
+shape = (2, 4)
+ndim = 2
+dtype = int64
+itemsize = 8
+size = 8
+strides = (32, 8)
+==== 3차원 ======
+shape = (2, 2, 2)
+ndim = 3
+dtype = int64
+itemsize = 8
+size = 8
+strides = (32, 16, 8)</code></pre>
+</div>
+</div>
+<p>다차원 배열은 데이터를 저장할 때 내부에서는 1차원으로 구성해서 관리한다. flatten(), ravel() 메소드로 조회한다.</p>
+<p>flatten(), ravel(), reshape(-1) 모두 1차원 배열을 반환하지만, flatten은 깊은 복사, 나머지는 얕은 복사다.</p>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]])</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a.flatten()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'a.flatten() -&gt; b ='</span>, b)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>b[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'flatten()은 원본이 바뀌지 않음'</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> np.array([[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]])</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a.ravel()</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'a.ravel() -&gt; b= '</span>, b)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>b[<span class="dv">0</span>] <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ravel()은 원본이 바뀜'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>a.flatten() -&gt; b = [1 2 3 4 5 6]
+[100   2   3   4   5   6]
+[[1 2 3]
+ [4 5 6]]
+flatten()은 원본이 바뀌지 않음
+a.ravel() -&gt; b=  [1 2 3 4 5 6]
+[100   2   3   4   5   6]
+[[100   2   3]
+ [  4   5   6]]
+ravel()은 원본이 바뀜</code></pre>
+</div>
+</div>
+<p>ndarray 메타 정보 출력은 <code>__array_interface__</code></p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>ndarr <span class="op">=</span> np.array([[[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>], [<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>]], [[<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>], [<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>]]])</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>ndarr.__array_interface__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>{'data': (105553126283264, False),
+ 'strides': None,
+ 'descr': [('', '&lt;i8')],
+ 'typestr': '&lt;i8',
+ 'shape': (2, 2, 3),
+ 'version': 3}</code></pre>
+</div>
+</div>
+<p>몫과 나머지를 구하는 함수</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'999 / 16 -&gt; 목과 나머지 튜플로 반환 divmod() -&gt;'</span>, <span class="bu">divmod</span>(<span class="dv">999</span>, <span class="dv">16</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>999 / 16 -&gt; 목과 나머지 튜플로 반환 divmod() -&gt; (62, 7)</code></pre>
+</div>
+</div>
+<p>ndarray의 모든 원소를 for로 돌릴 때 사용: 다중 for문 사용할 필요 없음 ndarray.flat</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> ndarr.flat:</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</code></pre>
+</div>
+</div>
+<p>matrix 클래스는 ndarray 클래스를 상속해서 구현한다. matrix는 2차원 배열만을 가리킨다.</p>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'ndarray의 부모 ='</span>, np.ndarray.__bases__)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'matrix의 부모 ='</span>, np.matrix.__bases__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>ndarray의 부모 = (&lt;class 'object'&gt;,)
+matrix의 부모 = (&lt;class 'numpy.ndarray'&gt;,)</code></pre>
+</div>
+</div>
+<p>matrix 고유의 속성과 메서드만 출력</p>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>nd_ <span class="op">=</span> <span class="bu">set</span>(<span class="bu">dir</span>(np.ndarray))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>md_ <span class="op">=</span> <span class="bu">set</span>(<span class="bu">dir</span>(np.matrix))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>md_ <span class="op">-</span> nd_</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>{'A',
+ 'A1',
+ 'H',
+ 'I',
+ '__dict__',
+ '__module__',
+ '_align',
+ '_collapse',
+ 'getA',
+ 'getA1',
+ 'getH',
+ 'getI',
+ 'getT'}</code></pre>
+</div>
+</div>
+<p>숫자 문자열을 받아 matrix로 만드는 함수</p>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>m4 <span class="op">=</span> np.mat(<span class="st">'1 2; 3 4'</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4.A)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4.getA())</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4.H) <span class="co"># 전치행렬</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4.T) <span class="co"># 전치행렬</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(m4.I) <span class="co"># 역행렬</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1 2]
+ [3 4]]
+[[1 2]
+ [3 4]]
+[[1 2]
+ [3 4]]
+[[1 3]
+ [2 4]]
+[[1 3]
+ [2 4]]
+[[-2.   1. ]
+ [ 1.5 -0.5]]</code></pre>
 </div>
 </div>
 <section id="더-읽어볼-만한-글" class="level2">

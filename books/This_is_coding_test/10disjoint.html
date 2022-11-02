@@ -330,13 +330,37 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="union-연산-수행할-값-입력" class="level3">
 <h3 class="anchored" data-anchor-id="union-연산-수행할-값-입력">union 연산 수행할 값 입력</h3>
-<p>1 4, 2 3, 2 4, 5 6</p>
+<ul>
+<li>입력 -&gt; 기본 부모 테이블 값 -&gt; 새로 입력한 부모 테이블 값</li>
+<li>1 4 -&gt; parent[1] = 1, parent[4] = 4 -&gt; parent[4] = 1</li>
+<li>2 3 -&gt; parent[2] = 2, parent[3] = 3 -&gt; parent[3] = 2</li>
+<li>2 4 -&gt; parent[2] = 2, parent[4] = 1 -&gt; parent[2] = 1</li>
+<li>5 6 -&gt; parent[5] = 5, parent[6] = 6 -&gt; parent[6] = 5</li>
+</ul>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in range(e):</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#     a, b = map(int, input().split())</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     union_parent(parent, a, b)</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>parent <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>union 연산 후 그래프</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<p>
+</p><pre class="mermaid" data-tooltip-selector="#mermaid-tooltip-2">graph LR
+    1 --- 2
+    3 --- 2
+    1 --- 4
+    5 --- 6
+</pre>
+<div id="mermaid-tooltip-2" class="mermaidTooltip">
+
+</div>
+<p></p>
+</div>
+</div>
 </div>
 </section>
 <section id="각-원소가-속한-집합-출력" class="level3">
