@@ -18,7 +18,7 @@ website:
       - text: "프로젝트"
         file: project.md
       - text: "블로그"
-        file: blog/index.md
+        file: blog/blog.md
       - about.md
     right: 
       - icon: github

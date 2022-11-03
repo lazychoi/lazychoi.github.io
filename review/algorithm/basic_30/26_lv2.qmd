@@ -1,0 +1,66 @@
+---
+title: 소수 찾기
+date: 2022/11/03
+updated: last-modified
+draft: true
+---
+
+[https://school.programmers.co.kr/learn/courses/30/lessons/12921](https://school.programmers.co.kr/learn/courses/30/lessons/12921)
+
+## 접근 과정
+
+에라토스테네스체 구현
+
+1. 입력받은 숫자까지의 리스트 변수 생성
+1. 리스트 변수를 for문으로 돌리며 자기보다 작은 숫자로 나누어 떨어지면 remove() 
+
+--> 숫자가 커지면 시간이 기하급수적으로 늘어난다. --> **시간 초과**
+
+```{python}
+n = 1000000
+num = [ i for i in range(2, n + 1)]
+
+for i in num:
+    try:
+        for j in range(2, i):
+            if i % j == 0:
+                num.remove(i)
+    except:
+        pass
+num
+```
+
+1. 자신과 같은 수가 아닌데도 나누어 떨어지면 반복을 중단하고, 
+1. 나누어서 몫이 1인 경우에만 출력  --> **시간 초과**
+
+```{python}
+n = 1000000
+
+for i in range(2, n + 1):
+    for j in range(2, i + 1):
+        if (i != j) and (i % j == 0):
+            break
+        elif i == j:
+            print(i)
+
+```
+
+위 식을 절반만 돌리면 
+
+
+```{python}
+n = 100
+
+for i in range(2, n + 1):
+    for j in range(2, (i + 1)//2):
+        if i % j != 0:
+            print(i, end=' ')
+            break
+```
+
+```{python}
+(1+1)//2
+```
+
+
+

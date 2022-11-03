@@ -42,7 +42,7 @@ title: ""
 
 ## 일일로그
 
-[2022년 10월](blog/index.md)
+[2022년 10월](blog/blog.md)
 
 :::
 :::
