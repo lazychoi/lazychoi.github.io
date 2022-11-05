@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-10-10">
 
-<title>👀 – ot</title>
+<title>👀 - 01장 파이썬 프로그램 작성 및 테스트 방법</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,32 +184,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#장-파이썬-프로그램-작성-및-테스트-방법" id="toc-장-파이썬-프로그램-작성-및-테스트-방법" class="nav-link active" data-scroll-target="#장-파이썬-프로그램-작성-및-테스트-방법">01장 파이썬 프로그램 작성 및 테스트 방법</a>
-  <ul class="collapse">
+  <li><a href="#pytest-사용법" id="toc-pytest-사용법" class="nav-link active" data-scroll-target="#pytest-사용법">pytest 사용법</a></li>
   <li><a href="#셔뱅-shebang" id="toc-셔뱅-shebang" class="nav-link" data-scroll-target="#셔뱅-shebang">셔뱅(#!, shebang)</a></li>
   <li><a href="#env" id="toc-env" class="nav-link" data-scroll-target="#env">env</a></li>
   <li><a href="#프로그램에-도움말-추가-argparse" id="toc-프로그램에-도움말-추가-argparse" class="nav-link" data-scroll-target="#프로그램에-도움말-추가-argparse">프로그램에 도움말 추가 argparse</a></li>
   <li><a href="#프로그램에-인수argument-추가하도록-설정" id="toc-프로그램에-인수argument-추가하도록-설정" class="nav-link" data-scroll-target="#프로그램에-인수argument-추가하도록-설정">프로그램에 인수(argument) 추가하도록 설정</a></li>
   <li><a href="#main-get_args-함수-추가" id="toc-main-get_args-함수-추가" class="nav-link" data-scroll-target="#main-get_args-함수-추가">main(), get_args() 함수 추가</a></li>
   <li><a href="#스타일-및-오류-확인-using-linter" id="toc-스타일-및-오류-확인-using-linter" class="nav-link" data-scroll-target="#스타일-및-오류-확인-using-linter">스타일 및 오류 확인 using linter</a></li>
-  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">01장 파이썬 프로그램 작성 및 테스트 방법</h1>
+</div>
 
 
-<section id="장-파이썬-프로그램-작성-및-테스트-방법" class="level1">
-<h1>01장 파이썬 프로그램 작성 및 테스트 방법</h1>
-<p>created: 2022-10-10 ## pytest 사용법</p>
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>lazychoi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 10, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<section id="pytest-사용법" class="level2">
+<h2 class="anchored" data-anchor-id="pytest-사용법">pytest 사용법</h2>
 <p><code>$ pytest -xv test.py</code></p>
 <ul>
 <li>저자가 작성한 test.py를 실행한다.</li>
 <li>v 옵션은 테스트 결과를 상세히 보여준다.</li>
 <li>x 옵션은 테스트 실패 시점에 실행을 중단한다.</li>
 </ul>
+</section>
 <section id="셔뱅-shebang" class="level2">
 <h2 class="anchored" data-anchor-id="셔뱅-shebang">셔뱅(#!, shebang)</h2>
 <p>OS가 해당 파일을 어떤 언어로 처리할지 정하기 위해 사용한다. 파이썬은 무시한다. 파일 첫 줄에 아래 문장 추가한다.</p>
@@ -334,7 +359,6 @@ Your code has been rated at 8.00/10</code></pre>
 <p>셔뱅 다음 줄과 함수 선언 다음 줄에 문서 정보 추가 후 다시 실행하면 점수가 만점으로 오른다.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

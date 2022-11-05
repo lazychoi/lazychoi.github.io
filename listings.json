@@ -118,6 +118,13 @@
     ]
   },
   {
+    "listing": "/review/eda.html",
+    "items": [
+      "/review/eda/folium.html",
+      "/review/eda/pyplot.html"
+    ]
+  },
+  {
     "listing": "/review/de.html",
     "items": [
       "/review/de/shell_prompt.html",
@@ -165,13 +172,6 @@
       "/review/algorithm/basic_30/15_lv2.html",
       "/review/algorithm/basic_30/12_lv1.html",
       "/review/algorithm/basic_30/13_lv2.html"
-    ]
-  },
-  {
-    "listing": "/review/visualization.html",
-    "items": [
-      "/review/visualization/folium.html",
-      "/review/visualization/pyplot.html"
     ]
   }
 ]
