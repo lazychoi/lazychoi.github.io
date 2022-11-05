@@ -1,0 +1,3418 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-05-27">
+
+<title>👀 - 구리 두 번째 미니 프로젝트 - 대통령과 주가</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books.html">읽은 책</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html">오답노트</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html">프로젝트</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/blog.html">블로그</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">Contact</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#분석-과정" id="toc-분석-과정" class="nav-link active" data-scroll-target="#분석-과정">분석 과정</a></li>
+  <li><a href="#부딪힌-문제와-대응" id="toc-부딪힌-문제와-대응" class="nav-link" data-scroll-target="#부딪힌-문제와-대응">부딪힌 문제와 대응</a></li>
+  <li><a href="#분석-1" id="toc-분석-1" class="nav-link" data-scroll-target="#분석-1">분석 1</a></li>
+  <li><a href="#분석-2" id="toc-분석-2" class="nav-link" data-scroll-target="#분석-2">분석 2</a></li>
+  <li><a href="#분석-3" id="toc-분석-3" class="nav-link" data-scroll-target="#분석-3">분석 3</a></li>
+  <li><a href="#배운-점-및-차후-과제" id="toc-배운-점-및-차후-과제" class="nav-link" data-scroll-target="#배운-점-및-차후-과제">배운 점 및 차후 과제</a></li>
+  <li><a href="#코드" id="toc-코드" class="nav-link" data-scroll-target="#코드">코드</a></li>
+  <li><a href="#재임기간-수익률-구간별-비교" id="toc-재임기간-수익률-구간별-비교" class="nav-link" data-scroll-target="#재임기간-수익률-구간별-비교">재임기간 수익률 구간별 비교</a></li>
+  <li><a href="#대통령-펀드-가입-후-주가-방향은" id="toc-대통령-펀드-가입-후-주가-방향은" class="nav-link" data-scroll-target="#대통령-펀드-가입-후-주가-방향은">대통령 펀드 가입 후 주가 방향은?</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">구리 두 번째 미니 프로젝트 - 대통령과 주가</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 27, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/president_stock.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">주식 투자</figcaption><p></p>
+</figure>
+</div>
+<div class="callout-info callout callout-style-default no-icon callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Info
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>얻은 게 많은 프로젝트였다. 판다스 시리즈와 데이터프레임를 변형하며 마주친 오류를 해결하는 과정에서 인덱스를 이해할 수 있었다. 표에 자료를 입력하고 생성, 병합하는 것도 익숙해졌다. 데이터를 만지며 새로운 아이디어가 떠오르고 다시 데이터로 검증하는 과정이 꽤 흥미로웠다. 주식에 투자할 때마다 다른 사람들의 얘기를 반신반의하며 따라했었는데 처음으로 직접 투자 방법을 하나 만들어냈다. 대통령 임기에 맞춰 5년에 한 번 코스피 지수에 투자하고 수익률이 나면 분포 기간 비율만큼 매도한다. 논리가 매우 단순하고 명쾌하다. 따라하기도 간편하고 신경 쓸 것도 별로 없어 수시로 주가 그래프를 확인할 일도 없다. 그저 본업에 몰두하면 된다. 남은 문제는 데이터가 제시한 대로 따라할 수 있는 용기와 인내를 갖고 있는냐에 달려있다. 이 방법이 들어 맞을지 앞으로 5년이 기대된다.</p>
+</div>
+</div>
+<section id="분석-과정" class="level3">
+<h3 class="anchored" data-anchor-id="분석-과정">분석 과정</h3>
+<ol type="1">
+<li>프로젝트 제목 : (데이터 분석으로 본) 대통령과 주가</li>
+<li>팀원 : 3명</li>
+<li>주제 선정 : 대통령 취임 후 1, 2년 혹은 임기말 주가를 비교하는 언론 기사와 대통령이 투자한 펀드 수익률 기사를 보고 이를 검증해보고자 제안했다. 혹시 쓸만한 투자 방법을 찾을 수 있지 않을까 하는 기대도 했다.</li>
+<li>기간 : 2022년 5월 25일 - 5월 27일</li>
+<li>진행 : 첫 번째 프로젝트보다 준비 기간을 많이 주었다. 월요일 수업 말미에 주제를 정하도록 한 시간을 주었다. 수요일에는 개별 상담이 진행되어 20분 정도의 상담 시간 외에는 자유롭게 프로젝트를 준비할 수 있었고, 목요일 하루와 금요일 오전까지 여유가 있어 지난 번보다 좋은 결과를 내고 싶었다. 한 시간 동안 얘기해도 매력적인 주제가 떠오르지 않아 각자 생각해 보고 다음 날 다시 얘기하기로 했다. 집에 돌아가는 전철에서 전에 대통령 재임기간 별로 주가 그래프를 그려봤던 기억이 나서 그것을 발전시켜보면 좋겠다고 생각해 카톡방에 올렸더니 모두 좋다고 했다. financeDataReader로 주가를 불러오는 소스를 팀원에게 전달하고 각자 전처리 하고 분석을 해보도록 했다. 분석 결과를 슬라이드로 만든 후 내가 발표했다. 발표 전 잘한 팀을 투표로 선정했는데 우리 팀이 1등을 했다. 투자하는 데 도움이 될 것 같다는 얘기도 들었다.</li>
+<li>데이터 선정</li>
+<li>주가는 finaceDataReader 라이브러리를 사용해 가져왔다.</li>
+<li>라이브러리 개발자가 제공한 Tutorial 소스 코드가 필요한 데이터를 가져오는 소스를 작성하는 데 큰 도움이 되었다.</li>
+<li>데이터 전처리</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/president_stock01.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">주식 투자</figcaption><p></p>
+</figure>
+</div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>presidents <span class="op">=</span> [[<span class="st">'노태우'</span>,<span class="st">'1988-02-25'</span>,<span class="st">'1993-02-24'</span>],</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'김영삼'</span>,<span class="st">'1993-02-25'</span>,<span class="st">'1998-02-24'</span>],</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'김대중'</span>,<span class="st">'1998-02-25'</span>,<span class="st">'2003-02-24'</span>],</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'노무현'</span>,<span class="st">'2003-02-25'</span>,<span class="st">'2008-02-24'</span>],</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'이명박'</span>,<span class="st">'2008-02-25'</span>,<span class="st">'2013-02-24'</span>],</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'박근혜'</span>,<span class="st">'2013-02-25'</span>,<span class="st">'2017-03-10'</span>],</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'문재인'</span>,<span class="st">'2017-05-10'</span>,<span class="st">'2022-05-09'</span>],</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'윤석열'</span>,<span class="st">'2022-05-10'</span>,date.today().isoformat()]]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 주가 자료 가져오기 - 대통령 재임기간 별 종가</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>kospi <span class="op">=</span> [ fdr.DataReader(<span class="st">'ks11'</span>, start, end)[<span class="st">'Close'</span>] <span class="cf">for</span> name, start, end <span class="kw">in</span> presidents ]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 리스트 내의 시리즈를 데이터프레임으로 변환</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 리스트 길이만큼 동적으로 변수 생성</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 시리즈 =&gt; 데이터프레임 =&gt; 생성된 변수에 저장</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]<span class="op">=</span>pd.DataFrame(kospi[i])</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임의 날짜 인덱스를 Date 컬럼으로 저장</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    temp_df[<span class="st">'Date'</span>]<span class="op">=</span>temp_df.index </span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임의 인덱스를 순번으로 초기화</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 컬럼명 변경</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    temp_df.index <span class="op">=</span> <span class="bu">range</span>(<span class="bu">len</span>(temp_df))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    temp_df.columns <span class="op">=</span> [[presidents[i][<span class="dv">0</span>]<span class="op">+</span><span class="st">'date'</span>,presidents[i][<span class="dv">0</span>]]]</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임 합치기</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 각각의 데이터 프레임을 리스트로 합치기</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. pd.concat을 이용해 list =&gt; 데이터프레임</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>temp_list <span class="op">=</span> []</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    temp_list.append(temp_df)</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>df_all <span class="op">=</span> pd.concat(temp_list,axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol type="1">
+<li>노태우 정부 이후 KOSPI 종가를 가져와 대통령 재임기간과 날짜별 종가를 컬럼으로 만들었다.</li>
+<li>수익률 비교를 위해 취임 후 첫 날 주가를 0으로 설정했다. 수식: ( 종가 / 첫날 종가 ) - 1</li>
+</ol>
+</section>
+<section id="부딪힌-문제와-대응" class="level3">
+<h3 class="anchored" data-anchor-id="부딪힌-문제와-대응">부딪힌 문제와 대응</h3>
+<ol type="1">
+<li>판다스는 인덱스를 기준으로 데이터를 입력하고 테이블을 병합한다는 것을 몰랐다. 원자료의 인덱스가 날짜로 되어 있고 대통령 임기마다 인덱스가 모두 다르기 때문에 컬럼으로 붙지 않았다.</li>
+<li>처음에는 원자료에 컬럼을 하나 덧붙이고 대통령 임기에 해당하는 날짜에 해당 대통령 이름을 넣으려고 시도했다. 하지만 새로운 컬럼을 만들며 일부 행에만 자료를 넣는 것은 되지 않았다. 새로운 컬럼을 만들 때는 모두 비어 있던지, 모두 채워져 있어야 했다.</li>
+<li>먼저 새로운 컬럼을 결측치로 만들고 나서 재임기간 행에 해당 대통령 이름을 입력하면 쉽게 해결되는 데 당시에는 이걸 몰랐다.</li>
+<li>튜토리얼에 나온 코드를 활용해 재임기간별 종가를 리스트로 받아오고 바로 데이터프레임으로 변환하려고 했으나 되지 않았다. 이유는 역시 인덱스가 다르기 때문이었다.</li>
+<li>financdDataReader로 가져온 자료는 시리즈로 되어 있고, 인덱스가 모두 날짜로 되어있기 때문이었다. 해결책은 인덱스를 컬럼으로 바꾸고 단순 나열된 번호로 인덱스를 재설정하는 것이었다.</li>
+<li>하지만, 인덱스를 컬럼으로 바꾸려면 시리즈를 데이터프레임으로 바꾸어야 하고 그때마다 데이터프레임 변수를 생성해야 한다. 즉 동적으로 1. 변수를 만드는 방법을 알아햐 했다. 선생님께 질문해 해결했다. globals()[]를 이용하면 된다.</li>
+<li>동적으로 생성한 데이터프레임을 다시 리스트로 묶고 pd.concat()으로 병합해 위 표를 완성했다.</li>
+<li>이후론 멀티 인덱스를 만날 때까지는 별다른 문제 없이 착착 진행되었다.</li>
+</ol>
+</section>
+<section id="분석-1" class="level3">
+<h3 class="anchored" data-anchor-id="분석-1">분석 1</h3>
+<p>대통령 재임기간에서 공통된 패턴을 찾는 것은 실패했다. 하지만 취임 직후에 매수하면 수익 낼 기회는 많다는 것을 발견했다.</p>
+<ol type="1">
+<li>대통령 재임기간 별 패턴 분석: 아래 도표에 나타나듯이 일정한 패턴을 발견할 수 없다.(그림-1)</li>
+<li>겹쳐 놓고 봐도 일년씩 나누어 봐도 일정한 패턴이 없어 보인다.(그림-2)</li>
+<li>하지만, 취임 직후에 매수했다면 수익을 낼 수 있는 기회는 많았다.(그림-3)</li>
+</ol>
+<p><img src="images/president_stock02.png" class="img-fluid" alt="그림1"> <img src="images/president_stock03.png" class="img-fluid" alt="그림1"> <img src="images/president_stock04.png" class="img-fluid" alt="그림1"></p>
+</section>
+<section id="분석-2" class="level3">
+<h3 class="anchored" data-anchor-id="분석-2">분석 2</h3>
+<p>대통령이 펀드 투자한 시점에 KOSPI 지수를 매수하면 70% 이상의 수익을 낼 수 있다. 단, 매도 시점을 잘 찾아야 한다.</p>
+<ol type="1">
+<li>대통령 펀드 투자일 종가와 이후 최고점까지의 기간과 수익률을 구했다.</li>
+<li>최고점 1년 후 종가와 수익률을 구해보니 매도 시점이 얼마나 중요한지를 볼 수 있었다.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/president_stock05.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">분석2</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="분석-3" class="level3">
+<h3 class="anchored" data-anchor-id="분석-3">분석 3</h3>
+<p>재임기간 내 수익률별 기간 분포를 비율로 계산 하여 비율 별 분할 매도 방법 제안</p>
+<ol type="1">
+<li>수익률 별 영업일 수 분포를 표로 집계 후 백분률로 변환</li>
+<li>대통령 별로 수익률 기간 분포를 파이 차트와 막대 그래프로 표시</li>
+<li>전체적으로 보면 대통령 취임 직후에 주식을 매수하면</li>
+<li>10% 이상 수익을 낼 기회는 51.4%나 된다.</li>
+<li>20% 이상 수익을 낼 기회도 39.2%나 된다.</li>
+<li>반대로 손해를 볼 경우는 28.4%다.</li>
+<li>최종 결론은 이 글 맨 위에 있다.</li>
+</ol>
+<img src="images/president_stock06.png" class="img-fluid">
+
+<table>
+<tbody><tr>
+<td>
+<img src="images/president_stock07.png">
+</td>
+<td>
+<img src="images/president_stock08.png">)
+</td>
+</tr>
+<tr>
+<td>
+<img src="images/president_stock09.png">
+</td>
+<td>
+<img src="images/president_stock10.png">
+</td>
+</tr>
+
+</tbody></table>
+</section>
+<section id="배운-점-및-차후-과제" class="level3">
+<h3 class="anchored" data-anchor-id="배운-점-및-차후-과제">배운 점 및 차후 과제</h3>
+<ol type="1">
+<li>판다스를 자유롭게 사용할 수 있어야 원하는 모양으로 표를 만들 수 있다. 판다스가 움직이는 원리를 알아야 예상치 못한 오류를 내뿜는 것을 막을 수 있다. 판다스만을 다룬 책을 찾아 공부해야겠다.</li>
+<li>원리를 모르고 시각화 도구를 사용하니 원하는 모양으로 만들어지지 않았다. 구글링도 원리를 알아야 활용할 수 있다. 프로젝트 준비 시간을 주느라고 matplotlib 수업이 줄어든 게 무척 아쉽다. 주말을 이용해 유튜브 강의나 책으로 공부해야겠다.</li>
+<li>모든 걸 파이썬으로 해결하려 하지 말자. 데이터를 엑셀로 보내 엑셀에서 그래프를 그리는 게 편리할 때도 있다. 파이 차트에서 숫자가 겹쳐 제대로 보이지 않는 것을 코드로 조정하는 게 무척 번거롭다. 엑셀에서 마우스로 움직이는 게 더 나았다. 필요에 따라 도구를 적절히 사용하자. 주객이 전도되면 안 된다.</li>
+</ol>
+</section>
+<section id="코드" class="level3">
+<h3 class="anchored" data-anchor-id="코드">코드</h3>
+<p>라이브러리 사용법</p>
+<p>https://github.com/FinanceData/FinanceDataReader</p>
+<ul>
+<li><p>설치: pip install finance-datareader</p></li>
+<li><p>업데이트 : pip install -U finance-datareader</p></li>
+<li><p>잘 되던 데이터 가져오기가 안 되면 ip가 차단당했을 수 있으니 휴대폰 핫스팟에 연결해서 해 본다.</p></li>
+</ul>
+<p>변수 정리 - df_kospi : financeDataReader 원자료 - presidents : 대통령, 첫날, 마지막날, 총거래일 리스트 변수 - kospi : 대통령 임기별 종가 리스트 변수 - df_all : 대통령 임기와 주가를 컬럼으로 나열한 변수 - df_all_rate : df_all 변수를 수익률로 변환 - df_freq : 수익률별 영업일수 - df_rate : 수익률별 영업일수 비율</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pip install finance<span class="op">-</span>datareader</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> FinanceDataReader <span class="im">as</span> fdr</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> date</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime, timedelta</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'font.family'</span>]<span class="op">=</span><span class="st">'Malgun Gothic, AppleGothic'</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'font.size'</span>]<span class="op">=</span><span class="fl">11.0</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>plt.rcParams[<span class="st">'axes.unicode_minus'</span>]<span class="op">=</span><span class="va">False</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># kospi 1980년 이후 오늘까지. 코스피(ks11),코스닥(kq11)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_kospi <span class="op">=</span> fdr.DataReader(<span class="st">'ks11'</span>, <span class="st">'1980'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># df_kospi</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 연도별 영업일 수</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>year_busi <span class="op">=</span> []</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1988</span>,<span class="dv">2023</span>):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    year_busi.append( [ i, df_kospi.loc[<span class="bu">str</span>(i)][<span class="st">'Close'</span>].count() ])</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x, y <span class="kw">in</span> year_busi:</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>x<span class="sc">}</span><span class="ss">년: </span><span class="sc">{</span>y<span class="sc">}</span><span class="ss"> 영업일'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1988년: 293 영업일
+1989년: 289 영업일
+1990년: 291 영업일
+1991년: 292 영업일
+1992년: 294 영업일
+1993년: 296 영업일
+1994년: 296 영업일
+1995년: 293 영업일
+1996년: 293 영업일
+1997년: 292 영업일
+1998년: 292 영업일
+1999년: 249 영업일
+2000년: 241 영업일
+2001년: 246 영업일
+2002년: 244 영업일
+2003년: 247 영업일
+2004년: 249 영업일
+2005년: 249 영업일
+2006년: 247 영업일
+2007년: 246 영업일
+2008년: 248 영업일
+2009년: 253 영업일
+2010년: 251 영업일
+2011년: 248 영업일
+2012년: 248 영업일
+2013년: 248 영업일
+2014년: 245 영업일
+2015년: 248 영업일
+2016년: 246 영업일
+2017년: 243 영업일
+2018년: 244 영업일
+2019년: 246 영업일
+2020년: 248 영업일
+2021년: 248 영업일
+2022년: 98 영업일</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>presidents <span class="op">=</span> [[<span class="st">'노태우'</span>,<span class="st">'1988-02-25'</span>,<span class="st">'1993-02-24'</span>],</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'김영삼'</span>,<span class="st">'1993-02-25'</span>,<span class="st">'1998-02-24'</span>],</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'김대중'</span>,<span class="st">'1998-02-25'</span>,<span class="st">'2003-02-24'</span>],</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'노무현'</span>,<span class="st">'2003-02-25'</span>,<span class="st">'2008-02-24'</span>],</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'이명박'</span>,<span class="st">'2008-02-25'</span>,<span class="st">'2013-02-24'</span>],</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'박근혜'</span>,<span class="st">'2013-02-25'</span>,<span class="st">'2017-03-10'</span>],</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'문재인'</span>,<span class="st">'2017-05-10'</span>,<span class="st">'2022-05-09'</span>],</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>              [<span class="st">'윤석열'</span>,<span class="st">'2022-05-10'</span>,date.today().isoformat()]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 주가 자료 가져오기 - 대통령 재임기간 별 종가</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>kospi <span class="op">=</span> [ fdr.DataReader(<span class="st">'ks11'</span>, start, end)[<span class="st">'Close'</span>] <span class="cf">for</span> name, start, end <span class="kw">in</span> presidents ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 리스트 내의 시리즈를 데이터프레임으로 변환</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 리스트 길이만큼 동적으로 변수 생성</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 시리즈 =&gt; 데이터프레임 =&gt; 생성된 변수에 저장</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]<span class="op">=</span>pd.DataFrame(kospi[i])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임의 날짜 인덱스를 Date 컬럼으로 저장</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    temp_df[<span class="st">'Date'</span>]<span class="op">=</span>temp_df.index </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 컬럼 순서를 Date, Close로 변경 (의문: 위 코드와 같은 cell에서 실행하면 바뀌지 않는다. 왜그럴까?)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in range(len(kospi)):</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#     tmp_df = globals()['p_'+str(i+1)]</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#     tmp_df = tmp_df[['Date','Close']]</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>p_1<span class="op">=</span>p_1[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>p_2<span class="op">=</span>p_2[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>p_3<span class="op">=</span>p_3[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>p_4<span class="op">=</span>p_4[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>p_5<span class="op">=</span>p_5[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>p_6<span class="op">=</span>p_6[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>p_7<span class="op">=</span>p_7[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>p_8<span class="op">=</span>p_8[[<span class="st">'Date'</span>,<span class="st">'Close'</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임의 인덱스를 순번으로 초기화</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 컬럼명 변경</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    temp_df.index <span class="op">=</span> <span class="bu">range</span>(<span class="bu">len</span>(temp_df))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    temp_df.columns <span class="op">=</span> [[presidents[i][<span class="dv">0</span>]<span class="op">+</span><span class="st">'date'</span>,presidents[i][<span class="dv">0</span>]]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 동적으로 생성한 데이터프레임 합치기</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 각각의 데이터 프레임을 리스트로 합치기</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. pd.concat을 이용해 list =&gt; 데이터프레임</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>temp_list <span class="op">=</span> []</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kospi)):</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    temp_df <span class="op">=</span> <span class="bu">globals</span>()[<span class="st">'p_'</span><span class="op">+</span><span class="bu">str</span>(i<span class="op">+</span><span class="dv">1</span>)]</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    temp_list.append(temp_df)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>df_all <span class="op">=</span> pd.concat(temp_list,axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>df_all.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>노태우date</th>
+      <th>노태우</th>
+      <th>김영삼date</th>
+      <th>김영삼</th>
+      <th>김대중date</th>
+      <th>김대중</th>
+      <th>노무현date</th>
+      <th>노무현</th>
+      <th>이명박date</th>
+      <th>이명박</th>
+      <th>박근혜date</th>
+      <th>박근혜</th>
+      <th>문재인date</th>
+      <th>문재인</th>
+      <th>윤석열date</th>
+      <th>윤석열</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1988-02-26</td>
+      <td>635.10</td>
+      <td>1993-02-25</td>
+      <td>655.61</td>
+      <td>1998-02-25</td>
+      <td>516.38</td>
+      <td>2003-02-25</td>
+      <td>592.25</td>
+      <td>2008-02-25</td>
+      <td>1709.13</td>
+      <td>2013-02-25</td>
+      <td>2009.52</td>
+      <td>2017-05-10</td>
+      <td>2270.12</td>
+      <td>2022-05-10</td>
+      <td>2596.56</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1988-02-27</td>
+      <td>633.23</td>
+      <td>1993-02-26</td>
+      <td>644.70</td>
+      <td>1998-02-26</td>
+      <td>524.98</td>
+      <td>2003-02-26</td>
+      <td>590.26</td>
+      <td>2008-02-26</td>
+      <td>1709.13</td>
+      <td>2013-02-26</td>
+      <td>2000.01</td>
+      <td>2017-05-11</td>
+      <td>2296.37</td>
+      <td>2022-05-11</td>
+      <td>2592.27</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1988-02-29</td>
+      <td>612.35</td>
+      <td>1993-02-27</td>
+      <td>642.96</td>
+      <td>1998-02-27</td>
+      <td>548.42</td>
+      <td>2003-02-27</td>
+      <td>582.46</td>
+      <td>2008-02-27</td>
+      <td>1720.89</td>
+      <td>2013-02-27</td>
+      <td>2004.04</td>
+      <td>2017-05-12</td>
+      <td>2286.02</td>
+      <td>2022-05-12</td>
+      <td>2550.08</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1988-03-02</td>
+      <td>608.24</td>
+      <td>1993-03-02</td>
+      <td>633.73</td>
+      <td>1998-02-28</td>
+      <td>558.98</td>
+      <td>2003-02-28</td>
+      <td>575.43</td>
+      <td>2008-02-28</td>
+      <td>1736.17</td>
+      <td>2013-02-28</td>
+      <td>2026.49</td>
+      <td>2017-05-15</td>
+      <td>2290.65</td>
+      <td>2022-05-13</td>
+      <td>2604.24</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1988-03-03</td>
+      <td>613.01</td>
+      <td>1993-03-03</td>
+      <td>632.99</td>
+      <td>1998-03-02</td>
+      <td>574.35</td>
+      <td>2003-03-03</td>
+      <td>590.04</td>
+      <td>2008-02-29</td>
+      <td>1711.62</td>
+      <td>2013-03-04</td>
+      <td>2013.15</td>
+      <td>2017-05-16</td>
+      <td>2295.33</td>
+      <td>2022-05-16</td>
+      <td>2596.58</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_all.to_csv(<span class="st">'대통령_재임기간_중_코스피종가.csv'</span>, encoding<span class="op">=</span><span class="st">'cp949'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 대통령 재임기간 총 영업일을 presidnets 변수에 추가</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># business_days = df_all.iloc[:,[1,3,5,7,9,11,13,15]].notnull().sum()</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for i in range(len(business_days)):</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     if presidents[i][3]:</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">#         break</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">#     else:</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">#         presidents[i].append(business_days[i])</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># presidents</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 대통령별 수익률 상대 비교 위해 데이터프레임 복사</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>df_all_rate <span class="op">=</span> df_all.copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 첫번째 영업일 종가를 0으로 설정</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]] <span class="op">=</span> df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]] <span class="op">/</span> df_all_rate.iloc[<span class="dv">0</span>,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]] <span class="op">-</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 백분율로 표시(소수점 2자리까지)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]] <span class="op">=</span> <span class="bu">round</span>(df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">*</span><span class="dv">100</span>, <span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_all_rate.rename(columns<span class="op">=</span>{<span class="st">'노태우'</span>:<span class="st">'노태우(%)'</span>, <span class="st">'김영삼'</span>:<span class="st">'김영삼(%)'</span>, <span class="st">'김대중'</span>:<span class="st">'김대중(%)'</span>,<span class="st">'노무현'</span>:<span class="st">'노무현(%)'</span>, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'이명박'</span>:<span class="st">'이명박(%)'</span>, <span class="st">'박근혜'</span>:<span class="st">'박근혜(%)'</span>, <span class="st">'문재인'</span>:<span class="st">'문재인(%)'</span>,<span class="st">'윤석열'</span>:<span class="st">'윤석열(%)'</span>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>노태우date</th>
+      <th>노태우(%)</th>
+      <th>김영삼date</th>
+      <th>김영삼(%)</th>
+      <th>김대중date</th>
+      <th>김대중(%)</th>
+      <th>노무현date</th>
+      <th>노무현(%)</th>
+      <th>이명박date</th>
+      <th>이명박(%)</th>
+      <th>박근혜date</th>
+      <th>박근혜(%)</th>
+      <th>문재인date</th>
+      <th>문재인(%)</th>
+      <th>윤석열date</th>
+      <th>윤석열(%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1988-02-26</td>
+      <td>0.00</td>
+      <td>1993-02-25</td>
+      <td>0.00</td>
+      <td>1998-02-25</td>
+      <td>0.00</td>
+      <td>2003-02-25</td>
+      <td>0.00</td>
+      <td>2008-02-25</td>
+      <td>0.00</td>
+      <td>2013-02-25</td>
+      <td>0.00</td>
+      <td>2017-05-10</td>
+      <td>0.00</td>
+      <td>2022-05-10</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1988-02-27</td>
+      <td>-0.29</td>
+      <td>1993-02-26</td>
+      <td>-1.66</td>
+      <td>1998-02-26</td>
+      <td>1.67</td>
+      <td>2003-02-26</td>
+      <td>-0.34</td>
+      <td>2008-02-26</td>
+      <td>0.00</td>
+      <td>2013-02-26</td>
+      <td>-0.47</td>
+      <td>2017-05-11</td>
+      <td>1.16</td>
+      <td>2022-05-11</td>
+      <td>-0.17</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1988-02-29</td>
+      <td>-3.58</td>
+      <td>1993-02-27</td>
+      <td>-1.93</td>
+      <td>1998-02-27</td>
+      <td>6.20</td>
+      <td>2003-02-27</td>
+      <td>-1.65</td>
+      <td>2008-02-27</td>
+      <td>0.69</td>
+      <td>2013-02-27</td>
+      <td>-0.27</td>
+      <td>2017-05-12</td>
+      <td>0.70</td>
+      <td>2022-05-12</td>
+      <td>-1.79</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1988-03-02</td>
+      <td>-4.23</td>
+      <td>1993-03-02</td>
+      <td>-3.34</td>
+      <td>1998-02-28</td>
+      <td>8.25</td>
+      <td>2003-02-28</td>
+      <td>-2.84</td>
+      <td>2008-02-28</td>
+      <td>1.58</td>
+      <td>2013-02-28</td>
+      <td>0.84</td>
+      <td>2017-05-15</td>
+      <td>0.90</td>
+      <td>2022-05-13</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1988-03-03</td>
+      <td>-3.48</td>
+      <td>1993-03-03</td>
+      <td>-3.45</td>
+      <td>1998-03-02</td>
+      <td>11.23</td>
+      <td>2003-03-03</td>
+      <td>-0.37</td>
+      <td>2008-02-29</td>
+      <td>0.15</td>
+      <td>2013-03-04</td>
+      <td>0.18</td>
+      <td>2017-05-16</td>
+      <td>1.11</td>
+      <td>2022-05-16</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1464</th>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>1998-02-19</td>
+      <td>-21.68</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1465</th>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>1998-02-20</td>
+      <td>-20.36</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1466</th>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>1998-02-21</td>
+      <td>-19.32</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1467</th>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>1998-02-23</td>
+      <td>-17.17</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1468</th>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>1998-02-24</td>
+      <td>-17.50</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+      <td>NaT</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>1469 rows × 16 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df_all_rate.head(<span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>노태우date</th>
+      <th>노태우</th>
+      <th>김영삼date</th>
+      <th>김영삼</th>
+      <th>김대중date</th>
+      <th>김대중</th>
+      <th>노무현date</th>
+      <th>노무현</th>
+      <th>이명박date</th>
+      <th>이명박</th>
+      <th>박근혜date</th>
+      <th>박근혜</th>
+      <th>문재인date</th>
+      <th>문재인</th>
+      <th>윤석열date</th>
+      <th>윤석열</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1988-02-26</td>
+      <td>0.00</td>
+      <td>1993-02-25</td>
+      <td>0.00</td>
+      <td>1998-02-25</td>
+      <td>0.00</td>
+      <td>2003-02-25</td>
+      <td>0.00</td>
+      <td>2008-02-25</td>
+      <td>0.00</td>
+      <td>2013-02-25</td>
+      <td>0.00</td>
+      <td>2017-05-10</td>
+      <td>0.00</td>
+      <td>2022-05-10</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1988-02-27</td>
+      <td>-0.29</td>
+      <td>1993-02-26</td>
+      <td>-1.66</td>
+      <td>1998-02-26</td>
+      <td>1.67</td>
+      <td>2003-02-26</td>
+      <td>-0.34</td>
+      <td>2008-02-26</td>
+      <td>0.00</td>
+      <td>2013-02-26</td>
+      <td>-0.47</td>
+      <td>2017-05-11</td>
+      <td>1.16</td>
+      <td>2022-05-11</td>
+      <td>-0.17</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1988-02-29</td>
+      <td>-3.58</td>
+      <td>1993-02-27</td>
+      <td>-1.93</td>
+      <td>1998-02-27</td>
+      <td>6.20</td>
+      <td>2003-02-27</td>
+      <td>-1.65</td>
+      <td>2008-02-27</td>
+      <td>0.69</td>
+      <td>2013-02-27</td>
+      <td>-0.27</td>
+      <td>2017-05-12</td>
+      <td>0.70</td>
+      <td>2022-05-12</td>
+      <td>-1.79</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1988-03-02</td>
+      <td>-4.23</td>
+      <td>1993-03-02</td>
+      <td>-3.34</td>
+      <td>1998-02-28</td>
+      <td>8.25</td>
+      <td>2003-02-28</td>
+      <td>-2.84</td>
+      <td>2008-02-28</td>
+      <td>1.58</td>
+      <td>2013-02-28</td>
+      <td>0.84</td>
+      <td>2017-05-15</td>
+      <td>0.90</td>
+      <td>2022-05-13</td>
+      <td>0.30</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1988-03-03</td>
+      <td>-3.48</td>
+      <td>1993-03-03</td>
+      <td>-3.45</td>
+      <td>1998-03-02</td>
+      <td>11.23</td>
+      <td>2003-03-03</td>
+      <td>-0.37</td>
+      <td>2008-02-29</td>
+      <td>0.15</td>
+      <td>2013-03-04</td>
+      <td>0.18</td>
+      <td>2017-05-16</td>
+      <td>1.11</td>
+      <td>2022-05-16</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>1988-03-04</td>
+      <td>-3.02</td>
+      <td>1993-03-04</td>
+      <td>-5.09</td>
+      <td>1998-03-03</td>
+      <td>10.56</td>
+      <td>2003-03-04</td>
+      <td>-2.65</td>
+      <td>2008-03-03</td>
+      <td>-2.19</td>
+      <td>2013-03-05</td>
+      <td>0.35</td>
+      <td>2017-05-17</td>
+      <td>1.01</td>
+      <td>2022-05-17</td>
+      <td>0.92</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1988-03-05</td>
+      <td>-2.63</td>
+      <td>1993-03-05</td>
+      <td>-6.11</td>
+      <td>1998-03-04</td>
+      <td>10.92</td>
+      <td>2003-03-05</td>
+      <td>-5.40</td>
+      <td>2008-03-04</td>
+      <td>-1.93</td>
+      <td>2013-03-06</td>
+      <td>0.56</td>
+      <td>2017-05-18</td>
+      <td>0.74</td>
+      <td>2022-05-18</td>
+      <td>1.13</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>1988-03-07</td>
+      <td>-3.21</td>
+      <td>1993-03-06</td>
+      <td>-7.58</td>
+      <td>1998-03-05</td>
+      <td>3.74</td>
+      <td>2003-03-06</td>
+      <td>-6.23</td>
+      <td>2008-03-05</td>
+      <td>-1.87</td>
+      <td>2013-03-07</td>
+      <td>-0.25</td>
+      <td>2017-05-19</td>
+      <td>0.81</td>
+      <td>2022-05-19</td>
+      <td>-0.16</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>1988-03-08</td>
+      <td>-4.99</td>
+      <td>1993-03-08</td>
+      <td>-4.57</td>
+      <td>1998-03-06</td>
+      <td>1.19</td>
+      <td>2003-03-07</td>
+      <td>-7.81</td>
+      <td>2008-03-06</td>
+      <td>-0.68</td>
+      <td>2013-03-08</td>
+      <td>-0.17</td>
+      <td>2017-05-22</td>
+      <td>1.49</td>
+      <td>2022-05-20</td>
+      <td>1.65</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>1988-03-09</td>
+      <td>-3.66</td>
+      <td>1993-03-09</td>
+      <td>-4.48</td>
+      <td>1998-03-07</td>
+      <td>1.86</td>
+      <td>2003-03-10</td>
+      <td>-8.11</td>
+      <td>2008-03-07</td>
+      <td>-2.64</td>
+      <td>2013-03-11</td>
+      <td>-0.31</td>
+      <td>2017-05-23</td>
+      <td>1.83</td>
+      <td>2022-05-23</td>
+      <td>1.96</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df_all_rate.to_csv(<span class="st">'대통령재임기간별수익률.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(df_all_rate.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>16</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># x,y축 값을 절대값으로 고정하려면 xlim=(0,50), ylim=(-50, 250)</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-22-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>))<span class="op">;</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt.grid(linestyle<span class="op">=</span><span class="st">'dotted'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-23-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 재임기간 중 첫 250 영업일(약 1년)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), xlim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">250</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-24-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 재임기간 중 2년차 250-500 영업일(약 1년)</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), xlim<span class="op">=</span>(<span class="dv">251</span>,<span class="dv">500</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-25-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 재임기간 중 3년차 500-750 영업일(약 1년)</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), xlim<span class="op">=</span>(<span class="dv">501</span>,<span class="dv">750</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 재임기간 중 4년차 750-1000 영업일(약 1년)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), xlim<span class="op">=</span>(<span class="dv">751</span>,<span class="dv">1000</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-27-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 재임기간 중 5년차 1000-1250 영업일(약 1년)</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]].plot(subplots<span class="op">=</span><span class="va">True</span>, layout<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), xlim<span class="op">=</span>(<span class="dv">1000</span>,<span class="dv">1250</span>), figsize<span class="op">=</span>(<span class="dv">20</span>,<span class="dv">15</span>), grid<span class="op">=</span><span class="st">'dotted'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="재임기간-수익률-구간별-비교" class="level3">
+<h3 class="anchored" data-anchor-id="재임기간-수익률-구간별-비교">재임기간 수익률 구간별 비교</h3>
+<div class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  취임일 직후 대비 10%, 20%,....,150% 이상인 영업일 수</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>freq_plus <span class="op">=</span> []</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>num_plus <span class="op">=</span> [<span class="dv">0</span>,<span class="dv">10</span>,<span class="dv">20</span>,<span class="dv">30</span>,<span class="dv">40</span>,<span class="dv">50</span>,<span class="dv">100</span>,<span class="dv">150</span>,<span class="dv">200</span>]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(num_plus)):</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">&lt;</span> <span class="bu">len</span>(num_plus)<span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(num_plus[i], num_plus[i+1])</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>        temp <span class="op">=</span> ((df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&gt;=</span>num_plus[i])<span class="op">&amp;</span>(df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&lt;</span>num_plus[i<span class="op">+</span><span class="dv">1</span>])).<span class="bu">sum</span>()</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(temp)</span></span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>        freq_plus.append(temp)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(num_plus[i])</span></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        temp2<span class="op">=</span>(df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&gt;=</span>num_plus[i]).<span class="bu">sum</span>()</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(temp2)</span></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>        freq_plus.append(temp2)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a><span class="co"># freq_plus</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">#  취임일 직후 대비 -50%, -40%,....,0% 미만인 영업일 수</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>freq_minus <span class="op">=</span> []</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>num_minus <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">0</span>, <span class="op">-</span><span class="dv">60</span>, <span class="op">-</span><span class="dv">10</span>))</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(num_minus)):</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> i <span class="op">&lt;</span> <span class="bu">len</span>(num_minus)<span class="op">-</span><span class="dv">1</span>:</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(num_minus[i], num_minus[i+1])</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>        temp1 <span class="op">=</span> ((df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&lt;=</span>num_minus[i])<span class="op">&amp;</span>(df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&gt;</span>num_minus[i<span class="op">+</span><span class="dv">1</span>])).<span class="bu">sum</span>()</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(temp1)</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        freq_minus.append(temp1)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co">#         print('dd',num_minus[i])</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>        temp2<span class="op">=</span>(df_all_rate.iloc[:,[<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">11</span>,<span class="dv">13</span>,<span class="dv">15</span>]]<span class="op">&lt;=</span>num_minus[i]).<span class="bu">sum</span>()</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co">#         print(temp2)</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>        freq_minus.append(temp2)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="co"># freq_minus</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># -10% ~ 10% 수익률</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># freq_zero = ((df_all_rate.iloc[:,[1,3,5,7,9,11,13,15]]&gt; -10) &amp; (df_all_rate.iloc[:,[1,3,5,7,9,11,13,15]]&lt; 10)).sum()</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="co"># freq_zero.name='-10%~10%'</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># freq_zero</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 플러스 수익률 영업일수</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>df_freq_plus <span class="op">=</span> pd.concat(freq_plus, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>df_freq_plus.columns<span class="op">=</span>[<span class="st">'0~10%'</span>,<span class="st">'10%'</span>,<span class="st">'20%'</span>,<span class="st">'30%'</span>,<span class="st">'40%'</span>,<span class="st">'50%'</span>,<span class="st">'100%'</span>,<span class="st">'150%'</span>,<span class="st">'200%&lt;'</span>]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>df_freq_plus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>노태우</th>
+      <td>422</td>
+      <td>188</td>
+      <td>71</td>
+      <td>123</td>
+      <td>217</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>김영삼</th>
+      <td>221</td>
+      <td>245</td>
+      <td>120</td>
+      <td>304</td>
+      <td>285</td>
+      <td>140</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>김대중</th>
+      <td>174</td>
+      <td>169</td>
+      <td>90</td>
+      <td>109</td>
+      <td>110</td>
+      <td>349</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>노무현</th>
+      <td>37</td>
+      <td>37</td>
+      <td>98</td>
+      <td>101</td>
+      <td>135</td>
+      <td>202</td>
+      <td>373</td>
+      <td>90</td>
+      <td>127</td>
+    </tr>
+    <tr>
+      <th>이명박</th>
+      <td>299</td>
+      <td>341</td>
+      <td>108</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>박근혜</th>
+      <td>375</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>문재인</th>
+      <td>357</td>
+      <td>107</td>
+      <td>62</td>
+      <td>168</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>윤석열</th>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 마이너스 수익률 영업일수</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>df_freq_minus <span class="op">=</span> pd.concat(freq_minus, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>df_freq_minus.columns<span class="op">=</span>[<span class="st">'-10%~0'</span>,<span class="st">'-10%'</span>,<span class="st">'-20%'</span>,<span class="st">'-30%'</span>,<span class="st">'-40%'</span>,<span class="st">'&lt;-50%'</span>]</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>df_freq_minus<span class="op">=</span>df_freq_minus[[<span class="st">'&lt;-50%'</span>,<span class="st">'-40%'</span>,<span class="st">'-30%'</span>,<span class="st">'-20%'</span>,<span class="st">'-10%'</span>,<span class="st">'-10%~0'</span>]]</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>df_freq_minus</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>노태우</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23</td>
+      <td>97</td>
+      <td>271</td>
+    </tr>
+    <tr>
+      <th>김영삼</th>
+      <td>0</td>
+      <td>13</td>
+      <td>23</td>
+      <td>38</td>
+      <td>27</td>
+      <td>54</td>
+    </tr>
+    <tr>
+      <th>김대중</th>
+      <td>0</td>
+      <td>41</td>
+      <td>80</td>
+      <td>37</td>
+      <td>38</td>
+      <td>71</td>
+    </tr>
+    <tr>
+      <th>노무현</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <th>이명박</th>
+      <td>0</td>
+      <td>13</td>
+      <td>87</td>
+      <td>44</td>
+      <td>102</td>
+      <td>257</td>
+    </tr>
+    <tr>
+      <th>박근혜</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>622</td>
+    </tr>
+    <tr>
+      <th>문재인</th>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>15</td>
+      <td>94</td>
+      <td>352</td>
+    </tr>
+    <tr>
+      <th>윤석열</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 수익률별 영업일수 합치기</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>df_freq <span class="op">=</span> pd.concat([df_freq_minus, df_freq_plus], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>df_freq</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="39">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>노태우</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23</td>
+      <td>97</td>
+      <td>271</td>
+      <td>422</td>
+      <td>188</td>
+      <td>71</td>
+      <td>123</td>
+      <td>217</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>김영삼</th>
+      <td>0</td>
+      <td>13</td>
+      <td>23</td>
+      <td>38</td>
+      <td>27</td>
+      <td>54</td>
+      <td>221</td>
+      <td>245</td>
+      <td>120</td>
+      <td>304</td>
+      <td>285</td>
+      <td>140</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>김대중</th>
+      <td>0</td>
+      <td>41</td>
+      <td>80</td>
+      <td>37</td>
+      <td>38</td>
+      <td>71</td>
+      <td>174</td>
+      <td>169</td>
+      <td>90</td>
+      <td>109</td>
+      <td>110</td>
+      <td>349</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>노무현</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>33</td>
+      <td>37</td>
+      <td>37</td>
+      <td>98</td>
+      <td>101</td>
+      <td>135</td>
+      <td>202</td>
+      <td>373</td>
+      <td>90</td>
+      <td>127</td>
+    </tr>
+    <tr>
+      <th>이명박</th>
+      <td>0</td>
+      <td>13</td>
+      <td>87</td>
+      <td>44</td>
+      <td>102</td>
+      <td>257</td>
+      <td>299</td>
+      <td>341</td>
+      <td>108</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>박근혜</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>622</td>
+      <td>375</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>문재인</th>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>15</td>
+      <td>94</td>
+      <td>352</td>
+      <td>357</td>
+      <td>107</td>
+      <td>62</td>
+      <td>168</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>윤석열</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>df_freq.to_csv(<span class="st">'대통령재임기간내수익률별영업일수.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 복사해서 합계</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>df_freq_sum_temp <span class="op">=</span> df_freq.copy()</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 행 합계</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>df_freq_sum_temp[<span class="st">'합계'</span>] <span class="op">=</span> df_freq_sum_temp.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 열 평균</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>df_freq_sum_temp.loc[<span class="st">'평균'</span>] <span class="op">=</span> df_freq_sum_temp.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>df_freq_sum_temp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="40">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+      <th>합계</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>(노태우,)</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>23</td>
+      <td>97</td>
+      <td>271</td>
+      <td>422</td>
+      <td>188</td>
+      <td>71</td>
+      <td>123</td>
+      <td>217</td>
+      <td>47</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1459</td>
+    </tr>
+    <tr>
+      <th>(김영삼,)</th>
+      <td>0</td>
+      <td>13</td>
+      <td>23</td>
+      <td>38</td>
+      <td>27</td>
+      <td>54</td>
+      <td>221</td>
+      <td>245</td>
+      <td>120</td>
+      <td>304</td>
+      <td>285</td>
+      <td>140</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1470</td>
+    </tr>
+    <tr>
+      <th>(김대중,)</th>
+      <td>0</td>
+      <td>41</td>
+      <td>80</td>
+      <td>37</td>
+      <td>38</td>
+      <td>71</td>
+      <td>174</td>
+      <td>169</td>
+      <td>90</td>
+      <td>109</td>
+      <td>110</td>
+      <td>349</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1269</td>
+    </tr>
+    <tr>
+      <th>(노무현,)</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>4</td>
+      <td>33</td>
+      <td>37</td>
+      <td>37</td>
+      <td>98</td>
+      <td>101</td>
+      <td>135</td>
+      <td>202</td>
+      <td>373</td>
+      <td>90</td>
+      <td>127</td>
+      <td>1237</td>
+    </tr>
+    <tr>
+      <th>(이명박,)</th>
+      <td>0</td>
+      <td>13</td>
+      <td>87</td>
+      <td>44</td>
+      <td>102</td>
+      <td>257</td>
+      <td>299</td>
+      <td>341</td>
+      <td>108</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1252</td>
+    </tr>
+    <tr>
+      <th>(박근혜,)</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>622</td>
+      <td>375</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1000</td>
+    </tr>
+    <tr>
+      <th>(문재인,)</th>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>15</td>
+      <td>94</td>
+      <td>352</td>
+      <td>357</td>
+      <td>107</td>
+      <td>62</td>
+      <td>168</td>
+      <td>74</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1232</td>
+    </tr>
+    <tr>
+      <th>(윤석열,)</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>5</td>
+      <td>10</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>15</td>
+    </tr>
+    <tr>
+      <th>평균</th>
+      <td>0</td>
+      <td>67</td>
+      <td>193</td>
+      <td>157</td>
+      <td>365</td>
+      <td>1665</td>
+      <td>1895</td>
+      <td>1087</td>
+      <td>549</td>
+      <td>806</td>
+      <td>821</td>
+      <td>738</td>
+      <td>374</td>
+      <td>90</td>
+      <td>127</td>
+      <td>8934</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 복사해서 합계</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>df_freq_sum <span class="op">=</span> df_freq.copy()</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 행 합계</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="co"># df_freq_sum['합계'] = df_freq_sum.sum(axis=1)</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 열 평균</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>df_freq_sum.loc[<span class="st">'평균'</span>] <span class="op">=</span> df_freq_sum.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>df_freq_sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="41">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>(노태우,)</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>23.000</td>
+      <td>97.000</td>
+      <td>271.000</td>
+      <td>422.000</td>
+      <td>188.000</td>
+      <td>71.000</td>
+      <td>123.00</td>
+      <td>217.000</td>
+      <td>47.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(김영삼,)</th>
+      <td>0.0</td>
+      <td>13.000</td>
+      <td>23.000</td>
+      <td>38.000</td>
+      <td>27.000</td>
+      <td>54.000</td>
+      <td>221.000</td>
+      <td>245.000</td>
+      <td>120.000</td>
+      <td>304.00</td>
+      <td>285.000</td>
+      <td>140.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(김대중,)</th>
+      <td>0.0</td>
+      <td>41.000</td>
+      <td>80.000</td>
+      <td>37.000</td>
+      <td>38.000</td>
+      <td>71.000</td>
+      <td>174.000</td>
+      <td>169.000</td>
+      <td>90.000</td>
+      <td>109.00</td>
+      <td>110.000</td>
+      <td>349.00</td>
+      <td>1.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(노무현,)</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>4.000</td>
+      <td>33.000</td>
+      <td>37.000</td>
+      <td>37.000</td>
+      <td>98.000</td>
+      <td>101.00</td>
+      <td>135.000</td>
+      <td>202.00</td>
+      <td>373.00</td>
+      <td>90.00</td>
+      <td>127.000</td>
+    </tr>
+    <tr>
+      <th>(이명박,)</th>
+      <td>0.0</td>
+      <td>13.000</td>
+      <td>87.000</td>
+      <td>44.000</td>
+      <td>102.000</td>
+      <td>257.000</td>
+      <td>299.000</td>
+      <td>341.000</td>
+      <td>108.000</td>
+      <td>1.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(박근혜,)</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>3.000</td>
+      <td>622.000</td>
+      <td>375.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(문재인,)</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>3.000</td>
+      <td>15.000</td>
+      <td>94.000</td>
+      <td>352.000</td>
+      <td>357.000</td>
+      <td>107.000</td>
+      <td>62.000</td>
+      <td>168.00</td>
+      <td>74.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>(윤석열,)</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>5.000</td>
+      <td>10.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>평균</th>
+      <td>0.0</td>
+      <td>8.375</td>
+      <td>24.125</td>
+      <td>19.625</td>
+      <td>45.625</td>
+      <td>208.125</td>
+      <td>236.875</td>
+      <td>135.875</td>
+      <td>68.625</td>
+      <td>100.75</td>
+      <td>102.625</td>
+      <td>92.25</td>
+      <td>46.75</td>
+      <td>11.25</td>
+      <td>15.875</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 멀티인덱스 해제</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> [name <span class="cf">for</span> name,s,e <span class="kw">in</span> presidents]<span class="op">+</span>[<span class="st">'평균'</span>]</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>df_freq_sum.index <span class="op">=</span> idx</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>df_freq_sum</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="48">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>노태우</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>23.000</td>
+      <td>97.000</td>
+      <td>271.000</td>
+      <td>422.000</td>
+      <td>188.000</td>
+      <td>71.000</td>
+      <td>123.00</td>
+      <td>217.000</td>
+      <td>47.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>김영삼</th>
+      <td>0.0</td>
+      <td>13.000</td>
+      <td>23.000</td>
+      <td>38.000</td>
+      <td>27.000</td>
+      <td>54.000</td>
+      <td>221.000</td>
+      <td>245.000</td>
+      <td>120.000</td>
+      <td>304.00</td>
+      <td>285.000</td>
+      <td>140.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>김대중</th>
+      <td>0.0</td>
+      <td>41.000</td>
+      <td>80.000</td>
+      <td>37.000</td>
+      <td>38.000</td>
+      <td>71.000</td>
+      <td>174.000</td>
+      <td>169.000</td>
+      <td>90.000</td>
+      <td>109.00</td>
+      <td>110.000</td>
+      <td>349.00</td>
+      <td>1.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>노무현</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>4.000</td>
+      <td>33.000</td>
+      <td>37.000</td>
+      <td>37.000</td>
+      <td>98.000</td>
+      <td>101.00</td>
+      <td>135.000</td>
+      <td>202.00</td>
+      <td>373.00</td>
+      <td>90.00</td>
+      <td>127.000</td>
+    </tr>
+    <tr>
+      <th>이명박</th>
+      <td>0.0</td>
+      <td>13.000</td>
+      <td>87.000</td>
+      <td>44.000</td>
+      <td>102.000</td>
+      <td>257.000</td>
+      <td>299.000</td>
+      <td>341.000</td>
+      <td>108.000</td>
+      <td>1.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>박근혜</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>3.000</td>
+      <td>622.000</td>
+      <td>375.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>문재인</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>3.000</td>
+      <td>15.000</td>
+      <td>94.000</td>
+      <td>352.000</td>
+      <td>357.000</td>
+      <td>107.000</td>
+      <td>62.000</td>
+      <td>168.00</td>
+      <td>74.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>윤석열</th>
+      <td>0.0</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>5.000</td>
+      <td>10.000</td>
+      <td>0.000</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.000</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.000</td>
+    </tr>
+    <tr>
+      <th>평균</th>
+      <td>0.0</td>
+      <td>8.375</td>
+      <td>24.125</td>
+      <td>19.625</td>
+      <td>45.625</td>
+      <td>208.125</td>
+      <td>236.875</td>
+      <td>135.875</td>
+      <td>68.625</td>
+      <td>100.75</td>
+      <td>102.625</td>
+      <td>92.25</td>
+      <td>46.75</td>
+      <td>11.25</td>
+      <td>15.875</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 위 값을 백분률로 표시하기 위해 데이터프레임 복사</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>df_rate <span class="op">=</span> df_freq_sum.copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-scrolled="true" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 위 값을 백분률로 표시: 행 합계로 나누기</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>df_rate <span class="op">=</span> <span class="bu">round</span>(df_rate.div(df_rate.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>), axis<span class="op">=</span><span class="dv">0</span>)<span class="op">*</span><span class="dv">100</span>,<span class="dv">2</span>)</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>df_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>&lt;-50%</th>
+      <th>-40%</th>
+      <th>-30%</th>
+      <th>-20%</th>
+      <th>-10%</th>
+      <th>-10%~0</th>
+      <th>0~10%</th>
+      <th>10%</th>
+      <th>20%</th>
+      <th>30%</th>
+      <th>40%</th>
+      <th>50%</th>
+      <th>100%</th>
+      <th>150%</th>
+      <th>200%&lt;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>노태우</th>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>1.58</td>
+      <td>6.65</td>
+      <td>18.57</td>
+      <td>28.92</td>
+      <td>12.89</td>
+      <td>4.87</td>
+      <td>8.43</td>
+      <td>14.87</td>
+      <td>3.22</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>김영삼</th>
+      <td>0.0</td>
+      <td>0.88</td>
+      <td>1.56</td>
+      <td>2.59</td>
+      <td>1.84</td>
+      <td>3.67</td>
+      <td>15.03</td>
+      <td>16.67</td>
+      <td>8.16</td>
+      <td>20.68</td>
+      <td>19.39</td>
+      <td>9.52</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>김대중</th>
+      <td>0.0</td>
+      <td>3.23</td>
+      <td>6.30</td>
+      <td>2.92</td>
+      <td>2.99</td>
+      <td>5.59</td>
+      <td>13.71</td>
+      <td>13.32</td>
+      <td>7.09</td>
+      <td>8.59</td>
+      <td>8.67</td>
+      <td>27.50</td>
+      <td>0.08</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>노무현</th>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.32</td>
+      <td>2.67</td>
+      <td>2.99</td>
+      <td>2.99</td>
+      <td>7.92</td>
+      <td>8.16</td>
+      <td>10.91</td>
+      <td>16.33</td>
+      <td>30.15</td>
+      <td>7.28</td>
+      <td>10.27</td>
+    </tr>
+    <tr>
+      <th>이명박</th>
+      <td>0.0</td>
+      <td>1.04</td>
+      <td>6.95</td>
+      <td>3.51</td>
+      <td>8.15</td>
+      <td>20.53</td>
+      <td>23.88</td>
+      <td>27.24</td>
+      <td>8.63</td>
+      <td>0.08</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>박근혜</th>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.30</td>
+      <td>62.20</td>
+      <td>37.50</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>문재인</th>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.24</td>
+      <td>1.22</td>
+      <td>7.63</td>
+      <td>28.57</td>
+      <td>28.98</td>
+      <td>8.69</td>
+      <td>5.03</td>
+      <td>13.64</td>
+      <td>6.01</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>윤석열</th>
+      <td>0.0</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>33.33</td>
+      <td>66.67</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>평균</th>
+      <td>0.0</td>
+      <td>0.75</td>
+      <td>2.16</td>
+      <td>1.76</td>
+      <td>4.09</td>
+      <td>18.64</td>
+      <td>21.21</td>
+      <td>12.17</td>
+      <td>6.15</td>
+      <td>9.02</td>
+      <td>9.19</td>
+      <td>8.26</td>
+      <td>4.19</td>
+      <td>1.01</td>
+      <td>1.42</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># df_rate.astype(int)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(df_rate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>9</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="212">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">15</span>))</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">221</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'노태우'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">200</span>)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'노태우'</span>)</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">222</span>)</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'김영삼'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">280</span>)</span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'김영삼'</span>)</span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'노태우'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">30</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)</span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'김영삼'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">30</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-46-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">15</span>))</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">221</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'김대중'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">260</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'김대중'</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">222</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'노무현'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">330</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'노무현'</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'김대중'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">35</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'노무현'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">35</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-47-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">15</span>))</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">221</span>)</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'이명박'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">160</span>)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'이명박'</span>)</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">222</span>)</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'박근혜'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">60</span>)</span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'박근혜'</span>)</span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)</span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'이명박'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">30</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)</span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'박근혜'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">70</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.suptitle('대통령 재임기간 수익률 구간별 영업일 비율')</span></span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-48-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="75">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">15</span>))</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">221</span>)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'문재인'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">180</span>)</span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'문재인'</span>)</span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">222</span>)</span>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'평균'</span>].plot.pie(autopct<span class="op">=</span><span class="st">'</span><span class="sc">%.1f%%</span><span class="st">'</span>, explode <span class="op">=</span> (<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>), startangle<span class="op">=</span><span class="dv">180</span>)</span>
+<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'전기간 평균'</span>)</span>
+<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">223</span>)</span>
+<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'문재인'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">30</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>plt.subplot(<span class="dv">224</span>)</span>
+<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>df_rate.loc[<span class="st">'평균'</span>].plot.bar(rot<span class="op">=</span><span class="dv">90</span>, ylim<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">30</span>), color<span class="op">=</span>[<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'blue'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>,<span class="st">'red'</span>],alpha<span class="op">=</span><span class="fl">0.6</span>)</span>
+<span id="cb50-12"><a href="#cb50-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-13"><a href="#cb50-13" aria-hidden="true" tabindex="-1"></a><span class="co"># plt.suptitle('대통령 재임기간 수익률 구간별 영업일 비율')</span></span>
+<span id="cb50-14"><a href="#cb50-14" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-49-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="대통령-펀드-가입-후-주가-방향은" class="level3">
+<h3 class="anchored" data-anchor-id="대통령-펀드-가입-후-주가-방향은">대통령 펀드 가입 후 주가 방향은?</h3>
+<ol type="1">
+<li>대통령이 매수하면 주가가 오르는가?</li>
+<li>언제 고점을 찍는가? (언제 팔아야 하는가?)</li>
+</ol>
+<p>이명박은 2008-11-25 주식 투자 권유<br>
+문재인은 2019년 8월 26일에’필승코리아펀드’에 5000만 원 투자. 2021년 1월 15일에도 투자</p>
+<div class="cell" data-execution_count="189">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>fund <span class="op">=</span> [ [<span class="st">'김대중'</span>,<span class="st">'1998-02-23'</span>],[<span class="st">'노무현'</span>,<span class="st">'2005-07-22'</span>], [<span class="st">'이명박'</span>,<span class="st">'2008-12-01'</span>],[<span class="st">'문재인'</span>,<span class="st">'2019-08-26'</span>] ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="190">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> fund:</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    temp <span class="op">=</span> df_kospi.loc[i[<span class="dv">1</span>]][<span class="st">'Close'</span>]</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    i.append(temp)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="190">
+<pre><code>[['김대중', '1998-02-23', 543.06],
+ ['노무현', '2005-07-22', 1074.22],
+ ['이명박', '2008-12-01', 1058.62],
+ ['문재인', '2019-08-26', 1916.31]]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="191">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 임기 내 고점, 저점 출력</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># df_all.loc[df_all.loc[:,'김대중'].idxmax()][['김대중date','김대중']]</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>fund_date <span class="op">=</span> []</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>fund_max <span class="op">=</span> []</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> [<span class="dv">5</span>,<span class="dv">7</span>,<span class="dv">9</span>,<span class="dv">13</span>]:</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>    a <span class="op">=</span> df_all.loc[df_all.iloc[:,i].idxmax()][[i<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    b <span class="op">=</span> df_all.loc[df_all.iloc[:,i].idxmax()][[i]]</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    fund_date.append(a[<span class="dv">0</span>])</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>    fund_max.append(b[<span class="dv">0</span>])</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>president_max <span class="op">=</span> <span class="bu">list</span>(<span class="bu">zip</span>(fund_date, fund_max))</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>president_max</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="191">
+<pre><code>[(Timestamp('2000-01-04 00:00:00'), 1059.04),
+ (Timestamp('2007-10-31 00:00:00'), 2064.85),
+ (Timestamp('2011-05-02 00:00:00'), 2228.96),
+ (Timestamp('2021-07-06 00:00:00'), 3305.21)]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="192">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>df_tmp1 <span class="op">=</span> pd.DataFrame(fund)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>df_tmp2 <span class="op">=</span> pd.DataFrame(president_max)</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>df_fund <span class="op">=</span> pd.concat([df_tmp1, df_tmp2], axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>df_fund.columns<span class="op">=</span>[<span class="st">'대통령'</span>,<span class="st">'구입일'</span>,<span class="st">'구입일종가'</span>,<span class="st">'고점일'</span>,<span class="st">'고점일종가'</span>]</span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="192">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="193">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 구입일을 날짜형식으로 변환 </span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'구입일'</span>] <span class="op">=</span> pd.to_datetime(df_fund[<span class="st">'구입일'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="194">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'고점도달기간'</span>] <span class="op">=</span> df_fund[<span class="st">'고점일'</span>] <span class="op">-</span> df_fund[<span class="st">'구입일'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="195">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'수익률(%)'</span>] <span class="op">=</span> <span class="bu">round</span>( (df_fund[<span class="st">'고점일종가'</span>]<span class="op">-</span> df_fund[<span class="st">'구입일종가'</span>]) <span class="op">/</span> df_fund[<span class="st">'구입일종가'</span>] <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="196">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="196">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="198">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 구입일과 고점일 사이 최저가 날짜와 주가</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>    df_fund.loc[i, <span class="st">'저점일'</span>] <span class="op">=</span> df_kospi[df_fund.loc[i, <span class="st">'구입일'</span>]:df_fund.loc[i, <span class="st">'고점일'</span>]][<span class="st">'Close'</span>].idxmin()</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>    df_fund.loc[i, <span class="st">'저점일종가'</span>] <span class="op">=</span> df_kospi[df_fund.loc[i, <span class="st">'구입일'</span>]:df_fund.loc[i, <span class="st">'고점일'</span>]][<span class="st">'Close'</span>].<span class="bu">min</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="199">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="199">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="200">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'저점일수익률(%)'</span>] <span class="op">=</span> <span class="bu">round</span>( (df_fund[<span class="st">'저점일종가'</span>]<span class="op">-</span>df_fund[<span class="st">'구입일종가'</span>])<span class="op">/</span>df_fund[<span class="st">'구입일종가'</span>] <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>)</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="200">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+      <th>저점일수익률(%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+      <td>-48.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+      <td>-1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+      <td>-5.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+      <td>-24.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="201">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 최고점 1년 후 수익률</span></span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1년을 더한 날짜가 영업일이 아닐 수 있음</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'고점1년후'</span>] <span class="op">=</span> df_fund[<span class="st">'고점일'</span>]<span class="op">+</span>timedelta(days<span class="op">=</span><span class="dv">365</span>)</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="201">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+      <th>저점일수익률(%)</th>
+      <th>고점1년후</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+      <td>-48.0</td>
+      <td>2001-01-03</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+      <td>-1.0</td>
+      <td>2008-10-30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+      <td>-5.0</td>
+      <td>2012-05-01</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+      <td>-24.0</td>
+      <td>2022-07-06</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="202">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 영업일로 수정(문재인은 고점 후 1년 안 됨)</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>df_fund.loc[<span class="dv">2</span>,<span class="st">'고점1년후'</span>] <span class="op">=</span> datetime.strptime(<span class="st">'2012-05-02'</span>,<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>df_fund.loc[<span class="dv">3</span>,<span class="st">'고점1년후'</span>] <span class="op">=</span> datetime.strptime(<span class="st">'2022-05-26'</span>,<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="202">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+      <th>저점일수익률(%)</th>
+      <th>고점1년후</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+      <td>-48.0</td>
+      <td>2001-01-03</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+      <td>-1.0</td>
+      <td>2008-10-30</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+      <td>-5.0</td>
+      <td>2012-05-02</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+      <td>-24.0</td>
+      <td>2022-05-26</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="203">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 고점 1년 후 종가</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 인덱스가 달라 붙지 않으니 인덱스 초기화 후 컬럼으로 붙임</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>temp <span class="op">=</span> df_kospi.loc[ df_fund.loc[:,<span class="st">'고점1년후'</span>]][<span class="st">'Close'</span>]</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>temp.index <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">4</span>))</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'고점1년후종가'</span>] <span class="op">=</span> temp</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="203">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+      <th>저점일수익률(%)</th>
+      <th>고점1년후</th>
+      <th>고점1년후종가</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+      <td>-48.0</td>
+      <td>2001-01-03</td>
+      <td>521.43</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+      <td>-1.0</td>
+      <td>2008-10-30</td>
+      <td>1084.72</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+      <td>-5.0</td>
+      <td>2012-05-02</td>
+      <td>1999.07</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+      <td>-24.0</td>
+      <td>2022-05-26</td>
+      <td>2612.45</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="204">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 고점1년 후 수익률</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>df_fund[<span class="st">'고점1년후수익률(%)'</span>] <span class="op">=</span> <span class="bu">round</span>( (df_fund[<span class="st">'고점1년후종가'</span>]<span class="op">-</span>df_fund[<span class="st">'구입일종가'</span>])<span class="op">/</span>df_fund[<span class="st">'구입일종가'</span>] <span class="op">*</span> <span class="dv">100</span>, <span class="dv">0</span>)</span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>df_fund</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="204">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>대통령</th>
+      <th>구입일</th>
+      <th>구입일종가</th>
+      <th>고점일</th>
+      <th>고점일종가</th>
+      <th>고점도달기간</th>
+      <th>수익률(%)</th>
+      <th>저점일</th>
+      <th>저점일종가</th>
+      <th>저점일수익률(%)</th>
+      <th>고점1년후</th>
+      <th>고점1년후종가</th>
+      <th>고점1년후수익률(%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>김대중</td>
+      <td>1998-02-23</td>
+      <td>543.06</td>
+      <td>2000-01-04</td>
+      <td>1059.04</td>
+      <td>680 days</td>
+      <td>95.0</td>
+      <td>1998-06-16</td>
+      <td>280.00</td>
+      <td>-48.0</td>
+      <td>2001-01-03</td>
+      <td>521.43</td>
+      <td>-4.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>노무현</td>
+      <td>2005-07-22</td>
+      <td>1074.22</td>
+      <td>2007-10-31</td>
+      <td>2064.85</td>
+      <td>831 days</td>
+      <td>92.0</td>
+      <td>2005-08-29</td>
+      <td>1063.16</td>
+      <td>-1.0</td>
+      <td>2008-10-30</td>
+      <td>1084.72</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>이명박</td>
+      <td>2008-12-01</td>
+      <td>1058.62</td>
+      <td>2011-05-02</td>
+      <td>2228.96</td>
+      <td>882 days</td>
+      <td>111.0</td>
+      <td>2008-12-04</td>
+      <td>1006.54</td>
+      <td>-5.0</td>
+      <td>2012-05-02</td>
+      <td>1999.07</td>
+      <td>89.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>문재인</td>
+      <td>2019-08-26</td>
+      <td>1916.31</td>
+      <td>2021-07-06</td>
+      <td>3305.21</td>
+      <td>680 days</td>
+      <td>72.0</td>
+      <td>2020-03-19</td>
+      <td>1457.64</td>
+      <td>-24.0</td>
+      <td>2022-05-26</td>
+      <td>2612.45</td>
+      <td>36.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="210">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>df_fund.to_csv(<span class="st">'대통령펀드투자.csv'</span>, encoding<span class="op">=</span><span class="st">'cp949'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="208">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 구입일과 고점1년후 사이 주가 그래프 </span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 간격 조정 subplots_adjust(left, bottom, right, top, wspace, hspace)</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>,<span class="dv">10</span>))</span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(hspace<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">4</span>):</span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a>    plt.subplot(<span class="dv">221</span><span class="op">+</span>i)</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a>    df_kospi_fund <span class="op">=</span> df_kospi[df_fund.loc[i, <span class="st">'구입일'</span>]:df_fund.loc[i, <span class="st">'고점1년후'</span>]][<span class="st">'Close'</span>]</span>
+<span id="cb69-10"><a href="#cb69-10" aria-hidden="true" tabindex="-1"></a>    df_kospi_fund.plot(xlabel<span class="op">=</span><span class="st">''</span>)</span>
+<span id="cb69-11"><a href="#cb69-11" aria-hidden="true" tabindex="-1"></a>    plt.title(df_fund.loc[i, <span class="st">'대통령'</span>])</span>
+<span id="cb69-12"><a href="#cb69-12" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_president_stock_files/figure-html/cell-67-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 주가 그래프 그리고, 최저점과 최고점을 마커로 찍기</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="214">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fl">6.15</span><span class="op">+</span><span class="fl">9.02</span><span class="op">+</span><span class="fl">9.19</span><span class="op">+</span><span class="fl">8.26</span><span class="op">+</span><span class="fl">4.19</span><span class="op">+</span><span class="fl">1.01</span><span class="op">+</span><span class="fl">1.42</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="214">
+<pre><code>39.239999999999995</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="153">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 문자열을 날짜형식으로 변환</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>datetime.datetime.strptime(fund[<span class="dv">0</span>][<span class="dv">1</span>],<span class="st">'%Y-%m-</span><span class="sc">%d</span><span class="st">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="153">
+<pre><code>datetime.datetime(1998, 2, 23, 0, 0)</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

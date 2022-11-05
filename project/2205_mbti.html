@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-05-13">
+
+<title>👀 - 첫 미니 프로젝트 - MBTI 유형별 인터넷 카페 게시글 제목 비교</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">Home</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books.html">읽은 책</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html">오답노트</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html">프로젝트</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/blog.html">블로그</a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">Contact</a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#분석-과정" id="toc-분석-과정" class="nav-link active" data-scroll-target="#분석-과정">분석 과정</a></li>
+  <li><a href="#분석" id="toc-분석" class="nav-link" data-scroll-target="#분석">분석</a></li>
+  <li><a href="#후기" id="toc-후기" class="nav-link" data-scroll-target="#후기">후기</a></li>
+  <li><a href="#코드" id="toc-코드" class="nav-link" data-scroll-target="#코드">코드</a></li>
+  <li><a href="#유형별-글-개수" id="toc-유형별-글-개수" class="nav-link" data-scroll-target="#유형별-글-개수">유형별 글 개수</a></li>
+  <li><a href="#워드-클라우드" id="toc-워드-클라우드" class="nav-link" data-scroll-target="#워드-클라우드">워드 클라우드</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">첫 미니 프로젝트 - MBTI 유형별 인터넷 카페 게시글 제목 비교</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">May 13, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
+
+
+<table>
+<tbody><tr>
+<td>
+<img src="images/mbtiproject.png">
+</td>
+<td>
+<img src="images/mbtiwordcloud.png">
+</td>
+</tr>
+
+</tbody></table>
+<p>파이썬과 크롤링, MySQL을 배우고 첫 번째 프로젝트 과제가 주어졌다. 주제는 정해줄 줄 알았는데 자유 주제였고 시간도 주말을 제외하면 하루밖에 주어지지 않아 품질보다는 속도에 촛점을 맞추기로 했다. 크롤링과 데이터 전처리에 예상보다 시간이 오래 걸려 정작 중요한 분석에 힘을 쏟지 못했다. 또한 텍스트 분석 방법을 몰라 워드클라우드를 만드는 데 만족해야 했다. 처음으로 배운 걸 실제에 써보며 에러 메시지에 지속적으로 노출되고 대응 방법을 찾는 경험을 했다. 혼자 할 때보다 팀으로 할 때 더 신속하게 해낼 수 있음을 체험했다.</p>
+<section id="분석-과정" class="level2">
+<h2 class="anchored" data-anchor-id="분석-과정">분석 과정</h2>
+<ol type="1">
+<li>프로젝트 제목: MBTI로 보는 나의 분석 ⇒ ’MBTI 유형별 인터넷 카페 게시글 특징 분석’으로 바꾸는 게 좋을 듯하다.</li>
+<li>팀원: 4명</li>
+<li>주제 선정: 모두들 한 시간 가량 이것저것 생각나는 소재를 말했지만 전체의 흥미를 끌지 못했다. 막판에 한 팀원이 제안한 MBTI가 재미있을 것 같다고 동의해 주제로 정했다. 구체적으로 무엇을 어떻게 분석할 것인지는 각자 구할 수 있는 데이터를 찾으며 다음 날까지 생각해보자고 했다.</li>
+<li>기간: 2022년 5월 12일 목요일 오후 4시 - 5월 13일 오후 8시 경.</li>
+<li>진행 기준: 시간이 그다지 많지 않고 배운 것을 연습하는 계기로 삼아 품질보다는 속도에 촛점을 맞추었다. 카톡방을 만들어 아이디어가 떠오르면 바로 공유하고 부딪힌 문제를 해결하면 팀원에게 전달해 빠르게 진행되도록 했다.</li>
+<li>데이터 선정</li>
+<li><strong>네이버 MBTI &amp;HEALTH 심리 카페</strong>를 찾았다. 이곳은 회원들이 아이디에 자신의 유형을 포함하도록 권장하고 있다.</li>
+<li>게시된 글 작성자에 MBTI유형이 포함되어 있어 유형 별 특성을 분석할 수 있을 것 같았다.</li>
+<li>더구나 유형별 게시판이 있어 게시글을 크롤링해 분석하면 유형별로 차이가 나는지 여부를 알 수 있을 것 같다고 팀원에게 제안했고 모두들 좋다고 했다.</li>
+<li>데이터 크롤링</li>
+<li>유형별 게시판에서 2022년 이후 쓴 게시글의 제목을 크롤링했다. 본문까지 크롤링해 분석하기에는 시간과 역량이 부족했다.</li>
+<li>8개 게시판에서 올해 글만 가져오기 위해 게시판마다 120페이지 정도를 크롤링했다. [제목, 글쓴이, 날짜]를 리스트에 담은 뒤 판다스 데이터프레임으로 변환하고 판다스 함수를 이용해 csv 파일로 저장했다.</li>
+<li>부딪힌 문제와 대응 1. 한 게시판에서 잘 작동한 코드가 다른 게시판에서 작동하지 않았다. ⇒ 선생님이 오타를 찾아 주셔서 해결했다. 1. 8개 게시판 주소를 보니 숫자가 +1씩 증가했다. for문을 활용해 한 번에 끝내고 싶었으나 방법을 몰라 코드를 복사해 일일히 숫자를 고쳐 크롤링했다. 지금 생각해 보니 3차원 리스트를 만들면 될 것 같다.</li>
+<li>데이터 전처리</li>
+<li>게시판 별로 크롤링한 데이터를 하나로 합치기</li>
+<li>글쓴이 컬럼에서 MBTI 유형만 뽑아 게시글 제목을 유형별로 분류</li>
+<li>프로젝트 공지사항에 MySQL로 저장하라는 조건이 있어 데이터베이스에 저장</li>
+<li>워드 클라우드를 만들기 위해 MBTI 유형별로 게시글 제목을 데이터베이스에서 불러와 유형별로 게시글 제목을 하나의 문자열로 합침</li>
+</ol>
+</section>
+<section id="분석" class="level2">
+<h2 class="anchored" data-anchor-id="분석">분석</h2>
+<ol type="1">
+<li>SQL 명령어를 사용해 2022년 이후 MBTI 유형별 게시글 개수를 확인했다.</li>
+</ol>
+<ul>
+<li>유형별로 게시글 개수가 꽤 차이가 났다. 통계검정으로 유의미한 차이가 있는지 확인하고 특성과 어떤 관련이 있는지 분석해 보면 재미있을 것 같다.</li>
+</ul>
+<ol type="1">
+<li>유형별로 자주 나오는 단어를 활용해 워드클라우드를 만들었다.</li>
+<li>공통적으로 등장하는 단어가 ’남자’인 걸 보니 게시판 이용자 상당수가 여성인 것 같다.</li>
+<li>게시글 제목만 크롤링한 데서 오는 한계가 뚜렷했다. 유형별 차이가 잘 보이지 않고 단어가 한정적이다. 글 본문을 가져오면 차이가 나지 않을까?</li>
+<li>워드클라우드 만들 때 제외할 단어를 잘 선정해야 의미 없는 단어가 표시되는 걸 막을 수 있다. 빈도 분석을 할 줄 알아야 가능할 것 같다.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/mbtiword.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption">유형별 단어</figcaption><p></p>
+</figure>
+</div>
+</section>
+<section id="후기" class="level2">
+<h2 class="anchored" data-anchor-id="후기">후기</h2>
+<ol start="10" type="1">
+<li>팀 프로젝트에 내가 기여한 점</li>
+</ol>
+<p>팀원이 제안한 주제를 구현할 방법을 제안했고, 칠판에 전체 과정을 정리해 시간 낭비 없이 체계적으로 진행되도록 이끌었다. 데이터 구할 곳을 찾아 크롤링 한 뒤 전처리해서 팀원에게 주었고, 시각화를 맡은 팀원이 워드크라우드를 만들 때 부딪힌 문제를 함께 해결했다. 발표자료를 만들 때 적절한 문구 선택을 도왔다.</p>
+<ol start="11" type="1">
+<li>팀원들이 기여한 점</li>
+</ol>
+<p>각자 자신이 해야 할 일을 찾아 했다. 부지런히 데이터 처리 방법을 찾고, 발표자료를 만드는 등 무임승차하지 않으려고 애쓰는 모습이 역력했다. 특히 주제를 제안한 팀원은 해야 할 일이 구체화되자 빠른 속도로 결과를 만들어냈고 다른 팀원이 못한 부분도 가져다 처리했다.</p>
+<ol start="12" type="1">
+<li>개선할 점 및 차후 과제</li>
+</ol>
+<p>데이터 전처리를 할 때 두 개 유형을 아이디에 모두 사용한 경우는 처리 시간이 모자라 먼저 검색된 유형에 포함시켰다. 이런 경우가 얼마나 되는지 계산한 뒤 삭제할지 여부를 결정해야 했었다. 필요한 데이터를 찾아와서 원하는 형태로 가공하는 게 쉽지 않다는 걸 절감했다. 어떤 데이터가 어디에 있는지 자료를 모으고, 이를 원하는 형태로 가공할 수 있는 코딩 실력을 키워야 한다. 특정 주제에 관한 게시글을 크롤링 한 뒤 MBTI 유형별로 특징이 나타나는지 검증해보면 MBTI가 쓸모 있는 도구인지 그저 심심풀이 오락용인지 확인할 수 있을 것 같다.</p>
+</section>
+<section id="코드" class="level2">
+<h2 class="anchored" data-anchor-id="코드">코드</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>mbti_nfp <span class="op">=</span> []</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=18&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        mbti_nfp.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_nfp:</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>mbti_ntp <span class="op">=</span> []</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=17&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>        mbti_ntp.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_ntp:</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_ntp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntp.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>mbti_sfp <span class="op">=</span> []</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=16&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        mbti_sfp.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_sfp:</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>df_sfp <span class="op">=</span> pd.DataFrame(mbti_sfp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>df_sfp</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>df_sfp.to_csv(<span class="st">'sfp.csv'</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>₩</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mbti_stp <span class="op">=</span> []</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=15&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        mbti_stp.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_stp:</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_stp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'_stp.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mbti_nfj <span class="op">=</span> []</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=14&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        mbti_nfj.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_nfj:</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_nfj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'nfj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mbti_sfj <span class="op">=</span> []</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=13&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        mbti_sfj.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_sfj:</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_sfj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'sfj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mbti_ntj <span class="op">=</span> []</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=12&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        mbti_ntj.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_ntj:</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_ntj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mbti_stj <span class="op">=</span> []</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,<span class="dv">120</span>):</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="ss">f'https://cafe.naver.com/ArticleList.nhn?search.clubid=11856775&amp;search.menuid=11&amp;search.boardtype=L&amp;search.totalCount=151&amp;search.cafeId=11856775&amp;search.page=</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">'</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    res <span class="op">=</span> requests.get(url)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    soup <span class="op">=</span> BeautifulSoup(res.text, <span class="st">'html.parser'</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#     list_table = soup.select('#upperArticleList+.article-board.m-tcol-c .inner_list &gt; .article')</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    l_table <span class="op">=</span> soup.select(<span class="st">'#upperArticleList+.article-board.m-tcol-c'</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    l_title <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.inner_list &gt; .article'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    l_writer <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_name .m-tcol-c'</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    l_date <span class="op">=</span> l_table[<span class="dv">0</span>].select(<span class="st">'.td_date'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(l_title)):</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        mbti_stj.append([l_title[j].text.strip(), l_writer[j].text.strip(), l_date[j].text.strip()])</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_stj:</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_stj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'stj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_a <span class="op">=</span> df[df[<span class="st">'글쓴이'</span>].<span class="bu">str</span>.contains(<span class="st">'ESTJ'</span>)]</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="42">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>제목</th>
+      <th>글쓴이</th>
+      <th>날짜</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>14</th>
+      <td>제발!!!!!아프면!!!!!!!!병원을!!!!!가라고!!!!!</td>
+      <td>과몰입충ESTJ</td>
+      <td>2022.05.12.</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>감정쓰레기통</td>
+      <td>요하 ESTJ</td>
+      <td>2022.05.11.</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>ESTJ 에게 헌신이란...</td>
+      <td>멍게 ESTJ A 3w2</td>
+      <td>2022.05.11.</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>ESTJ와 연락하시는 분들 계신가요?</td>
+      <td>ESTJ12</td>
+      <td>2022.05.11.</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>Istj 요새 힘든가봐요</td>
+      <td>멍게 ESTJ A 3w2</td>
+      <td>2022.05.10.</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1666</th>
+      <td>ESTJ 엣티제 여자 질문 받을게요~</td>
+      <td>늘빛 ESTJ 1w9</td>
+      <td>2021.07.07.</td>
+    </tr>
+    <tr>
+      <th>1682</th>
+      <td>ESTJ 업무</td>
+      <td>진쓰진쓰 ESTJ</td>
+      <td>2021.07.01.</td>
+    </tr>
+    <tr>
+      <th>1683</th>
+      <td>한달여만에 접속, 새로운 짝이 생겨서 잘 안 들어왔네요.</td>
+      <td>ESTJ A 3w2 3w4 팀장</td>
+      <td>2021.07.01.</td>
+    </tr>
+    <tr>
+      <th>1685</th>
+      <td>심심해서 받는 엣티제 질문</td>
+      <td>냥냥 ESTJ</td>
+      <td>2021.07.01.</td>
+    </tr>
+    <tr>
+      <th>1767</th>
+      <td>estj 여자입니다! 질문 받아요 ~</td>
+      <td>yebin ESTJ</td>
+      <td>2021.06.02.</td>
+    </tr>
+  </tbody>
+</table>
+<p>250 rows × 3 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df_file1 <span class="op">=</span> pd.read_csv(<span class="st">'nfj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df_file2 <span class="op">=</span> pd.read_csv(<span class="st">'nfp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>df_file3 <span class="op">=</span> pd.read_csv(<span class="st">'ntj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>df_file4 <span class="op">=</span> pd.read_csv(<span class="st">'ntp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df_file5 <span class="op">=</span> pd.read_csv(<span class="st">'sfj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>df_file6 <span class="op">=</span> pd.read_csv(<span class="st">'sfp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df_file7 <span class="op">=</span> pd.read_csv(<span class="st">'stj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>df_file8 <span class="op">=</span> pd.read_csv(<span class="st">'stp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([df_file1,df_file2,df_file3,df_file4,df_file5,df_file6,df_file7,df_file8])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'mbti.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'writer'</span>] <span class="op">=</span> df[<span class="st">'글쓴이'</span>].<span class="bu">str</span>.upper()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="55">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Unnamed: 0</th>
+      <th>제목</th>
+      <th>글쓴이</th>
+      <th>날짜</th>
+      <th>writer</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>엔프제분들 스스로 댕댕이과? or 고양이과?</td>
+      <td>로스코 ENFJ</td>
+      <td>10:16</td>
+      <td>로스코 ENFJ</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>인프제 여자친구 남자친구 특징</td>
+      <td>카블 3w2</td>
+      <td>08:19</td>
+      <td>카블 3W2</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>💜엔프제 T분💜을 관찰.</td>
+      <td>istp 혜성</td>
+      <td>08:16</td>
+      <td>ISTP 혜성</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>인싸 인프제분들</td>
+      <td>궁금이xxxp</td>
+      <td>01:23</td>
+      <td>궁금이XXXP</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>인프제 남과 썸</td>
+      <td>esfp여자</td>
+      <td>00:37</td>
+      <td>ESFP여자</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>1780</th>
+      <td>1780</td>
+      <td>잇팁 분들 결혼생각</td>
+      <td>ESFJ 댕이</td>
+      <td>2021.08.29.</td>
+      <td>ESFJ 댕이</td>
+    </tr>
+    <tr>
+      <th>1781</th>
+      <td>1781</td>
+      <td>엣팁 친동생과 약속잡기</td>
+      <td>entj구야 3w4</td>
+      <td>2021.08.29.</td>
+      <td>ENTJ구야 3W4</td>
+    </tr>
+    <tr>
+      <th>1782</th>
+      <td>1782</td>
+      <td>남친생기면 투덜대는 이해안가는 친구들</td>
+      <td>ISTP 솔직</td>
+      <td>2021.08.29.</td>
+      <td>ISTP 솔직</td>
+    </tr>
+    <tr>
+      <th>1783</th>
+      <td>1783</td>
+      <td>역시 체질입니다</td>
+      <td>라비 istp</td>
+      <td>2021.08.29.</td>
+      <td>라비 ISTP</td>
+    </tr>
+    <tr>
+      <th>1784</th>
+      <td>1784</td>
+      <td>잘 맞는/안맞는 편인 mbti</td>
+      <td>ESTPJ xx염색체</td>
+      <td>2021.08.29.</td>
+      <td>ESTPJ XX염색체</td>
+    </tr>
+  </tbody>
+</table>
+<p>14280 rows × 5 columns</p>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mbti_list <span class="op">=</span> [<span class="st">'ENFJ'</span>,<span class="st">'INFJ'</span>,<span class="st">'ENFP'</span>,<span class="st">'INFP'</span>,<span class="st">'ENTJ'</span>,<span class="st">'INTJ'</span>,<span class="st">'ENTP'</span>,<span class="st">'INTP'</span>,</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>             <span class="st">'ESFJ'</span>,<span class="st">'ISFJ'</span>,<span class="st">'ESFP'</span>,<span class="st">'ISFP'</span>,<span class="st">'ESTJ'</span>,<span class="st">'ISTJ'</span>,<span class="st">'ESTP'</span>,<span class="st">'ISTP'</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>ENFJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ENFJ'</span>)]</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>ENFJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ENFJ'</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>ENFJ <span class="op">=</span> ENFJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>INFJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'INFJ'</span>)]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>INFJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'INFJ'</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>INFJ <span class="op">=</span> INFJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>ENFP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ENFP'</span>)]</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>ENFP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ENFP'</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>ENFP <span class="op">=</span> ENFP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>INFP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'INFP'</span>)]</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>INFP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'INFP'</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>INFP <span class="op">=</span> INFP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>ENTJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ENTJ'</span>)]</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>ENTJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ENTJ'</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>ENTJ <span class="op">=</span> ENTJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>INTJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'INTJ'</span>)]</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>INTJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'INTJ'</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>INTJ <span class="op">=</span> INTJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>ENTP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ENTP'</span>)]</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>ENTP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ENTP'</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>ENTP <span class="op">=</span> ENTP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>INTP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'INTP'</span>)]</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>INTP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'INTP'</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>INTP <span class="op">=</span> INTP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>ESFJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ESFJ'</span>)]</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>ESFJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ESFJ'</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>ESFJ <span class="op">=</span> ESFJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>ISFJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ISFJ'</span>)]</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>ISFJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ISFJ'</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>ISFJ <span class="op">=</span> ISFJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>ESFP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ESFP'</span>)]</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>ESFP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ESFP'</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>ESFP <span class="op">=</span> ESFP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>ISFP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ISFP'</span>)]</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>ISFP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ISFP'</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>ISFP <span class="op">=</span> ISFP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>ESTJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ESTJ'</span>)]</span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>ESTJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ESTJ'</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>ESTJ <span class="op">=</span> ESTJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>ISTJ<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ISTJ'</span>)]</span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>ISTJ[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ISTJ'</span></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>ISTJ <span class="op">=</span> ISTJ[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>ESTP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ESTP'</span>)]</span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>ESTP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ESTP'</span></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>ESTP <span class="op">=</span> ESTP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>ISTP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ISTP'</span>)]</span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>ISTP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ISTP'</span></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>ISTP <span class="op">=</span> ISTP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="133">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.concat([ENFJ,INFJ,ENFP,INFP,ENTJ,INTJ,ENTP,INTP,ESFJ,ISFJ,ESFP,ISFP,ESTJ,ISTJ,ESTP,ISTP])</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df2.to_csv(<span class="st">'mbti_fianl.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="74">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="80">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> pd.read_csv(<span class="st">'mbti_fianl.csv'</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df3.head(<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="80">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>mtype</th>
+      <th>mtitle</th>
+      <th>mdate</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>ENFJ</td>
+      <td>엔프제분들 스스로 댕댕이과? or 고양이과?</td>
+      <td>2022.05.13.</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>ENFJ</td>
+      <td>ENFJ 여자예용!! 질문 받아요:)</td>
+      <td>2022.05.12.</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ENFJ</td>
+      <td>최근 7년 친구와 손절한 enfj 엔프제입니다</td>
+      <td>2022.05.12.</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>ENFJ</td>
+      <td>20대 초중반 엔프제분들 또는 인생 선배 엔프제 분들</td>
+      <td>2022.05.12.</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>ENFJ</td>
+      <td>오늘의 나는 시끄럽다</td>
+      <td>2022.05.12.</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>ENFJ</td>
+      <td>엔프제에게 밀당을 하면 안 되는 이유.</td>
+      <td>2022.05.11.</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>ENFJ</td>
+      <td>언어를 잃을 때</td>
+      <td>2022.05.11.</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>ENFJ</td>
+      <td>주변사람이 없는 곳으로 이사 온 엔프제</td>
+      <td>2022.05.09.</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>ENFJ</td>
+      <td>호감일까요??!!</td>
+      <td>2022.05.09.</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>ENFJ</td>
+      <td>우호성 높은 딸램 키우기 힘들었을 엄마…</td>
+      <td>2022.05.09.</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>ENFJ</td>
+      <td>연애 장벽 꽤 있는 듯</td>
+      <td>2022.05.09.</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>ENFJ</td>
+      <td>오랜만에 한 mbti 검사 결과 듣고 왔어요!</td>
+      <td>2022.05.06.</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>ENFJ</td>
+      <td>뼛속 ENFJ 질문 전부 다 받아여</td>
+      <td>2022.05.06.</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>ENFJ</td>
+      <td>애스크 펑!</td>
+      <td>2022.05.05.</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>ENFJ</td>
+      <td>다들 오늘의 tmi 적고 가기!</td>
+      <td>2022.05.04.</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>ENFJ</td>
+      <td>바라라니🥹 바라된 기념으로 무물해요 💜</td>
+      <td>2022.05.03.</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>ENFJ</td>
+      <td>ENFJ의 SNS에 대한 생각</td>
+      <td>2022.05.03.</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>ENFJ</td>
+      <td>엔프제 여행 계획 갈등</td>
+      <td>2022.05.02.</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>ENFJ</td>
+      <td>신경쓰이는 상대가 나타났을때</td>
+      <td>2022.05.02.</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>ENFJ</td>
+      <td>외향적이지만 낯가림</td>
+      <td>2022.05.02.</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>ENFJ</td>
+      <td>짝남이 INFJ인데 어떻게 꼬실까요..?</td>
+      <td>2022.05.01.</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>ENFJ</td>
+      <td>Enfj 이별 극복 방법이 있으신가요?</td>
+      <td>2022.04.30.</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>ENFJ</td>
+      <td>Istp 잇팁과 연애후 이별, 아프고 힘든 enfj 엔프제입니다</td>
+      <td>2022.04.29.</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>ENFJ</td>
+      <td>무료 검사 정확하지 않아요</td>
+      <td>2022.04.28.</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>ENFJ</td>
+      <td>주변에 enfj 가 별로 없나요??</td>
+      <td>2022.04.28.</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>ENFJ</td>
+      <td>걱정쟁이 인프제</td>
+      <td>2022.04.27.</td>
+    </tr>
+    <tr>
+      <th>26</th>
+      <td>ENFJ</td>
+      <td>카페 탈퇴 예정!</td>
+      <td>2022.04.27.</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>ENFJ</td>
+      <td>엔프제의 배려심에 대한 이면</td>
+      <td>2022.04.27.</td>
+    </tr>
+    <tr>
+      <th>28</th>
+      <td>ENFJ</td>
+      <td>생각보다 눈치 안 봄</td>
+      <td>2022.04.26.</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>ENFJ</td>
+      <td>Nfj 희귀함</td>
+      <td>2022.04.26.</td>
+    </tr>
+    <tr>
+      <th>30</th>
+      <td>ENFJ</td>
+      <td>인프제 연락그만하자고할까요?ㅠ</td>
+      <td>2022.04.25.</td>
+    </tr>
+    <tr>
+      <th>31</th>
+      <td>ENFJ</td>
+      <td>판단하고 싶지 않지만 판단하고 있다</td>
+      <td>2022.04.25.</td>
+    </tr>
+    <tr>
+      <th>32</th>
+      <td>ENFJ</td>
+      <td>엔프제분들 설렘 vs 안정</td>
+      <td>2022.04.25.</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>ENFJ</td>
+      <td>남자엔프제 잔소리 많나요?</td>
+      <td>2022.04.25.</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>ENFJ</td>
+      <td>enfj 엔프제 희귀유형 아닌가여....?</td>
+      <td>2022.04.24.</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>ENFJ</td>
+      <td>ENFJ의 싫은 사람(긴글주의-펑예정)</td>
+      <td>2022.04.24.</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>ENFJ</td>
+      <td>ENFJ에게 잘 보이는 법! 질문하는 글이 많이 보이던데, 가장 중요한 부분.</td>
+      <td>2022.04.24.</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>ENFJ</td>
+      <td>INFJ 생존법</td>
+      <td>2022.04.23.</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>ENFJ</td>
+      <td>INFJ 공략법 ,,</td>
+      <td>2022.04.23.</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>ENFJ</td>
+      <td>infj 인프제 고백 거절? 마음접을려고 합니다</td>
+      <td>2022.04.18.</td>
+    </tr>
+    <tr>
+      <th>40</th>
+      <td>ENFJ</td>
+      <td>사람을 좋아하는 엔프제지만</td>
+      <td>2022.04.17.</td>
+    </tr>
+    <tr>
+      <th>41</th>
+      <td>ENFJ</td>
+      <td>전용공간</td>
+      <td>2022.04.17.</td>
+    </tr>
+    <tr>
+      <th>42</th>
+      <td>ENFJ</td>
+      <td>엔프제 여러분, 혹은 워커홀릭 여러분, 혹은 남한테 싫은소리 못하고 꾹꾹 참으시는 ...</td>
+      <td>2022.04.17.</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>ENFJ</td>
+      <td>요즘은 그사람이 아침에 보고싶네요</td>
+      <td>2022.04.17.</td>
+    </tr>
+    <tr>
+      <th>44</th>
+      <td>ENFJ</td>
+      <td>코로나 걸려서 할 것도 없어서 심심해서 쓰는 ENFJ 엔프제 남친 장점</td>
+      <td>2022.04.15.</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>ENFJ</td>
+      <td>마음이 쓰리지만 접어야겠어여..</td>
+      <td>2022.04.14.</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>ENFJ</td>
+      <td>ENFJ ❤ ENFJ 커플 질문 받습니다</td>
+      <td>2022.04.14.</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>ENFJ</td>
+      <td>인프제 infj가 나를 이성적으로 보는지 알수 있는 방법 있을까요?</td>
+      <td>2022.04.14.</td>
+    </tr>
+    <tr>
+      <th>48</th>
+      <td>ENFJ</td>
+      <td>바라등급이 되었어요.....!!</td>
+      <td>2022.04.14.</td>
+    </tr>
+    <tr>
+      <th>49</th>
+      <td>ENFJ</td>
+      <td>인프제님들 엔프제 어케생각하세여..</td>
+      <td>2022.04.14.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="139">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sqlalchemy <span class="im">import</span> create_engine</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'mysql+pymysql://root:12345678@localhost:3306/mbti'</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> create_engine(url)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df3.to_sql(name<span class="op">=</span><span class="st">'mbtiTbl'</span>, con<span class="op">=</span>engine, if_exists<span class="op">=</span><span class="st">'append'</span>, index<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="72">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>NameError: name 'df3' is not defined</code></pre>
+</div>
+</div>
+</section>
+<section id="유형별-글-개수" class="level2">
+<h2 class="anchored" data-anchor-id="유형별-글-개수">유형별 글 개수</h2>
+<div class="cell" data-scrolled="true" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pymysql</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>conn <span class="op">=</span> pymysql.<span class="ex">connect</span>( host<span class="op">=</span><span class="st">'localhost'</span>,</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                        port<span class="op">=</span><span class="dv">3306</span>,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                        user<span class="op">=</span><span class="st">'root'</span>,</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                        password<span class="op">=</span><span class="st">'12345678'</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                        db<span class="op">=</span><span class="st">'mbti'</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>                        charset<span class="op">=</span><span class="st">'utf8'</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>cursor <span class="op">=</span> conn.cursor()</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtype, COUNT(*) FROM mbtiTbl GROUP BY mtype; '''</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> cursor.fetchall()</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> result:</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>('ENFJ', 435)
+('INFJ', 473)
+('ENFP', 672)
+('INFP', 865)
+('ENTJ', 397)
+('INTJ', 547)
+('ENTP', 578)
+('INTP', 493)
+('ESFJ', 221)
+('ISFJ', 334)
+('ESFP', 116)
+('ISFP', 399)
+('ESTJ', 175)
+('ISTJ', 175)
+('ESTP', 237)
+('ISTP', 444)</code></pre>
+</div>
+</div>
+</section>
+<section id="워드-클라우드" class="level2">
+<h2 class="anchored" data-anchor-id="워드-클라우드">워드 클라우드</h2>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> wordcloud <span class="im">import</span> WordCloud, STOPWORDS</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.font_manager <span class="im">as</span> fm</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> collections</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISTP'; '''</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>istp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>('?엔프제 T분?을 관찰.',)
+('injf전남친한테 문자..',)
+('늦게 자는 김에 올려보는 Enfj?(연애)',)
+('엔프제분의 감동포인트를 생각.(엔프제 기준)',)
+('엔프제분들이 쉽지(?)않은 이유.',)
+('엔프제 남친❤을 둔 사람들의 후기(!)',)
+('엔프제분의 의외성(잇팁이 느낀)',)
+('엔프제분 사용 설명서(주의점 위주)',)
+('엔프제T분과 폴인럽 하신 분들.',)
+('엔프제분이 무슨 생각을 하는지 모르겠다.',)
+('엔프제(T)분에 대해 알게 된 것들.(연인일 경우!)',)
+('istp이 enfj를 만족시켜줄 수 있나요??',)
+('엔프제 T분에 대한 개인적인 분석.',)
+('엔프제와 잇팁의 관계성에 대해서.',)
+('인프제 친구를 보면서 느끼는점',)
+('엔프제분을 관찰 중인 잇팁의 분석.(몇 번 째인지는 모릅니다)',)
+('엔프제 T분을 분석(최대한 객관적으로)',)
+('엔프제 T분을 사랑할 수 밖에 없는.',)
+('왜 ENFJ가 하는 칭찬은 기분이 좋은걸까..?',)
+('엔프제 T분의 매력❤❤',)
+('엔프제 T분의 매력♥',)
+('잇팁이 생각한 엔프제분의 회피.',)
+('엔프제 T분의 사랑(Feat. istp의 견해)',)
+('엔프제분을 분석(몇 번 째인지는 몰라요)',)
+('☆☆enfj-T분을 분석☆☆',)
+('잇팁이 생각하는 엔프제분 공략2',)
+('ENTJ분들 원래 친절하신가요?',)
+('enfj -T를 분석♡',)
+('엔프제분의 고마워, 사랑해♡에 대한 고찰.',)
+('의문이 들었던 엔프제의 질투(!)',)
+('엔프제분과 썸이거나.',)
+('(*세분화를 시도) 엔프제의 플러팅(!)',)
+('infj분들 본 모습이 어떠신가요???',)
+('굿모닝입니당 엔프제분들♡',)
+('엔프제를 덕질♥',)
+('enfj-A 엔프제분♥관찰.',)
+('오늘의 엔프제분 관찰기록(!)',)
+('잇팁이 생각하는 enfj-T분의 사랑.',)
+('☆enfj-T☆분을 분석.',)
+('대면 그룹 스터디',)
+('어쩌다보니 ♡엔프제분♡을 덕질중입니다.',)
+('♡오늘도 엔프제분을 관찰♡',)
+('오늘도 엔프제분을 관찰♡',)
+('오늘도 엔프제를 관찰합니당~!',)
+('오늘은 좀 늦은 엔프제 관찰기록.',)
+('오늘도 엔프제를 분석!',)
+('엔프제분 관찰기록(!)',)
+('엔프제를 사랑!하는 이유(?)',)
+('엔프제분들에 대한 이런 저런 분석.',)
+('일찍 일어난(?)김에 써 본 엔프제분들 관찰.',)
+('엔프제분들께 질문!',)
+('엔프제분의 사랑에 대한 고찰.',)
+('잇팁이 바라본 엔프제!(썸 친구 애인?)',)
+('Infj 왜 자존감이 낮을까요?',)
+('ENFJ님들..',)
+('Infj 분들 안 친한 사람의 인스타 염탐',)
+('엔프제분들에 대해 새로 알아낸 점.',)
+('ENFJ특징',)
+('INFJ특징',)
+('잇팁이 생각하는 엔프제 감동 포인트!',)
+('엔프제분들을 사로잡는법(?)',)
+('Infj 분들은 원래 사람에 관련해서 기억력이 좋으신가요?',)
+('엔프제분을 분석!!',)
+('잇팁이 생각한 엔프제분들의 의외성.',)
+('엔프제가 어렵다(?)느껴지는 이유.',)
+('엔프제분을 분석3',)
+('잇팁 입장에서 본 잇팁×엔프제 커플.',)
+('잇팁 엔프제 커플이신 분!(+분석 포함)',)
+('엔프제분을 분석2',)
+('엔프제분들에게 질문!(2)',)
+('잇팁이 생각하는 엔프제 공략(?)법.',)
+('잇팁(중 1명일 뿐)이 엔프제를 분석.',)
+('잇팁이 생각하는 엔프제(연인일 경우)',)
+('잇팁이 보는 엔프제 단점.',)
+('잇팁이 생각하는 엔프제 장점.',)
+('제가 본 엔프제(enfj)남성분 5',)
+('잇팁이 생각하는 엔프제(enfj) 남성분 그 네번째.',)
+('엔프제 인프제 차이점',)
+('인프제분들은  도어슬램하는사람한테어떻게대하나요?',)
+('인프제 친구 위로방법',)
+('인프피분들',)
+('엔프피 연락',)
+('인프피 질문이요',)
+('펑예)ㅜㅜ인프피 하...',)
+('인푸피 고백',)
+('인프피 술 먹고 전화 ?',)
+('인프피 남 플러팅 당하면 부담스럽나여..?',)
+('ISTP 인데요',)
+('INFP 남자 호감있을 때 하는 행동',)
+('엔프피를 분석~!',)
+('이상형 of ENFP',)
+('ENFP분들...',)
+('ENTP특징',)
+('ENFP특징',)
+('INFP특징',)
+('ENFP님들이 보기에는 ISTP친구는 어떨것 같아요?',)
+('엔프피 일부러 모르는척 잘해요?',)
+('인프피 남자분들',)
+('엔프피 여자친구',)
+('엔프피 여자친구 카톡 읽씹',)
+('ENFP 분들 연애할때 티내는거',)
+('Intj헤어지고 나서',)
+('Intj 연애 특징',)
+('Intj님들 ㅜㅜ',)
+('Intj 표현방법',)
+('Intj가 아픈 사람 걱정',)
+('인티제 질문 있습니다!',)
+('Intj질문',)
+('INTJ 말투',)
+('entj 랑 결혼하신 분 계신가요?',)
+('intj 랑 헤어졌어요 ㅎㅎㅎㅎ',)
+('엔티제와 소개팅',)
+('회사에 엔티제 신입이 들어왔어요!!',)
+('인티제한테 연락하기싫냐거 물어봐도 돼여?',)
+('엔티제의 거절 방법',)
+('잇팁이 보는 엔티제.',)
+('인티제랑 완전 싸웠거든요 어떻게 해야할까요',)
+('인티제가 잠수 탈 수 있나여',)
+('Intj남이 저랑 왜 연락하는지 모르겠어요',)
+('새학기 인간관계 entj질문 (총 7개)',)
+('아인슈타인(intp)의 말,',)
+('entp 분석',)
+('제가 INTP일수도 있을까요?',)
+('이 말 한마디 듣는데..',)
+('INTP분들께 갑자기 궁금한게 생겨서 질문합니다!',)
+('entp 약2달 분석',)
+('엔팁분들은 왜 감정얘기하는걸 귀여워하시나요???',)
+('Istp인데, Entp와의 관계가 어려워요.',)
+('entp 관찰',)
+('엔팁 여자분들 귀엽다는 말 들으면 어떠신가요?',)
+('(펑) 글 펑합니다!!!',)
+('entp 조사',)
+('저 인팁이에게 마구 적극성을 가지고 들이댔어요',)
+('entp 2주 조사',)
+('질문 안하는 인팁이',)
+('마음을 모르겠어요',)
+('연락을 안해요',)
+('엔팁한테 그럴수있어 그럴수있어 가 무슨뜻인가요..?ㅜㅠ',)
+('entp도 사바사 케바케인가요... (글삭 안해요)',)
+('ENTP에게 꽂힌 불쌍한 잇팁좀 도와주세요ㅠㅠ',)
+('INTP특징',)
+('인팁과 읽씹',)
+('ENTP를 조금 파보았다.',)
+('entp 무신경함',)
+('entp이 좋아할 때 하는 행동 궁금해여',)
+('간지나는 INTP',)
+('귀여운 entp!!!!',)
+('intp 방 청소상태 어때요?',)
+('엣프제들은 사귈때',)
+('엣프제분들은 싫은 것은 거절 잘하시나요?',)
+('엣프제 썸남이랑 곧..!',)
+('엣프제는 불도저 같은 직진 스타일인가요?',)
+('페북은 활동중인데 답장은 뒷전인 여친',)
+('갑자기 isfj분들께 궁금해져서 질문합니다!',)
+('일처럼 변한 카톡',)
+('ISFJ에게 정말 고마운 점.',)
+('isfj랑 esfj랑 성격이 어떻게다를까요??',)
+('isfj분들중에 공감능력 별로 없는분계세요?',)
+('잇프제 남친',)
+('isfj분을 첨 만나보는데 이분들 천사인가요??',)
+('엣프제 남자 특성이...?',)
+('엣프제는 애정표현 서툴러요?',)
+('엣프제는 호감없는 상대와 3시간 이상 영상통화 가능한가요?',)
+('엣프제 멕시코 썸녀랑 잘돼가고 있는데 이건 무슨 의미 일까요?',)
+('ISFJ',)
+('엣프제님들은 이런 경우라면 어떻게 대처하시요?',)
+('엣프제가 상대에게 이상형이 뭔지를 물어보는 건',)
+('isfj남 고민 ㅠㅠ',)
+('ESFJ 여자분들 호의 호감 구분',)
+('isfj 재회',)
+('ISFJ분들에게 질문이 있어요 (펑)',)
+('헤어진 esfj 남친의 전화..',)
+('esfp-a/ istp-a 부부의 흔한 카톡, esfp장점 !',)
+('우울증과 알코올 중독.. 대인관계가 답답하고 싫은 사람의 독서일기',)
+('ISFP가 고민을 말하는 이유?',)
+('소리내서 웃지 않는 엣프피도 있나요..?',)
+('ISFP들은 회피형을 좋아한다는 느낌을 받았어요',)
+('intp 와 isfp 성향 잘 안맞아요? ㅋㅋㅋ',)
+('ISFP &amp; ISTP 베프',)
+('ESFP.....이 (남자 사람)친구의 심리가 궁금해요..',)
+('isfp말인데요',)
+('이거 istp vs isfp 어느쪽인가요??',)
+('ESFP특징',)
+('ISFP특징',)
+('isfp 잇프피분들 아끼는 사람은 어떤 방식으로 챙겨주시나요?',)
+('부담스러운 ESFP 남사친',)
+('잇프피는 관심없으면 오히려 질문을 많이 하나요?',)
+('istp와 esfp 궁합 어떤가요?',)
+('estj는 제가 아쉽지 않은 걸까요',)
+('istj 외로움 성향',)
+('엣티제 연락',)
+('istj 연인과의 연락패턴',)
+('나를 자꾸 있는 그대로 받아들이지 못하고 바꾸려 드는 istj남친..힘들어요^^::',)
+('ISTJ남과 성사됐습니다...꺅',)
+('Istj친구',)
+('남자는 연애하기 시작하면 인생이 많이 바뀌지 않나요?',)
+('(투표)엣티제녀 분들 장난 잘 치는 남자 vs 진중한 남자',)
+('엣티제는 남자에게 호감이 있다면 욕 안 하죠?',)
+('엣티제 여자랑 카톡만 하다가 전화도 하고 싶은데',)
+('엣티제 여성들은 밀당 안 하죠?',)
+('엣티제는 왜 잇팁와 궁합이 맞는 건가요?',)
+('엣티제는 카톡보다 전화겠죠?',)
+('엣티제 여자분들은 원래 호감없었던 남성이',)
+('엣티제는 문자나 톡에서는 말이 잘 없나요?',)
+('엣티제 여자분들은 지인중 호감없는 상대가 연락해오면',)
+('엣티제녀한테 같이 밥 먹자고 했을 때',)
+('(ESTJ)톡을 보다가 갑자기 일 생겨서 답을 못 보내면',)
+('ESTJ(엣티제)녀들은 좋아하는 상대에게 톡이 와도',)
+('ISTJ 남친 스킨십',)
+('ESTJ 호감?',)
+('istp잇티분들 장난끼 심하세요??',)
+('N 같다는 말 들어보신 istp 분들 계신가요?',)
+('오늘도 글자 연습을 하고 잡니다!',)
+('연애상대로 최악이라는 잇팁 ?(본격 잇팁 쉴드?글)?',)
+('불타는 토요일 되세요!',)
+('임무 완료!',)
+('지하철에 사람이 많네요.',)
+('놀러는 가고 싶은데, 어디를 가야할지 모르겠다?',)
+('잇팁 게임 좋아하는 분들 많은가요?',)
+('바람이 시원하네요.',)
+('(요청,스압주의) 자랑 좀 해도 될까요? feat 한 번 빠지면 깊이 파고드는 ISTP',)
+('11km를 걸어서 갔는데...',)
+('사회화 된 ISTP에 대한 의견.',)
+('INTP와의 언쟁에서 느낀 S와 N의 차이',)
+('Form Q 정식검사 결과',)
+('istp여성분들많이계시나요?',)
+('잇팁 밸런스게임 해보아요.',)
+('전화 받기 싫어요',)
+('Istp연애',)
+('같은 유형 만나보신 적 있으신가요?',)
+('전 마음고생 안 시키는 남자가 최곤 것 같아요',)
+('퇴근 33분 전인 잇팁에게 질문주세요!',)
+('관계에 정성 들이기 싫은데요.',)
+('잇팁istp여자분들 신여성?이라는 말 듣는편이새요?',)
+('잇팁분들 숨쉬기 빼고 어떤 운동하시나요??',)
+('잇팁 스킨케어  순서',)
+('잇팁이 싫어하는 상황',)
+('다른 잇팁분들도 연인 사이에 서운한거 바로',)
+('잇팁분들 일하다가 이럴떄 진짜 열받지 않나요...',)
+('너무 심심한데 질문해주세요ㅠㅠㅠ 제발ㅜㅠㅠ',)
+('ISTP에 대한 흔한 편견들',)
+('잇팁에 대해 어떻게 생각하시나요',)
+('[Istp여자] 질문받아드립니다',)
+('mgram 무슨유형 같나요?? (2018, 2020, 2022 결과)',)
+('Istp estp이신 분들 혹시 정반대 성향 만나 보셨나요?',)
+('잇팁분들 도와줘요!!',)
+('p들의 약속 잡기 ㅋㅋㅌ',)
+('가장 제 취향인 유형은 isfp',)
+('잇팁분들 연애하면 t가 f로 변하나요?',)
+('잇팁 엣팁분들께 모두 궁금해요',)
+('원래 잇팁이 사람한테 정이 잘 떨어지나요??',)
+('종교도 신이 있다고 믿어야 다니는거죠?',)
+('INFP 같다는 소리를 들었어요!',)
+('Estp',)
+('잇팁님들 사진 찍히는 거 좋아하시나요?',)
+('ISTP분들 주변에 INFJ 많으신가요?',)
+('사회생활할 때만 j인 것 같은데...',)
+('다시 태어나면 뭘로 태어나고 싶으신가요?',)
+('T인 내가 너무 싫다',)
+('enfp 남성 만나게 되면 기빨릴까요',)
+('istp 이상형',)
+('잇팁님들 뭐 하는거 좋아하세요?',)
+('잇팁님들 결혼 어떻게 하셨어요?',)
+('istp분들 연애할때 제일 오래갔거나 제일 잘맞았던 mbti는?!(2개선택)',)
+('집순이 istp 여자 질문 받아요',)
+('잇팁분들 종교 궁금해요!',)
+('잇팁분들.. 잘 꾸미시나요?',)
+('삶에 대한 마음 (혼잣말. 어두움)',)
+('내유형과 비슷하다고 느낀 유형이 있으신가요??',)
+('istp의 장점.. 가스라이팅을 당하지 않음 ㅋㅋ',)
+('남사친 만나서 금욜이나 주말 저녁에 술 마실까요?',)
+('외로움 안타는줄 알았는데',)
+('ISTP-A를 분석.',)
+('혹시 양성.동성애자분들은 안 계신가요ㅎㅎ..',)
+('잇팁 직업',)
+('istp 여자',)
+('여유가 좋ㄴㅔ요',)
+('f이신분들 개그 프로그램 좋아하시나요?',)
+('잇팁 엣팁분들 서운할 때 있나요',)
+('istp는 왜케 에너지가 없을까요',)
+('잇팁인데 에니어그램 8번 나오네요!',)
+('엣팁 잇팁 대화내용 (선물사주는 법)',)
+('개심심하네요 잇팁 질문받습니다 (올나잇)',)
+('저 성향들이 좀 많이 극단적인것같아요',)
+('불금ㅎㅎ',)
+('저 높은 곳 잘 오르는 것 같아요',)
+('신조어..  많이들 아시나요?',)
+('Mbti 가면 istp isfp',)
+('istp 잇팁분들 상대방을 좋아한다는 걸 인정하고 싶지 않을때?? 어떠세요?',)
+('엣팁 잇팁 대화내용',)
+('엣픞친구한테 확실히 알게 말할려면 어떻게 해야할까요,,?(펑)',)
+('으아ㅏㅏㅏㅏㅏㅏㄱ 쪽팔려......ㅠㅠ',)
+('평범한 연인간 삶에 대한 바람',)
+('방금 음쓰 버리고 온 잇팁 질문 받아요',)
+('ESTP남자 님들',)
+('엣팁 남자가 진짜 좋아하기 전후 행동 써봄',)
+('갈매기 잘 보구 왔어요',)
+('엇.....혹쉬.....',)
+('코로나 걸렸어여',)
+('잇팁 여자분들',)
+('헬프 미!!!!!!!!!!!',)
+('인스타 잠시 중단하고 블로그 시작했는데',)
+('잇티제일까요 잇팁일까요',)
+('인생멘토, 애인, 친구로 어떤 유형이 좋으신가요?',)
+('제 친구중에서',)
+('어떻게 하면 좋을까요',)
+('긴장 상황에서 웬일로 심장이 크게 뛰어요',)
+('펑',)
+('친구랑 여행 가요',)
+('20대 ISTP여자 질문 받아볼..게요... (해주세요 심심해요ㅠㅠ)',)
+('잇팁 사회생활',)
+('잇팁 엣팁 커플 있어요?',)
+('ESTP가 사랑해라고',)
+('몇번을 해도 ISTP - T',)
+('걷는 시간...',)
+('소중한 존재가 다시 생명을 얻어',)
+('제가 너무 말을 세게 한걸까오',)
+('ENFP 자석..',)
+('전문가 상담으로 ISTP 땅땅하고 왔어요! (3시간 상담후기)',)
+('일상ㅎㅎ',)
+('새우장 만들었어요',)
+('영화 전공 Istp 인데요. 아무나 질문 받아용!',)
+('istp잇팁 분들 혼자있기 좋아하는이유?.저는 사람이 싫어서요',)
+('유형별 레고',)
+('대학교 새내기가 되었어요',)
+('이상형',)
+('저 이상형 테스트했어요',)
+('생각이 많을때 어떻게 하시나요?',)
+('전 다음생에 부잣집 애완동물로 태어나고 싶습니다',)
+('포토샵 배웠어요',)
+('이짤보고 estp 극호감 됐어욬ㅋㅋㅋ',)
+('집에..가고싶다',)
+('??(뻘글)',)
+('Estp 질문있어용',)
+('내가 진짜 ISTP인지 알아보는 법',)
+('이마트',)
+('요즘 많이 사먹네요~',)
+('ISTP분들 다들 어떤말을 많이 쓰시나요?',)
+('무료검사의 한계와 자기객관화 (장문주의)',)
+('풍선 껌 오랜만에 먹으니 맛있군요',)
+('금슬 좋은 부부가 부러워요',)
+('istp 여자분들 연인한테 방구 트는거요',)
+('istp분들 공감하시나요 어디에 푹 빠지면',)
+('언니가 ESFP인데 웃겨요ㅋㅋ',)
+('ESTP에 대해 질문드려요',)
+('잇팁ISTP 가장안어울리는 직업',)
+('ESTP특징',)
+('ISTP 친구 얼마나 있으세요?',)
+('ISTP특징',)
+('제와피',)
+('본인 ISTP였다가 30대되고 ESTP로 고정',)
+('윗니 교정기 뺐어요',)
+('ISTP인데 친구들이 갑자기 너무 싫어져요',)
+('갑자기 궁금해졌어요.',)
+('istp여+esfp남 연애중 질문받아볼래용',)
+('다들 외로움 어떻게 이겨내세요 ?',)
+('ISTP-T가 쓰는 ISTP',)
+('잇팁 A인 저를 분석해 봤습니다.',)
+('저 요즘 얘 껴안고 자요ㅎㅎ',)
+('istp여자인데 estj남자어떨까요',)
+('엔프제분이랑 연애중인 잇팁입니다~!',)
+('잇팁인 분들을 위한(?)이런 저런 분석.',)
+('잇팁 질문 받아볼께요ㅋㅋ',)
+('잇팁은 어디서 연인을 만드나요?',)
+('잇팁에 회피형 ? ?',)
+('enfj랑 istp은 진짜 다른가봐요',)
+('아빠랑 가평 아침고요수목원 다녀왔어요',)
+('Istp 성격',)
+('Istp istp 궁합 (여자)',)
+('사키노바 mbti 간만에 해봤네요',)
+('잇팁을 분석1',)
+('혼자가 너무 좋고 편해서 고민인데여',)
+('오랜만에 치킨이 왤케 맛있나요ㅠㅠ',)
+('잇팁이 생각하는 연애.',)
+('제가 좀 의도치 않은 예측을 잘하는데 저같은분있나요?',)
+('잇팁으로서 가끔 이렇더라.',)
+('ISTP랑 잘맞는 유형',)
+('잇팁하고 잘맞는 유형',)
+('요즘 분노게이지가 Max',)
+('Istp 장점은 뭐라고 생각하시나용',)
+('잇팁은 대나무 숲인가?',)
+('여자 ISTP 질문 받습니당 :)',)
+("잇팁의 '편견 없음'에 대하여",)
+('절 빡치게 했던 대화법',)
+('잇팁님들!! 그리고 다른 분들!',)
+('저는 후에 떳떳한 사랑을 할 거예요',)
+('심심한 잇팁이 질문받아봐요',)
+('잇팁이 싫어하는 대화 주제',)
+('잇팁은 무슨 생각을 할까?',)
+('잇팁여자 질문받아요?',)
+('잇팁이 생각하는 사랑.',)
+('스트레스를 어떻게 해소해야 하나요?',)
+('고백후 이성에게 천천히 알아가고싶다라는 말을 들으면',)
+('빵이 꽝이 되는 순간??',)
+('잇팁이 보는 잇팁 여성.',)
+('잇팁이 생각하는 ISTP와 INTJ의 차이점',)
+('26세 이상 ISTP 어르신 분들께 조언 구합니다',)
+('잇팁은 남성성을 이성 앞에서 어떻게 드러내죠?',)
+('코로나 확진된 남자 ISTP입니다.',)
+('istp는 부기능이 외향감각인데 왜 귀찮음이 많을까요?',)
+('오랜만에 돌아온 술 취한 잇팁이에요 ! 질문받아요',)
+('명절 음식을 제가 준비해서 가야 되는 게 맞나 싶어요',)
+('잇팁은 메타몽인가?',)
+('잇팁의 그냥, 굳이, 그래.. 뜻',)
+('잇팁은 꾸준히 대화 이어가기 힘든 듯요',)
+('같은 잇팁도 이렇게 다를 수 있구나.. (정식검사)',)
+('ISTP분들 누구 나오셨나요?',)
+('잇팁istp분들 갬성없는 본인모습이 좋으신가요??',)
+('F인척 하는 분들도 계신가요?',)
+('잇팁중 1인은 요리 연습 중??\u200d???\u200d?',)
+('잇팁 사랑꾼인데 아무도 안믿어줌',)
+('맛저하세요????',)
+('잇팁istp 결정장애 없으시나요 다들ㅋㅋ',)
+('잇팁으로 살아와서 친구가 없어요',)
+('케익을 만들라 했는데',)
+('ESTP를 조금 파보았다.',)
+('istp 에서 esfp -t 로 바꼈어요 무슨일이죠',)
+('다른 잇팁분들도 효율성 잘 따지세요?',)
+('잠 안오는 잇팁이 질문 받아봐여',)
+('잇팁 꼬시는 법좀알려주세요',)
+('제가 눈치가 없었나요?ㅋㅋㅋ',)
+('ISTP 중에 ENFP 만나시는분',)
+('잇팁 어떤가요??',)
+('이럴 때 어떨 것 같아요?',)
+('잇팁님들 외모 보시나요?',)
+('ISTP 여자분들 네일아트 즐겨 하시나요?',)
+('잇팁분들 사주 믿으시나요',)
+('남자한테 기대려고 하면 안되는 것 같아요',)
+('이 피아노 곡도 연습하려구요??',)
+('친구 혹은 연인 사이에 불리는 별명 있으신가요?',)
+('인프피 만나보신분..',)
+('잇팁 질문받습니다',)
+('잇팁님들 서운하단 말 많이 듣나요',)
+('ISTP 질문 받아요 심심하네용',)
+('여러분이 생각하는 잇팁이미지는?',)
+('잇팁 여자 질문 받아요',)
+('단 하나뿐인 돈주고 산 카톡이모티콘',)
+('잇팁끼리 사귈때 카톡',)
+('심심한 기념으로 잇팁 질문받아요',)
+('E성향 좀 부러워요',)
+('오랜만에 온 술 취한 잇팁입니다. 질문 받아요.',)
+('친한 친구들 모임에서 농담따먹기만 하는 친구들.. 과 대화되시나요?',)
+('istp?',)
+('현실에서 가까워지긴 힘든데 한번 이상 서로 인지하게 될 운명',)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>istp_list <span class="op">=</span> []</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> istp:</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    istp_list <span class="op">+=</span> i</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>istp_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> istp_list:</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    istp_s <span class="op">+=</span> i</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>istp_s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>"?엔프제 T분?을 관찰.injf전남친한테 문자..늦게 자는 김에 올려보는 Enfj?(연애)엔프제분의 감동포인트를 생각.(엔프제 기준)엔프제분들이 쉽지(?)않은 이유.엔프제 남친❤을 둔 사람들의 후기(!)엔프제분의 의외성(잇팁이 느낀)엔프제분 사용 설명서(주의점 위주)엔프제T분과 폴인럽 하신 분들.엔프제분이 무슨 생각을 하는지 모르겠다.엔프제(T)분에 대해 알게 된 것들.(연인일 경우!)istp이 enfj를 만족시켜줄 수 있나요??엔프제 T분에 대한 개인적인 분석.엔프제와 잇팁의 관계성에 대해서.인프제 친구를 보면서 느끼는점엔프제분을 관찰 중인 잇팁의 분석.(몇 번 째인지는 모릅니다)엔프제 T분을 분석(최대한 객관적으로)엔프제 T분을 사랑할 수 밖에 없는.왜 ENFJ가 하는 칭찬은 기분이 좋은걸까..?엔프제 T분의 매력❤❤엔프제 T분의 매력♥잇팁이 생각한 엔프제분의 회피.엔프제 T분의 사랑(Feat. istp의 견해)엔프제분을 분석(몇 번 째인지는 몰라요)☆☆enfj-T분을 분석☆☆잇팁이 생각하는 엔프제분 공략2ENTJ분들 원래 친절하신가요?enfj -T를 분석♡엔프제분의 고마워, 사랑해♡에 대한 고찰.의문이 들었던 엔프제의 질투(!)엔프제분과 썸이거나.(*세분화를 시도) 엔프제의 플러팅(!)infj분들 본 모습이 어떠신가요???굿모닝입니당 엔프제분들♡엔프제를 덕질♥enfj-A 엔프제분♥관찰.오늘의 엔프제분 관찰기록(!)잇팁이 생각하는 enfj-T분의 사랑.☆enfj-T☆분을 분석.대면 그룹 스터디어쩌다보니 ♡엔프제분♡을 덕질중입니다.♡오늘도 엔프제분을 관찰♡오늘도 엔프제분을 관찰♡오늘도 엔프제를 관찰합니당~!오늘은 좀 늦은 엔프제 관찰기록.오늘도 엔프제를 분석!엔프제분 관찰기록(!)엔프제를 사랑!하는 이유(?)엔프제분들에 대한 이런 저런 분석.일찍 일어난(?)김에 써 본 엔프제분들 관찰.엔프제분들께 질문!엔프제분의 사랑에 대한 고찰.잇팁이 바라본 엔프제!(썸 친구 애인?)Infj 왜 자존감이 낮을까요?ENFJ님들..Infj 분들 안 친한 사람의 인스타 염탐엔프제분들에 대해 새로 알아낸 점.ENFJ특징INFJ특징잇팁이 생각하는 엔프제 감동 포인트!엔프제분들을 사로잡는법(?)Infj 분들은 원래 사람에 관련해서 기억력이 좋으신가요?엔프제분을 분석!!잇팁이 생각한 엔프제분들의 의외성.엔프제가 어렵다(?)느껴지는 이유.엔프제분을 분석3잇팁 입장에서 본 잇팁×엔프제 커플.잇팁 엔프제 커플이신 분!(+분석 포함)엔프제분을 분석2엔프제분들에게 질문!(2)잇팁이 생각하는 엔프제 공략(?)법.잇팁(중 1명일 뿐)이 엔프제를 분석.잇팁이 생각하는 엔프제(연인일 경우)잇팁이 보는 엔프제 단점.잇팁이 생각하는 엔프제 장점.제가 본 엔프제(enfj)남성분 5잇팁이 생각하는 엔프제(enfj) 남성분 그 네번째.엔프제 인프제 차이점인프제분들은  도어슬램하는사람한테어떻게대하나요?인프제 친구 위로방법인프피분들엔프피 연락인프피 질문이요펑예)ㅜㅜ인프피 하...인푸피 고백인프피 술 먹고 전화 ?인프피 남 플러팅 당하면 부담스럽나여..?ISTP 인데요INFP 남자 호감있을 때 하는 행동엔프피를 분석~!이상형 of ENFPENFP분들...ENTP특징ENFP특징INFP특징ENFP님들이 보기에는 ISTP친구는 어떨것 같아요?엔프피 일부러 모르는척 잘해요?인프피 남자분들엔프피 여자친구엔프피 여자친구 카톡 읽씹ENFP 분들 연애할때 티내는거Intj헤어지고 나서Intj 연애 특징Intj님들 ㅜㅜIntj 표현방법Intj가 아픈 사람 걱정인티제 질문 있습니다!Intj질문INTJ 말투entj 랑 결혼하신 분 계신가요?intj 랑 헤어졌어요 ㅎㅎㅎㅎ엔티제와 소개팅회사에 엔티제 신입이 들어왔어요!!인티제한테 연락하기싫냐거 물어봐도 돼여?엔티제의 거절 방법잇팁이 보는 엔티제.인티제랑 완전 싸웠거든요 어떻게 해야할까요인티제가 잠수 탈 수 있나여Intj남이 저랑 왜 연락하는지 모르겠어요새학기 인간관계 entj질문 (총 7개)아인슈타인(intp)의 말,entp 분석제가 INTP일수도 있을까요?이 말 한마디 듣는데..INTP분들께 갑자기 궁금한게 생겨서 질문합니다!entp 약2달 분석엔팁분들은 왜 감정얘기하는걸 귀여워하시나요???Istp인데, Entp와의 관계가 어려워요.entp 관찰엔팁 여자분들 귀엽다는 말 들으면 어떠신가요?(펑) 글 펑합니다!!!entp 조사저 인팁이에게 마구 적극성을 가지고 들이댔어요entp 2주 조사질문 안하는 인팁이마음을 모르겠어요연락을 안해요엔팁한테 그럴수있어 그럴수있어 가 무슨뜻인가요..?ㅜㅠentp도 사바사 케바케인가요... (글삭 안해요)ENTP에게 꽂힌 불쌍한 잇팁좀 도와주세요ㅠㅠINTP특징인팁과 읽씹ENTP를 조금 파보았다.entp 무신경함entp이 좋아할 때 하는 행동 궁금해여간지나는 INTP귀여운 entp!!!!intp 방 청소상태 어때요?엣프제들은 사귈때엣프제분들은 싫은 것은 거절 잘하시나요?엣프제 썸남이랑 곧..!엣프제는 불도저 같은 직진 스타일인가요?페북은 활동중인데 답장은 뒷전인 여친갑자기 isfj분들께 궁금해져서 질문합니다!일처럼 변한 카톡ISFJ에게 정말 고마운 점.isfj랑 esfj랑 성격이 어떻게다를까요??isfj분들중에 공감능력 별로 없는분계세요?잇프제 남친isfj분을 첨 만나보는데 이분들 천사인가요??엣프제 남자 특성이...?엣프제는 애정표현 서툴러요?엣프제는 호감없는 상대와 3시간 이상 영상통화 가능한가요?엣프제 멕시코 썸녀랑 잘돼가고 있는데 이건 무슨 의미 일까요?ISFJ엣프제님들은 이런 경우라면 어떻게 대처하시요?엣프제가 상대에게 이상형이 뭔지를 물어보는 건isfj남 고민 ㅠㅠESFJ 여자분들 호의 호감 구분isfj 재회ISFJ분들에게 질문이 있어요 (펑)헤어진 esfj 남친의 전화..esfp-a/ istp-a 부부의 흔한 카톡, esfp장점 !우울증과 알코올 중독.. 대인관계가 답답하고 싫은 사람의 독서일기ISFP가 고민을 말하는 이유?소리내서 웃지 않는 엣프피도 있나요..?ISFP들은 회피형을 좋아한다는 느낌을 받았어요intp 와 isfp 성향 잘 안맞아요? ㅋㅋㅋISFP &amp; ISTP 베프ESFP.....이 (남자 사람)친구의 심리가 궁금해요..isfp말인데요이거 istp vs isfp 어느쪽인가요??ESFP특징ISFP특징isfp 잇프피분들 아끼는 사람은 어떤 방식으로 챙겨주시나요?부담스러운 ESFP 남사친잇프피는 관심없으면 오히려 질문을 많이 하나요?istp와 esfp 궁합 어떤가요?estj는 제가 아쉽지 않은 걸까요istj 외로움 성향엣티제 연락istj 연인과의 연락패턴나를 자꾸 있는 그대로 받아들이지 못하고 바꾸려 드는 istj남친..힘들어요^^::ISTJ남과 성사됐습니다...꺅Istj친구남자는 연애하기 시작하면 인생이 많이 바뀌지 않나요?(투표)엣티제녀 분들 장난 잘 치는 남자 vs 진중한 남자엣티제는 남자에게 호감이 있다면 욕 안 하죠?엣티제 여자랑 카톡만 하다가 전화도 하고 싶은데엣티제 여성들은 밀당 안 하죠?엣티제는 왜 잇팁와 궁합이 맞는 건가요?엣티제는 카톡보다 전화겠죠?엣티제 여자분들은 원래 호감없었던 남성이엣티제는 문자나 톡에서는 말이 잘 없나요?엣티제 여자분들은 지인중 호감없는 상대가 연락해오면엣티제녀한테 같이 밥 먹자고 했을 때(ESTJ)톡을 보다가 갑자기 일 생겨서 답을 못 보내면ESTJ(엣티제)녀들은 좋아하는 상대에게 톡이 와도ISTJ 남친 스킨십ESTJ 호감?istp잇티분들 장난끼 심하세요??N 같다는 말 들어보신 istp 분들 계신가요?오늘도 글자 연습을 하고 잡니다!연애상대로 최악이라는 잇팁 ?(본격 잇팁 쉴드?글)?불타는 토요일 되세요!임무 완료!지하철에 사람이 많네요.놀러는 가고 싶은데, 어디를 가야할지 모르겠다?잇팁 게임 좋아하는 분들 많은가요?바람이 시원하네요.(요청,스압주의) 자랑 좀 해도 될까요? feat 한 번 빠지면 깊이 파고드는 ISTP11km를 걸어서 갔는데...사회화 된 ISTP에 대한 의견.INTP와의 언쟁에서 느낀 S와 N의 차이Form Q 정식검사 결과istp여성분들많이계시나요?잇팁 밸런스게임 해보아요.전화 받기 싫어요Istp연애같은 유형 만나보신 적 있으신가요?전 마음고생 안 시키는 남자가 최곤 것 같아요퇴근 33분 전인 잇팁에게 질문주세요!관계에 정성 들이기 싫은데요.잇팁istp여자분들 신여성?이라는 말 듣는편이새요?잇팁분들 숨쉬기 빼고 어떤 운동하시나요??잇팁 스킨케어  순서잇팁이 싫어하는 상황다른 잇팁분들도 연인 사이에 서운한거 바로잇팁분들 일하다가 이럴떄 진짜 열받지 않나요...너무 심심한데 질문해주세요ㅠㅠㅠ 제발ㅜㅠㅠISTP에 대한 흔한 편견들잇팁에 대해 어떻게 생각하시나요[Istp여자] 질문받아드립니다mgram 무슨유형 같나요?? (2018, 2020, 2022 결과)Istp estp이신 분들 혹시 정반대 성향 만나 보셨나요?잇팁분들 도와줘요!!p들의 약속 잡기 ㅋㅋㅌ가장 제 취향인 유형은 isfp잇팁분들 연애하면 t가 f로 변하나요?잇팁 엣팁분들께 모두 궁금해요원래 잇팁이 사람한테 정이 잘 떨어지나요??종교도 신이 있다고 믿어야 다니는거죠?INFP 같다는 소리를 들었어요!Estp잇팁님들 사진 찍히는 거 좋아하시나요?ISTP분들 주변에 INFJ 많으신가요?사회생활할 때만 j인 것 같은데...다시 태어나면 뭘로 태어나고 싶으신가요?T인 내가 너무 싫다enfp 남성 만나게 되면 기빨릴까요istp 이상형잇팁님들 뭐 하는거 좋아하세요?잇팁님들 결혼 어떻게 하셨어요?istp분들 연애할때 제일 오래갔거나 제일 잘맞았던 mbti는?!(2개선택)집순이 istp 여자 질문 받아요잇팁분들 종교 궁금해요!잇팁분들.. 잘 꾸미시나요?삶에 대한 마음 (혼잣말. 어두움)내유형과 비슷하다고 느낀 유형이 있으신가요??istp의 장점.. 가스라이팅을 당하지 않음 ㅋㅋ남사친 만나서 금욜이나 주말 저녁에 술 마실까요?외로움 안타는줄 알았는데ISTP-A를 분석.혹시 양성.동성애자분들은 안 계신가요ㅎㅎ..잇팁 직업istp 여자여유가 좋ㄴㅔ요f이신분들 개그 프로그램 좋아하시나요?잇팁 엣팁분들 서운할 때 있나요istp는 왜케 에너지가 없을까요잇팁인데 에니어그램 8번 나오네요!엣팁 잇팁 대화내용 (선물사주는 법)개심심하네요 잇팁 질문받습니다 (올나잇)저 성향들이 좀 많이 극단적인것같아요불금ㅎㅎ저 높은 곳 잘 오르는 것 같아요신조어..  많이들 아시나요?Mbti 가면 istp isfpistp 잇팁분들 상대방을 좋아한다는 걸 인정하고 싶지 않을때?? 어떠세요?엣팁 잇팁 대화내용엣픞친구한테 확실히 알게 말할려면 어떻게 해야할까요,,?(펑)으아ㅏㅏㅏㅏㅏㅏㄱ 쪽팔려......ㅠㅠ평범한 연인간 삶에 대한 바람방금 음쓰 버리고 온 잇팁 질문 받아요ESTP남자 님들엣팁 남자가 진짜 좋아하기 전후 행동 써봄갈매기 잘 보구 왔어요엇.....혹쉬.....코로나 걸렸어여잇팁 여자분들헬프 미!!!!!!!!!!!인스타 잠시 중단하고 블로그 시작했는데잇티제일까요 잇팁일까요인생멘토, 애인, 친구로 어떤 유형이 좋으신가요?제 친구중에서어떻게 하면 좋을까요긴장 상황에서 웬일로 심장이 크게 뛰어요펑친구랑 여행 가요20대 ISTP여자 질문 받아볼..게요... (해주세요 심심해요ㅠㅠ)잇팁 사회생활잇팁 엣팁 커플 있어요?ESTP가 사랑해라고몇번을 해도 ISTP - T걷는 시간...소중한 존재가 다시 생명을 얻어제가 너무 말을 세게 한걸까오ENFP 자석..전문가 상담으로 ISTP 땅땅하고 왔어요! (3시간 상담후기)일상ㅎㅎ새우장 만들었어요영화 전공 Istp 인데요. 아무나 질문 받아용!istp잇팁 분들 혼자있기 좋아하는이유?.저는 사람이 싫어서요유형별 레고대학교 새내기가 되었어요이상형저 이상형 테스트했어요생각이 많을때 어떻게 하시나요?전 다음생에 부잣집 애완동물로 태어나고 싶습니다포토샵 배웠어요이짤보고 estp 극호감 됐어욬ㅋㅋㅋ집에..가고싶다??(뻘글)Estp 질문있어용내가 진짜 ISTP인지 알아보는 법이마트요즘 많이 사먹네요~ISTP분들 다들 어떤말을 많이 쓰시나요?무료검사의 한계와 자기객관화 (장문주의)풍선 껌 오랜만에 먹으니 맛있군요금슬 좋은 부부가 부러워요istp 여자분들 연인한테 방구 트는거요istp분들 공감하시나요 어디에 푹 빠지면언니가 ESFP인데 웃겨요ㅋㅋESTP에 대해 질문드려요잇팁ISTP 가장안어울리는 직업ESTP특징ISTP 친구 얼마나 있으세요?ISTP특징제와피본인 ISTP였다가 30대되고 ESTP로 고정윗니 교정기 뺐어요ISTP인데 친구들이 갑자기 너무 싫어져요갑자기 궁금해졌어요.istp여+esfp남 연애중 질문받아볼래용다들 외로움 어떻게 이겨내세요 ?ISTP-T가 쓰는 ISTP잇팁 A인 저를 분석해 봤습니다.저 요즘 얘 껴안고 자요ㅎㅎistp여자인데 estj남자어떨까요엔프제분이랑 연애중인 잇팁입니다~!잇팁인 분들을 위한(?)이런 저런 분석.잇팁 질문 받아볼께요ㅋㅋ잇팁은 어디서 연인을 만드나요?잇팁에 회피형 ? ?enfj랑 istp은 진짜 다른가봐요아빠랑 가평 아침고요수목원 다녀왔어요Istp 성격Istp istp 궁합 (여자)사키노바 mbti 간만에 해봤네요잇팁을 분석1혼자가 너무 좋고 편해서 고민인데여오랜만에 치킨이 왤케 맛있나요ㅠㅠ잇팁이 생각하는 연애.제가 좀 의도치 않은 예측을 잘하는데 저같은분있나요?잇팁으로서 가끔 이렇더라.ISTP랑 잘맞는 유형잇팁하고 잘맞는 유형요즘 분노게이지가 MaxIstp 장점은 뭐라고 생각하시나용잇팁은 대나무 숲인가?여자 ISTP 질문 받습니당 :)잇팁의 '편견 없음'에 대하여절 빡치게 했던 대화법잇팁님들!! 그리고 다른 분들!저는 후에 떳떳한 사랑을 할 거예요심심한 잇팁이 질문받아봐요잇팁이 싫어하는 대화 주제잇팁은 무슨 생각을 할까?잇팁여자 질문받아요?잇팁이 생각하는 사랑.스트레스를 어떻게 해소해야 하나요?고백후 이성에게 천천히 알아가고싶다라는 말을 들으면빵이 꽝이 되는 순간??잇팁이 보는 잇팁 여성.잇팁이 생각하는 ISTP와 INTJ의 차이점26세 이상 ISTP 어르신 분들께 조언 구합니다잇팁은 남성성을 이성 앞에서 어떻게 드러내죠?코로나 확진된 남자 ISTP입니다.istp는 부기능이 외향감각인데 왜 귀찮음이 많을까요?오랜만에 돌아온 술 취한 잇팁이에요 ! 질문받아요명절 음식을 제가 준비해서 가야 되는 게 맞나 싶어요잇팁은 메타몽인가?잇팁의 그냥, 굳이, 그래.. 뜻잇팁은 꾸준히 대화 이어가기 힘든 듯요같은 잇팁도 이렇게 다를 수 있구나.. (정식검사)ISTP분들 누구 나오셨나요?잇팁istp분들 갬성없는 본인모습이 좋으신가요??F인척 하는 분들도 계신가요?잇팁중 1인은 요리 연습 중??\u200d???\u200d?잇팁 사랑꾼인데 아무도 안믿어줌맛저하세요????잇팁istp 결정장애 없으시나요 다들ㅋㅋ잇팁으로 살아와서 친구가 없어요케익을 만들라 했는데ESTP를 조금 파보았다.istp 에서 esfp -t 로 바꼈어요 무슨일이죠다른 잇팁분들도 효율성 잘 따지세요?잠 안오는 잇팁이 질문 받아봐여잇팁 꼬시는 법좀알려주세요제가 눈치가 없었나요?ㅋㅋㅋISTP 중에 ENFP 만나시는분잇팁 어떤가요??이럴 때 어떨 것 같아요?잇팁님들 외모 보시나요?ISTP 여자분들 네일아트 즐겨 하시나요?잇팁분들 사주 믿으시나요남자한테 기대려고 하면 안되는 것 같아요이 피아노 곡도 연습하려구요??친구 혹은 연인 사이에 불리는 별명 있으신가요?인프피 만나보신분..잇팁 질문받습니다잇팁님들 서운하단 말 많이 듣나요ISTP 질문 받아요 심심하네용여러분이 생각하는 잇팁이미지는?잇팁 여자 질문 받아요단 하나뿐인 돈주고 산 카톡이모티콘잇팁끼리 사귈때 카톡심심한 기념으로 잇팁 질문받아요E성향 좀 부러워요오랜만에 온 술 취한 잇팁입니다. 질문 받아요.친한 친구들 모임에서 농담따먹기만 하는 친구들.. 과 대화되시나요?istp?현실에서 가까워지긴 힘든데 한번 이상 서로 인지하게 될 운명"</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'ISTP'</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'istp'</span>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇팁'</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇팁이'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>wc1.generate(istp_s)</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ESTP'; '''</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>estp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>estp_list <span class="op">=</span> []</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> estp:</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    estp_list <span class="op">+=</span> i</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>estp_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> estp_list:</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    estp_s <span class="op">+=</span> i</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'ESTP'</span>)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'estp'</span>)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'엣팁'</span>)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>wc1.generate(estp_s)</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISFP'; '''</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>isfp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>isfp_list <span class="op">=</span> []</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> isfp:</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    isfp_list <span class="op">+=</span> i</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>isfp_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> isfp_list:</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    isfp_s <span class="op">+=</span> i</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'ISFP'</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'isfp'</span>)</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇프피'</span>)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a>wc1.generate(isfp_s)</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISTJ'; '''</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>istj <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>istj_list <span class="op">=</span> []</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> istj:</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    istj_list <span class="op">+=</span> i</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>istj_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> istj_list:</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    istj_s <span class="op">+=</span> i</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'ISTJ'</span>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'ISTJ의'</span>)</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'istj'</span>)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>wc1.generate(istj_s)</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'INTP'; '''</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>intp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>intp_list <span class="op">=</span> []</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> intp:</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    intp_list <span class="op">+=</span> i</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>intp_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> intp_list:</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    intp_s <span class="op">+=</span> i</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'intp'</span>)</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'INTP'</span>)</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>wc1.generate(intp_s)</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-36-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'INFP'; '''</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>infp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="70">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>infp_list <span class="op">=</span> []</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> infp:</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    infp_list <span class="op">+=</span> i</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>infp_s <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> infp_list:</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    infp_s <span class="op">+=</span> i</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>spwords <span class="op">=</span> <span class="bu">set</span>(STOPWORDS)</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'infp'</span>)</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'INFP'</span>)</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'인프피'</span>)</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>wc1.generate(infp_s)</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">8</span>))</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="2205_mbti_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conn.close() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

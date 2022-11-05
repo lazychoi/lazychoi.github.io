@@ -2,7 +2,9 @@
   {
     "listing": "/project.html",
     "items": [
-      "/project/2210_pet_choropleth.html"
+      "/project/2210_pet_choropleth.html",
+      "/project/2205_president_stock.html",
+      "/project/2205_mbti.html"
     ]
   },
   {
@@ -59,8 +61,11 @@
     ]
   },
   {
-    "listing": "/blog/index.html",
+    "listing": "/blog/blog.html",
     "items": [
+      "/blog/posts/22-11-05.html",
+      "/blog/posts/22-11-04.html",
+      "/blog/posts/22-11-03.html",
       "/blog/posts/22-11-02.html",
       "/blog/posts/22-11-01.html",
       "/blog/posts/22-10-31.html",
@@ -116,7 +121,8 @@
     "listing": "/review/de.html",
     "items": [
       "/review/de/shell_prompt.html",
-      "/review/de/wsl2.html"
+      "/review/de/wsl2.html",
+      "/review/de/set_jupyter_notebook.html"
     ]
   },
   {
@@ -139,21 +145,26 @@
   {
     "listing": "/review/algorithm.html",
     "items": [
-      "/review/algorithm/basic_30/20_lv2.html",
-      "/review/algorithm/basic_30/22_lv2.html",
-      "/review/algorithm/basic_30/doksan_algorithm.html",
+      "/review/algorithm/basic_30/29_lv2.html",
+      "/review/algorithm/basic_30/28_lv3.html",
+      "/review/algorithm/basic_30/27_lv2.html",
+      "/review/algorithm/basic_30/25_lv2.html",
+      "/review/algorithm/basic_30/24_lv2.html",
+      "/review/algorithm/basic_30/26_lv2.html",
       "/review/algorithm/basic_30/23_lv3.html",
+      "/review/algorithm/basic_30/22_lv2.html",
+      "/review/algorithm/basic_30/19_lv2.html",
+      "/review/algorithm/basic_30/21_lv2.html",
+      "/review/algorithm/basic_30/20_lv2.html",
       "/review/algorithm/basic_30/16_lv2.html",
-      "/review/algorithm/basic_30/primer_number.html",
-      "/review/algorithm/basic_30/13_lv2.html",
-      "/review/algorithm/basic_30/18_lv2.html",
       "/review/algorithm/basic_30/17_lv2.html",
+      "/review/algorithm/basic_30/doksan_algorithm.html",
+      "/review/algorithm/basic_30/18_lv2.html",
+      "/review/algorithm/basic_30/11_lv2.html",
+      "/review/algorithm/basic_30/14_lv2.html",
       "/review/algorithm/basic_30/15_lv2.html",
       "/review/algorithm/basic_30/12_lv1.html",
-      "/review/algorithm/basic_30/14_lv2.html",
-      "/review/algorithm/basic_30/21_lv2.html",
-      "/review/algorithm/basic_30/19_lv2.html",
-      "/review/algorithm/basic_30/11_lv2.html"
+      "/review/algorithm/basic_30/13_lv2.html"
     ]
   },
   {
