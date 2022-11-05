@@ -47,7 +47,7 @@ website:
         - review/algorithm.md
         - review/pkm.md
         - review/de.md
-        - review/visualization.md
+        - review/eda.md
         # - section: "파이썬"
         #   contents: 
         # - section: "알고리즘"
@@ -56,7 +56,7 @@ website:
         #   contents:
         # - section: "개발환경"
         #   contents:
-        # - section: "시각화"
+        # - section: "EDA"
         #   contents:
 
 

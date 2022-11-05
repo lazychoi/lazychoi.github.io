@@ -1,9 +1,9 @@
-# Dictionary Methods List
-created: 2022-10-07  
-
+---
+title: "Dictionary Methods List"
+date: 2022-10-07
+---
 
 출처: [w3school](https://www.w3schools.com/python/python_ref_dictionary.asp){target=_blank}
-
 
 ## 목록
 
@@ -18,6 +18,7 @@ created: 2022-10-07
 
 
 ==주의!!==  
+
 - dict.key(), dict.values(), dict.items() 모두 ==메모리 낭비를 줄이기== 위해 list 아닌 **iterable views**를 반환한다.
 - eg. dict_keys([...]), dict_values([...]), dict_items([...])
 - 반환값을 반복문을 써서 각 요소 출력 또는 

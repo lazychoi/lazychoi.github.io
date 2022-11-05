@@ -1,6 +1,6 @@
 ---
 title: "shell prompt"
-created: 2022-10-07
+date: 2022-10-07
 updated: last-modified
 ---
 

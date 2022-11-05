@@ -1,7 +1,7 @@
 ---
 title: "시각화"
 listing:
-  contents: visualization
+  contents: eda
   sort: "title"
   type: grid
 ---

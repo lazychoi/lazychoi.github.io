@@ -24,7 +24,7 @@ title: ""
 - [알고리즘](review/algorithm.md)
 - [개발환경](review/de.md)
 - [지식관리](review/pkm.md)
-- [시각화](review/visualization.md)
+- [EDA](review/eda.md)
 
 :::
 :::

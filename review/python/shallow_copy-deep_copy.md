@@ -1,6 +1,6 @@
 ---
 title: 깊은 복사(deep copy) vs 얉은 복사(shallow copy)
-created: 2022-10-06
+date: 2022-10-06
 updated: last-modified
 ---
 

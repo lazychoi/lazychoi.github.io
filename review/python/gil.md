@@ -1,6 +1,6 @@
 ---
 title: GIL(Global Interpreter Lock)
-created: 2022-10-07
+date: 2022-10-07
 updated: last-modified
 ---
 

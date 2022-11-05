@@ -1,6 +1,7 @@
-# 02장 문자열 처리
-created: 2022-10-10
-
+---
+title: "02장 문자열 처리"
+date: 2022-10-10
+---
 
 ## 문(statement) vs 표현식(expresstion)
 

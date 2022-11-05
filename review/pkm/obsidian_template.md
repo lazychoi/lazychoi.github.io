@@ -1,6 +1,6 @@
 ---
 title: Obsidian template 사용
-created: 2022-10-07
+date: 2022-10-07
 updated: last-modified
 ---
 
