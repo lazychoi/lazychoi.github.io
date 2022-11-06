@@ -11,12 +11,14 @@ listing:
     page-size: 9
 ---
 
+## 자료 구조
+
+:::{#data-structure}
+:::
+
 ## 알고리즘 basic 30
 
 :::{#basic30}
 :::
 
-## 자료 구조
 
-:::{#data-structure}
-:::
