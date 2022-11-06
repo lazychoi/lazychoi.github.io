@@ -1,5 +1,5 @@
 ---
-title: "시각화"
+title: "EDA"
 listing:
   contents: eda
   sort: "title"

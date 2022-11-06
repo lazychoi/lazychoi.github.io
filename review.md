@@ -10,7 +10,7 @@ title: "오답노트"
 
 [개발환경](review/de.md)
 
-[시각화](review/eda.md)
+[EDA](review/eda.md)
 
 ## 외부 문서
 

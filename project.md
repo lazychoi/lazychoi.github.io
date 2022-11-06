@@ -2,7 +2,7 @@
 title: 프로젝트
 listing:
   contents: project
-  sort: "title"
+  sort: "date desc"
   type: default
   page-size: 10
 ---
