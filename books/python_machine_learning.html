@@ -95,7 +95,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="nav-sidebar docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -115,7 +115,7 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../books.html">읽은 책</a>
+    <a class="nav-link active" href="../books.html" aria-current="page">읽은 책</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../review.html">오답노트</a>
@@ -141,10 +141,54 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
+  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+    <div class="container-fluid d-flex justify-content-between">
+      <h1 class="quarto-secondary-nav-title">머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로</h1>
+      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books.html" class="sidebar-item-text sidebar-link">읽은 책</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books/This_is_coding_test.html" class="sidebar-item-text sidebar-link">이것이 코딩 테스트다</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books/tiny_python_project.html" class="sidebar-item-text sidebar-link">21가지 작고 재미난 파이썬 프로젝트</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books/pandas_in_action.html" class="sidebar-item-text sidebar-link">판다스 인 액션</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books/numpy_for_ml_dl.html" class="sidebar-item-text sidebar-link">딥러닝 머신러닝을 위한 파이썬 Numpy</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../books/python_machine_learning.html" class="sidebar-item-text sidebar-link active">머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로</a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
@@ -154,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로</h1>
+<h1 class="title d-none d-lg-block">머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로</h1>
 </div>
 
 
@@ -228,7 +272,36 @@ Nov 7, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1667833200000" data-listing-file-modified-sort="1667891446031" data-listing-reading-time-sort="0.04">
+<div class="quarto-post image-right" data-index="2" data-listing-date-sort="1667919600000" data-listing-file-modified-sort="1667993707095" data-listing-reading-time-sort="0.45">
+<div class="thumbnail">
+<a href="../books/python_machine_learning/03_classification5_random_forest.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="../books/python_machine_learning/03_classification5_random_forest.html"></a></p>
+</div>
+<div class="body">
+<a href="../books/python_machine_learning/03_classification5_random_forest.html">
+<h3 class="no-anchor listing-title">
+03장 사이킷런 - Random Forest
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<img src="03_classification5_random_forest_files/figure-html/cell-3-output-1.png" class="img-fluid">
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../books/python_machine_learning/03_classification5_random_forest.html">
+<div class="listing-date">
+Nov 9, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1667833200000" data-listing-file-modified-sort="1667891446031" data-listing-reading-time-sort="0.04">
 <div class="thumbnail">
 <a href="../books/python_machine_learning/03_classification3_svm.html">
 <div class="thumbnail-image">
@@ -257,7 +330,7 @@ Nov 8, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="3" data-listing-date-sort="1667833200000" data-listing-file-modified-sort="1667893672677" data-listing-reading-time-sort="0.03">
+<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1667919600000" data-listing-file-modified-sort="1667993294635" data-listing-reading-time-sort="1.075">
 <div class="thumbnail">
 <a href="../books/python_machine_learning/03_classification4_decesion_tree.html">
 <div class="thumbnail-image">
@@ -274,19 +347,19 @@ Nov 8, 2022
 
 </div>
 <div class="listing-description">
-
+내가 이해한 대로 풀어보자면 루트 노드의 불순도는 최대 1이다. 모든 클래스가 균등하게 섞여 있을 경우다. 루트 노드를 이진 트리로 나눌 때는 정보이득이 높은 기준을 선택한다. 정보 이득은 부모 불순도에서 자식 불순도의 합을 뺀 값이다. 자식 불순도를 합하는 이유는 자식이 둘이기 때문이다. 자식 불순도가 낮을수록, 즉 자식의 클래스가 한쪽으로 쏠려 순수해질수록 정보 이득이 높다.
 </div>
 </a>
 </div>
 <div class="metadata">
 <a href="../books/python_machine_learning/03_classification4_decesion_tree.html">
 <div class="listing-date">
-Nov 8, 2022
+Nov 9, 2022
 </div>
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="4" data-listing-date-sort="1667746800000" data-listing-file-modified-sort="1667885803812" data-listing-reading-time-sort="0.32">
+<div class="quarto-post image-right" data-index="5" data-listing-date-sort="1667746800000" data-listing-file-modified-sort="1667885803812" data-listing-reading-time-sort="0.32">
 <div class="thumbnail">
 <p><a href="../books/python_machine_learning/03_classification2_logistic.html"> <img src="../books/python_machine_learning/images/logistic1.jpeg" class="thumnail-image"> </a></p>
 </div>
@@ -309,6 +382,31 @@ Nov 8, 2022
 Nov 7, 2022
 </div>
 </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-listing-file-modified-sort="1667994149404" data-listing-reading-time-sort="0.105">
+<div class="thumbnail">
+<a href="../books/python_machine_learning/03_classification6_knn.html">
+<div class="thumbnail-image">
+
+</div>
+</a><p><a href="../books/python_machine_learning/03_classification6_knn.html"></a></p>
+</div>
+<div class="body">
+<a href="../books/python_machine_learning/03_classification6_knn.html">
+<h3 class="no-anchor listing-title">
+KNN(K-Nearest Neighbor) 알고리즘
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+<img src="03_classification6_knn_files/figure-html/cell-4-output-1.png" class="img-fluid">
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../books/python_machine_learning/03_classification6_knn.html"> </a>
 </div>
 </div>
 </div>

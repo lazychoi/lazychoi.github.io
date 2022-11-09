@@ -65,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="docked nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -113,56 +113,53 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
-  <div class="quarto-title-banner page-columns page-full">
-    <div class="quarto-title column-body">
-      <h1 class="title">22-11-08(화)</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">2022-11</div>
-              </div>
-                  </div>
-  </div>
-    
-  
-  <div class="quarto-title-meta">
-
-      <div>
-      <div class="quarto-title-meta-heading">Author</div>
-      <div class="quarto-title-meta-contents">
-               <p>lazychoi </p>
-            </div>
-    </div>
-      
-      <div>
-      <div class="quarto-title-meta-heading">Published</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">November 8, 2022</p>
-      </div>
-    </div>
-      
-    </div>
-    
-  
-  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
   <li><a href="#streamlit" id="toc-streamlit" class="nav-link active" data-scroll-target="#streamlit">streamlit</a></li>
+  <li><a href="#eda-시각화" id="toc-eda-시각화" class="nav-link" data-scroll-target="#eda-시각화">EDA &amp; 시각화</a></li>
   <li><a href="#개인-공부" id="toc-개인-공부" class="nav-link" data-scroll-target="#개인-공부">개인 공부</a></li>
   </ul>
 </nav>
-</nav>
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">22-11-08(화)</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">2022-11</div>
+  </div>
+  </div>
 
 
 
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>lazychoi </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 8, 2022</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+</header>
 
 <p>루트 폴더에 선생님 깃허브 클론: git clone https://github.com/bigdata-young/bigdata_16th.git</p>
 <section id="streamlit" class="level3">
@@ -183,13 +180,20 @@ ul.task-list li input[type="checkbox"] {
 </ol></li>
 </ol>
 </section>
+<section id="eda-시각화" class="level3">
+<h3 class="anchored" data-anchor-id="eda-시각화">EDA &amp; 시각화</h3>
+<ul>
+<li>데이터프레임으로 히트맵 그리기: <code>sns.heatmap(df.corr(), cmap='coolwarm', vmin=-1, vmax=1, annot=True)</code></li>
+<li>df.info()로 Dtype과 결측치 유무 확인</li>
+<li>데이터프레임에서 정규표현식 사용: df[‘column’].str.extract(‘정규식’)</li>
+<li>리스트에 속한 모든 문자를 한 문자로 바꿈: df[‘column’].replace(list, ‘str’)</li>
+</ul>
+</section>
 <section id="개인-공부" class="level3">
 <h3 class="anchored" data-anchor-id="개인-공부">개인 공부</h3>
 <ul>
 <li>알고리즘 “크레인 인형 뽑기 게임”을 풀었다</li>
-<li><ul>
 <li>“머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로(세바스찬 라시카)” 3장 로지스틱 회귀, SVM</li>
-</ul></li>
 </ul>
 
 
