@@ -85,6 +85,7 @@
   {
     "listing": "/blog/blog.html",
     "items": [
+      "/blog/posts/22-11-13.html",
       "/blog/posts/22-11-12.html",
       "/blog/posts/22-11-11.html",
       "/blog/posts/22-11-10.html",
@@ -190,6 +191,11 @@
   {
     "listing": "/review/algorithm.html",
     "items": [
+      "/review/algorithm/data_structure/01_stack1.html",
+      "/review/algorithm/data_structure/01_stack2.html",
+      "/review/algorithm/data_structure/03_recur1.html",
+      "/review/algorithm/data_structure/02_queue1.html",
+      "/review/algorithm/data_structure/02_queue2.html",
       "/review/algorithm/basic_30/25_lv2.html",
       "/review/algorithm/basic_30/20_lv2.html",
       "/review/algorithm/basic_30/22_lv2.html",
@@ -198,12 +204,9 @@
       "/review/algorithm/basic_30/16_lv2.html",
       "/review/algorithm/basic_30/30_lv2.html",
       "/review/algorithm/basic_30/26_lv2.html",
-      "/review/algorithm/data_structure/01_stack1.html",
-      "/review/algorithm/data_structure/01_stack2.html",
       "/review/algorithm/basic_30/29_lv2.html",
       "/review/algorithm/basic_30/27_lv2.html",
       "/review/algorithm/basic_30/24_lv2.html",
-      "/review/algorithm/data_structure/03_recur1.html",
       "/review/algorithm/basic_30/13_lv2.html",
       "/review/algorithm/basic_30/18_lv2.html",
       "/review/algorithm/basic_30/17_lv2.html",
@@ -211,8 +214,6 @@
       "/review/algorithm/basic_30/12_lv1.html",
       "/review/algorithm/basic_30/28_lv3.html",
       "/review/algorithm/basic_30/14_lv2.html",
-      "/review/algorithm/data_structure/02_queue1.html",
-      "/review/algorithm/data_structure/02_queue2.html",
       "/review/algorithm/basic_30/21_lv2.html",
       "/review/algorithm/basic_30/19_lv2.html",
       "/review/algorithm/basic_30/11_lv2.html"
