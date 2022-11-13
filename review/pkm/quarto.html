@@ -127,9 +127,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#yml-설정" id="toc-yml-설정" class="nav-link" data-scroll-target="#yml-설정">yml 설정</a></li>
   </ul></li>
   <li><a href="#웹사이트-만들기" id="toc-웹사이트-만들기" class="nav-link" data-scroll-target="#웹사이트-만들기">웹사이트 만들기</a></li>
-  <li><a href="#깃허브-페이지를-호스팅-서버로-사용하기" id="toc-깃허브-페이지를-호스팅-서버로-사용하기" class="nav-link" data-scroll-target="#깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</a>
+  <li><a href="#깃허브-페이지를-호스팅-서버로-사용하기" id="toc-깃허브-페이지를-호스팅-서버로-사용하기" class="nav-link" data-scroll-target="#깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</a></li>
+  <li><a href="#사용법" id="toc-사용법" class="nav-link" data-scroll-target="#사용법">사용법</a>
   <ul class="collapse">
-  <li><a href="#docs-폴더-이용-방법" id="toc-docs-폴더-이용-방법" class="nav-link" data-scroll-target="#docs-폴더-이용-방법">docs 폴더 이용 방법</a></li>
+  <li><a href="#멀티-컬럼-사용하기" id="toc-멀티-컬럼-사용하기" class="nav-link" data-scroll-target="#멀티-컬럼-사용하기">멀티 컬럼 사용하기</a></li>
+  <li><a href="#callout" id="toc-callout" class="nav-link" data-scroll-target="#callout">callout</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -229,14 +231,36 @@ ul.task-list li input[type="checkbox"] {
 <section id="깃허브-페이지를-호스팅-서버로-사용하기" class="level2">
 <h2 class="anchored" data-anchor-id="깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</h2>
 <p><a href="https://quarto.org/docs/publishing/github-pages.html">공식 문서</a></p>
-<p>3가지 방법이 있다.</p>
-<ul>
-<li>docs 폴더에 사이트 문서들을 렌더링하고 깃허브가 docs 폴더를 웹페이지로 출판하도록 설정</li>
-<li><code>quarto publish</code> 명령으로 직접 웹페이지로 출판</li>
-<li>코드를 깃허브에 올리면 자동으로 깃허브 액션이 렌더링해서 출판하도록 설정</li>
-</ul>
-<section id="docs-폴더-이용-방법" class="level3">
-<h3 class="anchored" data-anchor-id="docs-폴더-이용-방법">docs 폴더 이용 방법</h3>
+</section>
+<section id="사용법" class="level2">
+<h2 class="anchored" data-anchor-id="사용법">사용법</h2>
+<section id="멀티-컬럼-사용하기" class="level3">
+<h3 class="anchored" data-anchor-id="멀티-컬럼-사용하기">멀티 컬럼 사용하기</h3>
+<pre class="material"><code>
+::: {.grid}
+::: {.g-col-5}
+1행 1열
+:::
+
+::: {.g-col-5}
+1행 2열
+:::
+:::
+
+::: {.grid}
+::: {.g-col-5}
+2행 1열
+:::
+
+::: {.g-col-5}
+2행 2열
+:::
+:::</code></pre>
+<p><a href="https://quarto.org/docs/output-formats/page-layout.html" target="_blank">공식 설명서</a></p>
+</section>
+<section id="callout" class="level3">
+<h3 class="anchored" data-anchor-id="callout">callout</h3>
+<p><a href="https://quarto.org/docs/authoring/callouts.html" target="_blank">공식 설명서</a></p>
 
 
 </section>

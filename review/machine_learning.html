@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>👀 - 파이썬 라이브러리를 활용한 머신러닝 번역개정2판</title>
+<title>👀 - 머신러닝</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -70,9 +70,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -115,10 +115,10 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../index.html">Home</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../books.html" aria-current="page">읽은 책</a>
+    <a class="nav-link" href="../books.html">읽은 책</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../review.html">오답노트</a>
+    <a class="nav-link active" href="../review.html" aria-current="page">오답노트</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../project.html">프로젝트</a>
@@ -143,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
     </nav>
   <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
     <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">파이썬 라이브러리를 활용한 머신러닝 번역개정2판</h1>
+      <h1 class="quarto-secondary-nav-title">머신러닝</h1>
       <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
         <i class="bi bi-chevron-right"></i>
       </button>
@@ -158,37 +158,42 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books.html" class="sidebar-item-text sidebar-link">읽은 책</a>
+  <a href="../review.html" class="sidebar-item-text sidebar-link">오답노트</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/This_is_coding_test.html" class="sidebar-item-text sidebar-link">이것이 코딩 테스트다</a>
+  <a href="../review/python.html" class="sidebar-item-text sidebar-link">파이썬</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/tiny_python_project.html" class="sidebar-item-text sidebar-link">21가지 작고 재미난 파이썬 프로젝트</a>
+  <a href="../review/algorithm.html" class="sidebar-item-text sidebar-link">알고리즘</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/pandas_in_action.html" class="sidebar-item-text sidebar-link">판다스 인 액션</a>
+  <a href="../review/pkm.html" class="sidebar-item-text sidebar-link">지식 관리</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/numpy_for_ml_dl.html" class="sidebar-item-text sidebar-link">딥러닝 머신러닝을 위한 파이썬 Numpy</a>
+  <a href="../review/de.html" class="sidebar-item-text sidebar-link">개발 환경</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/introduction_to_ML_with_python.html" class="sidebar-item-text sidebar-link active">파이썬 라이브러리를 활용한 머신러닝 번역개정2판</a>
+  <a href="../review/eda.html" class="sidebar-item-text sidebar-link">EDA</a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../books/python_machine_learning.html" class="sidebar-item-text sidebar-link">머신러닝 교과서 with 파이썬, 사이킷런, 텐서플로</a>
+  <a href="../review/machine_learning.html" class="sidebar-item-text sidebar-link active">머신러닝</a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../review/deep_learning.html" class="sidebar-item-text sidebar-link">딥러닝</a>
   </div>
 </li>
     </ul>
@@ -203,7 +208,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">파이썬 라이브러리를 활용한 머신러닝 번역개정2판</h1>
+<h1 class="title d-none d-lg-block">머신러닝</h1>
 </div>
 
 
@@ -223,56 +228,24 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668092400000" data-listing-file-modified-sort="1668137404068" data-listing-reading-time-sort="2.41">
-<div class="thumbnail">
-<a href="../books/introduction_to_ML_with_python/01-introduction.html">
-<div class="thumbnail-image">
-
-</div>
-</a><p><a href="../books/introduction_to_ML_with_python/01-introduction.html"></a></p>
-</div>
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668265200000" data-listing-file-modified-sort="1668317886713" data-listing-reading-time-sort="0.59">
 <div class="body">
-<a href="../books/introduction_to_ML_with_python/01-introduction.html">
+<a href="../review/machine_learning/knn.html">
 <h3 class="no-anchor listing-title">
-01장 소개
+K-최근접 이웃(K-Nearest Neighbors)
 </h3>
 <div class="listing-subtitle">
 
 </div>
 <div class="listing-description">
-지도 학습 - 사용자는 알고리즘에 기대되는 입력과 기대되는 출력 제공 - 알고리즘은 주어진 입력에서 원하는 출력을 만드는 방법을 찾음 - 학습된 알고리즘은 사람의 도움 없이도 새로운 입력이 주어지면 적절한 출력을 만들 수 있음 - eg. 편지 봉투에 손으로 쓴 우편번호 숫자 판별 / 의료 영상 이미지에 기반한 종양 판단 / 의심되는 신용카드 거래 감지
+데이터가 아주 많은 경우 메모리가 많이 필요하고 거리 계산에 많은 시간 필요
 </div>
 </a>
 </div>
 <div class="metadata">
-<a href="../books/introduction_to_ML_with_python/01-introduction.html">
+<a href="../review/machine_learning/knn.html">
 <div class="listing-date">
-Nov 11, 2022
-</div>
-</a>
-</div>
-</div>
-<div class="quarto-post image-right" data-index="1" data-listing-date-sort="1668092400000" data-listing-file-modified-sort="1668240099422" data-listing-reading-time-sort="2.915">
-<div class="thumbnail">
-<p><a href="../books/introduction_to_ML_with_python/02-supervised-learning.html"> <img src="https://scikit-learn.org/stable/_images/sphx_glr_plot_classifier_comparison_001.png" class="thumnail-image"> </a></p>
-</div>
-<div class="body">
-<a href="../books/introduction_to_ML_with_python/02-supervised-learning.html">
-<h3 class="no-anchor listing-title">
-02장 지도 학습
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-preamble.py에 자주 쓰는 import, 설정 등이 기록되어 있다. 이를 불러와서 사용한다.
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="../books/introduction_to_ML_with_python/02-supervised-learning.html">
-<div class="listing-date">
-Nov 11, 2022
+Nov 13, 2022
 </div>
 </a>
 </div>

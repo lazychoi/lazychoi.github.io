@@ -844,7 +844,7 @@
     "href": "books/introduction_to_ML_with_python.html",
     "title": "파이썬 라이브러리를 활용한 머신러닝 번역개정2판",
     "section": "",
-    "text": "Nov 1, 2022\n\n\n\n\n\n\nNo matching items"
+    "text": "Nov 11, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 11, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "books/This_is_coding_test.html",
@@ -1467,35 +1467,14 @@
     "href": "index.html",
     "title": "👀",
     "section": "",
-    "text": "기대와 불안, 희망과 염려 없이 그저 불확실함 속으로, 뚜벅 뚜벅"
+    "text": "Important\n\n\n\n머신러닝 솔루션을 만들 동안 답하거나 마음에 새겨야 할 질문 - 어떤 질문에 대한 답을 원하는가? 가지고 있는 데이터가 원하는 답을 줄 수 있는가? - 내 질문을 머신러닝 문제로 가장 잘 기술할 수 있는 방법은 무엇인가? - 문제를 풀기에 충분한 데이터를 모았는가? - 내가 추출한 데이터의 특성은 무엇이며 좋은 예측을 만들어낼 수 있을 것인가? - 머신러닝 애플리케이션의 성과를 어떻게 측정할 수 있는가? - 머신러닝 솔루션이 다른 연구나 제품과 어떻게 협력할 수 있는가?"
   },
   {
-    "objectID": "index.html#읽은-책",
-    "href": "index.html#읽은-책",
-    "title": "👀",
-    "section": "읽은 책",
-    "text": "읽은 책\n\n이것이 취업을 위한 코딩 테스트다\n21개의 작고 재미난 파이썬 프로젝트\n판다스 인 액선\n딥러닝 머신러닝을 위한 넘파이"
-  },
-  {
-    "objectID": "index.html#오답노트",
-    "href": "index.html#오답노트",
-    "title": "👀",
-    "section": "오답노트",
-    "text": "오답노트\n\n파이썬\n알고리즘\n개발환경\n지식관리\nEDA"
-  },
-  {
-    "objectID": "index.html#프로젝트",
-    "href": "index.html#프로젝트",
-    "title": "👀",
-    "section": "프로젝트",
-    "text": "프로젝트\n\n경기도 시군별 등록 반려동물수 EDA"
-  },
-  {
-    "objectID": "index.html#일일로그",
-    "href": "index.html#일일로그",
-    "title": "👀",
-    "section": "일일로그",
-    "text": "일일로그\n2022년 10월"
+    "objectID": "review/machine_learning.html",
+    "href": "review/machine_learning.html",
+    "title": "머신러닝",
+    "section": "",
+    "text": "Nov 13, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/eda/folium.html",
@@ -1547,6 +1526,20 @@
     "text": "코로플레스 맵 만들기\n\n준비물1: 행정구역경계 정보가 담긴 geojson 파일\n준비물2: 지도에 표시할 데이터(행정구역명, 숫자)\n\n중요!! 데이터의 행정구역명과 geojson 파일의 행정구역명이 같아야 함\ngeojson 파일 받은 곳: 대한민국 행정동 경계 파일\ngeojson 데이터에 관한 설명\n\ngeojson 파일 구조\n{\n\"type\": \"FeatureCollection\",\n\"name\": \"20220701\",\n\"crs\": { \"type\": \"name\", \"properties\": { \"name\": \"urn:ogc:def:crs:OGC:1.3:CRS84\" } },\n\"features\": [\n{ \"type\": \"Feature\", \"properties\": { \"OBJECTID\": 1, \"adm_nm\": \"서울특별시 종로구 사직동\", \"adm_cd\": \"1101053\", \"adm_cd2\": \"1111053000\", \"sgg\": \"11110\", \"sido\": \"11\", \"sidonm\": \"서울특별시\", \"sggnm\": \"종로구\", \"adm_cd8\": \"11010530\" }, \"geometry\": { \"type\": \"MultiPolygon\", \"coordinates\": [ [ [ [ 126.976888842748167, 37.575650779448786 ], [ 126.977034498877501, 37.569194530054553 ], [ 126.975974728212492, 37.569336299425764 ], [ 126.975374709912543, 37.569315567021562 ], [ 126.974331935623255, 37.569261800517531 ], [ 126.969048370018541, 37.568194417708334 ], [ 126.968544936033837, 37.568427679612761 ], [ 126.966649959821197, 37.569491655206583 ], [ 126.966281750244846, 37.569700734798701 ], [ 126.966097327080405, 37.569856509723699 ], [ 126.965728529225771, 37.570183936115114 ], [ 126.965926998221278, 37.570318805686199 ], [ 126.96601094018429, 37.571548395577466 ], [ 126.963659220521961, 37.575174660660373 ], [ 126.963086004345101, 37.576485920015543 ], [ 126.962840990511978, 37.57666158609274 ], [ 126.962810410472628, 37.579448809656775 ], [ 126.967424315843317, 37.579601537124489 ], [ 126.967421763026508, 37.579263521441646 ], [ 126.967430060184597, 37.579192577998604 ], [ 126.967457090095607, 37.578975250585437 ], [ 126.968066046996256, 37.578246780467872 ], [ 126.968955116954774, 37.577935262340283 ], [ 126.969212842969057, 37.577935299309388 ], [ 126.969414538865792, 37.578121124142164 ], [ 126.969664426694706, 37.578531136682209 ], [ 126.969667219148718, 37.578736205134931 ], [ 126.969668773533087, 37.578992879009881 ], [ 126.969669499103631, 37.57911252674959 ], [ 126.969904573616262, 37.579301753628734 ], [ 126.97135197544759, 37.57951327793981 ], [ 126.973819257844539, 37.579372140302631 ], [ 126.973917363383421, 37.578487073041011 ], [ 126.973939619980882, 37.578240429978088 ], [ 126.974331538357575, 37.575749906299862 ], [ 126.975803789978045, 37.575649468824203 ], [ 126.976888842748167, 37.575650779448786 ] ] ] ] } },\n]}\n\n\nfolium.Choropleth() 함수 활용\n\n기본 사용법은 마터 추가와 같다. folium.Choropleth().add_to(m)\ngeo_data: geojson 파일을 저장한 변수\ndata = 데이터프레임 변수\ncolumns = [‘키’, ‘값’]\nkey_on = geojson 파일에서 시군명의 키 경로를 입력한다. 요 부분은 정확하게 모르겠다. 시군명은 sggnm 키에 저장되어 있으니 sggnm 부터 상위 경로를 점으로 구분해서 적으면 될 것 같은데 features가 아니라 feature부터 시작하는 게 이상하다.\nfill_color = 색상을 적는다.\nfill_opacity = 투명도를 지정한다.\nline_opacity = 행정경계선의 투명도를 지정한다.\nlegend_name = 범례 타이틀을 입력한다.\n\nfolium.LayerControl()은 없어도 작동을 한다. 여기서는 빼도 될 것 같다.\n\n\nCode\nimport json\n\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/HangJeongDong_ver20220701.geojson', encoding='UTF8'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '등록동물수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '시군별 등록 반려동물수(마리))'\n).add_to(m)\n\nfolium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n위에서 까맣게 표시되는 이유는 geojson 파일에 있는 행정구역명칭이 데이터프레임의 ‘시군명’ 컬럼에는 없기 때문이다.\n따라서 geojson 파일을 편집하여 데이터프레임에 있는 ’시군명’만 남기고 삭제한다.\n그렇게 편집한 파일이 ’kyeong.geojson’이다. 이 파일을 불러와서 다시 지도를 띄우자\n주의!!! geojson 파일을 불러올 때 cp949 인코딩 에러가 나는 경우가 있다. 이럴 때는 위 코드처럼 open() 함수 안에 encoding=‘utf8’ 옵션을 넣는다.\n\n\nCode\nimport json\n\nm = folium.Map(\n    location = [37.528043, 126.980238],\n    zoom_start = 8)\n\nlat = list(df['위도'])\nlong = list(df['경도'])\nname = list(df['등록동물수'])\nsi = list(df['시군명'])\n\nfor i in range(len(lat)):\n    folium.Marker(\n            [lat[i], long[i]], tooltip=f'<b>{si[i]}</b><br>반려동물수: {str(name[i])}',\n            icon=folium.Icon(color='red')\n            ).add_to(m)\n\n    \ngeo_data = json.load(open('data/kyeong.geojson', encoding='UTF8'))\n\nfolium.Choropleth(\n    geo_data = geo_data,\n    data = df,\n    columns= ['시군명', '등록동물수'],\n    key_on = 'feature.properties.sggnm',\n    fill_color = 'Reds',\n    fill_opacity = 0.7,\n    line_opacity = 0.4,\n    legend_name = '시군별 등록 반려동물수(마리))'\n).add_to(m)\n\n# folium.LayerControl().add_to(m)\n\nm\n\n\nMake this Notebook Trusted to load map: File -> Trust Notebook\n\n\n완성!!!"
   },
   {
+    "objectID": "review/eda/using_pandas.html",
+    "href": "review/eda/using_pandas.html",
+    "title": "판다스 활용 전처리",
+    "section": "",
+    "text": "데이터프레임에서 수치형 변수 컬럼명만 뽑기 : df.select_dtypes(exclude=object).columns\n데이터프레임에서 범주형 변수 컬럼명만 뽑기 : df.select_dtypes(include=object).columns\n특정 수치형 컬럼의 4분위 범위(IQR) 구하기: df[‘column’].quantile(0.75) - df[‘column’].quantile(0.25)\n특정 컬럼의 유일값 개수 출력: df[‘column’].nunique()\n\n\n\nCode\nimport pandas as pd\n\nurl = 'https://raw.githubusercontent.com/Datamanim/pandas/main/Jeju.csv'\ndf = pd.read_csv(url, encoding='euc-kr')\n\nprint('데이터프레임에서 수치형 변수명만 출력')\ndf.select_dtypes(exclude=object).head(3)\n\n\n데이터프레임에서 수치형 변수명만 출력\n\n\n\n\n\n\n  \n    \n      \n      id\n      거주인구\n      근무인구\n      방문인구\n      총 유동인구\n      평균 속도\n      평균 소요 시간\n      평균 기온\n      일강수량\n      평균 풍속\n    \n  \n  \n    \n      0\n      22448\n      32249.987\n      3418.266\n      102709.092\n      138377.345\n      39.556\n      29.167\n      5.0\n      0.0\n      2.5\n    \n    \n      1\n      22449\n      213500.997\n      10341.172\n      112692.789\n      336534.958\n      32.900\n      30.900\n      5.0\n      0.0\n      2.5\n    \n    \n      2\n      22450\n      1212382.218\n      96920.834\n      541194.481\n      1850497.533\n      29.538\n      35.692\n      2.9\n      0.0\n      2.4\n    \n  \n\n\n\n\n\n\nCode\nprint('데이터프레임에서 범주형 변수명만 출력')\ndf.select_dtypes(include=object).columns\n\n\n데이터프레임에서 범주형 변수명만 출력\n\n\nIndex(['일자', '시도명', '읍면동명'], dtype='object')\n\n\n\n\nCode\nprint('평균 속도 컬럼의 사분위 범위(IQR):')\ndf['평균 속도'].quantile(0.75) - df['평균 속도'].quantile(0.25)\n\n\n평균 속도 컬럼의 사분위 범위(IQR):\n\n\n14.854999999999997\n\n\n\n\nCode\nprint('특정 컬럼의 유일값 개수:')\ndf['읍면동명'].nunique()\n\n\n특정 컬럼의 유일값 개수:\n\n\n41\n\n\n\n\nCode\nprint('특정 컬럼의 유일값 출력')\ndf['읍면동명'].unique()\n\n\n특정 컬럼의 유일값 출력\n\n\narray(['도두동', '외도동', '이도2동', '일도1동', '대천동', '서홍동', '한경면', '송산동', '조천읍',\n       '일도2동', '영천동', '예래동', '대륜동', '삼도1동', '이호동', '건입동', '중앙동', '삼양동',\n       '삼도2동', '이도1동', '남원읍', '대정읍', '정방동', '효돈동', '아라동', '한림읍', '구좌읍',\n       '용담1동', '오라동', '화북동', '연동', '표선면', '중문동', '성산읍', '안덕면', '천지동',\n       '노형동', '동홍동', '용담2동', '봉개동', '애월읍'], dtype=object)"
+  },
+  {
+    "objectID": "review/eda/using_pandas.html#데이터프레임-필터링-정렬",
+    "href": "review/eda/using_pandas.html#데이터프레임-필터링-정렬",
+    "title": "판다스 활용 전처리",
+    "section": "데이터프레임 필터링, 정렬",
+    "text": "데이터프레임 필터링, 정렬\n\n필터링한 데이터의 인덱스를 새로 부여하기: df[필터링].reset_index(drop=True) drop=True는 기존 인덱스 삭제\n데이터프레임 컬럼 형변환: df[‘column’].astype(‘자료형’)\n특정 컬럼을 기준으로 오름차순 정렬: df.sort_values(‘column’)\n특정 컬럼의 문자열 중 특정 문자(열)을 포함하는 행만 출력: df[df[‘column’].str.contains(‘string’)]\n짝수번째 컬럼만 출력: df.iloc[:, ::2]\n데이터프레임에서 특정 컬럼을 기준으로 중복값을 없애되 마지막 값을 남김: df.drop_duplicates(‘column’, keep=‘last’)\n\n\n\nCode\nurl = 'https://raw.githubusercontent.com/Datamanim/pandas/main/chipo.csv'\ndf = pd.read_csv(url)\n\n\n\n\nCode\nprint('필터링한 데이터프레임의 인덱스 새로 부여')\ndf.loc[df['quantity'] == 3].reset_index(drop=True).head(3)\n\n\n필터링한 데이터프레임의 인덱스 새로 부여\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      quantity\n      item_name\n      choice_description\n      item_price\n      new_price\n    \n  \n  \n    \n      0\n      178\n      3\n      Chicken Bowl\n      [[Fresh Tomato Salsa (Mild), Tomatillo-Green C...\n      $32.94\n      32.94\n    \n    \n      1\n      193\n      3\n      Bowl\n      [Braised Carnitas, Pinto Beans, [Sour Cream, C...\n      $22.20\n      22.20\n    \n    \n      2\n      284\n      3\n      Canned Soft Drink\n      [Diet Coke]\n      $3.75\n      3.75\n    \n  \n\n\n\n\n\n\nCode\nprint('데이터프레임 컬럼 자료형 변환')\ndf['new_price'] = df['item_price'].str[1:].astype('float')\ndf.head(3)\n\n\n데이터프레임 컬럼 자료형 변환\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      quantity\n      item_name\n      choice_description\n      item_price\n      new_price\n    \n  \n  \n    \n      0\n      1\n      1\n      Chips and Fresh Tomato Salsa\n      NaN\n      $2.39\n      2.39\n    \n    \n      1\n      1\n      1\n      Izze\n      [Clementine]\n      $3.39\n      3.39\n    \n    \n      2\n      1\n      1\n      Nantucket Nectar\n      [Apple]\n      $3.39\n      3.39\n    \n  \n\n\n\n\n\n\nCode\nprint('특정 컬럼을 기준으로 오름차순 정렬 후 인덱스 재설정')\ndf.sort_values(by='new_price').reset_index(drop=True).head(3)\n\n\n특정 컬럼을 기준으로 오름차순 정렬 후 인덱스 재설정\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      quantity\n      item_name\n      choice_description\n      item_price\n      new_price\n    \n  \n  \n    \n      0\n      471\n      1\n      Bottled Water\n      NaN\n      $1.09\n      1.09\n    \n    \n      1\n      338\n      1\n      Canned Soda\n      [Coca Cola]\n      $1.09\n      1.09\n    \n    \n      2\n      1575\n      1\n      Canned Soda\n      [Dr. Pepper]\n      $1.09\n      1.09\n    \n  \n\n\n\n\n\n\nCode\nprint('특정 컬럼의 문자열 중 특정 문자(열)을 포함한 행만 출력')\ndf.loc[df['item_name'].str.contains('Chips')].head(3)\n\n\n특정 컬럼의 문자열 중 특정 문자(열)을 포함한 행만 출력\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      quantity\n      item_name\n      choice_description\n      item_price\n      new_price\n    \n  \n  \n    \n      0\n      1\n      1\n      Chips and Fresh Tomato Salsa\n      NaN\n      $2.39\n      2.39\n    \n    \n      3\n      1\n      1\n      Chips and Tomatillo-Green Chili Salsa\n      NaN\n      $2.39\n      2.39\n    \n    \n      6\n      3\n      1\n      Side of Chips\n      NaN\n      $1.69\n      1.69\n    \n  \n\n\n\n\n\n\nCode\nprint('짝수번째 컬럼만 출력')\ndf.iloc[:, ::2].head(3)\n\n\n짝수번째 컬럼만 출력\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      item_name\n      item_price\n    \n  \n  \n    \n      0\n      1\n      Chips and Fresh Tomato Salsa\n      $2.39\n    \n    \n      1\n      1\n      Izze\n      $3.39\n    \n    \n      2\n      1\n      Nantucket Nectar\n      $3.39\n    \n  \n\n\n\n\n\n\nCode\nprint('데이터프레임에서 특정 컬럼을 기준으로 중복값을 없애되 마지막 값을 남김')\nans = df.loc[(df['item_name'] == 'Steak Salad') | (df['item_name'] == 'Bowl')]\nans.drop_duplicates('item_name', keep='last')\n\n\n중복값을 없애되 마지막 값을 남김\n\n\n\n\n\n\n  \n    \n      \n      order_id\n      quantity\n      item_name\n      choice_description\n      item_price\n      new_price\n    \n  \n  \n    \n      673\n      279\n      1\n      Bowl\n      [Adobo-Marinated and Grilled Steak, [Sour Crea...\n      $7.40\n      7.40\n    \n    \n      3502\n      1406\n      1\n      Steak Salad\n      [[Lettuce, Fajita Veggies]]\n      $8.69\n      8.69\n    \n  \n\n\n\n\n\n\nCode\nlen(df.loc[~df['choice_description'].str.contains('Vegetable')])\n\n\n3900"
+  },
+  {
     "objectID": "review/eda/koreanfont.html",
     "href": "review/eda/koreanfont.html",
     "title": "한글이 보이지 않을 때",
@@ -1593,14 +1586,14 @@
     "href": "review/python.html",
     "title": "파이썬",
     "section": "",
-    "text": "Oct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
+    "text": "Oct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 13, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 14, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/python/list_comprehension.html",
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['수', '가', '가', '양', '우', '가', '가', '양', '가', '가']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '가', '가', '가', '가', '미', '가', '가', '가']"
   },
   {
     "objectID": "review/python/class.html",
@@ -1720,6 +1713,20 @@
     "title": "깊은 복사(deep copy) vs 얉은 복사(shallow copy)",
     "section": "deep copy “list in list”",
     "text": "deep copy “list in list”\nx = [[1,2], 3, 4]\ny = x.copy()\n\nprint( id(x)==id(y), id(x[0])==id(x[0]) ) # False True\n\nx[0][0] = 100\nprint( x, y ) # [[100, 2], 3, 4] [[100, 2], 3, 4]\n\n리스트 내의 리스트는 주소 복사\n\n\n\n\nx.copy\n\n\n위 문제를 해결하려면 for문을 돌려 내부 리스트를 깊은 복사한다.\nz = []\nfor i in x:\n    if type(i) == list:\n        z.append(i.copy())\n    else:\n        z.append(i)\n\nx[0][0] = 200\nx, z    # ([[200, 2], 3, 4], [[100, 2], 3, 4])"
+  },
+  {
+    "objectID": "review/python/numpy.html",
+    "href": "review/python/numpy.html",
+    "title": "넘파이(Numpy)",
+    "section": "",
+    "text": "np.random.shuffle(x) : 반환값 없이 x 자체를 섞음\n\nimport numpy as np\n\nx = np.arange(1, 31)\nprint('원본', x)\nnp.random.shuffle(x)\nprint('섞은 후', x)\n\n원본 [ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24\n 25 26 27 28 29 30]\n섞은 후 [ 1  2 28 27 18 26  9 19 30 22 10 20 12 13  8  5 15 23  4 16 11 21 29  6\n  7  3 24 14 25 17]"
+  },
+  {
+    "objectID": "review/python/numpy.html#배열-연결하기",
+    "href": "review/python/numpy.html#배열-연결하기",
+    "title": "넘파이(Numpy)",
+    "section": "배열 연결하기",
+    "text": "배열 연결하기\n\nnp.column_stack(튜플)\nnp.row_stack(튜플)\nnp.concatenate(튜플)"
   },
   {
     "objectID": "review/python/list_reverse.html",
@@ -1894,7 +1901,42 @@
     "href": "review/eda.html",
     "title": "EDA",
     "section": "",
-    "text": "lazychoi\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nOct 25, 2022\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 11, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "lazychoi\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nOct 25, 2022\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 11, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "review/machine_learning/knn.html",
+    "href": "review/machine_learning/knn.html",
+    "title": "K-최근접 이웃(K-Nearest Neighbors)",
+    "section": "",
+    "text": "가장 거리가 가까운 K개의 데이터의 레이블을 보고 다수를 차지하는 쪽을 레이블으로 사용\n거리를 계산할 때 특성의 스케일에 영향을 받기 때문에 특성 간의 스케일을 동일하게 맞춰야 함"
+  },
+  {
+    "objectID": "review/machine_learning/knn.html#장점",
+    "href": "review/machine_learning/knn.html#장점",
+    "title": "K-최근접 이웃(K-Nearest Neighbors)",
+    "section": "장점",
+    "text": "장점"
+  },
+  {
+    "objectID": "review/machine_learning/knn.html#단점",
+    "href": "review/machine_learning/knn.html#단점",
+    "title": "K-최근접 이웃(K-Nearest Neighbors)",
+    "section": "단점",
+    "text": "단점\n데이터가 아주 많은 경우 메모리가 많이 필요하고 거리 계산에 많은 시간 필요"
+  },
+  {
+    "objectID": "review/machine_learning/knn.html#모델-속성-메서드-파라미터",
+    "href": "review/machine_learning/knn.html#모델-속성-메서드-파라미터",
+    "title": "K-최근접 이웃(K-Nearest Neighbors)",
+    "section": "모델 속성, 메서드, 파라미터",
+    "text": "모델 속성, 메서드, 파라미터\n\nmodel._fit_X : 학습한 X 데이터 저장\nmodel._y : 학습한 y 데이터 저장\nmodel.kneighbors(샘플) : 샘플에서 가장 가까운 이웃들의 거리와 인덱스 배열 반환\nKNeighborsClassifier(n_neighbors=5, p=2, n_jobs=1) :\n\nn_neighbors=5 최근접이웃 개수\np=2 유클리디안 거리, p=1 맨해튼 거리\nn_jobs=1 계산할 때 사용할 CPU 코어 개수, n_jobs=-1 모든 코어 사용\n\n\n\n\nCode\nimport numpy as np\nbream_length = [25.4, 26.3, 26.5, 29.0, 29.0, 29.7, 29.7, 30.0, 30.0, 30.7, 31.0, 31.0, 31.5, 32.0, 32.0, 32.0, 33.0, 33.0, 33.5, 33.5, 34.0, 34.0, 34.5, 35.0, 35.0, 35.0, 35.0, 36.0, 36.0, 37.0, 38.5, 38.5, 39.5, 41.0, 41.0]\nbream_weight = [242.0, 290.0, 340.0, 363.0, 430.0, 450.0, 500.0, 390.0, 450.0, 500.0, 475.0, 500.0, 500.0, 340.0, 600.0, 600.0, 700.0, 700.0, 610.0, 650.0, 575.0, 685.0, 620.0, 680.0, 700.0, 725.0, 720.0, 714.0, 850.0, 1000.0, 920.0, 955.0, 925.0, 975.0, 950.0]\nsmelt_length = [9.8, 10.5, 10.6, 11.0, 11.2, 11.3, 11.8, 11.8, 12.0, 12.2, 12.4, 13.0, 14.3, 15.0]\nsmelt_weight = [6.7, 7.5, 7.0, 9.7, 9.8, 8.7, 10.0, 9.9, 9.8, 12.2, 13.4, 12.2, 19.7, 19.9]\n\nX = np.array([[i, j]for i, j in zip(bream_length + smelt_length, bream_weight + smelt_weight)])\ny = np.array( [1]*35 + [0]*14)\n\n\n\n\nCode\nfrom sklearn.neighbors import KNeighborsClassifier\nfrom sklearn.model_selection import train_test_split\n\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)\nkn = KNeighborsClassifier().fit(X_train, y_train)\nprint('정확도 =', kn.score(X_test, y_test))\nprint('_fit_X에 저장된 학습한 X_train data 일부\\n', kn._fit_X[:5])\nprint('_y에 저장된 학습한 y_train data 일부\\n', kn._y[:5])\n\n\n정확도 = 1.0\n_fit_X에 저장된 학습한 X_train data 일부\n [[  41.   975. ]\n [  30.   390. ]\n [  14.3   19.7]\n [  37.  1000. ]\n [  26.5  340. ]]\n_y에 저장된 학습한 y_train data 일부\n [1 1 0 1 1]\n\n\n\n최근접 이웃을 산점도에 표시하기\n\n\nCode\nneighbors = kn.kneighbors([[25, 150]])\nprint('최근접 이웃 리스트\\n', neighbors)\ndistance, index = neighbors\n\nimport matplotlib.pyplot as plt\nplt.scatter(X_train[:, 0], X_train[:, 1])\nplt.scatter(25, 150, marker='^')\nplt.scatter(X_train[index, 0], X_train[index, 1], marker='D')\nplt.xlabel('length')\nplt.ylabel('weight')\nplt.show()\n\n\n최근접 이웃 리스트\n (array([[ 92.00086956, 130.48375378, 130.73859415, 137.17988191,\n        138.32150953]]), array([[38, 31,  2, 35, 23]]))\n\n\n\n\n\n\n\nCode\n# 스케일을 맞춘 후 다시 산점도 그리기\n\nfrom sklearn.preprocessing import StandardScaler\n\nsc = StandardScaler()\nX_train_scaled = sc.fit_transform(X_train)\nX_test_scaled = sc.transform(X_test)\n\nkn2 = KNeighborsClassifier().fit(X_train_scaled, y_train)\nnew = sc.transform([[25, 150]])\nneighbors2 = kn2.kneighbors(new)\ndistance2, index2 = neighbors2\n\nplt.scatter(X_train_scaled[:, 0], X_train_scaled[:, 1])\nplt.scatter(new[0][0], new[0][1], marker='^')\nplt.scatter(X_train_scaled[index2, 0], X_train_scaled[index2, 1], marker='D')\nplt.xticks(fontname = \"DejaVu Sans\") # 한글 폰트가 음수를 표시하지 못하므로 ytick의 폰트를 바꾸어 줍니다.\nplt.yticks(fontname = \"DejaVu Sans\")\nplt.show()"
+  },
+  {
+    "objectID": "review/machine_learning/knn.html#출처",
+    "href": "review/machine_learning/knn.html#출처",
+    "title": "K-최근접 이웃(K-Nearest Neighbors)",
+    "section": "출처",
+    "text": "출처\n\n혼자 공부하는 머신러닝 딥러닝(박해선)"
   },
   {
     "objectID": "review/de.html",
@@ -1909,6 +1951,13 @@
     "title": "지식 관리",
     "section": "",
     "text": "Oct 12, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 7, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 23, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 26, 2022\n\n\n\n\n\n\n  \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 12, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nOct 6, 2022\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "review/algorithm/data_structure/03_recur1.html",
+    "href": "review/algorithm/data_structure/03_recur1.html",
+    "title": "이진수 변환",
+    "section": "",
+    "text": "이진수 변환 직접 구현\n\nn = 100000000000000\nbi = []\nwhile n >= 2:\n    bi.insert(0, n % 2)\n    n = n // 2\nbi.insert(0, 1)\na = int(''.join([str(i) for i in bi]))\na\n\n10110101111001100010000011110100100000000000000\n\n\n파이썬 이진수 변환 함수와 비교\n\nint(bin(100000000000000)[2:]) == a\n\nTrue"
   },
   {
     "objectID": "review/algorithm/data_structure/02_queue1.html",
@@ -2412,7 +2461,14 @@
     "href": "review/pkm/quarto.html#깃허브-페이지를-호스팅-서버로-사용하기",
     "title": "quarto",
     "section": "깃허브 페이지를 호스팅 서버로 사용하기",
-    "text": "깃허브 페이지를 호스팅 서버로 사용하기\n공식 문서\n3가지 방법이 있다.\n\ndocs 폴더에 사이트 문서들을 렌더링하고 깃허브가 docs 폴더를 웹페이지로 출판하도록 설정\nquarto publish 명령으로 직접 웹페이지로 출판\n코드를 깃허브에 올리면 자동으로 깃허브 액션이 렌더링해서 출판하도록 설정\n\n\ndocs 폴더 이용 방법"
+    "text": "깃허브 페이지를 호스팅 서버로 사용하기\n공식 문서"
+  },
+  {
+    "objectID": "review/pkm/quarto.html#사용법",
+    "href": "review/pkm/quarto.html#사용법",
+    "title": "quarto",
+    "section": "사용법",
+    "text": "사용법\n\n멀티 컬럼 사용하기\n\n::: {.grid}\n::: {.g-col-5}\n1행 1열\n:::\n\n::: {.g-col-5}\n1행 2열\n:::\n:::\n\n::: {.grid}\n::: {.g-col-5}\n2행 1열\n:::\n\n::: {.g-col-5}\n2행 2열\n:::\n:::\n공식 설명서\n\n\ncallout\n공식 설명서"
   },
   {
     "objectID": "review/pkm/create_vscode_snippets.html",
@@ -2461,7 +2517,14 @@
     "href": "review/algorithm.html#알고리즘-basic-30",
     "title": "알고리즘",
     "section": "알고리즘 basic 30",
-    "text": "알고리즘 basic 30\n\n\n\n\n\n\n\n2016년\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\nK 번째 수\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n나누어 떨어지는 숫자 배열\n\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n독산 플레이데이터 알고리즘 학습 안내표\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n모의고사\n\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n문자열 다루기 기본\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n비밀지도\n\n\n\n\n\n\n\n\n\nNov 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n소수 찾기\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\n스택 - 괄호\n\n\n\n\n\n\n\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n스택 - 크레인 인형 뽑기 게임\n\n\n\n\n\n\n\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n시저 암호\n\n\n\n\n\n\n\n\n\nNov 5, 2022\n\n\n\n\n\n\n\n\n\n\n\n예산\n\n\n\n\n\n\n\n\n\nNov 4, 2022\n\n\n\n\n\n\n\n\n\n\n\n완주하지 못한 선수\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\n자릿수 더하기\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n자연수 뒤집어 배열로 만들기\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n정수 내림차순으로 배치하기\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n정수 제곱근 판별\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n짝수와 홀수\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n체육복\n\n\n\n\n\n\n\n\n\nNov 5, 2022\n\n\n\n\n\n\n\n\n\n\n\n최대공약수 최소공배수 구하기\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n카드2\n\n\n\n\n\n\n\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n프린터\n\n\n\n\n\n\n\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n하샤드 수\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n핸드폰 번호 가리기\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n행렬의 덧셈\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "알고리즘 basic 30\n\n\n\n\n\n\n\n2016년\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\nK 번째 수\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n나누어 떨어지는 숫자 배열\n\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n독산 플레이데이터 알고리즘 학습 안내표\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n모의고사\n\n\n\n\n\n\n\n\n\nNov 2, 2022\n\n\n\n\n\n\n\n\n\n\n\n문자열 다루기 기본\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n비밀지도\n\n\n\n\n\n\n\n\n\nNov 6, 2022\n\n\n\n\n\n\n\n\n\n\n\n소수 찾기\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\n스택 - 괄호\n\n\n\n\n\n\n\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n스택 - 크레인 인형 뽑기 게임\n\n\n\n\n\n\n\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n시저 암호\n\n\n\n\n\n\n\n\n\nNov 5, 2022\n\n\n\n\n\n\n\n\n\n\n\n예산\n\n\n\n\n\n\n\n\n\nNov 4, 2022\n\n\n\n\n\n\n\n\n\n\n\n완주하지 못한 선수\n\n\n\n\n\n\n\n\n\nNov 3, 2022\n\n\n\n\n\n\n\n\n\n\n\n이진수 변환\n\n\n\n\n\n\n\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n자릿수 더하기\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n자연수 뒤집어 배열로 만들기\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n정수 내림차순으로 배치하기\n\n\n\n\n\n\n\n\n\nOct 30, 2022\n\n\n\n\n\n\n\n\n\n\n\n정수 제곱근 판별\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n짝수와 홀수\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n체육복\n\n\n\n\n\n\n\n\n\nNov 5, 2022\n\n\n\n\n\n\n\n\n\n\n\n최대공약수 최소공배수 구하기\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\n\n\n\n카드2\n\n\n\n\n\n\n\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n프린터\n\n\n\n\n\n\n\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n하샤드 수\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n핸드폰 번호 가리기\n\n\n\n\n\n\n\n\n\nOct 31, 2022\n\n\n\n\n\n\n\n\n\n\n\n행렬의 덧셈\n\n\n\n\n\n\n\n\n\nOct 29, 2022\n\n\n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "review/deep_learning.html",
+    "href": "review/deep_learning.html",
+    "title": "딥러닝",
+    "section": "",
+    "text": "No matching items"
   },
   {
     "objectID": "review/de/wsl2.html",
