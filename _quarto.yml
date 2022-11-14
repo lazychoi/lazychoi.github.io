@@ -2,6 +2,8 @@ project:
   type: website
   output-dir: docs
 
+execute: 
+  freeze: auto
 
 website:
   title: 👀
@@ -34,7 +36,6 @@ website:
         - books/tiny_python_project.md
         - books/pandas_in_action.md
         - books/numpy_for_ml_dl.md
-        - books/introduction_to_ML_with_python.md
         - books/python_machine_learning.md
         # - section: "이것이 코딩 테스트다"
         #   contents: 
