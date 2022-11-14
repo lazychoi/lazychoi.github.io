@@ -3,7 +3,7 @@ title: 04장 딕셔너리
 date: 2022-10-17
 ---
 
-문제가 어렵지 않았다. `딕셔너리.get('검색할 key', 'key가 없을 때 반환값')` 함수와 `str.translation(str.maketrans(문자 변환 규칙 딕셔너리))` 함수를 배웠다.
+문제가 어렵지 않았다. 딕셔너리.get('검색할 key', 'key가 없을 때 반환값') 함수와 str.translation(str.maketrans(문자 변환 규칙 딕셔너리)) 함수를 배웠다.
 
 ## 내가 짠 코드
 

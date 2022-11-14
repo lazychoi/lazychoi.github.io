@@ -50,6 +50,8 @@ website:
         - review/pkm.md
         - review/de.md
         - review/eda.md
+        - review/machine_learning.md
+        - review/deep_learning.md
         # - section: "파이썬"
         #   contents: 
         # - section: "알고리즘"

@@ -50,10 +50,35 @@ walkthrough.qmd 문서가 열린다.
 
 [공식 문서](https://quarto.org/docs/publishing/github-pages.html)
 
-3가지 방법이 있다.
+## 사용법
 
-- docs 폴더에 사이트 문서들을 렌더링하고 깃허브가 docs 폴더를 웹페이지로 출판하도록 설정
-- `quarto publish` 명령으로 직접 웹페이지로 출판
-- 코드를 깃허브에 올리면 자동으로 깃허브 액션이 렌더링해서 출판하도록 설정
+### 멀티 컬럼 사용하기
 
-### docs 폴더 이용 방법
+```material
+
+::: {.grid}
+::: {.g-col-5}
+1행 1열
+:::
+
+::: {.g-col-5}
+1행 2열
+:::
+:::
+
+::: {.grid}
+::: {.g-col-5}
+2행 1열
+:::
+
+::: {.g-col-5}
+2행 2열
+:::
+:::
+```
+
+[공식 설명서](https://quarto.org/docs/output-formats/page-layout.html){target=_blank}
+
+### callout
+
+[공식 설명서](https://quarto.org/docs/authoring/callouts.html){target=_blank}

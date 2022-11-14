@@ -4,4 +4,5 @@ listing:
   contents: python_machine_learning
   sort: "title"
   type: default
+  max-description-length: 100
 ---

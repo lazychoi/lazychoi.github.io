@@ -1,12 +1,12 @@
 ---
 title: "알고리즘"
 listing: 
-  - id: basic30
-    contents: algorithm
+  - id: data-structure
+    contents: algorithm/data_structure
     type: grid
     page-size: 9
-  - id: data-structure
-    contents: data_structure
+  - id: basic30
+    contents: algorithm/basic_30
     type: grid
     page-size: 9
 ---
@@ -20,5 +20,3 @@ listing:
 
 :::{#basic30}
 :::
-
-
