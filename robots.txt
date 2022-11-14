@@ -1,1 +1,1 @@
-Sitemap: https://lazychoi.github.io/quarto/sitemap.xml
+Sitemap: https://lazychoi.github.io/sitemap.xml
