@@ -70,9 +70,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: [],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -95,7 +95,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -118,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../books.html">읽은 책</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../review.html" aria-current="page">오답노트</a>
+    <a class="nav-link" href="../review.html">오답노트</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../project.html">프로젝트</a>
@@ -141,64 +141,10 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">머신러닝</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
-      </button>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review.html" class="sidebar-item-text sidebar-link">참고자료</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/python.html" class="sidebar-item-text sidebar-link">파이썬</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/algorithm.html" class="sidebar-item-text sidebar-link">알고리즘</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/pkm.html" class="sidebar-item-text sidebar-link">지식 관리</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/de.html" class="sidebar-item-text sidebar-link">개발 환경</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/eda.html" class="sidebar-item-text sidebar-link">EDA</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/machine_learning.html" class="sidebar-item-text sidebar-link active">머신러닝</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../review/deep_learning.html" class="sidebar-item-text sidebar-link">딥러닝</a>
-  </div>
-</li>
-    </ul>
-    </div>
-</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
@@ -208,7 +154,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title d-none d-lg-block">머신러닝</h1>
+<h1 class="title">머신러닝</h1>
 </div>
 
 
@@ -228,7 +174,390 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520659844" data-listing-reading-time-sort="0.055">
+<div class="body">
+<a href="../review/machine_learning/02_data_load/csv.html">
+<h3 class="no-anchor listing-title">
+csv 파일 불러오기
+</h3>
+<div class="listing-subtitle">
 
+</div>
+<div class="listing-description">
+csv를 불러올 때 결측치를 지정할 수 있다. pd.read_csv(‘filename’, na_values=[np.nan, ‘None’, -999])
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/02_data_load/csv.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-listing-file-modified-sort="1668518833934" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/01_numpy.html">
+<h3 class="no-anchor listing-title">
+numpy
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/01_numpy.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-listing-file-modified-sort="1668520433075" data-listing-reading-time-sort="0.045">
+<div class="body">
+<a href="../review/machine_learning/01_numpy/resize.html">
+<h3 class="no-anchor listing-title">
+reshape와 flatten 차이
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/01_numpy/resize.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-listing-file-modified-sort="1668519227071" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/07_datetime.html">
+<h3 class="no-anchor listing-title">
+날짜 시간
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/07_datetime.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-listing-file-modified-sort="1668518963311" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/03_data_wrangling.html">
+<h3 class="no-anchor listing-title">
+데이터 랭글링
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/03_data_wrangling.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-listing-file-modified-sort="1668518857020" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/02_data_load.html">
+<h3 class="no-anchor listing-title">
+데이터 불러오기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/02_data_load.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-listing-file-modified-sort="1668519133816" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/12_model_selection.html">
+<h3 class="no-anchor listing-title">
+모델 선택
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/12_model_selection.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="7" data-listing-file-modified-sort="1668519123483" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/11_metrics.html">
+<h3 class="no-anchor listing-title">
+모델 평가
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/11_metrics.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="8" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668521007160" data-listing-reading-time-sort="0.085">
+<div class="body">
+<a href="../review/machine_learning/03_data_wrangling/map_appply.html">
+<h3 class="no-anchor listing-title">
+모든 원소에 함수 적용
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+map과 apply 차이: map은 딕셔너리를 입력으로 넣을 수 있고 apply는 매개변수를 넣을 수 있는 것이 큰 차이이다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/03_data_wrangling/map_appply.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="9" data-listing-file-modified-sort="1668518995567" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/05_categorical_data.html">
+<h3 class="no-anchor listing-title">
+범주형 데이터 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/05_categorical_data.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520592875" data-listing-reading-time-sort="0.345">
+<div class="body">
+<a href="../review/machine_learning/01_numpy/linear_independent.html">
+<h3 class="no-anchor listing-title">
+선형 독립, 선형 종속, 행렬 계수
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+출처: 선형 독립, 선형 종속의 의미
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/01_numpy/linear_independent.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="11" data-listing-file-modified-sort="1668519148149" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/13_linear_regression.html">
+<h3 class="no-anchor listing-title">
+선형 회귀
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/13_linear_regression.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="12" data-listing-file-modified-sort="1668518979373" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data.html">
+<h3 class="no-anchor listing-title">
+수치형 데이터 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668521218360" data-listing-reading-time-sort="0.215">
+<div class="body">
+<a href="../review/machine_learning/07_datetime/resample.html">
+<h3 class="no-anchor listing-title">
+시계열 데이터 리샘플
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+출처
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/07_datetime/resample.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="14" data-listing-file-modified-sort="1668519069319" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/08_image_data.html">
+<h3 class="no-anchor listing-title">
+이미지 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/08_image_data.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="15" data-listing-file-modified-sort="1668519009991" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/06_text_data.html">
+<h3 class="no-anchor listing-title">
+텍스트 데이터 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/06_text_data.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520393427" data-listing-reading-time-sort="0.105">
+<div class="body">
+<a href="../review/machine_learning/01_numpy/statistic.html">
+<h3 class="no-anchor listing-title">
+통계치 - 최대, 최소, 평균 등
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+keepdims=True -&gt; 원본 배열의 차원과 동일한 결과를 만듦
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/01_numpy/statistic.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="17" data-listing-file-modified-sort="1668519110151" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/10_feature_selection.html">
+<h3 class="no-anchor listing-title">
+특성 선택(차원 축소)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/10_feature_selection.html"> </a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520961678" data-listing-reading-time-sort="0.19">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/scaling.html">
+<h3 class="no-anchor listing-title">
+특성 스케일 바꾸기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/scaling.html">
+<div class="listing-date">
+Nov 15, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="19" data-listing-file-modified-sort="1668519097136" data-listing-reading-time-sort="0.005">
+<div class="body">
+<a href="../review/machine_learning/09_feature_extraction.html">
+<h3 class="no-anchor listing-title">
+특성 추출(차원 축소)
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/09_feature_extraction.html"> </a>
+</div>
+</div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items

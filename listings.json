@@ -78,8 +78,10 @@
   {
     "listing": "/blog/blog.html",
     "items": [
+      "/blog/posts/22-11-15.html",
       "/blog/posts/22-11-14.html",
       "/blog/posts/07-working-with-text-data.html",
+      "/blog/posts/using_pandas.html",
       "/blog/posts/knn.html",
       "/blog/posts/22-11-13.html",
       "/blog/posts/22-11-12.html",
@@ -124,7 +126,28 @@
   },
   {
     "listing": "/review/machine_learning.html",
-    "items": []
+    "items": [
+      "/review/machine_learning/02_data_load/csv.html",
+      "/review/machine_learning/01_numpy.html",
+      "/review/machine_learning/01_numpy/resize.html",
+      "/review/machine_learning/07_datetime.html",
+      "/review/machine_learning/03_data_wrangling.html",
+      "/review/machine_learning/02_data_load.html",
+      "/review/machine_learning/12_model_selection.html",
+      "/review/machine_learning/11_metrics.html",
+      "/review/machine_learning/03_data_wrangling/map_appply.html",
+      "/review/machine_learning/05_categorical_data.html",
+      "/review/machine_learning/01_numpy/linear_independent.html",
+      "/review/machine_learning/13_linear_regression.html",
+      "/review/machine_learning/04_numeric_data.html",
+      "/review/machine_learning/07_datetime/resample.html",
+      "/review/machine_learning/08_image_data.html",
+      "/review/machine_learning/06_text_data.html",
+      "/review/machine_learning/01_numpy/statistic.html",
+      "/review/machine_learning/10_feature_selection.html",
+      "/review/machine_learning/04_numeric_data/scaling.html",
+      "/review/machine_learning/09_feature_extraction.html"
+    ]
   },
   {
     "listing": "/review/python.html",
@@ -152,10 +175,72 @@
     "listing": "/review/eda.html",
     "items": [
       "/review/eda/folium.html",
-      "/review/eda/pyplot.html",
-      "/review/eda/using_pandas.html",
       "/review/eda/koreanfont.html"
     ]
+  },
+  {
+    "listing": "/review/machine_learning/12_model_selection.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/01_numpy.html",
+    "items": [
+      "/review/machine_learning/01_numpy/resize.html",
+      "/review/machine_learning/01_numpy/linear_independent.html",
+      "/review/machine_learning/01_numpy/statistic.html"
+    ]
+  },
+  {
+    "listing": "/review/machine_learning/07_datetime.html",
+    "items": [
+      "/review/machine_learning/07_datetime/resample.html"
+    ]
+  },
+  {
+    "listing": "/review/machine_learning/02_data_load.html",
+    "items": [
+      "/review/machine_learning/02_data_load/csv.html"
+    ]
+  },
+  {
+    "listing": "/review/machine_learning/06_text_data.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/05_categorical_data.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/08_image_data.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/04_numeric_data.html",
+    "items": [
+      "/review/machine_learning/04_numeric_data/scaling.html"
+    ]
+  },
+  {
+    "listing": "/review/machine_learning/09_feature_extraction.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/10_feature_selection.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/11_metrics.html",
+    "items": []
+  },
+  {
+    "listing": "/review/machine_learning/03_data_wrangling.html",
+    "items": [
+      "/review/machine_learning/03_data_wrangling/map_appply.html"
+    ]
+  },
+  {
+    "listing": "/review/machine_learning/13_linear_regression.html",
+    "items": []
   },
   {
     "listing": "/review/de.html",
@@ -185,10 +270,12 @@
   {
     "listing": "/review/algorithm.html",
     "items": [
+      "/review/algorithm/data_structure/03_recur3.html",
       "/review/algorithm/data_structure/01_stack1.html",
       "/review/algorithm/data_structure/01_stack2.html",
       "/review/algorithm/data_structure/03_recur1.html",
       "/review/algorithm/data_structure/02_queue1.html",
+      "/review/algorithm/data_structure/03_recur2.html",
       "/review/algorithm/data_structure/02_queue2.html",
       "/review/algorithm/basic_30/25_lv2.html",
       "/review/algorithm/basic_30/20_lv2.html",
