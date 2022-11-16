@@ -4,4 +4,5 @@ listing:
   contents: de
   sort: "title"
   type: default
+  categories: true
 ---

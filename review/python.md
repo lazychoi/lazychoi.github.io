@@ -4,4 +4,5 @@ listing:
   contents: python
   sort: "title"
   type: default
+  categories: true
 ---

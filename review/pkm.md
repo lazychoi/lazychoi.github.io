@@ -4,4 +4,5 @@ listing:
   contents: pkm
   sort: "title"
   type: default
+  categories: true
 ---

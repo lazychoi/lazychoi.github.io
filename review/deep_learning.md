@@ -4,4 +4,5 @@ listing:
   contents: deep_learning
   sort: "date descending"
   type: default
+  categories: true
 ---

@@ -2,6 +2,8 @@
 title: "참고자료"
 ---
 
+- [scikit-learn API](https://scikit-learn.org/stable/modules/classes.html#module){target=_blank}
+- [scikit-learn User Guide](https://scikit-learn.org/stable/user_guide.html#user-guide){target=_blank}
 - [판다스 요약(외부 문서)](https://velog.io/@ssu_hyun/Python-Basics-for-AI-Pandas-I#dataframe-operations){target=_blank}
 - [판다스 요약 pivot merge 등(외부 문서)](https://velog.io/@ssu_hyun/Python-Basics-for-AI-Pandas-II){target=_blank}
 - [넘파이 요약(외부 문서)](https://velog.io/@ssu_hyun/Python-Basics-for-AI-Numpy){target=_blank}

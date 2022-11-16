@@ -9,6 +9,7 @@ listing:
     contents: algorithm/basic_30
     type: grid
     page-size: 9
+  categories: true
 ---
 
 ## 자료 구조

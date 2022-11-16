@@ -44,6 +44,7 @@ website:
         # - section: "판다스 인 액션"
         #   contents: 
     - title: "오답노트"
+      collapse-level: 1
       contents:
         - review.md
         - review/python.md
@@ -51,10 +52,23 @@ website:
         - review/pkm.md
         - review/de.md
         - review/eda.md
-        - review/machine_learning.md
+        - section: "머신 러닝"
+          contents: 
+              # - review/machine_learning.md
+              - review/machine_learning/01_numpy.md
+              - review/machine_learning/02_data_load.md
+              - review/machine_learning/03_data_wrangling.md
+              - review/machine_learning/04_numeric_data.md
+              - review/machine_learning/05_categorical_data.md
+              - review/machine_learning/06_text_data.md
+              - review/machine_learning/07_datetime.md
+              - review/machine_learning/08_image_data.md
+              - review/machine_learning/09_feature_extraction.md
+              - review/machine_learning/10_feature_selection.md
+              - review/machine_learning/11_metrics.md
+              - review/machine_learning/12_model_selection.md
+              - review/machine_learning/13_linear_regression.md
         - review/deep_learning.md
-        # - section: "파이썬"
-        #   contents: 
         # - section: "알고리즘"
         #   contents:
         # - section: "지식관리"
@@ -63,6 +77,7 @@ website:
         #   contents:
         # - section: "EDA"
         #   contents:
+  
 
 
 format:
