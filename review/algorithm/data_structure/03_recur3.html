@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-16">
 
 <title>👀 - 괄호 변환</title>
 <style>
@@ -185,6 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <ul>
   <li><a href="#요구-사항" id="toc-요구-사항" class="nav-link active" data-scroll-target="#요구-사항">요구 사항</a></li>
   <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a></li>
+  <li><a href="#엔코아-풀이" id="toc-엔코아-풀이" class="nav-link" data-scroll-target="#엔코아-풀이">엔코아 풀이</a></li>
   </ul>
 </nav>
     </div>
@@ -204,7 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 16, 2022</p>
     </div>
   </div>
     
@@ -225,12 +226,193 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="접근-과정" class="level2">
 <h2 class="anchored" data-anchor-id="접근-과정">접근 과정</h2>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="st">"(()())()"</span></span>
+<ol type="1">
+<li>‘(’ = 1, ‘)’ = -1 로 대체</li>
+<li>문자열을 순회하며 더한 값이 0이면 문자열 분리</li>
+<li>올바른 괄호 문자열인지 판단
+<ol type="1">
+<li>더한 값이 &lt; 0 이면 올바른 문자열이 아님</li>
+<li>최종적으로 모두 더한 값이 0이면 올바른 문자열임</li>
+</ol></li>
+<li>앞뒤 모두 올바른 괄호 문자열이면 u + v 반환</li>
+<li>앞만 올바른 괄호 문자열이면 u + 재귀함수(v) 반환</li>
+<li>그 외
+<ol type="1">
+<li>빈 배열 생성</li>
+<li>빈 배열에 ‘(’ append</li>
+<li>재귀함수(v) extend &lt;- 1차원 유지 위해 extend</li>
+<li>‘)’ append</li>
+<li>u[1:-1] 리스트에서 ‘(’ -&gt; ‘)’, ‘)’ -&gt; ‘(’ 처럼 방향을 뒤집어서 extend</li>
+<li>이렇게 만든 배열 반환</li>
+</ol></li>
+</ol>
+<p>시키는 대로 해서 구현은 했는데 원리는 모르겠다.</p>
+<div class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> <span class="st">")("</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> paren(p):</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">==</span> <span class="st">''</span>: <span class="cf">return</span> p</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> check_paren(p):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    hap <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> p:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        hap <span class="op">+=</span> i</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hap <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="st">'bad'</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> hap <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'good'</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> paren(p):</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">==</span> <span class="st">''</span>:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> p</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    hap, u, v <span class="op">=</span> <span class="dv">0</span>, [], []</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(p)):</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        hap <span class="op">+=</span> p[i]</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hap <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            u <span class="op">=</span> p[:i<span class="op">+</span><span class="dv">1</span>]</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            v <span class="op">=</span> p[i<span class="op">+</span><span class="dv">1</span>:]</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'u'</span>, u)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'v'</span>, v)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'check u'</span>, check_paren(u))</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'check v'</span>, check_paren(v))</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> check_paren(u) <span class="op">==</span> <span class="st">'good'</span> <span class="kw">and</span> check_paren(v) <span class="op">==</span> <span class="st">'good'</span>:</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> u <span class="op">+</span> v</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> check_paren(u) <span class="op">==</span> <span class="st">'good'</span> <span class="kw">and</span> check_paren(v) <span class="op">==</span> <span class="st">'bad'</span>:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> u <span class="op">+</span> paren(v)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        new <span class="op">=</span> []</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>        new.append(<span class="dv">1</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>        new.extend(paren(v))</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        new.append(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        new_u <span class="op">=</span> [<span class="op">-</span><span class="dv">1</span> <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="dv">1</span> <span class="cf">for</span> i <span class="kw">in</span> u[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        new.extend(new_u)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">'new'</span>, new)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> new</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>new_p <span class="op">=</span> [ <span class="dv">1</span> <span class="cf">if</span> i <span class="op">==</span> <span class="st">'('</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">1</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">list</span>(p)]</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> paren(new_p)</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">''</span>.join([<span class="st">'('</span> <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">')'</span> <span class="cf">for</span> i <span class="kw">in</span> result]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>u [-1, 1]
+v []
+check u bad
+check v good
+u []
+v []
+check u good
+check v good
+new [1, -1]
+()</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solution(k):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> check_paren(p):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        hap <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> p:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            hap <span class="op">+=</span> i</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> hap <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> <span class="st">'bad'</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> hap <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="st">'good'</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> paren(p):</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> p <span class="op">==</span> <span class="st">''</span>:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        hap, u, v <span class="op">=</span> <span class="dv">0</span>, [], []</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(p)):</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>            hap <span class="op">+=</span> p[i]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> hap <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                u <span class="op">=</span> p[:i<span class="op">+</span><span class="dv">1</span>]</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>                v <span class="op">=</span> p[i<span class="op">+</span><span class="dv">1</span>:]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> check_paren(u) <span class="op">==</span> <span class="st">'good'</span> <span class="kw">and</span> check_paren(v) <span class="op">==</span> <span class="st">'good'</span>:</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> u <span class="op">+</span> v</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> check_paren(u) <span class="op">==</span> <span class="st">'good'</span> <span class="kw">and</span> check_paren(v) <span class="op">==</span> <span class="st">'bad'</span>:</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> u <span class="op">+</span> paren(v)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>            new <span class="op">=</span> []</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>            new.append(<span class="dv">1</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>            new.extend(paren(v))</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>            new.append(<span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>            new_u <span class="op">=</span> [<span class="op">-</span><span class="dv">1</span> <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="dv">1</span> <span class="cf">for</span> i <span class="kw">in</span> u[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]]</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>            new.extend(new_u)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> new</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> [ <span class="dv">1</span> <span class="cf">if</span> i <span class="op">==</span> <span class="st">'('</span> <span class="cf">else</span> <span class="op">-</span><span class="dv">1</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">list</span>(k)]</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> paren(p)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">''</span>.join([<span class="st">'('</span> <span class="cf">if</span> i <span class="op">==</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">')'</span> <span class="cf">for</span> i <span class="kw">in</span> result])</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>solution(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>'()'</code></pre>
+</div>
+</div>
+</section>
+<section id="엔코아-풀이" class="level2">
+<h2 class="anchored" data-anchor-id="엔코아-풀이">엔코아 풀이</h2>
+<p>이 문제에서 base case는 “입력이 빈 문자열일 경우 빈 문자열 반환”이다. base case를 지정하지 않으면 무한루프에 빠진다.</p>
+<ul>
+<li>p : 입력 문자열</li>
+<li>cnt : “(”, “)” 개수 카운트</li>
+<li>idx : “균형 잡힌 괄호 문자열” u, v를 나누기 위한 index</li>
+<li>u, v : 분리된 문자열</li>
+<li>new_u : ’올바른 문자열’이 아닌 u에 대한 작업이 수행된 이후의 u</li>
+</ul>
+<div class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solution(p):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 1. 입력이 빈 문자열인 경우, 빈 문자열 반환</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> p <span class="op">==</span> <span class="st">''</span>:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> p</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 2. 문자열을 '균형 잡힌 괄호 문자열' u, v로 분리.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    cnt, idx <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(p)):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> p[i] <span class="op">==</span> <span class="st">"("</span>:</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            cnt <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: <span class="co"># 닫는 괄호일 때</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            cnt <span class="op">-=</span> <span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> cnt <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            idx <span class="op">=</span> i</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    u, v <span class="op">=</span> p[:idx<span class="op">+</span><span class="dv">1</span>], p[idx<span class="op">+</span><span class="dv">1</span>:]</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3. 문자열 u가 올바른 괄호 문자열이라면 v에 대해 1단계부터 다시 수행</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 3-1.수행한 문자열을 u에 이어붙인 후 반환</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 올바른 괄호 문자열 파악 - 괄호 개수가 같기 때문에 첫번째 문자가 '('이기만 하면 올바른 괄호 문자열이다.</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> u[<span class="dv">0</span>] <span class="op">==</span> <span class="st">"("</span>:</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> u <span class="op">+</span> solution(v)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 4. 문자열 u가 "올바른 괄호 문자열"이 아니라면 아래 과정을 수행합니다. </span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">#4-1. 빈 문자열에 첫 번째 문자로 '('를 붙입니다. </span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">#4-2. 문자열 v에 대해 1단계부터 재귀적으로 수행한 결과 문자열을 이어 붙입니다. </span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">#4-3. ')'를 다시 붙입니다. </span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">#4-4. u의 첫 번째와 마지막 문자를 제거하고, 나머지 문자열의 괄호 방향을 뒤집어서 뒤에 붙입니다. </span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="co">#4-5. 생성된 문자열을 반환합니다.</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>        new_u <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> u[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> i <span class="op">==</span> <span class="st">"("</span>:</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>                new_u <span class="op">+=</span> <span class="st">")"</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>                new_u <span class="op">+=</span> <span class="st">"("</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">"("</span> <span class="op">+</span> solution(v) <span class="op">+</span> <span class="st">")"</span> <span class="op">+</span> new_u</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>solution(p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="52">
+<pre><code>'()'</code></pre>
+</div>
 </div>
 
 
