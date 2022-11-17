@@ -70,9 +70,10 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-description"],
+      valueNames: ['listing-date','listing-title','listing-author','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      page: 25,
+    pagination: { item: "<li class='page-item'><a class='page page-link' href='#'></a></li>" },
+      searchColumns: ["listing-date","listing-title","listing-author","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -148,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(30)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -406,7 +407,95 @@ Nov 15, 2022
 <a href="../review/machine_learning/05_categorical_data.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520592875" data-listing-reading-time-sort="0.345">
+<div class="quarto-post image-right" data-index="12" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668672048482" data-listing-reading-time-sort="0.02">
+<div class="body">
+<a href="../review/machine_learning/05_categorical_data/nan.html">
+<h3 class="no-anchor listing-title">
+범주형 특성 결측치 대체
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/05_categorical_data/nan.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="13" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668670042281" data-listing-reading-time-sort="0.27">
+<div class="body">
+<a href="../review/machine_learning/05_categorical_data/encoding.html">
+<h3 class="no-anchor listing-title">
+범주형 특성 인코딩
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/05_categorical_data/encoding.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="14" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668672857465" data-listing-reading-time-sort="0.315">
+<div class="body">
+<a href="../review/machine_learning/05_categorical_data/imbalance.html">
+<h3 class="no-anchor listing-title">
+불균형한 클래스 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+-&gt; 다운샘플링과 업샘플링 중 선택은 문제에 따라 다르다. 일반적으로 둘 다 시도해보고 결과가 좋은 쪽을 선택한다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/05_categorical_data/imbalance.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668661140891" data-listing-reading-time-sort="0.04">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/group_samples.html">
+<h3 class="no-anchor listing-title">
+샘플을 군집으로 묶기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+샘플을 그룹으로 묶는다. 각 그룹은 새로운 특성이 된다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/group_samples.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="16" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520592875" data-listing-reading-time-sort="0.345">
 <div class="body">
 <a href="../review/machine_learning/01_numpy/linear_independent.html">
 <h3 class="no-anchor listing-title">
@@ -428,7 +517,7 @@ Nov 15, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="13" data-listing-file-modified-sort="1668519148149" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="17" data-listing-file-modified-sort="1668519148149" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/13_linear_regression.html">
 <h3 class="no-anchor listing-title">
@@ -446,7 +535,7 @@ Nov 15, 2022
 <a href="../review/machine_learning/13_linear_regression.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="14" data-listing-file-modified-sort="1668518979373" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="18" data-listing-file-modified-sort="1668518979373" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/04_numeric_data.html">
 <h3 class="no-anchor listing-title">
@@ -464,7 +553,29 @@ Nov 15, 2022
 <a href="../review/machine_learning/04_numeric_data.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="15" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668521218360" data-listing-reading-time-sort="0.215">
+<div class="quarto-post image-right" data-index="19" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668673237626" data-listing-reading-time-sort="0.58">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/nan.html">
+<h3 class="no-anchor listing-title">
+수치형 특성 결측치 다루기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+=&gt; MCAR이나 MAR은 이따금 결측치가 있는 샘플을 삭제해도 괜찮다. <strong>MNAR은 값이 누란된 사실 자체가 정보다.</strong> MNAR인 샘플을 삭제하면 데이터에 편향을 추가하게 된다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/nan.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668521218360" data-listing-reading-time-sort="0.215">
 <div class="body">
 <a href="../review/machine_learning/07_datetime/resample.html">
 <h3 class="no-anchor listing-title">
@@ -486,7 +597,7 @@ Nov 15, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="16" data-listing-file-modified-sort="1668519069319" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="21" data-listing-file-modified-sort="1668519069319" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/08_image_data.html">
 <h3 class="no-anchor listing-title">
@@ -504,7 +615,29 @@ Nov 15, 2022
 <a href="../review/machine_learning/08_image_data.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="17" data-listing-file-modified-sort="1668519009991" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="22" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668652707817" data-listing-reading-time-sort="0.17">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/outlier.html">
+<h3 class="no-anchor listing-title">
+이상치 감지 및 처리
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+Three ways to detect outliers
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/outlier.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="23" data-listing-file-modified-sort="1668519009991" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/06_text_data.html">
 <h3 class="no-anchor listing-title">
@@ -522,7 +655,7 @@ Nov 15, 2022
 <a href="../review/machine_learning/06_text_data.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="18" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520393427" data-listing-reading-time-sort="0.105">
+<div class="quarto-post image-right" data-index="24" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520393427" data-listing-reading-time-sort="0.105">
 <div class="body">
 <a href="../review/machine_learning/01_numpy/statistic.html">
 <h3 class="no-anchor listing-title">
@@ -544,7 +677,29 @@ Nov 15, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="19" data-listing-file-modified-sort="1668519110151" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="25" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668650246174" data-listing-reading-time-sort="0.94">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/feature_engineering.html">
+<h3 class="no-anchor listing-title">
+특성 생성 변환
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/feature_engineering.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="26" data-listing-file-modified-sort="1668519110151" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/10_feature_selection.html">
 <h3 class="no-anchor listing-title">
@@ -562,7 +717,7 @@ Nov 15, 2022
 <a href="../review/machine_learning/10_feature_selection.html"> </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="20" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668520961678" data-listing-reading-time-sort="0.19">
+<div class="quarto-post image-right" data-index="27" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668644176194" data-listing-reading-time-sort="0.51">
 <div class="body">
 <a href="../review/machine_learning/04_numeric_data/scaling.html">
 <h3 class="no-anchor listing-title">
@@ -584,7 +739,7 @@ Nov 15, 2022
 </a>
 </div>
 </div>
-<div class="quarto-post image-right" data-index="21" data-listing-file-modified-sort="1668519097136" data-listing-reading-time-sort="0.005">
+<div class="quarto-post image-right" data-index="28" data-listing-file-modified-sort="1668519097136" data-listing-reading-time-sort="0.005">
 <div class="body">
 <a href="../review/machine_learning/09_feature_extraction.html">
 <h3 class="no-anchor listing-title">
@@ -602,10 +757,35 @@ Nov 15, 2022
 <a href="../review/machine_learning/09_feature_extraction.html"> </a>
 </div>
 </div>
+<div class="quarto-post image-right" data-index="29" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668660654673" data-listing-reading-time-sort="0.545">
+<div class="body">
+<a href="../review/machine_learning/04_numeric_data/bin.html">
+<h3 class="no-anchor listing-title">
+특성을 구간으로 나누기
+</h3>
+<div class="listing-subtitle">
+
+</div>
+<div class="listing-description">
+수치 특성을 범주형처럼 다룰 때 유용한 전략이다. 예를 들어 18세와 19세의 소비 습관은 차이가 매우 작지만 19세와 20세 사이는 차이가 클 수 있다. 20세부터는 성년이어서 술을 살 수 있기 때문이다.
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/machine_learning/04_numeric_data/bin.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items
 </div>
+<nav id="listing-pagination" class="listing-pagination" aria-label="Page Navigation">
+  <ul class="pagination"></ul>
+</nav>
 </div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

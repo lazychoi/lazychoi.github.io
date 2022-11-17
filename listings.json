@@ -78,6 +78,7 @@
   {
     "listing": "/blog/blog.html",
     "items": [
+      "/blog/posts/22-11-17.html",
       "/blog/posts/22-11-16.html",
       "/blog/posts/22-11-15.html",
       "/blog/posts/22-11-14.html",
@@ -140,16 +141,24 @@
       "/review/machine_learning/11_metrics.html",
       "/review/machine_learning/03_data_wrangling/map_appply.html",
       "/review/machine_learning/05_categorical_data.html",
+      "/review/machine_learning/05_categorical_data/nan.html",
+      "/review/machine_learning/05_categorical_data/encoding.html",
+      "/review/machine_learning/05_categorical_data/imbalance.html",
+      "/review/machine_learning/04_numeric_data/group_samples.html",
       "/review/machine_learning/01_numpy/linear_independent.html",
       "/review/machine_learning/13_linear_regression.html",
       "/review/machine_learning/04_numeric_data.html",
+      "/review/machine_learning/04_numeric_data/nan.html",
       "/review/machine_learning/07_datetime/resample.html",
       "/review/machine_learning/08_image_data.html",
+      "/review/machine_learning/04_numeric_data/outlier.html",
       "/review/machine_learning/06_text_data.html",
       "/review/machine_learning/01_numpy/statistic.html",
+      "/review/machine_learning/04_numeric_data/feature_engineering.html",
       "/review/machine_learning/10_feature_selection.html",
       "/review/machine_learning/04_numeric_data/scaling.html",
-      "/review/machine_learning/09_feature_extraction.html"
+      "/review/machine_learning/09_feature_extraction.html",
+      "/review/machine_learning/04_numeric_data/bin.html"
     ]
   },
   {
@@ -213,7 +222,11 @@
   },
   {
     "listing": "/review/machine_learning/05_categorical_data.html",
-    "items": []
+    "items": [
+      "/review/machine_learning/05_categorical_data/nan.html",
+      "/review/machine_learning/05_categorical_data/encoding.html",
+      "/review/machine_learning/05_categorical_data/imbalance.html"
+    ]
   },
   {
     "listing": "/review/machine_learning/08_image_data.html",
@@ -222,7 +235,12 @@
   {
     "listing": "/review/machine_learning/04_numeric_data.html",
     "items": [
-      "/review/machine_learning/04_numeric_data/scaling.html"
+      "/review/machine_learning/04_numeric_data/group_samples.html",
+      "/review/machine_learning/04_numeric_data/nan.html",
+      "/review/machine_learning/04_numeric_data/outlier.html",
+      "/review/machine_learning/04_numeric_data/feature_engineering.html",
+      "/review/machine_learning/04_numeric_data/scaling.html",
+      "/review/machine_learning/04_numeric_data/bin.html"
     ]
   },
   {
@@ -308,6 +326,8 @@
   },
   {
     "listing": "/review/deep_learning.html",
-    "items": []
+    "items": [
+      "/review/deep_learning/pytorch_dl.html"
+    ]
   }
 ]

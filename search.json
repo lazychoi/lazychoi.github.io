@@ -1365,6 +1365,13 @@
     "text": "book\n\n이것이 코딩 테스트다 8장 다이나믹 프로그래밍"
   },
   {
+    "objectID": "blog/posts/22-11-17.html",
+    "href": "blog/posts/22-11-17.html",
+    "title": "22-11-17(목)",
+    "section": "",
+    "text": "샘플의 특성값을 전체 길이가 1인 단위 노름으로 변환\n특성 생성 및 변환\n이상치 감지 및 처리\n특성을 구간으로 나누기\n샘플을 군집으로 묶기\n수치형 특성 결측치 다루기\n\n파이썬을 활용한 머신러닝 쿡북 5장 범주형 데이터 다루기\n\n범주형 특성 인코딩\n범주형 특성 결측치 대체\n불균형한 클래스 다루기\n\n이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝"
+  },
+  {
     "objectID": "blog/posts/22-11-07.html",
     "href": "blog/posts/22-11-07.html",
     "title": "22-11-07(월)",
@@ -1446,7 +1453,7 @@
     "href": "blog/blog.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\nK-최근접 이웃(K-Nearest Neighbors)\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\nK-최근접 이웃(K-Nearest Neighbors)\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "project/2205_mbti.html",
@@ -1586,7 +1593,7 @@
     "href": "review/machine_learning.html",
     "title": "머신러닝",
     "section": "",
-    "text": "Nov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\nNo matching items"
+    "text": "Nov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/eda/folium.html",
@@ -1656,7 +1663,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '양', '가', '가', '수', '우', '가', '양', '양', '우']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['양', '가', '가', '우', '가', '미', '가', '수', '가', '가']"
   },
   {
     "objectID": "review/python/class.html",
@@ -1967,6 +1974,55 @@
     "text": "Oct 31, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\nNo matching items"
   },
   {
+    "objectID": "review/machine_learning/05_categorical_data/nan.html",
+    "href": "review/machine_learning/05_categorical_data/nan.html",
+    "title": "범주형 특성 결측치 대체",
+    "section": "",
+    "text": "import numpy as np\nimport pandas as pd\nfrom sklearn.neighbors import KNeighborsClassifier\n\n# 범주형 특성 행렬 만들기\nX = np.array([[0, 2.10, 1.45],\n              [1, 1.18, 1.33],\n              [0, 1.22, 1.27],\n              [1, -0.21, -1.19]])\n\n# 결측치 포함한 특성 행렬 만들기. 0번째 열에 결측치 추가\nX_with_nan = np.array([[np.nan, 0.87, 1.31],\n                       [np.nan, -0.67, -0.22]])\n\nclf = KNeighborsClassifier(3, weights='distance')\ntrained_model = clf.fit(X[:, 1:], X[:, 0]) # 범주형 특성을 타겟으로 설정\n\n# 결측치 클래스 예측\nimputed_values = trained_model.predict(X_with_nan[:, 1:]) # array([0., 1.])\n\n# 결측치 포함한 원본 행렬 중 결측치 제외한 열과 예측된 클래스를 합침\nX_with_imputed = np.hstack((imputed_values.reshape(-1, 1), X_with_nan[:, 1:]))\n\n# 두 특성 행렬 연결(세로)\nnp.vstack((X_with_imputed, X))\n\narray([[ 0.  ,  0.87,  1.31],\n       [ 1.  , -0.67, -0.22],\n       [ 0.  ,  2.1 ,  1.45],\n       [ 1.  ,  1.18,  1.33],\n       [ 0.  ,  1.22,  1.27],\n       [ 1.  , -0.21, -1.19]])"
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/nan.html#특성의-최빈값으로-대체하기",
+    "href": "review/machine_learning/05_categorical_data/nan.html#특성의-최빈값으로-대체하기",
+    "title": "범주형 특성 결측치 대체",
+    "section": "특성의 최빈값으로 대체하기",
+    "text": "특성의 최빈값으로 대체하기\n\nfrom sklearn.impute import SimpleImputer\n\nX_complete = np.vstack((X_with_nan, X))\n\nimputer = SimpleImputer(strategy='most_frequent')\nimputer.fit_transform(X_complete)\n\narray([[ 0.  ,  0.87,  1.31],\n       [ 0.  , -0.67, -0.22],\n       [ 0.  ,  2.1 ,  1.45],\n       [ 1.  ,  1.18,  1.33],\n       [ 0.  ,  1.22,  1.27],\n       [ 1.  , -0.21, -1.19]])"
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/imbalance.html",
+    "href": "review/machine_learning/05_categorical_data/imbalance.html",
+    "title": "불균형한 클래스 다루기",
+    "section": "",
+    "text": "소수 클래스 샘플 더 모으기\n불균형한 클래스에 잘 맞는 모델 평가지표 사용: 오차행렬, 재현율, 정밀도, F1 점수, ROC 곡선\n일부 모델에서 제공하는 클래스 가중치 매개변수 사용(class_weight)\n다운샘플링\n업샘플링\n\n-> 다운샘플링과 업샘플링 중 선택은 문제에 따라 다르다. 일반적으로 둘 다 시도해보고 결과가 좋은 쪽을 선택한다."
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/imbalance.html#가중치-매개변수-제공-모델-사용",
+    "href": "review/machine_learning/05_categorical_data/imbalance.html#가중치-매개변수-제공-모델-사용",
+    "title": "불균형한 클래스 다루기",
+    "section": "가중치 매개변수 제공 모델 사용",
+    "text": "가중치 매개변수 제공 모델 사용\nRandomForestClassifier()의 class_weight 매개변수에\n\n딕셔너리 형식으로 클래스별 비중을 지정하거나\n’balanced’를 지정하여 자동으로 설정할 수 있다\n\n\nimport numpy as np\nimport pandas as pd\nfrom sklearn.ensemble import RandomForestClassifier\n\n# 신용카드 사기 검출 데이터셋\ndf = pd.read_csv('https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv')\ndf.head()\n\n\n\n\n\n  \n    \n      \n      Time\n      V1\n      V2\n      V3\n      V4\n      V5\n      V6\n      V7\n      V8\n      V9\n      ...\n      V21\n      V22\n      V23\n      V24\n      V25\n      V26\n      V27\n      V28\n      Amount\n      Class\n    \n  \n  \n    \n      0\n      0.0\n      -1.359807\n      -0.072781\n      2.536347\n      1.378155\n      -0.338321\n      0.462388\n      0.239599\n      0.098698\n      0.363787\n      ...\n      -0.018307\n      0.277838\n      -0.110474\n      0.066928\n      0.128539\n      -0.189115\n      0.133558\n      -0.021053\n      149.62\n      0\n    \n    \n      1\n      0.0\n      1.191857\n      0.266151\n      0.166480\n      0.448154\n      0.060018\n      -0.082361\n      -0.078803\n      0.085102\n      -0.255425\n      ...\n      -0.225775\n      -0.638672\n      0.101288\n      -0.339846\n      0.167170\n      0.125895\n      -0.008983\n      0.014724\n      2.69\n      0\n    \n    \n      2\n      1.0\n      -1.358354\n      -1.340163\n      1.773209\n      0.379780\n      -0.503198\n      1.800499\n      0.791461\n      0.247676\n      -1.514654\n      ...\n      0.247998\n      0.771679\n      0.909412\n      -0.689281\n      -0.327642\n      -0.139097\n      -0.055353\n      -0.059752\n      378.66\n      0\n    \n    \n      3\n      1.0\n      -0.966272\n      -0.185226\n      1.792993\n      -0.863291\n      -0.010309\n      1.247203\n      0.237609\n      0.377436\n      -1.387024\n      ...\n      -0.108300\n      0.005274\n      -0.190321\n      -1.175575\n      0.647376\n      -0.221929\n      0.062723\n      0.061458\n      123.50\n      0\n    \n    \n      4\n      2.0\n      -1.158233\n      0.877737\n      1.548718\n      0.403034\n      -0.407193\n      0.095921\n      0.592941\n      -0.270533\n      0.817739\n      ...\n      -0.009431\n      0.798278\n      -0.137458\n      0.141267\n      -0.206010\n      0.502292\n      0.219422\n      0.215153\n      69.99\n      0\n    \n  \n\n5 rows × 31 columns\n\n\n\n\nX = df.iloc[:, 1:-1]\ny = df.iloc[:, -1]\n\nweights = {0: 0.9, 1: 0.1}\nRandomForestClassifier(class_weight=weights)\n\nRandomForestClassifier(class_weight={0: 0.9, 1: 0.1})\n\n\n\nRandomForestClassifier(class_weight='balanced')\n\nRandomForestClassifier(class_weight='balanced')"
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/encoding.html",
+    "href": "review/machine_learning/05_categorical_data/encoding.html",
+    "title": "범주형 특성 인코딩",
+    "section": "",
+    "text": "from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer, OneHotEncoder\npandas.get_dummies()\n원-핫 인코딩 후에는 선형 의존성을 피하기 위해 원-핫 인코딩된 특성 중 하나를 삭제하는 것이 좋음\n\n\nimport numpy as np\nimport pandas as pd\nfrom sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer, OneHotEncoder\n\nfeatures = np.array([['Seoul'],\n                     ['Busan'],\n                     ['Incheon'],\n                     ['Seoul'],\n                     ['Seoul']])\n\n\n\n\none_hot_la = LabelBinarizer()\nfeatures_la = one_hot_la.fit_transform(features)\nfeatures_la\n\narray([[0, 0, 1],\n       [1, 0, 0],\n       [0, 1, 0],\n       [0, 0, 1],\n       [0, 0, 1]])\n\n\n\n# 클래스 확인\none_hot_la.classes_\n\narray(['Busan', 'Incheon', 'Seoul'], dtype='<U7')\n\n\n\n# 인코딩 되돌리기\none_hot_la.inverse_transform(features_la)\n\narray(['Seoul', 'Busan', 'Incheon', 'Seoul', 'Seoul'], dtype='<U7')\n\n\n\n\n\n\nfeatures = np.array([('Seoul', 'Incheon'),\n                     ('Busan', 'Daejun'),\n                     ('Incheon', 'Sejong'),\n                     ('Seoul', 'Busan'),\n                     ('Seoul', 'Daejun')])\n\n\none_hot_mul = MultiLabelBinarizer()\nfeatures_mul = one_hot_mul.fit_transform(features)\nfeatures_mul\n\narray([[0, 0, 1, 0, 1],\n       [1, 1, 0, 0, 0],\n       [0, 0, 1, 1, 0],\n       [1, 0, 0, 0, 1],\n       [0, 1, 0, 0, 1]])\n\n\n\none_hot_mul.classes_\n\narray(['Busan', 'Daejun', 'Incheon', 'Sejong', 'Seoul'], dtype=object)\n\n\n\n\n\n\noh = OneHotEncoder(sparse=False)\nfeatures_oh = oh.fit_transform(features)\nfeatures_oh\n\narray([[0., 0., 1., 0., 0., 1., 0.],\n       [1., 0., 0., 0., 1., 0., 0.],\n       [0., 1., 0., 0., 0., 0., 1.],\n       [0., 0., 1., 1., 0., 0., 0.],\n       [0., 0., 1., 0., 1., 0., 0.]])\n\n\n\noh.categories_\n\n[array(['Busan', 'Incheon', 'Seoul'], dtype='<U7'),\n array(['Busan', 'Daejun', 'Incheon', 'Sejong'], dtype='<U7')]"
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/encoding.html#순서가-있는-범주형-특성-인코딩",
+    "href": "review/machine_learning/05_categorical_data/encoding.html#순서가-있는-범주형-특성-인코딩",
+    "title": "범주형 특성 인코딩",
+    "section": "순서가 있는 범주형 특성 인코딩",
+    "text": "순서가 있는 범주형 특성 인코딩\n\n가장 자주 사용하는 방법은 클래스 레이블 문자열을 정수로 매핑하는 딕셔너리를 만들고 이를 필요한 특성에 적용하는 것\n클래스 간 간격에 주의\n\n\ndf = pd.DataFrame({'Score':['Low', 'Low', 'Medium', 'Medium', 'High']})\n\nscale_mapper = {'Low':1,\n                'Medium':2,\n                'High':3}\n\ndf['Score'].replace(scale_mapper)\n\n0    1\n1    1\n2    2\n3    2\n4    3\nName: Score, dtype: int64"
+  },
+  {
+    "objectID": "review/machine_learning/05_categorical_data/encoding.html#딕셔너리를-행렬로-변환",
+    "href": "review/machine_learning/05_categorical_data/encoding.html#딕셔너리를-행렬로-변환",
+    "title": "범주형 특성 인코딩",
+    "section": "딕셔너리를 행렬로 변환",
+    "text": "딕셔너리를 행렬로 변환\n\nfrom sklearn.feature_extraction import DictVectorizer\n\ndata_dict = [{'Red':2, 'Blue':4},\n             {'Red':4, 'Blue':3},\n             {'Red':1, 'Yellow':2},\n             {'Red':2, 'Yellow':2}]\n\ndv = DictVectorizer(sparse=False)\ndv.fit_transform(data_dict)\n\narray([[4., 2., 0.],\n       [3., 4., 0.],\n       [0., 1., 2.],\n       [0., 2., 2.]])\n\n\n\ndv.get_feature_names_out()\n\narray(['Blue', 'Red', 'Yellow'], dtype=object)"
+  },
+  {
     "objectID": "review/machine_learning/12_model_selection.html",
     "href": "review/machine_learning/12_model_selection.html",
     "title": "모델 선택",
@@ -2076,7 +2132,7 @@
     "href": "review/machine_learning/05_categorical_data.html",
     "title": "범주형 데이터 다루기",
     "section": "",
-    "text": "No matching items"
+    "text": "Nov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/machine_learning/08_image_data.html",
@@ -2090,7 +2146,7 @@
     "href": "review/machine_learning/04_numeric_data.html",
     "title": "수치형 데이터 다루기",
     "section": "",
-    "text": "Nov 15, 2022\n\n\n\n\n\n\nNo matching items"
+    "text": "Nov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNov 17, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/machine_learning/09_feature_extraction.html",
@@ -2100,11 +2156,144 @@
     "text": "No matching items"
   },
   {
+    "objectID": "review/machine_learning/04_numeric_data/outlier.html",
+    "href": "review/machine_learning/04_numeric_data/outlier.html",
+    "title": "이상치 감지 및 처리",
+    "section": "",
+    "text": "import numpy as np"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/outlier.html#이상치-감지-방법",
+    "href": "review/machine_learning/04_numeric_data/outlier.html#이상치-감지-방법",
+    "title": "이상치 감지 및 처리",
+    "section": "이상치 감지 방법",
+    "text": "이상치 감지 방법\nThree ways to detect outliers\n\nZ-score method\nModified Z-score method\nIQR method\n\n\n사분위수(IQR) 이용\n\n# 샘플 데이터 만들기\nfrom sklearn.datasets import make_blobs\n\nfeatures, _ = make_blobs(n_samples = 10,\n                         n_features = 2,\n                         centers = 1,\n                         random_state = 1)\n# 이상치 입력\nfeatures[0, 0] = 10000\nfeatures[0, 1] = 10000\nfeatures\n\narray([[ 1.00000000e+04,  1.00000000e+04],\n       [-2.76017908e+00,  5.55121358e+00],\n       [-1.61734616e+00,  4.98930508e+00],\n       [-5.25790464e-01,  3.30659860e+00],\n       [ 8.52518583e-02,  3.64528297e+00],\n       [-7.94152277e-01,  2.10495117e+00],\n       [-1.34052081e+00,  4.15711949e+00],\n       [-1.98197711e+00,  4.02243551e+00],\n       [-2.18773166e+00,  3.33352125e+00],\n       [-1.97451969e-01,  2.34634916e+00]])\n\n\n\n# 이상치의 인덱스 반환 함수\ndef indicies_of_outliers(x):\n    q1, q3 = np.percentile(x, [25, 75])\n    iqr = q3 - q1\n    lower_bound = q1 - (iqr * 1.5)\n    upper_bound = q3 + (iqr * 1.5)\n    return np.where((x > upper_bound) | (x < lower_bound))\n\nindicies_of_outliers(features[:,0])\n\n(array([0]),)"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/outlier.html#이상치-다루는-3가지-방법",
+    "href": "review/machine_learning/04_numeric_data/outlier.html#이상치-다루는-3가지-방법",
+    "title": "이상치 감지 및 처리",
+    "section": "이상치 다루는 3가지 방법",
+    "text": "이상치 다루는 3가지 방법\n\n삭제\n포함: outlier 특성을 만들고 1로 설정\n변환: 이상치의 영향이 줄어들도록 특성을 변환. eg. 로그 변환\n\n\nhelp(np.where)\n\nHelp on function where in module numpy:\n\nwhere(...)\n    where(condition, [x, y])\n    \n    Return elements chosen from `x` or `y` depending on `condition`.\n    \n    .. note::\n        When only `condition` is provided, this function is a shorthand for\n        ``np.asarray(condition).nonzero()``. Using `nonzero` directly should be\n        preferred, as it behaves correctly for subclasses. The rest of this\n        documentation covers only the case where all three arguments are\n        provided.\n    \n    Parameters\n    ----------\n    condition : array_like, bool\n        Where True, yield `x`, otherwise yield `y`.\n    x, y : array_like\n        Values from which to choose. `x`, `y` and `condition` need to be\n        broadcastable to some shape.\n    \n    Returns\n    -------\n    out : ndarray\n        An array with elements from `x` where `condition` is True, and elements\n        from `y` elsewhere.\n    \n    See Also\n    --------\n    choose\n    nonzero : The function that is called when x and y are omitted\n    \n    Notes\n    -----\n    If all the arrays are 1-D, `where` is equivalent to::\n    \n        [xv if c else yv\n         for c, xv, yv in zip(condition, x, y)]\n    \n    Examples\n    --------\n    >>> a = np.arange(10)\n    >>> a\n    array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])\n    >>> np.where(a < 5, a, 10*a)\n    array([ 0,  1,  2,  3,  4, 50, 60, 70, 80, 90])\n    \n    This can be used on multidimensional arrays too:\n    \n    >>> np.where([[True, False], [True, True]],\n    ...          [[1, 2], [3, 4]],\n    ...          [[9, 8], [7, 6]])\n    array([[1, 8],\n           [3, 4]])\n    \n    The shapes of x, y, and the condition are broadcast together:\n    \n    >>> x, y = np.ogrid[:3, :4]\n    >>> np.where(x < y, x, 10 + y)  # both x and 10+y are broadcast\n    array([[10,  0,  0,  0],\n           [10, 11,  1,  1],\n           [10, 11, 12,  2]])\n    \n    >>> a = np.array([[0, 1, 2],\n    ...               [0, 2, 4],\n    ...               [0, 3, 6]])\n    >>> np.where(a < 4, a, -1)  # -1 is broadcast\n    array([[ 0,  1,  2],\n           [ 0,  2, -1],\n           [ 0,  3, -1]])"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/nan.html",
+    "href": "review/machine_learning/04_numeric_data/nan.html",
+    "title": "수치형 특성 결측치 다루기",
+    "section": "",
+    "text": "import numpy as np"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/nan.html#결측치-종류",
+    "href": "review/machine_learning/04_numeric_data/nan.html#결측치-종류",
+    "title": "수치형 특성 결측치 다루기",
+    "section": "결측치 종류",
+    "text": "결측치 종류\n\nMCAR(Missing Completely at Random): 완전 랜덤하게 누락\nMAR(Missing at Random): 랜덤하게 누락. 값이 누락될 확률이 다른 특성에서 얻은 정보에 의존함. eg. 결혼 여부와 자녀 유무에 관한 설문에서, 미혼자는 자녀 유무 항목을 건너뛸 가능성이 높다. 이때 자녀 유무 항목의 응답 여부는 결혼 여부 특성에 의존한다.\nMNAR(Not Missing at Random): 값이 누락될 확률이 특성에서 잡지 못한 정보에 의존. eg. 고소득자는 수입에 관한 설문항목에 응답하지 않을 가능성이 높다.\n\n=> MCAR이나 MAR은 이따금 결측치가 있는 샘플을 삭제해도 괜찮다. MNAR은 값이 누란된 사실 자체가 정보다. MNAR인 샘플을 삭제하면 데이터에 편향을 추가하게 된다."
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/nan.html#결측치-없는-샘플만-반환",
+    "href": "review/machine_learning/04_numeric_data/nan.html#결측치-없는-샘플만-반환",
+    "title": "수치형 특성 결측치 다루기",
+    "section": "결측치 없는 샘플만 반환",
+    "text": "결측치 없는 샘플만 반환\n\n넘파이: ~ 연산자와 np.isnan(ndarray) 사용\n판다스: df.dropna()\n\n\nfeatures = np.array([[1.1, 11.1],\n                     [2.2, 22.2],\n                     [3.3, 33.3],\n                     [4.4, 44.4],\n                     [np.nan, 55]])\n\nfeatures[~np.isnan(features).any(axis=1)]\n\narray([[ 1.1, 11.1],\n       [ 2.2, 22.2],\n       [ 3.3, 33.3],\n       [ 4.4, 44.4]])"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/nan.html#결측치-채우기",
+    "href": "review/machine_learning/04_numeric_data/nan.html#결측치-채우기",
+    "title": "수치형 특성 결측치 다루기",
+    "section": "결측치 채우기",
+    "text": "결측치 채우기\n데이터 양이 작으면 KNN 알고리즘을 사용해 누락된 값을 예측한다.(fancyimpute 모듈)  -> fancyimpute 설치 에러. 아마도\nsklearn.preprocessing.SimpleImputer 사용\n\nfrom sklearn.preprocessing import StandardScaler\nfrom fancyimpute import KNN\nfrom sklearn.datasets import make_blobs\n\nfeatures, _ = make_blobs(n_samples=1000,\n                         n_features=2,\n                         random_state=1)\n\nscaler = StandardScaler()\nstandardized_features = scaler.fit_transform(features)\n\n# 첫 번째 샘플의 첫 번째 특성 삭제\ntrue_value = standardized_features[0,0]\nstandardized_features[0,0] = np.nan\n\n# 특성 행렬에 있는 누락된 값 예측\nfeatures_knn_imputed = KNN(k=5, verbose=0).fit_transform(standardized_features)\n\n# 실제 값과 대체된 값 비교\nprint('실제 값:', true_value)\nprint('대체된 값:', features_knn_imputed[0,0])\n\n\nfrom sklearn.impute import SimpleImputer\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.datasets import make_blobs\n\nfeatures, _ = make_blobs(n_samples=1000,\n                         n_features=2,\n                         random_state=1)\n\nscaler = StandardScaler()\nstandardized_features = scaler.fit_transform(features)\n\n# 첫 번째 샘플의 첫 번째 특성 삭제\ntrue_value = standardized_features[0,0]\nstandardized_features[0,0] = np.nan\n\nsi = SimpleImputer() # 기본값은 mean\nfeature_simpleImputed = si.fit_transform(standardized_features)\n\n# 실제 값과 대체된 값 비교\nprint('실제 값:', true_value)\nprint('대체된 값:', feature_simpleImputed[0,0])\n\n실제 값: 0.8730186113995938\n대체된 값: -0.000873892503901796"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/group_samples.html",
+    "href": "review/machine_learning/04_numeric_data/group_samples.html",
+    "title": "샘플을 군집으로 묶기",
+    "section": "",
+    "text": "import numpy as np\nimport pandas as pd"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/group_samples.html#k-means-clustering-이용하여-샘플-범주화",
+    "href": "review/machine_learning/04_numeric_data/group_samples.html#k-means-clustering-이용하여-샘플-범주화",
+    "title": "샘플을 군집으로 묶기",
+    "section": "K-means clustering 이용하여 샘플 범주화",
+    "text": "K-means clustering 이용하여 샘플 범주화\n샘플을 그룹으로 묶는다. 각 그룹은 새로운 특성이 된다.\n\nfrom sklearn.datasets import make_blobs\nfrom sklearn.cluster import KMeans\n\n# 데이터 만들기\nfeatures, _ = make_blobs(n_samples=50,\n                         n_features=2,\n                         centers=3,\n                         random_state=1)\n\n# 데이터프레임 만들기\ndf = pd.DataFrame(features, columns=['col1', 'col2'])\n\ncluster = KMeans(3, random_state=0)\ncluster.fit(features)\n\ndf['group'] = cluster.predict(features)\ndf.sample(5)\n\n\n\n\n\n  \n    \n      \n      col1\n      col2\n      group\n    \n  \n  \n    \n      45\n      -9.509194\n      -4.028920\n      0\n    \n    \n      4\n      -6.641388\n      -8.075888\n      2\n    \n    \n      33\n      -10.189548\n      -4.840978\n      0\n    \n    \n      36\n      -1.927448\n      4.936845\n      1\n    \n    \n      6\n      -2.760179\n      5.551214\n      1"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/feature_engineering.html",
+    "href": "review/machine_learning/04_numeric_data/feature_engineering.html",
+    "title": "특성 생성 변환",
+    "section": "",
+    "text": "import numpy as np"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/feature_engineering.html#다항polynomial-특성과-교차항interaction-특성-생성",
+    "href": "review/machine_learning/04_numeric_data/feature_engineering.html#다항polynomial-특성과-교차항interaction-특성-생성",
+    "title": "특성 생성 변환",
+    "section": "다항(polynomial) 특성과 교차항(interaction) 특성 생성",
+    "text": "다항(polynomial) 특성과 교차항(interaction) 특성 생성\n\n다항 특성 추가 이유\n\n특성과 타깃 사이에 비선형 관계가 있다는 가정을 추가할 때. eg. 주요 질병에 걸릴 확률에 나이가 미치는 영향은 일정한 상숫값이 아니고 나이가 증가함에 따라 같이 증가한다고 가정할 수 있다. 이 효과를 주입하기 위해 고차항 특성을 만든다. x^2, x^3 등\n\n\n\n교차항 특성 추가 이유\n\n한 특성 효과가 다른 특성에 의존하는 경우. eg. 커피가 달달한지 예측할 때 1)설탕을 넣고 2)커피를 젓는 두 가지 특성이 모두 작용해야 커피가 달달하다. 타깃(달달함)에 대한 각 특성의 영향은 서로에게 종속적이다. 따라서 개별 특성을 곱한 교차항을 특성에 추가한다.\n\n\n\nPolynomialFeatures(degree=n, interaction_only=False, include_bias=True)\n\ndegree : 다항식의 최대 차수. eg. degree=2 -> \\(x_1, x_2, x_1^2, x_2^2\\)\n기본적으로 교차항 포함 \\(x_1x_2\\)\ninteraction_only=True : 교차항만 포함\ninclude_bias=True : 상수항 1 추가\n변환 후 get_feature_names_out 메서드는 특성 변환 수식 반환\n\n\nfrom sklearn.preprocessing import PolynomialFeatures\n\nfeatures = np.array([[2, 3],\n                     [2, 3],\n                     [2, 3]])\nprint('features:\\n', features)\npolynomial_features = PolynomialFeatures(degree=2, interaction_only=False, include_bias=False)\nprint('new features:\\n', polynomial_features.fit_transform(features))\n\nprint('특성 변환 수식:', polynomial_features.get_feature_names_out())\n\nfeatures:\n [[2 3]\n [2 3]\n [2 3]]\nnew features:\n [[2. 3. 4. 6. 9.]\n [2. 3. 4. 6. 9.]\n [2. 3. 4. 6. 9.]]\n특성 변환 수식: ['x0' 'x1' 'x0^2' 'x0 x1' 'x1^2']"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/feature_engineering.html#특성에-함수-적용하여-변환",
+    "href": "review/machine_learning/04_numeric_data/feature_engineering.html#특성에-함수-적용하여-변환",
+    "title": "특성 생성 변환",
+    "section": "특성에 함수 적용하여 변환",
+    "text": "특성에 함수 적용하여 변환\n\n판다스의 apply 메서드 사용\n사이킷런의 FunctionTransformer, ColumnTransformer 사용\n\n\nFunctionTransformer(validate=False)\n\nvalidate=True : 입력값이 2차원 배열인지 확인\n\n\n\nColumnTransformer([(이름, 변환기, 열 리스트), (이름, 변환기, 열 리스트), …])\n\n튜플로 이루어진 리스트를 입력으로 받는다\nColumnTransformer에 데이터프레임이 아니라 넘파이 배열을 직접 넣을 때 열 리스트를 지정하는 방법은 열 위치를 숫자로 넣으면 된다. eg. 첫 번째 열 -> [0], 두세 번째 열 -> [1, 2]\n넘파이 배열의 변수명은 fit_transform에서 지정한다. fit_transform(변수명)\n\n\nfrom sklearn.preprocessing import FunctionTransformer\n\nfeatures = np.array([[2, 3],\n                     [2, 3],\n                     [2, 3]])\n\ndef add_ten(x):\n    return x + 10\n\nten_transformer = FunctionTransformer(add_ten)\nfeatures_ten = ten_transformer.transform(features)\nprint('함수 적용한 특성:\\n', features_ten)\n\n함수 적용한 특성:\n [[12 13]\n [12 13]\n [12 13]]\n\n\n\n# validate=True 설정 후 1차원 배열을 넣으면 에러 발생\nerr_transform = FunctionTransformer(add_ten, validate=True).transform(np.array([1,2,3,4]))\n\n\nfrom sklearn.compose import ColumnTransformer\n\ndef mul_ten(x):\n    return x * 10\n\nct = ColumnTransformer(\n        [('add_ten', FunctionTransformer(add_ten), [0]),\n         ('mul_ten', FunctionTransformer(mul_ten), [1])])\nct.fit_transform(features)\n\narray([[12, 30],\n       [12, 30],\n       [12, 30]])"
+  },
+  {
     "objectID": "review/machine_learning/04_numeric_data/scaling.html",
     "href": "review/machine_learning/04_numeric_data/scaling.html",
     "title": "특성 스케일 바꾸기",
     "section": "",
-    "text": "스케일링은 기본적으로 StandardScaler를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 MinMaxScaler를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 RobustScaler를 사용한다. QuantileTransformer는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다."
+    "text": "import numpy as np"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/scaling.html#특성-스케일-바꾸기",
+    "href": "review/machine_learning/04_numeric_data/scaling.html#특성-스케일-바꾸기",
+    "title": "특성 스케일 바꾸기",
+    "section": "특성 스케일 바꾸기",
+    "text": "특성 스케일 바꾸기\n스케일링은 기본적으로 StandardScaler를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 MinMaxScaler를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 RobustScaler를 사용한다. QuantileTransformer는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다."
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/scaling.html#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환",
+    "href": "review/machine_learning/04_numeric_data/scaling.html#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환",
+    "title": "특성 스케일 바꾸기",
+    "section": "샘플의 특성값을 전체 길이가 1인 단위 노름으로 변환",
+    "text": "샘플의 특성값을 전체 길이가 1인 단위 노름으로 변환\n\nNormalizer(norm=“l1/l2/max”)\n단위 노름이 되도록 개별 샘플 값을 변환\n텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용\n행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용\nl2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))\nl1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True\nl1 norm은 샘플 특성값의 합 = 1\n\n\nfrom sklearn.preprocessing import Normalizer\n\nfeatures = np.array([[0.5,0.5],\n                     [1.1,3.4],\n                     [1.5,20.2],\n                     [1.63,34.4],\n                     [10.9,3.3]])\n\nfeatures_l2_norm = Normalizer(norm='l2').transform(features)\nprint('l2 norm:\\n', features_l2_norm)\nfeatures_l1_norm = Normalizer(norm='l1').transform(features)\nprint('l1 norm:\\n', features_l1_norm)\n\nl2 norm:\n [[0.70710678 0.70710678]\n [0.30782029 0.95144452]\n [0.07405353 0.99725427]\n [0.04733062 0.99887928]\n [0.95709822 0.28976368]]\nl1 norm:\n [[0.5        0.5       ]\n [0.24444444 0.75555556]\n [0.06912442 0.93087558]\n [0.04524008 0.95475992]\n [0.76760563 0.23239437]]"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/bin.html",
+    "href": "review/machine_learning/04_numeric_data/bin.html",
+    "title": "특성을 구간으로 나누기",
+    "section": "",
+    "text": "import numpy as np"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/bin.html#이산화-사용-이유",
+    "href": "review/machine_learning/04_numeric_data/bin.html#이산화-사용-이유",
+    "title": "특성을 구간으로 나누기",
+    "section": "이산화 사용 이유",
+    "text": "이산화 사용 이유\n수치 특성을 범주형처럼 다룰 때 유용한 전략이다. 예를 들어 18세와 19세의 소비 습관은 차이가 매우 작지만 19세와 20세 사이는 차이가 클 수 있다. 20세부터는 성년이어서 술을 살 수 있기 때문이다."
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/bin.html#특성을-둘로-나누기",
+    "href": "review/machine_learning/04_numeric_data/bin.html#특성을-둘로-나누기",
+    "title": "특성을 구간으로 나누기",
+    "section": "특성을 둘로 나누기",
+    "text": "특성을 둘로 나누기\n\nsklearn.preprocessing.Binarizer\nnumpy.digitize(x, bins=[])\n\n\nfrom sklearn.preprocessing import Binarizer\n\nage = np.array([[6],\n                [12],\n                [20],\n                [36],\n                [65]])\n\nbi = Binarizer(threshold=18)\nprint(bi.fit_transform(age))\nbi2 = np.digitize(age, bins=[20])\nprint('\\n', bi2)\n\n[[0]\n [0]\n [1]\n [1]\n [1]]\n\n [[0]\n [0]\n [1]\n [1]\n [1]]"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/bin.html#특성을-여러-임곗값에-따라-나누기",
+    "href": "review/machine_learning/04_numeric_data/bin.html#특성을-여러-임곗값에-따라-나누기",
+    "title": "특성을 구간으로 나누기",
+    "section": "특성을 여러 임곗값에 따라 나누기",
+    "text": "특성을 여러 임곗값에 따라 나누기\n\nnumpy.digitize\nnumpy.digitize(x, bins, right=False)\nbins = 리스트. 요소는 구분 기준으로 사용되는 경곗값(경곗값은 포함하지 않음)\neg. [20, 30, 64] -> [ , 20), [20, 30), [30, 64), [64, ) ‘[’는 포함’(’는 포함하지 않음\nright=True : 경곗값을 포함\n\n\nprint(age.flatten())\nnp.digitize(age, bins=[20, 36, 64]).flatten()\n\n[ 6 12 20 36 65]\n\n\narray([0, 0, 1, 2, 3])\n\n\n\nnp.digitize(age, bins=[20, 36, 64], right=True).flatten()\n\narray([0, 0, 0, 1, 3])"
+  },
+  {
+    "objectID": "review/machine_learning/04_numeric_data/bin.html#kbinsdiscretizer",
+    "href": "review/machine_learning/04_numeric_data/bin.html#kbinsdiscretizer",
+    "title": "특성을 구간으로 나누기",
+    "section": "KBinsDiscretizer",
+    "text": "KBinsDiscretizer\n\nsklearn.preprocessing.KBinsDiscretizer(n_bins=5, encode=‘onehot’, strategy=‘quantile’)\nencode=‘ordinal/onehot/onehot-dense’ : 원핫 인코딩된 희소 행렬 반환. ’onehot-dense’는 원핫 인코딩된 밀집행렬 반환.\nstrategy=‘quantile/uniform/kmeans’ : quantile-각 구간의 샘플 개수 비슷, uniform-구간 폭 동일\n구간 경계값은 bin_edges_ 속성\n\n\nfrom sklearn.preprocessing import KBinsDiscretizer\n\nkb = KBinsDiscretizer(4, encode='ordinal', strategy='uniform')\nprint(kb.fit_transform(age))\nprint(kb.bin_edges_)\n\n[[0.]\n [0.]\n [0.]\n [2.]\n [3.]]\n[array([ 6.  , 20.75, 35.5 , 50.25, 65.  ])]"
   },
   {
     "objectID": "review/machine_learning/10_feature_selection.html",
@@ -2737,6 +2926,62 @@
     "text": "templater plugin 사용\n\nSettings >>> Community Plugins >>> Templater\nTemplate folder location 지정\nTrigger Templater on new file creation 활성화\n\n\n\n특정 폴더에서 새 노트를 만들 때 적용할 템플릿 파일 지정"
   },
   {
+    "objectID": "review/deep_learning/pytorch_dl.html",
+    "href": "review/deep_learning/pytorch_dl.html",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "",
+    "text": "시그모이드 함수 사용 이유\n\n\n\n단위 계단 함수(unit step function)은 불연속이므로 미분할 수 없는 지점이 있어 퍼셉트론 학습에 사용하기에 적합하지 않다. 0과 1 사의의 연속적인 값을 가지는 시그모이드(sigmoid) 함수를 사용한다. p214"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#활성화-함수",
+    "href": "review/deep_learning/pytorch_dl.html#활성화-함수",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "활성화 함수",
+    "text": "활성화 함수\n\n\n\n\n\n\n\n\n\n사용층\n용도\n활성화 함수\n설명\n\n\n\n\n은닉층\n기울기 소실 문제를 줄이고 다음 층으로 신호 전달\n렐루 / 리키 렐루\n0이하는 모두 0, 0 초과는 항상 1\n\n\n출력층\n이진 분류\n시그모이드\n양성일 확률로 따져 양성, 음성 판정\n\n\n\n다중 분류\n소프트맥스\n각 클래스에 속할 확률을 따져 분류\n\n\n\n회귀\n-\n노드 값을 그대로 출력"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#손실-함수",
+    "href": "review/deep_learning/pytorch_dl.html#손실-함수",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "손실 함수",
+    "text": "손실 함수\n\n\n\n용도\n손실 함수\n\n\n\n\n이진 분류\n이진 크로스 엔트로피\n\n\n다중 분류\n크로스 엔트로피\n\n\n회귀\n평균 제곱 오차"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#옵티마이저optimizer---사용하는-경사-하강법-종류",
+    "href": "review/deep_learning/pytorch_dl.html#옵티마이저optimizer---사용하는-경사-하강법-종류",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "옵티마이저(optimizer) - 사용하는 경사 하강법 종류",
+    "text": "옵티마이저(optimizer) - 사용하는 경사 하강법 종류\n\n\n\n\n\n\n\n옵티마이저\n특징\n\n\n\n\n확률적 경사 하강법(SGD, Stochastic Gradient Descent)\n데이터 샘플을 무작위로 추출하여 일부만 경사 하강법을 사용해 학습 속도 개선\n\n\nRMSProp(Root Mean Square Propagation)\n학습률이 커서 최적 가중치를 지나치는 문제 해결손실 함수의 기울기가 크면 학습률이 크고 작으면 학습률이 작아지도록 조절\n\n\n모멘텀(momentum)\n지역 최솟값에 갇히는 문제를 해결하기 위해손실 함수의 기울기가 0인 여러 지점 중 한 지점에서 멈추지 않고계속 최솟값을 찾도록 관성 개념을 추가\n\n\n아담(adam)\nRMSProp과 모멘텀 기능을 합침\n\n\n\n\n\n\n\n\n\n텐서(tensor) 자료구조\n\n\n\n넘파이 배열과 구조적, 기능적으로 거의 비슷하지만 그래픽 카드를 사용해 병렬 연산을 할 수 있다는 차이가 있다. NVIDIA 그래픽 카드가 제공하는 쿠다(cuda) 환경에서 모델을 학습할 수 있다."
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#선형-회귀-구현",
+    "href": "review/deep_learning/pytorch_dl.html#선형-회귀-구현",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "선형 회귀 구현",
+    "text": "선형 회귀 구현\n\nfrom sklearn import datasets\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim # 옵티마이저\n\n\ndataset = datasets.load_boston()\n\nX, y = dataset['data'], dataset['target']\n\n\n특성과 타깃을 텐서 자료구조로 변환\n\n실수형 텐서: torch.FloatTensor\n정수형 텐서: torch.LongTensor\n파이토치는 타겟을 2차원 배열로 인식\n차원 추가 메서드 : unsqueeze() eg. 맨 뒤에 길이가 1인 차원 추가 unsqueeze(-1)\n차원 제거 메서드 : squeeze\n\n\nX = torch.FloatTensor(X)\ny = torch.FloatTensor(y).unsqueeze(-1)\n\n\nX.shape, y.shape\n\n(torch.Size([506, 13]), torch.Size([506, 1]))\n\n\n\n\n표준화\nsklearn의 StandardSacler는 2차원 배열까지만 지원하기 때문에 3차원 이상의 데이터를 많이 다루는 딥러닝에서는 표준화를 직접 하는 것에 익숙해져야 한다.\n\nX = (X - torch.mean(X))/torch.std(X)\n\n\n\n선형 회귀 모델 객체 생성\n(입력값, 출력값) = (특성 13개, 타겟 1개)\n\n활성화 함수 => 시그모이드 함수 => 로지스틱 회귀\n활성화 함수 없는 퍼셉트론 => 선형 회귀\n\n\nmodel = nn.Linear(13, 1)\n\n\n\n손실함수와 옵티마이저 객체 생성\n\nMSE 손실 함수 -> criterion 변수 이름이 관례\n확률적 경사 하강법 옵티마이저\nparameters 메서드로 모델의 가중치를 불러올 수 있다.\n\n\ncriterion = nn.MSELoss()\n\noptimizer = optim.SGD(model.parameters(), lr=0.01)\n\n\n\n학습 함수 정의(에포크 1회) -> 오차(손실) 반환\n\n손실 함수로 오차 계산(실제 타깃과 모델 예측 타깃의 차이)\n미분으로 손실 함수 기울기 계산하여 가중치를 어떻게 수정해야 오차가 줄어드는지 파악\n학습률만큼 가중치 수정\n\n한 번의 에포크는 주어진 모든 데이터 샘플을 이용해 한 번 학습하는 것을 의미\n\ndef train(model, criterion, optimizer, X, y):\n    \n    optimizer.zero_grad()           # 기울기 초기화\n    hypothesis = model(X)           # 모델 사용해 타깃 예측\n    loss = criterion(hypothesis, y) # 오차 계산\n    loss.backward()                 # 기울기 계산\n    optimizer.step()                # 경사하강법으로 가중치 수정\n    return loss.item()              # 현재 에포크 오차 반환 -> 파이썬 숫자형 자료구조로 변환(item)\n    \n\n\n\n학습하며 오차 출력\n\nn_epochs = 100 # 학습 횟수\nfor epoch in range(1, n_epochs):\n    loss = train(model, criterion, optimizer, X, y)\n    if epoch % 10 == 0:\n        print('epoch: {}, loss: {:.4f}'.format(epoch, loss))\n\nepoch: 10, loss: 115.4186\nepoch: 20, loss: 97.9571\nepoch: 30, loss: 88.5269\nepoch: 40, loss: 82.5146\nepoch: 50, loss: 78.6239\nepoch: 60, loss: 76.0548\nepoch: 70, loss: 74.3105\nepoch: 80, loss: 73.0827\nepoch: 90, loss: 72.1799"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#로지스틱-회귀",
+    "href": "review/deep_learning/pytorch_dl.html#로지스틱-회귀",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "로지스틱 회귀",
+    "text": "로지스틱 회귀\n\n이진 크로스 엔트로피 손실 함수 사용\nview 메서드는 넘파이의 reshape와 유사\n\n\n데이터 불러오기, 텐서 변환, 표준화\n\nfrom sklearn import datasets\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\n\ndataset = datasets.load_breast_cancer()\n\nX, y = dataset['data'], dataset['target']\n\nX = torch.FloatTensor(X)\ny = torch.FloatTensor(y).view(-1, 1)\n\nX = (X - torch.mean(X)) / torch.std(X)\n\nX.shape, y.shape\n\n(torch.Size([569, 30]), torch.Size([569, 1]))\n\n\n\n\nnn.Sequential\nSequential 클래스 생성자에 모델 객체와 활성화 함수 객체를 전달하면 두 객체를 차례대로 사용해 계산한 결과를 반환하는 모델 생성\n\nmodel = nn.Sequential(\n    nn.Linear(30, 1),\n    nn.Sigmoid()\n)\n\n\n\n손실함수, 옵티마이저 정의 / 학습 함수 정의 / 학습\n이진 크로스 엔트로피(Binary Cross Entropy) 손실함수\n\ncriterion = nn.BCELoss()\noptimizer = optim.SGD(model.parameters(), lr=0.1)\n\ndef train(model, criterion, optimizer, X, y):\n    optimizer.zero_grad()\n    hypothesis = model(X)\n    loss = criterion(hypothesis, y)\n    loss.backward()\n    optimizer.step()\n    return loss.item()\n\nn_epochs = 100\nfor epoch in range(1, n_epochs + 1):\n    loss = train(model, criterion, optimizer, X, y)\n    if epoch % 10 == 0:\n        print('epoch: {}, loss: {:.4f}'.format(epoch, loss))\n\nepoch: 10, loss: 0.6046\nepoch: 20, loss: 0.5323\nepoch: 30, loss: 0.4806\nepoch: 40, loss: 0.4422\nepoch: 50, loss: 0.4126\nepoch: 60, loss: 0.3891\nepoch: 70, loss: 0.3701\nepoch: 80, loss: 0.3543\nepoch: 90, loss: 0.3411\nepoch: 100, loss: 0.3298\n\n\n\n\n타깃 예측 및 평가\n\ny_predicted = (model(X) >= 0.5).float()\n\nscore = (y_predicted == y).float().sum()\nprint('accuracy: {:.2f}'.format(score))\n\naccuracy: 518.00"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#클래스로-모델-정의",
+    "href": "review/deep_learning/pytorch_dl.html#클래스로-모델-정의",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "클래스로 모델 정의",
+    "text": "클래스로 모델 정의\n\n파이토치에서 모델 클래스를 정의할 때는 nn.Module 클래스를 상속받아야 한다.\n모델 구조는 __init__ 생성자 안에 정의한다.\n\n\n선형회귀 모델 클래스 정의\n\nclass LinearRegression(nn.Module):\n    def __init__(self, num_features): # 생성자에서 모델 구조 정의\n        super().__init__()\n        self.linear = nn.Linear(num_features, 1)\n    \n    def forward(self, X): # 순전파 정의\n        out = self.linear(X)  # 생성자에서 만든 선형모델로 타깃 예측 및 반환\n        return out\n    \nmodel = LinearRegression(13)\n\n\n\n로지스틱 회귀 모델 클래스 정의\n\nclass LogisticRegression(nn.Module):\n    def __init__(self, num_features):\n        super().__init__()\n        self.linear = nn.Linear(num_features, 1)\n        self.sigmoid = nn.Sigmoid()\n        \n    def forward(self, X):\n        out = self.linear(X)\n        out = self.sigmoid(out)\n        return out\n    \nmodel = LogisticRegression(30)"
+  },
+  {
+    "objectID": "review/deep_learning/pytorch_dl.html#배치batch-학습",
+    "href": "review/deep_learning/pytorch_dl.html#배치batch-학습",
+    "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
+    "section": "배치(batch) 학습",
+    "text": "배치(batch) 학습\n전체 데이터에 대한 추론과 오차 역전파를 한 번에 실행하기에는 컴퓨터 메모리 한계가 존재한다. 이 문제를 해결하기 위해 데이터를 나눠서 처리하는 배치라는 개념이 등장한다. 배치란 한 번의 에포크를 수행할 때 처리하는 샘플의 개수를 의미한다. 전체 데이터 샘플을 지정된 배치 크기로 나눠서 학습하고 마지막 배치 학습이 끝나면 한 번의 에포크가 수행된 것이다.\n배치 학습을 위해 DataLoader 클래스 제공\n\n데이터 로드, 표준화\n\nfrom sklearn import datasets\nimport torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import TensorDataset, DataLoader\n\ndataset = datasets.load_breast_cancer()\nX, y = dataset['data'], dataset['target']\nX = torch.FloatTensor(X)\ny = torch.FloatTensor(y).view(-1,1)\n\nX = (X - torch.mean(X)) / torch.std(X)\n\n\n\n배치 학습 구현 위해 데이터와 타깃 합치기\n\n# 입력 데이터와 타깃을 묶어 텐서 데이터셋 생성\ndset = TensorDataset(X, y)\n\n# 한 번에 256개의 데이터 샘플을 배치로 사용하는 데이터로더 생성\nloader = DataLoader(dset, batch_size=256, shuffle=True)\n\n\n\n신경망 모델 클래스 정의 / 학습 함수 정의 / 학습 / 평가\n\nclass NeuralNetwork(nn.Module):\n    def __init__(self, num_features):\n        super().__init__()\n        self.linear1 = nn.Linear(num_features, 4) # 은닉층 노드 4개 생성\n        self.relu = nn.ReLU()\n        self.linear2 = nn.Linear(4, 1)\n        self.sigmoid = nn.Sigmoid()\n        \n    def forward(self, X):\n        out = self.linear1(X)\n        out = self.relu(out)\n        out = self.linear2(out)\n        out = self.sigmoid(out)\n        return out\n\nmodel = NeuralNetwork(30) \ncriterion = nn.BCELoss()  # 이진 크로스 엔트로피\noptimizer = optim.SGD(model.parameters(), lr=0.1)\n\n# 학습 함수 정의\ndef train(model, criterion, optimizer, loader):\n    epoch_loss = 0    # 현재 에포크의 오차 저장 변수\n    \n    for X_batch, y_batch in loader:\n        optimizer.zero_grad()\n        hypothesis = model(X_batch)\n        loss = criterion(hypothesis, y_batch)\n        loss.backward()\n        optimizer.step()\n        epoch_loss += loss.item() # 현재 배치의 오차 누적\n        \n    return epoch_loss / len(loader) # 현대 에포크의 오차 평균 반환\n\n# 모델 학습\nn_epochs = 100\nfor epoch in range(1, n_epochs + 1):\n    loss = train(model, criterion, optimizer, loader)\n    if epoch % 10 == 0:\n        print('epoch: {}, loss: {:.4f}'.format(epoch, loss))\n        \n# 학습된 모델로 타깃 예측\ny_predicted = (model(X) >= 0.5).float()\n\n# 정확도 계산\nscore_trained_model = (y_predicted == y).float().mean()\nprint('accuracy: {:.2f}'.format(score_trained_model))\n\nepoch: 10, loss: 0.5338\nepoch: 20, loss: 0.3442\nepoch: 30, loss: 0.2628\nepoch: 40, loss: 0.2579\nepoch: 50, loss: 0.2114\nepoch: 60, loss: 0.1996\nepoch: 70, loss: 0.2114\nepoch: 80, loss: 0.2221\nepoch: 90, loss: 0.2065\nepoch: 100, loss: 0.2161\naccuracy: 0.92\n\n\n\n\n모델 저장\n\nmodel.state_dict() 모델 정보를 가진 딕셔너리에 접근\ntorch.save() 모델 저장 .pt 또는 .pth\n\n\ntorch.save(model.state_dict(), 'breast_cancer.pt')\n\n\n\n모델 로드, 예측\n\ntorch.load() 모델 불러오기\n\n\n# 신경망 모델의 객체 생성\nloaded_model = NeuralNetwork(30)\n\n# 저장한 파일에서 가중치 불러와 복원\nloaded_model.load_state_dict(torch.load('breast_cancer.pt'))\n\n# 타깃 예측\ny_pred2 = (loaded_model(X) >= 0.5).float()\n\nscore_loaded_model = (y_pred2 == y).float().mean()\nprint('accuracy of loaded model: {:.2f}'.format(score_loaded_model))\n\naccuracy of loaded model: 0.92"
+  },
+  {
     "objectID": "review/algorithm.html",
     "href": "review/algorithm.html",
     "title": "알고리즘",
@@ -2755,7 +3000,7 @@
     "href": "review/deep_learning.html",
     "title": "딥러닝",
     "section": "",
-    "text": "No matching items"
+    "text": "Nov 17, 2022\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "review/de/wsl2.html",

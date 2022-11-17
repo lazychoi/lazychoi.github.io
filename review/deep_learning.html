@@ -70,9 +70,9 @@ ul.task-list li input[type="checkbox"] {
     }
 
     const options = {
-      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-date','listing-title','listing-author','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: [],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-description","listing-categories"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -272,7 +272,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         
-    </div>
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(1)</span></div></div></div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
@@ -298,7 +298,28 @@ ul.task-list li input[type="checkbox"] {
 
 <div class="quarto-listing quarto-listing-container-default" id="listing-listing">
 <div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668610800000" data-listing-file-modified-sort="1668683504423" data-listing-reading-time-sort="3.565">
+<div class="body">
+<a href="../review/deep_learning/pytorch_dl.html">
+<h3 class="no-anchor listing-title">
+이토록 쉬운 머신러닝&amp;딥러닝 입문 3장 파이토치를 활용한 딥러닝
+</h3>
+<div class="listing-subtitle">
 
+</div>
+<div class="listing-description">
+단위 계단 함수(unit step function)은 불연속이므로 미분할 수 없는 지점이 있어 퍼셉트론 학습에 사용하기에 적합하지 않다. 0과 1 사의의 연속적인 값을 가지는 시그모이드(sigmoid) 함수를 사용한다. p214
+</div>
+</a>
+</div>
+<div class="metadata">
+<a href="../review/deep_learning/pytorch_dl.html">
+<div class="listing-date">
+Nov 17, 2022
+</div>
+</a>
+</div>
+</div>
 </div>
 <div class="listing-no-matching d-none">
 No matching items

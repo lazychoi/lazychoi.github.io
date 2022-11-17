@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-17">
 
-<title>👀 - 특성 스케일 바꾸기</title>
+<title>👀 - 샘플을 군집으로 묶기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -122,6 +122,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -183,8 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#특성-스케일-바꾸기" id="toc-특성-스케일-바꾸기" class="nav-link active" data-scroll-target="#특성-스케일-바꾸기">특성 스케일 바꾸기</a></li>
-  <li><a href="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" id="toc-샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="nav-link" data-scroll-target="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</a></li>
+  <li><a href="#k-means-clustering-이용하여-샘플-범주화" id="toc-k-means-clustering-이용하여-샘플-범주화" class="nav-link active" data-scroll-target="#k-means-clustering-이용하여-샘플-범주화">K-means clustering 이용하여 샘플 범주화</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +195,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">특성 스케일 바꾸기</h1>
+<h1 class="title">샘플을 군집으로 묶기</h1>
 </div>
 
 
@@ -204,7 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 17, 2022</p>
     </div>
   </div>
     
@@ -213,50 +215,78 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="특성-스케일-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="특성-스케일-바꾸기">특성 스케일 바꾸기</h2>
-<p>스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.</p>
-</section>
-<section id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</h2>
-<ul>
-<li>Normalizer(norm=“l1/l2/max”)</li>
-<li>단위 노름이 되도록 개별 샘플 값을 변환</li>
-<li>텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용</li>
-<li>행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용</li>
-<li>l2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))</li>
-<li>l1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True</li>
-<li>l1 norm은 샘플 특성값의 합 = 1</li>
-</ul>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> Normalizer</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">0.5</span>,<span class="fl">0.5</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.1</span>,<span class="fl">3.4</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.5</span>,<span class="fl">20.2</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.63</span>,<span class="fl">34.4</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">10.9</span>,<span class="fl">3.3</span>]])</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features_l2_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l2'</span>).transform(features)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l2 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l2_norm)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features_l1_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l1'</span>).transform(features)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l1 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l1_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>l2 norm:
- [[0.70710678 0.70710678]
- [0.30782029 0.95144452]
- [0.07405353 0.99725427]
- [0.04733062 0.99887928]
- [0.95709822 0.28976368]]
-l1 norm:
- [[0.5        0.5       ]
- [0.24444444 0.75555556]
- [0.06912442 0.93087558]
- [0.04524008 0.95475992]
- [0.76760563 0.23239437]]</code></pre>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="k-means-clustering-이용하여-샘플-범주화" class="level2">
+<h2 class="anchored" data-anchor-id="k-means-clustering-이용하여-샘플-범주화">K-means clustering 이용하여 샘플 범주화</h2>
+<p>샘플을 그룹으로 묶는다. 각 그룹은 새로운 특성이 된다.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 데이터 만들기</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>features, _ <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">50</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                         n_features<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                         centers<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                         random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 데이터프레임 만들기</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(features, columns<span class="op">=</span>[<span class="st">'col1'</span>, <span class="st">'col2'</span>])</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>cluster <span class="op">=</span> KMeans(<span class="dv">3</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>cluster.fit(features)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'group'</span>] <span class="op">=</span> cluster.predict(features)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>df.sample(<span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>col1</th>
+      <th>col2</th>
+      <th>group</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>45</th>
+      <td>-9.509194</td>
+      <td>-4.028920</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>-6.641388</td>
+      <td>-8.075888</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>-10.189548</td>
+      <td>-4.840978</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>-1.927448</td>
+      <td>4.936845</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>-2.760179</td>
+      <td>5.551214</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 </div>
 </div>
 

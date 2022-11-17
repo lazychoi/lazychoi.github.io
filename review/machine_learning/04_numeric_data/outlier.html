@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-17">
 
-<title>👀 - 특성 스케일 바꾸기</title>
+<title>👀 - 이상치 감지 및 처리</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,8 +183,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#특성-스케일-바꾸기" id="toc-특성-스케일-바꾸기" class="nav-link active" data-scroll-target="#특성-스케일-바꾸기">특성 스케일 바꾸기</a></li>
-  <li><a href="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" id="toc-샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="nav-link" data-scroll-target="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</a></li>
+  <li><a href="#이상치-감지-방법" id="toc-이상치-감지-방법" class="nav-link active" data-scroll-target="#이상치-감지-방법">이상치 감지 방법</a>
+  <ul class="collapse">
+  <li><a href="#사분위수iqr-이용" id="toc-사분위수iqr-이용" class="nav-link" data-scroll-target="#사분위수iqr-이용">사분위수(IQR) 이용</a></li>
+  </ul></li>
+  <li><a href="#이상치-다루는-3가지-방법" id="toc-이상치-다루는-3가지-방법" class="nav-link" data-scroll-target="#이상치-다루는-3가지-방법">이상치 다루는 3가지 방법</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">특성 스케일 바꾸기</h1>
+<h1 class="title">이상치 감지 및 처리</h1>
 </div>
 
 
@@ -204,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 17, 2022</p>
     </div>
   </div>
     
@@ -216,47 +219,139 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="특성-스케일-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="특성-스케일-바꾸기">특성 스케일 바꾸기</h2>
-<p>스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.</p>
-</section>
-<section id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</h2>
+<section id="이상치-감지-방법" class="level2">
+<h2 class="anchored" data-anchor-id="이상치-감지-방법">이상치 감지 방법</h2>
+<p><a href="http://colingorrie.github.io/outlier-detection.html" target="_blank">Three ways to detect outliers</a></p>
 <ul>
-<li>Normalizer(norm=“l1/l2/max”)</li>
-<li>단위 노름이 되도록 개별 샘플 값을 변환</li>
-<li>텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용</li>
-<li>행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용</li>
-<li>l2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))</li>
-<li>l1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True</li>
-<li>l1 norm은 샘플 특성값의 합 = 1</li>
+<li>Z-score method</li>
+<li>Modified Z-score method</li>
+<li>IQR method</li>
 </ul>
+<section id="사분위수iqr-이용" class="level3">
+<h3 class="anchored" data-anchor-id="사분위수iqr-이용">사분위수(IQR) 이용</h3>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 샘플 데이터 만들기</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>features, _ <span class="op">=</span> make_blobs(n_samples <span class="op">=</span> <span class="dv">10</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                         n_features <span class="op">=</span> <span class="dv">2</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                         centers <span class="op">=</span> <span class="dv">1</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                         random_state <span class="op">=</span> <span class="dv">1</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 이상치 입력</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features[<span class="dv">0</span>, <span class="dv">0</span>] <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>features[<span class="dv">0</span>, <span class="dv">1</span>] <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>array([[ 1.00000000e+04,  1.00000000e+04],
+       [-2.76017908e+00,  5.55121358e+00],
+       [-1.61734616e+00,  4.98930508e+00],
+       [-5.25790464e-01,  3.30659860e+00],
+       [ 8.52518583e-02,  3.64528297e+00],
+       [-7.94152277e-01,  2.10495117e+00],
+       [-1.34052081e+00,  4.15711949e+00],
+       [-1.98197711e+00,  4.02243551e+00],
+       [-2.18773166e+00,  3.33352125e+00],
+       [-1.97451969e-01,  2.34634916e+00]])</code></pre>
+</div>
+</div>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> Normalizer</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">0.5</span>,<span class="fl">0.5</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.1</span>,<span class="fl">3.4</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.5</span>,<span class="fl">20.2</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.63</span>,<span class="fl">34.4</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">10.9</span>,<span class="fl">3.3</span>]])</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features_l2_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l2'</span>).transform(features)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l2 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l2_norm)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features_l1_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l1'</span>).transform(features)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l1 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l1_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 이상치의 인덱스 반환 함수</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> indicies_of_outliers(x):</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    q1, q3 <span class="op">=</span> np.percentile(x, [<span class="dv">25</span>, <span class="dv">75</span>])</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    iqr <span class="op">=</span> q3 <span class="op">-</span> q1</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    lower_bound <span class="op">=</span> q1 <span class="op">-</span> (iqr <span class="op">*</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    upper_bound <span class="op">=</span> q3 <span class="op">+</span> (iqr <span class="op">*</span> <span class="fl">1.5</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.where((x <span class="op">&gt;</span> upper_bound) <span class="op">|</span> (x <span class="op">&lt;</span> lower_bound))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>indicies_of_outliers(features[:,<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>(array([0]),)</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="이상치-다루는-3가지-방법" class="level2">
+<h2 class="anchored" data-anchor-id="이상치-다루는-3가지-방법">이상치 다루는 3가지 방법</h2>
+<ul>
+<li>삭제</li>
+<li>포함: outlier 특성을 만들고 1로 설정</li>
+<li>변환: 이상치의 영향이 줄어들도록 특성을 변환. eg. 로그 변환</li>
+</ul>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(np.where)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>l2 norm:
- [[0.70710678 0.70710678]
- [0.30782029 0.95144452]
- [0.07405353 0.99725427]
- [0.04733062 0.99887928]
- [0.95709822 0.28976368]]
-l1 norm:
- [[0.5        0.5       ]
- [0.24444444 0.75555556]
- [0.06912442 0.93087558]
- [0.04524008 0.95475992]
- [0.76760563 0.23239437]]</code></pre>
+<pre><code>Help on function where in module numpy:
+
+where(...)
+    where(condition, [x, y])
+    
+    Return elements chosen from `x` or `y` depending on `condition`.
+    
+    .. note::
+        When only `condition` is provided, this function is a shorthand for
+        ``np.asarray(condition).nonzero()``. Using `nonzero` directly should be
+        preferred, as it behaves correctly for subclasses. The rest of this
+        documentation covers only the case where all three arguments are
+        provided.
+    
+    Parameters
+    ----------
+    condition : array_like, bool
+        Where True, yield `x`, otherwise yield `y`.
+    x, y : array_like
+        Values from which to choose. `x`, `y` and `condition` need to be
+        broadcastable to some shape.
+    
+    Returns
+    -------
+    out : ndarray
+        An array with elements from `x` where `condition` is True, and elements
+        from `y` elsewhere.
+    
+    See Also
+    --------
+    choose
+    nonzero : The function that is called when x and y are omitted
+    
+    Notes
+    -----
+    If all the arrays are 1-D, `where` is equivalent to::
+    
+        [xv if c else yv
+         for c, xv, yv in zip(condition, x, y)]
+    
+    Examples
+    --------
+    &gt;&gt;&gt; a = np.arange(10)
+    &gt;&gt;&gt; a
+    array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+    &gt;&gt;&gt; np.where(a &lt; 5, a, 10*a)
+    array([ 0,  1,  2,  3,  4, 50, 60, 70, 80, 90])
+    
+    This can be used on multidimensional arrays too:
+    
+    &gt;&gt;&gt; np.where([[True, False], [True, True]],
+    ...          [[1, 2], [3, 4]],
+    ...          [[9, 8], [7, 6]])
+    array([[1, 8],
+           [3, 4]])
+    
+    The shapes of x, y, and the condition are broadcast together:
+    
+    &gt;&gt;&gt; x, y = np.ogrid[:3, :4]
+    &gt;&gt;&gt; np.where(x &lt; y, x, 10 + y)  # both x and 10+y are broadcast
+    array([[10,  0,  0,  0],
+           [10, 11,  1,  1],
+           [10, 11, 12,  2]])
+    
+    &gt;&gt;&gt; a = np.array([[0, 1, 2],
+    ...               [0, 2, 4],
+    ...               [0, 3, 6]])
+    &gt;&gt;&gt; np.where(a &lt; 4, a, -1)  # -1 is broadcast
+    array([[ 0,  1,  2],
+           [ 0,  2, -1],
+           [ 0,  3, -1]])
+</code></pre>
 </div>
 </div>
 

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-17">
 
-<title>👀 - 특성 스케일 바꾸기</title>
+<title>👀 - 불균형한 클래스 다루기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -122,6 +122,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     "search-submit-button-title": "Submit"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../../styles.css">
@@ -183,8 +186,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#특성-스케일-바꾸기" id="toc-특성-스케일-바꾸기" class="nav-link active" data-scroll-target="#특성-스케일-바꾸기">특성 스케일 바꾸기</a></li>
-  <li><a href="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" id="toc-샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="nav-link" data-scroll-target="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</a></li>
+  <li><a href="#불균형한-클래스를-다루는-5가지-방법" id="toc-불균형한-클래스를-다루는-5가지-방법" class="nav-link active" data-scroll-target="#불균형한-클래스를-다루는-5가지-방법">불균형한 클래스를 다루는 5가지 방법</a></li>
+  <li><a href="#가중치-매개변수-제공-모델-사용" id="toc-가중치-매개변수-제공-모델-사용" class="nav-link" data-scroll-target="#가중치-매개변수-제공-모델-사용">가중치 매개변수 제공 모델 사용</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +196,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">특성 스케일 바꾸기</h1>
+<h1 class="title">불균형한 클래스 다루기</h1>
 </div>
 
 
@@ -204,7 +207,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 17, 2022</p>
     </div>
   </div>
     
@@ -213,50 +216,204 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="특성-스케일-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="특성-스케일-바꾸기">특성 스케일 바꾸기</h2>
-<p>스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.</p>
+<section id="불균형한-클래스를-다루는-5가지-방법" class="level2">
+<h2 class="anchored" data-anchor-id="불균형한-클래스를-다루는-5가지-방법">불균형한 클래스를 다루는 5가지 방법</h2>
+<ol type="1">
+<li>소수 클래스 샘플 더 모으기</li>
+<li>불균형한 클래스에 잘 맞는 모델 평가지표 사용: 오차행렬, 재현율, 정밀도, F1 점수, ROC 곡선</li>
+<li>일부 모델에서 제공하는 클래스 가중치 매개변수 사용(class_weight)</li>
+<li>다운샘플링</li>
+<li>업샘플링</li>
+</ol>
+<p>-&gt; 다운샘플링과 업샘플링 중 선택은 문제에 따라 다르다. 일반적으로 둘 다 시도해보고 결과가 좋은 쪽을 선택한다.</p>
 </section>
-<section id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</h2>
+<section id="가중치-매개변수-제공-모델-사용" class="level2">
+<h2 class="anchored" data-anchor-id="가중치-매개변수-제공-모델-사용">가중치 매개변수 제공 모델 사용</h2>
+<p>RandomForestClassifier()의 class_weight 매개변수에</p>
 <ul>
-<li>Normalizer(norm=“l1/l2/max”)</li>
-<li>단위 노름이 되도록 개별 샘플 값을 변환</li>
-<li>텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용</li>
-<li>행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용</li>
-<li>l2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))</li>
-<li>l1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True</li>
-<li>l1 norm은 샘플 특성값의 합 = 1</li>
+<li>딕셔너리 형식으로 클래스별 비중을 지정하거나</li>
+<li>’balanced’를 지정하여 자동으로 설정할 수 있다</li>
 </ul>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> Normalizer</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">0.5</span>,<span class="fl">0.5</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.1</span>,<span class="fl">3.4</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.5</span>,<span class="fl">20.2</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.63</span>,<span class="fl">34.4</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">10.9</span>,<span class="fl">3.3</span>]])</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features_l2_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l2'</span>).transform(features)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l2 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l2_norm)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features_l1_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l1'</span>).transform(features)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l1 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l1_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>l2 norm:
- [[0.70710678 0.70710678]
- [0.30782029 0.95144452]
- [0.07405353 0.99725427]
- [0.04733062 0.99887928]
- [0.95709822 0.28976368]]
-l1 norm:
- [[0.5        0.5       ]
- [0.24444444 0.75555556]
- [0.06912442 0.93087558]
- [0.04524008 0.95475992]
- [0.76760563 0.23239437]]</code></pre>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 신용카드 사기 검출 데이터셋</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://storage.googleapis.com/download.tensorflow.org/data/creditcard.csv'</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Time</th>
+      <th>V1</th>
+      <th>V2</th>
+      <th>V3</th>
+      <th>V4</th>
+      <th>V5</th>
+      <th>V6</th>
+      <th>V7</th>
+      <th>V8</th>
+      <th>V9</th>
+      <th>...</th>
+      <th>V21</th>
+      <th>V22</th>
+      <th>V23</th>
+      <th>V24</th>
+      <th>V25</th>
+      <th>V26</th>
+      <th>V27</th>
+      <th>V28</th>
+      <th>Amount</th>
+      <th>Class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>-1.359807</td>
+      <td>-0.072781</td>
+      <td>2.536347</td>
+      <td>1.378155</td>
+      <td>-0.338321</td>
+      <td>0.462388</td>
+      <td>0.239599</td>
+      <td>0.098698</td>
+      <td>0.363787</td>
+      <td>...</td>
+      <td>-0.018307</td>
+      <td>0.277838</td>
+      <td>-0.110474</td>
+      <td>0.066928</td>
+      <td>0.128539</td>
+      <td>-0.189115</td>
+      <td>0.133558</td>
+      <td>-0.021053</td>
+      <td>149.62</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>1.191857</td>
+      <td>0.266151</td>
+      <td>0.166480</td>
+      <td>0.448154</td>
+      <td>0.060018</td>
+      <td>-0.082361</td>
+      <td>-0.078803</td>
+      <td>0.085102</td>
+      <td>-0.255425</td>
+      <td>...</td>
+      <td>-0.225775</td>
+      <td>-0.638672</td>
+      <td>0.101288</td>
+      <td>-0.339846</td>
+      <td>0.167170</td>
+      <td>0.125895</td>
+      <td>-0.008983</td>
+      <td>0.014724</td>
+      <td>2.69</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1.0</td>
+      <td>-1.358354</td>
+      <td>-1.340163</td>
+      <td>1.773209</td>
+      <td>0.379780</td>
+      <td>-0.503198</td>
+      <td>1.800499</td>
+      <td>0.791461</td>
+      <td>0.247676</td>
+      <td>-1.514654</td>
+      <td>...</td>
+      <td>0.247998</td>
+      <td>0.771679</td>
+      <td>0.909412</td>
+      <td>-0.689281</td>
+      <td>-0.327642</td>
+      <td>-0.139097</td>
+      <td>-0.055353</td>
+      <td>-0.059752</td>
+      <td>378.66</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1.0</td>
+      <td>-0.966272</td>
+      <td>-0.185226</td>
+      <td>1.792993</td>
+      <td>-0.863291</td>
+      <td>-0.010309</td>
+      <td>1.247203</td>
+      <td>0.237609</td>
+      <td>0.377436</td>
+      <td>-1.387024</td>
+      <td>...</td>
+      <td>-0.108300</td>
+      <td>0.005274</td>
+      <td>-0.190321</td>
+      <td>-1.175575</td>
+      <td>0.647376</td>
+      <td>-0.221929</td>
+      <td>0.062723</td>
+      <td>0.061458</td>
+      <td>123.50</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>2.0</td>
+      <td>-1.158233</td>
+      <td>0.877737</td>
+      <td>1.548718</td>
+      <td>0.403034</td>
+      <td>-0.407193</td>
+      <td>0.095921</td>
+      <td>0.592941</td>
+      <td>-0.270533</td>
+      <td>0.817739</td>
+      <td>...</td>
+      <td>-0.009431</td>
+      <td>0.798278</td>
+      <td>-0.137458</td>
+      <td>0.141267</td>
+      <td>-0.206010</td>
+      <td>0.502292</td>
+      <td>0.219422</td>
+      <td>0.215153</td>
+      <td>69.99</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 31 columns</p>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df.iloc[:, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df.iloc[:, <span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>weights <span class="op">=</span> {<span class="dv">0</span>: <span class="fl">0.9</span>, <span class="dv">1</span>: <span class="fl">0.1</span>}</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>RandomForestClassifier(class_weight<span class="op">=</span>weights)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>RandomForestClassifier(class_weight={0: 0.9, 1: 0.1})</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>RandomForestClassifier(class_weight<span class="op">=</span><span class="st">'balanced'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>RandomForestClassifier(class_weight='balanced')</code></pre>
 </div>
 </div>
 

@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-16">
 
-<title>👀 - 특성 스케일 바꾸기</title>
+<title>👀 - 연산자 끼워넣기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,8 +183,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#특성-스케일-바꾸기" id="toc-특성-스케일-바꾸기" class="nav-link active" data-scroll-target="#특성-스케일-바꾸기">특성 스케일 바꾸기</a></li>
-  <li><a href="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" id="toc-샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="nav-link" data-scroll-target="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</a></li>
+  <li><a href="#요구-사항" id="toc-요구-사항" class="nav-link active" data-scroll-target="#요구-사항">요구 사항</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +193,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">특성 스케일 바꾸기</h1>
+<h1 class="title">연산자 끼워넣기</h1>
 </div>
 
 
@@ -204,7 +204,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 16, 2022</p>
     </div>
   </div>
     
@@ -213,50 +213,75 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<section id="특성-스케일-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="특성-스케일-바꾸기">특성 스케일 바꾸기</h2>
-<p>스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.</p>
-</section>
-<section id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</h2>
+<p><a href="https://www.acmicpc.net/problem/14888">https://www.acmicpc.net/problem/14888</a></p>
+<section id="요구-사항" class="level3">
+<h3 class="anchored" data-anchor-id="요구-사항">요구 사항</h3>
 <ul>
-<li>Normalizer(norm=“l1/l2/max”)</li>
-<li>단위 노름이 되도록 개별 샘플 값을 변환</li>
-<li>텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용</li>
-<li>행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용</li>
-<li>l2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))</li>
-<li>l1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True</li>
-<li>l1 norm은 샘플 특성값의 합 = 1</li>
+<li>식의 계산은 연산자 우선 순위를 무시하고 앞에서부터 진행해야 한다.</li>
+<li>나눗셈은 정수 나눗셈으로 몫만 취한다.</li>
+<li>음수를 양수로 나눌 때는 양수로 바꾼 뒤 몫을 취하고, 그 몫을 음수로 바꾼 것과 같다.</li>
 </ul>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> Normalizer</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">0.5</span>,<span class="fl">0.5</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.1</span>,<span class="fl">3.4</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.5</span>,<span class="fl">20.2</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.63</span>,<span class="fl">34.4</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">10.9</span>,<span class="fl">3.3</span>]])</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features_l2_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l2'</span>).transform(features)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l2 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l2_norm)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features_l1_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l1'</span>).transform(features)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l1 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l1_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>N개의 수와 N-1개의 연산자가 주어졌을 때, 만들 수 있는 식의 결과가 최대인 것과 최소인 것을 구하는 프로그램을 작성하시오.</p>
+<ul>
+<li>입력: 첫째 줄에 수의 개수 N(2 ≤ N ≤ 11)가 주어진다. 둘째 줄에는 A1, A2, …, AN이 주어진다. 셋째 줄에는 합이 N-1인 4개의 정수가 주어지는데, 차례대로 덧셈(+)의 개수, 뺄셈(-)의 개수, 곱셈(×)의 개수, 나눗셈(÷)의 개수이다.</li>
+<li>출력: 첫째 줄에 만들 수 있는 식의 결과의 최댓값을, 둘째 줄에는 최솟값을 출력</li>
+</ul>
+</section>
+<section id="접근-과정" class="level3">
+<h3 class="anchored" data-anchor-id="접근-과정">접근 과정</h3>
+<ol type="1">
+<li>모든 경우의 수를 출력하는 코드
+<ol type="1">
+<li>직접 구현은 못 하겠다.</li>
+<li>itertools 모듈의 permutations 클래스를 사용한다</li>
+</ol></li>
+<li>연산 배열의 모든 경우의 수를 리스트로 반환
+<ol type="1">
+<li>연산 배열을 enumerate -&gt; for문 -&gt; 값이 0이 아니면 인덱스에 해당하는 문자 * 값 -&gt; 배열</li>
+</ol></li>
+</ol>
+<div class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> permutations</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nums <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>operator <span class="op">=</span> [<span class="st">'+'</span>, <span class="st">'-'</span>, <span class="st">'*'</span>, <span class="st">'/'</span>]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> [ ]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(op):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> v <span class="op">!=</span> <span class="dv">0</span>: ops.extend(operator[i] <span class="op">*</span> v)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> <span class="bu">list</span>(permutations(ops, n <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ops)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> []</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> ops:</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    tmp <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(nums)):</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># tmp = nums[j]; print(tmp)</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i[j] <span class="op">==</span> <span class="st">'+'</span>: tmp <span class="op">+=</span> tmp <span class="op">+</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> i[j] <span class="op">==</span> <span class="st">'-'</span>: tmp <span class="op">+=</span> tmp <span class="op">-</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> i[j] <span class="op">==</span> <span class="st">'*'</span>: tmp <span class="op">+=</span> tmp <span class="op">*</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: tmp <span class="op">+=</span> tmp <span class="op">/</span> nums[j<span class="op">+</span><span class="dv">1</span>]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    answer.append(tmp)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>l2 norm:
- [[0.70710678 0.70710678]
- [0.30782029 0.95144452]
- [0.07405353 0.99725427]
- [0.04733062 0.99887928]
- [0.95709822 0.28976368]]
-l1 norm:
- [[0.5        0.5       ]
- [0.24444444 0.75555556]
- [0.06912442 0.93087558]
- [0.04524008 0.95475992]
- [0.76760563 0.23239437]]</code></pre>
+<pre><code>[('+', '*'), ('*', '+')]
+3
+15
+0
+4</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="43">
+<pre><code>[15, 4]</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> permutations(ops, <span class="dv">2</span>):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>('+', '*')
+('*', '+')</code></pre>
 </div>
 </div>
 

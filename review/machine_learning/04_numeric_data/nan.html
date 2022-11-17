@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2022-11-15">
+<meta name="dcterms.date" content="2022-11-17">
 
-<title>👀 - 특성 스케일 바꾸기</title>
+<title>👀 - 수치형 특성 결측치 다루기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -183,8 +183,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#특성-스케일-바꾸기" id="toc-특성-스케일-바꾸기" class="nav-link active" data-scroll-target="#특성-스케일-바꾸기">특성 스케일 바꾸기</a></li>
-  <li><a href="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" id="toc-샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="nav-link" data-scroll-target="#샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</a></li>
+  <li><a href="#결측치-종류" id="toc-결측치-종류" class="nav-link active" data-scroll-target="#결측치-종류">결측치 종류</a></li>
+  <li><a href="#결측치-없는-샘플만-반환" id="toc-결측치-없는-샘플만-반환" class="nav-link" data-scroll-target="#결측치-없는-샘플만-반환">결측치 없는 샘플만 반환</a></li>
+  <li><a href="#결측치-채우기" id="toc-결측치-채우기" class="nav-link" data-scroll-target="#결측치-채우기">결측치 채우기</a></li>
   </ul>
 </nav>
     </div>
@@ -193,7 +194,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">특성 스케일 바꾸기</h1>
+<h1 class="title">수치형 특성 결측치 다루기</h1>
 </div>
 
 
@@ -204,7 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">November 15, 2022</p>
+      <p class="date">November 17, 2022</p>
     </div>
   </div>
     
@@ -213,50 +214,92 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="특성-스케일-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="특성-스케일-바꾸기">특성 스케일 바꾸기</h2>
-<p>스케일링은 기본적으로 <strong>StandardScaler</strong>를 사용한다. 그러나 알고리즘에 따라 권장하는 스케일링 방식이 있는 경우가 있다. 신경망은 <strong>MinMaxScaler</strong>를 종종 권장한다. 데이터에 이상치가 많다면 중간값과 사분위범위를 사용하는 <strong>RobustScaler</strong>를 사용한다. <strong>QuantileTransformer</strong>는 훈련 데이터를 1000개의 분위로 나누어 0~1 상이에 고르게 분포시킴으로써 이상치의 영향을 줄인다.</p>
-</section>
-<section id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="샘플의-특성값을-전체-길이가-1인-단위-노름으로-변환"><strong>샘플</strong>의 특성값을 전체 길이가 1인 단위 노름으로 변환</h2>
+<section id="결측치-종류" class="level2">
+<h2 class="anchored" data-anchor-id="결측치-종류">결측치 종류</h2>
 <ul>
-<li>Normalizer(norm=“l1/l2/max”)</li>
-<li>단위 노름이 되도록 개별 샘플 값을 변환</li>
-<li>텍스트 분류와 같이 유사한 특성이 많을 때 종종 사용</li>
-<li>행 단위 변환이므로 fit 메서드는 아무런 작업을 하지 않으니 transform 메서드만 사용</li>
-<li>l2 : 유클리드 노름 : features / np.sqrt(np.sum(np.square(features), axis=1, keepdims=True))</li>
-<li>l1 : 맨해튼 노름 : features / np.sum(np.abs(features)), axis=1, keepdims=True</li>
-<li>l1 norm은 샘플 특성값의 합 = 1</li>
+<li>MCAR(Missing Completely at Random): 완전 랜덤하게 누락</li>
+<li>MAR(Missing at Random): 랜덤하게 누락. 값이 누락될 확률이 다른 특성에서 얻은 정보에 의존함. eg. 결혼 여부와 자녀 유무에 관한 설문에서, 미혼자는 자녀 유무 항목을 건너뛸 가능성이 높다. 이때 자녀 유무 항목의 응답 여부는 결혼 여부 특성에 의존한다.</li>
+<li>MNAR(Not Missing at Random): 값이 누락될 확률이 특성에서 잡지 못한 정보에 의존. eg. 고소득자는 수입에 관한 설문항목에 응답하지 않을 가능성이 높다.</li>
 </ul>
-<div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> Normalizer</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">0.5</span>,<span class="fl">0.5</span>],</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.1</span>,<span class="fl">3.4</span>],</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.5</span>,<span class="fl">20.2</span>],</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">1.63</span>,<span class="fl">34.4</span>],</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">10.9</span>,<span class="fl">3.3</span>]])</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>features_l2_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l2'</span>).transform(features)</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l2 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l2_norm)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>features_l1_norm <span class="op">=</span> Normalizer(norm<span class="op">=</span><span class="st">'l1'</span>).transform(features)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'l1 norm:</span><span class="ch">\n</span><span class="st">'</span>, features_l1_norm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>=&gt; MCAR이나 MAR은 이따금 결측치가 있는 샘플을 삭제해도 괜찮다. <strong>MNAR은 값이 누란된 사실 자체가 정보다.</strong> MNAR인 샘플을 삭제하면 데이터에 편향을 추가하게 된다.</p>
+</section>
+<section id="결측치-없는-샘플만-반환" class="level2">
+<h2 class="anchored" data-anchor-id="결측치-없는-샘플만-반환">결측치 없는 샘플만 반환</h2>
+<ul>
+<li>넘파이: ~ 연산자와 np.isnan(ndarray) 사용</li>
+<li>판다스: df.dropna()</li>
+</ul>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([[<span class="fl">1.1</span>, <span class="fl">11.1</span>],</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">2.2</span>, <span class="fl">22.2</span>],</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">3.3</span>, <span class="fl">33.3</span>],</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                     [<span class="fl">4.4</span>, <span class="fl">44.4</span>],</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                     [np.nan, <span class="dv">55</span>]])</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>features[<span class="op">~</span>np.isnan(features).<span class="bu">any</span>(axis<span class="op">=</span><span class="dv">1</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>array([[ 1.1, 11.1],
+       [ 2.2, 22.2],
+       [ 3.3, 33.3],
+       [ 4.4, 44.4]])</code></pre>
+</div>
+</div>
+</section>
+<section id="결측치-채우기" class="level2">
+<h2 class="anchored" data-anchor-id="결측치-채우기">결측치 채우기</h2>
+<p>데이터 양이 작으면 KNN 알고리즘을 사용해 누락된 값을 예측한다.(fancyimpute 모듈) <br> -&gt; fancyimpute 설치 에러. 아마도</p>
+<p>sklearn.preprocessing.SimpleImputer 사용</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> fancyimpute <span class="im">import</span> KNN</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>features, _ <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                         n_features<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                         random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>standardized_features <span class="op">=</span> scaler.fit_transform(features)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 첫 번째 샘플의 첫 번째 특성 삭제</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>true_value <span class="op">=</span> standardized_features[<span class="dv">0</span>,<span class="dv">0</span>]</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>standardized_features[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> np.nan</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 특성 행렬에 있는 누락된 값 예측</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>features_knn_imputed <span class="op">=</span> KNN(k<span class="op">=</span><span class="dv">5</span>, verbose<span class="op">=</span><span class="dv">0</span>).fit_transform(standardized_features)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 실제 값과 대체된 값 비교</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'실제 값:'</span>, true_value)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'대체된 값:'</span>, features_knn_imputed[<span class="dv">0</span>,<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.impute <span class="im">import</span> SimpleImputer</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> make_blobs</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>features, _ <span class="op">=</span> make_blobs(n_samples<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>                         n_features<span class="op">=</span><span class="dv">2</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                         random_state<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>standardized_features <span class="op">=</span> scaler.fit_transform(features)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 첫 번째 샘플의 첫 번째 특성 삭제</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>true_value <span class="op">=</span> standardized_features[<span class="dv">0</span>,<span class="dv">0</span>]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>standardized_features[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> np.nan</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>si <span class="op">=</span> SimpleImputer() <span class="co"># 기본값은 mean</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>feature_simpleImputed <span class="op">=</span> si.fit_transform(standardized_features)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 실제 값과 대체된 값 비교</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'실제 값:'</span>, true_value)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'대체된 값:'</span>, feature_simpleImputed[<span class="dv">0</span>,<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>l2 norm:
- [[0.70710678 0.70710678]
- [0.30782029 0.95144452]
- [0.07405353 0.99725427]
- [0.04733062 0.99887928]
- [0.95709822 0.28976368]]
-l1 norm:
- [[0.5        0.5       ]
- [0.24444444 0.75555556]
- [0.06912442 0.93087558]
- [0.04524008 0.95475992]
- [0.76760563 0.23239437]]</code></pre>
+<pre><code>실제 값: 0.8730186113995938
+대체된 값: -0.000873892503901796</code></pre>
 </div>
 </div>
 
