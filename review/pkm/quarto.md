@@ -82,3 +82,10 @@ walkthrough.qmd 문서가 열린다.
 ### callout
 
 [공식 설명서](https://quarto.org/docs/authoring/callouts.html){target=_blank}
+
+### Section numbering
+
+number-sections: true
+number-depth: 3
+넘버링 제외 : ### More Options {.unnumbered}
+

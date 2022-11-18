@@ -7,6 +7,10 @@ freeze: auto
 title-block-banner: true
 # title-block-banner-color: body
 
+# Numbering
+number-sections: true
+number-depth: 3
+
 # Author name of all blog posts
 author: 'lazychoi'
 

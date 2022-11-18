@@ -11,7 +11,7 @@ date: 2022-10-14
 - 인접 리스트(Adjacency List) 방식
 - 파이썬에서는 모두 2차원 리스트로 표현한다.
 
-```mermaid
+```{mermaid}
 flowchart
     A((0))
     B((1))
@@ -34,7 +34,7 @@ graph = [
 
 ### 인접 리스트 방식
 
-```mermaid
+```{mermaid}
 flowchart LR
 A(0)-->B(1_7)-->C(2_5)
 D(1)-->E(0_7)
@@ -43,7 +43,7 @@ F(2)-->G(0_5)
 
 ### 구현
 
-```mermaid
+```{mermaid}
 graph
     1(1)---2(2)---7(7)---6(6)
     1(1)---3(3)---4(4)
