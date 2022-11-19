@@ -102,7 +102,7 @@
     "href": "books/python_machine_learning/04_preprocessing2_category.html",
     "title": "👀",
     "section": "",
-    "text": "---\ntitle: \"04장 범주형 데이터 다루기\"\ndate: 2022/11/10\nupdated: last-modified\n---\n범주형 데이터는 순서가 있는 것과 없는 것을 구분해야 한다.\n영화 평점처럼 순서가 있는 레이블로 예측하는 것은 사이킷런에서 지원하지 않는다.\nMord 파이썬 패키지 참고"
+    "text": "---\ntitle: \"04장 범주형 데이터 다루기\"\ndate: 2022/11/10\ndate-modified: last-modified\n---\n범주형 데이터는 순서가 있는 것과 없는 것을 구분해야 한다.\n영화 평점처럼 순서가 있는 레이블로 예측하는 것은 사이킷런에서 지원하지 않는다.\nMord 파이썬 패키지 참고"
   },
   {
     "objectID": "books/python_machine_learning/04_preprocessing2_category.html#순서-있는-특성-매핑",
@@ -826,6 +826,27 @@
     "text": "개인 공부\n\n“파이썬 라이브러리를 활용한 머신러닝(박해선 역)” 1장, 2장"
   },
   {
+    "objectID": "blog/posts/korean_embedding.html",
+    "href": "blog/posts/korean_embedding.html",
+    "title": "한국어 임베딩(이기창)",
+    "section": "",
+    "text": "임베딩(embedding): 사람이 쓰는 자연어를 기계가 이해할 수 있는 숫자의 나열인 벡터로 바꾼 결과 혹은 그 일련의 과정 전체를 의미한다. 단어나 문장 각각을 벡터로 변환해 벡터 공간으로 ’끼워 넣는다(embed)’는 의미에서 임베딩이라는 이름이 붙었다.\n단어-문서 행렬(Term-Document Matrix): 문서에 나타난 단어의 빈도표. 행은 단어, 열은 문서로 이루어져 있다.\nWord2Vec: 2013년 구글 연구 팀이 발표한 단어 벡터화 기법\n단어 유추 평가(word analogy test): 단어 임베딩을 평가하는 방법\n전이 학습(transfer learning): 임베딩을 다른 딥러닝 모델의 입력값으로 쓰는 기법\nFastText 임베딩(100차원): Word2Vec의 개선된 버전이며 59만 건에 이르는 한국어 문서를 미리 학습함\n잠재 의미 분석(Latent Semantic Analysis): 단어 사용 빈도 등 말뭉치의 통계량 정보가 들어 있는 커다란 행렬에 특이값 분해(Singular Value Decomposition) 등 수학적 기법을 적용해 행렬에 속한 벡터들의 차원을 축소하는 방법을 말한다.\n엔드투엔드 모델(end-to-end model): 데이터를 통째로 모델에 넣고 입출력 사이의 관계를 사람의 개입 없이 모델 스스로 처음부터 끝가지 이해하도록 유도하는 것. eg. 시퀀스투시퀀스(sequence-to-sequence)\n문장 수준 임베딩 기법: 개별 단어가 아닌 단어 시퀀스(sequence) 전체의 문맥적 의미를 함축하는 기법이다. 단어 임베딩 기법보다 전이 학습 효과가 좋은 것으로 알려져 있다. eg. ELMo(Embedding from Language Models), BERT(Bidirectional Encoder Representations from Transformer), GPT(Generative Pre-Training)\n프리트레인(pretrain): 대규모 말뭉치로 임베딩을 만든다. 이 임베딩에는 말뭉치의 의미적, 문법적 맥락이 포함돼 있다.\n파인 튜닝(fine tuning): 프리트레인으로 만든 임베딩을 입력으로 하는 새로운 딥러닝 모델을 만들고 우리가 풀고 싶은 구체적 문제에 맞는 소규모 데이터에 맞게 임베딩을 포함한 모델 전체를 업데이트한다.\n다운스트림 태스크(downstream task): 풀고 싶은 자연어 처리의 구체적 문제들을 이르는 말. eg. 품사 판별, 개체명 인식, 의미역 분석 등\n업스트림 태스크(upstream task): 다운스트림 태스크에 앞서 해결해야 할 과제. eg. 단어/문장 임베딩을 프리트레인하는 작업\n행렬 분해(factorization) 기반 방법: 말뭉치 정보가 들어 있는 원래 행렬을 두 개 이상의 작은 행렬로 쪼개는 방식의 임베딩 기법을 가리킨다. eg. GloVe, Swivel\n예측 기반 방법: 어떤 단어 주변에 특정 단어가 나타날지 예측하거나, 이전 단어가 주어졌을 때 다음 단어가 뭐가 될지 예측하거나, 문장 내 일부 단어를 지우고 해당 단어가 무엇일지 맞추는 과정에서 학습하는 방법이다. eg. Word2Vec, FastText, BERT, ELMo, GPT\n토픽 기반 방법: 주어진 문서에 잠재된 주제를 추론하는 방식으로 임베딩을 수행하는 기법. eg. 잠재 디리클레 할당(Latent Dirichlet Allocation)\n말뭉치(corpus): 임베딩 학습이라는 특정한 목적을 가지고 수집한 표본\n컬렉션(collection): 말뭉치에 속한 각각의 집합\n문서(document): 생각이나 감정, 정보를 공유하는 문장 집합\n어휘 집합(vocabulary): 말뭉치에 있는 모든 문서를 문장으로 나누고 여기에 토크나이즈를 실시한 후 중복을 제거한 토큰들의 집합\n미등록 단어(unknown word): 어휘 집합에 없는 토큰"
+  },
+  {
+    "objectID": "blog/posts/korean_embedding.html#임베딩의-역할",
+    "href": "blog/posts/korean_embedding.html#임베딩의-역할",
+    "title": "한국어 임베딩(이기창)",
+    "section": "임베딩의 역할",
+    "text": "임베딩의 역할\n\n단어/문장 간 관련도 계산: 단어를 벡터로 임베딩하는 순간 단어 벡터들 사이의 유사도(similarity)를 계산하는 일이 가능해진다.\n의미적/문법적 정보 함축: 단어 벡터 간 덧셈/뺄셈을 통해 단어들 사이의 의미적, 문법적 관계를 토출해낼 수 있다.\n전이 학습"
+  },
+  {
+    "objectID": "blog/posts/korean_embedding.html#neural-probabilistic-language-model",
+    "href": "blog/posts/korean_embedding.html#neural-probabilistic-language-model",
+    "title": "한국어 임베딩(이기창)",
+    "section": "Neural Probabilistic Language Model",
+    "text": "Neural Probabilistic Language Model\n이전 단어가 주어졌을 때 다음 단어가 뭐가 될지 예측하거나, 문장 내 일부분에 구멍을 뚫어 놓고(masking) 해당 단어가 무엇일지 맞추는 과정에서 학습된다."
+  },
+  {
     "objectID": "blog/posts/22-11-01.html",
     "href": "blog/posts/22-11-01.html",
     "title": "22-11-01(화)",
@@ -1097,6 +1118,13 @@
     "title": "22-10-10(월)",
     "section": "",
     "text": "공휴일로 수업이 없다. “Tiny Python Project(켄 유엔스-클락)”을 읽는다."
+  },
+  {
+    "objectID": "blog/posts/22-11-19.html",
+    "href": "blog/posts/22-11-19.html",
+    "title": "2022-11-19(토)",
+    "section": "",
+    "text": "빅분기 실기 연습 문제 풀기: 자동완성을 사용할 수 없는 시험장 환경을 대비해 vim에서 코드를 작성했다.\n“한국어 임베딩(이기창)” 1장 서론\n맥 iterm 설정\n\n영문 폰트 Andale Mono, 크기 15, 자간 80, 줄간격 120\n한글 폰트 NanumGothicCoding, 크기 15"
   },
   {
     "objectID": "blog/posts/22-10-17.html",
@@ -1425,7 +1453,7 @@
     "href": "blog/blog.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\n\n\n\n\nNov 19, 2022\n\n\n2022/11/19\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\nNo matching items"
+    "text": "Order By\n       Default\n         \n          Date - Oldest\n        \n         \n          Date - Newest\n        \n         \n          Title\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\nDate\n\n\nTitle\n\n\n\n\n\n\nNov 19, 2022\n\n\n한국어 임베딩(이기창)\n\n\n\n\nNov 19, 2022\n\n\n2022-11-19(토)\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "project/2205_mbti.html",
@@ -1635,7 +1663,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['미', '가', '가', '수', '가', '가', '가', '가', '양', '가']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['수', '가', '가', '수', '가', '가', '미', '가', '수', '가']"
   },
   {
     "objectID": "review/python/class.html",
@@ -2097,7 +2125,7 @@
     "href": "review/machine_learning/01_numpy/resize.html",
     "title": "👀",
     "section": "",
-    "text": "---\ntitle: \"배열 크기 바꾸기\"\ndate: 2022/11/15\nupdated: last-modified\nformat: \n  html:\n    code-fold: false\n---"
+    "text": "---\ntitle: \"배열 크기 바꾸기\"\ndate: 2022/11/15\ndate-modified: last-modified\nformat: \n  html:\n    code-fold: false\n---"
   },
   {
     "objectID": "review/machine_learning/01_numpy/resize.html#reshape와-flatten-차이",
@@ -2944,7 +2972,7 @@
     "href": "review/deep_learning/pytorch_dl.html#활성화-함수",
     "title": "이토록 쉬운 머신러닝&딥러닝 입문 3장 파이토치를 활용한 딥러닝",
     "section": "1 활성화 함수",
-    "text": "1 활성화 함수\n\n\n\n\n\n\n\n\n\n사용층\n용도\n활성화 함수\n\n\n\n\n\n은닉층\n기울기 소실 문제를 줄이고 다음 층으로 신호 전달\n렐루 / 리키 렐루\n0이하는 모두 0, 0 초과는 항상 1\n\n\n출력층\n이진 분류\n시그모이드\n양성일 확률로 따져 양성, 음성 판정\n\n\n\n다중 분류\n소프트맥스\n각 클래스에 속할 확률을 따져 분류\n\n\n\n회귀\n-\n노드 값을 그대로 출력"
+    "text": "1 활성화 함수\n\n\n\n\n\n\n\n\n\n사용층\n용도\n활성화 함수\n설명\n\n\n\n\n은닉층\n기울기 소실 문제를 줄이고 다음 층으로 신호 전달\n렐루 / 리키 렐루\n0이하는 모두 0, 0 초과는 항상 1\n\n\n출력층\n이진 분류\n시그모이드\n양성일 확률로 따져 양성, 음성 판정\n\n\n\n다중 분류\n소프트맥스\n각 클래스에 속할 확률을 따져 분류\n\n\n\n회귀\n-\n노드 값을 그대로 출력"
   },
   {
     "objectID": "review/deep_learning/pytorch_dl.html#손실-함수",

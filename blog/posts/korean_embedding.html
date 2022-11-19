@@ -7,8 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-11-19">
 
-<title>👀 - 데이터 불러오기</title>
+<title>👀 - 한국어 임베딩(이기창)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +32,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<script src="../../site_libs/quarto-listing/list.min.js"></script>
-<script src="../../site_libs/quarto-listing/quarto-listing.js"></script>
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -61,42 +60,12 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit"
   }
 }</script>
-<script>
 
-  window.document.addEventListener("DOMContentLoaded", function (_event) {
-    const listingTargetEl = window.document.querySelector('#listing-listing .list');
-    if (!listingTargetEl) {
-      // No listing discovered, do not attach.
-      return; 
-    }
-
-    const options = {
-      valueNames: ['listing-date','listing-title','listing-author','listing-description',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
-      
-      searchColumns: ["listing-date","listing-title","listing-author","listing-description"],
-    };
-
-    window['quarto-listings'] = window['quarto-listings'] || {};
-    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
-
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  });
-
-  window.addEventListener('hashchange',() => {
-    if (window['quarto-listing-loaded']) {
-      window['quarto-listing-loaded']();
-    }
-  })
-  </script>
-
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-sidebar docked nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -119,7 +88,7 @@ ul.task-list li input[type="checkbox"] {
     <a class="nav-link" href="../../books.html">읽은 책</a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="../../review.html" aria-current="page">오답노트</a>
+    <a class="nav-link" href="../../review.html">오답노트</a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../../project.html">프로젝트</a>
@@ -142,20 +111,12 @@ ul.task-list li input[type="checkbox"] {
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
     </nav>
-  <nav class="quarto-secondary-nav" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
-    <div class="container-fluid d-flex justify-content-between">
-      <h1 class="quarto-secondary-nav-title">데이터 불러오기</h1>
-      <button type="button" class="quarto-btn-toggle btn" aria-label="Show secondary navigation">
-        <i class="bi bi-chevron-right"></i>
-      </button>
-    </div>
-  </nav>
 </header>
 <!-- content -->
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title d-none d-lg-block">데이터 불러오기</h1>
+      <h1 class="title">한국어 임베딩(이기창)</h1>
                       </div>
   </div>
     
@@ -169,6 +130,12 @@ ul.task-list li input[type="checkbox"] {
             </div>
     </div>
       
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2022</p>
+      </div>
+    </div>
       
     </div>
     
@@ -176,121 +143,15 @@ ul.task-list li input[type="checkbox"] {
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <div class="sidebar-menu-container"> 
-    <ul class="list-unstyled mt-1">
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review.html" class="sidebar-item-text sidebar-link">참고자료</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/python.html" class="sidebar-item-text sidebar-link">파이썬</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/algorithm.html" class="sidebar-item-text sidebar-link">알고리즘</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/pkm.html" class="sidebar-item-text sidebar-link">지식 관리</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/de.html" class="sidebar-item-text sidebar-link">개발 환경</a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/eda.html" class="sidebar-item-text sidebar-link">EDA</a>
-  </div>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">머신 러닝</a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/01_numpy.html" class="sidebar-item-text sidebar-link">numpy</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/02_data_load.html" class="sidebar-item-text sidebar-link active">데이터 불러오기</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/03_data_wrangling.html" class="sidebar-item-text sidebar-link">데이터 랭글링</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/04_numeric_data.html" class="sidebar-item-text sidebar-link">수치형 데이터 다루기</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/05_categorical_data.html" class="sidebar-item-text sidebar-link">범주형 데이터 다루기</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/06_text_data.html" class="sidebar-item-text sidebar-link">텍스트 데이터 다루기</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/07_datetime.html" class="sidebar-item-text sidebar-link">날짜 시간</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/08_image_data.html" class="sidebar-item-text sidebar-link">이미지 다루기</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/09_feature_extraction.html" class="sidebar-item-text sidebar-link">특성 추출(차원 축소)</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/10_feature_selection.html" class="sidebar-item-text sidebar-link">특성 선택(차원 축소)</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/11_metrics.html" class="sidebar-item-text sidebar-link">모델 평가</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/12_model_selection.html" class="sidebar-item-text sidebar-link">모델 선택</a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/machine_learning/13_linear_regression.html" class="sidebar-item-text sidebar-link">선형 회귀</a>
-  </div>
-</li>
-      </ul>
-  </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../../review/deep_learning.html" class="sidebar-item-text sidebar-link">딥러닝</a>
-  </div>
-</li>
-    </ul>
-    </div>
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#용어" id="toc-용어" class="nav-link active" data-scroll-target="#용어">용어</a></li>
+  <li><a href="#임베딩의-역할" id="toc-임베딩의-역할" class="nav-link" data-scroll-target="#임베딩의-역할">임베딩의 역할</a></li>
+  <li><a href="#neural-probabilistic-language-model" id="toc-neural-probabilistic-language-model" class="nav-link" data-scroll-target="#neural-probabilistic-language-model">Neural Probabilistic Language Model</a></li>
+  </ul>
+</nav>
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -301,42 +162,48 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="용어" class="level2">
+<h2 class="anchored" data-anchor-id="용어">용어</h2>
+<ul>
+<li>임베딩(embedding): 사람이 쓰는 자연어를 기계가 이해할 수 있는 숫자의 나열인 벡터로 바꾼 결과 혹은 그 일련의 과정 전체를 의미한다. 단어나 문장 각각을 벡터로 변환해 벡터 공간으로 ’끼워 넣는다(embed)’는 의미에서 임베딩이라는 이름이 붙었다.</li>
+<li>단어-문서 행렬(Term-Document Matrix): 문서에 나타난 단어의 빈도표. 행은 단어, 열은 문서로 이루어져 있다.</li>
+<li>Word2Vec: 2013년 구글 연구 팀이 발표한 단어 벡터화 기법</li>
+<li>단어 유추 평가(word analogy test): 단어 임베딩을 평가하는 방법</li>
+<li>전이 학습(transfer learning): 임베딩을 다른 딥러닝 모델의 입력값으로 쓰는 기법</li>
+<li>FastText 임베딩(100차원): Word2Vec의 개선된 버전이며 59만 건에 이르는 한국어 문서를 미리 학습함</li>
+<li>잠재 의미 분석(Latent Semantic Analysis): 단어 사용 빈도 등 말뭉치의 통계량 정보가 들어 있는 커다란 행렬에 특이값 분해(Singular Value Decomposition) 등 수학적 기법을 적용해 행렬에 속한 벡터들의 차원을 축소하는 방법을 말한다.</li>
+<li>엔드투엔드 모델(end-to-end model): 데이터를 통째로 모델에 넣고 입출력 사이의 관계를 사람의 개입 없이 모델 스스로 처음부터 끝가지 이해하도록 유도하는 것. eg. 시퀀스투시퀀스(sequence-to-sequence)</li>
+<li>문장 수준 임베딩 기법: 개별 단어가 아닌 단어 시퀀스(sequence) 전체의 문맥적 의미를 함축하는 기법이다. 단어 임베딩 기법보다 전이 학습 효과가 좋은 것으로 알려져 있다. eg. ELMo(Embedding from Language Models), BERT(Bidirectional Encoder Representations from Transformer), GPT(Generative Pre-Training)</li>
+<li>프리트레인(pretrain): 대규모 말뭉치로 임베딩을 만든다. 이 임베딩에는 말뭉치의 의미적, 문법적 맥락이 포함돼 있다.</li>
+<li>파인 튜닝(fine tuning): 프리트레인으로 만든 임베딩을 입력으로 하는 새로운 딥러닝 모델을 만들고 우리가 풀고 싶은 구체적 문제에 맞는 소규모 데이터에 맞게 임베딩을 포함한 모델 전체를 업데이트한다.</li>
+<li>다운스트림 태스크(downstream task): 풀고 싶은 자연어 처리의 구체적 문제들을 이르는 말. eg. 품사 판별, 개체명 인식, 의미역 분석 등</li>
+<li>업스트림 태스크(upstream task): 다운스트림 태스크에 앞서 해결해야 할 과제. eg. 단어/문장 임베딩을 프리트레인하는 작업</li>
+<li>행렬 분해(factorization) 기반 방법: 말뭉치 정보가 들어 있는 원래 행렬을 두 개 이상의 작은 행렬로 쪼개는 방식의 임베딩 기법을 가리킨다. eg. GloVe, Swivel</li>
+<li>예측 기반 방법: 어떤 단어 주변에 특정 단어가 나타날지 예측하거나, 이전 단어가 주어졌을 때 다음 단어가 뭐가 될지 예측하거나, 문장 내 일부 단어를 지우고 해당 단어가 무엇일지 맞추는 과정에서 학습하는 방법이다. eg. Word2Vec, FastText, BERT, ELMo, GPT</li>
+<li>토픽 기반 방법: 주어진 문서에 잠재된 주제를 추론하는 방식으로 임베딩을 수행하는 기법. eg. 잠재 디리클레 할당(Latent Dirichlet Allocation)</li>
+<li>말뭉치(corpus): 임베딩 학습이라는 특정한 목적을 가지고 수집한 표본</li>
+<li>컬렉션(collection): 말뭉치에 속한 각각의 집합</li>
+<li>문서(document): 생각이나 감정, 정보를 공유하는 문장 집합</li>
+<li>어휘 집합(vocabulary): 말뭉치에 있는 모든 문서를 문장으로 나누고 여기에 토크나이즈를 실시한 후 중복을 제거한 토큰들의 집합</li>
+<li>미등록 단어(unknown word): 어휘 집합에 없는 토큰</li>
+</ul>
+</section>
+<section id="임베딩의-역할" class="level2">
+<h2 class="anchored" data-anchor-id="임베딩의-역할">임베딩의 역할</h2>
+<ul>
+<li>단어/문장 간 관련도 계산: 단어를 벡터로 임베딩하는 순간 단어 벡터들 사이의 유사도(similarity)를 계산하는 일이 가능해진다.</li>
+<li>의미적/문법적 정보 함축: 단어 벡터 간 덧셈/뺄셈을 통해 단어들 사이의 의미적, 문법적 관계를 토출해낼 수 있다.</li>
+<li>전이 학습</li>
+</ul>
+</section>
+<section id="neural-probabilistic-language-model" class="level2">
+<h2 class="anchored" data-anchor-id="neural-probabilistic-language-model">Neural Probabilistic Language Model</h2>
+<p>이전 단어가 주어졌을 때 다음 단어가 뭐가 될지 예측하거나, 문장 내 일부분에 구멍을 뚫어 놓고(masking) 해당 단어가 무엇일지 맞추는 과정에서 학습된다.</p>
 
 
+</section>
 
-
-<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
-<div class="list quarto-listing-default">
-<div class="quarto-post image-right" data-index="0" data-listing-date-sort="1668438000000" data-listing-file-modified-sort="1668837050463" data-listing-reading-time-sort="0.055">
-<div class="body">
-<a href="../../review/machine_learning/02_data_load/csv.html">
-<h3 class="no-anchor listing-title">
-csv 파일 불러오기
-</h3>
-<div class="listing-subtitle">
-
-</div>
-<div class="listing-description">
-csv를 불러올 때 결측치를 지정할 수 있다. pd.read_csv(‘filename’, na_values=[np.nan, ‘None’, -999])
-</div>
-</a>
-</div>
-<div class="metadata">
-<a href="../../review/machine_learning/02_data_load/csv.html">
-<div class="listing-date">
-Nov 15, 2022
-</div>
-<div class="listing-author">
-lazychoi
-</div>
-</a>
-</div>
-</div>
-</div>
-<div class="listing-no-matching d-none">
-No matching items
-</div>
-</div></main> <!-- /main -->
+</main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
