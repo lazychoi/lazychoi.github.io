@@ -1,7 +1,7 @@
 ---
 title: GIL(Global Interpreter Lock)
 date: 2022-10-07
-updated: last-modified
+date-modified: last-modified
 ---
 
 참고:

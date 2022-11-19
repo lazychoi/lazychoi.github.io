@@ -1,7 +1,7 @@
 ---
 title: 리스트 내장 함수
 date: 2022-10-31
-updated: last-modified
+date-modified: last-modified
 ---
 
 ## 리스트 컴프리헨션

@@ -1,7 +1,7 @@
 ---
 title: 깊은 복사(deep copy) vs 얉은 복사(shallow copy)
 date: 2022-10-06
-updated: last-modified
+date-modified: last-modified
 ---
 
 좋은 코드 실행 시각화 도구: [python tutor](https://pythontutor.com/){target=_blank}

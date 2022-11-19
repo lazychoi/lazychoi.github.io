@@ -1,7 +1,7 @@
 ---
 title: 정규표현식
 date: 2022-10-31
-updated: last-modified
+date-modified: last-modified
 draft: true
 ---
 

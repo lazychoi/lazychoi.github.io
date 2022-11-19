@@ -1,7 +1,7 @@
 ---
 title: 한글이 보이지 않을 때
 date: 2022/11/11
-updated: last-modified
+date-modified: last-modified
 format: 
   html:
     code-fold: false

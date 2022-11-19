@@ -1,7 +1,7 @@
 ---
 title: Obsidian template 사용
 date: 2022-10-07
-updated: last-modified
+date-modified: last-modified
 ---
 
 - [기본 템플릿 문법](https://help.obsidian.md/Plugins/Templates){target=_blank}

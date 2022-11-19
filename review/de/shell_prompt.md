@@ -1,7 +1,7 @@
 ---
 title: "shell prompt"
 date: 2022-10-07
-updated: last-modified
+date-modified: last-modified
 ---
 
 출처: [How To Customize Bash Prompt in Linux](https://phoenixnap.com/kb/change-bash-prompt-linux){target=_blank}
