@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,15 +178,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#json-데이터-크롤링한-후-dict-형식으로-변환" id="toc-json-데이터-크롤링한-후-dict-형식으로-변환" class="nav-link active" data-scroll-target="#json-데이터-크롤링한-후-dict-형식으로-변환">json 데이터 크롤링한 후 dict 형식으로 변환</a></li>
+  <li><a href="#json-데이터-크롤링한-후-dict-형식으로-변환" id="toc-json-데이터-크롤링한-후-dict-형식으로-변환" class="nav-link active" data-scroll-target="#json-데이터-크롤링한-후-dict-형식으로-변환"><span class="toc-section-number">1</span>  json 데이터 크롤링한 후 dict 형식으로 변환</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -219,8 +221,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="json-데이터-크롤링한-후-dict-형식으로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="json-데이터-크롤링한-후-dict-형식으로-변환">json 데이터 크롤링한 후 dict 형식으로 변환</h2>
+<section id="json-데이터-크롤링한-후-dict-형식으로-변환" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="json-데이터-크롤링한-후-dict-형식으로-변환"><span class="header-section-number">1</span> json 데이터 크롤링한 후 dict 형식으로 변환</h2>
 <p>교보문고 베스트셀러 데이터 크롤링(최대 100위까지)</p>
 <p>순위, 제목, 저자, 할인가</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>

@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,16 +178,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#random" id="toc-random" class="nav-link active" data-scroll-target="#random">random</a></li>
-  <li><a href="#배열-연결하기" id="toc-배열-연결하기" class="nav-link" data-scroll-target="#배열-연결하기">배열 연결하기</a></li>
+  <li><a href="#random" id="toc-random" class="nav-link active" data-scroll-target="#random"><span class="toc-section-number">1</span>  random</a></li>
+  <li><a href="#배열-연결하기" id="toc-배열-연결하기" class="nav-link" data-scroll-target="#배열-연결하기"><span class="toc-section-number">2</span>  배열 연결하기</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -220,8 +222,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="random" class="level2">
-<h2 class="anchored" data-anchor-id="random">random</h2>
+<section id="random" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="random"><span class="header-section-number">1</span> random</h2>
 <p><a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.shuffle.html" target="_blank">np.random.shuffle(x)</a> : 반환값 없이 x 자체를 섞음</p>
 <div class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -238,8 +240,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="배열-연결하기" class="level2">
-<h2 class="anchored" data-anchor-id="배열-연결하기">배열 연결하기</h2>
+<section id="배열-연결하기" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="배열-연결하기"><span class="header-section-number">2</span> 배열 연결하기</h2>
 <ul>
 <li><a href="https://numpy.org/doc/stable/reference/generated/numpy.column_stack.html" target="_blank">np.column_stack(튜플)</a></li>
 <li><a href="https://numpy.org/doc/stable/reference/generated/numpy.row_stack.html" target="_blank">np.row_stack(튜플)</a></li>

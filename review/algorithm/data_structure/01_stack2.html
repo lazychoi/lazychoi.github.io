@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-08">
 
 <title>👀 - 스택 - 크레인 인형 뽑기 게임</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,48 +176,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">스택 - 크레인 인형 뽑기 게임</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 8, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link active" data-scroll-target="#접근-과정">접근 과정</a></li>
-  <li><a href="#코드-정리" id="toc-코드-정리" class="nav-link" data-scroll-target="#코드-정리">코드 정리</a></li>
-  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드">다른 사람 코드</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link active" data-scroll-target="#접근-과정"><span class="toc-section-number">0.1</span>  접근 과정</a></li>
+  <li><a href="#코드-정리" id="toc-코드-정리" class="nav-link" data-scroll-target="#코드-정리"><span class="toc-section-number">0.2</span>  코드 정리</a></li>
+  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드"><span class="toc-section-number">0.3</span>  다른 사람 코드</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">스택 - 크레인 인형 뽑기 게임</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 8, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/64061">https://school.programmers.co.kr/learn/courses/30/lessons/64061</a></p>
-<section id="접근-과정" class="level3">
-<h3 class="anchored" data-anchor-id="접근-과정">접근 과정</h3>
+<section id="접근-과정" class="level3" data-number="0.1">
+<h3 data-number="0.1" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">0.1</span> 접근 과정</h3>
 <ol type="1">
 <li>board 리스트의 2차원에서 같은 자리의 요소로 이루어진 리스트로 변형하여 새로운 2차원 리스트를 만듦</li>
 <li>board 배열과 같은 모양이 되도록 stack 리스트 append 구현</li>
@@ -311,8 +322,8 @@ columns 1 doll 0 basket [4, 2, 0]
 </div>
 </div>
 </section>
-<section id="코드-정리" class="level3">
-<h3 class="anchored" data-anchor-id="코드-정리">코드 정리</h3>
+<section id="코드-정리" class="level3" data-number="0.2">
+<h3 data-number="0.2" class="anchored" data-anchor-id="코드-정리"><span class="header-section-number">0.2</span> 코드 정리</h3>
 <p>1번이 통과를 못해 힌트의 반례를 보고서야 문제 원인을 찾았다. 인형이 하나도 없거나 모두 같은 인형일 경우를 예상하지 못했다. moves에서 숫자를 뽑을 때 underflow가 나지 않도록 조건을 걸고, 인형이 없을 때 바구니에 담지 않도록 명시적으로 조건을 걸어야 한다.</p>
 <div class="cell" data-execution_count="262">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>board <span class="op">=</span> [[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>],[<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">3</span>],[<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">5</span>,<span class="dv">0</span>,<span class="dv">1</span>],[<span class="dv">4</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">4</span>,<span class="dv">2</span>],[<span class="dv">3</span>,<span class="dv">5</span>,<span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">1</span>]]</span>
@@ -407,8 +418,8 @@ columns 1 doll 0 basket [4, 2, 0]
 </div>
 </div>
 </section>
-<section id="다른-사람-코드" class="level3">
-<h3 class="anchored" data-anchor-id="다른-사람-코드">다른 사람 코드</h3>
+<section id="다른-사람-코드" class="level3" data-number="0.3">
+<h3 data-number="0.3" class="anchored" data-anchor-id="다른-사람-코드"><span class="header-section-number">0.3</span> 다른 사람 코드</h3>
 <p>moves를 가장 바깥 for문으로 돌린 점이 돋보인다. 스택을 만들 때 0은 아예 넣지 않았다. 한 번 읽은 곳은 다시 읽지 않도록 0을 입력한 것도 생각지 못한 방법이다.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solution(board, moves):</span>

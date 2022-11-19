@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-07">
 
 <title>👀 - Obsidian template 사용</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,72 +113,82 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Obsidian template 사용</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 7, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#기본-template-사용" id="toc-기본-template-사용" class="nav-link active" data-scroll-target="#기본-template-사용">기본 template 사용</a>
+  <li><a href="#기본-template-사용" id="toc-기본-template-사용" class="nav-link active" data-scroll-target="#기본-template-사용"><span class="toc-section-number">1</span>  기본 template 사용</a>
   <ul class="collapse">
-  <li><a href="#환경-설정" id="toc-환경-설정" class="nav-link" data-scroll-target="#환경-설정">환경 설정</a></li>
-  <li><a href="#수동으로-템플릿-적용" id="toc-수동으로-템플릿-적용" class="nav-link" data-scroll-target="#수동으로-템플릿-적용">수동으로 템플릿 적용</a></li>
-  <li><a href="#틀정-폴더에-자동으로-템플릿-적용" id="toc-틀정-폴더에-자동으로-템플릿-적용" class="nav-link" data-scroll-target="#틀정-폴더에-자동으로-템플릿-적용">틀정 폴더에 자동으로 템플릿 적용</a></li>
+  <li><a href="#환경-설정" id="toc-환경-설정" class="nav-link" data-scroll-target="#환경-설정"><span class="toc-section-number">1.1</span>  환경 설정</a></li>
+  <li><a href="#수동으로-템플릿-적용" id="toc-수동으로-템플릿-적용" class="nav-link" data-scroll-target="#수동으로-템플릿-적용"><span class="toc-section-number">1.2</span>  수동으로 템플릿 적용</a></li>
+  <li><a href="#틀정-폴더에-자동으로-템플릿-적용" id="toc-틀정-폴더에-자동으로-템플릿-적용" class="nav-link" data-scroll-target="#틀정-폴더에-자동으로-템플릿-적용"><span class="toc-section-number">1.3</span>  틀정 폴더에 자동으로 템플릿 적용</a></li>
   </ul></li>
-  <li><a href="#templater-plugin-사용" id="toc-templater-plugin-사용" class="nav-link" data-scroll-target="#templater-plugin-사용">templater plugin 사용</a></li>
+  <li><a href="#templater-plugin-사용" id="toc-templater-plugin-사용" class="nav-link" data-scroll-target="#templater-plugin-사용"><span class="toc-section-number">2</span>  templater plugin 사용</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Obsidian template 사용</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 7, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <ul>
 <li><a href="https://help.obsidian.md/Plugins/Templates" target="_blank">기본 템플릿 문법</a></li>
 <li><a href="https://silentvoid13.github.io/Templater/syntax.html" target="_blank">templater plugin 문법</a></li>
 </ul>
-<section id="기본-template-사용" class="level2">
-<h2 class="anchored" data-anchor-id="기본-template-사용">기본 template 사용</h2>
-<section id="환경-설정" class="level3">
-<h3 class="anchored" data-anchor-id="환경-설정">환경 설정</h3>
+<section id="기본-template-사용" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="기본-template-사용"><span class="header-section-number">1</span> 기본 template 사용</h2>
+<section id="환경-설정" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="환경-설정"><span class="header-section-number">1.1</span> 환경 설정</h3>
 <ol type="1">
 <li>Settings &gt;&gt;&gt; Core plugins &gt;&gt;&gt; Templates 활성화</li>
 <li>템플릿 파일 저장할 폴더 만들기. eg. DOCS/templates</li>
 </ol>
 </section>
-<section id="수동으로-템플릿-적용" class="level3">
-<h3 class="anchored" data-anchor-id="수동으로-템플릿-적용">수동으로 템플릿 적용</h3>
+<section id="수동으로-템플릿-적용" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="수동으로-템플릿-적용"><span class="header-section-number">1.2</span> 수동으로 템플릿 적용</h3>
 <ol type="1">
 <li>문서를 만들고</li>
 <li>왼쪽 사이드바에서 “insert template” 아이콘 선택</li>
 <li>삽입할 템플릿 선택(템플릿이 2개 이상인 경우)</li>
 </ol>
 </section>
-<section id="틀정-폴더에-자동으로-템플릿-적용" class="level3">
-<h3 class="anchored" data-anchor-id="틀정-폴더에-자동으로-템플릿-적용">틀정 폴더에 자동으로 템플릿 적용</h3>
+<section id="틀정-폴더에-자동으로-템플릿-적용" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="틀정-폴더에-자동으로-템플릿-적용"><span class="header-section-number">1.3</span> 틀정 폴더에 자동으로 템플릿 적용</h3>
 <ol start="3" type="1">
 <li>Options(톱니 버튼) &gt;&gt;&gt; Template folder location 에 1번에서 만들 폴더 지정</li>
 <li>templates 폴더 .gitignore에 추가</li>
@@ -186,8 +197,8 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 </section>
 </section>
-<section id="templater-plugin-사용" class="level2">
-<h2 class="anchored" data-anchor-id="templater-plugin-사용">templater plugin 사용</h2>
+<section id="templater-plugin-사용" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="templater-plugin-사용"><span class="header-section-number">2</span> templater plugin 사용</h2>
 <ol type="1">
 <li>Settings &gt;&gt;&gt; Community Plugins &gt;&gt;&gt; Templater</li>
 <li>Template folder location 지정</li>

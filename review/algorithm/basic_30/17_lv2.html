@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-30">
 
 <title>👀 - 정수 내림차순으로 배치하기</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,51 +176,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">정수 내림차순으로 배치하기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 30, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#정수-내림차순으로-배치" id="toc-정수-내림차순으로-배치" class="nav-link active" data-scroll-target="#정수-내림차순으로-배치">정수 내림차순으로 배치</a>
+  <li><a href="#정수-내림차순으로-배치" id="toc-정수-내림차순으로-배치" class="nav-link active" data-scroll-target="#정수-내림차순으로-배치"><span class="toc-section-number">1</span>  정수 내림차순으로 배치</a>
   <ul class="collapse">
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a></li>
-  <li><a href="#다른-사람-풀이-보고-알게-된-점" id="toc-다른-사람-풀이-보고-알게-된-점" class="nav-link" data-scroll-target="#다른-사람-풀이-보고-알게-된-점">다른 사람 풀이 보고 알게 된 점</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정"><span class="toc-section-number">1.1</span>  접근 과정</a></li>
+  <li><a href="#다른-사람-풀이-보고-알게-된-점" id="toc-다른-사람-풀이-보고-알게-된-점" class="nav-link" data-scroll-target="#다른-사람-풀이-보고-알게-된-점"><span class="toc-section-number">1.2</span>  다른 사람 풀이 보고 알게 된 점</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">정수 내림차순으로 배치하기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="정수-내림차순으로-배치" class="level1">
-<h1>정수 내림차순으로 배치</h1>
-<section id="접근-과정" class="level2">
-<h2 class="anchored" data-anchor-id="접근-과정">접근 과정</h2>
+<section id="정수-내림차순으로-배치" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 정수 내림차순으로 배치</h1>
+<section id="접근-과정" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">1.1</span> 접근 과정</h2>
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/12933">https://school.programmers.co.kr/learn/courses/30/lessons/12933</a></p>
 <ul>
 <li>정렬 알고리즘을 직접 구현하든디</li>
@@ -237,8 +248,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="다른-사람-풀이-보고-알게-된-점" class="level2">
-<h2 class="anchored" data-anchor-id="다른-사람-풀이-보고-알게-된-점">다른 사람 풀이 보고 알게 된 점</h2>
+<section id="다른-사람-풀이-보고-알게-된-점" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="다른-사람-풀이-보고-알게-된-점"><span class="header-section-number">1.2</span> 다른 사람 풀이 보고 알게 된 점</h2>
 <p>문자열을 리스트로 형변환하면 낱개의 문자가 요소로 저장된다.</p>
 <div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(<span class="bu">str</span>(n))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

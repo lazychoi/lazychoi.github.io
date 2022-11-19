@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,22 +178,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#인수-종류" id="toc-인수-종류" class="nav-link active" data-scroll-target="#인수-종류">인수 종류</a></li>
-  <li><a href="#parser-만들기" id="toc-parser-만들기" class="nav-link" data-scroll-target="#parser-만들기">parser 만들기</a></li>
-  <li><a href="#위치-인수-만들기" id="toc-위치-인수-만들기" class="nav-link" data-scroll-target="#위치-인수-만들기">위치 인수 만들기</a></li>
-  <li><a href="#두-개의-위치-인수가-필요한-경우" id="toc-두-개의-위치-인수가-필요한-경우" class="nav-link" data-scroll-target="#두-개의-위치-인수가-필요한-경우">두 개의 위치 인수가 필요한 경우</a></li>
-  <li><a href="#미리-지정한-값-내에서만-입력-choices" id="toc-미리-지정한-값-내에서만-입력-choices" class="nav-link" data-scroll-target="#미리-지정한-값-내에서만-입력-choices">미리 지정한 값 내에서만 입력: choices</a></li>
-  <li><a href="#두-숫자-받아-더하기.-두-개의-동일-위치-인수" id="toc-두-숫자-받아-더하기.-두-개의-동일-위치-인수" class="nav-link" data-scroll-target="#두-숫자-받아-더하기.-두-개의-동일-위치-인수">두 숫자 받아 더하기. 두 개의 동일 위치 인수</a></li>
-  <li><a href="#하나-이상의-동일한-위치-인수-입력" id="toc-하나-이상의-동일한-위치-인수-입력" class="nav-link" data-scroll-target="#하나-이상의-동일한-위치-인수-입력">하나 이상의 동일한 위치 인수 입력</a></li>
-  <li><a href="#옵션-있으면-리스트-정렬-없으면-입력-순으로" id="toc-옵션-있으면-리스트-정렬-없으면-입력-순으로" class="nav-link" data-scroll-target="#옵션-있으면-리스트-정렬-없으면-입력-순으로">옵션 있으면 리스트 정렬, 없으면 입력 순으로</a></li>
+  <li><a href="#인수-종류" id="toc-인수-종류" class="nav-link active" data-scroll-target="#인수-종류"><span class="toc-section-number">1</span>  인수 종류</a></li>
+  <li><a href="#parser-만들기" id="toc-parser-만들기" class="nav-link" data-scroll-target="#parser-만들기"><span class="toc-section-number">2</span>  parser 만들기</a></li>
+  <li><a href="#위치-인수-만들기" id="toc-위치-인수-만들기" class="nav-link" data-scroll-target="#위치-인수-만들기"><span class="toc-section-number">3</span>  위치 인수 만들기</a></li>
+  <li><a href="#두-개의-위치-인수가-필요한-경우" id="toc-두-개의-위치-인수가-필요한-경우" class="nav-link" data-scroll-target="#두-개의-위치-인수가-필요한-경우"><span class="toc-section-number">4</span>  두 개의 위치 인수가 필요한 경우</a></li>
+  <li><a href="#미리-지정한-값-내에서만-입력-choices" id="toc-미리-지정한-값-내에서만-입력-choices" class="nav-link" data-scroll-target="#미리-지정한-값-내에서만-입력-choices"><span class="toc-section-number">5</span>  미리 지정한 값 내에서만 입력: choices</a></li>
+  <li><a href="#두-숫자-받아-더하기.-두-개의-동일-위치-인수" id="toc-두-숫자-받아-더하기.-두-개의-동일-위치-인수" class="nav-link" data-scroll-target="#두-숫자-받아-더하기.-두-개의-동일-위치-인수"><span class="toc-section-number">6</span>  두 숫자 받아 더하기. 두 개의 동일 위치 인수</a></li>
+  <li><a href="#하나-이상의-동일한-위치-인수-입력" id="toc-하나-이상의-동일한-위치-인수-입력" class="nav-link" data-scroll-target="#하나-이상의-동일한-위치-인수-입력"><span class="toc-section-number">7</span>  하나 이상의 동일한 위치 인수 입력</a></li>
+  <li><a href="#옵션-있으면-리스트-정렬-없으면-입력-순으로" id="toc-옵션-있으면-리스트-정렬-없으면-입력-순으로" class="nav-link" data-scroll-target="#옵션-있으면-리스트-정렬-없으면-입력-순으로"><span class="toc-section-number">8</span>  옵션 있으면 리스트 정렬, 없으면 입력 순으로</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -228,16 +230,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <p>출처: tiny python project 부록 pp.457~481</p>
 <p><a href="https://docs.python.org/ko/3/howto/argparse.html" target="_blank">argparse 자습서</a></p>
-<section id="인수-종류" class="level2">
-<h2 class="anchored" data-anchor-id="인수-종류">인수 종류</h2>
+<section id="인수-종류" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="인수-종류"><span class="header-section-number">1</span> 인수 종류</h2>
 <ul>
 <li>위치 인수(positional argument): 인수의 순서와 숫자가 의미 결정</li>
 <li>명명된 옵션 인수(named option): 대시 하나(-) 또는 두 개(–)로 인수 정의하고 그 뒤에 값을 지정. 기본값을 설정하는 게 좋음.</li>
 <li>플래그(flag): yes/no, True/False.</li>
 </ul>
 </section>
-<section id="parser-만들기" class="level2">
-<h2 class="anchored" data-anchor-id="parser-만들기">parser 만들기</h2>
+<section id="parser-만들기" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="parser-만들기"><span class="header-section-number">2</span> parser 만들기</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> argparse</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>parser <span class="op">=</span> argparse.ArgumentParser(</span>
@@ -249,16 +251,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>==명령줄의 모든 인수는 문자열==</li>
 </ul>
 </section>
-<section id="위치-인수-만들기" class="level2">
-<h2 class="anchored" data-anchor-id="위치-인수-만들기">위치 인수 만들기</h2>
+<section id="위치-인수-만들기" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="위치-인수-만들기"><span class="header-section-number">3</span> 위치 인수 만들기</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>parser.add_argument(</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'positional'</span>,       <span class="co"># 앞에 대시(-)가 없으면 위치 인수. 이름은 아무 거나</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    metavar<span class="op">=</span><span class="st">'str'</span>,      <span class="co"># 데이터 타입 힌트. 모든 인수의 기본값은 문자열</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">help</span><span class="op">=</span><span class="st">'A positional argument'</span>  <span class="co"># 인수에 대한 간단한 설명</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="두-개의-위치-인수가-필요한-경우" class="level2">
-<h2 class="anchored" data-anchor-id="두-개의-위치-인수가-필요한-경우">두 개의 위치 인수가 필요한 경우</h2>
+<section id="두-개의-위치-인수가-필요한-경우" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="두-개의-위치-인수가-필요한-경우"><span class="header-section-number">4</span> 두 개의 위치 인수가 필요한 경우</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>parser.add_argument(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'color'</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    metavar<span class="op">=</span><span class="st">'color'</span>,</span>
@@ -273,8 +275,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">help</span><span class="op">=</span><span class="st">'The size of the garment'</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="미리-지정한-값-내에서만-입력-choices" class="level2">
-<h2 class="anchored" data-anchor-id="미리-지정한-값-내에서만-입력-choices">미리 지정한 값 내에서만 입력: choices</h2>
+<section id="미리-지정한-값-내에서만-입력-choices" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="미리-지정한-값-내에서만-입력-choices"><span class="header-section-number">5</span> 미리 지정한 값 내에서만 입력: choices</h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>parser.add_argument(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'color'</span>,</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    metavar<span class="op">=</span><span class="st">'color'</span>,</span>
@@ -291,8 +293,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    choices<span class="op">=</span><span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">11</span>)</span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="두-숫자-받아-더하기.-두-개의-동일-위치-인수" class="level2">
-<h2 class="anchored" data-anchor-id="두-숫자-받아-더하기.-두-개의-동일-위치-인수">두 숫자 받아 더하기. 두 개의 동일 위치 인수</h2>
+<section id="두-숫자-받아-더하기.-두-개의-동일-위치-인수" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="두-숫자-받아-더하기.-두-개의-동일-위치-인수"><span class="header-section-number">6</span> 두 숫자 받아 더하기. 두 개의 동일 위치 인수</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">Author : playdata &lt;playdata@localhost&gt;</span></span>
@@ -338,8 +340,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    main()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>==nargs = 2==, type=int 추가</p>
 </section>
-<section id="하나-이상의-동일한-위치-인수-입력" class="level2">
-<h2 class="anchored" data-anchor-id="하나-이상의-동일한-위치-인수-입력">하나 이상의 동일한 위치 인수 입력</h2>
+<section id="하나-이상의-동일한-위치-인수-입력" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="하나-이상의-동일한-위치-인수-입력"><span class="header-section-number">7</span> 하나 이상의 동일한 위치 인수 입력</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">"""</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">Author : playdata &lt;playdata@localhost&gt;</span></span>
@@ -389,8 +391,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><code>print('{} = {}'.format(' + '.join(map(str, numbers)), sum(numbers)))</code></li>
 </ul>
 </section>
-<section id="옵션-있으면-리스트-정렬-없으면-입력-순으로" class="level2">
-<h2 class="anchored" data-anchor-id="옵션-있으면-리스트-정렬-없으면-입력-순으로">옵션 있으면 리스트 정렬, 없으면 입력 순으로</h2>
+<section id="옵션-있으면-리스트-정렬-없으면-입력-순으로" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="옵션-있으면-리스트-정렬-없으면-입력-순으로"><span class="header-section-number">8</span> 옵션 있으면 리스트 정렬, 없으면 입력 순으로</h2>
 <div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>parser.add_argument(</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'-s'</span>, </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">'--sorted'</span>,</span>

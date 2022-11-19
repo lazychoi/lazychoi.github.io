@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-17">
 
 <title>👀 - 불균형한 클래스 다루기</title>
@@ -130,7 +131,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,46 +179,56 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">불균형한 클래스 다루기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 17, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#불균형한-클래스를-다루는-5가지-방법" id="toc-불균형한-클래스를-다루는-5가지-방법" class="nav-link active" data-scroll-target="#불균형한-클래스를-다루는-5가지-방법">불균형한 클래스를 다루는 5가지 방법</a></li>
-  <li><a href="#가중치-매개변수-제공-모델-사용" id="toc-가중치-매개변수-제공-모델-사용" class="nav-link" data-scroll-target="#가중치-매개변수-제공-모델-사용">가중치 매개변수 제공 모델 사용</a></li>
+  <li><a href="#불균형한-클래스를-다루는-5가지-방법" id="toc-불균형한-클래스를-다루는-5가지-방법" class="nav-link active" data-scroll-target="#불균형한-클래스를-다루는-5가지-방법"><span class="toc-section-number">1</span>  불균형한 클래스를 다루는 5가지 방법</a></li>
+  <li><a href="#가중치-매개변수-제공-모델-사용" id="toc-가중치-매개변수-제공-모델-사용" class="nav-link" data-scroll-target="#가중치-매개변수-제공-모델-사용"><span class="toc-section-number">2</span>  가중치 매개변수 제공 모델 사용</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">불균형한 클래스 다루기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 17, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="불균형한-클래스를-다루는-5가지-방법" class="level2">
-<h2 class="anchored" data-anchor-id="불균형한-클래스를-다루는-5가지-방법">불균형한 클래스를 다루는 5가지 방법</h2>
+<section id="불균형한-클래스를-다루는-5가지-방법" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="불균형한-클래스를-다루는-5가지-방법"><span class="header-section-number">1</span> 불균형한 클래스를 다루는 5가지 방법</h2>
 <ol type="1">
 <li>소수 클래스 샘플 더 모으기</li>
 <li>불균형한 클래스에 잘 맞는 모델 평가지표 사용: 오차행렬, 재현율, 정밀도, F1 점수, ROC 곡선</li>
@@ -227,8 +238,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <p>-&gt; 다운샘플링과 업샘플링 중 선택은 문제에 따라 다르다. 일반적으로 둘 다 시도해보고 결과가 좋은 쪽을 선택한다.</p>
 </section>
-<section id="가중치-매개변수-제공-모델-사용" class="level2">
-<h2 class="anchored" data-anchor-id="가중치-매개변수-제공-모델-사용">가중치 매개변수 제공 모델 사용</h2>
+<section id="가중치-매개변수-제공-모델-사용" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="가중치-매개변수-제공-모델-사용"><span class="header-section-number">2</span> 가중치 매개변수 제공 모델 사용</h2>
 <p>RandomForestClassifier()의 class_weight 매개변수에</p>
 <ul>
 <li>딕셔너리 형식으로 클래스별 비중을 지정하거나</li>

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-30">
 
 <title>👀 - 문자열 다루기 기본</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,55 +176,65 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">문자열 다루기 기본</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 30, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#문자열-다루기-기본" id="toc-문자열-다루기-기본" class="nav-link active" data-scroll-target="#문자열-다루기-기본">문자열 다루기 기본</a>
+  <li><a href="#문자열-다루기-기본" id="toc-문자열-다루기-기본" class="nav-link active" data-scroll-target="#문자열-다루기-기본"><span class="toc-section-number">1</span>  문자열 다루기 기본</a>
   <ul class="collapse">
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정"><span class="toc-section-number">1.1</span>  접근 과정</a>
   <ul class="collapse">
-  <li><a href="#틀린-이유" id="toc-틀린-이유" class="nav-link" data-scroll-target="#틀린-이유">틀린 이유</a></li>
-  <li><a href="#바꾼-것" id="toc-바꾼-것" class="nav-link" data-scroll-target="#바꾼-것">바꾼 것</a></li>
+  <li><a href="#틀린-이유" id="toc-틀린-이유" class="nav-link" data-scroll-target="#틀린-이유"><span class="toc-section-number">1.1.1</span>  틀린 이유</a></li>
+  <li><a href="#바꾼-것" id="toc-바꾼-것" class="nav-link" data-scroll-target="#바꾼-것"><span class="toc-section-number">1.1.2</span>  바꾼 것</a></li>
   </ul></li>
-  <li><a href="#다른-사람-풀이-보고-배운-것" id="toc-다른-사람-풀이-보고-배운-것" class="nav-link" data-scroll-target="#다른-사람-풀이-보고-배운-것">다른 사람 풀이 보고 배운 것</a></li>
+  <li><a href="#다른-사람-풀이-보고-배운-것" id="toc-다른-사람-풀이-보고-배운-것" class="nav-link" data-scroll-target="#다른-사람-풀이-보고-배운-것"><span class="toc-section-number">1.2</span>  다른 사람 풀이 보고 배운 것</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">문자열 다루기 기본</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="문자열-다루기-기본" class="level1">
-<h1>문자열 다루기 기본</h1>
-<section id="접근-과정" class="level2">
-<h2 class="anchored" data-anchor-id="접근-과정">접근 과정</h2>
+<section id="문자열-다루기-기본" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 문자열 다루기 기본</h1>
+<section id="접근-과정" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">1.1</span> 접근 과정</h2>
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/12918">문제 링크 https://school.programmers.co.kr/learn/courses/30/lessons/12918</a></p>
 <ol type="1">
 <li>ord(‘0’) = 48, ord(‘9’) = 57 이용한다.</li>
@@ -231,12 +242,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>48에서 57 사이의 값이 나오면 True 반환하는 리스트를 만들다.</li>
 <li>True는 1과 같기 때문에 sum()을 해서 4나 6이 나오면 True를 반환한다.</li>
 </ol>
-<section id="틀린-이유" class="level3">
-<h3 class="anchored" data-anchor-id="틀린-이유">틀린 이유</h3>
+<section id="틀린-이유" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="틀린-이유"><span class="header-section-number">1.1.1</span> 틀린 이유</h3>
 <p>3, 4번에서 True만 반환하여 더하기 때문에 틀린 게 있어도 True 개수만 4개나 6개면 조건에 맞는 것으로 잘못 생각했다. 만약 ’a1234’가 주어지면 a가 False인데도 [True, True, True, True]가 되어 True를 반환한다.</p>
 </section>
-<section id="바꾼-것" class="level3">
-<h3 class="anchored" data-anchor-id="바꾼-것">바꾼 것</h3>
+<section id="바꾼-것" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="바꾼-것"><span class="header-section-number">1.1.2</span> 바꾼 것</h3>
 <ul>
 <li>3번에 False도 리스트에 추가되도록 변경했다.</li>
 <li>4번 조건문에 False not in a 추가하여 False가 있는 리스트를 걸러내도록 했다.</li>
@@ -260,8 +271,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="다른-사람-풀이-보고-배운-것" class="level2">
-<h2 class="anchored" data-anchor-id="다른-사람-풀이-보고-배운-것">다른 사람 풀이 보고 배운 것</h2>
+<section id="다른-사람-풀이-보고-배운-것" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="다른-사람-풀이-보고-배운-것"><span class="header-section-number">1.2</span> 다른 사람 풀이 보고 배운 것</h2>
 <p>리스트의 isdigit() 함수를 써서 코드를 한 줄로 구현했다.</p>
 <div class="cell" data-execution_count="100">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>s.isdigit() <span class="kw">and</span> <span class="bu">len</span>(s) <span class="kw">in</span> (<span class="dv">4</span>, <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

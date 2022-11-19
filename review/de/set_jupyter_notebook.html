@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-05">
 
 <title>👀 - 주피터 노트북 설정</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,49 +176,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">주피터 노트북 설정</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 5, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#순서" id="toc-순서" class="nav-link active" data-scroll-target="#순서">순서</a></li>
-  <li><a href="#설정-파일-경로-찾기" id="toc-설정-파일-경로-찾기" class="nav-link" data-scroll-target="#설정-파일-경로-찾기">설정 파일 경로 찾기</a></li>
-  <li><a href="#customcustom.js-파일-만들기" id="toc-customcustom.js-파일-만들기" class="nav-link" data-scroll-target="#customcustom.js-파일-만들기">custom/custom.js 파일 만들기</a></li>
-  <li><a href="#자바스크립트-코드-붙여넣기" id="toc-자바스크립트-코드-붙여넣기" class="nav-link" data-scroll-target="#자바스크립트-코드-붙여넣기">자바스크립트 코드 붙여넣기</a></li>
-  <li><a href="#출처" id="toc-출처" class="nav-link" data-scroll-target="#출처">출처</a></li>
+  <li><a href="#순서" id="toc-순서" class="nav-link active" data-scroll-target="#순서"><span class="toc-section-number">1</span>  순서</a></li>
+  <li><a href="#설정-파일-경로-찾기" id="toc-설정-파일-경로-찾기" class="nav-link" data-scroll-target="#설정-파일-경로-찾기"><span class="toc-section-number">2</span>  설정 파일 경로 찾기</a></li>
+  <li><a href="#customcustom.js-파일-만들기" id="toc-customcustom.js-파일-만들기" class="nav-link" data-scroll-target="#customcustom.js-파일-만들기"><span class="toc-section-number">3</span>  custom/custom.js 파일 만들기</a></li>
+  <li><a href="#자바스크립트-코드-붙여넣기" id="toc-자바스크립트-코드-붙여넣기" class="nav-link" data-scroll-target="#자바스크립트-코드-붙여넣기"><span class="toc-section-number">4</span>  자바스크립트 코드 붙여넣기</a></li>
+  <li><a href="#출처" id="toc-출처" class="nav-link" data-scroll-target="#출처"><span class="toc-section-number">5</span>  출처</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">주피터 노트북 설정</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 5, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="순서" class="level2">
-<h2 class="anchored" data-anchor-id="순서">순서</h2>
+<section id="순서" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="순서"><span class="header-section-number">1</span> 순서</h2>
 <ol type="1">
 <li>설정 파일 경로 찾기</li>
 <li>설정 파일 경로 안에 custom 폴더 만들고 그 안에 custom.js 파일 만들기</li>
@@ -225,8 +236,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>주피터 노트북 재실행</li>
 </ol>
 </section>
-<section id="설정-파일-경로-찾기" class="level2">
-<h2 class="anchored" data-anchor-id="설정-파일-경로-찾기">설정 파일 경로 찾기</h2>
+<section id="설정-파일-경로-찾기" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="설정-파일-경로-찾기"><span class="header-section-number">2</span> 설정 파일 경로 찾기</h2>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jupyter_core.paths <span class="im">import</span> jupyter_config_dir</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>      </span>
@@ -236,8 +247,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="customcustom.js-파일-만들기" class="level2">
-<h2 class="anchored" data-anchor-id="customcustom.js-파일-만들기">custom/custom.js 파일 만들기</h2>
+<section id="customcustom.js-파일-만들기" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="customcustom.js-파일-만들기"><span class="header-section-number">3</span> custom/custom.js 파일 만들기</h2>
 <p>Jupyter 설정 폴더로 이동하여, custom 디렉토리에 custom.js 파일 생성 (폴더 및 파일 생성 -&gt; 있는 경우 파일 오픈)</p>
 <div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>cd <span class="op">~/</span>.jupyter</span>
@@ -260,8 +271,8 @@ drwxr-xr-x   4 jun  staff   128 Oct 16 10:36 nbconfig/</code></pre>
 </div>
 </div>
 </section>
-<section id="자바스크립트-코드-붙여넣기" class="level2">
-<h2 class="anchored" data-anchor-id="자바스크립트-코드-붙여넣기">자바스크립트 코드 붙여넣기</h2>
+<section id="자바스크립트-코드-붙여넣기" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="자바스크립트-코드-붙여넣기"><span class="header-section-number">4</span> 자바스크립트 코드 붙여넣기</h2>
 <p>custom 폴더 안에 custom.js 파일을 만들어 아래 코드 입력</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="pp">require</span>([<span class="st">"codemirror/keymap/sublime"</span><span class="op">,</span> <span class="st">"notebook/js/cell"</span><span class="op">,</span> <span class="st">"base/js/namespace"</span>]<span class="op">,</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>     <span class="kw">function</span>(sublime_keymap<span class="op">,</span> cell<span class="op">,</span> IPython) {</span>
@@ -273,8 +284,8 @@ drwxr-xr-x   4 jun  staff   128 Oct 16 10:36 nbconfig/</code></pre>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>     } </span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="출처" class="level2">
-<h2 class="anchored" data-anchor-id="출처">출처</h2>
+<section id="출처" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="출처"><span class="header-section-number">5</span> 출처</h2>
 <p><a href="https://sungalex.github.io/python/dev/2020/06/21/Multi-cursor_and_selection.html" target="_blank">출처 가기</a></p>
 
 

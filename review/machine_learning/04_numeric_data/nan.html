@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-17">
 
 <title>👀 - 수치형 특성 결측치 다루기</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,50 +176,60 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">수치형 특성 결측치 다루기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 17, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#결측치-종류" id="toc-결측치-종류" class="nav-link active" data-scroll-target="#결측치-종류">결측치 종류</a></li>
-  <li><a href="#결측치-없는-샘플만-반환" id="toc-결측치-없는-샘플만-반환" class="nav-link" data-scroll-target="#결측치-없는-샘플만-반환">결측치 없는 샘플만 반환</a></li>
-  <li><a href="#결측치-채우기" id="toc-결측치-채우기" class="nav-link" data-scroll-target="#결측치-채우기">결측치 채우기</a></li>
+  <li><a href="#결측치-종류" id="toc-결측치-종류" class="nav-link active" data-scroll-target="#결측치-종류"><span class="toc-section-number">1</span>  결측치 종류</a></li>
+  <li><a href="#결측치-없는-샘플만-반환" id="toc-결측치-없는-샘플만-반환" class="nav-link" data-scroll-target="#결측치-없는-샘플만-반환"><span class="toc-section-number">2</span>  결측치 없는 샘플만 반환</a></li>
+  <li><a href="#결측치-채우기" id="toc-결측치-채우기" class="nav-link" data-scroll-target="#결측치-채우기"><span class="toc-section-number">3</span>  결측치 채우기</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">수치형 특성 결측치 다루기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 17, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <div class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="결측치-종류" class="level2">
-<h2 class="anchored" data-anchor-id="결측치-종류">결측치 종류</h2>
+<section id="결측치-종류" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="결측치-종류"><span class="header-section-number">1</span> 결측치 종류</h2>
 <ul>
 <li>MCAR(Missing Completely at Random): 완전 랜덤하게 누락</li>
 <li>MAR(Missing at Random): 랜덤하게 누락. 값이 누락될 확률이 다른 특성에서 얻은 정보에 의존함. eg. 결혼 여부와 자녀 유무에 관한 설문에서, 미혼자는 자녀 유무 항목을 건너뛸 가능성이 높다. 이때 자녀 유무 항목의 응답 여부는 결혼 여부 특성에 의존한다.</li>
@@ -226,8 +237,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>=&gt; MCAR이나 MAR은 이따금 결측치가 있는 샘플을 삭제해도 괜찮다. <strong>MNAR은 값이 누란된 사실 자체가 정보다.</strong> MNAR인 샘플을 삭제하면 데이터에 편향을 추가하게 된다.</p>
 </section>
-<section id="결측치-없는-샘플만-반환" class="level2">
-<h2 class="anchored" data-anchor-id="결측치-없는-샘플만-반환">결측치 없는 샘플만 반환</h2>
+<section id="결측치-없는-샘플만-반환" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="결측치-없는-샘플만-반환"><span class="header-section-number">2</span> 결측치 없는 샘플만 반환</h2>
 <ul>
 <li>넘파이: ~ 연산자와 np.isnan(ndarray) 사용</li>
 <li>판다스: df.dropna()</li>
@@ -248,8 +259,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="결측치-채우기" class="level2">
-<h2 class="anchored" data-anchor-id="결측치-채우기">결측치 채우기</h2>
+<section id="결측치-채우기" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="결측치-채우기"><span class="header-section-number">3</span> 결측치 채우기</h2>
 <p>데이터 양이 작으면 KNN 알고리즘을 사용해 누락된 값을 예측한다.(fancyimpute 모듈) <br> -&gt; fancyimpute 설치 에러. 아마도</p>
 <p>sklearn.preprocessing.SimpleImputer 사용</p>
 <div class="cell">

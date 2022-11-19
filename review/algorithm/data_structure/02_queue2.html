@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-10">
 
 <title>👀 - 프린터</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,57 +176,67 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">프린터</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 10, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#제한사항" id="toc-제한사항" class="nav-link active" data-scroll-target="#제한사항">제한사항</a></li>
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a></li>
-  <li><a href="#제출용-코드" id="toc-제출용-코드" class="nav-link" data-scroll-target="#제출용-코드">제출용 코드</a></li>
-  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드">다른 사람 코드</a></li>
+  <li><a href="#제한사항" id="toc-제한사항" class="nav-link active" data-scroll-target="#제한사항"><span class="toc-section-number">0.1</span>  제한사항</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정"><span class="toc-section-number">0.2</span>  접근 과정</a></li>
+  <li><a href="#제출용-코드" id="toc-제출용-코드" class="nav-link" data-scroll-target="#제출용-코드"><span class="toc-section-number">0.3</span>  제출용 코드</a></li>
+  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드"><span class="toc-section-number">0.4</span>  다른 사람 코드</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">프린터</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 10, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/42587">https://school.programmers.co.kr/learn/courses/30/lessons/42587</a></p>
-<section id="제한사항" class="level3">
-<h3 class="anchored" data-anchor-id="제한사항">제한사항</h3>
+<section id="제한사항" class="level3" data-number="0.1">
+<h3 data-number="0.1" class="anchored" data-anchor-id="제한사항"><span class="header-section-number">0.1</span> 제한사항</h3>
 <ul>
 <li>현재 대기목록에는 1개 이상 100개 이하의 문서가 있습니다.</li>
 <li>인쇄 작업의 중요도는 1~9로 표현하며 숫자가 클수록 중요하다는 뜻입니다.</li>
 <li>location은 0 이상 (현재 대기목록에 있는 작업 수 - 1) 이하의 값을 가지며 대기목록의 가장 앞에 있으면 0, 두 번째에 있으면 1로 표현합니다.</li>
 </ul>
 </section>
-<section id="접근-과정" class="level3">
-<h3 class="anchored" data-anchor-id="접근-과정">접근 과정</h3>
+<section id="접근-과정" class="level3" data-number="0.2">
+<h3 data-number="0.2" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">0.2</span> 접근 과정</h3>
 <ol type="1">
 <li>리스트를 큐에 넣는다.</li>
 <li>최댓값_인덱스를 변수에 넣는다.</li>
@@ -285,8 +296,8 @@ if deque([1]) location -1
 </div>
 </div>
 </section>
-<section id="제출용-코드" class="level3">
-<h3 class="anchored" data-anchor-id="제출용-코드">제출용 코드</h3>
+<section id="제출용-코드" class="level3" data-number="0.3">
+<h3 data-number="0.3" class="anchored" data-anchor-id="제출용-코드"><span class="header-section-number">0.3</span> 제출용 코드</h3>
 <div class="cell" data-execution_count="51">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> deque</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -319,8 +330,8 @@ if deque([1]) location -1
 </div>
 </div>
 </section>
-<section id="다른-사람-코드" class="level3">
-<h3 class="anchored" data-anchor-id="다른-사람-코드">다른 사람 코드</h3>
+<section id="다른-사람-코드" class="level3" data-number="0.4">
+<h3 data-number="0.4" class="anchored" data-anchor-id="다른-사람-코드"><span class="header-section-number">0.4</span> 다른 사람 코드</h3>
 <p>pop한 값의 인덱스를 추적하기 위해 enumerate를 써서 인덱스를 변수에 담았다. 요걸 왜 생각하지 못했을까?</p>
 <div class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solution(priorities, location):</span>

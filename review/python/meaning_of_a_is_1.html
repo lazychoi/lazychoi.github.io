@@ -65,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -115,16 +115,18 @@ ul.task-list li input[type="checkbox"] {
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#요약" id="toc-요약" class="nav-link active" data-scroll-target="#요약">요약</a></li>
-  <li><a href="#설명" id="toc-설명" class="nav-link" data-scroll-target="#설명">설명</a></li>
+  <li><a href="#요약" id="toc-요약" class="nav-link active" data-scroll-target="#요약"><span class="toc-section-number">1</span>  요약</a></li>
+  <li><a href="#설명" id="toc-설명" class="nav-link" data-scroll-target="#설명"><span class="toc-section-number">2</span>  설명</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -158,16 +160,16 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p><a href="https://post.naver.com/viewer/postView.naver?volumeNo=27679629&amp;memberNo=21815" target="_blank">출처 1</a> <a href="https://post.naver.com/viewer/postView.naver?volumeNo=19888923&amp;memberNo=21815" target="_blank">출처 2</a></p>
-<section id="요약" class="level2">
-<h2 class="anchored" data-anchor-id="요약">요약</h2>
+<section id="요약" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="요약"><span class="header-section-number">1</span> 요약</h2>
 <blockquote class="blockquote">
 <p>파이썬에서 “a=1”은 ‘int’라는 이름의 파이썬 클래스를 가지고 그 인스턴스인 ’a’ 객체를 생성한다는 뜻. 파이썬의 ’a=1’은 ’a=int(1)’를 의미</p>
 </blockquote>
 <p>int()를 정수형 변수를 생성하는 내장함수로 봐서는 안 되고 클래스 int를 가지고 객체를 생성하는 명령으로 봐야 한다. 그래서 객체 a에 포함된 여러 내부 함수를 이용할 수 있는 것이다.</p>
 <p>cf.&nbsp;C 언어에서 “a=1”는 오로지 어떤 메모리 주소에 정수 1을 저장하라는 명령</p>
 </section>
-<section id="설명" class="level2">
-<h2 class="anchored" data-anchor-id="설명">설명</h2>
+<section id="설명" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="설명"><span class="header-section-number">2</span> 설명</h2>
 <p>a=1</p>
 <ul>
 <li>특정 메모리 주소에 1이라는 정수를 데이터로서 저장하는 명령</li>

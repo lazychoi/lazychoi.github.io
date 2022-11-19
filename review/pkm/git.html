@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-30">
 
 <title>👀 - git</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,61 +113,71 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">git</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 30, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#환경-설정" id="toc-환경-설정" class="nav-link active" data-scroll-target="#환경-설정">환경 설정</a></li>
-  <li><a href="#로그" id="toc-로그" class="nav-link" data-scroll-target="#로그">로그</a></li>
-  <li><a href="#기타" id="toc-기타" class="nav-link" data-scroll-target="#기타">기타</a></li>
+  <li><a href="#환경-설정" id="toc-환경-설정" class="nav-link active" data-scroll-target="#환경-설정"><span class="toc-section-number">1</span>  환경 설정</a></li>
+  <li><a href="#로그" id="toc-로그" class="nav-link" data-scroll-target="#로그"><span class="toc-section-number">2</span>  로그</a></li>
+  <li><a href="#기타" id="toc-기타" class="nav-link" data-scroll-target="#기타"><span class="toc-section-number">3</span>  기타</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">git</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="환경-설정" class="level2">
-<h2 class="anchored" data-anchor-id="환경-설정">환경 설정</h2>
+<section id="환경-설정" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="환경-설정"><span class="header-section-number">1</span> 환경 설정</h2>
 <ul>
 <li>기존 환경 설정 파일 삭제: <code>git config --unset 이메일 주소</code></li>
 <li>이메일 주소는 git이 개발자를 구별하는 고유의 키 값으로 사용: <code>git config user.email "이메일 주소"</code></li>
 <li>환경설정 파일 보기: 먼저 <code>ls .git</code> 명령으로 config 파일 존재 유무 확인 &gt;&gt;&gt; <code>vi .git/config</code> 글로벌 사용자 등록을 했다면 <code>vi ~/.gitconfig</code></li>
 </ul>
 </section>
-<section id="로그" class="level2">
-<h2 class="anchored" data-anchor-id="로그">로그</h2>
+<section id="로그" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="로그"><span class="header-section-number">2</span> 로그</h2>
 <ul>
 <li>로그 보기 명령: <code>git log --graph --pretty=oneline</code> &gt;&gt;&gt; show-grpah 별칭으로 등록: <code>git config --global alias.show-graph 'log --graph --pretty=oneline'</code></li>
 </ul>
 </section>
-<section id="기타" class="level2">
-<h2 class="anchored" data-anchor-id="기타">기타</h2>
+<section id="기타" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="기타"><span class="header-section-number">3</span> 기타</h2>
 <ul>
 <li><a href="../../review/pkm/gitignore_not_working.html">gitignore가 적용 안 될 때</a></li>
 </ul>

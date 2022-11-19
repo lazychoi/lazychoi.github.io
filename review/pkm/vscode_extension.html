@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-12">
 
 <title>👀 - vscode extension</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,49 +176,59 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">vscode extension</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 12, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#paste-image" id="toc-paste-image" class="nav-link active" data-scroll-target="#paste-image">Paste Image</a>
+  <li><a href="#paste-image" id="toc-paste-image" class="nav-link active" data-scroll-target="#paste-image"><span class="toc-section-number">1</span>  Paste Image</a>
   <ul class="collapse">
-  <li><a href="#오류-wsl2에서-xclip-미설치-오류-나타남" id="toc-오류-wsl2에서-xclip-미설치-오류-나타남" class="nav-link" data-scroll-target="#오류-wsl2에서-xclip-미설치-오류-나타남">[오류] wsl2에서 xclip 미설치 오류 나타남</a></li>
-  <li><a href="#오류-wsl2에서-저장된-파일-크기-0kb" id="toc-오류-wsl2에서-저장된-파일-크기-0kb" class="nav-link" data-scroll-target="#오류-wsl2에서-저장된-파일-크기-0kb">[오류] wsl2에서 저장된 파일 크기 0KB</a></li>
+  <li><a href="#오류-wsl2에서-xclip-미설치-오류-나타남" id="toc-오류-wsl2에서-xclip-미설치-오류-나타남" class="nav-link" data-scroll-target="#오류-wsl2에서-xclip-미설치-오류-나타남"><span class="toc-section-number">1.1</span>  [오류] wsl2에서 xclip 미설치 오류 나타남</a></li>
+  <li><a href="#오류-wsl2에서-저장된-파일-크기-0kb" id="toc-오류-wsl2에서-저장된-파일-크기-0kb" class="nav-link" data-scroll-target="#오류-wsl2에서-저장된-파일-크기-0kb"><span class="toc-section-number">1.2</span>  [오류] wsl2에서 저장된 파일 크기 0KB</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">vscode extension</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 12, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="paste-image" class="level2">
-<h2 class="anchored" data-anchor-id="paste-image">Paste Image</h2>
+<section id="paste-image" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="paste-image"><span class="header-section-number">1</span> Paste Image</h2>
 <ul>
 <li>캡처한 이미지를 문서에 붙여넣을 때 경로와 파일명 자동 작성됨.<br>
 </li>
@@ -229,8 +240,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>Paste Image: Path -&gt; <strong>이미지 파일이 저장될 위치 </strong> -&gt; 모든 이미지를 한 폴더 저장하려면 <code>${projectRoot}/docs/images</code>처럼 프로젝트 루트부터 경로를 입력한다. 현재 문서 파일과 같은 위치에 이미지 파일을 저장하려면 <code>${currentFileDir}</code>를 입력하고, 현재 문서 파일 아래에 images 폴더를 만들어 저장하려면 <code>${currentFileDir}/images</code>를 입력한다.</li>
 </ol>
 <p><img src="../../images/2022-10-22-12-57-02.png" class="img-fluid" alt="Base Path"> <img src="../../images/2022-10-22-12-57-45.png" class="img-fluid" alt="Path"></p>
-<section id="오류-wsl2에서-xclip-미설치-오류-나타남" class="level3">
-<h3 class="anchored" data-anchor-id="오류-wsl2에서-xclip-미설치-오류-나타남">[오류] wsl2에서 xclip 미설치 오류 나타남</h3>
+<section id="오류-wsl2에서-xclip-미설치-오류-나타남" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="오류-wsl2에서-xclip-미설치-오류-나타남"><span class="header-section-number">1.1</span> [오류] wsl2에서 xclip 미설치 오류 나타남</h3>
 <ul>
 <li>xclip 클론하고 그 폴더를 PATH에 포함</li>
 </ul>
@@ -238,8 +249,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> git <span class="ex">clone</span> https://github.com/Konfekt/win-bash-xclip-xsel</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> cp <span class="ex">xclip</span> ~/bin</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="오류-wsl2에서-저장된-파일-크기-0kb" class="level3">
-<h3 class="anchored" data-anchor-id="오류-wsl2에서-저장된-파일-크기-0kb">[오류] wsl2에서 저장된 파일 크기 0KB</h3>
+<section id="오류-wsl2에서-저장된-파일-크기-0kb" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="오류-wsl2에서-저장된-파일-크기-0kb"><span class="header-section-number">1.2</span> [오류] wsl2에서 저장된 파일 크기 0KB</h3>
 
 
 </section>

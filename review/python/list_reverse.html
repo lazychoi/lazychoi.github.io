@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,15 +178,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#요소-순서를-거꾸로-뒤집기" id="toc-요소-순서를-거꾸로-뒤집기" class="nav-link active" data-scroll-target="#요소-순서를-거꾸로-뒤집기">요소 순서를 거꾸로 뒤집기</a></li>
+  <li><a href="#요소-순서를-거꾸로-뒤집기" id="toc-요소-순서를-거꾸로-뒤집기" class="nav-link active" data-scroll-target="#요소-순서를-거꾸로-뒤집기"><span class="toc-section-number">1</span>  요소 순서를 거꾸로 뒤집기</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -219,8 +221,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="요소-순서를-거꾸로-뒤집기" class="level2">
-<h2 class="anchored" data-anchor-id="요소-순서를-거꾸로-뒤집기">요소 순서를 거꾸로 뒤집기</h2>
+<section id="요소-순서를-거꾸로-뒤집기" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="요소-순서를-거꾸로-뒤집기"><span class="header-section-number">1</span> 요소 순서를 거꾸로 뒤집기</h2>
 <p>리스트변수.reverse() 함수는 반환값이 없고 자신을 변경하는 점을 주의해야 한다.</p>
 <div class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">2</span>,<span class="dv">3</span>, <span class="dv">5</span>]</span>

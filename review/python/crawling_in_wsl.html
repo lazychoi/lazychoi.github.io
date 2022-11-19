@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,22 +178,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#selenium" id="toc-selenium" class="nav-link active" data-scroll-target="#selenium">selenium</a>
+  <li><a href="#selenium" id="toc-selenium" class="nav-link active" data-scroll-target="#selenium"><span class="toc-section-number">1</span>  selenium</a>
   <ul class="collapse">
-  <li><a href="#selenium-설치" id="toc-selenium-설치" class="nav-link" data-scroll-target="#selenium-설치">selenium 설치</a></li>
-  <li><a href="#chrome-설치-webdriver-다운로드" id="toc-chrome-설치-webdriver-다운로드" class="nav-link" data-scroll-target="#chrome-설치-webdriver-다운로드">chrome 설치, webdriver 다운로드</a></li>
+  <li><a href="#selenium-설치" id="toc-selenium-설치" class="nav-link" data-scroll-target="#selenium-설치"><span class="toc-section-number">1.1</span>  selenium 설치</a></li>
+  <li><a href="#chrome-설치-webdriver-다운로드" id="toc-chrome-설치-webdriver-다운로드" class="nav-link" data-scroll-target="#chrome-설치-webdriver-다운로드"><span class="toc-section-number">1.2</span>  chrome 설치, webdriver 다운로드</a></li>
   </ul></li>
-  <li><a href="#오류" id="toc-오류" class="nav-link" data-scroll-target="#오류">오류</a></li>
-  <li><a href="#제한-사항" id="toc-제한-사항" class="nav-link" data-scroll-target="#제한-사항">제한 사항</a></li>
-  <li><a href="#기억할-사항" id="toc-기억할-사항" class="nav-link" data-scroll-target="#기억할-사항">기억할 사항</a></li>
+  <li><a href="#오류" id="toc-오류" class="nav-link" data-scroll-target="#오류"><span class="toc-section-number">2</span>  오류</a></li>
+  <li><a href="#제한-사항" id="toc-제한-사항" class="nav-link" data-scroll-target="#제한-사항"><span class="toc-section-number">3</span>  제한 사항</a></li>
+  <li><a href="#기억할-사항" id="toc-기억할-사항" class="nav-link" data-scroll-target="#기억할-사항"><span class="toc-section-number">4</span>  기억할 사항</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -230,15 +232,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><a href="https://cloudbytes.dev/snippets/run-selenium-and-chrome-on-wsl2#creating-a-script-to-automate-the-process" target="_blank">설치 및 환경설정 참고 사이트(영문)</a></p></li>
 <li><p><a href="https://cloudbytes.dev/snippets/run-selenium-in-jupyter-notebook-on-wsl2-or-ubuntu" target="_blank">주피터 노트북에서 selenium 사용(영문)</a></p></li>
 </ul>
-<section id="selenium" class="level2">
-<h2 class="anchored" data-anchor-id="selenium">selenium</h2>
-<section id="selenium-설치" class="level3">
-<h3 class="anchored" data-anchor-id="selenium-설치">selenium 설치</h3>
+<section id="selenium" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="selenium"><span class="header-section-number">1</span> selenium</h2>
+<section id="selenium-설치" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="selenium-설치"><span class="header-section-number">1.1</span> selenium 설치</h3>
 <p><code>$ pip install selenium</code></p>
 <p>?? 주피터 노트북에서 임포트할 경우 에러 발생 vscode에서는 잘 됨</p>
 </section>
-<section id="chrome-설치-webdriver-다운로드" class="level3">
-<h3 class="anchored" data-anchor-id="chrome-설치-webdriver-다운로드">chrome 설치, webdriver 다운로드</h3>
+<section id="chrome-설치-webdriver-다운로드" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="chrome-설치-webdriver-다운로드"><span class="header-section-number">1.2</span> chrome 설치, webdriver 다운로드</h3>
 <p><code>$ pip install chromedriver_autoinstaller</code></p>
 <p>wsl에 크롬 설치</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt <span class="at">-y</span> upgrade <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> apt <span class="at">-y</span> autoremove</span>
@@ -251,8 +253,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unzip</span> chromedriver_linux64.zip</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 </section>
-<section id="오류" class="level2">
-<h2 class="anchored" data-anchor-id="오류">오류</h2>
+<section id="오류" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="오류"><span class="header-section-number">2</span> 오류</h2>
 <p>DeprecationWarning: executable_path has been deprecated, please pass in a Service object driver = webdriver.Chrome(‘./chromedriver’)</p>
 <p>또는</p>
 <p>(unknown error: DevToolsActivePort file doesn’t exist)</p>
@@ -271,13 +273,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>driver.get(<span class="st">"https://www.google.com"</span>)</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(driver.title)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="제한-사항" class="level2">
-<h2 class="anchored" data-anchor-id="제한-사항">제한 사항</h2>
+<section id="제한-사항" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="제한-사항"><span class="header-section-number">3</span> 제한 사항</h2>
 <p>==wsl에서는 크롬 브라우저가 뜨지 않는다.==</p>
 <p>반환값을 확인하며 코드를 작성해야 한다.</p>
 </section>
-<section id="기억할-사항" class="level2">
-<h2 class="anchored" data-anchor-id="기억할-사항">기억할 사항</h2>
+<section id="기억할-사항" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="기억할-사항"><span class="header-section-number">4</span> 기억할 사항</h2>
 <p>selenium은 <code>driver.page_source</code> 명령으로 소스 코드를 동적으로 불러올 수 있다. 즉, 버튼을 클릭하거나 스크롤하면 소스 코드가 계속 추가된다.</p>
 
 

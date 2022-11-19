@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,17 +178,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#얉은-복사shallow-copy" id="toc-얉은-복사shallow-copy" class="nav-link active" data-scroll-target="#얉은-복사shallow-copy">얉은 복사(shallow copy)</a></li>
-  <li><a href="#깊은-복사deep-copy" id="toc-깊은-복사deep-copy" class="nav-link" data-scroll-target="#깊은-복사deep-copy">깊은 복사(deep copy)</a></li>
-  <li><a href="#deep-copy-list-in-list" id="toc-deep-copy-list-in-list" class="nav-link" data-scroll-target="#deep-copy-list-in-list">deep copy “list in list”</a></li>
+  <li><a href="#얉은-복사shallow-copy" id="toc-얉은-복사shallow-copy" class="nav-link active" data-scroll-target="#얉은-복사shallow-copy"><span class="toc-section-number">1</span>  얉은 복사(shallow copy)</a></li>
+  <li><a href="#깊은-복사deep-copy" id="toc-깊은-복사deep-copy" class="nav-link" data-scroll-target="#깊은-복사deep-copy"><span class="toc-section-number">2</span>  깊은 복사(deep copy)</a></li>
+  <li><a href="#deep-copy-list-in-list" id="toc-deep-copy-list-in-list" class="nav-link" data-scroll-target="#deep-copy-list-in-list"><span class="toc-section-number">3</span>  deep copy “list in list”</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -222,8 +224,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 
 <p>좋은 코드 실행 시각화 도구: <a href="https://pythontutor.com/" target="_blank">python tutor</a></p>
-<section id="얉은-복사shallow-copy" class="level2">
-<h2 class="anchored" data-anchor-id="얉은-복사shallow-copy">얉은 복사(shallow copy)</h2>
+<section id="얉은-복사shallow-copy" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="얉은-복사shallow-copy"><span class="header-section-number">1</span> 얉은 복사(shallow copy)</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> a</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -244,8 +246,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </figure>
 </div>
 </section>
-<section id="깊은-복사deep-copy" class="level2">
-<h2 class="anchored" data-anchor-id="깊은-복사deep-copy">깊은 복사(deep copy)</h2>
+<section id="깊은-복사deep-copy" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="깊은-복사deep-copy"><span class="header-section-number">2</span> 깊은 복사(deep copy)</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>]</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> a.copy()</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -266,8 +268,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </figure>
 </div>
 </section>
-<section id="deep-copy-list-in-list" class="level2">
-<h2 class="anchored" data-anchor-id="deep-copy-list-in-list">deep copy “list in list”</h2>
+<section id="deep-copy-list-in-list" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="deep-copy-list-in-list"><span class="header-section-number">3</span> deep copy “list in list”</h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> [[<span class="dv">1</span>,<span class="dv">2</span>], <span class="dv">3</span>, <span class="dv">4</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> x.copy()</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>

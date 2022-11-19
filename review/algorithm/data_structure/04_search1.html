@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-16">
 
 <title>👀 - 연산자 끼워넣기</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,47 +176,58 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">연산자 끼워넣기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 16, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#요구-사항" id="toc-요구-사항" class="nav-link active" data-scroll-target="#요구-사항">요구 사항</a></li>
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a></li>
+  <li><a href="#요구-사항" id="toc-요구-사항" class="nav-link active" data-scroll-target="#요구-사항"><span class="toc-section-number">0.1</span>  요구 사항</a></li>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정"><span class="toc-section-number">0.2</span>  접근 과정</a></li>
+  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드"><span class="toc-section-number">1</span>  다른 사람 코드</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">연산자 끼워넣기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 16, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <p><a href="https://www.acmicpc.net/problem/14888">https://www.acmicpc.net/problem/14888</a></p>
-<section id="요구-사항" class="level3">
-<h3 class="anchored" data-anchor-id="요구-사항">요구 사항</h3>
+<section id="요구-사항" class="level3" data-number="0.1">
+<h3 data-number="0.1" class="anchored" data-anchor-id="요구-사항"><span class="header-section-number">0.1</span> 요구 사항</h3>
 <ul>
 <li>식의 계산은 연산자 우선 순위를 무시하고 앞에서부터 진행해야 한다.</li>
 <li>나눗셈은 정수 나눗셈으로 몫만 취한다.</li>
@@ -227,61 +239,153 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>출력: 첫째 줄에 만들 수 있는 식의 결과의 최댓값을, 둘째 줄에는 최솟값을 출력</li>
 </ul>
 </section>
-<section id="접근-과정" class="level3">
-<h3 class="anchored" data-anchor-id="접근-과정">접근 과정</h3>
+<section id="접근-과정" class="level3" data-number="0.2">
+<h3 data-number="0.2" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">0.2</span> 접근 과정</h3>
 <ol type="1">
 <li>모든 경우의 수를 출력하는 코드
 <ol type="1">
 <li>직접 구현은 못 하겠다.</li>
 <li>itertools 모듈의 permutations 클래스를 사용한다</li>
 </ol></li>
-<li>연산 배열의 모든 경우의 수를 리스트로 반환
-<ol type="1">
-<li>연산 배열을 enumerate -&gt; for문 -&gt; 값이 0이 아니면 인덱스에 해당하는 문자 * 값 -&gt; 배열</li>
-</ol></li>
+<li>연산자 배열의 모든 경우의 수를 2차원 리스트로 반환</li>
+<li>연산자 경우의 수마다 합계를 내야하기 때문에 가장 바깥 for문으로 순회</li>
 </ol>
-<div class="cell" data-execution_count="42">
+<div class="cell" data-execution_count="65">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> permutations</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>nums <span class="op">=</span> [<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>]</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> [<span class="dv">1</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>]</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>operator <span class="op">=</span> [<span class="st">'+'</span>, <span class="st">'-'</span>, <span class="st">'*'</span>, <span class="st">'/'</span>]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> [ ]</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(op):</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> v <span class="op">!=</span> <span class="dv">0</span>: ops.extend(operator[i] <span class="op">*</span> v)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> <span class="bu">list</span>(permutations(ops, n <span class="op">-</span> <span class="dv">1</span>))</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ops)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> []</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> ops:</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    tmp <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(nums)):</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># tmp = nums[j]; print(tmp)</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> i[j] <span class="op">==</span> <span class="st">'+'</span>: tmp <span class="op">+=</span> tmp <span class="op">+</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> i[j] <span class="op">==</span> <span class="st">'-'</span>: tmp <span class="op">+=</span> tmp <span class="op">-</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> i[j] <span class="op">==</span> <span class="st">'*'</span>: tmp <span class="op">+=</span> tmp <span class="op">*</span> nums[j]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: tmp <span class="op">+=</span> tmp <span class="op">/</span> nums[j<span class="op">+</span><span class="dv">1</span>]<span class="op">;</span> <span class="bu">print</span>(tmp)</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    answer.append(tmp)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>answer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># n = 6</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># nums = [1, 2, 3, 4, 5, 6]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># op = [2, 1, 1, 1]</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>nums <span class="op">=</span> [<span class="dv">5</span>, <span class="dv">6</span>]</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> [<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">0</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 연산자 배열</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>operator <span class="op">=</span> [<span class="st">'+'</span>, <span class="st">'-'</span>, <span class="st">'*'</span>, <span class="st">'/'</span>]</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 연산자 개수를 반영해서 1차원 배열로 변환</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> [ ]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(op):</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> v <span class="op">!=</span> <span class="dv">0</span>: ops.extend(operator[i] <span class="op">*</span> v)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 연산자 모든 경우의 수를 만들어 2차원 배열로 변환  </span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> <span class="bu">list</span>(permutations(ops, n <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ops)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> []</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ops)):  <span class="co"># 연산자 경우의 수를 순회</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    tmp <span class="op">=</span> nums[<span class="dv">0</span>] <span class="op">;</span> <span class="bu">print</span>(tmp)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(nums)):</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'+'</span>: tmp <span class="op">=</span> tmp <span class="op">+</span> nums[i]<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ops[j][i<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nums[i]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>tmp<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'-'</span>: tmp <span class="op">=</span> tmp <span class="op">-</span> nums[i]<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ops[j][i<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nums[i]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>tmp<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'*'</span>: tmp <span class="op">=</span> tmp <span class="op">*</span> nums[i]<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ops[j][i<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nums[i]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>tmp<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'/'</span>:</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> tmp <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>                tmp <span class="op">=</span> <span class="op">-</span>(<span class="bu">abs</span>(tmp) <span class="op">//</span> nums[i])<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ops[j][i<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nums[i]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>tmp<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>                tmp <span class="op">=</span> tmp <span class="op">//</span> nums[i]<span class="op">;</span> <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>ops[j][i<span class="op">-</span><span class="dv">1</span>]<span class="sc">}</span><span class="ss"> </span><span class="sc">{</span>nums[i]<span class="sc">}</span><span class="ss"> = </span><span class="sc">{</span>tmp<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    answer.append(tmp)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="bu">max</span>(answer), <span class="bu">min</span>(answer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[('+', '*'), ('*', '+')]
-3
-15
-0
-4</code></pre>
+<pre><code>[('*',)]
+5
+* 6 = 30</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="43">
-<pre><code>[15, 4]</code></pre>
+<div class="cell-output cell-output-display" data-execution_count="65">
+<pre><code>(30, 30)</code></pre>
 </div>
 </div>
-<div class="cell" data-execution_count="29">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> permutations(ops, <span class="dv">2</span>):</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="73">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 제출 코드</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> permutations</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>())</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>nums <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">input</span>().split()))</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">input</span>().split()))</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>operator <span class="op">=</span> [<span class="st">'+'</span>, <span class="st">'-'</span>, <span class="st">'*'</span>, <span class="st">'/'</span>]</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> [ ]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(op):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> v <span class="op">!=</span> <span class="dv">0</span>: ops.extend(operator[i] <span class="op">*</span> v)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>ops <span class="op">=</span> <span class="bu">list</span>(permutations(ops, n <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>answer <span class="op">=</span> []</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ops)):</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    tmp <span class="op">=</span> nums[<span class="dv">0</span>]</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(nums)):</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'+'</span>: tmp <span class="op">=</span> tmp <span class="op">+</span> nums[i]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'-'</span>: tmp <span class="op">=</span> tmp <span class="op">-</span> nums[i]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'*'</span>: tmp <span class="op">=</span> tmp <span class="op">*</span> nums[i]</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> ops[j][i<span class="op">-</span><span class="dv">1</span>] <span class="op">==</span> <span class="st">'/'</span>:</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> tmp <span class="op">&lt;</span> <span class="dv">0</span>:</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                tmp <span class="op">=</span> <span class="op">-</span>(<span class="bu">abs</span>(tmp) <span class="op">//</span> nums[i])</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>                tmp <span class="op">=</span> tmp <span class="op">//</span> nums[i]</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    answer.append(tmp)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">max</span>(answer))</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">min</span>(answer))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdin">
+<pre><code> 6
+ 1 2 3 4 5 6
+ 2 1 1 1</code></pre>
+</div>
 <div class="cell-output cell-output-stdout">
-<pre><code>('+', '*')
-('*', '+')</code></pre>
+<pre><code>54
+-24</code></pre>
+</div>
+</div>
+</section>
+<section id="다른-사람-코드" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="다른-사람-코드"><span class="header-section-number">1</span> 다른 사람 코드</h2>
+<p>모든 경우의 수를 고려하는 백트래킹 알고리즘 중 깊이우선탐색(DFS, Deep First Search)을 이용해서 짠 코드다.</p>
+<p><a href="https://velog.io/@kimdukbae/BOJ-14888-%EC%97%B0%EC%82%B0%EC%9E%90-%EB%81%BC%EC%9B%8C%EB%84%A3%EA%B8%B0-Python" target="_blank">출처</a></p>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 백트래킹 (Python3 통과, PyPy3도 통과)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="bu">int</span>(<span class="bu">input</span>())</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">input</span>().split()))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>op <span class="op">=</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">input</span>().split()))  <span class="co"># +, -, *, //</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>maximum <span class="op">=</span> <span class="op">-</span><span class="fl">1e9</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>minimum <span class="op">=</span> <span class="fl">1e9</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> dfs(depth, total, plus, minus, multiply, divide):</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> maximum, minimum</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 재귀함수 종료 조건 : 최대 깊이 도달</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> depth <span class="op">==</span> N:</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        maximum <span class="op">=</span> <span class="bu">max</span>(total, maximum)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        minimum <span class="op">=</span> <span class="bu">min</span>(total, minimum)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 재귀함수(깊이 증가, total(초기값은 첫 인덱스)-연산-num[깊이], 연산자 개수 감소, 나머지 연산자는 그대로)</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> plus:  </span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        dfs(depth <span class="op">+</span> <span class="dv">1</span>, total <span class="op">+</span> num[depth], plus <span class="op">-</span> <span class="dv">1</span>, minus, multiply, divide)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> minus:</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        dfs(depth <span class="op">+</span> <span class="dv">1</span>, total <span class="op">-</span> num[depth], plus, minus <span class="op">-</span> <span class="dv">1</span>, multiply, divide)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> multiply:</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        dfs(depth <span class="op">+</span> <span class="dv">1</span>, total <span class="op">*</span> num[depth], plus, minus, multiply <span class="op">-</span> <span class="dv">1</span>, divide)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> divide:</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        dfs(depth <span class="op">+</span> <span class="dv">1</span>, <span class="bu">int</span>(total <span class="op">/</span> num[depth]), plus, minus, multiply, divide <span class="op">-</span> <span class="dv">1</span>) <span class="co"># 지시사항대로 하지 않고 정수형으로만 만들면 되는구나</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>dfs(<span class="dv">1</span>, num[<span class="dv">0</span>], op[<span class="dv">0</span>], op[<span class="dv">1</span>], op[<span class="dv">2</span>], op[<span class="dv">3</span>])</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(maximum)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(minimum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdin">
+<pre><code> 3
+ 3 4 5
+ 1 0 1 0</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>35
+17</code></pre>
 </div>
 </div>
 

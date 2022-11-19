@@ -128,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -178,18 +178,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#리스트-컴프리헨션" id="toc-리스트-컴프리헨션" class="nav-link active" data-scroll-target="#리스트-컴프리헨션">리스트 컴프리헨션</a>
+  <li><a href="#리스트-컴프리헨션" id="toc-리스트-컴프리헨션" class="nav-link active" data-scroll-target="#리스트-컴프리헨션"><span class="toc-section-number">1</span>  리스트 컴프리헨션</a>
   <ul class="collapse">
-  <li><a href="#예제" id="toc-예제" class="nav-link" data-scroll-target="#예제">예제</a></li>
+  <li><a href="#예제" id="toc-예제" class="nav-link" data-scroll-target="#예제"><span class="toc-section-number">1.1</span>  예제</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -222,16 +224,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 </header>
 
-<section id="리스트-컴프리헨션" class="level2">
-<h2 class="anchored" data-anchor-id="리스트-컴프리헨션">리스트 컴프리헨션</h2>
+<section id="리스트-컴프리헨션" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="리스트-컴프리헨션"><span class="header-section-number">1</span> 리스트 컴프리헨션</h2>
 <ul>
 <li>if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.</li>
 <li>for문을 중첩해서 쓸 수 있다.</li>
 <li>if문을 중첩해 쓸 수 있다.</li>
 <li>사용자 정의 함수를 사용할 수 있다.</li>
 </ul>
-<section id="예제" class="level3">
-<h3 class="anchored" data-anchor-id="예제">예제</h3>
+<section id="예제" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="예제"><span class="header-section-number">1.1</span> 예제</h3>
 <ul>
 <li>1에서 10까지 수 중 3의 배수만 출력 -&gt; for if문 사용</li>
 </ul>
@@ -278,7 +280,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'가'</span></span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>[grade(i) <span class="cf">for</span> i <span class="kw">in</span> np.random.randint(<span class="dv">1</span>, <span class="dv">100</span>, size<span class="op">=</span><span class="dv">10</span>)]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>['양', '가', '가', '우', '가', '미', '가', '수', '가', '가']</code></pre>
+<pre><code>['미', '가', '가', '수', '가', '가', '가', '가', '양', '가']</code></pre>
 </div>
 </div>
 

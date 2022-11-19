@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 
 <title>👀 – resize</title>
 <style>
@@ -126,7 +127,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -176,18 +177,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#reshape와-flatten-차이" id="toc-reshape와-flatten-차이" class="nav-link active" data-scroll-target="#reshape와-flatten-차이">reshape와 flatten 차이</a></li>
+  <li><a href="#reshape와-flatten-차이" id="toc-reshape와-flatten-차이" class="nav-link active" data-scroll-target="#reshape와-flatten-차이"><span class="toc-section-number">1</span>  reshape와 flatten 차이</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
@@ -201,8 +204,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    code<span class="op">-</span>fold: false</span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="op">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="reshape와-flatten-차이" class="level2">
-<h2 class="anchored" data-anchor-id="reshape와-flatten-차이">reshape와 flatten 차이</h2>
+<section id="reshape와-flatten-차이" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="reshape와-flatten-차이"><span class="header-section-number">1</span> reshape와 flatten 차이</h2>
 <ul>
 <li>reshape : 얕은 복사</li>
 <li>flatten : 깊은 복사</li>

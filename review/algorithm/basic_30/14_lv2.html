@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-29">
 
 <title>👀 - 최대공약수 최소공배수 구하기</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,52 +176,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">최대공약수 최소공배수 구하기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 29, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#최대공약수-최소공배수-구하기" id="toc-최대공약수-최소공배수-구하기" class="nav-link active" data-scroll-target="#최대공약수-최소공배수-구하기">최대공약수, 최소공배수 구하기</a>
+  <li><a href="#최대공약수-최소공배수-구하기" id="toc-최대공약수-최소공배수-구하기" class="nav-link active" data-scroll-target="#최대공약수-최소공배수-구하기"><span class="toc-section-number">1</span>  최대공약수, 최소공배수 구하기</a>
   <ul class="collapse">
-  <li><a href="#유클리드-호제법" id="toc-유클리드-호제법" class="nav-link" data-scroll-target="#유클리드-호제법">유클리드 호제법</a>
+  <li><a href="#유클리드-호제법" id="toc-유클리드-호제법" class="nav-link" data-scroll-target="#유클리드-호제법"><span class="toc-section-number">1.1</span>  유클리드 호제법</a>
   <ul class="collapse">
-  <li><a href="#구현" id="toc-구현" class="nav-link" data-scroll-target="#구현">구현</a></li>
-  <li><a href="#최소공배수" id="toc-최소공배수" class="nav-link" data-scroll-target="#최소공배수">최소공배수</a></li>
+  <li><a href="#구현" id="toc-구현" class="nav-link" data-scroll-target="#구현"><span class="toc-section-number">1.1.1</span>  구현</a></li>
+  <li><a href="#최소공배수" id="toc-최소공배수" class="nav-link" data-scroll-target="#최소공배수"><span class="toc-section-number">1.1.2</span>  최소공배수</a></li>
   </ul></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">최대공약수 최소공배수 구하기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 29, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="최대공약수-최소공배수-구하기" class="level1">
-<h1>최대공약수, 최소공배수 구하기</h1>
+<section id="최대공약수-최소공배수-구하기" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 최대공약수, 최소공배수 구하기</h1>
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/12940">문제 보기 https://school.programmers.co.kr/learn/courses/30/lessons/12940</a></p>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 유클리드 호제법 기억이 가물가물할 때 짠 코드</span></span>
@@ -246,14 +257,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>[1, 10]</code></pre>
 </div>
 </div>
-<section id="유클리드-호제법" class="level2">
-<h2 class="anchored" data-anchor-id="유클리드-호제법">유클리드 호제법</h2>
+<section id="유클리드-호제법" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="유클리드-호제법"><span class="header-section-number">1.1</span> 유클리드 호제법</h2>
 <ul>
 <li>호제법: 서로 나눈다</li>
 <li>a를 b로 나눈 나머지를 r이라고 하면 a와 b의 최대공약수 = b와 r의 최대공약수</li>
 </ul>
-<section id="구현" class="level3">
-<h3 class="anchored" data-anchor-id="구현">구현</h3>
+<section id="구현" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="구현"><span class="header-section-number">1.1.1</span> 구현</h3>
 <ul>
 <li>a % b = r</li>
 <li>b % r = r2</li>
@@ -263,8 +274,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <p>큰 수와 작은 수의 순서는 고려하지 않아도 된다. 왜냐하면, 작은 수를 큰 수로 나누면 나머지가 작은 수가 되고 이를 재귀함수로 넘기면 큰 수가 앞에 오기 때문이다. eg. gcd(8, 40) -&gt; 나머지 8 -&gt; gcd(40, 8)</p>
 </section>
-<section id="최소공배수" class="level3">
-<h3 class="anchored" data-anchor-id="최소공배수">최소공배수</h3>
+<section id="최소공배수" class="level3" data-number="1.1.2">
+<h3 data-number="1.1.2" class="anchored" data-anchor-id="최소공배수"><span class="header-section-number">1.1.2</span> 최소공배수</h3>
 <p>gcd * a/gcd * b/gcd = a*b/gcd</p>
 <p><img src="gcdlcm.jpeg" width="300"></p>
 <div class="cell" data-execution_count="21">

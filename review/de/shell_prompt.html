@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-07">
 
 <title>👀 - shell prompt</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,48 +113,58 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">shell prompt</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 7, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#bash-prompt-기본값" id="toc-bash-prompt-기본값" class="nav-link active" data-scroll-target="#bash-prompt-기본값">bash prompt 기본값</a></li>
-  <li><a href="#bash-prompt-변경-.bashrc-파일" id="toc-bash-prompt-변경-.bashrc-파일" class="nav-link" data-scroll-target="#bash-prompt-변경-.bashrc-파일">bash prompt 변경: <code>~/.bashrc</code> 파일</a></li>
-  <li><a href="#유용한-사이트" id="toc-유용한-사이트" class="nav-link" data-scroll-target="#유용한-사이트">유용한 사이트</a></li>
+  <li><a href="#bash-prompt-기본값" id="toc-bash-prompt-기본값" class="nav-link active" data-scroll-target="#bash-prompt-기본값"><span class="toc-section-number">1</span>  bash prompt 기본값</a></li>
+  <li><a href="#bash-prompt-변경-.bashrc-파일" id="toc-bash-prompt-변경-.bashrc-파일" class="nav-link" data-scroll-target="#bash-prompt-변경-.bashrc-파일"><span class="toc-section-number">2</span>  bash prompt 변경: <code>~/.bashrc</code> 파일</a></li>
+  <li><a href="#유용한-사이트" id="toc-유용한-사이트" class="nav-link" data-scroll-target="#유용한-사이트"><span class="toc-section-number">3</span>  유용한 사이트</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">shell prompt</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 7, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <p>출처: <a href="https://phoenixnap.com/kb/change-bash-prompt-linux" target="_blank">How To Customize Bash Prompt in Linux</a></p>
-<section id="bash-prompt-기본값" class="level2">
-<h2 class="anchored" data-anchor-id="bash-prompt-기본값">bash prompt 기본값</h2>
+<section id="bash-prompt-기본값" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="bash-prompt-기본값"><span class="header-section-number">1</span> bash prompt 기본값</h2>
 <ul>
 <li>eg. <code>(base) aaa@DESKTOP:~$</code> 또는 <code>aaa@DESKTOP:~$</code></li>
 <li>의미: (아나콘다 가상환경) 사용자명@호스트명:</li>
@@ -162,8 +173,8 @@ ul.task-list li input[type="checkbox"] {
 <li><code>#</code>: root 사용자 표시</li>
 </ul>
 </section>
-<section id="bash-prompt-변경-.bashrc-파일" class="level2">
-<h2 class="anchored" data-anchor-id="bash-prompt-변경-.bashrc-파일">bash prompt 변경: <code>~/.bashrc</code> 파일</h2>
+<section id="bash-prompt-변경-.bashrc-파일" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="bash-prompt-변경-.bashrc-파일"><span class="header-section-number">2</span> bash prompt 변경: <code>~/.bashrc</code> 파일</h2>
 <ul>
 <li>~/.bashrc 파일 변경. 만일을 위해 백업 파일 만들기(~/.bashrc.bak)</li>
 <li>==파일 내용을 변경한 뒤에는 재실행==하여 변경사항 반영: <code>source ~/.bashrc</code></li>
@@ -247,8 +258,8 @@ ul.task-list li input[type="checkbox"] {
 </ul></li>
 </ul>
 </section>
-<section id="유용한-사이트" class="level2">
-<h2 class="anchored" data-anchor-id="유용한-사이트">유용한 사이트</h2>
+<section id="유용한-사이트" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="유용한-사이트"><span class="header-section-number">3</span> 유용한 사이트</h2>
 <ul>
 <li><a href="https://ss64.com/bash/syntax-prompt.html" target="_blank">기타 다른 명령어 보기</a></li>
 <li><a href="https://bashrcgenerator.com/" target="_blank">PS1 명령어 생성기</a> : 드래그 앤 드랍으로 .bashrc에 입력할 속성값을 쉽게 만들 수 있다.</li>

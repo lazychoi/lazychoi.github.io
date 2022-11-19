@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-30">
 
 <title>👀 - 자연수 뒤집어 배열로 만들기</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,62 +176,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">자연수 뒤집어 배열로 만들기</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 30, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#자연수-뒤집어-배열로-만들기" id="toc-자연수-뒤집어-배열로-만들기" class="nav-link active" data-scroll-target="#자연수-뒤집어-배열로-만들기">자연수 뒤집어 배열로 만들기</a>
+  <li><a href="#자연수-뒤집어-배열로-만들기" id="toc-자연수-뒤집어-배열로-만들기" class="nav-link active" data-scroll-target="#자연수-뒤집어-배열로-만들기"><span class="toc-section-number">1</span>  자연수 뒤집어 배열로 만들기</a>
   <ul class="collapse">
-  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정">접근 과정</a>
+  <li><a href="#접근-과정" id="toc-접근-과정" class="nav-link" data-scroll-target="#접근-과정"><span class="toc-section-number">1.1</span>  접근 과정</a>
   <ul class="collapse">
-  <li><a href="#틀린-이유" id="toc-틀린-이유" class="nav-link" data-scroll-target="#틀린-이유">틀린 이유</a></li>
+  <li><a href="#틀린-이유" id="toc-틀린-이유" class="nav-link" data-scroll-target="#틀린-이유"><span class="toc-section-number">1.1.1</span>  틀린 이유</a></li>
   </ul></li>
-  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드">다른 사람 코드</a></li>
+  <li><a href="#다른-사람-코드" id="toc-다른-사람-코드" class="nav-link" data-scroll-target="#다른-사람-코드"><span class="toc-section-number">1.2</span>  다른 사람 코드</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">자연수 뒤집어 배열로 만들기</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 30, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="자연수-뒤집어-배열로-만들기" class="level1">
-<h1>자연수 뒤집어 배열로 만들기</h1>
-<section id="접근-과정" class="level2">
-<h2 class="anchored" data-anchor-id="접근-과정">접근 과정</h2>
+<section id="자연수-뒤집어-배열로-만들기" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 자연수 뒤집어 배열로 만들기</h1>
+<section id="접근-과정" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="접근-과정"><span class="header-section-number">1.1</span> 접근 과정</h2>
 <p><a href="https://school.programmers.co.kr/learn/courses/30/lessons/12932">https://school.programmers.co.kr/learn/courses/30/lessons/12932</a></p>
 <ol type="1">
 <li>자연수를 문자열로 변환</li>
 <li>문자열을 sorted(reverse=) 함수로 정렬</li>
 <li>각 요소를 숫자형으로 변환</li>
 </ol>
-<section id="틀린-이유" class="level3">
-<h3 class="anchored" data-anchor-id="틀린-이유">틀린 이유</h3>
+<section id="틀린-이유" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="틀린-이유"><span class="header-section-number">1.1.1</span> 틀린 이유</h3>
 <p>문제를 잘못 이해했다. 역순으로 정렬하는 문제가 아니라 단순하게 순서만 뒤집는 문제였다. 힌트를 보고 알았다. 예시가 함정이었다. 다소 야비한 문제다.</p>
 <p>리스트변수.reverse()는 반환값이 없지만, reversed(iterable)는 reversed object 반환</p>
 <div class="cell" data-execution_count="18">
@@ -255,8 +266,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="다른-사람-코드" class="level2">
-<h2 class="anchored" data-anchor-id="다른-사람-코드">다른 사람 코드</h2>
+<section id="다른-사람-코드" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="다른-사람-코드"><span class="header-section-number">1.2</span> 다른 사람 코드</h2>
 <p>map 함수를 쓰는 게 간편하다.</p>
 <div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">list</span>(<span class="bu">map</span>(<span class="bu">int</span>, <span class="bu">reversed</span>(<span class="bu">str</span>(n))))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

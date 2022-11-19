@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-12">
 
 <title>👀 - Material for MkDocs</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,62 +176,72 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Material for MkDocs</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 12, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#설치-및-환경설정" id="toc-설치-및-환경설정" class="nav-link active" data-scroll-target="#설치-및-환경설정">설치 및 환경설정</a></li>
-  <li><a href="#사이트-만들기" id="toc-사이트-만들기" class="nav-link" data-scroll-target="#사이트-만들기">사이트 만들기</a></li>
-  <li><a href="#mkdocs.yml-설정" id="toc-mkdocs.yml-설정" class="nav-link" data-scroll-target="#mkdocs.yml-설정">mkdocs.yml 설정</a></li>
-  <li><a href="#사이트-미리보기" id="toc-사이트-미리보기" class="nav-link" data-scroll-target="#사이트-미리보기">사이트 미리보기</a></li>
-  <li><a href="#사이트-만들기-1" id="toc-사이트-만들기-1" class="nav-link" data-scroll-target="#사이트-만들기-1">사이트 만들기</a>
+  <li><a href="#설치-및-환경설정" id="toc-설치-및-환경설정" class="nav-link active" data-scroll-target="#설치-및-환경설정"><span class="toc-section-number">1</span>  설치 및 환경설정</a></li>
+  <li><a href="#사이트-만들기" id="toc-사이트-만들기" class="nav-link" data-scroll-target="#사이트-만들기"><span class="toc-section-number">2</span>  사이트 만들기</a></li>
+  <li><a href="#mkdocs.yml-설정" id="toc-mkdocs.yml-설정" class="nav-link" data-scroll-target="#mkdocs.yml-설정"><span class="toc-section-number">3</span>  mkdocs.yml 설정</a></li>
+  <li><a href="#사이트-미리보기" id="toc-사이트-미리보기" class="nav-link" data-scroll-target="#사이트-미리보기"><span class="toc-section-number">4</span>  사이트 미리보기</a></li>
+  <li><a href="#사이트-만들기-1" id="toc-사이트-만들기-1" class="nav-link" data-scroll-target="#사이트-만들기-1"><span class="toc-section-number">5</span>  사이트 만들기</a>
   <ul class="collapse">
-  <li><a href="#github-actions-이용하기선택" id="toc-github-actions-이용하기선택" class="nav-link" data-scroll-target="#github-actions-이용하기선택">github actions 이용하기(선택)</a></li>
-  <li><a href="#로컬에서-build한-후에-올리기" id="toc-로컬에서-build한-후에-올리기" class="nav-link" data-scroll-target="#로컬에서-build한-후에-올리기">로컬에서 build한 후에 올리기</a></li>
+  <li><a href="#github-actions-이용하기선택" id="toc-github-actions-이용하기선택" class="nav-link" data-scroll-target="#github-actions-이용하기선택"><span class="toc-section-number">5.1</span>  github actions 이용하기(선택)</a></li>
+  <li><a href="#로컬에서-build한-후에-올리기" id="toc-로컬에서-build한-후에-올리기" class="nav-link" data-scroll-target="#로컬에서-build한-후에-올리기"><span class="toc-section-number">5.2</span>  로컬에서 build한 후에 올리기</a></li>
   </ul></li>
-  <li><a href="#기타-설정-방법" id="toc-기타-설정-방법" class="nav-link" data-scroll-target="#기타-설정-방법">기타 설정 방법</a></li>
+  <li><a href="#기타-설정-방법" id="toc-기타-설정-방법" class="nav-link" data-scroll-target="#기타-설정-방법"><span class="toc-section-number">6</span>  기타 설정 방법</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Material for MkDocs</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 12, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="설치-및-환경설정" class="level2">
-<h2 class="anchored" data-anchor-id="설치-및-환경설정">설치 및 환경설정</h2>
+<section id="설치-및-환경설정" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="설치-및-환경설정"><span class="header-section-number">1</span> 설치 및 환경설정</h2>
 <ol type="1">
 <li>conda 가상환경 만들기: <code>$ conda create -n mkdocs</code></li>
 <li>가상환경 들어가기: <code>$ conda activate mkdocs</code></li>
 <li>설치: <code>$ pip install mkdocs-material</code></li>
 </ol>
 </section>
-<section id="사이트-만들기" class="level2">
-<h2 class="anchored" data-anchor-id="사이트-만들기">사이트 만들기</h2>
+<section id="사이트-만들기" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="사이트-만들기"><span class="header-section-number">2</span> 사이트 만들기</h2>
 <p><code>$ mkdir 폴더이름</code> : 사이트로 구성할 폴더 만들기</p>
 <p><code>$ cd 폴더이름</code></p>
 <p><code>$ mkdocs new .</code> : 사이트 기본 파일 생성. 아래와 같은 폴더와 파일을 만든다.</p>
@@ -239,8 +250,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>  └─ index.md</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">└─</span> mkdocs.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="mkdocs.yml-설정" class="level2">
-<h2 class="anchored" data-anchor-id="mkdocs.yml-설정">mkdocs.yml 설정</h2>
+<section id="mkdocs.yml-설정" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="mkdocs.yml-설정"><span class="header-section-number">3</span> mkdocs.yml 설정</h2>
 <p>vscode에 Yaml extension 설치</p>
 <p>settings &gt;&gt;&gt; yaml.schemas 아래 코드 추가</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
@@ -249,26 +260,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="사이트-미리보기" class="level2">
-<h2 class="anchored" data-anchor-id="사이트-미리보기">사이트 미리보기</h2>
+<section id="사이트-미리보기" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="사이트-미리보기"><span class="header-section-number">4</span> 사이트 미리보기</h2>
 <p><code>$ mkdocs serve</code></p>
 <p>INFO - Option search.lang ‘kr’ is not supported, falling back to ‘en’ ERROR - Config value: ‘plugins’. Error: The “roamlinks” plugin is not installed Aborted with 1 Configuration Errors!</p>
 <p>=&gt; 해당 코드 모두 주석처리한 뒤 실행하니 일단 뜨기는 함</p>
 </section>
-<section id="사이트-만들기-1" class="level2">
-<h2 class="anchored" data-anchor-id="사이트-만들기-1">사이트 만들기</h2>
-<section id="github-actions-이용하기선택" class="level3">
-<h3 class="anchored" data-anchor-id="github-actions-이용하기선택">github actions 이용하기(선택)</h3>
+<section id="사이트-만들기-1" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="사이트-만들기-1"><span class="header-section-number">5</span> 사이트 만들기</h2>
+<section id="github-actions-이용하기선택" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="github-actions-이용하기선택"><span class="header-section-number">5.1</span> github actions 이용하기(선택)</h3>
 <p><a href="https://squidfunk.github.io/mkdocs-material/publishing-your-site/" target="_blank">설명서</a></p>
 </section>
-<section id="로컬에서-build한-후에-올리기" class="level3">
-<h3 class="anchored" data-anchor-id="로컬에서-build한-후에-올리기">로컬에서 build한 후에 올리기</h3>
+<section id="로컬에서-build한-후에-올리기" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="로컬에서-build한-후에-올리기"><span class="header-section-number">5.2</span> 로컬에서 build한 후에 올리기</h3>
 <p><code>$ mkdocs build</code></p>
 <p>=&gt; site/ 폴더가 만들어진 뒤 그 안에 변환된 html 파일을 넣음 =&gt; site/ 폴더를 깃허브에 올리면 됨.</p>
 </section>
 </section>
-<section id="기타-설정-방법" class="level2">
-<h2 class="anchored" data-anchor-id="기타-설정-방법">기타 설정 방법</h2>
+<section id="기타-설정-방법" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="기타-설정-방법"><span class="header-section-number">6</span> 기타 설정 방법</h2>
 <ul>
 <li><a href="../../review/pkm/markdown_link_new_window.html">링크 문서 새 창으로 열기</a></li>
 </ul>

@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-11-17">
 
 <title>👀 - 범주형 특성 인코딩</title>
@@ -127,7 +128,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <link rel="stylesheet" href="../../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -175,52 +176,62 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">범주형 특성 인코딩</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 17, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#순서가-없는-범주형-특성-인코딩" id="toc-순서가-없는-범주형-특성-인코딩" class="nav-link active" data-scroll-target="#순서가-없는-범주형-특성-인코딩">순서가 없는 범주형 특성 인코딩</a>
+  <li><a href="#순서가-없는-범주형-특성-인코딩" id="toc-순서가-없는-범주형-특성-인코딩" class="nav-link active" data-scroll-target="#순서가-없는-범주형-특성-인코딩"><span class="toc-section-number">1</span>  순서가 없는 범주형 특성 인코딩</a>
   <ul class="collapse">
-  <li><a href="#labelbinarizer" id="toc-labelbinarizer" class="nav-link" data-scroll-target="#labelbinarizer">LabelBinarizer</a></li>
-  <li><a href="#multilabelbinarizer" id="toc-multilabelbinarizer" class="nav-link" data-scroll-target="#multilabelbinarizer">MultiLabelBinarizer</a></li>
-  <li><a href="#onehotencoder" id="toc-onehotencoder" class="nav-link" data-scroll-target="#onehotencoder">OneHotEncoder</a></li>
+  <li><a href="#labelbinarizer" id="toc-labelbinarizer" class="nav-link" data-scroll-target="#labelbinarizer"><span class="toc-section-number">1.1</span>  LabelBinarizer</a></li>
+  <li><a href="#multilabelbinarizer" id="toc-multilabelbinarizer" class="nav-link" data-scroll-target="#multilabelbinarizer"><span class="toc-section-number">1.2</span>  MultiLabelBinarizer</a></li>
+  <li><a href="#onehotencoder" id="toc-onehotencoder" class="nav-link" data-scroll-target="#onehotencoder"><span class="toc-section-number">1.3</span>  OneHotEncoder</a></li>
   </ul></li>
-  <li><a href="#순서가-있는-범주형-특성-인코딩" id="toc-순서가-있는-범주형-특성-인코딩" class="nav-link" data-scroll-target="#순서가-있는-범주형-특성-인코딩">순서가 있는 범주형 특성 인코딩</a></li>
-  <li><a href="#딕셔너리를-행렬로-변환" id="toc-딕셔너리를-행렬로-변환" class="nav-link" data-scroll-target="#딕셔너리를-행렬로-변환">딕셔너리를 행렬로 변환</a></li>
+  <li><a href="#순서가-있는-범주형-특성-인코딩" id="toc-순서가-있는-범주형-특성-인코딩" class="nav-link" data-scroll-target="#순서가-있는-범주형-특성-인코딩"><span class="toc-section-number">2</span>  순서가 있는 범주형 특성 인코딩</a></li>
+  <li><a href="#딕셔너리를-행렬로-변환" id="toc-딕셔너리를-행렬로-변환" class="nav-link" data-scroll-target="#딕셔너리를-행렬로-변환"><span class="toc-section-number">3</span>  딕셔너리를 행렬로 변환</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">범주형 특성 인코딩</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">November 17, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="순서가-없는-범주형-특성-인코딩" class="level2">
-<h2 class="anchored" data-anchor-id="순서가-없는-범주형-특성-인코딩">순서가 없는 범주형 특성 인코딩</h2>
+<section id="순서가-없는-범주형-특성-인코딩" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="순서가-없는-범주형-특성-인코딩"><span class="header-section-number">1</span> 순서가 없는 범주형 특성 인코딩</h2>
 <ul>
 <li>from sklearn.preprocessing import LabelBinarizer, MultiLabelBinarizer, OneHotEncoder</li>
 <li>pandas.get_dummies()</li>
@@ -237,8 +248,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                     [<span class="st">'Seoul'</span>],</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>                     [<span class="st">'Seoul'</span>]])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="labelbinarizer" class="level3">
-<h3 class="anchored" data-anchor-id="labelbinarizer">LabelBinarizer</h3>
+<section id="labelbinarizer" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="labelbinarizer"><span class="header-section-number">1.1</span> LabelBinarizer</h3>
 <div class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>one_hot_la <span class="op">=</span> LabelBinarizer()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>features_la <span class="op">=</span> one_hot_la.fit_transform(features)</span>
@@ -266,8 +277,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="multilabelbinarizer" class="level3">
-<h3 class="anchored" data-anchor-id="multilabelbinarizer">MultiLabelBinarizer</h3>
+<section id="multilabelbinarizer" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="multilabelbinarizer"><span class="header-section-number">1.2</span> MultiLabelBinarizer</h3>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> np.array([(<span class="st">'Seoul'</span>, <span class="st">'Incheon'</span>),</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                     (<span class="st">'Busan'</span>, <span class="st">'Daejun'</span>),</span>
@@ -294,8 +305,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
-<section id="onehotencoder" class="level3">
-<h3 class="anchored" data-anchor-id="onehotencoder">OneHotEncoder</h3>
+<section id="onehotencoder" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="onehotencoder"><span class="header-section-number">1.3</span> OneHotEncoder</h3>
 <div class="cell" data-execution_count="23">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>oh <span class="op">=</span> OneHotEncoder(sparse<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>features_oh <span class="op">=</span> oh.fit_transform(features)</span>
@@ -317,8 +328,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </section>
 </section>
-<section id="순서가-있는-범주형-특성-인코딩" class="level2">
-<h2 class="anchored" data-anchor-id="순서가-있는-범주형-특성-인코딩">순서가 있는 범주형 특성 인코딩</h2>
+<section id="순서가-있는-범주형-특성-인코딩" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="순서가-있는-범주형-특성-인코딩"><span class="header-section-number">2</span> 순서가 있는 범주형 특성 인코딩</h2>
 <ul>
 <li>가장 자주 사용하는 방법은 클래스 레이블 문자열을 정수로 매핑하는 딕셔너리를 만들고 이를 필요한 특성에 적용하는 것</li>
 <li>클래스 간 간격에 주의</li>
@@ -341,8 +352,8 @@ Name: Score, dtype: int64</code></pre>
 </div>
 </div>
 </section>
-<section id="딕셔너리를-행렬로-변환" class="level2">
-<h2 class="anchored" data-anchor-id="딕셔너리를-행렬로-변환">딕셔너리를 행렬로 변환</h2>
+<section id="딕셔너리를-행렬로-변환" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="딕셔너리를-행렬로-변환"><span class="header-section-number">3</span> 딕셔너리를 행렬로 변환</h2>
 <div class="cell" data-execution_count="28">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction <span class="im">import</span> DictVectorizer</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>

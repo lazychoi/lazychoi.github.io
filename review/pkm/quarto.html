@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-26">
 
 <title>👀 - quarto</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,64 +113,75 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">quarto</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 26, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#설치" id="toc-설치" class="nav-link active" data-scroll-target="#설치">설치</a></li>
-  <li><a href="#vscode에서-사용-tutorial" id="toc-vscode에서-사용-tutorial" class="nav-link" data-scroll-target="#vscode에서-사용-tutorial">vscode에서 사용 tutorial</a></li>
-  <li><a href="#주피터-노트북-사용-tutorial" id="toc-주피터-노트북-사용-tutorial" class="nav-link" data-scroll-target="#주피터-노트북-사용-tutorial">주피터 노트북 사용 tutorial</a>
+  <li><a href="#설치" id="toc-설치" class="nav-link active" data-scroll-target="#설치"><span class="toc-section-number">1</span>  설치</a></li>
+  <li><a href="#vscode에서-사용-tutorial" id="toc-vscode에서-사용-tutorial" class="nav-link" data-scroll-target="#vscode에서-사용-tutorial"><span class="toc-section-number">2</span>  vscode에서 사용 tutorial</a></li>
+  <li><a href="#주피터-노트북-사용-tutorial" id="toc-주피터-노트북-사용-tutorial" class="nav-link" data-scroll-target="#주피터-노트북-사용-tutorial"><span class="toc-section-number">3</span>  주피터 노트북 사용 tutorial</a>
   <ul class="collapse">
-  <li><a href="#yml-설정" id="toc-yml-설정" class="nav-link" data-scroll-target="#yml-설정">yml 설정</a></li>
+  <li><a href="#yml-설정" id="toc-yml-설정" class="nav-link" data-scroll-target="#yml-설정"><span class="toc-section-number">3.1</span>  yml 설정</a></li>
   </ul></li>
-  <li><a href="#웹사이트-만들기" id="toc-웹사이트-만들기" class="nav-link" data-scroll-target="#웹사이트-만들기">웹사이트 만들기</a></li>
-  <li><a href="#깃허브-페이지를-호스팅-서버로-사용하기" id="toc-깃허브-페이지를-호스팅-서버로-사용하기" class="nav-link" data-scroll-target="#깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</a></li>
-  <li><a href="#사용법" id="toc-사용법" class="nav-link" data-scroll-target="#사용법">사용법</a>
+  <li><a href="#웹사이트-만들기" id="toc-웹사이트-만들기" class="nav-link" data-scroll-target="#웹사이트-만들기"><span class="toc-section-number">4</span>  웹사이트 만들기</a></li>
+  <li><a href="#깃허브-페이지를-호스팅-서버로-사용하기" id="toc-깃허브-페이지를-호스팅-서버로-사용하기" class="nav-link" data-scroll-target="#깃허브-페이지를-호스팅-서버로-사용하기"><span class="toc-section-number">5</span>  깃허브 페이지를 호스팅 서버로 사용하기</a></li>
+  <li><a href="#사용법" id="toc-사용법" class="nav-link" data-scroll-target="#사용법"><span class="toc-section-number">6</span>  사용법</a>
   <ul class="collapse">
-  <li><a href="#멀티-컬럼-사용하기" id="toc-멀티-컬럼-사용하기" class="nav-link" data-scroll-target="#멀티-컬럼-사용하기">멀티 컬럼 사용하기</a></li>
-  <li><a href="#callout" id="toc-callout" class="nav-link" data-scroll-target="#callout">callout</a></li>
+  <li><a href="#멀티-컬럼-사용하기" id="toc-멀티-컬럼-사용하기" class="nav-link" data-scroll-target="#멀티-컬럼-사용하기"><span class="toc-section-number">6.1</span>  멀티 컬럼 사용하기</a></li>
+  <li><a href="#callout" id="toc-callout" class="nav-link" data-scroll-target="#callout"><span class="toc-section-number">6.2</span>  callout</a></li>
+  <li><a href="#section-numbering" id="toc-section-numbering" class="nav-link" data-scroll-target="#section-numbering"><span class="toc-section-number">6.3</span>  Section numbering</a></li>
   </ul></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">quarto</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 26, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="설치" class="level2">
-<h2 class="anchored" data-anchor-id="설치">설치</h2>
+<section id="설치" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="설치"><span class="header-section-number">1</span> 설치</h2>
 <ul>
 <li><a href="https://quarto.org/docs/get-started/">quarto 홈페이지</a>에서 운영체제에 맞는 파일을 받아 실행</li>
 <li>맥 Homebrew 설치: <code>brew install --cask quarto</code></li>
 </ul>
 </section>
-<section id="vscode에서-사용-tutorial" class="level2">
-<h2 class="anchored" data-anchor-id="vscode에서-사용-tutorial">vscode에서 사용 tutorial</h2>
+<section id="vscode에서-사용-tutorial" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="vscode에서-사용-tutorial"><span class="header-section-number">2</span> vscode에서 사용 tutorial</h2>
 <p><a href="https://quarto.org/docs/get-started/hello/vscode.html" target="_blank">공식 문서</a></p>
 <ol type="1">
 <li>vscode에서 quarto vscode extension 설치</li>
@@ -201,18 +213,18 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>변환하면 같은 폴더에 walkthrough.html 파일과 walkthrough_files 폴더가 만들어진다.</p>
 </section>
-<section id="주피터-노트북-사용-tutorial" class="level2">
-<h2 class="anchored" data-anchor-id="주피터-노트북-사용-tutorial">주피터 노트북 사용 tutorial</h2>
-<section id="yml-설정" class="level3">
-<h3 class="anchored" data-anchor-id="yml-설정">yml 설정</h3>
+<section id="주피터-노트북-사용-tutorial" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="주피터-노트북-사용-tutorial"><span class="header-section-number">3</span> 주피터 노트북 사용 tutorial</h2>
+<section id="yml-설정" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="yml-설정"><span class="header-section-number">3.1</span> yml 설정</h3>
 <ul>
 <li>코드 블록 숨기기/보이기 설정</li>
 <li>코드 블록 숨기기/보이기 버튼 우측 상단에 보이게 설정</li>
 </ul>
 </section>
 </section>
-<section id="웹사이트-만들기" class="level2">
-<h2 class="anchored" data-anchor-id="웹사이트-만들기">웹사이트 만들기</h2>
+<section id="웹사이트-만들기" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="웹사이트-만들기"><span class="header-section-number">4</span> 웹사이트 만들기</h2>
 <ul>
 <li><a href="https://quarto.org/docs/websites/">공식 문서</a></li>
 </ul>
@@ -228,14 +240,14 @@ ul.task-list li input[type="checkbox"] {
 <li>최종 html 파일 만들기: 터미널에서 quarto render -&gt; _site 폴더에 html 파일이 만들어진다.</li>
 </ul>
 </section>
-<section id="깃허브-페이지를-호스팅-서버로-사용하기" class="level2">
-<h2 class="anchored" data-anchor-id="깃허브-페이지를-호스팅-서버로-사용하기">깃허브 페이지를 호스팅 서버로 사용하기</h2>
+<section id="깃허브-페이지를-호스팅-서버로-사용하기" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="깃허브-페이지를-호스팅-서버로-사용하기"><span class="header-section-number">5</span> 깃허브 페이지를 호스팅 서버로 사용하기</h2>
 <p><a href="https://quarto.org/docs/publishing/github-pages.html">공식 문서</a></p>
 </section>
-<section id="사용법" class="level2">
-<h2 class="anchored" data-anchor-id="사용법">사용법</h2>
-<section id="멀티-컬럼-사용하기" class="level3">
-<h3 class="anchored" data-anchor-id="멀티-컬럼-사용하기">멀티 컬럼 사용하기</h3>
+<section id="사용법" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="사용법"><span class="header-section-number">6</span> 사용법</h2>
+<section id="멀티-컬럼-사용하기" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="멀티-컬럼-사용하기"><span class="header-section-number">6.1</span> 멀티 컬럼 사용하기</h3>
 <pre class="material"><code>
 ::: {.grid}
 ::: {.g-col-5}
@@ -258,9 +270,13 @@ ul.task-list li input[type="checkbox"] {
 :::</code></pre>
 <p><a href="https://quarto.org/docs/output-formats/page-layout.html" target="_blank">공식 설명서</a></p>
 </section>
-<section id="callout" class="level3">
-<h3 class="anchored" data-anchor-id="callout">callout</h3>
+<section id="callout" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="callout"><span class="header-section-number">6.2</span> callout</h3>
 <p><a href="https://quarto.org/docs/authoring/callouts.html" target="_blank">공식 설명서</a></p>
+</section>
+<section id="section-numbering" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="section-numbering"><span class="header-section-number">6.3</span> Section numbering</h3>
+<p>number-sections: true number-depth: 3 넘버링 제외 : ### More Options {.unnumbered}</p>
 
 
 </section>

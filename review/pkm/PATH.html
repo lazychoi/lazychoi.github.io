@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-06">
 
 <title>👀 - 리눅스 PATH</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,42 +113,52 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">리눅스 PATH</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 6, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#기능" id="toc-기능" class="nav-link active" data-scroll-target="#기능">기능</a></li>
+  <li><a href="#기능" id="toc-기능" class="nav-link active" data-scroll-target="#기능"><span class="toc-section-number">1</span>  기능</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">리눅스 PATH</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 6, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <ul>
 <li>의미: OS가 특정 프로그램을 찾기 위해 사용하는 디렉토리들의 집합</li>
@@ -155,8 +166,8 @@ ul.task-list li input[type="checkbox"] {
 <li>특정 폴더(eg. ~/bin)를 PATH에 추가하기: <code>$ PATH=~/bin:$PATH</code> or <code>$ export $PATH=/bin</code></li>
 <li>특정 폴더를 영구적으로 PATH에 포함하려면 <code>~/.bashrc</code>에 추가</li>
 </ul>
-<section id="기능" class="level2">
-<h2 class="anchored" data-anchor-id="기능">기능</h2>
+<section id="기능" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="기능"><span class="header-section-number">1</span> 기능</h2>
 <ul>
 <li>파일을 $PATH에 지정한 경로 중 한 곳에 놓으면 어느 경로에서든 실행할 수 있다.</li>
 <li>대부분 프로그램은 <code>/usr/local/bin/</code>에 설치된다.</li>

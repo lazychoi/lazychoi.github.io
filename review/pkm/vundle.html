@@ -6,6 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
 <meta name="dcterms.date" content="2022-10-17">
 
 <title>👀 - VI Vundle</title>
@@ -64,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -112,53 +113,63 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">VI Vundle</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">October 17, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-<!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#vundle-설치" id="toc-vundle-설치" class="nav-link active" data-scroll-target="#vundle-설치">Vundle 설치</a></li>
-  <li><a href="#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" id="toc-설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" class="nav-link" data-scroll-target="#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다">설정: 아래 코드를 <code>.vimrc</code> 파일의 맨 위에 추가한다</a></li>
-  <li><a href="#플러그인-설치-vim-실행-후-plugininstall" id="toc-플러그인-설치-vim-실행-후-plugininstall" class="nav-link" data-scroll-target="#플러그인-설치-vim-실행-후-plugininstall">플러그인 설치: vim 실행 후 <code>:PluginInstall</code></a></li>
-  <li><a href="#추가한-플러그인" id="toc-추가한-플러그인" class="nav-link" data-scroll-target="#추가한-플러그인">추가한 플러그인</a></li>
+  <li><a href="#vundle-설치" id="toc-vundle-설치" class="nav-link active" data-scroll-target="#vundle-설치"><span class="toc-section-number">1</span>  Vundle 설치</a></li>
+  <li><a href="#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" id="toc-설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" class="nav-link" data-scroll-target="#설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다"><span class="toc-section-number">2</span>  설정: 아래 코드를 <code>.vimrc</code> 파일의 맨 위에 추가한다</a></li>
+  <li><a href="#플러그인-설치-vim-실행-후-plugininstall" id="toc-플러그인-설치-vim-실행-후-plugininstall" class="nav-link" data-scroll-target="#플러그인-설치-vim-실행-후-plugininstall"><span class="toc-section-number">3</span>  플러그인 설치: vim 실행 후 <code>:PluginInstall</code></a></li>
+  <li><a href="#추가한-플러그인" id="toc-추가한-플러그인" class="nav-link" data-scroll-target="#추가한-플러그인"><span class="toc-section-number">4</span>  추가한 플러그인</a></li>
   </ul>
 </nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">VI Vundle</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
-
-    
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 17, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
 
 <p><a href="https://github.com/VundleVim/Vundle.vim" target="_blank">Vundle 홈페이지</a></p>
-<section id="vundle-설치" class="level2">
-<h2 class="anchored" data-anchor-id="vundle-설치">Vundle 설치</h2>
+<section id="vundle-설치" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="vundle-설치"><span class="header-section-number">1</span> Vundle 설치</h2>
 <p><code>git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim</code></p>
 </section>
-<section id="설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" class="level2">
-<h2 class="anchored" data-anchor-id="설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다">설정: 아래 코드를 <code>.vimrc</code> 파일의 맨 위에 추가한다</h2>
+<section id="설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="설정-아래-코드를-.vimrc-파일의-맨-위에-추가한다"><span class="header-section-number">2</span> 설정: 아래 코드를 <code>.vimrc</code> 파일의 맨 위에 추가한다</h2>
 <pre class="text"><code>set nocompatible              " be iMproved, required
 filetype off                  " required
 
@@ -204,12 +215,12 @@ filetype plugin indent on    " required
 " Put your non-Plugin stuff after this line</code></pre>
 <p>call vundle#begin()과 call vundle#end() 사이에 설치할 Plugin을 지정한다.</p>
 </section>
-<section id="플러그인-설치-vim-실행-후-plugininstall" class="level2">
-<h2 class="anchored" data-anchor-id="플러그인-설치-vim-실행-후-plugininstall">플러그인 설치: vim 실행 후 <code>:PluginInstall</code></h2>
+<section id="플러그인-설치-vim-실행-후-plugininstall" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="플러그인-설치-vim-실행-후-plugininstall"><span class="header-section-number">3</span> 플러그인 설치: vim 실행 후 <code>:PluginInstall</code></h2>
 <p>에러 발생: Plugin ‘file:///home/playdata/path/to/plugin’</p>
 </section>
-<section id="추가한-플러그인" class="level2">
-<h2 class="anchored" data-anchor-id="추가한-플러그인">추가한 플러그인</h2>
+<section id="추가한-플러그인" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="추가한-플러그인"><span class="header-section-number">4</span> 추가한 플러그인</h2>
 <ul>
 <li>nerdtree: .vimrc의 플러그인 정의 영역에 Plugin ‘scrooloose/nerdtree’ 추가 -&gt; 단축키 설정(.vimrc에 추가) nmap nerd :NERDTreeToggle<cr> -&gt; vi 명령모드에서 ’nerd’를 키보드로 치면 실행됨</cr></li>
 </ul>
