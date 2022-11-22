@@ -6281,6 +6281,600 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
  'show_versions']</code></pre>
 </div>
 </div>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb132"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb132-3"><a href="#cb132-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb132-4"><a href="#cb132-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/Datamanim/datarepo/main/stroke_/train.csv'</span>)</span>
+<span id="cb132-5"><a href="#cb132-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df.head(<span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>      id  gender age  hypertension  heart_disease ever_married work_type  \
+0   1192  Female  31             0              0           No  Govt_job   
+1     77  Female  13             0              0           No  children   
+2  59200    Male  18             0              0           No   Private   
+3  24905  Female  65             0              0          Yes   Private   
+4  24257    Male   4             0              0           No  children   
+
+  Residence_type  avg_glucose_level   bmi   smoking_status  stroke  
+0          Rural              70.66  27.2     never smoked       0  
+1          Rural              85.81  18.6          Unknown       0  
+2          Urban              60.56  33.0     never smoked       0  
+3          Urban             205.77  46.0  formerly smoked       1  
+4          Rural              90.42  16.2          Unknown       0  </code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>bmi컬럼의 각 결측치들을 직전의 행의 bmi값으로 채웠을 경우 bmi 컬럼의 평균을 소숫점 이하 3자리 까지 구하여라(<a href="https://cafe.naver.com/yjbooks/63744?boardType=L">출처</a>)</p>
+</div>
+</div>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb134"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb134-1"><a href="#cb134-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="sc">{:.3f}</span><span class="st">'</span>.<span class="bu">format</span>(df[<span class="st">'bmi'</span>].fillna(method<span class="op">=</span><span class="st">'ffill'</span>).mean()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>29.188</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>bim컬럼의 각 결측치를 결측치를 가진 환자 나이대(10단위)의 평균 bmi 값으로 대체한 후 데체된 bmi 컬럼의 평균을 소숫점 이하 3자리까지 구하여라(<a href="https://cafe.naver.com/yjbooks/63744?boardType=L">출처</a>)</p>
+</div>
+</div>
+<ol type="1">
+<li>나이를 구간으로 분류하기 -&gt; <code>np.digitize(변수, bins=[경계점])</code> eg. df[‘age_category’] = np.digitize(df[‘age’], bins=[10, 20, 30, 40, 50, 60, 70, 80])</li>
+<li>구간으로 groupby 하여 평균을 구한 후 딕셔너리형으로 만들기 -&gt; age_bmi = {i:v for i, v in enumerate(df.groupby(‘age_category’).mean()[‘bmi’])}</li>
+<li>bmi 컬럼 결측치 슬라이싱 후 ‘age_category’ 열만 뽑은 후 map으로 나이대별 평균값 뽑기 -&gt; df.loc[df[‘bmi’].isna(), ‘age_category’].map(age_bmi)</li>
+<li>나이대별 평균값을 bmi 결측치에 대입 -&gt; df.loc[df[‘bmi’].isna(), ‘bmi’] = df.loc[df[‘bmi’].isna(), ‘age_category’].map(age_bmi)</li>
+</ol>
+<div class="cell" data-execution_count="3">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb136"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'https://raw.githubusercontent.com/Datamanim/datarepo/main/stroke_/train.csv'</span>)</span>
+<span id="cb136-2"><a href="#cb136-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb136-3"><a href="#cb136-3" aria-hidden="true" tabindex="-1"></a><span class="co"># age 특성에 특수 문자 포함된 값이 있어 수치형으로 변환이 안 됨</span></span>
+<span id="cb136-4"><a href="#cb136-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre><code>array(['31', '13', '18', '65', '4', '28', '64', '62', '26', '63', '50',
+       '77', '1', '52', '24', '48', '45', '74', '3', '17', '54', '55',
+       '67', '35', '38', '81', '34', '44', '79', '56', '70', '30', '39',
+       '29', '80', '59', '51', '19', '43', '71', '0', '23', '53', '78',
+       '66', '60', '76', '22', '6', '47', '2', '46', '11', '33', '37',
+       '49', '61', '75', '40', '8', '57', '12', '21', '41', '58', '27',
+       '20', '68', '42', '5', '69', '9', '36', '25', '82', '73', '32',
+       '7', '16', '14', '72', '15', '10', '*82'], dtype=object)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb138"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 특수문자 제거하고 수치형으로 변환</span></span>
+<span id="cb138-2"><a href="#cb138-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age'</span>] <span class="op">=</span> df[<span class="st">'age'</span>].replace(<span class="st">'*82'</span>, <span class="st">'82'</span>)</span>
+<span id="cb138-3"><a href="#cb138-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age'</span>] <span class="op">=</span> df[<span class="st">'age'</span>].astype(<span class="st">'int'</span>)</span>
+<span id="cb138-4"><a href="#cb138-4" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age'</span>].unique()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>array([31, 13, 18, 65,  4, 28, 64, 62, 26, 63, 50, 77,  1, 52, 24, 48, 45,
+       74,  3, 17, 54, 55, 67, 35, 38, 81, 34, 44, 79, 56, 70, 30, 39, 29,
+       80, 59, 51, 19, 43, 71,  0, 23, 53, 78, 66, 60, 76, 22,  6, 47,  2,
+       46, 11, 33, 37, 49, 61, 75, 40,  8, 57, 12, 21, 41, 58, 27, 20, 68,
+       42,  5, 69,  9, 36, 25, 82, 73, 32,  7, 16, 14, 72, 15, 10])</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb140"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 최대 최솟값 확인</span></span>
+<span id="cb140-2"><a href="#cb140-2" aria-hidden="true" tabindex="-1"></a>df[[<span class="st">'age'</span>,<span class="st">'bmi'</span>]].describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>age</th>
+      <th>bmi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>1137.000000</td>
+      <td>1085.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>45.189094</td>
+      <td>29.198065</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>23.070207</td>
+      <td>7.669615</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.000000</td>
+      <td>11.300000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>28.000000</td>
+      <td>24.100000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>48.000000</td>
+      <td>28.500000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>63.000000</td>
+      <td>33.200000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>82.000000</td>
+      <td>64.400000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb141"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb141-1"><a href="#cb141-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 나이를 10단위로 구분하기</span></span>
+<span id="cb141-2"><a href="#cb141-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'age_category'</span>] <span class="op">=</span> np.digitize(df[<span class="st">'age'</span>], bins<span class="op">=</span>[<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>, <span class="dv">40</span>, <span class="dv">50</span>, <span class="dv">60</span>, <span class="dv">70</span>, <span class="dv">80</span>])</span>
+<span id="cb141-3"><a href="#cb141-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="6">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>id</th>
+      <th>gender</th>
+      <th>age</th>
+      <th>hypertension</th>
+      <th>heart_disease</th>
+      <th>ever_married</th>
+      <th>work_type</th>
+      <th>Residence_type</th>
+      <th>avg_glucose_level</th>
+      <th>bmi</th>
+      <th>smoking_status</th>
+      <th>stroke</th>
+      <th>age_category</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1192</td>
+      <td>Female</td>
+      <td>31</td>
+      <td>0</td>
+      <td>0</td>
+      <td>No</td>
+      <td>Govt_job</td>
+      <td>Rural</td>
+      <td>70.66</td>
+      <td>27.2</td>
+      <td>never smoked</td>
+      <td>0</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>77</td>
+      <td>Female</td>
+      <td>13</td>
+      <td>0</td>
+      <td>0</td>
+      <td>No</td>
+      <td>children</td>
+      <td>Rural</td>
+      <td>85.81</td>
+      <td>18.6</td>
+      <td>Unknown</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>59200</td>
+      <td>Male</td>
+      <td>18</td>
+      <td>0</td>
+      <td>0</td>
+      <td>No</td>
+      <td>Private</td>
+      <td>Urban</td>
+      <td>60.56</td>
+      <td>33.0</td>
+      <td>never smoked</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>24905</td>
+      <td>Female</td>
+      <td>65</td>
+      <td>0</td>
+      <td>0</td>
+      <td>Yes</td>
+      <td>Private</td>
+      <td>Urban</td>
+      <td>205.77</td>
+      <td>46.0</td>
+      <td>formerly smoked</td>
+      <td>1</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>24257</td>
+      <td>Male</td>
+      <td>4</td>
+      <td>0</td>
+      <td>0</td>
+      <td>No</td>
+      <td>children</td>
+      <td>Rural</td>
+      <td>90.42</td>
+      <td>16.2</td>
+      <td>Unknown</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="7">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb142"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 나이대별 bmi 평균 -&gt; 딕셔너리로</span></span>
+<span id="cb142-2"><a href="#cb142-2" aria-hidden="true" tabindex="-1"></a>age_bmi <span class="op">=</span> { i:v <span class="cf">for</span> i, v <span class="kw">in</span> <span class="bu">enumerate</span>(df.groupby(<span class="st">'age_category'</span>).mean()[<span class="st">'bmi'</span>])}</span>
+<span id="cb142-3"><a href="#cb142-3" aria-hidden="true" tabindex="-1"></a>age_bmi</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>{0: 18.96078431372549,
+ 1: 24.477227722772277,
+ 2: 28.052747252747256,
+ 3: 31.751111111111108,
+ 4: 31.427096774193547,
+ 5: 31.894086021505377,
+ 6: 31.615873015873014,
+ 7: 30.44772727272727,
+ 8: 28.566666666666666}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="8">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb144"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a><span class="co"># bmi 결측치를 나이대별 bmi 평균으로 채우기</span></span>
+<span id="cb144-2"><a href="#cb144-2" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'bmi'</span>].isna(), <span class="st">'bmi'</span>] <span class="op">=</span> df.loc[df[<span class="st">'bmi'</span>].isna(), <span class="st">'age_category'</span>].<span class="bu">map</span>(age_bmi)</span>
+<span id="cb144-3"><a href="#cb144-3" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'bmi'</span>].isna().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb146"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'</span><span class="sc">{:.3f}</span><span class="st">'</span>.<span class="bu">format</span>(df[<span class="st">'bmi'</span>].mean()))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>29.263</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>:::{.callout<span class="op">-</span>important}</span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>avg_glucose_level 컬럼의 값이 <span class="dv">200</span><span class="er">이상인</span> 데이터를 모두 <span class="dv">199</span><span class="er">로</span> 변경하고 stroke값이 <span class="dv">1</span><span class="er">인</span> 데이터의 avg_glucose_level값의 평균을 소수점이하 <span class="dv">3</span><span class="er">자리</span> 까지 구하여라</span>
+<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell" data-execution_count="10">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'avg_glucose_level'</span>] <span class="op">&gt;=</span> <span class="dv">200</span>, <span class="st">'avg_glucose_level'</span>] <span class="op">=</span> <span class="dv">199</span></span>
+<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(df.loc[df[<span class="st">'stroke'</span>] <span class="op">==</span> <span class="dv">1</span>, <span class="st">'avg_glucose_level'</span>].mean(), <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>125.188</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Attack컬럼의 값을 기준으로 내림차순정렬 했을때 상위 400위까지 포켓몬들과 401~800위까지의 포켓몬들에서 전설포켓몬(Legendary컬럼)의 숫자 차이는? [출처] 20주차 예상문제 (실기1유형 10문제) (이기적 스터디 카페_컴활,정보처리,워드,데이터자격증) | 작성자 빅분기 실기조교</p>
+</div>
+</div>
+<div class="cell" data-execution_count="12">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/Datamanim/datarepo/main/pok/Pokemon.csv'</span></span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, index_col<span class="op">=</span>[<span class="dv">0</span>])</span>
+<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="12">
+
+<div>
+
+<table class="dataframe table table-sm table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th>Name</th>
+      <th>Type 1</th>
+      <th>Type 2</th>
+      <th>Total</th>
+      <th>HP</th>
+      <th>Attack</th>
+      <th>Defense</th>
+      <th>Sp. Atk</th>
+      <th>Sp. Def</th>
+      <th>Speed</th>
+      <th>Generation</th>
+      <th>Legendary</th>
+    </tr>
+    <tr>
+      <th>#</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>Bulbasaur</td>
+      <td>Grass</td>
+      <td>Poison</td>
+      <td>318</td>
+      <td>45</td>
+      <td>49</td>
+      <td>49</td>
+      <td>65</td>
+      <td>65</td>
+      <td>45</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Ivysaur</td>
+      <td>Grass</td>
+      <td>Poison</td>
+      <td>405</td>
+      <td>60</td>
+      <td>62</td>
+      <td>63</td>
+      <td>80</td>
+      <td>80</td>
+      <td>60</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Venusaur</td>
+      <td>Grass</td>
+      <td>Poison</td>
+      <td>525</td>
+      <td>80</td>
+      <td>82</td>
+      <td>83</td>
+      <td>100</td>
+      <td>100</td>
+      <td>80</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>VenusaurMega Venusaur</td>
+      <td>Grass</td>
+      <td>Poison</td>
+      <td>625</td>
+      <td>80</td>
+      <td>100</td>
+      <td>123</td>
+      <td>122</td>
+      <td>120</td>
+      <td>80</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Charmander</td>
+      <td>Fire</td>
+      <td>NaN</td>
+      <td>309</td>
+      <td>39</td>
+      <td>52</td>
+      <td>43</td>
+      <td>60</td>
+      <td>50</td>
+      <td>65</td>
+      <td>1</td>
+      <td>False</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="23">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>(df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[:<span class="dv">400</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>() </span>
+<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[<span class="dv">401</span>:<span class="dv">800</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>57</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Type 1 컬럼의 종류에 따른 Total 컬럼의 평균값을 내림차순 정렬했을때 상위 3번째 Type 1은 무엇인가? [출처] 20주차 예상문제 (실기1유형 10문제) (이기적 스터디 카페_컴활,정보처리,워드,데이터자격증) | 작성자 빅분기 실기조교</p>
+</div>
+</div>
+<div class="cell" data-execution_count="54">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Type 1'</span>).mean()[<span class="st">'Total'</span>].nlargest(<span class="dv">3</span>).index[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="54">
+<pre><code>'Flying'</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="53">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'Type 1'</span>]).mean()[<span class="st">'Total'</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).index[<span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>'Flying'</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>결측치가 존재하는 행을 모두 지운 후 처음부터 순서대로 60% 데이터를 추출하여 Defense컬럼의 1분위수를 구하여라 [출처] 20주차 예상문제 (실기1유형 10문제) (이기적 스터디 카페_컴활,정보처리,워드,데이터자격증) | 작성자 빅분기 실기조교</p>
+</div>
+</div>
+<div class="cell" data-execution_count="57">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.dropna(how<span class="op">=</span><span class="st">'any'</span>).reset_index()</span>
+<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>df2.isna().<span class="bu">sum</span>().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="57">
+<pre><code>0</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="70">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df2.loc[:<span class="bu">int</span>(<span class="bu">len</span>(df2) <span class="op">*</span> <span class="fl">0.6</span>), <span class="st">'Defense'</span>].quantile(<span class="fl">0.25</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>50.0</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Type 1 컬럼의 속성이 Fire인 포켓몬들의 Attack의 평균이상인 Water속성의 포켓몬 수를 구하여라 [출처] 20주차 예상문제 (실기1유형 10문제) (이기적 스터디 카페_컴활,정보처리,워드,데이터자격증) | 작성자 빅분기 실기조교</p>
+</div>
+</div>
+<div class="cell" data-execution_count="76">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>(df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Water'</span>, <span class="st">'Attack'</span>] <span class="op">&gt;=</span> df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Fire'</span>, <span class="st">'Attack'</span>].mean()).<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="76">
+<pre><code>37</code></pre>
+</div>
+</div>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>각 세대 중(Generation 컬럼)의 Speed와 Defense 컬럼의 차이(절댓값)이 가장 큰 세대는? [출처] 20주차 예상문제 (실기1유형 10문제) (이기적 스터디 카페_컴활,정보처리,워드,데이터자격증) | 작성자 빅분기 실기조교</p>
+</div>
+</div>
+<div class="cell" data-execution_count="85">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'diff'</span>] <span class="op">=</span> <span class="bu">abs</span>(df[<span class="st">'Speed'</span>] <span class="op">-</span> df[<span class="st">'Defense'</span>])</span>
+<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Generation'</span>)[<span class="st">'diff'</span>].<span class="bu">max</span>().nlargest(<span class="dv">1</span>).index[<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="85">
+<pre><code>2</code></pre>
+</div>
+</div>
 
 
 </section>
