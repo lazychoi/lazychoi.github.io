@@ -124,7 +124,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -223,6 +222,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </ul></li>
   <li><a href="#pip-list" id="toc-pip-list" class="nav-link" data-scroll-target="#pip-list">pip list</a></li>
   <li><a href="#프로그램을-설치한-컨테이너를-이미지로-저장" id="toc-프로그램을-설치한-컨테이너를-이미지로-저장" class="nav-link" data-scroll-target="#프로그램을-설치한-컨테이너를-이미지로-저장">프로그램을 설치한 컨테이너를 이미지로 저장</a></li>
+  <li><a href="#mlp.py-알고리즘" id="toc-mlp.py-알고리즘" class="nav-link" data-scroll-target="#mlp.py-알고리즘">mlp.py 알고리즘</a></li>
+  <li><a href="#도커에서-파일-실행-중-killed-되는-이유" id="toc-도커에서-파일-실행-중-killed-되는-이유" class="nav-link" data-scroll-target="#도커에서-파일-실행-중-killed-되는-이유">도커에서 파일 실행 중 Killed 되는 이유</a></li>
   </ul>
 </nav>
 </nav>
@@ -278,19 +279,18 @@ RUN pip install konlpy</code></pre>
 <ul>
 <li>위키피디아 데이터 다운로드 : https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2</li>
 <li>내려받은 파일을 bzip2 명령어로 압축 풀기(bzip2 -d kowiki-latest-pages-articles.xml.bz2) 속도가 느려 맥 파인더에서 압축 풂</li>
-<li>루비로 만들어진 wp2txt 도구로 위키피티아 xml 데이터를 텍스로 변환
+<li>루비로 만들어진 wp2txt 도구로 위키피티아 xml 데이터를 텍스로 변환</li>
+<li>도커에 루비 설치</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">apt-get</span> install <span class="at">-y</span> git</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/sstephenson/rbenv.git ~/.rbenv</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export PATH="$HOME/.rbenv/bin:$PATH"'</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'eval "$(rbenv init -)"'</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> ~/.bash_profile</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">rbenv</span> install 2.4.1 <span class="op">&lt;</span>- 시간이 오래 걸린다. 기다려라.</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">rbenv</span> global 2.4.1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ul>
-<li>도커에 루비 설치
-<ul>
-<li>apt-get install -y git</li>
-<li>git clone https://github.com/sstephenson/rbenv.git ~/.rbenv</li>
-<li>git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build</li>
-<li>echo ‘export PATH=“<span class="math inline">\(HOME/.rbenv/bin:\)</span>PATH”’ &gt;&gt; ~/.bash_profile</li>
-<li>echo ‘eval “$(rbenv init -)”’ &gt;&gt; ~/.bash_profile</li>
-<li>source ~/.bash_profile</li>
-<li>rbenv install 2.4.1 &lt;- 시간이 오래 걸린다. 기다려라.</li>
-<li>rbenv global 2.4.1</li>
-</ul></li>
 <li>wp2txt 설치
 <ul>
 <li>gem install wp2txt</li>
@@ -300,7 +300,6 @@ RUN pip install konlpy</code></pre>
 <li>설치된 루비 버전 확인: rbenv versions</li>
 <li>디폴트 루비 버전 설정: rbenv global 2.7.6</li>
 <li>다시 실행 gem install wp2txt</li>
-</ul></li>
 </ul></li>
 </ul>
 </section>
@@ -394,6 +393,49 @@ RUN pip install konlpy</code></pre>
 <h2 class="anchored" data-anchor-id="프로그램을-설치한-컨테이너를-이미지로-저장">프로그램을 설치한 컨테이너를 이미지로 저장</h2>
 <p>docker commit &lt;컨테이너ID&gt; &lt;이름&gt;:&lt;태그&gt;</p>
 <p><code>docker commit 5aed94b1a094 ml_learn:init</code></p>
+</section>
+<section id="mlp.py-알고리즘" class="level2">
+<h2 class="anchored" data-anchor-id="mlp.py-알고리즘">mlp.py 알고리즘</h2>
+<ul>
+<li><code>glob.glob()</code> 메서드는 조건에 맞는 파일명을 리스트 형식으로 반환한다. 많은 파일을 다룰 때 사용하며 특정한 패턴이나 확장자를 가진 파일들의 경로나 이름을 반환한다. ‘?’, ’*’ 같은 와일드 카드를 지원한다.</li>
+<li><code>json.load()</code> : json -&gt; python 객체. <code>json.dump()</code> : python 객체 -&gt; json</li>
+</ul>
+<p>word_dic = { ‘단어’: 숫자아이디 }</p>
+<ol type="1">
+<li>경로에 word_dic.json 파일이 있으면 파일 불러와 word_dic 변수에 저장</li>
+</ol>
+<ul>
+<li>없으면 register_dic() 함수 실행
+<ul>
+<li>register_dic() 함수는 wakati 파일을 불러와 filt_to_ids() 함수 호출해 매개변수로 파일 전달
+<ul>
+<li>file_to_ids() 함수는 전달받은 파일을 열어 한 줄씩 읽으며 text_to_idx() 함수 호출해 매개변수로 전달
+<ul>
+<li>text_to_idx() 함수는
+<ol type="1">
+<li>양쪽의 공백을 제거한 뒤 공백으로 단어를 분리하여 words 변수에 저장</li>
+<li>words 리스트 변수의 단어 하나하나를 돌며</li>
+<li>단어가 word_dic 집합변수 안에 없으면 단어를 word_dic 집합에 추가하고 _MAX 값을 입력한다. &lt;- 단어 id 해당. 새로운 단어가 들어올 때마다 1씩 증가된 숫자를 대입한다.</li>
+<li>_MAX 값은 1증가하고</li>
+<li>result 변수에 단어를 추가한다.</li>
+</ol></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+<p>테스트 목적의 소규모 데이터 만들기 -&gt; data-mini.json</p>
+<ol type="1">
+<li>count_freq(가져올 단어 개수)</li>
+<li>os.listdir(‘폴더명’) : 폴더 안의 파일명과 폴더명을 리스트로 반환한다.</li>
+</ol>
+</section>
+<section id="도커에서-파일-실행-중-killed-되는-이유" class="level2">
+<h2 class="anchored" data-anchor-id="도커에서-파일-실행-중-killed-되는-이유">도커에서 파일 실행 중 Killed 되는 이유</h2>
+<p>The container has consumed too much memory, and has been killed by the host OS: If the operating system detects that it’s running out of memory, it might start killing processes to free up memory. If a container is using a lot of memory or resources, it might be killed by the OS. You can set hard memory limits on your container by using the -m switch with docker run.</p>
+<p>❯ docker run -it -v ~/chatbot:/chatbot -m 50m –oom-kill-disable text_mining:0.2 bash WARNING: Your kernel does not support OomKillDisable. OomKillDisable discarded.</p>
+<p>프로세스를 죽이지 못하도록 하는 옵션을 커널이 지원하지 않는다.</p>
+<p>if it runs out of GPU memory, the OOM message will be very verbose (and logged from tensorflow) in the process. It won’t die silently. If it’s RAM exhaustion, it’s the kernel killing the process and that will be silent (you’ll have logs in dmesg to confirm that it was a RAM OOM)</p>
+<p>=&gt; 노트북 메모리 전체 용량인 8G를 다 주고 CPU도 6으로 올리니 중간에 죽지 않는다. 물론 시간은 오래 걸렸다.</p>
 
 
 </section>

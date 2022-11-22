@@ -823,7 +823,7 @@
     "href": "blog/posts/22-11-21.html#word2vec-문장-벡터화",
     "title": "22-11-21(월)",
     "section": "Word2Vec 문장 벡터화",
-    "text": "Word2Vec 문장 벡터화\nGensim 설치 -> 파이썬 3.8 버전에서는 에러가 나지 않는다.\n\n위키피디아 한국어 버전을 사전으로 사용\n\n위키피디아 데이터 다운로드 : https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2\n내려받은 파일을 bzip2 명령어로 압축 풀기(bzip2 -d kowiki-latest-pages-articles.xml.bz2) 속도가 느려 맥 파인더에서 압축 풂\n루비로 만들어진 wp2txt 도구로 위키피티아 xml 데이터를 텍스로 변환\n\n도커에 루비 설치\n\napt-get install -y git\ngit clone https://github.com/sstephenson/rbenv.git ~/.rbenv\ngit clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build\necho ‘export PATH=“\\(HOME/.rbenv/bin:\\)PATH”’ >> ~/.bash_profile\necho ‘eval “$(rbenv init -)”’ >> ~/.bash_profile\nsource ~/.bash_profile\nrbenv install 2.4.1 <- 시간이 오래 걸린다. 기다려라.\nrbenv global 2.4.1\n\nwp2txt 설치\n\ngem install wp2txt\nruby 2.5버전 이상이 필요하다는 메시지 뜸\n설치 가능한 루비 버전 확인: rbenv install -l\n루비 2.7.6 버전 설치: rbenv install 2.7.6\n설치된 루비 버전 확인: rbenv versions\n디폴트 루비 버전 설정: rbenv global 2.7.6\n다시 실행 gem install wp2txt"
+    "text": "Word2Vec 문장 벡터화\nGensim 설치 -> 파이썬 3.8 버전에서는 에러가 나지 않는다.\n\n위키피디아 한국어 버전을 사전으로 사용\n\n위키피디아 데이터 다운로드 : https://dumps.wikimedia.org/kowiki/latest/kowiki-latest-pages-articles.xml.bz2\n내려받은 파일을 bzip2 명령어로 압축 풀기(bzip2 -d kowiki-latest-pages-articles.xml.bz2) 속도가 느려 맥 파인더에서 압축 풂\n루비로 만들어진 wp2txt 도구로 위키피티아 xml 데이터를 텍스로 변환\n도커에 루비 설치\n\napt-get install -y git\ngit clone https://github.com/sstephenson/rbenv.git ~/.rbenv\ngit clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build\necho 'export PATH=\"$HOME/.rbenv/bin:$PATH\"' >> ~/.bash_profile\necho 'eval \"$(rbenv init -)\"' >> ~/.bash_profile\nsource ~/.bash_profile\nrbenv install 2.4.1 <- 시간이 오래 걸린다. 기다려라.\nrbenv global 2.4.1\n\nwp2txt 설치\n\ngem install wp2txt\nruby 2.5버전 이상이 필요하다는 메시지 뜸\n설치 가능한 루비 버전 확인: rbenv install -l\n루비 2.7.6 버전 설치: rbenv install 2.7.6\n설치된 루비 버전 확인: rbenv versions\n디폴트 루비 버전 설정: rbenv global 2.7.6\n다시 실행 gem install wp2txt"
   },
   {
     "objectID": "blog/posts/22-11-21.html#pip-list",
@@ -838,6 +838,20 @@
     "title": "22-11-21(월)",
     "section": "프로그램을 설치한 컨테이너를 이미지로 저장",
     "text": "프로그램을 설치한 컨테이너를 이미지로 저장\ndocker commit <컨테이너ID> <이름>:<태그>\ndocker commit 5aed94b1a094 ml_learn:init"
+  },
+  {
+    "objectID": "blog/posts/22-11-21.html#mlp.py-알고리즘",
+    "href": "blog/posts/22-11-21.html#mlp.py-알고리즘",
+    "title": "22-11-21(월)",
+    "section": "mlp.py 알고리즘",
+    "text": "mlp.py 알고리즘\n\nglob.glob() 메서드는 조건에 맞는 파일명을 리스트 형식으로 반환한다. 많은 파일을 다룰 때 사용하며 특정한 패턴이나 확장자를 가진 파일들의 경로나 이름을 반환한다. ‘?’, ’*’ 같은 와일드 카드를 지원한다.\njson.load() : json -> python 객체. json.dump() : python 객체 -> json\n\nword_dic = { ‘단어’: 숫자아이디 }\n\n경로에 word_dic.json 파일이 있으면 파일 불러와 word_dic 변수에 저장\n\n\n없으면 register_dic() 함수 실행\n\nregister_dic() 함수는 wakati 파일을 불러와 filt_to_ids() 함수 호출해 매개변수로 파일 전달\n\nfile_to_ids() 함수는 전달받은 파일을 열어 한 줄씩 읽으며 text_to_idx() 함수 호출해 매개변수로 전달\n\ntext_to_idx() 함수는\n\n양쪽의 공백을 제거한 뒤 공백으로 단어를 분리하여 words 변수에 저장\nwords 리스트 변수의 단어 하나하나를 돌며\n단어가 word_dic 집합변수 안에 없으면 단어를 word_dic 집합에 추가하고 _MAX 값을 입력한다. <- 단어 id 해당. 새로운 단어가 들어올 때마다 1씩 증가된 숫자를 대입한다.\n_MAX 값은 1증가하고\nresult 변수에 단어를 추가한다.\n\n\n\n\n\n테스트 목적의 소규모 데이터 만들기 -> data-mini.json\n\ncount_freq(가져올 단어 개수)\nos.listdir(‘폴더명’) : 폴더 안의 파일명과 폴더명을 리스트로 반환한다."
+  },
+  {
+    "objectID": "blog/posts/22-11-21.html#도커에서-파일-실행-중-killed-되는-이유",
+    "href": "blog/posts/22-11-21.html#도커에서-파일-실행-중-killed-되는-이유",
+    "title": "22-11-21(월)",
+    "section": "도커에서 파일 실행 중 Killed 되는 이유",
+    "text": "도커에서 파일 실행 중 Killed 되는 이유\nThe container has consumed too much memory, and has been killed by the host OS: If the operating system detects that it’s running out of memory, it might start killing processes to free up memory. If a container is using a lot of memory or resources, it might be killed by the OS. You can set hard memory limits on your container by using the -m switch with docker run.\n❯ docker run -it -v ~/chatbot:/chatbot -m 50m –oom-kill-disable text_mining:0.2 bash WARNING: Your kernel does not support OomKillDisable. OomKillDisable discarded.\n프로세스를 죽이지 못하도록 하는 옵션을 커널이 지원하지 않는다.\nif it runs out of GPU memory, the OOM message will be very verbose (and logged from tensorflow) in the process. It won’t die silently. If it’s RAM exhaustion, it’s the kernel killing the process and that will be silent (you’ll have logs in dmesg to confirm that it was a RAM OOM)\n=> 노트북 메모리 전체 용량인 8G를 다 주고 CPU도 6으로 올리니 중간에 죽지 않는다. 물론 시간은 오래 걸렸다."
   },
   {
     "objectID": "blog/posts/22-11-15.html",
@@ -1440,6 +1454,34 @@
     "title": "22-10-09(일)",
     "section": "",
     "text": "이틀 내내 obsidian을 github pages에 올릴려고 삽질했다. 하지만 금요일에 구현한 방법으로 되돌아왔다. 이틀 동안의 고생이 성과 없이 끝났지만, mkdocs가 어떻게 작동하는지 조금 알았다.\n삽질한 이유는 obsidian의 dataview 플러그인 출력화면이 깃허브에 보이지 않고 소스가 그대로 출력됐기 때문이다. 하루를 꼬박 검색한 끝에 dataview 출력화면을 깃허브에 올리려면 obsidian에서 지원을 해야 한다는 걸 알았다. 그 기능을 구현한 플러그인이 Github Publisher다.\n요약하면, obsidian에서 출력 화면을 깃허브에 올리면 github action가 작동해 웹문서로 변환한다. 깃허브 액션은 obsidian-mkdocs-publisher-template 을 이용한다. 옵시디언과 깃허브 두 군데 모두 환경설정을 해야 한다.\n하지만 작동원리를 모르는 상태에서 부실한 설명서만 읽고 원하는 대로 만들기란 쉽지 않았다. 결국 dataview는 출력했지만 링크는 작동하지 않았다. 여기에 더 매달리다가는 지금 할 일에 지장이 되어 멈추기로 했다.\n언젠가 Typescript를 공부해 플러그인을 만들겠다."
+  },
+  {
+    "objectID": "blog/posts/22-11-22.html",
+    "href": "blog/posts/22-11-22.html",
+    "title": "22-11-22(화)",
+    "section": "",
+    "text": "위키피디아 한국어 버전 파일 xml\nwp2txt 사용하여 “xml -> txt” using wp2txt -i kowiki-latest-pages-articles.xml (컨테이너를 재실행하여 wp2txt를 인식하지 못할 경우 source ~/.bash_profile 하여 bash를 재실행한다.) m1 맥북에어 20분 정도 소요\n423개의 xml 파일과 txt 파일이 만들어짐 -> txt 파일을 하나로 합침 cat kowiki-latest-*.txt > kowiki.txt\n사용된 단어 추출(형태소 분석) “txt -> wakati” using wiki-wakati.py 반나절 정도 소요\n\n굳이 wakati 파일로 저장할 필요가 없을 것 같다. 그냥 텍스트 문서다. 분해된 형태소가 공백으로 분리되어 있다.\n\nword2vec “wakati -> model” using wiki-mkdic.py\n\n입력 형식은\n\n\nword2vec 모델 활용\n\nfrom gensim.models import Word2Vec\nmodel = Word2Vec.load(‘wiki.model’)\n유사어 조사: model.wv.most_similar(positive=[‘단어’, ‘단어’], negative=[‘단어’, ‘단어’])\n단어 벡터값 확인: model.wv[‘단어’]"
+  },
+  {
+    "objectID": "blog/posts/22-11-22.html#dockerfile-작성해-도커-이미지-만들기",
+    "href": "blog/posts/22-11-22.html#dockerfile-작성해-도커-이미지-만들기",
+    "title": "22-11-22(화)",
+    "section": "Dockerfile 작성해 도커 이미지 만들기",
+    "text": "Dockerfile 작성해 도커 이미지 만들기\nFROM python:3.8\nENV JAVA_HOME /usr/lib/jvm/java-1.7-openjdk/jre\nRUN apt-get update && apt-get install -y g++ default-jdk\nCOPY requirements.txt /root\nRUN pip install -r /root/requirements.txt\n\n# Install packages for building ruby\nRUN apt-get update\nRUN apt-get install -y --force-yes build-essential curl git\nRUN apt-get install -y --force-yes zlib1g-dev libssl-dev libreadline-dev libyaml-dev libxml2-dev libxslt-dev\nRUN apt-get clean\n\n# Install rbenv and ruby-build\nRUN git clone https://github.com/sstephenson/rbenv.git /root/.rbenv\nRUN git clone https://github.com/sstephenson/ruby-build.git /root/.rbenv/plugins/ruby-build\nRUN /root/.rbenv/plugins/ruby-build/install.sh\nENV PATH /root/.rbenv/bin:$PATH\nRUN echo 'eval \"$(rbenv init -)\"' >> /etc/profile.d/rbenv.sh # or /etc/profile\nRUN echo 'eval \"$(rbenv init -)\"' >> .bashrc\n\nCMD source ~/.bashrc\nRUN rbenv install 2.7.6\nRUN rbenv global 2.7.6\nCMD gem install wp2txt\nruby 설치에 애를 먹었다. RUN 에서 에러가 났던 source, gem 명령어가 CMD에서는 에러가 나지 않았다.\nrequirements.txt 파일\nbeautifulsoup4==4.11.1\ngensim==4.2.0\nJPype1==1.4.1\nkonlpy==0.6.0\nlxml==4.9.1\nnumpy==1.23.5\npandas==1.5.1\n도커 이미지 생성 명령어\ndocker build --tag text_mining:0.1 .\ndocker run -it -v ~/chatbot/:/chatbot text_mining:0.1 bash"
+  },
+  {
+    "objectID": "blog/posts/22-11-22.html#mlp로-텍스트-분류",
+    "href": "blog/posts/22-11-22.html#mlp로-텍스트-분류",
+    "title": "22-11-22(화)",
+    "section": "MLP로 텍스트 분류",
+    "text": "MLP로 텍스트 분류\n\ntensorflow 설치: pip install tensorflow\nsklearn 설치: pip install scikit-learn\n\n에러 발생: The file to load file system plugin from does not exist.: ’/usr/local/lib/python3.8/site-packages/tensorflow_io/python/ops/libtensorflow_io_plugins.so\n-> pip install tensorflow_io\n에러 발생: W tensorflow/tsl/framework/cpu_allocator_impl.cc:82] Allocation of 116082688 exceeds 10% of free system memory. -> docker Dashboard >> Preferences >> Resources >> Advanced >> Swap 4G로 확장\nDeprecationWarning: KerasClassifier is deprecated, use Sci-Keras (https://github.com/adriangb/scikeras) instead. See https://www.adriangb.com/scikeras/stable/migration.html for help migrating. -> pip install scikeras[tensorflow]\nscikeras 문서\n\n\n\n\n\n\n입력 shpae\n\n\n\n\nMLP : X(2차원), Y(2차원)\nDNN : 1차원 배열\nCNN : 3차원 배열\n\n\n\n다중 분류일 경우에는 train 클래스를 원핫인코딩하여 다중 컬럼이 된다.  -> predict 할 때는 argmax(axis=1)을 사용해 가장 큰 값을 뽑아 레이블로 결정한다.\ntest 클래스는 predict 값이 1열이기 때문에 원핫인코딩을 할 필요 없다.\nimport numpy as np\nimport tensorflow as tf\nfrom tensorflow.keras import Sequential\nfrom tensorflow.keras.layers import Dense, Dropout, Activation\nfrom scikeras.wrappers import KerasClassifier\nfrom tensorflow.keras.utils import to_categorical \nfrom sklearn.model_selection import train_test_split\nfrom sklearn.metrics import accuracy_score, classification_report\nimport json\n\nprint('텐서플로 버전: ', tf.__version__)\n\nmax_words = 56681\nnb_classes = 6 \n\nbatch_size = 64 \nnb_epoch = 10\n\n# MLP 모델 생성\ndef build_model():\n    model = Sequential()\n    model.add(Dense(512, input_dim=max_words))\n    model.add(Activation('relu'))\n    model.add(Dropout(0.5))\n    model.add(Dense(nb_classes))\n    model.add(Activation('softmax'))\n    model.compile(loss='categorical_crossentropy',\n                  optimizer='adam',\n                  metrics=['acc'])\n    return model\n\n# 데이터 로드\ndata = json.load(open('./data/data-mini.json'))\n# data = json.load(open('./data/data.json'))\nX = np.array(data['X']) # 텍스트 데이터\nY = np.array(data['Y']) # 카테고리 데이터 (132,) 2차원 배열\n\nprint('X shape: ', X.shape)\nprint('y 클래스=', np.unique(Y))\nprint('y shape: ', Y.shape)\n\n# 학습\nX_train, X_test, Y_train, Y_test = train_test_split(X, Y)\nY_train = to_categorical(Y_train, nb_classes) # 6열로 원핫 인코딩\nprint('Y_train shape=', Y_train.shape) # Y_test는 1열 그대로 사용\n\nmodel = KerasClassifier(model=build_model,\n                        epochs=nb_epoch,\n                        batch_size=batch_size)\nmodel.fit(X_train, Y_train)\n\n# 예측\npred = model.predict(X_test).argmax(axis=1) # 예측값이 6열로 반환되어 가장 큰 값 1개만 출력\nprint('pred shape=', pred.shape) \nprint('pred[0]=', pred[0])\n\nac_score = accuracy_score(Y_test, pred)\ncl_report = classification_report(Y_test, pred)\nprint('정답률: ', ac_score)\nprint('리포트:\\n', cl_report)"
+  },
+  {
+    "objectID": "blog/posts/22-11-22.html#vim-여러-줄-주석-처리",
+    "href": "blog/posts/22-11-22.html#vim-여러-줄-주석-처리",
+    "title": "22-11-22(화)",
+    "section": "vim 여러 줄 주석 처리",
+    "text": "vim 여러 줄 주석 처리\n\n주석 설정: visual 모드로 선택 후 :norm i# -> 삽입모드 후 #\n주석 해제: visual 모드로 선택 후 :norm 1x -> 1개 문자 삭제"
   },
   {
     "objectID": "blog/posts/22-10-18.html",
