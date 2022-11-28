@@ -2,6 +2,7 @@
   {
     "listing": "/project.html",
     "items": [
+      "/project/2211_recommend.html",
       "/project/2210_pet_choropleth.html",
       "/project/2209_mlops.html",
       "/project/2205_president_stock.html",
@@ -79,6 +80,7 @@
     "listing": "/blog/blog.html",
     "items": [
       "/blog/posts/study_konlpy.html",
+      "/blog/posts/22-11-28.html",
       "/blog/posts/22-11-27.html",
       "/blog/posts/22-11-26.html",
       "/blog/posts/22-11-25.html",

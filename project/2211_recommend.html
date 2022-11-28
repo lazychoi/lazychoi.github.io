@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-10-27">
+
+<title>👀 - 독산 미니 프로젝트 - 유사 도서 추천 시스템, 챗봇</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#유사-도서-추천-시스템" id="toc-유사-도서-추천-시스템" class="nav-link active" data-scroll-target="#유사-도서-추천-시스템">유사 도서 추천 시스템</a>
+  <ul class="collapse">
+  <li><a href="#streamlit에서-앱-작동" id="toc-streamlit에서-앱-작동" class="nav-link" data-scroll-target="#streamlit에서-앱-작동">streamlit에서 앱 작동</a></li>
+  </ul></li>
+  <li><a href="#마르코프-체인을-이용한-챗봇-엔진-만들기" id="toc-마르코프-체인을-이용한-챗봇-엔진-만들기" class="nav-link" data-scroll-target="#마르코프-체인을-이용한-챗봇-엔진-만들기">마르코프 체인을 이용한 챗봇 엔진 만들기</a></li>
+  <li><a href="#데이터" id="toc-데이터" class="nav-link" data-scroll-target="#데이터">데이터</a></li>
+  <li><a href="#문장-생성" id="toc-문장-생성" class="nav-link" data-scroll-target="#문장-생성">문장 생성</a></li>
+  <li><a href="#word2vec-이용-사용자가-입력한-단어와-유사한-단어로-문장-생성" id="toc-word2vec-이용-사용자가-입력한-단어와-유사한-단어로-문장-생성" class="nav-link" data-scroll-target="#word2vec-이용-사용자가-입력한-단어와-유사한-단어로-문장-생성">word2vec 이용 사용자가 입력한 단어와 유사한 단어로 문장 생성</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">독산 미니 프로젝트 - 유사 도서 추천 시스템, 챗봇</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">공개</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 27, 2022</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="유사-도서-추천-시스템" class="level2">
+<h2 class="anchored" data-anchor-id="유사-도서-추천-시스템">유사 도서 추천 시스템</h2>
+<p><a href="https://nammtaeehyeonn-reco-recommend-utwo4b.streamlit.app/" target="_blank">앱 시연</a></p>
+<ul>
+<li>책 제목을 입력하면 내용이 유사한 도서 5권 추천하는 앱</li>
+</ul>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc_similarity.py</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> string <span class="im">import</span> punctuation</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics.pairwise <span class="im">import</span> cosine_similarity</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'data/book.csv'</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 제 컴퓨터로는 데이터 개수를 줄여야 돌아갑니다...</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>df1 <span class="op">=</span> df.head(<span class="dv">3000</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>description <span class="op">=</span> df1[<span class="st">'description'</span>]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># TF - IDF 기법으로 벡터화</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 20000개의 줄거리는 약 80000개의 단어로 이루어져있다. (전처리 완료돼서 많이 줄었다.)</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>tf_idf <span class="op">=</span> TfidfVectorizer()</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>tf_idf_matrix <span class="op">=</span> tf_idf.fit_transform(description)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'TF-IDF 행렬의 크기(shape) :'</span>,tf_idf_matrix.shape)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 전체 유사도 계산</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>cos_sim <span class="op">=</span> cosine_similarity(tf_idf_matrix, tf_idf_matrix)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'코사인 유사도 연산 결과 :'</span>,cos_sim.shape)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>np.save(<span class="st">'data/sim.npy'</span>, cos_sim)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>TF-IDF 행렬의 크기(shape) : (2999, 30145)
+코사인 유사도 연산 결과 : (2999, 2999)</code></pre>
+</div>
+</div>
+<div class="cell">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recommend.py</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> streamlit <span class="im">as</span> st</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> Recommend(title, cos_sim):</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    title_idx <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">zip</span>(df[<span class="st">'Title'</span>], df.index))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 도서 제목 입력하면 인덱스를 리턴</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> title_idx[title]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 도서 줄거리 유사도 전부 가져오기</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    sim <span class="op">=</span> <span class="bu">list</span>(<span class="bu">enumerate</span>(cos_sim[idx]))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 유사도에 따라 정렬하기</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    sim <span class="op">=</span> <span class="bu">sorted</span>(sim, key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 유사도 탐5 가져오기</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    sim <span class="op">=</span> sim[<span class="dv">1</span>:<span class="dv">6</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 유사도 탑5 인덱스 가져오기</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    rec_idx <span class="op">=</span> [idx[<span class="dv">0</span>] <span class="cf">for</span> idx <span class="kw">in</span> sim]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 유사도 탑10 제목 가져오기</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(sim)                       # (인덱스, 유사도)</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df.iloc[rec_idx]</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'book.csv'</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>cos_sim <span class="op">=</span> np.load(<span class="st">'sim.npy'</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># streamlit</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>st.title(<span class="st">'독서는 마음의 양식'</span>)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>title <span class="op">=</span> st.text_input(<span class="st">"책 제목을 입력해주세요"</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> title:</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    ans <span class="op">=</span> Recommend(title, cos_sim)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    ans.reset_index(drop <span class="op">=</span> <span class="va">True</span>, inplace <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>):</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>        st.subheader(ans.Title[i])    <span class="co"># 제목</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>        col1, col2 <span class="op">=</span> st.columns(<span class="dv">2</span>)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> col1:</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>            st.image(ans.image[i], width <span class="op">=</span> <span class="dv">200</span>)  <span class="co"># 책 표지</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> col2:</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            st.write(ans.description[i][:<span class="dv">400</span>] <span class="op">+</span> <span class="st">"   ..."</span>)  <span class="co"># 책 내용</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        st.header(<span class="st">""</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<section id="streamlit에서-앱-작동" class="level3">
+<h3 class="anchored" data-anchor-id="streamlit에서-앱-작동">streamlit에서 앱 작동</h3>
+<p><img src="images/Screenshot2022-11-284.44.59.png" width="600px"></p>
+</section>
+</section>
+<section id="마르코프-체인을-이용한-챗봇-엔진-만들기" class="level2">
+<h2 class="anchored" data-anchor-id="마르코프-체인을-이용한-챗봇-엔진-만들기">마르코프 체인을 이용한 챗봇 엔진 만들기</h2>
+<p>“파이썬을 이용한 머신러닝, 딥러닝 실전 개발 입문(쿠지라 히코우즈쿠에)”의 6장에서 소개한 코드를 변경해서 구현했습니다. 마르코프 체인이 무엇인지에 대해서 설명할 능력은 없습니다. 궁금하면 여기☞ <a href="https://www.youtube.com/watch?v=Yh62wN2kMkA">유튜브 설명</a>를 눌러 보세요.</p>
+<p>제목에 마르코프 체인을 이용해서 챗봇 엔진을 만들었다고 했지만, 코드를 보면 확률을 사용하지 않고 랜덤하게 다음 단어를 선택했음을 알 수 있습니다. 구체적으로 이 책에서 제공한 코드가 어떻게 작동하는지 아래 2줄의 대화 데이터로 살펴보겠습니다.</p>
+<div class="cell" data-execution_count="1">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">'''</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">이번에 캘리포니아에 산불 난 거 보셨어요?</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">네 봤어요 ㅜㅜ 일주일 넘게 진압하고 있다는데 걱정이네요...</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<p>konlpy에서 제공하는 Okt 클래스를 이용해 형태소 분석을 했습니다. 다음은 형태소 분석한 데이터입니다.</p>
+<div class="cell" data-execution_count="2">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> konlpy.tag <span class="im">import</span> Okt</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>okt <span class="op">=</span> Okt()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>morph_list <span class="op">=</span> okt.pos(text)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(morph_list)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>[('\n', 'Foreign'), ('이번', 'Noun'), ('에', 'Josa'), ('캘리포니아', 'Noun'), ('에', 'Josa'), ('산불', 'Noun'), ('난', 'Noun'), ('거', 'Noun'), ('보셨어요', 'Verb'), ('?', 'Punctuation'), ('\n', 'Foreign'), ('네', 'Noun'), ('봤어요', 'Verb'), ('ㅜㅜ', 'KoreanParticle'), ('일주일', 'Noun'), ('넘게', 'Verb'), ('진압', 'Noun'), ('하고', 'Josa'), ('있다는데', 'Adjective'), ('걱정', 'Noun'), ('이네', 'Josa'), ('요', 'Noun'), ('...', 'Punctuation'), ('\n', 'Foreign')]</code></pre>
+</div>
+</div>
+<p>형태소 분석한 데이터 중에서 품사명은 제외하고 형태소만을 리스트로 추린 후 3 단어씩 묶었습니다. 이렇게 묶은 이유는 어떤 단어의 뒤에 오는 단어를 2개까지 확보하기 위해서입니다. 특정 단어 뒤에 올만한 단어를 2개까지 묶는 겁니다. ’@’는 문장의 처음을 표시하는 기호입니다.</p>
+<div class="cell" data-execution_count="3">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>word_list <span class="op">=</span> []</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> morph <span class="kw">in</span> morph_list:</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 마침표를 제외한 모든 구두점 제외</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> morph[<span class="dv">1</span>] <span class="kw">in</span> [<span class="st">'Punctuation'</span>]:</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        word_list.append(morph[<span class="dv">0</span>])</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> morph[<span class="dv">0</span>] <span class="op">==</span> <span class="st">'.'</span>:</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        word_list.append(morph[<span class="dv">0</span>])</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(word_list)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>['\n', '이번', '에', '캘리포니아', '에', '산불', '난', '거', '보셨어요', '\n', '네', '봤어요', 'ㅜㅜ', '일주일', '넘게', '진압', '하고', '있다는데', '걱정', '이네', '요', '\n']</code></pre>
+</div>
+</div>
+<p>이제 데이터를 만드는 마지막 단계입니다. 위에서 만든 리스트를 딕셔너리 자료형으로 바꿉니다. 이 딕셔너리가 문장을 만들 때 어떻게 사용되는지는 다음과 같습니다.</p>
+<p>예를 들어, 1. 사용자가 ‘이번(w1)’이라는 단어를 입력하면 ’이번’이라는 키에 해당하는 값을 찾습니다. (①) 2. 아래 딕셔너리에는 값이 ’에(w2)’ 하나뿐입니다. 따라서 ’이번’키의 값인 ’에’와 ’에’키의 값인 ’캘리포니아’를 반환합니다. 3. 다음은 부모로 ’에’키와 ’캘니포니아’키를 지닌 키를 찾습니다. 여기서는 ’에(w3)’네요. (②) 4. 지금까지 만들어진 문장은 ’이번 에 캘리포니아 에’입니다. 5. 이어서 부모 키가 ’캘리포니아’키와 ’에’키인 단어를 찾습니다. ’산불’이네요.(③) 6. 그러면 ’이번 에 캘리포니아 에 산불’이라는 문장이 만들어집니다. 7. 이런 과정을 반복해 문장을 만들고, 값으로 마침표나 물음표 같은 문장부호, 또는 공백이 나오면 문장 생성을 종료합니다.</p>
+<p>여기서는 설명을 위해 문장 2개로 만든 사전의 일부만 사용해서 자료와 똑같은 문장이 만들어졌지만, 많은 문장을 사용하면 하나의 단어키에 해당하는 값이 여러 개가 되고, 그 중에 하나를 랜덤하게 추출하는 것으로 코드가 작성되어 있어 데이터와 다른 문장이 생성됩니다. 랜덤하게 값에 해당하는 형태소를 가져오기 때문에 마르코프 체인의 확률은 구현되지 않은 것 같습니다. 그래서인지 문법이나 뜻이 어색한 문장이 종종 만들어집니다.</p>
+<pre><code>{
+  "@": {
+    "이번": {
+      "에": 1
+    },
+    "네": {
+      "봤어요": 1
+    }
+  },
+  "이번": {     &lt;------- ①
+    "에": {
+      "캘리포니아": 1
+    }
+  },
+  "에": {
+    "캘리포니아": {
+      "에": 1  &lt;------- ②
+    },
+    "산불": {
+      "난": 1
+    }
+  },
+  "캘리포니아": {
+    "에": {
+      "산불": 1  &lt;------- ③
+    }
+(이하 생략)</code></pre>
+<div class="cell" data-execution_count="4">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dic <span class="op">=</span> {}</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> [<span class="st">'@'</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, word <span class="kw">in</span> <span class="bu">enumerate</span>(word_list):</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="op">==</span> <span class="st">''</span> <span class="kw">or</span> word <span class="op">==</span><span class="st">'</span><span class="ch">\r\n</span><span class="st">'</span> <span class="kw">or</span> word <span class="op">==</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span>: <span class="cf">continue</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    tmp.append(word)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(tmp) <span class="op">&lt;</span> <span class="dv">3</span>: <span class="cf">continue</span>      <span class="co"># 3개 단어씩 묶기</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(tmp) <span class="op">&gt;</span> <span class="dv">3</span>: tmp <span class="op">=</span> tmp[<span class="dv">1</span>:] <span class="co"># tmp 리스트 길이가 3을 넘어가면 첫 번째 요소 제외</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># print(tmp)</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># sys.exit(0)</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    w1, w2, w3 <span class="op">=</span> tmp </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> w1 <span class="kw">in</span> dic: dic[w1] <span class="op">=</span> {}   <span class="co"># w1 단어가 사전에 없으면 등록</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> w2 <span class="kw">in</span> dic[w1]: dic[w1][w2] <span class="op">=</span> {}  <span class="co"># w2 단어가 w1 블록 안에 없으면 등록</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> w3 <span class="kw">in</span> dic[w1][w2]: dic[w1][w2][w3] <span class="op">=</span> <span class="dv">0</span> <span class="co"># w3 단어가 w2 블록 안에 없으면 등록 후 0으로 초기화</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    dic[w1][w2][w3] <span class="op">+=</span> <span class="dv">1</span>   <span class="co"># w3 단어가 나왔기 때문에 +1</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> word <span class="op">==</span> <span class="st">'.'</span> <span class="kw">or</span> word <span class="op">==</span> <span class="st">'?'</span>:  <span class="co"># 마침표를 만나면 tmp 초기화</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        tmp <span class="op">=</span> [<span class="st">'@'</span>]</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(dic)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'@': {'이번': {'에': 1}}, '이번': {'에': {'캘리포니아': 1}}, '에': {'캘리포니아': {'에': 1}, '산불': {'난': 1}}, '캘리포니아': {'에': {'산불': 1}}, '산불': {'난': {'거': 1}}, '난': {'거': {'보셨어요': 1}}, '거': {'보셨어요': {'네': 1}}, '보셨어요': {'네': {'봤어요': 1}}, '네': {'봤어요': {'ㅜㅜ': 1}}, '봤어요': {'ㅜㅜ': {'일주일': 1}}, 'ㅜㅜ': {'일주일': {'넘게': 1}}, '일주일': {'넘게': {'진압': 1}}, '넘게': {'진압': {'하고': 1}}, '진압': {'하고': {'있다는데': 1}}, '하고': {'있다는데': {'걱정': 1}}, '있다는데': {'걱정': {'이네': 1}}, '걱정': {'이네': {'요': 1}}}</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pretty <span class="op">=</span> json.dumps(dic, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pretty)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>{
+  "@": {
+    "이번": {
+      "에": 1
+    }
+  },
+  "이번": {
+    "에": {
+      "캘리포니아": 1
+    }
+  },
+  "에": {
+    "캘리포니아": {
+      "에": 1
+    },
+    "산불": {
+      "난": 1
+    }
+  },
+  "캘리포니아": {
+    "에": {
+      "산불": 1
+    }
+  },
+  "산불": {
+    "난": {
+      "거": 1
+    }
+  },
+  "난": {
+    "거": {
+      "보셨어요": 1
+    }
+  },
+  "거": {
+    "보셨어요": {
+      "네": 1
+    }
+  },
+  "보셨어요": {
+    "네": {
+      "봤어요": 1
+    }
+  },
+  "네": {
+    "봤어요": {
+      "ㅜㅜ": 1
+    }
+  },
+  "봤어요": {
+    "ㅜㅜ": {
+      "일주일": 1
+    }
+  },
+  "ㅜㅜ": {
+    "일주일": {
+      "넘게": 1
+    }
+  },
+  "일주일": {
+    "넘게": {
+      "진압": 1
+    }
+  },
+  "넘게": {
+    "진압": {
+      "하고": 1
+    }
+  },
+  "진압": {
+    "하고": {
+      "있다는데": 1
+    }
+  },
+  "하고": {
+    "있다는데": {
+      "걱정": 1
+    }
+  },
+  "있다는데": {
+    "걱정": {
+      "이네": 1
+    }
+  },
+  "걱정": {
+    "이네": {
+      "요": 1
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</section>
+<section id="데이터" class="level2">
+<h2 class="anchored" data-anchor-id="데이터">데이터</h2>
+<p>위의 책에서는 소설 토지로 사전을 만들었지만, 챗봇에는 어울리지 않아 아래 사이트에서 제공하는 SNS 대화 텍스트 파일을 이용했습니다.</p>
+<p><img width="1244" alt="Screenshot2022-11-259 22 03" src="https://user-images.githubusercontent.com/8787919/203877544-822fcb64-55ce-4521-a3ac-ba6f597d309b.png"></p>
+<p>데이터 파일만 98,654개이고 하나의 파일은 대략 20에서 30줄 정도의 문장으로 이루어져 있습니다. 이것을 사전으로 변환하는데 제 M1 맥북에어로 이틀을 꼬박 돌렸는데도 절반도 하지 못했고, 메모리가 부족해서인지 속도가 점점 더 느려져 결국 중단했습니다. 그래서 10,000개 파일만 변환했습니다.</p>
+</section>
+<section id="문장-생성" class="level2">
+<h2 class="anchored" data-anchor-id="문장-생성">문장 생성</h2>
+<div class="cell" data-execution_count="15">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> word_choice(select):</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    keys <span class="op">=</span> select.keys()</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> random.choice(<span class="bu">list</span>(keys))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>input_list <span class="op">=</span> [<span class="st">'@'</span>, <span class="st">'산불'</span>, <span class="st">'안녕'</span>]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> input_text <span class="kw">in</span> input_list:</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> input_text <span class="kw">in</span> dic: <span class="cf">break</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    sentence <span class="op">=</span> []</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> input_text <span class="op">!=</span> <span class="st">'@'</span>: sentence.append(input_text)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    top <span class="op">=</span> dic[input_text]</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    w1 <span class="op">=</span> word_choice(top)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    w2 <span class="op">=</span> word_choice(top[w1])</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    sentence.append(w1)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    sentence.append(w2)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> w1 <span class="kw">in</span> dic <span class="kw">and</span> w2 <span class="kw">in</span> dic[w1]:</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>            w3 <span class="op">=</span> word_choice(dic[w1][w2])</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>: w3 <span class="op">=</span> <span class="st">''</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        sentence.append(w3)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> w3 <span class="op">==</span> <span class="st">'</span><span class="ch">\n</span><span class="st">'</span> <span class="kw">or</span> w3 <span class="op">==</span> <span class="st">''</span> <span class="kw">or</span> w3 <span class="op">==</span> <span class="st">'.'</span> <span class="kw">or</span> w3 <span class="op">==</span> <span class="st">'?'</span>: <span class="cf">break</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        w1, w2 <span class="op">=</span> w2, w3</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> <span class="st">' '</span>.join(sentence)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>이번 에 캘리포니아 에 산불 난 거 보셨어요 네 봤어요 ㅜㅜ 일주일 넘게 진압 하고 있다는데 걱정 이네 요 
+산불 난 거 보셨어요 네 봤어요 ㅜㅜ 일주일 넘게 진압 하고 있다는데 걱정 이네 요 </code></pre>
+</div>
+</div>
+</section>
+<section id="word2vec-이용-사용자가-입력한-단어와-유사한-단어로-문장-생성" class="level2">
+<h2 class="anchored" data-anchor-id="word2vec-이용-사용자가-입력한-단어와-유사한-단어로-문장-생성">word2vec 이용 사용자가 입력한 단어와 유사한 단어로 문장 생성</h2>
+<p>위 코드는 사용자가 입력한 단어를 포함해 문장을 만듭니다. 마치 앵무새처럼 말이죠. 그래서 같은 단어를 사용하는 대신에 의미가 유사한 단어를 이용하는 것으로 바꿔보았습니다.</p>
+<p>사전 파일을 만들 때 사용한 데이터에서 명사를 추출하여 word2vec으로 학습시켰습니다. 사용자가 입력한 단어 중에서 명사를 뽑아 word2vec으로 유사한 단어를 찾은 뒤 그 단어를 사전에 키로 넣어 문장을 만들었습니다.</p>
+<div class="cell" data-execution_count="27">
+<details>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models <span class="im">import</span> Word2Vec</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w2v <span class="op">=</span> Word2Vec(sentences<span class="op">=</span>word_list, vector_size<span class="op">=</span><span class="dv">200</span>, window<span class="op">=</span><span class="dv">4</span>, hs<span class="op">=</span><span class="dv">1</span>, min_count<span class="op">=</span><span class="dv">2</span>, sg<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'corpus count:'</span>, w2v.corpus_count)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'corpus total words:'</span>, w2v.corpus_total_words)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>corpus count: 22
+corpus total words: 44</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
