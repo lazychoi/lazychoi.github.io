@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.2.269">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -111,15 +111,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "type": "overlay",
   "limit": 20,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
   }
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
@@ -147,29 +147,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html">Home</a>
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../books.html">읽은 책</a>
+    <a class="nav-link" href="../books.html">
+ <span class="menu-text">읽은 책</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../review.html">오답노트</a>
+    <a class="nav-link" href="../review.html">
+ <span class="menu-text">오답노트</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../project.html">프로젝트</a>
+    <a class="nav-link" href="../project.html">
+ <span class="menu-text">프로젝트</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../blog/blog.html">블로그</a>
+    <a class="nav-link" href="../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../about.html">Contact</a>
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contact</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
 </i> 
- </a>
+ <span class="menu-text"></span></a>
   </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
@@ -183,7 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">목차</h2>
    
   <ul>
   <li><a href="#분석-과정" id="toc-분석-과정" class="nav-link active" data-scroll-target="#분석-과정">분석 과정</a></li>
@@ -209,9 +215,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
     
     <div>
-    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-heading">공개</div>
     <div class="quarto-title-meta-contents">
       <p class="date">May 13, 2022</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">November 19, 2022</p>
     </div>
   </div>
     
@@ -314,7 +327,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_nfp:</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -336,14 +349,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f'</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">페이지 크롤링 완료'</span>)</span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> mbti_ntp:</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="32">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_ntp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntp.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntp.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
@@ -371,7 +384,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>df_sfp <span class="op">=</span> pd.DataFrame(mbti_sfp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>df_sfp</span>
 <span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>df_sfp.to_csv(<span class="st">'sfp.csv'</span>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>₩</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>₩</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>mbti_stp <span class="op">=</span> []</span>
@@ -394,7 +407,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_stp, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'_stp.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'_stp.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mbti_nfj <span class="op">=</span> []</span>
@@ -417,7 +430,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_nfj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'nfj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'nfj.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mbti_sfj <span class="op">=</span> []</span>
@@ -440,7 +453,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_sfj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'sfj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'sfj.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mbti_ntj <span class="op">=</span> []</span>
@@ -463,7 +476,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_ntj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'ntj.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mbti_stj <span class="op">=</span> []</span>
@@ -486,11 +499,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(mbti_stj, columns<span class="op">=</span>[<span class="st">'제목'</span>, <span class="st">'글쓴이'</span>,<span class="st">'날짜'</span>])</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'stj.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'stj.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="42">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df_a <span class="op">=</span> df[df[<span class="st">'글쓴이'</span>].<span class="bu">str</span>.contains(<span class="st">'ESTJ'</span>)]</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_a</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>df_a</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="42">
 
 <div>
@@ -585,16 +598,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df_file5 <span class="op">=</span> pd.read_csv(<span class="st">'sfj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>df_file6 <span class="op">=</span> pd.read_csv(<span class="st">'sfp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>df_file7 <span class="op">=</span> pd.read_csv(<span class="st">'stj.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>df_file8 <span class="op">=</span> pd.read_csv(<span class="st">'stp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>df_file8 <span class="op">=</span> pd.read_csv(<span class="st">'stp.csv'</span>, encoding <span class="op">=</span> <span class="st">'utf-8'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat([df_file1,df_file2,df_file3,df_file4,df_file5,df_file6,df_file7,df_file8])</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>df</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'mbti.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">'mbti.csv'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="55">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'writer'</span>] <span class="op">=</span> df[<span class="st">'글쓴이'</span>].<span class="bu">str</span>.upper()</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>df</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="55">
 
 <div>
@@ -771,18 +784,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>ISTP<span class="op">=</span> df[df[<span class="st">'writer'</span>].<span class="bu">str</span>.contains(<span class="st">'ISTP'</span>)]</span>
 <span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>ISTP[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'ISTP'</span></span>
 <span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>ISTP <span class="op">=</span> ISTP[[<span class="st">'type'</span>,<span class="st">'제목'</span>,<span class="st">'날짜'</span>]]</span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="133">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> pd.concat([ENFJ,INFJ,ENFP,INFP,ENTJ,INTJ,ENTP,INTP,ESFJ,ISFJ,ESFP,ISFP,ESTJ,ISTJ,ESTP,ISTP])</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df2.to_csv(<span class="st">'mbti_fianl.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df2.to_csv(<span class="st">'mbti_fianl.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="74">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="80">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df3 <span class="op">=</span> pd.read_csv(<span class="st">'mbti_fianl.csv'</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df3.head(<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df3.head(<span class="dv">50</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="80">
 
 <div>
@@ -1106,10 +1119,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sqlalchemy <span class="im">import</span> create_engine</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'mysql+pymysql://root:12345678@localhost:3306/mbti'</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>engine <span class="op">=</span> create_engine(url)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df3.to_sql(name<span class="op">=</span><span class="st">'mbtiTbl'</span>, con<span class="op">=</span>engine, if_exists<span class="op">=</span><span class="st">'append'</span>, index<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>df3.to_sql(name<span class="op">=</span><span class="st">'mbtiTbl'</span>, con<span class="op">=</span>engine, if_exists<span class="op">=</span><span class="st">'append'</span>, index<span class="op">=</span><span class="va">True</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="72">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df3</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>NameError: name 'df3' is not defined</code></pre>
 </div>
@@ -1132,7 +1145,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> cursor.fetchall()</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> result:</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(i)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>('ENFJ', 435)
 ('INFJ', 473)
@@ -1161,12 +1174,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.font_manager <span class="im">as</span> fm</span>
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> collections</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> collections</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISTP'; '''</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>istp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>istp <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>('?엔프제 T분?을 관찰.',)
 ('injf전남친한테 문자..',)
@@ -1621,7 +1634,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>istp_s <span class="op">=</span> <span class="st">''</span></span>
 <span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> istp_list:</span>
 <span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    istp_s <span class="op">+=</span> i</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>istp_s</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>istp_s</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>"?엔프제 T분?을 관찰.injf전남친한테 문자..늦게 자는 김에 올려보는 Enfj?(연애)엔프제분의 감동포인트를 생각.(엔프제 기준)엔프제분들이 쉽지(?)않은 이유.엔프제 남친❤을 둔 사람들의 후기(!)엔프제분의 의외성(잇팁이 느낀)엔프제분 사용 설명서(주의점 위주)엔프제T분과 폴인럽 하신 분들.엔프제분이 무슨 생각을 하는지 모르겠다.엔프제(T)분에 대해 알게 된 것들.(연인일 경우!)istp이 enfj를 만족시켜줄 수 있나요??엔프제 T분에 대한 개인적인 분석.엔프제와 잇팁의 관계성에 대해서.인프제 친구를 보면서 느끼는점엔프제분을 관찰 중인 잇팁의 분석.(몇 번 째인지는 모릅니다)엔프제 T분을 분석(최대한 객관적으로)엔프제 T분을 사랑할 수 밖에 없는.왜 ENFJ가 하는 칭찬은 기분이 좋은걸까..?엔프제 T분의 매력❤❤엔프제 T분의 매력♥잇팁이 생각한 엔프제분의 회피.엔프제 T분의 사랑(Feat. istp의 견해)엔프제분을 분석(몇 번 째인지는 몰라요)☆☆enfj-T분을 분석☆☆잇팁이 생각하는 엔프제분 공략2ENTJ분들 원래 친절하신가요?enfj -T를 분석♡엔프제분의 고마워, 사랑해♡에 대한 고찰.의문이 들었던 엔프제의 질투(!)엔프제분과 썸이거나.(*세분화를 시도) 엔프제의 플러팅(!)infj분들 본 모습이 어떠신가요???굿모닝입니당 엔프제분들♡엔프제를 덕질♥enfj-A 엔프제분♥관찰.오늘의 엔프제분 관찰기록(!)잇팁이 생각하는 enfj-T분의 사랑.☆enfj-T☆분을 분석.대면 그룹 스터디어쩌다보니 ♡엔프제분♡을 덕질중입니다.♡오늘도 엔프제분을 관찰♡오늘도 엔프제분을 관찰♡오늘도 엔프제를 관찰합니당~!오늘은 좀 늦은 엔프제 관찰기록.오늘도 엔프제를 분석!엔프제분 관찰기록(!)엔프제를 사랑!하는 이유(?)엔프제분들에 대한 이런 저런 분석.일찍 일어난(?)김에 써 본 엔프제분들 관찰.엔프제분들께 질문!엔프제분의 사랑에 대한 고찰.잇팁이 바라본 엔프제!(썸 친구 애인?)Infj 왜 자존감이 낮을까요?ENFJ님들..Infj 분들 안 친한 사람의 인스타 염탐엔프제분들에 대해 새로 알아낸 점.ENFJ특징INFJ특징잇팁이 생각하는 엔프제 감동 포인트!엔프제분들을 사로잡는법(?)Infj 분들은 원래 사람에 관련해서 기억력이 좋으신가요?엔프제분을 분석!!잇팁이 생각한 엔프제분들의 의외성.엔프제가 어렵다(?)느껴지는 이유.엔프제분을 분석3잇팁 입장에서 본 잇팁×엔프제 커플.잇팁 엔프제 커플이신 분!(+분석 포함)엔프제분을 분석2엔프제분들에게 질문!(2)잇팁이 생각하는 엔프제 공략(?)법.잇팁(중 1명일 뿐)이 엔프제를 분석.잇팁이 생각하는 엔프제(연인일 경우)잇팁이 보는 엔프제 단점.잇팁이 생각하는 엔프제 장점.제가 본 엔프제(enfj)남성분 5잇팁이 생각하는 엔프제(enfj) 남성분 그 네번째.엔프제 인프제 차이점인프제분들은  도어슬램하는사람한테어떻게대하나요?인프제 친구 위로방법인프피분들엔프피 연락인프피 질문이요펑예)ㅜㅜ인프피 하...인푸피 고백인프피 술 먹고 전화 ?인프피 남 플러팅 당하면 부담스럽나여..?ISTP 인데요INFP 남자 호감있을 때 하는 행동엔프피를 분석~!이상형 of ENFPENFP분들...ENTP특징ENFP특징INFP특징ENFP님들이 보기에는 ISTP친구는 어떨것 같아요?엔프피 일부러 모르는척 잘해요?인프피 남자분들엔프피 여자친구엔프피 여자친구 카톡 읽씹ENFP 분들 연애할때 티내는거Intj헤어지고 나서Intj 연애 특징Intj님들 ㅜㅜIntj 표현방법Intj가 아픈 사람 걱정인티제 질문 있습니다!Intj질문INTJ 말투entj 랑 결혼하신 분 계신가요?intj 랑 헤어졌어요 ㅎㅎㅎㅎ엔티제와 소개팅회사에 엔티제 신입이 들어왔어요!!인티제한테 연락하기싫냐거 물어봐도 돼여?엔티제의 거절 방법잇팁이 보는 엔티제.인티제랑 완전 싸웠거든요 어떻게 해야할까요인티제가 잠수 탈 수 있나여Intj남이 저랑 왜 연락하는지 모르겠어요새학기 인간관계 entj질문 (총 7개)아인슈타인(intp)의 말,entp 분석제가 INTP일수도 있을까요?이 말 한마디 듣는데..INTP분들께 갑자기 궁금한게 생겨서 질문합니다!entp 약2달 분석엔팁분들은 왜 감정얘기하는걸 귀여워하시나요???Istp인데, Entp와의 관계가 어려워요.entp 관찰엔팁 여자분들 귀엽다는 말 들으면 어떠신가요?(펑) 글 펑합니다!!!entp 조사저 인팁이에게 마구 적극성을 가지고 들이댔어요entp 2주 조사질문 안하는 인팁이마음을 모르겠어요연락을 안해요엔팁한테 그럴수있어 그럴수있어 가 무슨뜻인가요..?ㅜㅠentp도 사바사 케바케인가요... (글삭 안해요)ENTP에게 꽂힌 불쌍한 잇팁좀 도와주세요ㅠㅠINTP특징인팁과 읽씹ENTP를 조금 파보았다.entp 무신경함entp이 좋아할 때 하는 행동 궁금해여간지나는 INTP귀여운 entp!!!!intp 방 청소상태 어때요?엣프제들은 사귈때엣프제분들은 싫은 것은 거절 잘하시나요?엣프제 썸남이랑 곧..!엣프제는 불도저 같은 직진 스타일인가요?페북은 활동중인데 답장은 뒷전인 여친갑자기 isfj분들께 궁금해져서 질문합니다!일처럼 변한 카톡ISFJ에게 정말 고마운 점.isfj랑 esfj랑 성격이 어떻게다를까요??isfj분들중에 공감능력 별로 없는분계세요?잇프제 남친isfj분을 첨 만나보는데 이분들 천사인가요??엣프제 남자 특성이...?엣프제는 애정표현 서툴러요?엣프제는 호감없는 상대와 3시간 이상 영상통화 가능한가요?엣프제 멕시코 썸녀랑 잘돼가고 있는데 이건 무슨 의미 일까요?ISFJ엣프제님들은 이런 경우라면 어떻게 대처하시요?엣프제가 상대에게 이상형이 뭔지를 물어보는 건isfj남 고민 ㅠㅠESFJ 여자분들 호의 호감 구분isfj 재회ISFJ분들에게 질문이 있어요 (펑)헤어진 esfj 남친의 전화..esfp-a/ istp-a 부부의 흔한 카톡, esfp장점 !우울증과 알코올 중독.. 대인관계가 답답하고 싫은 사람의 독서일기ISFP가 고민을 말하는 이유?소리내서 웃지 않는 엣프피도 있나요..?ISFP들은 회피형을 좋아한다는 느낌을 받았어요intp 와 isfp 성향 잘 안맞아요? ㅋㅋㅋISFP &amp; ISTP 베프ESFP.....이 (남자 사람)친구의 심리가 궁금해요..isfp말인데요이거 istp vs isfp 어느쪽인가요??ESFP특징ISFP특징isfp 잇프피분들 아끼는 사람은 어떤 방식으로 챙겨주시나요?부담스러운 ESFP 남사친잇프피는 관심없으면 오히려 질문을 많이 하나요?istp와 esfp 궁합 어떤가요?estj는 제가 아쉽지 않은 걸까요istj 외로움 성향엣티제 연락istj 연인과의 연락패턴나를 자꾸 있는 그대로 받아들이지 못하고 바꾸려 드는 istj남친..힘들어요^^::ISTJ남과 성사됐습니다...꺅Istj친구남자는 연애하기 시작하면 인생이 많이 바뀌지 않나요?(투표)엣티제녀 분들 장난 잘 치는 남자 vs 진중한 남자엣티제는 남자에게 호감이 있다면 욕 안 하죠?엣티제 여자랑 카톡만 하다가 전화도 하고 싶은데엣티제 여성들은 밀당 안 하죠?엣티제는 왜 잇팁와 궁합이 맞는 건가요?엣티제는 카톡보다 전화겠죠?엣티제 여자분들은 원래 호감없었던 남성이엣티제는 문자나 톡에서는 말이 잘 없나요?엣티제 여자분들은 지인중 호감없는 상대가 연락해오면엣티제녀한테 같이 밥 먹자고 했을 때(ESTJ)톡을 보다가 갑자기 일 생겨서 답을 못 보내면ESTJ(엣티제)녀들은 좋아하는 상대에게 톡이 와도ISTJ 남친 스킨십ESTJ 호감?istp잇티분들 장난끼 심하세요??N 같다는 말 들어보신 istp 분들 계신가요?오늘도 글자 연습을 하고 잡니다!연애상대로 최악이라는 잇팁 ?(본격 잇팁 쉴드?글)?불타는 토요일 되세요!임무 완료!지하철에 사람이 많네요.놀러는 가고 싶은데, 어디를 가야할지 모르겠다?잇팁 게임 좋아하는 분들 많은가요?바람이 시원하네요.(요청,스압주의) 자랑 좀 해도 될까요? feat 한 번 빠지면 깊이 파고드는 ISTP11km를 걸어서 갔는데...사회화 된 ISTP에 대한 의견.INTP와의 언쟁에서 느낀 S와 N의 차이Form Q 정식검사 결과istp여성분들많이계시나요?잇팁 밸런스게임 해보아요.전화 받기 싫어요Istp연애같은 유형 만나보신 적 있으신가요?전 마음고생 안 시키는 남자가 최곤 것 같아요퇴근 33분 전인 잇팁에게 질문주세요!관계에 정성 들이기 싫은데요.잇팁istp여자분들 신여성?이라는 말 듣는편이새요?잇팁분들 숨쉬기 빼고 어떤 운동하시나요??잇팁 스킨케어  순서잇팁이 싫어하는 상황다른 잇팁분들도 연인 사이에 서운한거 바로잇팁분들 일하다가 이럴떄 진짜 열받지 않나요...너무 심심한데 질문해주세요ㅠㅠㅠ 제발ㅜㅠㅠISTP에 대한 흔한 편견들잇팁에 대해 어떻게 생각하시나요[Istp여자] 질문받아드립니다mgram 무슨유형 같나요?? (2018, 2020, 2022 결과)Istp estp이신 분들 혹시 정반대 성향 만나 보셨나요?잇팁분들 도와줘요!!p들의 약속 잡기 ㅋㅋㅌ가장 제 취향인 유형은 isfp잇팁분들 연애하면 t가 f로 변하나요?잇팁 엣팁분들께 모두 궁금해요원래 잇팁이 사람한테 정이 잘 떨어지나요??종교도 신이 있다고 믿어야 다니는거죠?INFP 같다는 소리를 들었어요!Estp잇팁님들 사진 찍히는 거 좋아하시나요?ISTP분들 주변에 INFJ 많으신가요?사회생활할 때만 j인 것 같은데...다시 태어나면 뭘로 태어나고 싶으신가요?T인 내가 너무 싫다enfp 남성 만나게 되면 기빨릴까요istp 이상형잇팁님들 뭐 하는거 좋아하세요?잇팁님들 결혼 어떻게 하셨어요?istp분들 연애할때 제일 오래갔거나 제일 잘맞았던 mbti는?!(2개선택)집순이 istp 여자 질문 받아요잇팁분들 종교 궁금해요!잇팁분들.. 잘 꾸미시나요?삶에 대한 마음 (혼잣말. 어두움)내유형과 비슷하다고 느낀 유형이 있으신가요??istp의 장점.. 가스라이팅을 당하지 않음 ㅋㅋ남사친 만나서 금욜이나 주말 저녁에 술 마실까요?외로움 안타는줄 알았는데ISTP-A를 분석.혹시 양성.동성애자분들은 안 계신가요ㅎㅎ..잇팁 직업istp 여자여유가 좋ㄴㅔ요f이신분들 개그 프로그램 좋아하시나요?잇팁 엣팁분들 서운할 때 있나요istp는 왜케 에너지가 없을까요잇팁인데 에니어그램 8번 나오네요!엣팁 잇팁 대화내용 (선물사주는 법)개심심하네요 잇팁 질문받습니다 (올나잇)저 성향들이 좀 많이 극단적인것같아요불금ㅎㅎ저 높은 곳 잘 오르는 것 같아요신조어..  많이들 아시나요?Mbti 가면 istp isfpistp 잇팁분들 상대방을 좋아한다는 걸 인정하고 싶지 않을때?? 어떠세요?엣팁 잇팁 대화내용엣픞친구한테 확실히 알게 말할려면 어떻게 해야할까요,,?(펑)으아ㅏㅏㅏㅏㅏㅏㄱ 쪽팔려......ㅠㅠ평범한 연인간 삶에 대한 바람방금 음쓰 버리고 온 잇팁 질문 받아요ESTP남자 님들엣팁 남자가 진짜 좋아하기 전후 행동 써봄갈매기 잘 보구 왔어요엇.....혹쉬.....코로나 걸렸어여잇팁 여자분들헬프 미!!!!!!!!!!!인스타 잠시 중단하고 블로그 시작했는데잇티제일까요 잇팁일까요인생멘토, 애인, 친구로 어떤 유형이 좋으신가요?제 친구중에서어떻게 하면 좋을까요긴장 상황에서 웬일로 심장이 크게 뛰어요펑친구랑 여행 가요20대 ISTP여자 질문 받아볼..게요... (해주세요 심심해요ㅠㅠ)잇팁 사회생활잇팁 엣팁 커플 있어요?ESTP가 사랑해라고몇번을 해도 ISTP - T걷는 시간...소중한 존재가 다시 생명을 얻어제가 너무 말을 세게 한걸까오ENFP 자석..전문가 상담으로 ISTP 땅땅하고 왔어요! (3시간 상담후기)일상ㅎㅎ새우장 만들었어요영화 전공 Istp 인데요. 아무나 질문 받아용!istp잇팁 분들 혼자있기 좋아하는이유?.저는 사람이 싫어서요유형별 레고대학교 새내기가 되었어요이상형저 이상형 테스트했어요생각이 많을때 어떻게 하시나요?전 다음생에 부잣집 애완동물로 태어나고 싶습니다포토샵 배웠어요이짤보고 estp 극호감 됐어욬ㅋㅋㅋ집에..가고싶다??(뻘글)Estp 질문있어용내가 진짜 ISTP인지 알아보는 법이마트요즘 많이 사먹네요~ISTP분들 다들 어떤말을 많이 쓰시나요?무료검사의 한계와 자기객관화 (장문주의)풍선 껌 오랜만에 먹으니 맛있군요금슬 좋은 부부가 부러워요istp 여자분들 연인한테 방구 트는거요istp분들 공감하시나요 어디에 푹 빠지면언니가 ESFP인데 웃겨요ㅋㅋESTP에 대해 질문드려요잇팁ISTP 가장안어울리는 직업ESTP특징ISTP 친구 얼마나 있으세요?ISTP특징제와피본인 ISTP였다가 30대되고 ESTP로 고정윗니 교정기 뺐어요ISTP인데 친구들이 갑자기 너무 싫어져요갑자기 궁금해졌어요.istp여+esfp남 연애중 질문받아볼래용다들 외로움 어떻게 이겨내세요 ?ISTP-T가 쓰는 ISTP잇팁 A인 저를 분석해 봤습니다.저 요즘 얘 껴안고 자요ㅎㅎistp여자인데 estj남자어떨까요엔프제분이랑 연애중인 잇팁입니다~!잇팁인 분들을 위한(?)이런 저런 분석.잇팁 질문 받아볼께요ㅋㅋ잇팁은 어디서 연인을 만드나요?잇팁에 회피형 ? ?enfj랑 istp은 진짜 다른가봐요아빠랑 가평 아침고요수목원 다녀왔어요Istp 성격Istp istp 궁합 (여자)사키노바 mbti 간만에 해봤네요잇팁을 분석1혼자가 너무 좋고 편해서 고민인데여오랜만에 치킨이 왤케 맛있나요ㅠㅠ잇팁이 생각하는 연애.제가 좀 의도치 않은 예측을 잘하는데 저같은분있나요?잇팁으로서 가끔 이렇더라.ISTP랑 잘맞는 유형잇팁하고 잘맞는 유형요즘 분노게이지가 MaxIstp 장점은 뭐라고 생각하시나용잇팁은 대나무 숲인가?여자 ISTP 질문 받습니당 :)잇팁의 '편견 없음'에 대하여절 빡치게 했던 대화법잇팁님들!! 그리고 다른 분들!저는 후에 떳떳한 사랑을 할 거예요심심한 잇팁이 질문받아봐요잇팁이 싫어하는 대화 주제잇팁은 무슨 생각을 할까?잇팁여자 질문받아요?잇팁이 생각하는 사랑.스트레스를 어떻게 해소해야 하나요?고백후 이성에게 천천히 알아가고싶다라는 말을 들으면빵이 꽝이 되는 순간??잇팁이 보는 잇팁 여성.잇팁이 생각하는 ISTP와 INTJ의 차이점26세 이상 ISTP 어르신 분들께 조언 구합니다잇팁은 남성성을 이성 앞에서 어떻게 드러내죠?코로나 확진된 남자 ISTP입니다.istp는 부기능이 외향감각인데 왜 귀찮음이 많을까요?오랜만에 돌아온 술 취한 잇팁이에요 ! 질문받아요명절 음식을 제가 준비해서 가야 되는 게 맞나 싶어요잇팁은 메타몽인가?잇팁의 그냥, 굳이, 그래.. 뜻잇팁은 꾸준히 대화 이어가기 힘든 듯요같은 잇팁도 이렇게 다를 수 있구나.. (정식검사)ISTP분들 누구 나오셨나요?잇팁istp분들 갬성없는 본인모습이 좋으신가요??F인척 하는 분들도 계신가요?잇팁중 1인은 요리 연습 중??\u200d???\u200d?잇팁 사랑꾼인데 아무도 안믿어줌맛저하세요????잇팁istp 결정장애 없으시나요 다들ㅋㅋ잇팁으로 살아와서 친구가 없어요케익을 만들라 했는데ESTP를 조금 파보았다.istp 에서 esfp -t 로 바꼈어요 무슨일이죠다른 잇팁분들도 효율성 잘 따지세요?잠 안오는 잇팁이 질문 받아봐여잇팁 꼬시는 법좀알려주세요제가 눈치가 없었나요?ㅋㅋㅋISTP 중에 ENFP 만나시는분잇팁 어떤가요??이럴 때 어떨 것 같아요?잇팁님들 외모 보시나요?ISTP 여자분들 네일아트 즐겨 하시나요?잇팁분들 사주 믿으시나요남자한테 기대려고 하면 안되는 것 같아요이 피아노 곡도 연습하려구요??친구 혹은 연인 사이에 불리는 별명 있으신가요?인프피 만나보신분..잇팁 질문받습니다잇팁님들 서운하단 말 많이 듣나요ISTP 질문 받아요 심심하네용여러분이 생각하는 잇팁이미지는?잇팁 여자 질문 받아요단 하나뿐인 돈주고 산 카톡이모티콘잇팁끼리 사귈때 카톡심심한 기념으로 잇팁 질문받아요E성향 좀 부러워요오랜만에 온 술 취한 잇팁입니다. 질문 받아요.친한 친구들 모임에서 농담따먹기만 하는 친구들.. 과 대화되시나요?istp?현실에서 가까워지긴 힘든데 한번 이상 서로 인지하게 될 운명"</code></pre>
 </div>
@@ -1633,7 +1646,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'질문'</span>)</span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'어떻게'</span>)</span>
 <span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇팁'</span>)</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇팁이'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>spwords.add(<span class="st">'잇팁이'</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="55">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wc1 <span class="op">=</span> WordCloud(max_font_size<span class="op">=</span><span class="dv">200</span>, stopwords<span class="op">=</span>spwords, font_path<span class="op">=</span><span class="st">'C:\Windows\Fonts\H2GTRM.TTF'</span>, background_color<span class="op">=</span><span class="st">'white'</span>, width<span class="op">=</span><span class="dv">800</span>, height<span class="op">=</span><span class="dv">800</span>)</span>
@@ -1642,7 +1655,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
 </div>
@@ -1650,7 +1663,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="56">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ESTP'; '''</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>estp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>estp <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="58">
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>estp_list <span class="op">=</span> []</span>
@@ -1673,7 +1686,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
 </div>
@@ -1681,7 +1694,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="47">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISFP'; '''</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>isfp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>isfp <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="60">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>isfp_list <span class="op">=</span> []</span>
@@ -1704,7 +1717,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-32-output-1.png" class="img-fluid"></p>
 </div>
@@ -1712,7 +1725,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="49">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'ISTJ'; '''</span></span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>istj <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>istj <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="62">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>istj_list <span class="op">=</span> []</span>
@@ -1735,7 +1748,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-34-output-1.png" class="img-fluid"></p>
 </div>
@@ -1743,7 +1756,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="63">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'INTP'; '''</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>intp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>intp <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="64">
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>intp_list <span class="op">=</span> []</span>
@@ -1765,7 +1778,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-36-output-1.png" class="img-fluid"></p>
 </div>
@@ -1773,7 +1786,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="cell" data-execution_count="68">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>sql <span class="op">=</span> <span class="st">'''SELECT mtitle FROM mbtiTbl WHERE mtype = 'INFP'; '''</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>cursor.execute(sql)</span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>infp <span class="op">=</span> cursor.fetchall()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>infp <span class="op">=</span> cursor.fetchall()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-execution_count="70">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>infp_list <span class="op">=</span> []</span>
@@ -1796,13 +1809,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>plt.imshow(wc1)</span>
 <span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout(pad<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
-<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="2205_mbti_files/figure-html/cell-38-output-1.png" class="img-fluid"></p>
 </div>
 </div>
 <div class="cell" data-execution_count="65">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conn.close() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>conn.close() </span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -1849,8 +1862,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // flash "checked"
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1886,24 +1916,42 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>

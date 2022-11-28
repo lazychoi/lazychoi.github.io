@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-11-23">
+
+<title>👀 - 22-11-23(수)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">22-11-23(수)</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">2022-11</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 23, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#문장-유사도-n-gram-분석" id="toc-문장-유사도-n-gram-분석" class="nav-link active" data-scroll-target="#문장-유사도-n-gram-분석">문장 유사도 n-gram 분석</a></li>
+  <li><a href="#마르코프-체인으로-문장-생성" id="toc-마르코프-체인으로-문장-생성" class="nav-link" data-scroll-target="#마르코프-체인으로-문장-생성">마르코프 체인으로 문장 생성</a></li>
+  <li><a href="#lstm-문장-생성" id="toc-lstm-문장-생성" class="nav-link" data-scroll-target="#lstm-문장-생성">LSTM 문장 생성</a></li>
+  <li><a href="#m1-용-tensorflow-설치" id="toc-m1-용-tensorflow-설치" class="nav-link" data-scroll-target="#m1-용-tensorflow-설치">m1 용 tensorflow 설치</a></li>
+  <li><a href="#모듈-설치" id="toc-모듈-설치" class="nav-link" data-scroll-target="#모듈-설치">모듈 설치</a></li>
+  <li><a href="#참고-자료" id="toc-참고-자료" class="nav-link" data-scroll-target="#참고-자료">참고 자료</a></li>
+  <li><a href="#한글-대화-말뭉치-데이터" id="toc-한글-대화-말뭉치-데이터" class="nav-link" data-scroll-target="#한글-대화-말뭉치-데이터">한글 대화 말뭉치 데이터</a></li>
+  <li><a href="#spacy-공부" id="toc-spacy-공부" class="nav-link" data-scroll-target="#spacy-공부">spaCy 공부</a></li>
+  </ul>
+</nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="문장-유사도-n-gram-분석" class="level2">
+<h2 class="anchored" data-anchor-id="문장-유사도-n-gram-분석">문장 유사도 n-gram 분석</h2>
+<p>교재 코드가 잘 작동됨</p>
+</section>
+<section id="마르코프-체인으로-문장-생성" class="level2">
+<h2 class="anchored" data-anchor-id="마르코프-체인으로-문장-생성">마르코프 체인으로 문장 생성</h2>
+<p>형태소 분석 -&gt; 사전 생성 -&gt; 문장 생성</p>
+</section>
+<section id="lstm-문장-생성" class="level2">
+<h2 class="anchored" data-anchor-id="lstm-문장-생성">LSTM 문장 생성</h2>
+<p><a href="https://keras.io/examples/generative/lstm_character_level_text_generation/" target="_blank">keras 문서</a></p>
+</section>
+<section id="m1-용-tensorflow-설치" class="level2">
+<h2 class="anchored" data-anchor-id="m1-용-tensorflow-설치">m1 용 tensorflow 설치</h2>
+<section id="conda-가상환경-자동-실행-금지-conda-config-set-auto_activate_base-false" class="level4">
+<h4 class="anchored" data-anchor-id="conda-가상환경-자동-실행-금지-conda-config-set-auto_activate_base-false">conda 가상환경 자동 실행 금지: conda config –set auto_activate_base false</h4>
+</section>
+<section id="아나콘다-삭제-brew-uninstall--f-anaconda" class="level4">
+<h4 class="anchored" data-anchor-id="아나콘다-삭제-brew-uninstall--f-anaconda">아나콘다 삭제: brew uninstall -f anaconda</h4>
+</section>
+<section id="miniforge-설치-brew-install-miniforge" class="level4">
+<h4 class="anchored" data-anchor-id="miniforge-설치-brew-install-miniforge">miniforge 설치: brew install miniforge</h4>
+<ul>
+<li>miniforge is the community (conda-forge) driven minimalistic conda installer. Subsequent package installations come thus from conda-forge channel.</li>
+<li>miniconda is the Anaconda (company) driven minimalistic conda installer. Subsequent package installations come from the anaconda channels (default or otherwise).</li>
+</ul>
+<p>==&gt; Linking Binary ‘conda’ to ‘/opt/homebrew/bin/conda’</p>
+<p>miniforge 설치 후 conda info를 했을 때 이전 아나콘다 경로를 표시하며 에러가 발생할 경우 ~/.conda/ 안의 environment.txt 파일의 아나콘다 경로를 위의 conda 경로로 바꾼다. 권한이 없어 저장이 안 될 때에는 <code>sudo vi environment.txt</code> 로 열어 변경 후 저장한다.</p>
+<p>도커가 메모리 부족 때문인지 자꾸 프로세서가 죽는다. 그냥 맥에서 가상환경을 구축해 작업해 보자.</p>
+</section>
+<section id="base-가상환경에서-나오기-conda-deactivate" class="level4">
+<h4 class="anchored" data-anchor-id="base-가상환경에서-나오기-conda-deactivate">base 가상환경에서 나오기: conda deactivate</h4>
+</section>
+<section id="python3.8-버전으로-conda-가상환경-만들기-conda-create--n-가상환경이름-python3.8" class="level4">
+<h4 class="anchored" data-anchor-id="python3.8-버전으로-conda-가상환경-만들기-conda-create--n-가상환경이름-python3.8">python=3.8 버전으로 conda 가상환경 만들기: conda create -n 가상환경이름 python=3.8</h4>
+<pre><code>$ conda create -n chatbot
+environment location: /opt/homebrew/anaconda3/envs/chatbot
+
+Preparing transaction: done
+Verifying transaction: | WARNING conda.core.path_actions:verify(962): Unable to create environments file. Path not writable.
+  environment location: /Users/jun/.conda/environments.txt
+
+done
+Executing transaction: - WARNING conda.core.envs_manager:register_env(51): Unable to register environment. Path not writable or missing.
+  environment location: /opt/homebrew/anaconda3/envs/chatbot
+  registry file: /Users/jun/.conda/environments.txt
+done
+To activate this environment, use
+    $ conda activate chatbot
+To deactivate an active environment, use
+    $ conda deactivate</code></pre>
+<p>위의 WARNING 없애기: <code>sudo chown -R $USER ~/.conda</code></p>
+<p>chatbot 가상환경을 삭제하고 재설치 하니 ~/.conda/environment.txt 파일 안에 <code>/opt/homebrew/Caskroom/miniforge/base/envs/chatbot</code> 내용이 포함되었다.</p>
+</section>
+<section id="가상환경-리스트-확인-conda-env-list" class="level4">
+<h4 class="anchored" data-anchor-id="가상환경-리스트-확인-conda-env-list">가상환경 리스트 확인: conda env list</h4>
+</section>
+<section id="chatbot-가상환경-실행-conda-activate-chatbot" class="level4">
+<h4 class="anchored" data-anchor-id="chatbot-가상환경-실행-conda-activate-chatbot">chatbot 가상환경 실행: conda activate chatbot</h4>
+<p>conda init zsh 을 안 했다는 메시지가 나와서 함.</p>
+<p>source ~/.zshrc 하여 셀 재실행</p>
+<p>그러고 나서 다시 conda activate chatbot 하니 chatbot 가상환경으로 들어감</p>
+</section>
+<section id="xcode-설치-앱스토어" class="level4">
+<h4 class="anchored" data-anchor-id="xcode-설치-앱스토어">Xcode 설치 (앱스토어)</h4>
+</section>
+<section id="tensorflow-설치" class="level4">
+<h4 class="anchored" data-anchor-id="tensorflow-설치">tensorflow 설치</h4>
+<p>conda install -c apple tensorflow-deps</p>
+<p>or</p>
+<p>python -m pip install tensorflow-macos # base tensorflow</p>
+</section>
+<section id="메탈-플러그인-설치" class="level4">
+<h4 class="anchored" data-anchor-id="메탈-플러그인-설치">메탈 플러그인 설치</h4>
+<p>python -m pip install tensorflow-metal # tensorflow-metal plugin</p>
+<p>ERROR: conda 로 설치하니 모듈을 찾을 수 없다는 에러가 발생해서 pip로 다시 설치</p>
+</section>
+</section>
+<section id="모듈-설치" class="level2">
+<h2 class="anchored" data-anchor-id="모듈-설치">모듈 설치</h2>
+<ul>
+<li>pip install konlpy</li>
+<li>gem install wp2txt</li>
+</ul>
+<p>ERROR: While executing gem … (Gem::FilePermissionError) You don’t have write permissions for the /Library/Ruby/Gems/2.6.0 directory.</p>
+<p><a href="https://jojoldu.tistory.com/288" target="_blank">이 문서를 보고 해결</a></p>
+<p>아래를 차례로 실행 후 다시 설치</p>
+<ol type="1">
+<li>brew update</li>
+<li>brew install rbenv ruby-build</li>
+<li>rbenv versions</li>
+<li>rbenv로 관리되는 Ruby를 설치</li>
+<li>설치할 수 있는 버전 확인: rbenv install -l</li>
+<li>rbenv install 2.7.6</li>
+<li>rbenv versions</li>
+<li>rbenv global 2.7.6</li>
+<li>환경변수에 추가 .zshrc</li>
+</ol>
+<pre><code>[[ -d ~/.rbenv  ]] &amp;&amp; \
+  export PATH=${HOME}/.rbenv/bin:${PATH} &amp;&amp; \
+  eval "$(rbenv init -)"</code></pre>
+<section id="가상환경-삭제-conda-env-remove--n-가상환경이름" class="level4">
+<h4 class="anchored" data-anchor-id="가상환경-삭제-conda-env-remove--n-가상환경이름">가상환경 삭제: conda env remove -n 가상환경이름</h4>
+</section>
+</section>
+<section id="참고-자료" class="level2">
+<h2 class="anchored" data-anchor-id="참고-자료">참고 자료</h2>
+<ul>
+<li><a href="https://developer.apple.com/metal/tensorflow-plugin/" target="_blank">Get started with tensorflow-metal</a></li>
+<li><a href="https://hmfactory.tistory.com/26" target="_blank">https://hmfactory.tistory.com/26</a></li>
+<li><a href="https://webnautes.tistory.com/1639" target="_blank">https://webnautes.tistory.com/1639</a></li>
+</ul>
+</section>
+<section id="한글-대화-말뭉치-데이터" class="level2">
+<h2 class="anchored" data-anchor-id="한글-대화-말뭉치-데이터">한글 대화 말뭉치 데이터</h2>
+<p>소설 토지 데이터로 챗봇을 만들었더니 말투가 영 어울리지 않는다. 승민님이 AIHub 라는 사이트를 알려 주셨다. 아래 자료로 만들어보자.</p>
+<p><a href="https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&amp;topMenu=100&amp;aihubDataSe=realm&amp;dataSetSn=543" target="_blank">주제별 텍스트 일상 대화 데이터</a></p>
+</section>
+<section id="spacy-공부" class="level2">
+<h2 class="anchored" data-anchor-id="spacy-공부">spaCy 공부</h2>
+<p><a href="https://spacy.io/usage" target="_blank">설치</a></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode zsh code-with-copy"><code class="sourceCode zsh"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> pip setuptools wheel</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-U</span> <span class="st">'spacy[apple]'</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> spacy download en_core_web_trf</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">=</span><span class="op">&gt;</span> ERROR: Failed building wheel for tokenizers</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ex">=</span><span class="op">&gt;</span> ERROR: Could not build wheels for tokenizers, which is required to install pyproject.toml-based projects</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> spacy download en_core_web_sm</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> spacy download ko_core_news_lg</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> spacy download xx_sent_ud_sm</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

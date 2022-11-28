@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.1.251">
+<meta name="generator" content="quarto-1.2.269">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -112,15 +112,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   "type": "overlay",
   "limit": 20,
   "language": {
-    "search-no-results-text": "No results",
-    "search-matching-documents-text": "matching documents",
-    "search-copy-link-title": "Copy link to search",
-    "search-hide-matches-text": "Hide additional matches",
-    "search-more-match-text": "more match in this document",
-    "search-more-matches-text": "more matches in this document",
-    "search-clear-button-title": "Clear",
-    "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
   }
 }</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
@@ -148,29 +148,35 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../../index.html">Home</a>
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../books.html">읽은 책</a>
+    <a class="nav-link" href="../../books.html">
+ <span class="menu-text">읽은 책</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../review.html">오답노트</a>
+    <a class="nav-link" href="../../review.html">
+ <span class="menu-text">오답노트</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../project.html">프로젝트</a>
+    <a class="nav-link" href="../../project.html">
+ <span class="menu-text">프로젝트</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../blog/blog.html">블로그</a>
+    <a class="nav-link" href="../../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../../about.html">Contact</a>
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">Contact</span></a>
   </li>  
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
 </i> 
- </a>
+ <span class="menu-text"></span></a>
   </li>  
 </ul>
               <div id="quarto-search" class="" title="Search"></div>
@@ -193,16 +199,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <div class="quarto-title-meta">
 
       <div>
-      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-heading">저자</div>
       <div class="quarto-title-meta-contents">
                <p>lazychoi </p>
             </div>
     </div>
       
       <div>
-      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-heading">공개</div>
       <div class="quarto-title-meta-contents">
         <p class="date">November 14, 2022</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">November 19, 2022</p>
       </div>
     </div>
       
@@ -213,7 +226,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
     <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
+    <h2 id="toc-title">목차</h2>
    
   <ul>
   <li><a href="#중요-사항" id="toc-중요-사항" class="nav-link active" data-scroll-target="#중요-사항">중요 사항</a></li>
@@ -260,8 +273,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <div class="cell" data-execution_count="75">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> preamble <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> preamble <span class="im">import</span> <span class="op">*</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -271,7 +284,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 class="anchored" data-anchor-id="원-핫-인코딩-가변수">4.1.1 원-핫-인코딩 (가변수)</h3>
 <div class="cell" data-execution_count="76">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 이 파일은 열 이름을 나타내는 헤더가 없으므로 header=None으로 지정하고</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># "names" 매개변수로 열 이름을 제공합니다</span></span>
@@ -284,7 +297,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 예제를 위해 몇개의 열만 선택합니다</span></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> data[[<span class="st">'age'</span>, <span class="st">'workclass'</span>, <span class="st">'education'</span>, <span class="st">'gender'</span>, <span class="st">'hours-per-week'</span>,</span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>             <span class="st">'occupation'</span>, <span class="st">'income'</span>]]</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="76">
 
@@ -363,8 +376,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 class="anchored" data-anchor-id="문자열로-된-범주형-데이터-확인하기">문자열로 된 범주형 데이터 확인하기</h4>
 <div class="cell" data-scrolled="true" data-execution_count="77">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data.gender.value_counts())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data.gender.value_counts())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code> Male      21790
@@ -374,10 +387,10 @@ Name: gender, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="78">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"원본 특성:</span><span class="ch">\n</span><span class="st">"</span>, <span class="bu">list</span>(data.columns), <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>data_dummies <span class="op">=</span> pd.get_dummies(data)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"get_dummies 후의 특성:</span><span class="ch">\n</span><span class="st">"</span>, <span class="bu">list</span>(data_dummies.columns))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"get_dummies 후의 특성:</span><span class="ch">\n</span><span class="st">"</span>, <span class="bu">list</span>(data_dummies.columns))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>원본 특성:
@@ -389,8 +402,8 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="79">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_dummies.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_dummies.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="79">
 
@@ -480,12 +493,12 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="80">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span> data_dummies.loc[:, <span class="st">'age'</span>:<span class="st">'occupation_ Transport-moving'</span>]</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># NumPy 배열 추출</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> features.values</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> data_dummies[<span class="st">'income_ &gt;50K'</span>].values</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X.shape: </span><span class="sc">{}</span><span class="st">  y.shape: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(X.shape, y.shape))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X.shape: </span><span class="sc">{}</span><span class="st">  y.shape: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(X.shape, y.shape))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X.shape: (32561, 44)  y.shape: (32561,)</code></pre>
@@ -493,13 +506,13 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="81">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, random_state<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">5000</span>)</span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>logreg.fit(X_train, y_train)</span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span>(logreg.score(X_test, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span>(logreg.score(X_test, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.81</code></pre>
@@ -511,11 +524,11 @@ get_dummies 후의 특성:
 <h3 class="anchored" data-anchor-id="숫자로-표현된-범주형-특성">4.1.2 숫자로 표현된 범주형 특성</h3>
 <div class="cell" data-execution_count="82">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 숫자 특성과 범주형 문자열 특성을 가진 DataFrame을 만듭니다</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>demo_df <span class="op">=</span> pd.DataFrame({<span class="st">'숫자 특성'</span>: [<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">1</span>],</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">'범주형 특성'</span>: [<span class="st">'양말'</span>, <span class="st">'여우'</span>, <span class="st">'양말'</span>, <span class="st">'상자'</span>]})</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>demo_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>demo_df</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="82">
 
@@ -557,8 +570,8 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="83">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pd.get_dummies(demo_df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>pd.get_dummies(demo_df)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="83">
 
@@ -610,9 +623,9 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="84">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>demo_df[<span class="st">'숫자 특성'</span>] <span class="op">=</span> demo_df[<span class="st">'숫자 특성'</span>].astype(<span class="bu">str</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pd.get_dummies(demo_df, columns<span class="op">=</span>[<span class="st">'숫자 특성'</span>, <span class="st">'범주형 특성'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>pd.get_dummies(demo_df, columns<span class="op">=</span>[<span class="st">'숫자 특성'</span>, <span class="st">'범주형 특성'</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="84">
 
@@ -678,11 +691,11 @@ get_dummies 후의 특성:
 <h2 class="anchored" data-anchor-id="onehotencoder와-columntransformer-scikit-learn으로-범주형-변수-다루기">4.2 OneHotEncoder와 ColumnTransformer: scikit-learn으로 범주형 변수 다루기</h2>
 <div class="cell" data-scrolled="true" data-execution_count="85">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> OneHotEncoder</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sparse=False로 설정하면 OneHotEncode가 희소 행렬이 아니라 넘파이 배열을 반환합니다</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>ohe <span class="op">=</span> OneHotEncoder(sparse<span class="op">=</span><span class="va">False</span>)</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ohe.fit_transform(demo_df))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ohe.fit_transform(demo_df))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1. 0. 0. 0. 1. 0.]
@@ -693,10 +706,10 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="86">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get_feature_names() 메서드가 1.0에서 deprecated 되었고 1.2 버전에서 삭제될 예정입니다.</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 대신 get_feature_names_out()을 사용합니다.</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ohe.get_feature_names_out())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(ohe.get_feature_names_out())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>['숫자 특성_0' '숫자 특성_1' '숫자 특성_2' '범주형 특성_상자' '범주형 특성_양말' '범주형 특성_여우']</code></pre>
@@ -704,8 +717,8 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="87">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>data.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="87">
 
@@ -782,19 +795,19 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="88">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> ColumnTransformer</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> ColumnTransformer(</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    [(<span class="st">"scaling"</span>, StandardScaler(), [<span class="st">'age'</span>, <span class="st">'hours-per-week'</span>]),</span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>     (<span class="st">"onehot"</span>, OneHotEncoder(sparse<span class="op">=</span><span class="va">False</span>), </span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      [<span class="st">'workclass'</span>, <span class="st">'education'</span>, <span class="st">'gender'</span>, <span class="st">'occupation'</span>])])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>      [<span class="st">'workclass'</span>, <span class="st">'education'</span>, <span class="st">'gender'</span>, <span class="st">'occupation'</span>])])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="89">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="co"># income을 제외한 모든 열을 추출합니다</span></span>
@@ -805,7 +818,7 @@ get_dummies 후의 특성:
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>ct.fit(X_train)</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>X_train_trans <span class="op">=</span> ct.transform(X_train)</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_train_trans.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_train_trans.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>(24420, 44)</code></pre>
@@ -813,12 +826,12 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="90">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>logreg <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>logreg.fit(X_train_trans, y_train)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>X_test_trans <span class="op">=</span> ct.transform(X_test)</span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span>(logreg.score(X_test_trans, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.2f}</span><span class="st">"</span>.<span class="bu">format</span>(logreg.score(X_test_trans, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.81</code></pre>
@@ -826,8 +839,8 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="91">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ct.named_transformers_.onehot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>ct.named_transformers_.onehot</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="91">
 <pre><code>OneHotEncoder(sparse=False)</code></pre>
@@ -838,11 +851,11 @@ get_dummies 후의 특성:
 <h2 class="anchored" data-anchor-id="make_column_transformer로-간편하게-columntransformer-만들기">4.3 make_column_transformer로 간편하게 ColumnTransformer 만들기</h2>
 <div class="cell" data-execution_count="92">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.compose <span class="im">import</span> make_column_transformer</span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>ct <span class="op">=</span> make_column_transformer(</span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    (StandardScaler(), [<span class="st">'age'</span>, <span class="st">'hours-per-week'</span>]),</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    (OneHotEncoder(sparse<span class="op">=</span><span class="va">False</span>), [<span class="st">'workclass'</span>, <span class="st">'education'</span>, <span class="st">'gender'</span>, <span class="st">'occupation'</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    (OneHotEncoder(sparse<span class="op">=</span><span class="va">False</span>), [<span class="st">'workclass'</span>, <span class="st">'education'</span>, <span class="st">'gender'</span>, <span class="st">'occupation'</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -853,7 +866,7 @@ get_dummies 후의 특성:
 <p>SVM, 최근접 이웃, 신경망 같은 모델은 이따금 구간 분할, 상호작용, 다항식으로 이득을 볼 수 있지만 선형 모델보다는 영향이 그렇게 뚜렷하지 않다.</p>
 <div class="cell" data-execution_count="93">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.tree <span class="im">import</span> DecisionTreeRegressor</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -870,7 +883,7 @@ get_dummies 후의 특성:
 <span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
 <span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-20-output-1.png" class="img-fluid"></p>
@@ -878,16 +891,16 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="94">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> KBinsDiscretizer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> KBinsDiscretizer</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="95">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>kb <span class="op">=</span> KBinsDiscretizer(n_bins<span class="op">=</span><span class="dv">10</span>, strategy<span class="op">=</span><span class="st">'uniform'</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>kb.fit(X)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"bin edges: </span><span class="ch">\n</span><span class="st">"</span>, kb.bin_edges_)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"bin edges: </span><span class="ch">\n</span><span class="st">"</span>, kb.bin_edges_)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>bin edges: 
@@ -897,9 +910,9 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="96">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>X_binned <span class="op">=</span> kb.transform(X)</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>X_binned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>X_binned</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="96">
 <pre><code>&lt;120x10 sparse matrix of type '&lt;class 'numpy.float64'&gt;'
@@ -908,9 +921,9 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="97">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X[:<span class="dv">10</span>])</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>X_binned.toarray()[:<span class="dv">10</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>X_binned.toarray()[:<span class="dv">10</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[-0.753]
@@ -939,15 +952,15 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="98">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>kb <span class="op">=</span> KBinsDiscretizer(n_bins<span class="op">=</span><span class="dv">10</span>, strategy<span class="op">=</span><span class="st">'uniform'</span>, encode<span class="op">=</span><span class="st">'onehot-dense'</span>)</span>
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>kb.fit(X)</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>X_binned <span class="op">=</span> kb.transform(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>X_binned <span class="op">=</span> kb.transform(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="99">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>line_binned <span class="op">=</span> kb.transform(line)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> LinearRegression().fit(X_binned, y)</span>
@@ -960,7 +973,7 @@ get_dummies 후의 특성:
 <span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
 <span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
-<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-26-output-1.png" class="img-fluid"></p>
@@ -975,9 +988,9 @@ get_dummies 후의 특성:
 </ul>
 <div class="cell" data-execution_count="100">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>X_combined <span class="op">=</span> np.hstack([X, X_binned])</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_combined.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_combined.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>(120, 11)</code></pre>
@@ -985,7 +998,7 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="101">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> LinearRegression().fit(X_combined, y)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>line_combined <span class="op">=</span> np.hstack([line, line_binned])</span>
@@ -996,7 +1009,7 @@ get_dummies 후의 특성:
 <span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
 <span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>plt.plot(X[:, <span class="dv">0</span>], y, <span class="st">'o'</span>, c<span class="op">=</span><span class="st">'k'</span>)</span>
-<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-28-output-1.png" class="img-fluid"></p>
@@ -1004,9 +1017,9 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="102">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>X_product <span class="op">=</span> np.hstack([X_binned, X <span class="op">*</span> X_binned])</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_product.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X_product.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>(120, 20)</code></pre>
@@ -1014,7 +1027,7 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="103">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> LinearRegression().fit(X_product, y)</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>line_product <span class="op">=</span> np.hstack([line_binned, line <span class="op">*</span> line_binned])</span>
@@ -1026,7 +1039,7 @@ get_dummies 후의 특성:
 <span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
 <span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
-<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-30-output-1.png" class="img-fluid"></p>
@@ -1034,20 +1047,20 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-execution_count="104">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> PolynomialFeatures</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="co"># x ** 10까지 고차항을 추가합니다</span></span>
 <span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 기본값인 "include_bias=True"는 절편에 해당하는 1인 특성을 추가합니다</span></span>
 <span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>poly <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">10</span>, include_bias<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>poly.fit(X)</span>
-<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>X_poly <span class="op">=</span> poly.transform(X)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>X_poly <span class="op">=</span> poly.transform(X)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="105">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_poly.shape:"</span>, X_poly.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_poly.shape:"</span>, X_poly.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X_poly.shape: (120, 10)</code></pre>
@@ -1055,9 +1068,9 @@ get_dummies 후의 특성:
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="106">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X 원소:</span><span class="ch">\n</span><span class="st">"</span>, X[:<span class="dv">5</span>])</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_poly 원소:</span><span class="ch">\n</span><span class="st">"</span>, X_poly[:<span class="dv">5</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_poly 원소:</span><span class="ch">\n</span><span class="st">"</span>, X_poly[:<span class="dv">5</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X 원소:
@@ -1081,10 +1094,10 @@ X_poly 원소:
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="107">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get_feature_names() 메서드가 1.0에서 deprecated 되었고 1.2 버전에서 삭제될 예정입니다.</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 대신 get_feature_names_out()을 사용합니다.</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"항 이름:</span><span class="ch">\n</span><span class="st">"</span>, poly.get_feature_names_out())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"항 이름:</span><span class="ch">\n</span><span class="st">"</span>, poly.get_feature_names_out())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>항 이름:
@@ -1093,7 +1106,7 @@ X_poly 원소:
 </div>
 <div class="cell" data-execution_count="108">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>reg <span class="op">=</span> LinearRegression().fit(X_poly, y)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>line_poly <span class="op">=</span> poly.transform(line)</span>
@@ -1102,7 +1115,7 @@ X_poly 원소:
 <span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
 <span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-35-output-1.png" class="img-fluid"></p>
@@ -1110,7 +1123,7 @@ X_poly 원소:
 </div>
 <div class="cell" data-execution_count="109">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.svm <span class="im">import</span> SVR</span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> gamma <span class="kw">in</span> [<span class="dv">1</span>, <span class="dv">10</span>]:</span>
@@ -1121,7 +1134,7 @@ X_poly 원소:
 <span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"회귀 출력"</span>)</span>
 <span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"입력 특성"</span>)</span>
 <span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>plt.legend(loc<span class="op">=</span><span class="st">"best"</span>)</span>
-<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-36-output-1.png" class="img-fluid"></p>
@@ -1129,7 +1142,7 @@ X_poly 원소:
 </div>
 <div class="cell" data-execution_count="110">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 보스턴 주택 데이터셋이 1.0 버전에 deprecated 되었고 1.2 버전에서 삭제됩니다.</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 경고 메시지를 피하기 위해 다음 코드를 추가합니다.</span></span>
 <span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> warnings</span>
@@ -1146,17 +1159,17 @@ X_poly 원소:
 <span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 데이터 스케일 조정</span></span>
 <span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> MinMaxScaler()</span>
 <span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>X_train_scaled <span class="op">=</span> scaler.fit_transform(X_train)</span>
-<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>X_test_scaled <span class="op">=</span> scaler.transform(X_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb54-17"><a href="#cb54-17" aria-hidden="true" tabindex="-1"></a>X_test_scaled <span class="op">=</span> scaler.transform(X_test)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="111">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>poly <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">2</span>).fit(X_train_scaled)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>X_train_poly <span class="op">=</span> poly.transform(X_train_scaled)</span>
 <span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>X_test_poly <span class="op">=</span> poly.transform(X_test_scaled)</span>
 <span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train.shape:"</span>, X_train.shape)</span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_poly.shape:"</span>, X_train_poly.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_poly.shape:"</span>, X_train_poly.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X_train.shape: (379, 13)
@@ -1165,10 +1178,10 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="112">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get_feature_names() 메서드가 1.0에서 deprecated 되었고 1.2 버전에서 삭제될 예정입니다.</span></span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 대신 get_feature_names_out()을 사용합니다.</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"다항 특성 이름:</span><span class="ch">\n</span><span class="st">"</span>, poly.get_feature_names_out())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"다항 특성 이름:</span><span class="ch">\n</span><span class="st">"</span>, poly.get_feature_names_out())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>다항 특성 이름:
@@ -1188,12 +1201,12 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="113">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>ridge <span class="op">=</span> Ridge().fit(X_train_scaled, y_train)</span>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 없을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(ridge.score(X_test_scaled, y_test)))</span>
 <span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>ridge <span class="op">=</span> Ridge().fit(X_train_poly, y_train)</span>
-<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 있을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(ridge.score(X_test_poly, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 있을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(ridge.score(X_test_poly, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>상호작용 특성이 없을 때 점수: 0.621
@@ -1202,12 +1215,12 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="114">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X_train_scaled, y_train)</span>
 <span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 없을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(rf.score(X_test_scaled, y_test)))</span>
 <span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>rf <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">0</span>).fit(X_train_poly, y_train)</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 있을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(rf.score(X_test_poly, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"상호작용 특성이 있을 때 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(rf.score(X_test_poly, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>상호작용 특성이 없을 때 점수: 0.795
@@ -1221,14 +1234,14 @@ X_train_poly.shape: (379, 105)</code></pre>
 <p>한쪽으로 치우친 데이터를 로그 스케일로 변환하면 성능이 좋아진다.</p>
 <div class="cell" data-execution_count="115">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>rnd <span class="op">=</span> np.random.RandomState(<span class="dv">0</span>)</span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>X_org <span class="op">=</span> rnd.normal(size<span class="op">=</span>(<span class="dv">1000</span>, <span class="dv">3</span>))</span>
 <span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> rnd.normal(size<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> rnd.poisson(<span class="dv">10</span> <span class="op">*</span> np.exp(X_org))</span>
 <span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> np.dot(X_org, w)</span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X[:<span class="dv">10</span>, <span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(X[:<span class="dv">10</span>, <span class="dv">0</span>])</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[ 56  81  25  20  27  18  12  21 109   7]</code></pre>
@@ -1236,8 +1249,8 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="116">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"특성 출현 횟수:</span><span class="ch">\n</span><span class="st">"</span>, np.bincount(X[:, <span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"특성 출현 횟수:</span><span class="ch">\n</span><span class="st">"</span>, np.bincount(X[:, <span class="dv">0</span>]))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>특성 출현 횟수:
@@ -1251,14 +1264,14 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="117">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="dv">0</span>, <span class="dv">160</span>)</span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="dv">70</span>)</span>
 <span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>bins <span class="op">=</span> np.bincount(X[:, <span class="dv">0</span>])</span>
 <span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>plt.bar(<span class="bu">range</span>(<span class="bu">len</span>(bins)), bins, color<span class="op">=</span><span class="st">'grey'</span>)</span>
 <span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"출현 횟수"</span>)</span>
 <span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"값"</span>)</span>
-<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-44-output-1.png" class="img-fluid"></p>
@@ -1266,11 +1279,11 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="118">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> Ridge</span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, random_state<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> Ridge().fit(X_train, y_train).score(X_test, y_test)</span>
-<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.622</code></pre>
@@ -1278,18 +1291,18 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="119">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb70"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>X_train_log <span class="op">=</span> np.log(X_train <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>X_test_log <span class="op">=</span> np.log(X_test <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>X_test_log <span class="op">=</span> np.log(X_test <span class="op">+</span> <span class="dv">1</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="120">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>plt.hist(X_train_log[:, <span class="dv">0</span>], bins<span class="op">=</span><span class="dv">25</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"출현 횟수"</span>)</span>
 <span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"값"</span>)</span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-47-output-1.png" class="img-fluid"></p>
@@ -1297,9 +1310,9 @@ X_train_poly.shape: (379, 105)</code></pre>
 </div>
 <div class="cell" data-execution_count="121">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> Ridge().fit(X_train_log, y_train).score(X_test_log, y_test)</span>
-<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.875</code></pre>
@@ -1316,7 +1329,7 @@ X_train_poly.shape: (379, 105)</code></pre>
 <p>분류에서는 f_classif를 사용하여 테스트한 뒤 percentile에 지정한 비율만큼만 선택: SelectPercentile(score_func=f_classif, percentile=50)</p>
 <div class="cell" data-execution_count="122">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.datasets <span class="im">import</span> load_breast_cancer</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> SelectPercentile, f_classif</span>
 <span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
@@ -1339,7 +1352,7 @@ X_train_poly.shape: (379, 105)</code></pre>
 <span id="cb74-20"><a href="#cb74-20" aria-hidden="true" tabindex="-1"></a>X_train_selected <span class="op">=</span> select.transform(X_train)</span>
 <span id="cb74-21"><a href="#cb74-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-22"><a href="#cb74-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train.shape:"</span>, X_train.shape)</span>
-<span id="cb74-23"><a href="#cb74-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_selected.shape:"</span>, X_train_selected.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb74-23"><a href="#cb74-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_selected.shape:"</span>, X_train_selected.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X_train.shape: (284, 80)
@@ -1348,14 +1361,14 @@ X_train_selected.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="123">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> select.get_support()</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(mask)</span>
 <span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="co"># True는 검은색, False는 흰색으로 마스킹합니다</span></span>
 <span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>plt.matshow(mask.reshape(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), cmap<span class="op">=</span><span class="st">'gray_r'</span>)</span>
 <span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"특성 번호"</span>)</span>
 <span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="dv">0</span>])</span>
-<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[ True  True  True  True  True  True  True  True  True False  True False
@@ -1372,7 +1385,7 @@ X_train_selected.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="124">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LogisticRegression</span>
 <span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 테스트 데이터 변환</span></span>
@@ -1383,7 +1396,7 @@ X_train_selected.shape: (284, 40)</code></pre>
 <span id="cb78-8"><a href="#cb78-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"전체 특성을 사용한 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(lr.score(X_test, y_test)))</span>
 <span id="cb78-9"><a href="#cb78-9" aria-hidden="true" tabindex="-1"></a>lr.fit(X_train_selected, y_train)</span>
 <span id="cb78-10"><a href="#cb78-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"선택된 일부 특성을 사용한 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(</span>
-<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>        lr.score(X_test_selected, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb78-11"><a href="#cb78-11" aria-hidden="true" tabindex="-1"></a>        lr.score(X_test_selected, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>전체 특성을 사용한 점수: 0.947
@@ -1398,21 +1411,21 @@ X_train_selected.shape: (284, 40)</code></pre>
 <p>SelectFromModel은 (지도 학습 모델로 계산된) 중요도가 지정한 임계치보다 큰 모든 특성을 선택한다.</p>
 <div class="cell" data-execution_count="125">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> SelectFromModel</span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
 <span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>select <span class="op">=</span> SelectFromModel(</span>
 <span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>    RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>),</span>
-<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="st">"median"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>    threshold<span class="op">=</span><span class="st">"median"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="126">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>select.fit(X_train, y_train)</span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>X_train_l1 <span class="op">=</span> select.transform(X_train)</span>
 <span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train.shape:"</span>, X_train.shape)</span>
-<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_l1.shape:"</span>, X_train_l1.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"X_train_l1.shape:"</span>, X_train_l1.shape)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>X_train.shape: (284, 80)
@@ -1421,13 +1434,13 @@ X_train_l1.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="127">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> select.get_support()</span>
 <span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a><span class="co"># True는 검은색, False는 흰색으로 마스킹합니다</span></span>
 <span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>plt.matshow(mask.reshape(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), cmap<span class="op">=</span><span class="st">'gray_r'</span>)</span>
 <span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"특성 번호"</span>)</span>
 <span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="dv">0</span>])</span>
-<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-54-output-1.png" class="img-fluid"></p>
@@ -1435,10 +1448,10 @@ X_train_l1.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="128">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb84"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>X_test_l1 <span class="op">=</span> select.transform(X_test)</span>
 <span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">5000</span>).fit(X_train_l1, y_train).score(X_test_l1, y_test)</span>
-<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb84-3"><a href="#cb84-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.947</code></pre>
@@ -1454,7 +1467,7 @@ X_train_l1.shape: (284, 40)</code></pre>
 </ul>
 <div class="cell" data-execution_count="129">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.feature_selection <span class="im">import</span> RFE</span>
 <span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a>select <span class="op">=</span> RFE(RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>),</span>
 <span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>             n_features_to_select<span class="op">=</span><span class="dv">40</span>)</span>
@@ -1465,7 +1478,7 @@ X_train_l1.shape: (284, 40)</code></pre>
 <span id="cb86-8"><a href="#cb86-8" aria-hidden="true" tabindex="-1"></a>plt.matshow(mask.reshape(<span class="dv">1</span>, <span class="op">-</span><span class="dv">1</span>), cmap<span class="op">=</span><span class="st">'gray_r'</span>)</span>
 <span id="cb86-9"><a href="#cb86-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"특성 번호"</span>)</span>
 <span id="cb86-10"><a href="#cb86-10" aria-hidden="true" tabindex="-1"></a>plt.yticks([<span class="dv">0</span>])</span>
-<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb86-11"><a href="#cb86-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-56-output-1.png" class="img-fluid"></p>
@@ -1473,12 +1486,12 @@ X_train_l1.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="130">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a>X_train_rfe <span class="op">=</span> select.transform(X_train)</span>
 <span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>X_test_rfe <span class="op">=</span> select.transform(X_test)</span>
 <span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>score <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">5000</span>).fit(X_train_rfe, y_train).score(X_test_rfe, y_test)</span>
-<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(score))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.940</code></pre>
@@ -1486,8 +1499,8 @@ X_train_l1.shape: (284, 40)</code></pre>
 </div>
 <div class="cell" data-execution_count="131">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(select.score(X_test, y_test)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb89"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb89-1"><a href="#cb89-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"테스트 점수: </span><span class="sc">{:.3f}</span><span class="st">"</span>.<span class="bu">format</span>(select.score(X_test, y_test)))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 점수: 0.951</code></pre>
@@ -1499,14 +1512,14 @@ X_train_l1.shape: (284, 40)</code></pre>
 <h2 class="anchored" data-anchor-id="전문가-지식-활용">4.8 전문가 지식 활용</h2>
 <div class="cell" data-execution_count="132">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>citibike <span class="op">=</span> mglearn.datasets.load_citibike()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>citibike <span class="op">=</span> mglearn.datasets.load_citibike()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="133">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"시티 바이크 데이터:</span><span class="ch">\n</span><span class="st">"</span>, citibike.head())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"시티 바이크 데이터:</span><span class="ch">\n</span><span class="st">"</span>, citibike.head())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>시티 바이크 데이터:
@@ -1524,7 +1537,7 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 <p>pd.data_range(start=datetime-like, end=datetime-like, freq=‘Date/Month/Hour/…’)</p>
 <div class="cell" data-execution_count="134">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">3</span>))</span>
 <span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>xticks <span class="op">=</span> pd.date_range(start<span class="op">=</span>citibike.index.<span class="bu">min</span>(), end<span class="op">=</span>citibike.index.<span class="bu">max</span>(),</span>
 <span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>                       freq<span class="op">=</span><span class="st">'D'</span>)</span>
@@ -1535,7 +1548,7 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 <span id="cb94-8"><a href="#cb94-8" aria-hidden="true" tabindex="-1"></a>plt.plot(citibike, linewidth<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb94-9"><a href="#cb94-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"날짜"</span>)</span>
 <span id="cb94-10"><a href="#cb94-10" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"대여횟수"</span>)</span>
-<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb94-11"><a href="#cb94-11" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-61-output-1.png" class="img-fluid"></p>
@@ -1543,18 +1556,18 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="135">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 타깃값 추출 (대여 횟수)</span></span>
 <span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> citibike.values</span>
 <span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 판다스 1.3.0에서 datetime을 astype()으로 정수로 바꾸는 것이 deprecated되었고 향후 삭제될 예정입니다.</span></span>
 <span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 대신 view()를 사용합니다.</span></span>
 <span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a><span class="co"># POSIX 시간을 10**9로 나누어 변경</span></span>
-<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> citibike.index.view(<span class="st">"int64"</span>).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="op">//</span> <span class="dv">10</span><span class="op">**</span><span class="dv">9</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> citibike.index.view(<span class="st">"int64"</span>).reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>) <span class="op">//</span> <span class="dv">10</span><span class="op">**</span><span class="dv">9</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="136">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 처음 184개 데이터 포인트를 훈련 세트로 사용하고 나머지는 테스트 세트로 사용합니다</span></span>
 <span id="cb96-2"><a href="#cb96-2" aria-hidden="true" tabindex="-1"></a>n_train <span class="op">=</span> <span class="dv">184</span></span>
 <span id="cb96-3"><a href="#cb96-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -1580,14 +1593,14 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 <span id="cb96-23"><a href="#cb96-23" aria-hidden="true" tabindex="-1"></a>             label<span class="op">=</span><span class="st">"테스트 예측"</span>)</span>
 <span id="cb96-24"><a href="#cb96-24" aria-hidden="true" tabindex="-1"></a>    plt.legend(loc<span class="op">=</span>(<span class="fl">1.01</span>, <span class="dv">0</span>))</span>
 <span id="cb96-25"><a href="#cb96-25" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"날짜"</span>)</span>
-<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"대여횟수"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb96-26"><a href="#cb96-26" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"대여횟수"</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="137">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a> regressor <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X, y, regressor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X, y, regressor)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: -0.04</code></pre>
@@ -1598,9 +1611,9 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="138">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb99"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a>X_hour <span class="op">=</span> citibike.index.hour.values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour, y, regressor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour, y, regressor)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: 0.60</code></pre>
@@ -1611,10 +1624,10 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="139">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb101"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb101-1"><a href="#cb101-1" aria-hidden="true" tabindex="-1"></a>X_hour_week <span class="op">=</span> np.hstack([citibike.index.dayofweek.values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>),</span>
 <span id="cb101-2"><a href="#cb101-2" aria-hidden="true" tabindex="-1"></a>                         citibike.index.hour.values.reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)])</span>
-<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week, y, regressor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb101-3"><a href="#cb101-3" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week, y, regressor)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: 0.84</code></pre>
@@ -1625,9 +1638,9 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="140">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb103"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
-<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week, y, LinearRegression())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb103-2"><a href="#cb103-2" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week, y, LinearRegression())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: 0.13</code></pre>
@@ -1639,15 +1652,15 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 <p>scikit-learn 0.22 버전에서 OneHotEncoder 클래스가 정수 카테고리를 인식하는 방식이 변경됩니다. 이전에는 훈련 데이터에 나타난 0~최댓값 사이 범위를 카테고리로 인식하여 원-핫 인코딩하지만 0.22 버전부터는 고유한 정수 값을 카테고리로 사용합니다. 0.20 버전부터 정수형 데이터를 변환할 때 이와 관련된 경고가 출력됩니다.</p>
 <div class="cell" data-execution_count="141">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a>enc <span class="op">=</span> OneHotEncoder()</span>
-<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>X_hour_week_onehot <span class="op">=</span> enc.fit_transform(X_hour_week).toarray()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>X_hour_week_onehot <span class="op">=</span> enc.fit_transform(X_hour_week).toarray()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="142">
 <details>
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week_onehot, y, Ridge())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<summary>코드</summary>
+<div class="sourceCode cell-code" id="cb106"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb106-1"><a href="#cb106-1" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week_onehot, y, Ridge())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: 0.62</code></pre>
@@ -1658,12 +1671,12 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="143">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb108"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>poly_transformer <span class="op">=</span> PolynomialFeatures(degree<span class="op">=</span><span class="dv">2</span>, interaction_only<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb108-2"><a href="#cb108-2" aria-hidden="true" tabindex="-1"></a>                                      include_bias<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb108-3"><a href="#cb108-3" aria-hidden="true" tabindex="-1"></a>X_hour_week_onehot_poly <span class="op">=</span> poly_transformer.fit_transform(X_hour_week_onehot)</span>
 <span id="cb108-4"><a href="#cb108-4" aria-hidden="true" tabindex="-1"></a>lr <span class="op">=</span> Ridge()</span>
-<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week_onehot_poly, y, lr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb108-5"><a href="#cb108-5" aria-hidden="true" tabindex="-1"></a>eval_on_features(X_hour_week_onehot_poly, y, lr)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>테스트 세트 R^2: 0.85</code></pre>
@@ -1674,31 +1687,31 @@ Freq: 3H, Name: one, dtype: int64</code></pre>
 </div>
 <div class="cell" data-execution_count="144">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb110"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>hour <span class="op">=</span> [<span class="st">"</span><span class="sc">%02d</span><span class="st">:00"</span> <span class="op">%</span> i <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">24</span>, <span class="dv">3</span>)]</span>
 <span id="cb110-2"><a href="#cb110-2" aria-hidden="true" tabindex="-1"></a>day <span class="op">=</span> [<span class="st">"월"</span>, <span class="st">"화"</span>, <span class="st">"수"</span>, <span class="st">"목"</span>, <span class="st">"금"</span>, <span class="st">"토"</span>, <span class="st">"일"</span>]</span>
-<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span>  day <span class="op">+</span> hour</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb110-3"><a href="#cb110-3" aria-hidden="true" tabindex="-1"></a>features <span class="op">=</span>  day <span class="op">+</span> hour</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-scrolled="true" data-execution_count="145">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb111"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get_feature_names() 메서드가 1.0에서 deprecated 되었고 1.2 버전에서 삭제될 예정입니다.</span></span>
 <span id="cb111-2"><a href="#cb111-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 대신 get_feature_names_out()을 사용합니다.</span></span>
 <span id="cb111-3"><a href="#cb111-3" aria-hidden="true" tabindex="-1"></a>features_poly <span class="op">=</span> poly_transformer.get_feature_names_out(features)</span>
 <span id="cb111-4"><a href="#cb111-4" aria-hidden="true" tabindex="-1"></a>features_nonzero <span class="op">=</span> np.array(features_poly)[lr.coef_ <span class="op">!=</span> <span class="dv">0</span>]</span>
-<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>coef_nonzero <span class="op">=</span> lr.coef_[lr.coef_ <span class="op">!=</span> <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb111-5"><a href="#cb111-5" aria-hidden="true" tabindex="-1"></a>coef_nonzero <span class="op">=</span> lr.coef_[lr.coef_ <span class="op">!=</span> <span class="dv">0</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell" data-execution_count="146">
 <details>
-<summary>Code</summary>
+<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb112"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">15</span>, <span class="dv">2</span>))</span>
 <span id="cb112-2"><a href="#cb112-2" aria-hidden="true" tabindex="-1"></a>plt.plot(coef_nonzero, <span class="st">'o'</span>)</span>
 <span id="cb112-3"><a href="#cb112-3" aria-hidden="true" tabindex="-1"></a>plt.xticks(np.arange(<span class="bu">len</span>(coef_nonzero)), features_nonzero, rotation<span class="op">=</span><span class="dv">90</span>)</span>
 <span id="cb112-4"><a href="#cb112-4" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"특성 이름"</span>)</span>
 <span id="cb112-5"><a href="#cb112-5" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"계수 크기"</span>)</span>
-<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb112-6"><a href="#cb112-6" aria-hidden="true" tabindex="-1"></a>plt.show() <span class="co"># 책에는 없음</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <p><img src="04-representing-data-feature-engineering_files/figure-html/cell-73-output-1.png" class="img-fluid"></p>
@@ -1750,8 +1763,25 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // flash "checked"
     button.classList.add('code-copy-button-checked');
     var currentTitle = button.getAttribute("title");
-    button.setAttribute("title", "Copied!");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
     setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
       button.setAttribute("title", currentTitle);
       button.classList.remove('code-copy-button-checked');
     }, 1000);
@@ -1787,24 +1817,42 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       return note.innerHTML;
     });
   }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
   var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
   for (var i=0; i<bibliorefs.length; i++) {
     const ref = bibliorefs[i];
-    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
-    tippyHover(ref, function() {
-      var popup = window.document.createElement('div');
-      cites.forEach(function(cite) {
-        var citeDiv = window.document.createElement('div');
-        citeDiv.classList.add('hanging-indent');
-        citeDiv.classList.add('csl-entry');
-        var biblioDiv = window.document.getElementById('ref-' + cite);
-        if (biblioDiv) {
-          citeDiv.innerHTML = biblioDiv.innerHTML;
-        }
-        popup.appendChild(citeDiv);
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
       });
-      return popup.innerHTML;
-    });
+    }
   }
 });
 </script>
