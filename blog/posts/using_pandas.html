@@ -215,7 +215,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">November 23, 2022</p>
+        <p class="date-modified">November 30, 2022</p>
       </div>
     </div>
       
@@ -6614,19 +6614,24 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <pre><code>29.263</code></pre>
 </div>
 </div>
-<div class="cell">
-<details>
-<summary>코드</summary>
-<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>:::{.callout<span class="op">-</span>important}</span>
-<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a>avg_glucose_level 컬럼의 값이 <span class="dv">200</span><span class="er">이상인</span> 데이터를 모두 <span class="dv">199</span><span class="er">로</span> 변경하고 stroke값이 <span class="dv">1</span><span class="er">인</span> 데이터의 avg_glucose_level값의 평균을 소수점이하 <span class="dv">3</span><span class="er">자리</span> 까지 구하여라</span>
-<span id="cb148-3"><a href="#cb148-3" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
+<div class="callout-important callout callout-style-default callout-captioned">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-caption-container flex-fill">
+중요
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>avg_glucose_level 컬럼의 값이 200이상인 데이터를 모두 199로 변경하고 stroke값이 1인 데이터의 avg_glucose_level값의 평균을 소수점이하 3자리 까지 구하여라</p>
+</div>
 </div>
 <div class="cell" data-execution_count="10">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb149"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb149-1"><a href="#cb149-1" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'avg_glucose_level'</span>] <span class="op">&gt;=</span> <span class="dv">200</span>, <span class="st">'avg_glucose_level'</span>] <span class="op">=</span> <span class="dv">199</span></span>
-<span id="cb149-2"><a href="#cb149-2" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(df.loc[df[<span class="st">'stroke'</span>] <span class="op">==</span> <span class="dv">1</span>, <span class="st">'avg_glucose_level'</span>].mean(), <span class="dv">3</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb148"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>df.loc[df[<span class="st">'avg_glucose_level'</span>] <span class="op">&gt;=</span> <span class="dv">200</span>, <span class="st">'avg_glucose_level'</span>] <span class="op">=</span> <span class="dv">199</span></span>
+<span id="cb148-2"><a href="#cb148-2" aria-hidden="true" tabindex="-1"></a><span class="bu">round</span>(df.loc[df[<span class="st">'stroke'</span>] <span class="op">==</span> <span class="dv">1</span>, <span class="st">'avg_glucose_level'</span>].mean(), <span class="dv">3</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>125.188</code></pre>
@@ -6648,9 +6653,9 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="12">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/Datamanim/datarepo/main/pok/Pokemon.csv'</span></span>
-<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, index_col<span class="op">=</span>[<span class="dv">0</span>])</span>
-<span id="cb151-3"><a href="#cb151-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb150"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">'https://raw.githubusercontent.com/Datamanim/datarepo/main/pok/Pokemon.csv'</span></span>
+<span id="cb150-2"><a href="#cb150-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, index_col<span class="op">=</span>[<span class="dv">0</span>])</span>
+<span id="cb150-3"><a href="#cb150-3" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="12">
 
@@ -6773,8 +6778,8 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="23">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb152"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>(df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[:<span class="dv">400</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>() </span>
-<span id="cb152-2"><a href="#cb152-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[<span class="dv">401</span>:<span class="dv">800</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb151"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb151-1"><a href="#cb151-1" aria-hidden="true" tabindex="-1"></a>(df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[:<span class="dv">400</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>() </span>
+<span id="cb151-2"><a href="#cb151-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span> df.sort_values([<span class="st">'Attack'</span>], ascending<span class="op">=</span><span class="va">False</span>).iloc[<span class="dv">401</span>:<span class="dv">800</span>, <span class="op">-</span><span class="dv">1</span>].<span class="bu">sum</span>())</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="23">
 <pre><code>57</code></pre>
@@ -6796,7 +6801,7 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="54">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb154"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Type 1'</span>).mean()[<span class="st">'Total'</span>].nlargest(<span class="dv">3</span>).index[<span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb153"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb153-1"><a href="#cb153-1" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Type 1'</span>).mean()[<span class="st">'Total'</span>].nlargest(<span class="dv">3</span>).index[<span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="54">
 <pre><code>'Flying'</code></pre>
@@ -6805,7 +6810,7 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="53">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb156"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'Type 1'</span>]).mean()[<span class="st">'Total'</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).index[<span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb155"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb155-1"><a href="#cb155-1" aria-hidden="true" tabindex="-1"></a>df.groupby([<span class="st">'Type 1'</span>]).mean()[<span class="st">'Total'</span>].sort_values(ascending<span class="op">=</span><span class="va">False</span>).index[<span class="dv">2</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="53">
 <pre><code>'Flying'</code></pre>
@@ -6827,8 +6832,8 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="57">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb158"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.dropna(how<span class="op">=</span><span class="st">'any'</span>).reset_index()</span>
-<span id="cb158-2"><a href="#cb158-2" aria-hidden="true" tabindex="-1"></a>df2.isna().<span class="bu">sum</span>().<span class="bu">sum</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb157"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb157-1"><a href="#cb157-1" aria-hidden="true" tabindex="-1"></a>df2 <span class="op">=</span> df.dropna(how<span class="op">=</span><span class="st">'any'</span>).reset_index()</span>
+<span id="cb157-2"><a href="#cb157-2" aria-hidden="true" tabindex="-1"></a>df2.isna().<span class="bu">sum</span>().<span class="bu">sum</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="57">
 <pre><code>0</code></pre>
@@ -6837,7 +6842,7 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="70">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb160"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df2.loc[:<span class="bu">int</span>(<span class="bu">len</span>(df2) <span class="op">*</span> <span class="fl">0.6</span>), <span class="st">'Defense'</span>].quantile(<span class="fl">0.25</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb159"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb159-1"><a href="#cb159-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df2.loc[:<span class="bu">int</span>(<span class="bu">len</span>(df2) <span class="op">*</span> <span class="fl">0.6</span>), <span class="st">'Defense'</span>].quantile(<span class="fl">0.25</span>))</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>50.0</code></pre>
@@ -6859,7 +6864,7 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="76">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb162"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>(df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Water'</span>, <span class="st">'Attack'</span>] <span class="op">&gt;=</span> df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Fire'</span>, <span class="st">'Attack'</span>].mean()).<span class="bu">sum</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb161"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb161-1"><a href="#cb161-1" aria-hidden="true" tabindex="-1"></a>(df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Water'</span>, <span class="st">'Attack'</span>] <span class="op">&gt;=</span> df.loc[df[<span class="st">'Type 1'</span>] <span class="op">==</span> <span class="st">'Fire'</span>, <span class="st">'Attack'</span>].mean()).<span class="bu">sum</span>()</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="76">
 <pre><code>37</code></pre>
@@ -6881,8 +6886,8 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="85">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb164"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb164-1"><a href="#cb164-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'diff'</span>] <span class="op">=</span> <span class="bu">abs</span>(df[<span class="st">'Speed'</span>] <span class="op">-</span> df[<span class="st">'Defense'</span>])</span>
-<span id="cb164-2"><a href="#cb164-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Generation'</span>)[<span class="st">'diff'</span>].<span class="bu">max</span>().nlargest(<span class="dv">1</span>).index[<span class="dv">0</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb163"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb163-1"><a href="#cb163-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'diff'</span>] <span class="op">=</span> <span class="bu">abs</span>(df[<span class="st">'Speed'</span>] <span class="op">-</span> df[<span class="st">'Defense'</span>])</span>
+<span id="cb163-2"><a href="#cb163-2" aria-hidden="true" tabindex="-1"></a>df.groupby(<span class="st">'Generation'</span>)[<span class="st">'diff'</span>].<span class="bu">max</span>().nlargest(<span class="dv">1</span>).index[<span class="dv">0</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="85">
 <pre><code>2</code></pre>
@@ -6891,7 +6896,7 @@ Name: likes, Length: 1832, dtype: int64</code></pre>
 <div class="cell" data-execution_count="2">
 <details>
 <summary>코드</summary>
-<div class="sourceCode cell-code" id="cb166"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb166-1"><a href="#cb166-1" aria-hidden="true" tabindex="-1"></a>[i <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">19</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb165"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb165-1"><a href="#cb165-1" aria-hidden="true" tabindex="-1"></a>[i <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">19</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]</code></pre>

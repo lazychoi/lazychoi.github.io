@@ -80,6 +80,8 @@
     "listing": "/blog/blog.html",
     "items": [
       "/blog/posts/study_konlpy.html",
+      "/blog/posts/22-11-30.html",
+      "/blog/posts/22-11-29.html",
       "/blog/posts/22-11-28.html",
       "/blog/posts/22-11-27.html",
       "/blog/posts/22-11-26.html",
@@ -145,6 +147,7 @@
       "/review/machine_learning/02_data_load/csv.html",
       "/review/machine_learning/01_numpy.html",
       "/review/machine_learning/01_numpy/resize.html",
+      "/review/machine_learning/12_model_selection/module_list.html",
       "/review/machine_learning/12_model_selection/sklearn.html",
       "/review/machine_learning/03_data_wrangling/na.html",
       "/review/machine_learning/07_datetime.html",
@@ -207,6 +210,7 @@
   {
     "listing": "/review/machine_learning/12_model_selection.html",
     "items": [
+      "/review/machine_learning/12_model_selection/module_list.html",
       "/review/machine_learning/12_model_selection/sklearn.html"
     ]
   },

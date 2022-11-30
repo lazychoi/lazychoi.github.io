@@ -233,8 +233,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li>책 제목을 입력하면 내용이 유사한 도서 5권 추천하는 앱</li>
 </ul>
 <div class="cell" data-execution_count="1">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calc_similarity.py</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -261,15 +259,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'코사인 유사도 연산 결과 :'</span>,cos_sim.shape)</span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>np.save(<span class="st">'data/sim.npy'</span>, cos_sim)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>TF-IDF 행렬의 크기(shape) : (2999, 30145)
 코사인 유사도 연산 결과 : (2999, 2999)</code></pre>
 </div>
 </div>
 <div class="cell">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># recommend.py</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> streamlit <span class="im">as</span> st</span>
@@ -318,7 +313,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>        <span class="cf">with</span> col2:</span>
 <span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>            st.write(ans.description[i][:<span class="dv">400</span>] <span class="op">+</span> <span class="st">"   ..."</span>)  <span class="co"># 책 내용</span></span>
 <span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>        st.header(<span class="st">""</span>)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <section id="streamlit에서-앱-작동" class="level3">
 <h3 class="anchored" data-anchor-id="streamlit에서-앱-작동">streamlit에서 앱 작동</h3>
@@ -330,32 +324,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>“파이썬을 이용한 머신러닝, 딥러닝 실전 개발 입문(쿠지라 히코우즈쿠에)”의 6장에서 소개한 코드를 변경해서 구현했습니다. 마르코프 체인이 무엇인지에 대해서 설명할 능력은 없습니다. 궁금하면 여기☞ <a href="https://www.youtube.com/watch?v=Yh62wN2kMkA">유튜브 설명</a>를 눌러 보세요.</p>
 <p>제목에 마르코프 체인을 이용해서 챗봇 엔진을 만들었다고 했지만, 코드를 보면 확률을 사용하지 않고 랜덤하게 다음 단어를 선택했음을 알 수 있습니다. 구체적으로 이 책에서 제공한 코드가 어떻게 작동하는지 아래 2줄의 대화 데이터로 살펴보겠습니다.</p>
 <div class="cell" data-execution_count="1">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>text <span class="op">=</span> <span class="st">'''</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">이번에 캘리포니아에 산불 난 거 보셨어요?</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">네 봤어요 ㅜㅜ 일주일 넘게 진압하고 있다는데 걱정이네요...</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">'''</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 </div>
 <p>konlpy에서 제공하는 Okt 클래스를 이용해 형태소 분석을 했습니다. 다음은 형태소 분석한 데이터입니다.</p>
 <div class="cell" data-execution_count="2">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> konlpy.tag <span class="im">import</span> Okt</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>okt <span class="op">=</span> Okt()</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>morph_list <span class="op">=</span> okt.pos(text)</span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(morph_list)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>[('\n', 'Foreign'), ('이번', 'Noun'), ('에', 'Josa'), ('캘리포니아', 'Noun'), ('에', 'Josa'), ('산불', 'Noun'), ('난', 'Noun'), ('거', 'Noun'), ('보셨어요', 'Verb'), ('?', 'Punctuation'), ('\n', 'Foreign'), ('네', 'Noun'), ('봤어요', 'Verb'), ('ㅜㅜ', 'KoreanParticle'), ('일주일', 'Noun'), ('넘게', 'Verb'), ('진압', 'Noun'), ('하고', 'Josa'), ('있다는데', 'Adjective'), ('걱정', 'Noun'), ('이네', 'Josa'), ('요', 'Noun'), ('...', 'Punctuation'), ('\n', 'Foreign')]</code></pre>
 </div>
 </div>
 <p>형태소 분석한 데이터 중에서 품사명은 제외하고 형태소만을 리스트로 추린 후 3 단어씩 묶었습니다. 이렇게 묶은 이유는 어떤 단어의 뒤에 오는 단어를 2개까지 확보하기 위해서입니다. 특정 단어 뒤에 올만한 단어를 2개까지 묶는 겁니다. ’@’는 문장의 처음을 표시하는 기호입니다.</p>
 <div class="cell" data-execution_count="3">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>word_list <span class="op">=</span> []</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> morph <span class="kw">in</span> morph_list:</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 마침표를 제외한 모든 구두점 제외</span></span>
@@ -364,7 +350,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> morph[<span class="dv">0</span>] <span class="op">==</span> <span class="st">'.'</span>:</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        word_list.append(morph[<span class="dv">0</span>])</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(word_list)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>['\n', '이번', '에', '캘리포니아', '에', '산불', '난', '거', '보셨어요', '\n', '네', '봤어요', 'ㅜㅜ', '일주일', '넘게', '진압', '하고', '있다는데', '걱정', '이네', '요', '\n']</code></pre>
 </div>
@@ -400,8 +385,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     }
 (이하 생략)</code></pre>
 <div class="cell" data-execution_count="4">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dic <span class="op">=</span> {}</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>tmp <span class="op">=</span> [<span class="st">'@'</span>]</span>
@@ -424,18 +407,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        tmp <span class="op">=</span> [<span class="st">'@'</span>]</span>
 <span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(dic)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>{'@': {'이번': {'에': 1}}, '이번': {'에': {'캘리포니아': 1}}, '에': {'캘리포니아': {'에': 1}, '산불': {'난': 1}}, '캘리포니아': {'에': {'산불': 1}}, '산불': {'난': {'거': 1}}, '난': {'거': {'보셨어요': 1}}, '거': {'보셨어요': {'네': 1}}, '보셨어요': {'네': {'봤어요': 1}}, '네': {'봤어요': {'ㅜㅜ': 1}}, '봤어요': {'ㅜㅜ': {'일주일': 1}}, 'ㅜㅜ': {'일주일': {'넘게': 1}}, '일주일': {'넘게': {'진압': 1}}, '넘게': {'진압': {'하고': 1}}, '진압': {'하고': {'있다는데': 1}}, '하고': {'있다는데': {'걱정': 1}}, '있다는데': {'걱정': {'이네': 1}}, '걱정': {'이네': {'요': 1}}}</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="9">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>pretty <span class="op">=</span> json.dumps(dic, indent<span class="op">=</span><span class="dv">2</span>, ensure_ascii<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(pretty)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>{
   "@": {
@@ -533,14 +512,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="데이터" class="level2">
 <h2 class="anchored" data-anchor-id="데이터">데이터</h2>
 <p>위의 책에서는 소설 토지로 사전을 만들었지만, 챗봇에는 어울리지 않아 아래 사이트에서 제공하는 SNS 대화 텍스트 파일을 이용했습니다.</p>
-<p><img width="1244" alt="Screenshot2022-11-259 22 03" src="https://user-images.githubusercontent.com/8787919/203877544-822fcb64-55ce-4521-a3ac-ba6f597d309b.png"></p>
+<p><img width="600px" src="https://user-images.githubusercontent.com/8787919/203877544-822fcb64-55ce-4521-a3ac-ba6f597d309b.png"></p>
 <p>데이터 파일만 98,654개이고 하나의 파일은 대략 20에서 30줄 정도의 문장으로 이루어져 있습니다. 이것을 사전으로 변환하는데 제 M1 맥북에어로 이틀을 꼬박 돌렸는데도 절반도 하지 못했고, 메모리가 부족해서인지 속도가 점점 더 느려져 결국 중단했습니다. 그래서 10,000개 파일만 변환했습니다.</p>
 </section>
 <section id="문장-생성" class="level2">
 <h2 class="anchored" data-anchor-id="문장-생성">문장 생성</h2>
 <div class="cell" data-execution_count="15">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> word_choice(select):</span>
@@ -567,7 +544,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>        w1, w2 <span class="op">=</span> w2, w3</span>
 <span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> <span class="st">' '</span>.join(sentence)</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(result)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>이번 에 캘리포니아 에 산불 난 거 보셨어요 네 봤어요 ㅜㅜ 일주일 넘게 진압 하고 있다는데 걱정 이네 요 
 산불 난 거 보셨어요 네 봤어요 ㅜㅜ 일주일 넘게 진압 하고 있다는데 걱정 이네 요 </code></pre>
@@ -579,13 +555,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>위 코드는 사용자가 입력한 단어를 포함해 문장을 만듭니다. 마치 앵무새처럼 말이죠. 그래서 같은 단어를 사용하는 대신에 의미가 유사한 단어를 이용하는 것으로 바꿔보았습니다.</p>
 <p>사전 파일을 만들 때 사용한 데이터에서 명사를 추출하여 word2vec으로 학습시켰습니다. 사용자가 입력한 단어 중에서 명사를 뽑아 word2vec으로 유사한 단어를 찾은 뒤 그 단어를 사전에 키로 넣어 문장을 만들었습니다.</p>
 <div class="cell" data-execution_count="27">
-<details>
-<summary>코드</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models <span class="im">import</span> Word2Vec</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>w2v <span class="op">=</span> Word2Vec(sentences<span class="op">=</span>word_list, vector_size<span class="op">=</span><span class="dv">200</span>, window<span class="op">=</span><span class="dv">4</span>, hs<span class="op">=</span><span class="dv">1</span>, min_count<span class="op">=</span><span class="dv">2</span>, sg<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'corpus count:'</span>, w2v.corpus_count)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'corpus total words:'</span>, w2v.corpus_total_words)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
 <pre><code>corpus count: 22
 corpus total words: 44</code></pre>
