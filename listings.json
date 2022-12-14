@@ -80,6 +80,8 @@
     "listing": "/blog/blog.html",
     "items": [
       "/blog/posts/study_konlpy.html",
+      "/blog/posts/22-12-14.html",
+      "/blog/posts/22-12-13.html",
       "/blog/posts/22-12-12.html",
       "/blog/posts/22-12-09.html",
       "/blog/posts/22-12-08.html",
@@ -323,6 +325,7 @@
   {
     "listing": "/review/algorithm.html",
     "items": [
+      "/review/algorithm/data_structure/quickSort.html",
       "/review/algorithm/data_structure/03_recur3.html",
       "/review/algorithm/data_structure/01_stack1.html",
       "/review/algorithm/data_structure/01_stack2.html",

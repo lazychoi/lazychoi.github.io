@@ -1302,6 +1302,27 @@
     "text": "공휴일로 수업이 없다. “Tiny Python Project(켄 유엔스-클락)”을 읽는다."
   },
   {
+    "objectID": "blog/posts/22-12-14.html",
+    "href": "blog/posts/22-12-14.html",
+    "title": "22-12-14(수)",
+    "section": "",
+    "text": "nodejs 설치\n❯ brew install node\n/opt/homebrew/Cellar/node/19.2.0\n❯ node -v\nv19.2.0\n❯ npm -v\n8.19.3\n브라우저에서 콘솔 사용\n\n주소창에 about:blank 입력 후 엔터\n개발자도구(cmd + shift + c) >> Console"
+  },
+  {
+    "objectID": "blog/posts/22-12-14.html#무던한-개발자를-위한-모던한-자바스크립트",
+    "href": "blog/posts/22-12-14.html#무던한-개발자를-위한-모던한-자바스크립트",
+    "title": "22-12-14(수)",
+    "section": "무던한 개발자를 위한 모던한 자바스크립트",
+    "text": "무던한 개발자를 위한 모던한 자바스크립트\n\n문자열과 숫자의 상호 변환: parseFloat(), parseInt(), toString()\n객체 ≠ 자바 객체, ≈ 파이썬 딕서녀리\n배열\n\n인덱스 = 프로퍼티(문자열) -> 숫자를 입력하면 문자열로 자동 변환됨\n배열인지 확인: Array.isArray(변수)\n배열을 문자열로 변환: 쉼표와 덧셈 => 쉼표로 이어진 문자열 반환(공백은 빈 문자열, eg. ‘1,2,,4’)"
+  },
+  {
+    "objectID": "blog/posts/22-12-14.html#알고리즘---quick-sort",
+    "href": "blog/posts/22-12-14.html#알고리즘---quick-sort",
+    "title": "22-12-14(수)",
+    "section": "알고리즘 - quick sort",
+    "text": "알고리즘 - quick sort\n자바로 불완전하게 구현되어 있는 코드를 파이썬으로 바꾸었다. 권오흠 교수님 강의가 정말 탁월하다. 시간복잡도 계산 방법은 제대로 이해하지 못했지만, 퀵 소트의 개념과 구현 원리는 깔끔하게 이해됐다. 그런데, 피봇을 랜덤하게 지정하는 코드는 어떻게 짜야할까?\ndef partition(arr: list, low: int, high: int) -> int: \n    i, j = low - 1, low                     # 작은 부분 인덱스(i), 검사 인덱스(j)\n    p = arr[high]                           # 마지막 인덱스값을 피봇으로 설정\n    for j in range(low, high):               # low부터 high-1까지 피봇과 비교\n        if arr[j] < p:                       # 검사 위치값이 피봇보다 작으면\n            i = i + 1                        # 작은 부분의 마지막 인덱스를 하나 증가하고(=큰 부분 중 가장 작은 인덱스 위치)\n            arr[i], arr[j] = arr[j], arr[i]  # 검사 위치값을 큰 부분 중 가장 작은 인덱스값과 교환\n            print(f'i={i}, j={j+1}, pivot={p}, arr= {arr}')\n        else:                                # 피봇보다 크면 그냥 지나감\n            print(f'i={i}, j={j+1}, pivot={p}, arr= {arr}')\n    arr[i + 1], arr[high] = arr[high], arr[i + 1]    # 피봇과 큰 부분 중 가장 작은 인덱스 위치값과 교환\n    return i + 1                         # 작은 부분 + 1 => 피봇 인덱스\n\ndef quick_sort(arr: list, low: int, high: int):\n    if low < high:\n        pivot = partition(arr, low, high)  # 분할 후 피봇 인덱스 반환\n        quick_sort(arr, low, pivot-1)      # 전반부 정렬\n        quick_sort(arr, pivot+1, high)     # 후반부 정렬\n\narr = [ 6, 2, 1, 9, 7, 3]\nquick_sort(arr, 0, len(arr)-1)\nprint(arr)\n# i=-1, j=1, pivot=3, arr= [6, 2, 1, 9, 7, 3]\n# i=0, j=2, pivot=3, arr= [2, 6, 1, 9, 7, 3]\n# i=1, j=3, pivot=3, arr= [2, 1, 6, 9, 7, 3]\n# i=1, j=4, pivot=3, arr= [2, 1, 6, 9, 7, 3]\n# i=1, j=5, pivot=3, arr= [2, 1, 6, 9, 7, 3]\n# i=-1, j=1, pivot=1, arr= [2, 1, 3, 9, 7, 6]\n# i=2, j=4, pivot=6, arr= [1, 2, 3, 9, 7, 6]\n# i=2, j=5, pivot=6, arr= [1, 2, 3, 9, 7, 6]\n# i=4, j=5, pivot=9, arr= [1, 2, 3, 6, 7, 9]\n# [1, 2, 3, 6, 7, 9]"
+  },
+  {
     "objectID": "blog/posts/22-11-19.html",
     "href": "blog/posts/22-11-19.html",
     "title": "22-11-19(토)",
@@ -1335,6 +1356,27 @@
     "title": "22-10-23(일)",
     "section": "",
     "text": "이것이 코딩 테스트다 09장 최단 경로: Floyd-Warshall Algorithm 미래 도시, Dijkstra Algorithm 전보\n이것이 코딩 테스트다 10장 그래프 이론: 서로소 집합\nmkdocs 링크 문서를 새 창으로 열기\nvscode 사용자 코드 조각 만들기"
+  },
+  {
+    "objectID": "blog/posts/22-12-13.html",
+    "href": "blog/posts/22-12-13.html",
+    "title": "22-12-13(화)",
+    "section": "",
+    "text": "파이썬 클래스\n파이썬 GUI 프로그래밍 - Tk"
+  },
+  {
+    "objectID": "blog/posts/22-12-13.html#do-it-자바프로그래밍-입문",
+    "href": "blog/posts/22-12-13.html#do-it-자바프로그래밍-입문",
+    "title": "22-12-13(화)",
+    "section": "Do it 자바프로그래밍 입문",
+    "text": "Do it 자바프로그래밍 입문\n\n10장 인터페이스\n11장 기본 클래스\n12장 제네릭"
+  },
+  {
+    "objectID": "blog/posts/22-12-13.html#알고리즘",
+    "href": "blog/posts/22-12-13.html#알고리즘",
+    "title": "22-12-13(화)",
+    "section": "알고리즘",
+    "text": "알고리즘\n\n선택 정렬\n버블 정렬\n삽입 정렬\n병합 정렬\n\n// Merge Sort\npublic class MergeSort{\n\n    private static void merge(int[] array, int low, int mid, int high) {\n        \n        int[] tmp = new int[array.length];  // 원본 배열 크기와 같은 임시 배열 선언(이곳으로 병합)\n        int k =low, i=low; int j=mid+1;     // i = 전반부, j=후반부, k=임시배열\n        \n        while(i<=mid && j<=high) {  전반부나 후반부 중 한 곳이 모두 임시 배열에 저장될 때까지 반복\n            \n            if(array[i]<= array[j]) {    // 전반부 요소가 후반부 요소보다 작으면 \n//              result[k++]=array[i++];  // array의 i를 먼저 result k 에 저장한 뒤 1씩 증가\n                tmp[k]=array[i];\n                k++; i++;\n            } else {                     // 후반부 요소가 전반부 요소보다 작으면\n                tmp[k++]=array[j++];\n            }\n        }\n        while(i<=mid) {           // 전반부에 남은 요소가 있으면\n            tmp[k++]=array[i++];\n        }\n        while(j<=high) {           // 후반부에 남은 요소가 있으면\n            tmp[k++]=array[j++];\n        }\n        for(i=low;i<=high;i++) {   // 임시 배열의 모든 요소를 원본에 복사\n            array[i]=tmp[i];\n        }\n    }\n\n    private static void mergeSort(int[] array, int low, int high) {\n        if(low == high) {   // 원본이 모두 낱개로 분할되면 재귀 멈춤\n            return ;\n        }\n        \n        int mid = (low + high)/2;\n        mergeSort(array, low, mid );    // 전반부 재귀 호출\n        mergeSort(array, mid+1, high ); // 후반부 재귀 호출\n        \n        merge(array, low, mid, high);   // 병합\n    }   \n\n    public static void main(String[] args) {\n        int[] array = {8,4,3,12,25,6,13,10};\n        \n        mergeSort(array, 0, array.length-1 );\n        for(int i=0; i<=array.length-1;i++) {   // 정렬 후 배열 출력\n            System.out.print(array[i] + \" \");\n        }\n    }\n}"
   },
   {
     "objectID": "blog/posts/22-10-07.html",
@@ -1845,7 +1887,7 @@
     "href": "blog/blog.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "정렬\n       디폴트\n         \n          날짜 - 날짜(오름차순)\n        \n         \n          날짜 - 날짜(내림차순)\n        \n         \n          제목\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n날짜\n\n\n제목\n\n\n\n\n\n\n\n\n\n\n\n\nDec 12, 2022\n\n\n22-12-12(월)\n\n\n\n\nDec 9, 2022\n\n\n22-12-09(금)\n\n\n\n\nDec 8, 2022\n\n\n22-12-08(목)\n\n\n\n\nDec 7, 2022\n\n\n22-12-07(수)\n\n\n\n\nDec 6, 2022\n\n\n22-12-06(화)\n\n\n\n\nDec 5, 2022\n\n\n22-12-05(월)\n\n\n\n\nDec 2, 2022\n\n\n22-12-02(금)\n\n\n\n\nDec 1, 2022\n\n\n22-12-01(목)\n\n\n\n\nNov 30, 2022\n\n\n22-11-30(목)\n\n\n\n\nNov 29, 2022\n\n\n22-11-29(화)\n\n\n\n\nNov 28, 2022\n\n\n22-11-28(월)\n\n\n\n\nNov 27, 2022\n\n\n22-11-27(일)\n\n\n\n\nNov 26, 2022\n\n\n22-11-26(토)\n\n\n\n\nNov 25, 2022\n\n\n22-11-25(금)\n\n\n\n\nNov 24, 2022\n\n\n22-11-24(목)\n\n\n\n\nNov 23, 2022\n\n\n22-11-23(수)\n\n\n\n\nNov 22, 2022\n\n\n22-11-22(화)\n\n\n\n\nNov 21, 2022\n\n\n22-11-21(월)\n\n\n\n\nNov 19, 2022\n\n\n한국어 임베딩(이기창)\n\n\n\n\nNov 19, 2022\n\n\n22-11-19(토)\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\n일치 없음"
+    "text": "정렬\n       디폴트\n         \n          날짜 - 날짜(오름차순)\n        \n         \n          날짜 - 날짜(내림차순)\n        \n         \n          제목\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n날짜\n\n\n제목\n\n\n\n\n\n\n\n\n\n\n\n\nDec 14, 2022\n\n\n22-12-14(수)\n\n\n\n\nDec 13, 2022\n\n\n22-12-13(화)\n\n\n\n\nDec 12, 2022\n\n\n22-12-12(월)\n\n\n\n\nDec 9, 2022\n\n\n22-12-09(금)\n\n\n\n\nDec 8, 2022\n\n\n22-12-08(목)\n\n\n\n\nDec 7, 2022\n\n\n22-12-07(수)\n\n\n\n\nDec 6, 2022\n\n\n22-12-06(화)\n\n\n\n\nDec 5, 2022\n\n\n22-12-05(월)\n\n\n\n\nDec 2, 2022\n\n\n22-12-02(금)\n\n\n\n\nDec 1, 2022\n\n\n22-12-01(목)\n\n\n\n\nNov 30, 2022\n\n\n22-11-30(목)\n\n\n\n\nNov 29, 2022\n\n\n22-11-29(화)\n\n\n\n\nNov 28, 2022\n\n\n22-11-28(월)\n\n\n\n\nNov 27, 2022\n\n\n22-11-27(일)\n\n\n\n\nNov 26, 2022\n\n\n22-11-26(토)\n\n\n\n\nNov 25, 2022\n\n\n22-11-25(금)\n\n\n\n\nNov 24, 2022\n\n\n22-11-24(목)\n\n\n\n\nNov 23, 2022\n\n\n22-11-23(수)\n\n\n\n\nNov 22, 2022\n\n\n22-11-22(화)\n\n\n\n\nNov 21, 2022\n\n\n22-11-21(월)\n\n\n\n\nNov 19, 2022\n\n\n한국어 임베딩(이기창)\n\n\n\n\nNov 19, 2022\n\n\n22-11-19(토)\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\n일치 없음"
   },
   {
     "objectID": "project/2211_recommend.html",
@@ -2090,7 +2132,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '수', '양', '우', '가', '양', '가', '가', '가']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '양', '미', '가', '가', '가', '가', '가', '가', '수']"
   },
   {
     "objectID": "review/python/class.html",
@@ -2828,6 +2870,13 @@
     "text": "https://www.acmicpc.net/problem/10872\n헤매다가 얼떨결에 풀었다.\n\nn = 3\n# n = int(input())\n\ndef factorial(n):\n    \n    if n == 0:\n        return 1\n    if n == 1:\n        return n\n    else:\n        return n * factorial(n - 1)\n\nfactorial(n)\n\n6\n\n\n재귀 알고리즘은 다음 3가지 조건을 만족해야 한다.(출처: “쓰면서 익히는 알고리즘과 자료구조(윤대석)”\n\n베이스 케이스가 반드시 정의되어야 한다. 베이스 케이스는 재귀 호출을 마무리할 수 있는 조건이다.\n지속적으로 재귀 인자가 변경되어야 하고 변경되는 인자는 베이스 케이스로 수렴해야 한다.\n재귀 알고리즘은 자기 자신을 호출하는 과정이 필요하다.\n\n\ndef fac(n):\n    if(n > 1):\n        return n * fac(n - 1)\n    else:\n        return 1\n\nfac(10)\n\n3628800"
   },
   {
+    "objectID": "review/algorithm/data_structure/quickSort.html",
+    "href": "review/algorithm/data_structure/quickSort.html",
+    "title": "Quick Sort",
+    "section": "",
+    "text": "def partition(arr: list, low: int, high: int) -> int: \n    i, j = low - 1, low                     # 작은 부분 인덱스(i), 검사 인덱스(j)\n    p = arr[high]                           # 마지막 인덱스값을 피봇으로 설정\n    for j in range(low, high):                # low부터 high-1까지 피봇과 비교\n        if arr[j] < p:                       # 검사 위치값이 피봇보다 작으면\n            i = i + 1                        # 작은 부분의 마지막 인덱스를 하나 증가하고(=큰 부분 중 가장 작은 인덱스 위치)\n            arr[i], arr[j] = arr[j], arr[i]  # 검사 위치값을 큰 부분 중 가장 작은 인덱스값과 교환\n            print(f'i={i}, j={j+1}, pivot={p}, arr= {arr}')\n        else:                                # 피봇보다 크면 그냥 지나감\n            print(f'i={i}, j={j+1}, pivot={p}, arr= {arr}')\n    arr[i + 1], arr[high] = arr[high], arr[i + 1]    # 피봇과 큰 부분 중 가장 작은 인덱스 위치값과 교환\n    return i + 1                         # 작은 부분 + 1 => 피봇 인덱스\n\ndef quick_sort(arr: list, low: int, high: int):\n    if low < high:\n        pivot = partition(arr, low, high)  # 분할 후 피봇 인덱스 반환\n        quick_sort(arr, low, pivot-1)      # 전반부 정렬\n        quick_sort(arr, pivot+1, high)     # 후반부 정렬\n\n# arr = [ 6, 3, 1, 9, 7, 4, 10, 2, 5, 8]\narr = [ 6, 2, 1, 9, 7, 3]\nquick_sort(arr, 0, len(arr)-1)\narr\n\ni=-1, j=1, pivot=3, arr= [6, 2, 1, 9, 7, 3]\ni=0, j=2, pivot=3, arr= [2, 6, 1, 9, 7, 3]\ni=1, j=3, pivot=3, arr= [2, 1, 6, 9, 7, 3]\ni=1, j=4, pivot=3, arr= [2, 1, 6, 9, 7, 3]\ni=1, j=5, pivot=3, arr= [2, 1, 6, 9, 7, 3]\ni=-1, j=1, pivot=1, arr= [2, 1, 3, 9, 7, 6]\ni=2, j=4, pivot=6, arr= [1, 2, 3, 9, 7, 6]\ni=2, j=5, pivot=6, arr= [1, 2, 3, 9, 7, 6]\ni=4, j=5, pivot=9, arr= [1, 2, 3, 6, 7, 9]\n\n\n[1, 2, 3, 6, 7, 9]"
+  },
+  {
     "objectID": "review/algorithm/data_structure/03_recur1.html",
     "href": "review/algorithm/data_structure/03_recur1.html",
     "title": "이진수 변환",
@@ -3511,7 +3560,7 @@
     "href": "review/algorithm.html",
     "title": "알고리즘",
     "section": "",
-    "text": "lazychoi\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 21, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n일치 없음"
+    "text": "lazychoi\n\n\nDec 14, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 21, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n일치 없음"
   },
   {
     "objectID": "review/algorithm.html#알고리즘-basic-30",
