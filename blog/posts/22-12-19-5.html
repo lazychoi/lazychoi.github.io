@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lazychoi">
-<meta name="dcterms.date" content="2022-12-15">
+<meta name="dcterms.date" content="2022-12-19">
 
-<title>👀 - 22-12-15(목)</title>
+<title>👀 - 자바 Swing</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -185,9 +185,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">22-12-15(목)</h1>
+      <h1 class="title">자바 Swing</h1>
                                 <div class="quarto-categories">
-                <div class="quarto-category">2022-12</div>
+                <div class="quarto-category">자바</div>
               </div>
                   </div>
   </div>
@@ -205,7 +205,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">공개</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">December 15, 2022</p>
+        <p class="date">December 19, 2022</p>
       </div>
     </div>
     
@@ -216,15 +216,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">목차</h2>
-   
-  <ul>
-  <li><a href="#수업---자바스크립트" id="toc-수업---자바스크립트" class="nav-link active" data-scroll-target="#수업---자바스크립트">수업 - 자바스크립트</a></li>
-  <li><a href="#무던한-개발자를-위한-모던한-자바스크립트" id="toc-무던한-개발자를-위한-모던한-자바스크립트" class="nav-link" data-scroll-target="#무던한-개발자를-위한-모던한-자바스크립트">무던한 개발자를 위한 모던한 자바스크립트</a></li>
-  <li><a href="#알고리즘-heap-정렬" id="toc-알고리즘-heap-정렬" class="nav-link" data-scroll-target="#알고리즘-heap-정렬">알고리즘 heap 정렬</a></li>
-  </ul>
-</nav>
+    
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -235,49 +227,40 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<section id="수업---자바스크립트" class="level2">
-<h2 class="anchored" data-anchor-id="수업---자바스크립트">수업 - 자바스크립트</h2>
+<p>1, main()을 포함한 클래스에서 JFrame 상속:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> App <span class="kw">extends</span> <span class="bu">JFrame</span> <span class="op">{</span> <span class="kw">...</span> <span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>main() 함수에서 생성자 호출하고 JFrame 나타내기</li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        App frame <span class="op">=</span> <span class="kw">new</span> <span class="fu">App</span><span class="op">(</span><span class="st">" "</span><span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li>생성자에서 매개변수, 타이틀, 크기, 위치 지정.</li>
+</ol>
+<div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="fu">App</span><span class="op">(</span><span class="bu">String</span> title<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setTitle</span><span class="op">(</span>title<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setSize</span><span class="op">(</span><span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span>                    <span class="co">// 화면 중앙에 위치</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setDefaultCloseOperation</span><span class="op">(</span><span class="bu">JFrame</span><span class="op">.</span><span class="fu">EXIT_ON_CLOSE</span><span class="op">);</span> <span class="co">// 종료 버튼 누르면 프로세스 종료</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="4" type="1">
+<li>Swing Container 구조</li>
+</ol>
+<p><img src="images/2022-12-19-22-04-38.png" class="img-fluid"></p>
 <ul>
-<li>반복문, 제어문</li>
-<li>함수</li>
-<li><a href="https://ko.javascript.info/date" target="_blank">Date 객체와 날짜</a></li>
-<li>객체로 만든 것을 for문으로 한 번에 출력하려면, 객체를 배열로 묶는다.</li>
+<li>GlassPane: 다른 패널 위에 존재하면서 기본적으로 숨겨져 있는 투명한 판</li>
+<li>JMenuBar: <code>jFrame.setJMenuBar ( new JMenuBar());</code></li>
+<li>ContentPane: UI 컴포넌트가 배치되는 판. <code>jFrame.getContentPane().add( new JButton("확인"), BorderLayout.SOUTH );</code></li>
+<li>LayeredPane: 여러 컴포넌트들이 겹쳐질 때 각 컴포넌트의 상하 위치를 결정.</li>
+<li>JWindow: 윈도우 경계선, 제목 표시줄, 메뉴바가 모두 없는 윈도우를 만드는 컨테이너</li>
+<li>JFrame: 윈도우 경계선, 제목 표시줄, 메뉴바가 있는 윈도우를 만드는 컨테이너 클래스</li>
+<li>JTabbedPane: 탭 별로 다른 내용을 보여주기 위해 사용되는 컨테이너</li>
+<li>JScrollPane: 포함된 컴포넌트의 크기가 JScrollPane 자신보다 큰 경우 수평 또는 수직 스크롤 바를 이용해서 볼 수 있게 해준다</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> today <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> start <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="st">"2022-11-30"</span>)<span class="op">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">"#accent"</span>)<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>((today <span class="op">-</span> start)<span class="op">/</span><span class="dv">1000</span><span class="op">/</span><span class="dv">60</span><span class="op">/</span><span class="dv">60</span><span class="op">/</span><span class="dv">24</span>) <span class="op">+</span> <span class="st">"일"</span><span class="op">;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">future</span>(id<span class="op">,</span> days){</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// date = new Date(start.getTime() + days*24*60*60*1000);</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> date <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(start)<span class="op">;</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    date<span class="op">.</span><span class="fu">setDate</span>(start<span class="op">.</span><span class="fu">getDate</span>() <span class="op">+</span> days)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(id)<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> date<span class="op">.</span><span class="fu">getFullYear</span>() <span class="op">+</span> <span class="st">"년 "</span> <span class="op">+</span> (date<span class="op">.</span><span class="fu">getMonth</span>()<span class="op">+</span><span class="dv">1</span>) <span class="op">+</span><span class="st">"월 "</span> <span class="op">+</span> date<span class="op">.</span><span class="fu">getDate</span>()<span class="op">+</span><span class="st">"일"</span><span class="op">;</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">future</span>(<span class="st">"#date100"</span><span class="op">,</span> <span class="dv">100</span>)<span class="op">;</span>  <span class="co">// start부터 100일 후 날짜 출력</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">future</span>(<span class="st">"#date200"</span><span class="op">,</span> <span class="dv">200</span>)<span class="op">;</span>  <span class="co">// 200일 후 날짜 출력</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">future</span>(<span class="st">"#date365"</span><span class="op">,</span> <span class="dv">365</span>)<span class="op">;</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">future</span>(<span class="st">"#date500"</span><span class="op">,</span> <span class="dv">500</span>)<span class="op">;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</section>
-<section id="무던한-개발자를-위한-모던한-자바스크립트" class="level2">
-<h2 class="anchored" data-anchor-id="무던한-개발자를-위한-모던한-자바스크립트">무던한 개발자를 위한 모던한 자바스크립트</h2>
-<p>아는 만큼 보인다는 독자의 평이 적절한 책이다. 연습문제 수준이 꽤 높다. 거의 모르겠다. 해답을 구할 수 없을까?</p>
-<ul>
-<li>destructuring: ’비구조화’로 번역되는 데 무슨 말인지 감을 잡을 수 없다. 자동번역기의 ’구조 해제’가 좀 더 적절해 보인다. 배열의 각 요소를 변수에 담는 기능을 의미한다. 파이썬에서 당연하게 사용하던 기능이다. 자바스크립트에서는 대괄호(배열)나 중괄호(객체)를 붙여야 한다. eg. [a, b] = array, [a, b] = [b, a]</li>
-<li>거짓으로 평가되는 값(falsy): 0, NaN, null, undefined</li>
-<li>명시적으로 true, false를 조건으로 사용하라. “형식을 확인하고 자동 형 변환을 피한다”</li>
-<li>… 연산자</li>
-<li>혼합된 형식의 비교, 특히 느슨한 연산자 ==와 !=를 피하라.</li>
-</ul>
-</section>
-<section id="알고리즘-heap-정렬" class="level2">
-<h2 class="anchored" data-anchor-id="알고리즘-heap-정렬">알고리즘 heap 정렬</h2>
-<p><a href="https://slid.cc/share/vdocs/heap-sort-bb49a7b96720418b8ecad1d75ec74364" target="_blank">권오흠 교수 heap sort 강좌</a></p>
-<p>파이썬으로 구현하기</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

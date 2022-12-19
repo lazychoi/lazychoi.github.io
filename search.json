@@ -784,6 +784,97 @@
     "text": "02장 간단한 분류 알고리즘 훈련\n\n\n\n\n\n\n\n\n\n\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n03장 사이킷런 - Perceptron\n\n\n\n\n\n\n\n\n\n\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n03장 사이킷런 - Random Forest\n\n\n\n\n\n\n\n\n\n\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n03장 사이킷런 - SVM\n\n\n\n\n\n\n\n\n\n\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n03장 사이킷런 - decision tree\n\n\n\n\n\n\n\n\n\n\n\n\nNov 9, 2022\n\n\n\n\n\n\n  \n\n\n\n\n03장 사이킷런 - logistic regression\n\n\n\n\n\n\n\n\n\n\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n04장 결측치 처리\n\n\n\n\n\n\n\n\n\n\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nKNN(K-Nearest Neighbor) 알고리즘\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n\n\n\n\n\n\n\n\n\n순서 있는 특성 매핑\n\n\n\n\n\n\n\n\n\n\n \n\n\n\n\n일치 없음"
   },
   {
+    "objectID": "books/kocw_database_modeling/SQL 데이터조작.html",
+    "href": "books/kocw_database_modeling/SQL 데이터조작.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/database02.html",
+    "href": "books/kocw_database_modeling/database02.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의\n\n\n\n| 800\n\n\n 파일 시스템의 문제점 - 같은 내용의 데이터가 여러 파일에 중복 저장된다. - 응용 프로그램이 데이터 파일에 종속적이다. - 데이터 파일에 대한 동시 공유, 보안, 회복 기능이 부족하다. - 응용 프로그램 개발이 쉽지 않다.\n\n\n\n데이터 중복성 | 800\n\n\n\n\n\n데이터 종속성 | 800\n\n\n\n\n\n데이터베이스 관리 시스템 | 800\n\n\n\n\n\n\nDBMS의 주요 기능 | 800\n\n\n\n\n\nDBMS 장단점 | 800\n\n\n\n\n\n1세대 DBMS | 800\n\n\n\n\n\n2세대 DBMS | 800\n\n\n\n\n\n3세대 DBMS | 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/SQL 데이터정의.html",
+    "href": "books/kocw_database_modeling/SQL 데이터정의.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/정규형과 정규화예제.html",
+    "href": "books/kocw_database_modeling/정규형과 정규화예제.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 삽입 이상 : 고객 아이디 melon을 넣고 싶은데 이벤트번호와 당첨여부 데이터가 없어 키값이 null이 되어 삽입 안 됨 - 갱신 이상 : 고객 아이디 apple의 등급을 vip로 바꿀 때 일부만 바꿀 수도 있음 - 삭제 이상 : 고객 아이디 orange 이벤트 기록을 지우고 싶을 때 등급과 할인율까지도 삭제 됨\n - 고객아이디 → 등급 - 고객아이디 → 할인율 - ⇒ 부분 함수 종속 관계 - 고객아이디 → 등급 → 할인율 : 이행\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - gold 할인율을 10 → 15%로 일부만 갱신할 때 데이터 불일치 - vip 등급을 지닌 유일한 고객인 banana 고객이 탈퇴할 때 vip 할인율도 같이 사라짐 - bronze 등급의 할인율을 1%로 정했지만 이 등급을 지닌 고객이 아무도 없을 때 삽입이 안 됨\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 삽입 이상 : 수강신청을 하지 않은 학생은 학번 삽입 불가. 왜냐면, 과목번호가 없기 때문에 - 갱신 이상 : 1명의 학생이 여러 과목을 수강한 경우. 지도교수가 바뀔 경우 모든 데이터가 바뀌어야 하는데 그렇지 않은 경우 발생 가능 - 삭제 이상 : 1과목만 수강신청한 학생의 수강신청을 삭제하면 다른 모든 정보도 같이 삭제됨\n - 부분 함수 종속을 없애야 함\n\n\n\n| 800\n\n\n - 세 개의 릴레이션으로 분해\n - 이행적 함수 종속관계를 없애야 함\n\n\n\n| 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/개념적 데이터 모델링.html",
+    "href": "books/kocw_database_modeling/개념적 데이터 모델링.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의\n\n\n\n\n\n\n - 개체 : 네모 - 관계 : 마름모 - 속성 : 타원 - 밑줄 : 키 속성 - n, m, 1 : 관계\n\n\n\n\n\n - 유도 속성 : 기존 속성에 의해 유도된 속성. 주민등록번호 → 나이(유도 속성)\n\n - 다중 값은 이중 타원으로 표시\n\n - 복합 속성은 속성 밑에 하위 속성 표시\n - 유도 속성은 점선 타원으로 표현\n\n - 밑줄로 표현 - 유일한 속성이 존재하지 않은 경우 둘 이상을 속성을 키 속성으로 한다 : 이름+생년월일+주소\n - 관계는 마름모로 표현\n\n - 책 - 구매 - 고객 : 다 대 다 관계\n\n\n\n\n - 한 번이라도 책을 구매한 사람만이 고객 - 책은 팔리지 않은 책도 존재\n\n - 부양가족은 직원이라는 오너 개체가 있어야 존재. - 직원과 부양가족은 일 대 다 관계. - 직원은 부양가족이 있을 수도 없을 수도 있지만, 부양가족은 직원이 반드시 있어야 함 - 부양가족은 직원의 키를 포함해서 키를 구성해야 구분할 수 있음. - 약한개체는 이중 사각형, 약한 개체와의 관계는 이중 마름모꼴로 표현"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/index.html",
+    "href": "books/kocw_database_modeling/index.html",
+    "title": "데이터베이스의 원리와 응용",
+    "section": "",
+    "text": "데이터베이스의 원리와 응용\n\n데이터베이스 기본개념 데이터베이스의 필요성과 정의 및 주요 특성에 대해 공부한다.\n데이터베이스 관리시스템 데이터베이스 관리시스템의 등장배경과 정의 및 특성, 발전과정에 대해 공부한다.\n[[데이터베이스 시스템]] 데이터베이스 시스템의 정의 및 관련 요소에 대해 공부한다.\n[[개념적 데이터 모델링]] 데이터베이스 설계단계와 데이터 모델링에 대한 개념을 공부하고, 개체-관계 모델 작성방법에 대해 공부한다.\n[[개념적 데이터 모델링 실습]] 사례를 통해 직적 개체-관계 모델을 작성해보는 실습을 진행하다.\n[[관계 데이터 모델링]] 관계 데이터 모델의 개념 및 제약을 살펴보고, 개체-관계 모델을 관계 데이터 모델로 변경하는 규칙을 공부한다.\n[[관계 데이터 모델링 실습]] 사례를 통해 직적 관계 데이터 모델을 작성해보는 실습을 진행하다.\n[[이상현상과 함수종속]] 이상현상의 개념 및 사례를 살펴보고, 정규화 수행을 위한 함수 종속성 개념을 이해한다.\n[[정규형과 정규화예제]] 정규형의 유형에 대해 살펴보고, 예제를 통해 정규화 과정을 연습해본다.\n[[관계데이터 연산]] 관계 데이터 연산의 개념과 종류를 알아보고, 일반집합연산자와 순수관계연산자를 이용해 질의를 표현하는 방법을 익힌다.\n[[SQL 데이터정의]] SQL을 통한 데이터 정의 기능(테이블 생성, 테이블 변경, 테이블 제거)을 예제를 통해 익힌다.\n[[SQL 데이터조작]] SQL을 통한 데이터 조작 기능(데이터 검색, 데이터 삽입, 데이터 수정, 데이터 삭제)을 예제를 통해 익힌다.\n[[실습]] ERD, 관계데이터모델, SQL 기업에서의 데이터베이스 설계를 위한 사례를 바탕으로 ERD작성, 관계데이터모델, SQL을 통한 질의까지 실습을 진행한다."
+  },
+  {
+    "objectID": "books/kocw_database_modeling/데이터베이스 시스템.html",
+    "href": "books/kocw_database_modeling/데이터베이스 시스템.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의\n\n\n\n학습목표 | 800\n\n\n\n\n\n데이터베이스 시스템이란 | 800\n\n\n\n\n\n스키마와 인스턴스 | 800\n\n\n\n\n\n\n3단계 데이터베이스 구조 | 800\n\n\n\n\n external schema = sub schema 전체 스키마 중 필요한 일부만 사용\n 데이터베이스 하나에 개념 스키마 하나\n\n\n\n내부 단계 | 800\n\n\n\n 응용 인터페이스 저장 인터페이스 데이터의 독립성 실현\n\n\n\n데이터 독립성 | 800\n\n\n 데이터 사전(data dictionary) = system catalog\n\n\n\n데이터 디렉토리 | 800\n\n\n\n\n\n데이터베이스 사용자 | 800\n\n\n\n\n\n데이터베이스 관리자 | 800\n\n\n\n\n\n\n데이터 언어 | 800\n\n\n - procedural DML - nonprocedural DML : eg. SQL\n\n - query processor - stored data manager"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/관계데이터 연산.html",
+    "href": "books/kocw_database_modeling/관계데이터 연산.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 차수 = 속성 - 도메인 : int = int, float = float 등\n - 나이와 직위가 달라 합병 불가능\n\n\n\n| 800\n\n\n - 카디널리티 = 행 개수. R은 3개, S는 3개. 중복 1개 ⇒ 합집합 5개\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 논리연산자 : and, or, not\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/개념적 데이터 모델링 실습.html",
+    "href": "books/kocw_database_modeling/개념적 데이터 모델링 실습.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/database01.html",
+    "href": "books/kocw_database_modeling/database01.html",
+    "title": "데이터베이스 기본개념",
+    "section": "",
+    "text": "강의\n데이터에서 정보를 의사결정자에게 제공\n\n\n\n| 800\n\n\n - DIKW : 피라미드 위로 올라갈수록 가치(value) 증가 - 데이터 : 가공하기 전의 순수한 상태의 수치들. 의미 없는 사실이나 값. eg.쿠팡에서 A란 사람이 검색한 기록 - 정보 : 데이터를 유의미하게 가공한 2차 데이터. 의이 있게 구조화된 데이터 집합 eg. A는 샤오미와 보스의 헤드폰을 검색했다. - 지식 : 정보를 의미 있게 처리하고 활용한 것. eg. A가 헤드폰을 구매하기 위해 고민하고 있다. - 지혜 : 지식을 활용할 수 있는 창의적인 아이디어. eg. 두 제품의 특성을 모두 가지고 있는 소니 제품을 추천해야겠다.\n예전에는 정보화시대라고 불렀지만, 지금은 빅데이터시대라고 부름\n\n\n\n정보 처리 | 800\n\n\n데이터를 통해 에어컨이 많이 팔리고 , 청소기가 가장 적게 팔린다는 정보 얻음 → 사이트를 청소기를 중심으로 개편하든지, 청소기에 대한 프로모션을 진행하자.\n\n\n\n정보 시스템과 데이터베이스 | 800\n\n\n정보 시스템 : 조직 운영에 필요한 데이터를 수집하여 저장해 두었다가 필요할 때 유용한 정보를 만들어 주는 수단.\n 동그라미 친 것이 데이터베이스의 특성\n\n\n\n\n| 800\n\n\n데이터베이스 : 특정 조직의 여러 사용자가 공유하여 사용할 수 있도록 통합하여 저장한 운영 데이터의 집합\n\n통합 데이터 : 최소의 중복과 통제가능한 중복만 허용하는 데이터\n공유 데이터 : 특정 조직의 여러 사용자가 함께 소유하고 이용할 수 있는 공용 데이터\n저장 데이터 : 컴퓨터가 접근할 수 있는 매체에 저장된 데이터\n운영 데이터 : 조직의 주요 기능을 수행하기 위해 지속적으로 유지해야 하는 데이터\n\n\n\n\n| 800\n\n\n데이터베이스의 특성\n\n실시간 접근 : 사용자의 데이터 요구에 실시간으로 응답\n계속 변화 : 데이터의 계속적인 삽입, 삭제, 수정을 통해 현재의 정확한 데이터를 유지\n동시 공유 : 서로 다른 데이터의 동시 사용뿐만 아니라 같은 데이터의 동시 사용도 지원\n내용 기반 참조 : 데이터가 저장된 주소나 위치가 아닌 내용으로 참조"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/이상현상과 함수종속.html",
+    "href": "books/kocw_database_modeling/이상현상과 함수종속.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 이벤트에 참여하지 않는 melon이란 고객아이디를 삽입하려 할 경우 - → 이벤트에 참여하지 않았기 때문에 이벤트번호와 당첨여부가 NULL\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 하나의 X 값에 대한 Y 값이 항상 하나\n - 동명이인이 있을 수 있기 때문에 “고객이름 → 등급”은 항수 종속 관계가 성립하지 않음\n\n\n\n| 800\n\n\n - 결정자 → 종속자\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 고객이름은 고객아이디 하나에도 종속되어 있음 → 부분 함수 종속\n\n\n\n| 800\n\n\n\n\n\n| 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/관계 데이터 모델링 실습.html",
+    "href": "books/kocw_database_modeling/관계 데이터 모델링 실습.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 1측인 교수 릴레이션에 n측인 학생을 포함시키면 속성의 원자값 조건을 위배하게 된다.(즉, 학생 여러 명이 포함된다.)\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 좌석은 비행기가 있어야만 존재할 수 있는 약한 개체다. - 따라서 비행비 번호를 좌석 릴레이션의 기본키에 포함해야 한다.\n - 공급 - 작성\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n - 이중 타원 = 다중값 속성 - 사원번호 A. 사원명 홍길동. 직위 차장. 부학직원 B, C, D - ⇒ 사원 릴레이션 : 사원번호 A. 사원명 홍길동. 직위 차장. - ⇒ 사원-부하 릴레이션 : 사원번호 A. 부하직원 B = (A, B), (A, C), (A, D)\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800"
+  },
+  {
+    "objectID": "books/kocw_database_modeling/관계 데이터 모델링.html",
+    "href": "books/kocw_database_modeling/관계 데이터 모델링.html",
+    "title": "👀",
+    "section": "",
+    "text": "강의 보기\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n 이번 시간에 공부할 부분은 3단계 논리적 설계\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n 후보키로 ‘① 고객아이디 ② (고객이름, 주소)’ 를 꼽을 수 있으나 주소에 NULL이 포함될 수 있기 때문에 기본키에서는 제외한다.\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800\n\n\n\n\n\n| 800"
+  },
+  {
     "objectID": "books/This_is_coding_test.html",
     "href": "books/This_is_coding_test.html",
     "title": "이것이 코딩 테스트다",
@@ -931,6 +1022,20 @@
     "text": "2장 벡터가 어떻게 의미를 가지는가\n\n임베딩을 만드는 세 가지 철학\n\n\n\n\n\n\n\n\n\n구분\n백오브워즈(bag of words) 가정\n언어 모델(language model)\n분포 가정(distributional hypothesis)\n\n\n\n\n내용\n어떤 단어가 (많이) 쓰였는가\n단어가 어떤 순서로 쓰였는가\n어떤 단어가 같이 쓰였는가\n\n\n대표 통계량\nTF-IDF\n-\nPMI\n\n\n대표 모델\nDeep Averaging Network\nELMo, GPT\nWord2Vec"
   },
   {
+    "objectID": "blog/posts/22-12-19-2.html",
+    "href": "blog/posts/22-12-19-2.html",
+    "title": "파이썬으로 프로세스, 쓰레드 다루기",
+    "section": "",
+    "text": "출처 - 혼자 공부하는 컴퓨터 구조 + 운영체제\n부모 프로세스와 자식 프로세스 id 출력\nfrom multiprocessing import Process\nimport os\n\ndef foo():\n    print('child process', os.getpid())\n    print('my parent process', os.getppid())\n\nif __name__ == '__main__':\n    print('parent proces', os.getpid())\n    child = Process(target=foo).start()\n\n# parent proces 59881\n# child process 59883\n# my parent process 59881\n같은 작업을 하는 프로세스 여러 개 만들기\nfrom multiprocessing import Process\nimport os\n\ndef foo():\n    print(\"Hello os\")\n\nif __name__ == '__main__':\n    Process(target=foo).start()\n    Process(target=foo).start()\n    Process(target=foo).start()\n다른 작업을 하는 프로세스 여러 개 만들기\nfrom multiprocessing import Process\nimport os\n\ndef foo():\n    print(\"Hello foo\")\n\ndef bar():\n    print(\"Hello bar\")\n\ndef baz():\n    print(\"Hello baz\")\n\nif __name__ == '__main__':\n    Process(target=foo).start()\n    Process(target=bar).start()\n    Process(target=baz).start()"
+  },
+  {
+    "objectID": "blog/posts/22-12-19-2.html#쓰레드",
+    "href": "blog/posts/22-12-19-2.html#쓰레드",
+    "title": "파이썬으로 프로세스, 쓰레드 다루기",
+    "section": "쓰레드",
+    "text": "쓰레드\n쓰레드 만들기\nimport threading\nimport os\n\ndef foo():\n    print('thread id', threading.get_native_id())\n    print('process id', os.getpid())\n\nif __name__ == '__main__':\n    print('process id', os.getpid())\n    thread = threading.Thread(target=foo).start()\n\n# process id 60538\n# thread id 2461303\n# process id 60538\n같은 작업을 하는 쓰레드 만들기\nimport threading\nimport os\n\ndef foo():\n    print('thread id', threading.get_native_id())\n    print('process id', os.getpid())\n\nif __name__ == '__main__':\n    print('process id', os.getpid())\n    thread1 = threading.Thread(target=foo).start()\n    thread2 = threading.Thread(target=foo).start()\n    thread3 = threading.Thread(target=foo).start()\n\n# process id 60661    <- 같은 프로세스 공유\n# thread id 2463436\n# process id 60661    <- 같은 프로세스 공유\n# thread id 2463437\n# process id 60661    <- 같은 프로세스 공유\n# thread id 2463438\n# process id 60661    <- 같은 프로세스 공유\n각기 다른 작업하는 쓰레드 만들기\nimport threading\nimport os\n\ndef foo():\n    print('This is foo', threading.get_native_id(), os.getpid())\n\ndef bar():\n    print('This is bar', threading.get_native_id(), os.getpid())\n\ndef baz():\n    print('This is baz', threading.get_native_id(), os.getpid())\n\nif __name__ == '__main__':\n    print('process id', os.getpid())\n    thread1 = threading.Thread(target=foo).start()\n    thread2 = threading.Thread(target=bar).start()\n    thread3 = threading.Thread(target=baz).start()\n\n# process id 60881\n# This is foo 2466643 60881\n# This is bar 2466644 60881\n# This is baz 2466645 60881"
+  },
+  {
     "objectID": "blog/posts/22-11-01.html",
     "href": "blog/posts/22-11-01.html",
     "title": "22-11-01(화)",
@@ -985,6 +1090,20 @@
     "title": "22-11-24(목)",
     "section": "챗봇 프로젝트",
     "text": "챗봇 프로젝트\n조원들에게 보낸 메시지 1. 프로젝트에서 작업할 폴더 만들기 2. 작업할 폴더 안에 들어가서 git init 3. git remote add origin git@github.com:doksan-tech/chatbot.git 4. git pull origin main 5. git branch <브랜치명> ← 앞으로 자신이 사용할 브랜치명을 지으세요. 6. git checkout <브랜치명>\n요렇게 기본 설정을 해서 각자 브랜치에서 작업을 하고 마지막에 PR을 해서 main으로 합치고 README 파일을 작성하면 될 것 같아요\n제 개인 깃허브가 아니고 조직 깃허브예요. 모든 조원에게 admin 권한을 주었으니 모두의 권한이 똑같아요. 그래서 취업하실 때에도 사용하실 수 있을 거예요"
+  },
+  {
+    "objectID": "blog/posts/22-12-19-3.html",
+    "href": "blog/posts/22-12-19-3.html",
+    "title": "javaFx 환경 설치",
+    "section": "",
+    "text": "출처\njenv(Java environment manager) : an open-source tool that will allow us to manage several JDKs on Linux-type systems\n$ brew install jenv\n$ echo 'export PATH=\"$HOME/.jenv/bin:$PATH\"' >> ~/.zshrc\n$ echo 'eval \"$(jenv init -)\"' >> ~/.zshrc\n$ jenv enable-plugin maven\n\n// brew에 외부 저장소 등록 후 설치\n$ brew tap mdogan/zulu  \n$ brew install zulu-jdk17\n\n// jenv 사용\n$ jenv add /Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home/\n$ jenv versions\n\n// 사용할 자바 버전 설정\n$ jenv global zulu64-17.0.5\n$ jenv shell zulu64-17.0.5\n\n// 확인\n$ jenv versions\nsystem\n17.0\n17.0.5\n* zulu64-17.0.5 (set by JENV_VERSION environment variable)\n\n// PATH 등록\n$ echo 'jenv shell zulu64-17.0.2' >> ~/.zshrc\n\n// shell 재실행\n$ source ~/.zshrc\n\n// scene-builder 설치: 경로 -> /Applications/SceneBuilder.app\n$ brew install --cask scenebuilder"
+  },
+  {
+    "objectID": "blog/posts/22-12-19-3.html#이클립스-설정",
+    "href": "blog/posts/22-12-19-3.html#이클립스-설정",
+    "title": "javaFx 환경 설치",
+    "section": "이클립스 설정",
+    "text": "이클립스 설정\nEclipse >> Help >> Eclipse Marketplace >> javafx 검색 e(fx)clipse 설치\n\njavafx 프로젝트 만들기\nNew >> Other >> JavaFX >> JavaFX Project\n이클립스에서 JavaFX 설정이 여의치 않아 일단 Swing으로 만들어 보리고 했다.\n\nCalendar class 익히기\n공식 문서\nCalendar.YEAR => 예상과 달리 현재 연도를 반환하지 않고 필드 번호를 반환한다.\nCalendar cal = Calendar.getInstance();\nSystem.out.println(\"Field number ERA: \\t\\t\\t\" + cal.ERA);                               // 0 AD, BC\nSystem.out.println(\"Field number YEAR: \\t\\t\\t\" + cal.YEAR);                             // 1\nSystem.out.println(\"Field number MONTH: \\t\\t\\t\" + cal.MONTH);                           // 2\nSystem.out.println(\"Field number WEEK_OF_YEAR: \\t\\t\" + cal.WEEK_OF_YEAR);               // 3\nSystem.out.println(\"Field number WEEK_OF_MONTH: \\t\\t\" + cal.WEEK_OF_MONTH);             // 4\nSystem.out.println(\"Field number DATE: \\t\\t\\t\" + cal.DATE);                             // 5\nSystem.out.println(\"Field number DAY_OF_MONTH: \\t\\t\" + cal.DAY_OF_MONTH);               // 5\nSystem.out.println(\"Field number DAY_OF_YEAR: \\t\\t\" + cal.DAY_OF_YEAR);                 // 6\nSystem.out.println(\"Field number DAY_OF_WEEK: \\t\\t\" + cal.DAY_OF_WEEK);                // 7\nSystem.out.println(\"Field number DAY_OF_WEEK_IN_MONTH: \\t\" + cal.DAY_OF_WEEK_IN_MONTH); // 8\nSystem.out.println(\"Field number AM_PM: \\t\\t\\t\" + cal.AM_PM);                           // 9\nSystem.out.println(\"Field number HOUR: \\t\\t\\t\" + cal.HOUR);                             // 10\nSystem.out.println(\"Field number HOUR_OF_DAY: \\t\\t\" + cal.HOUR_OF_DAY);                 // 11\nSystem.out.println(\"Field number MINUTE: \\t\\t\\t\" + cal.MINUTE);                         // 12\nSystem.out.println(\"Field number SECOND: \\t\\t\\t\" + cal.SECOND);                         // 13\nSystem.out.println(\"Field number MILLISECOND: \\t\\t\" + cal.MILLISECOND);                 // 14\nSystem.out.println(\"Field number ZONE_OFFSET: \\t\\t\" + cal.ZONE_OFFSET);                 // 15\nSystem.out.println(\"Field number DST_OFFSET: \\t\\t\" + cal.DST_OFFSET);                   // 16\n현재 연도를 반환하려면 Calendar.get(Calendar.YEAR) 처럼 get() 메소드 안에 매개변수로 넣어야 한다.\nCalendar.get(int 필드 번호) => int\n월의 마지막 날 Calendar.getActualMaximum(Calendar.DATE)\nSystem.out.println(cal.get(cal.YEAR) + \"년\");            // 2022년\nSystem.out.println(cal.get(cal.MONTH)+1 + \"월\");         // 12월 <- 1월이 0 \nSystem.out.println(cal.get(cal.DATE) + \"일\");            // 19일\nSystem.out.println(cal.get(cal.DAY_OF_WEEK) + \"요일\");    // 2요일 <- 일요일부터 1\nSystem.out.println(cal.get(cal.HOUR) + \"시 (\" + cal.get(cal.HOUR_OF_DAY) + \"시)\"); // 5시 (17시)\nSystem.out.println(cal.get(cal.MINUTE) + \"분\");          // 12분\nSystem.out.println(cal.get(cal.SECOND) + \"초\");          // 6초\nadd(int field, int amount): calendar field에 amount 만큼을 더하거나 뺀다. 반환값이 없고 자신을 바꾼다.\ncal.add(cal.DATE, 20); // add method는 반환값이 없어 print 못 함\nSystem.out.println(\"현재 날짜로부터 20일 후는 \" +  cal.get(cal.YEAR) + \"년 \" +  (cal.get(cal.MONTH)+1) + \"월 \" + cal.get(cal.DATE) + \"일\");  \ncal.add(cal.DATE, -20); \nSystem.out.println(\"바꾼 날짜로부터 20일 전은 \" +  cal.get(cal.YEAR) + \"년 \" +  (cal.get(cal.MONTH)+1) + \"월 \" + cal.get(cal.DATE) + \"일\");\n\n// 현재 날짜로부터 20일 후는 2023년 1월 8일\n// 바꾼 날짜로부터 20일 전은 2022년 12월 19일"
   },
   {
     "objectID": "blog/posts/22-11-14.html",
@@ -1069,6 +1188,27 @@
     "title": "22-12-05(월)",
     "section": "",
     "text": "XML을 공부해야 XML을 기반으로 만들어진 JSON, GML(Geometric Markup Langugae) 등을 이해할 수 있음.\n\n배열과 구조체를 합친 것이 파이썬의 list\n배열은 연속적인 메모리 공간에 할당됨\nint a[5] -> 4바이트 크기의 방 5개 할당: a[0] ~ a[4]\n배열은 같은 자료형만 쓸 수 있음.\n여러 자료형을 묶어서 쓸 수 있도록 한 것이 구조체(C에서 유래) eg. 학생-번호, 이름, 나이, 주소 등\n\nStruct\n{\n    int number\n    char name[5]\n    int age\n    char address[20]\n}Student\n\n구조체 -> 클래스(구조체+함수)\n데이터 관리\n\n디스트 :\n\n파일처리(동시 사용 불가능) -> 데이터베이스(DBMS가 여러 프로그램의 파일 접근을 스케줄링)\n디스트 IO 최소화\n\n메모리 :\n\n자료구조 : 메모리에 데이터 저장. int, char, … -> 배열, 구조체, .. -> 스택, 큐, ..\n알고리즘 : 메모리에서 효율적 데이터 처리. 비교 횟수 최소화. 정렬, 검색, …\n\n\n\n변수\n\n객체지향 아닌 경우\n\n지역 변수: 블록 안에서 선언. 블록 안에서만 사용 가능.\n전역 변수: 블록 밖에서 선언\n\n객체지향인 경우\n\n지역/전역\n클래스 변수: 첫번째 객체가 만들어질 때 생성된 변수를 다른 객체가 같이 사용할 때의 변수. eg. 클래스에서 static으로 선언.\n객체 변수: 각 객체가 생성될 때의 변수\n\n\n생성자 함수, 소멸자 함수\n\n생성자 함수: 객체가 생성될 때 자동으로 호출됨\n소멸자 함수: 할당한 메모리 해제."
+  },
+  {
+    "objectID": "blog/posts/22-12-15.html",
+    "href": "blog/posts/22-12-15.html",
+    "title": "22-12-15(목)",
+    "section": "",
+    "text": "반복문, 제어문\n함수\nDate 객체와 날짜\n객체로 만든 것을 for문으로 한 번에 출력하려면, 객체를 배열로 묶는다.\n\nconst today = new Date();\nconst start = new Date(\"2022-11-30\");\ndocument.querySelector(\"#accent\").innerHTML = Math.floor((today - start)/1000/60/60/24) + \"일\";\n\nfunction future(id, days){\n    // date = new Date(start.getTime() + days*24*60*60*1000);\n    let date = new Date(start);\n    date.setDate(start.getDate() + days)\n    document.querySelector(id).innerHTML = date.getFullYear() + \"년 \" + (date.getMonth()+1) +\"월 \" + date.getDate()+\"일\";\n}\n\nfuture(\"#date100\", 100);  // start부터 100일 후 날짜 출력\nfuture(\"#date200\", 200);  // 200일 후 날짜 출력\nfuture(\"#date365\", 365);\nfuture(\"#date500\", 500);"
+  },
+  {
+    "objectID": "blog/posts/22-12-15.html#무던한-개발자를-위한-모던한-자바스크립트",
+    "href": "blog/posts/22-12-15.html#무던한-개발자를-위한-모던한-자바스크립트",
+    "title": "22-12-15(목)",
+    "section": "무던한 개발자를 위한 모던한 자바스크립트",
+    "text": "무던한 개발자를 위한 모던한 자바스크립트\n아는 만큼 보인다는 독자의 평이 적절한 책이다. 연습문제 수준이 꽤 높다. 거의 모르겠다. 해답을 구할 수 없을까?\n\ndestructuring: ’비구조화’로 번역되는 데 무슨 말인지 감을 잡을 수 없다. 자동번역기의 ’구조 해제’가 좀 더 적절해 보인다. 배열의 각 요소를 변수에 담는 기능을 의미한다. 파이썬에서 당연하게 사용하던 기능이다. 자바스크립트에서는 대괄호(배열)나 중괄호(객체)를 붙여야 한다. eg. [a, b] = array, [a, b] = [b, a]\n거짓으로 평가되는 값(falsy): 0, NaN, null, undefined\n명시적으로 true, false를 조건으로 사용하라. “형식을 확인하고 자동 형 변환을 피한다”\n… 연산자\n혼합된 형식의 비교, 특히 느슨한 연산자 ==와 !=를 피하라."
+  },
+  {
+    "objectID": "blog/posts/22-12-15.html#알고리즘-heap-정렬",
+    "href": "blog/posts/22-12-15.html#알고리즘-heap-정렬",
+    "title": "22-12-15(목)",
+    "section": "알고리즘 heap 정렬",
+    "text": "알고리즘 heap 정렬\n권오흠 교수 heap sort 강좌\n파이썬으로 구현하기"
   },
   {
     "objectID": "blog/posts/22-12-01.html",
@@ -1505,6 +1645,27 @@
     "text": "개인 공부\n\n크롤링 in wsl\n블로그 도구로 Material for MKDocs 선택한 이유\n\n기술 변화 속도가 빠르기 때문에 특정 어플에 얽매이지 않아야 오랫동안 유지할 수 있다.\n표준 markdown 문법을 사용하고 특정 OS나 편집기에 구애받지 않는다.\n\nvscode extension"
   },
   {
+    "objectID": "blog/posts/22-12-16.html",
+    "href": "blog/posts/22-12-16.html",
+    "title": "22-12-16(금)",
+    "section": "",
+    "text": "파일 IO\n데이터베이스\n\n\n\n\n메타 데이터 = 시스템 카탈로그(오라클 용어) = 데이터 사전 : DB의 수많은 테이블에 대한 정보 요약 저장\n쿼리 날리면\n\n구문 분석\n시스템 카탈로그 이용해 테이블 정보 확인\n권한 검사\n효율적 실행 계획(execute plan) 생성 by 옵티마이저(최적화기) in DB engine\n\n경험 기반: cost base (시스템 카탈로그에 있는 통계 정보 이용)\n관례에 따라: rule base\n=> IO 최소화 목적 why? 데이터가 디스크에 저장되어 있기 때문\n디스크는 write를 동시에 할 수 없음(하나 밖에 없는 헤드가 있는 곳에 저장) => 여러 대의 디스크에 분산 처리\n실시간 서비스 위해 디스크에 있는 데이터를 메모리에 올려 사용하는 메모리 기반 DBMS = MMDBMS => 전원이 나가도 최신 데이터가 유지되도록 노력\n=> 휘발성 문제 해결 위해 SSD 기반 DB 개발. 단점은 수명이 짧음 => SSD의 여러 곳에 골고루 저장되게 해 특정 영역의 write 가능 횟수가 급격히 줄지 않도록 노력\n\n\nSQL 속도 개선을 위해 튜닝을 하려면 옵티마이저에 대해 잘 알아야 한다.\n\n프로그램-데이터 독립성: DB는 파일을 논리적으로 모델링해서 사용하기 때문에 mysql을 쓰다가 oracle로 바꾼다고 해서 DB를 바꿀 필요는 없다.\n데이터에 특화된 DB: 공간 DBMS, 시공간 DBMS\n외래키\n\n1:N => N쪽에 외래키 넣는다 eg. 교수:학생 => 학생테이블에 교수테이블의 기본키를 넣는다. 그래야 단일성이 유지된다.(교수테이블에 넣으려면 여러 학생을 같은 컬럼에 넣어야 하는 문제 발생)\nN:M => 중간에 매개하는 테이블을 만들어 매개 테이블에 양쪽의 외래키를 넣는다.\n\n트랜잭션: DB에서 수행되는 논리적인 작업 모음\n보안 관련 공부할 때 사용하는 운영체제: 칼리 리눅스\n데이터 모델링 도구: DA#\n외부-개념-내부 단계로 나누는 이유는 독립성을 보장하기 위해서다. 한 쪽이 바뀌더라도 다른 쪽을 수정할 필요가 없도록\n2 tier : 클라이언트가 서버에 직접 접속 3 tier : 2 tier로 서버에 부하가 집중되는 것을 완화하기 위해 중간에 middle ware를 두는 것\n\n\n\n\n쇼핑몰 요구사항 정리\nER 다이어그램: 고객, 상품, 판매자\n외래키\n\n\n\n개체와 속성\n\n회원: 회원아이디, 회원이름, 회원비밀번호, 회원연락처, 회원주소\n상품: 상품번호, 상품명, 상품단가, 재고수량, 유통기한\n판매자: 판매자아이디, 판매자이름, 판매자비밀번호, 판매자연락처, 판매자주소,\n회원이 상품 주문: 회원아이디, 주문번호, 주문일자, 상품번호, 주문수량, 배송지*\n판매자가 상품 발송: 판매자아이디, 주문번호, 상품번호, 주문수량, 배송지*\n\n관계\n\n회원 N 주문한다 M 상품\n판매자 1 발송한다 N 상품\n\n새발처럼 되어있는 것에 동그라미가 추가된 것은 옵션"
+  },
+  {
+    "objectID": "blog/posts/22-12-16.html#객체지향-개념-익히기",
+    "href": "blog/posts/22-12-16.html#객체지향-개념-익히기",
+    "title": "22-12-16(금)",
+    "section": "객체지향 개념 익히기",
+    "text": "객체지향 개념 익히기\n권오흠 교수 강의 - 상속\n\ntoString(): 객체의 값들을 하나의 문자열로 표현해서 리턴하는 메서드를 만들 때 많이 사용하는 이름\nMethod Overriding\nPolymorphism: 수퍼클래스 타입의 참조 변수가 서브클래스 타입의 객체를 참조할 수 있다.\nDynamic Binding\nsplit string\narray reallocation"
+  },
+  {
+    "objectID": "blog/posts/22-12-16.html#미니-프로젝트-제안",
+    "href": "blog/posts/22-12-16.html#미니-프로젝트-제안",
+    "title": "22-12-16(금)",
+    "section": "미니 프로젝트 제안",
+    "text": "미니 프로젝트 제안\n유행을 따라 저도 미니 프로젝트를 제안하고자 합니다. 자바로 객체지향 프로그래밍을 연습하는게 목적입니다.\n구체적으로는 작은 GUI 앱을 만들려고 합니다.\n진행방법\n\n먼저 이번 주말 동안 안내 강좌를 봅니다. 이번 주말에 다 보신 분에 한해서 모임을 진행하려고 합니다.\n\n아래 링크된 강좌 중 3-1장 상속부터 3-5장 제너릭 프로그래밍까지입니다. 꽤 많은 분량이니 부지런히 보셔야 할 것 같습니다. 이해가 안 되는 부분은 스터디 과정에서 풀어나갈 수 있으리라고 기대합니다.\nhttps://www.youtube.com/watch?v=hLJ2_JMn6_k&list=PL52K_8WQO5oWz_LYm3xg23m5q9qJXoE4n&index=26\n함께 만들 앱은 이 강좌에서 만들어 가는 스케줄러앱을 GUI로 변형하는 것입니다. 잘 되면 db에 데이터를 저장하는 것까지 해보려고요.\n\n주말에 다 보시면 월요일에 모여 프로젝트 설계를 합니다.\n모임은 격일로 할까 합니다. 하루는 각자 코드로 구현을 하고 월, 수, 금에 모여 각각의 코드를 리뷰하는 형식으로 진행하는 게 좋을 것 같습니다. 코드 리뷰 과정에서 속 쓰리는 일이 있겠지만, 다른 사람의 조언을 듣고 다른 사람의 코드를 보며 배우는 게 많을 것 같습니다.\n한 사람의 코드를 리뷰하는 데 30분 정도 예상을 하면 최대 3, 4명으로 진행해야 할 것 같습니다. 또한, 원격으로는 대화하기가 쉽지 않으니 교육장으로 오실 수 있는 분밖에 할 수 없을 것 같아요.\n\n이상은 제가 생각나는 점을 나열한 것일 분 확정사항이 아닙니다. 함께하실 분이 정해지면 다시 논의해 봐요.\n관심 있으신 분은 DM 주세요."
+  },
+  {
     "objectID": "blog/posts/22-11-18.html",
     "href": "blog/posts/22-11-18.html",
     "title": "22-11-18(금)",
@@ -1764,6 +1925,13 @@
     "text": "이틀 내내 obsidian을 github pages에 올릴려고 삽질했다. 하지만 금요일에 구현한 방법으로 되돌아왔다. 이틀 동안의 고생이 성과 없이 끝났지만, mkdocs가 어떻게 작동하는지 조금 알았다.\n삽질한 이유는 obsidian의 dataview 플러그인 출력화면이 깃허브에 보이지 않고 소스가 그대로 출력됐기 때문이다. 하루를 꼬박 검색한 끝에 dataview 출력화면을 깃허브에 올리려면 obsidian에서 지원을 해야 한다는 걸 알았다. 그 기능을 구현한 플러그인이 Github Publisher다.\n요약하면, obsidian에서 출력 화면을 깃허브에 올리면 github action가 작동해 웹문서로 변환한다. 깃허브 액션은 obsidian-mkdocs-publisher-template 을 이용한다. 옵시디언과 깃허브 두 군데 모두 환경설정을 해야 한다.\n하지만 작동원리를 모르는 상태에서 부실한 설명서만 읽고 원하는 대로 만들기란 쉽지 않았다. 결국 dataview는 출력했지만 링크는 작동하지 않았다. 여기에 더 매달리다가는 지금 할 일에 지장이 되어 멈추기로 했다.\n언젠가 Typescript를 공부해 플러그인을 만들겠다."
   },
   {
+    "objectID": "blog/posts/22-12-19-4.html",
+    "href": "blog/posts/22-12-19-4.html",
+    "title": "java Calendar class 연습",
+    "section": "",
+    "text": "공식 문서\nCalendar.YEAR => 예상과 달리 현재 연도를 반환하지 않고 필드 번호를 반환한다.\nCalendar cal = Calendar.getInstance();\nSystem.out.println(\"Field number ERA: \\t\\t\\t\" + cal.ERA);                               // 0 AD, BC\nSystem.out.println(\"Field number YEAR: \\t\\t\\t\" + cal.YEAR);                             // 1\nSystem.out.println(\"Field number MONTH: \\t\\t\\t\" + cal.MONTH);                           // 2\nSystem.out.println(\"Field number WEEK_OF_YEAR: \\t\\t\" + cal.WEEK_OF_YEAR);               // 3\nSystem.out.println(\"Field number WEEK_OF_MONTH: \\t\\t\" + cal.WEEK_OF_MONTH);             // 4\nSystem.out.println(\"Field number DATE: \\t\\t\\t\" + cal.DATE);                             // 5\nSystem.out.println(\"Field number DAY_OF_MONTH: \\t\\t\" + cal.DAY_OF_MONTH);               // 5\nSystem.out.println(\"Field number DAY_OF_YEAR: \\t\\t\" + cal.DAY_OF_YEAR);                 // 6\nSystem.out.println(\"Field number DAY_OF_WEEK: \\t\\t\" + cal.DAY_OF_WEEK);                // 7\nSystem.out.println(\"Field number DAY_OF_WEEK_IN_MONTH: \\t\" + cal.DAY_OF_WEEK_IN_MONTH); // 8\nSystem.out.println(\"Field number AM_PM: \\t\\t\\t\" + cal.AM_PM);                           // 9\nSystem.out.println(\"Field number HOUR: \\t\\t\\t\" + cal.HOUR);                             // 10\nSystem.out.println(\"Field number HOUR_OF_DAY: \\t\\t\" + cal.HOUR_OF_DAY);                 // 11\nSystem.out.println(\"Field number MINUTE: \\t\\t\\t\" + cal.MINUTE);                         // 12\nSystem.out.println(\"Field number SECOND: \\t\\t\\t\" + cal.SECOND);                         // 13\nSystem.out.println(\"Field number MILLISECOND: \\t\\t\" + cal.MILLISECOND);                 // 14\nSystem.out.println(\"Field number ZONE_OFFSET: \\t\\t\" + cal.ZONE_OFFSET);                 // 15\nSystem.out.println(\"Field number DST_OFFSET: \\t\\t\" + cal.DST_OFFSET);                   // 16\n현재 연도를 반환하려면 Calendar.get(Calendar.YEAR) 처럼 get() 메소드 안에 매개변수로 넣어야 한다.\nCalendar.get(int 필드 번호) => int \n월의 마지막 날 Calendar.getActualMaximum(Calendar.DATE)\nSystem.out.println(cal.get(cal.YEAR) + \"년\");            // 2022년\nSystem.out.println(cal.get(cal.MONTH)+1 + \"월\");         // 12월 <- 1월이 0 \nSystem.out.println(cal.get(cal.DATE) + \"일\");            // 19일\nSystem.out.println(cal.get(cal.DAY_OF_WEEK) + \"요일\");    // 2요일 <- 일요일부터 1\nSystem.out.println(cal.get(cal.HOUR) + \"시 (\" + cal.get(cal.HOUR_OF_DAY) + \"시)\"); // 5시 (17시)\nSystem.out.println(cal.get(cal.MINUTE) + \"분\");          // 12분\nSystem.out.println(cal.get(cal.SECOND) + \"초\");          // 6초\nadd(int field, int amount): calendar field에 amount 만큼을 더하거나 뺀다. 반환값이 없고 자신을 바꾼다.\ncal.add(cal.DATE, 20); // add method는 반환값이 없어 print 못 함\nSystem.out.println(\"현재 날짜로부터 20일 후는 \" +  cal.get(cal.YEAR) + \"년 \" +  (cal.get(cal.MONTH)+1) + \"월 \" + cal.get(cal.DATE) + \"일\");  \ncal.add(cal.DATE, -20); \nSystem.out.println(\"바꾼 날짜로부터 20일 전은 \" +  cal.get(cal.YEAR) + \"년 \" +  (cal.get(cal.MONTH)+1) + \"월 \" + cal.get(cal.DATE) + \"일\");\n\n// 현재 날짜로부터 20일 후는 2023년 1월 8일\n// 바꾼 날짜로부터 20일 전은 2022년 12월 19일"
+  },
+  {
     "objectID": "blog/posts/22-11-22.html",
     "href": "blog/posts/22-11-22.html",
     "title": "22-11-22(화)",
@@ -1827,6 +1995,13 @@
     "text": "알고리즘 basic 30 중 마지막 문제를 풀었다. 내일부터는 자료구조와 알고리즘 파트를 공부하자.\n“최재천의 공부(최재천, 안희경)”를 읽었다. 인상적인 곳이 많지만 제안하는 방안이 다소 낭만적이라는 생각을 지울 수 없다. 시험을 보지 않고 수행평가로만 평가를 해왔고 그렇게 하면 한 두 번의 시험만으로는 발견하기 어려운 실력을 드러나게 할 수 있다는 점은 충분히 공감한다. 하지만 온정주의와 연줄이 크게 작용하고 신뢰가 부족한 우리 교육 현실에서 일반화하기 어려운 방안이다. 교수는 조교의 도움을 받을 수 있지만 초중고 교사는 혼자 해야하기에 늘어난 업무 부담을 반기지 않을 것 같다.\n일류 대학의 기득권도 서서히 무너질거라는 전망도 동의하기 어렵다. 대학을 안 가고 성공한 사람들은 예외에 지나지 않을까? 최재천이 겸손하게 자신의 약점을 스스럼없이 드러내지만 그래도 최고의 학교에 진학하고 학업을 성공적으로 이수할 수 있는 두뇌를 지녔고 좋아하는 일에 몰두할 수 있도록 다른 문제가 없는 환경에서 자란 것 같다. 공부에서 이보다 더 중요한 요인이 있을까?\n책에는 공부하고 가르치는 사람이 곱씹어 볼만한 내용이 많다. 일부만 적자.\n\n우리에게는 문제를 인식하고 숙고할 시간이 충분히 있어요. 그러니까 ’어떤 자원을 동원해서 어떻게 문제를 풀어나갈까’를 가르쳐야 하는데, 우리는 주어진 문제를 한정된 시간 안에 어떻게 푸는지를 가르치죠. p64\n\n\n함께 하는 일을 열심히 해도 자기 일을 못 챙기면, 나중에 상대가 나보다 더 잘나갈 때 상대방에게 ’너는 노력을 더 해야겠다’라는 말을 듣는 험한 꼴을 당할 수 있습니다. 반대로 내 것은 열심히 챙기면서 같이 일할 때 얌체처럼 굴면 동반추락하고요. 이 둘을 어떻게 잘 조율하느냐가 인생이죠. p133\n\n\n“웃기지? 너희들 생각에 애가 아무것도 모르는 거 같지? 그런데 애는 다 듣고 있거든. 애한데 매일 ’우르르 까꿍’만 하는 것은 시간 낭비니까 책을 읽어주고 세상 이야기를 해줘”라고요. 그날부터 아기가 눈 뜨고 있는 시간에는 둘이 번갈아 책을 읽어줬어요. 어느 날은 너무 졸려서 책을 읽다 잠이 들었는데, 누가 책을 읽고 있더라고요. 아들이었습니다. 책을 다 외운 거죠. 그림을 보면서 줄줄 읊었어요. p135\n\n\n독서는 일입니다. 빡세게 하는 겁니다. 읽어도 되고 안 읽어도 되는 책을 그늘에 가서 편안하게 보는 건 시간 낭비이고 눈만 나빠져요. 책은 인류의 발명품 중에서도 최악의 발명품이기 때문입니다. 우리의 눈은 3차원을 보게끔 진화했어요. 책은 평면에 글자를 새겨서 만든 2차원 물건입니다. 그러니 얼마나 눈이 아파요. 책은 눈을 망가뜨린 원흉이에요. 우리는 기획서를 작성해서 책을 읽어야 합니다. 치밀하게 기획해서 공략해야죠. p144\n\n\n자연에서는 꼴찌만 아니면 삽니다. … 가장 적응을 잘한 하나만 살아남고 다 죽는 것이 아니라 풍요로운 시대에는 아무도 안 떨어져요. … 그러다 힘들어지면 제일 못하는 끝이 사라집니다. 1등만 남겨놓는 일은 처음부터 없었어요. p167\n\n\n제 머릿속에 있는 빅데이터를 보면, 대부분 첫 마디를 튼 사람이 계속 이야기를 이끌어갑니다. … 침묵을 내가 깨지 않도록 이 악물고 참아야 해요. p282\n\n\n우리는 무엇을 하고 싶은지 악착같이 찾아야 합니다. 그러다 보면 대부분은 내 길이 아니라는 것을 알게 돼요. 내 길이 아니라는 걸 발견하는 것도 큰 도움이 되죠. 그러다 어느 날, 갑자기 고속도로 같은 길이 눈앞에 보입니다. ‘이거다!’ 싶으면 그때 전력으로 내달리면 됩니다. 제가 정확하게 그렇게 했어요. 한 10년쯤 달리다 보니 처음에는 친구들보다 훨씬 늦었는데, 10년 정도 지나면서 남들보다 조금씩 앞서가고 있더라고요. p285\n\n아래는 대담자인 안희경의 글이다. 술술 읽히는 최재천의 글과 달리 함축이 많다.\n\n우리는 매 순간 선택을 하게 됩니다. 다행히, 알면 바른 선택에 가까워질 수 있습니다. 나를 알면 나의 욕망이 보이고 고통이 어디서 오는지 선명해지고 그 고리를 조금이라도 끊는 선택을 할 수 있습니다. … 우리는 관계 속에서 삽니다. 내 마음이 곧 내가 사는 세상이죠. 관계의 망이 얽힌 지점들을 좇다 보면 내 삶의 주된 영역이 어디까지인지를 볼 수 있어요. 내가 힘써 미칠 수 있는 영역이 보인다면 바른 선택에 다가갈 기회를 좀 더 갖지 않을까요? 내 세상의 안녕을 도모할 가능성도 커질 터입니다. 이때 우리의 앎은 세상을 파악하는 데 도움을 줍니다. … 그리고 앎의 시간이 이어지면, 우리는 ’나’로 존재하는 영역이 세상 모든 생명의 본능과 의지에 얽혀 있는 현실을 마주하게 됩니다. 지식이 보여주는 갈래갈래 길들이 바로 시간과 공간을 넘어 내게 작동하는 힘의 실체를 드러냅니다. 그러므로 우리는 오늘 나의 존재가 오랜 시간 속에서 형성되어 왔고, 너른 공간 속에 퍼져 있음을 알아차리게 될 거예요. 나의 안녕을 위해 지구 전체가 안녕해야 한다는 각성으로 공존의 미래를 건설해가는 겁니다. p294"
   },
   {
+    "objectID": "blog/posts/22-12-19-5.html",
+    "href": "blog/posts/22-12-19-5.html",
+    "title": "자바 Swing",
+    "section": "",
+    "text": "1, main()을 포함한 클래스에서 JFrame 상속:\npublic class App extends JFrame { ... }\n\nmain() 함수에서 생성자 호출하고 JFrame 나타내기\n\n    public static void main(String[] args) {\n        App frame = new App(\" \");\n        frame.setVisible(true);\n    }\n\n생성자에서 매개변수, 타이틀, 크기, 위치 지정.\n\npublic App(String title) {\n    setTitle(title);\n    setSize(800, 600);\n    setLocationRelativeTo(null);                    // 화면 중앙에 위치\n    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // 종료 버튼 누르면 프로세스 종료\n}\n\nSwing Container 구조\n\n\n\nGlassPane: 다른 패널 위에 존재하면서 기본적으로 숨겨져 있는 투명한 판\nJMenuBar: jFrame.setJMenuBar ( new JMenuBar());\nContentPane: UI 컴포넌트가 배치되는 판. jFrame.getContentPane().add( new JButton(\"확인\"), BorderLayout.SOUTH );\nLayeredPane: 여러 컴포넌트들이 겹쳐질 때 각 컴포넌트의 상하 위치를 결정.\nJWindow: 윈도우 경계선, 제목 표시줄, 메뉴바가 모두 없는 윈도우를 만드는 컨테이너\nJFrame: 윈도우 경계선, 제목 표시줄, 메뉴바가 있는 윈도우를 만드는 컨테이너 클래스\nJTabbedPane: 탭 별로 다른 내용을 보여주기 위해 사용되는 컨테이너\nJScrollPane: 포함된 컴포넌트의 크기가 JScrollPane 자신보다 큰 경우 수평 또는 수직 스크롤 바를 이용해서 볼 수 있게 해준다"
+  },
+  {
     "objectID": "blog/posts/22-12-08.html",
     "href": "blog/posts/22-12-08.html",
     "title": "22-12-08(목)",
@@ -1876,6 +2051,13 @@
     "text": "마르코프 체인을 이용한 챗봇에서 사용할 사전 파일을 이틀에 걸쳐 만들다 중단했다. 지금까지 51020개 파일을 이용했다. 처음과 달리 점점 메모리가 부족해져서 그런지 파일 한 개를 변환하는데에 1초 이상이 걸린다. 총 10만개 가까이 되는 파일을 모두 변환하는데 얼마나 더 걸릴지 장담할 수 없어 그만 멈췄다."
   },
   {
+    "objectID": "blog/posts/22-12-19-1.html",
+    "href": "blog/posts/22-12-19-1.html",
+    "title": "22-12-19(월)",
+    "section": "",
+    "text": "selection : 원하는 행을 뽑고 싶을 때\nprojectoin: 원하는 열을 뽑고 싶을 때\ncartesian product : 두 개의 테이블의 특정 컬럼끼리 대응하는 모든 경우의 수를 뽑음. join은 여기서 파생됨\npredicate: selection 조건들 =, - 등\n\n테이블 만들기"
+  },
+  {
     "objectID": "blog/posts/22-11-02.html",
     "href": "blog/posts/22-11-02.html",
     "title": "22-11-02(수)",
@@ -1883,11 +2065,18 @@
     "text": "“이것이 코딩 테스트다” 10장 실전 문제를 마저 풀다. 도시 분할 계획, 커리큘럼 문제는 풀이를 봐도 잘 이해가 안 된다. 도시 분할 계획은 Spinning tree를 활용하는데 union 연산 후 만들어지는 그래프를 어떻게 리스트로 저장하는지 모르겠다. 안 되는 걸 붙잡고 낑낑대다 화만 돋구지 말고 건너뛰자.\nQuarto callout 사용법"
   },
   {
+    "objectID": "blog/posts/22-12-18.html",
+    "href": "blog/posts/22-12-18.html",
+    "title": "22-12-18(일)",
+    "section": "",
+    "text": "유튜브에 공개한 부경대학교 권오흠 교수의 자바 강의는 탁월하다. 내가 다른 강의에서 느꼈던 불만을 완전히 해소하는 강의다. 다른 강의는 보통 학습자의 이해를 돕는다고 써먹을 것 같지 않은 예로 설명한다. 대표적으로 클래스와 상속을 설명할 때 동물, 사람, 개 등등을 들고 메서드를 ‘짖는다’, ’말한다’로 비유하는 것이다. 이렇게 하면 클래스에 관한 개념을 쉽게 이해해 실제 프로그램을 만들 때 적용할 수 있을거라 기대하지만 실상은 전혀 그렇지 않다. 학습은 맥락 속에서 이루어지는 경우가 많기에 기존 맥락에서 벗어나면 전이가 잘 이루어지지 않는다. 한 두달 내내 문법을 공부해도 간단한 프로그램 하나 짜지 못하는 이유가 여기에 있다.\n반면에 권오흠 교수의 강의는 실제 사용할만한 예제를 들고 그것을 자바 문법에 맞춰 개선해나간다. 중간 중간 일부러 오류가 나는 코드를 작성해 수정하도록 한 것이나 핵심 코드만 직접 작성해 보여주고 나머지는 학생들에게 맡기는 점도 좋다. 각 문법의 핵심을 한 단어나 문장으로 표현해 준 것은 학습자에게 축복이다. 강의계획서를 보니 거꾸로 수업을 활용해 수업 시간은 학생들이 직접 코드를 짜게 하는 것 같다. 내가 아무리 잘 가르쳐도 근본적으로 이 분을 넘어서지는 못할 것 같다."
+  },
+  {
     "objectID": "blog/blog.html",
     "href": "blog/blog.html",
     "title": "일일 학습 로그",
     "section": "",
-    "text": "정렬\n       디폴트\n         \n          날짜 - 날짜(오름차순)\n        \n         \n          날짜 - 날짜(내림차순)\n        \n         \n          제목\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n날짜\n\n\n제목\n\n\n\n\n\n\n\n\n\n\n\n\nDec 14, 2022\n\n\n22-12-14(수)\n\n\n\n\nDec 13, 2022\n\n\n22-12-13(화)\n\n\n\n\nDec 12, 2022\n\n\n22-12-12(월)\n\n\n\n\nDec 9, 2022\n\n\n22-12-09(금)\n\n\n\n\nDec 8, 2022\n\n\n22-12-08(목)\n\n\n\n\nDec 7, 2022\n\n\n22-12-07(수)\n\n\n\n\nDec 6, 2022\n\n\n22-12-06(화)\n\n\n\n\nDec 5, 2022\n\n\n22-12-05(월)\n\n\n\n\nDec 2, 2022\n\n\n22-12-02(금)\n\n\n\n\nDec 1, 2022\n\n\n22-12-01(목)\n\n\n\n\nNov 30, 2022\n\n\n22-11-30(목)\n\n\n\n\nNov 29, 2022\n\n\n22-11-29(화)\n\n\n\n\nNov 28, 2022\n\n\n22-11-28(월)\n\n\n\n\nNov 27, 2022\n\n\n22-11-27(일)\n\n\n\n\nNov 26, 2022\n\n\n22-11-26(토)\n\n\n\n\nNov 25, 2022\n\n\n22-11-25(금)\n\n\n\n\nNov 24, 2022\n\n\n22-11-24(목)\n\n\n\n\nNov 23, 2022\n\n\n22-11-23(수)\n\n\n\n\nNov 22, 2022\n\n\n22-11-22(화)\n\n\n\n\nNov 21, 2022\n\n\n22-11-21(월)\n\n\n\n\nNov 19, 2022\n\n\n한국어 임베딩(이기창)\n\n\n\n\nNov 19, 2022\n\n\n22-11-19(토)\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\n일치 없음"
+    "text": "정렬\n       디폴트\n         \n          날짜 - 날짜(오름차순)\n        \n         \n          날짜 - 날짜(내림차순)\n        \n         \n          제목\n        \n     \n  \n    \n      \n      \n    \n\n\n\n\n\n\n날짜\n\n\n제목\n\n\n\n\n\n\n\n\n\n\n\n\nDec 19, 2022\n\n\n파이썬으로 프로세스, 쓰레드 다루기\n\n\n\n\nDec 19, 2022\n\n\njavaFx 환경 설치\n\n\n\n\nDec 19, 2022\n\n\njava Calendar class 연습\n\n\n\n\nDec 19, 2022\n\n\n자바 Swing\n\n\n\n\nDec 19, 2022\n\n\n22-12-19(월)\n\n\n\n\nDec 18, 2022\n\n\n22-12-18(일)\n\n\n\n\nDec 16, 2022\n\n\n22-12-16(금)\n\n\n\n\nDec 15, 2022\n\n\n22-12-15(목)\n\n\n\n\nDec 14, 2022\n\n\n22-12-14(수)\n\n\n\n\nDec 13, 2022\n\n\n22-12-13(화)\n\n\n\n\nDec 12, 2022\n\n\n22-12-12(월)\n\n\n\n\nDec 9, 2022\n\n\n22-12-09(금)\n\n\n\n\nDec 8, 2022\n\n\n22-12-08(목)\n\n\n\n\nDec 7, 2022\n\n\n22-12-07(수)\n\n\n\n\nDec 6, 2022\n\n\n22-12-06(화)\n\n\n\n\nDec 5, 2022\n\n\n22-12-05(월)\n\n\n\n\nDec 2, 2022\n\n\n22-12-02(금)\n\n\n\n\nDec 1, 2022\n\n\n22-12-01(목)\n\n\n\n\nNov 30, 2022\n\n\n22-11-30(목)\n\n\n\n\nNov 29, 2022\n\n\n22-11-29(화)\n\n\n\n\nNov 28, 2022\n\n\n22-11-28(월)\n\n\n\n\nNov 27, 2022\n\n\n22-11-27(일)\n\n\n\n\nNov 26, 2022\n\n\n22-11-26(토)\n\n\n\n\nNov 25, 2022\n\n\n22-11-25(금)\n\n\n\n\nNov 24, 2022\n\n\n22-11-24(목)\n\n\n\n\nNov 23, 2022\n\n\n22-11-23(수)\n\n\n\n\nNov 22, 2022\n\n\n22-11-22(화)\n\n\n\n\nNov 21, 2022\n\n\n22-11-21(월)\n\n\n\n\nNov 19, 2022\n\n\n한국어 임베딩(이기창)\n\n\n\n\nNov 19, 2022\n\n\n22-11-19(토)\n\n\n\n\nNov 18, 2022\n\n\n22-11-18(금)\n\n\n\n\nNov 17, 2022\n\n\n22-11-17(목)\n\n\n\n\nNov 16, 2022\n\n\n22-11-16(수)\n\n\n\n\nNov 15, 2022\n\n\n22-11-15(화)\n\n\n\n\nNov 14, 2022\n\n\n22-11-14(월)\n\n\n\n\nNov 14, 2022\n\n\n파이썬 라이브러리를 활용한 머신러닝 07장 텍스트 데이터 다루기\n\n\n\n\nNov 13, 2022\n\n\n빅데이터분석기사 실기 준비 - 판다스 활용 전처리\n\n\n\n\nNov 13, 2022\n\n\n22-11-13(일)\n\n\n\n\nNov 12, 2022\n\n\n22-11-12(토)\n\n\n\n\nNov 11, 2022\n\n\n22-11-11(금)\n\n\n\n\nNov 10, 2022\n\n\n22-11-10(목)\n\n\n\n\nNov 9, 2022\n\n\n22-11-09(수)\n\n\n\n\nNov 8, 2022\n\n\n22-11-08(화)\n\n\n\n\nNov 7, 2022\n\n\n22-11-07(월)\n\n\n\n\nNov 6, 2022\n\n\n22-11-06(일)\n\n\n\n\nNov 5, 2022\n\n\n22-11-05(토)\n\n\n\n\nNov 4, 2022\n\n\n22-11-04(금)\n\n\n\n\nNov 3, 2022\n\n\n22-11-03(목)\n\n\n\n\nNov 2, 2022\n\n\n22-11-02(수)\n\n\n\n\nNov 1, 2022\n\n\n22-11-01(화)\n\n\n\n\nOct 31, 2022\n\n\n22-10-31(월)\n\n\n\n\nOct 30, 2022\n\n\n22-10-30(일)\n\n\n\n\nOct 29, 2022\n\n\n22-10-29(토)\n\n\n\n\nOct 28, 2022\n\n\n22-10-28(금)\n\n\n\n\nOct 27, 2022\n\n\n22-10-27(목)\n\n\n\n\nOct 26, 2022\n\n\n22-10-26(수)\n\n\n\n\nOct 25, 2022\n\n\n22-10-25(화)\n\n\n\n\nOct 24, 2022\n\n\n22-10-24(월)\n\n\n\n\nOct 23, 2022\n\n\n22-10-23(일)\n\n\n\n\nOct 22, 2022\n\n\n22-10-22(토)\n\n\n\n\nOct 21, 2022\n\n\n22-10-21(금)\n\n\n\n\nOct 20, 2022\n\n\n22-10-20(목)\n\n\n\n\nOct 19, 2022\n\n\n22-10-19(수)\n\n\n\n\nOct 18, 2022\n\n\n22-10-18(화)\n\n\n\n\nOct 17, 2022\n\n\n22-10-17(월)\n\n\n\n\nOct 16, 2022\n\n\n22-10-16(일)\n\n\n\n\nOct 14, 2022\n\n\n22-10-14(금)\n\n\n\n\nOct 13, 2022\n\n\n22-10-13(목)\n\n\n\n\nOct 12, 2022\n\n\n22-10-12(수)\n\n\n\n\nOct 11, 2022\n\n\n22-10-11(화)\n\n\n\n\nOct 10, 2022\n\n\n22-10-10(월)\n\n\n\n\nOct 9, 2022\n\n\n22-10-09(일)\n\n\n\n\nOct 7, 2022\n\n\n22-10-07(금)\n\n\n\n\nOct 6, 2022\n\n\n22-10-06(목)\n\n\n\n\nOct 5, 2022\n\n\n22-10-05(수)\n\n\n\n\nOct 4, 2022\n\n\n22-10-04(화)\n\n\n\n\n\n\n일치 없음"
   },
   {
     "objectID": "project/2211_recommend.html",
@@ -2132,7 +2321,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '양', '미', '가', '가', '가', '가', '가', '가', '수']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '수', '가', '가', '가', '가', '가', '양', '가', '가']"
   },
   {
     "objectID": "review/python/class.html",
@@ -2940,6 +3129,13 @@
     "text": "1 접근 과정"
   },
   {
+    "objectID": "review/algorithm/data_structure/heapSort.html",
+    "href": "review/algorithm/data_structure/heapSort.html",
+    "title": "👀",
+    "section": "",
+    "text": "---\ntitle: \"Heap Sort\"\ndate: 2022/12/15\ndate-modified: last-modified\nformat: \n  html:\n    code-fold: false\n---\n\n\nHeap Sort Algorithm\n권오흠 교수 강의\n\n\narr = [2, 8, 6, 1, 10, 15, 3, 12, 11]\n# arr = [2, 8, 6, 1, 10]\n\n# 권오흠 교수 강의 듣고 구현하다가 실패한 코드\n# def max_heapify(arr, parent):\n#     print(f'heapify {parent} => {arr}')\n#     larger = parent\n#     left = 2*parent+1           # 왼쪽 자식 노드\n#     right = 2*parent+2          # 오른쪽 자식 노드\n#     # if left >= len(arr)-1  and right >= len(arr):  # 자식 노드가 없으면 재귀 호출 멈춤\n#     #     print(\"자식 노드가 없으므로 멈춤 =================\")\n#     #     return\n#     if right < len(arr) and arr[left] >= arr[right]:    # 자식 노드가 존재하고 왼쪽 노드가 오른쪽 노드보다 크면 왼쪽 노드 인덱스를 larger에 저장\n#         larger = left\n#         print(\"왼쪽 노드 인덱스\", larger)\n#     elif right < len(arr) and arr[right] > arr[parent]:         # 오른쪽 노드가 존재하고 부모보다 크면 오른쪽 노드 인덱스를 larger에 저장\n#         larger = right\n#         print(\"오른쪽 노드 인덱스\", larger)\n#     if arr[parent] < arr[larger]:          # 부모 노드가 자식 노드보다 크면 재귀 멈춤\n#         arr[parent], arr[larger] = arr[larger], arr[parent]  # 부모 노드와 큰 자식 노드를 교환\n#         return\n#     print(f'부모 노드({arr[larger]})와 자식 노드({arr[parent]}) 교환 => {arr}')\n#     max_heapify(arr, larger)             # 교환한 자식 노드에서 재귀 호출\n\n# def max_heapify(arr, n, i):\n#     k = i            # 부모 노드를 큰 값을 저장하는 k변수에 저장\n#     while(2*i+1 < n and 2*i+2 < n):\n#         left = 2*i+1     # left child\n#         right = 2*i+2    # right child\n#         print(f\"왼쪽 자식={left}({arr[left]}), 오른쪽 자식={right}({arr[right]})\")\n#         if arr[left] > arr[right]: k = left       # 왼쪽 자식이 크면 그 인덱스를 k에 저장\n#         elif arr[right] > arr[left]: k = right    # 오른쪽 자식이 크면 \n#         if arr[i] >= arr[k]: return               # 부모가 크면 다음 노드로 넘어가거나 중지\n#         arr[i], arr[k] = arr[k], arr[i]\n#         i = k\n#         print(\"교환후 배열=>\", arr)\n#         print(\"\\ni=\", i, \"n=\", n, \"right\", 2*i+2)\n\n\ndef max_heapify(arr, n, i):\n    '''\n    마지막 leaf node의 부모(n/2-1)부터 역순으로 노드를 검사하여 heap을 만듦\n    * 주어진 배열을 max heap로 만드는 함수\n    * arr : 배열\n    * n : max heap으로 만들 범위 -> heap sort에서 root를 맨 끝으로 보낸 후 제외하기 위해 필요\n    * i : 비교할 부모 노드 인덱스\n    '''\n    \n    large = i           # 부모 노드가 가장 크다고 가정\n    left = 2*i+1        # 왼쪽 자식 노드\n    right = 2*i+2       # 오른쪽 자식 노드\n    if left < n and arr[left] > arr[large]:     # 왼쪽 자식이 검사할 배열(n) 내에 있고 부모 노드보다 크면\n        large = left\n        print(f\"왼쪽 자식 index={left}({arr[left]})\")\n    if right < n and arr[right] > arr[large]:   # 오른쪽 자식이 검사할 배열(n) 내에 있고 기존의 가장 큰 노드보다 크면(형제끼리 비교 가능)\n        large = right\n        print(f\"오른쪽 자식 index={right}({arr[right]})\")\n    if large != i:                              # 가장 큰 값이 부모와 다르면 교환\n        arr[i], arr[large] = arr[large], arr[i]\n        print(\"교환후 배열=>\", arr)\n        print(f\"{large}({arr[large]})를 새로운 부모로 하여 재귀 호출\")\n        max_heapify(arr, n, large)\n\n\ndef heap_sort(arr: list):\n    n = len(arr)\n\n    # maxheap 만들기\n    for i in range( n//2 -1, -1, -1):  # 마지막 노드의 부모(n/2 -1)부터 시작하여 거꾸로 돌기\n        print(\"====== max heap 만들기 =======\")\n        print(f\"부모 노드 index={i}({arr[i]}) => {arr}\")\n        max_heapify(arr, n, i)\n\n    print(\"***** max heap 생성 완료 *****\")\n    \n    # 첫번째 요소를 맨 뒤로 보내며 힙 만들기\n    for i in range(n-1, 0, -1):  # 힙 크기에서 시작해 1까지\n        print(\"\\n=========== 정렬 ===============\")\n        print(arr)\n        arr[0], arr[i] = arr[i], arr[0]  # 배열의 첫(root node)과 끝(end node)을 바꾼다\n        print(f\"맨 앞과 맨 뒤({i}) 교환(가장 큰 수를 맨 뒤로 보낸) 후\\n=>\", arr)\n        print(\"+++++ 힙 만들기 +++++\")\n        print(f\"마지막 index={i}(=> 함수에서 인덱스 {i-1}까지 heapify)\")\n        max_heapify(arr, i, 0)      # 마지막 요소를 제외하려면 마지막 인덱스를 가리키는 i값을 매개변수에 넣어야 함.\n\nheap_sort(arr)\nprint(\"\\n최종 배열=> \", arr)\n\n====== max heap 만들기 =======\n부모 노드 index=3(1) => [2, 8, 6, 1, 10, 15, 3, 12, 11]\n왼쪽 자식 index=7(12)\n교환후 배열=> [2, 8, 6, 12, 10, 15, 3, 1, 11]\n7(1)를 새로운 부모로 하여 재귀 호출\n====== max heap 만들기 =======\n부모 노드 index=2(6) => [2, 8, 6, 12, 10, 15, 3, 1, 11]\n왼쪽 자식 index=5(15)\n교환후 배열=> [2, 8, 15, 12, 10, 6, 3, 1, 11]\n5(6)를 새로운 부모로 하여 재귀 호출\n====== max heap 만들기 =======\n부모 노드 index=1(8) => [2, 8, 15, 12, 10, 6, 3, 1, 11]\n왼쪽 자식 index=3(12)\n교환후 배열=> [2, 12, 15, 8, 10, 6, 3, 1, 11]\n3(8)를 새로운 부모로 하여 재귀 호출\n오른쪽 자식 index=8(11)\n교환후 배열=> [2, 12, 15, 11, 10, 6, 3, 1, 8]\n8(8)를 새로운 부모로 하여 재귀 호출\n====== max heap 만들기 =======\n부모 노드 index=0(2) => [2, 12, 15, 11, 10, 6, 3, 1, 8]\n왼쪽 자식 index=1(12)\n오른쪽 자식 index=2(15)\n교환후 배열=> [15, 12, 2, 11, 10, 6, 3, 1, 8]\n2(2)를 새로운 부모로 하여 재귀 호출\n왼쪽 자식 index=5(6)\n교환후 배열=> [15, 12, 6, 11, 10, 2, 3, 1, 8]\n5(2)를 새로운 부모로 하여 재귀 호출\n***** max heap 생성 완료 *****\n\n=========== 정렬 ===============\n[15, 12, 6, 11, 10, 2, 3, 1, 8]\n맨 앞과 맨 뒤(8) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [8, 12, 6, 11, 10, 2, 3, 1, 15]\n+++++ 힙 만들기 +++++\n마지막 index=8(=> 함수에서 인덱스 7까지 heapify)\n왼쪽 자식 index=1(12)\n교환후 배열=> [12, 8, 6, 11, 10, 2, 3, 1, 15]\n1(8)를 새로운 부모로 하여 재귀 호출\n왼쪽 자식 index=3(11)\n교환후 배열=> [12, 11, 6, 8, 10, 2, 3, 1, 15]\n3(8)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[12, 11, 6, 8, 10, 2, 3, 1, 15]\n맨 앞과 맨 뒤(7) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [1, 11, 6, 8, 10, 2, 3, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=7(=> 함수에서 인덱스 6까지 heapify)\n왼쪽 자식 index=1(11)\n교환후 배열=> [11, 1, 6, 8, 10, 2, 3, 12, 15]\n1(1)를 새로운 부모로 하여 재귀 호출\n왼쪽 자식 index=3(8)\n오른쪽 자식 index=4(10)\n교환후 배열=> [11, 10, 6, 8, 1, 2, 3, 12, 15]\n4(1)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[11, 10, 6, 8, 1, 2, 3, 12, 15]\n맨 앞과 맨 뒤(6) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [3, 10, 6, 8, 1, 2, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=6(=> 함수에서 인덱스 5까지 heapify)\n왼쪽 자식 index=1(10)\n교환후 배열=> [10, 3, 6, 8, 1, 2, 11, 12, 15]\n1(3)를 새로운 부모로 하여 재귀 호출\n왼쪽 자식 index=3(8)\n교환후 배열=> [10, 8, 6, 3, 1, 2, 11, 12, 15]\n3(3)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[10, 8, 6, 3, 1, 2, 11, 12, 15]\n맨 앞과 맨 뒤(5) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [2, 8, 6, 3, 1, 10, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=5(=> 함수에서 인덱스 4까지 heapify)\n왼쪽 자식 index=1(8)\n교환후 배열=> [8, 2, 6, 3, 1, 10, 11, 12, 15]\n1(2)를 새로운 부모로 하여 재귀 호출\n왼쪽 자식 index=3(3)\n교환후 배열=> [8, 3, 6, 2, 1, 10, 11, 12, 15]\n3(2)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[8, 3, 6, 2, 1, 10, 11, 12, 15]\n맨 앞과 맨 뒤(4) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [1, 3, 6, 2, 8, 10, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=4(=> 함수에서 인덱스 3까지 heapify)\n왼쪽 자식 index=1(3)\n오른쪽 자식 index=2(6)\n교환후 배열=> [6, 3, 1, 2, 8, 10, 11, 12, 15]\n2(1)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[6, 3, 1, 2, 8, 10, 11, 12, 15]\n맨 앞과 맨 뒤(3) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [2, 3, 1, 6, 8, 10, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=3(=> 함수에서 인덱스 2까지 heapify)\n왼쪽 자식 index=1(3)\n교환후 배열=> [3, 2, 1, 6, 8, 10, 11, 12, 15]\n1(2)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[3, 2, 1, 6, 8, 10, 11, 12, 15]\n맨 앞과 맨 뒤(2) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [1, 2, 3, 6, 8, 10, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=2(=> 함수에서 인덱스 1까지 heapify)\n왼쪽 자식 index=1(2)\n교환후 배열=> [2, 1, 3, 6, 8, 10, 11, 12, 15]\n1(1)를 새로운 부모로 하여 재귀 호출\n\n=========== 정렬 ===============\n[2, 1, 3, 6, 8, 10, 11, 12, 15]\n맨 앞과 맨 뒤(1) 교환(가장 큰 수를 맨 뒤로 보낸) 후\n=> [1, 2, 3, 6, 8, 10, 11, 12, 15]\n+++++ 힙 만들기 +++++\n마지막 index=1(=> 함수에서 인덱스 0까지 heapify)\n\n최종 배열=>  [1, 2, 3, 6, 8, 10, 11, 12, 15]"
+  },
+  {
     "objectID": "review/algorithm/data_structure/01_stack1.html",
     "href": "review/algorithm/data_structure/01_stack1.html",
     "title": "스택 - 괄호",
@@ -3560,7 +3756,7 @@
     "href": "review/algorithm.html",
     "title": "알고리즘",
     "section": "",
-    "text": "lazychoi\n\n\nDec 14, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 21, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n일치 없음"
+    "text": "lazychoi\n\n\nDec 14, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 16, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 7, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 8, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 13, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 21, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 9, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 15, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\nNov 10, 2022\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nlazychoi\n\n\n\n\n\n\n\n\n일치 없음"
   },
   {
     "objectID": "review/algorithm.html#알고리즘-basic-30",
