@@ -216,7 +216,30 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#기본-구조" id="toc-기본-구조" class="nav-link active" data-scroll-target="#기본-구조">기본 구조</a>
+  <ul class="collapse">
+  <li><a href="#swing-container-종류" id="toc-swing-container-종류" class="nav-link" data-scroll-target="#swing-container-종류">Swing Container 종류</a></li>
+  <li><a href="#swing-container-구조" id="toc-swing-container-구조" class="nav-link" data-scroll-target="#swing-container-구조">Swing Container 구조</a></li>
+  <li><a href="#윈도우-종류" id="toc-윈도우-종류" class="nav-link" data-scroll-target="#윈도우-종류">윈도우 종류</a></li>
+  </ul></li>
+  <li><a href="#구현" id="toc-구현" class="nav-link" data-scroll-target="#구현">구현</a>
+  <ul class="collapse">
+  <li><a href="#구현-순서" id="toc-구현-순서" class="nav-link" data-scroll-target="#구현-순서">구현 순서</a></li>
+  </ul></li>
+  <li><a href="#프레임-만들기" id="toc-프레임-만들기" class="nav-link" data-scroll-target="#프레임-만들기">프레임 만들기</a>
+  <ul class="collapse">
+  <li><a href="#main-함수에서-생성자-호출하고-jframe-나타내기" id="toc-main-함수에서-생성자-호출하고-jframe-나타내기" class="nav-link" data-scroll-target="#main-함수에서-생성자-호출하고-jframe-나타내기">main() 함수에서 생성자 호출하고 JFrame 나타내기</a></li>
+  <li><a href="#생성자에서-타이틀-크기-위치-버튼-지정." id="toc-생성자에서-타이틀-크기-위치-버튼-지정." class="nav-link" data-scroll-target="#생성자에서-타이틀-크기-위치-버튼-지정.">생성자에서 타이틀, 크기, 위치, 버튼 지정.</a></li>
+  <li><a href="#버튼-추가" id="toc-버튼-추가" class="nav-link" data-scroll-target="#버튼-추가">버튼 추가</a></li>
+  <li><a href="#기본-컴포넌트-구현" id="toc-기본-컴포넌트-구현" class="nav-link" data-scroll-target="#기본-컴포넌트-구현">기본 컴포넌트 구현</a></li>
+  </ul></li>
+  <li><a href="#참고-자료" id="toc-참고-자료" class="nav-link" data-scroll-target="#참고-자료">참고 자료</a></li>
+  </ul>
+</nav>
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -227,40 +250,156 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<p>1, main()을 포함한 클래스에서 JFrame 상속:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> App <span class="kw">extends</span> <span class="bu">JFrame</span> <span class="op">{</span> <span class="kw">...</span> <span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol start="2" type="1">
-<li>main() 함수에서 생성자 호출하고 JFrame 나타내기</li>
-</ol>
-<div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        App frame <span class="op">=</span> <span class="kw">new</span> <span class="fu">App</span><span class="op">(</span><span class="st">" "</span><span class="op">);</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol start="3" type="1">
-<li>생성자에서 매개변수, 타이틀, 크기, 위치 지정.</li>
-</ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="fu">App</span><span class="op">(</span><span class="bu">String</span> title<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setTitle</span><span class="op">(</span>title<span class="op">);</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setSize</span><span class="op">(</span><span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span>                    <span class="co">// 화면 중앙에 위치</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setDefaultCloseOperation</span><span class="op">(</span><span class="bu">JFrame</span><span class="op">.</span><span class="fu">EXIT_ON_CLOSE</span><span class="op">);</span> <span class="co">// 종료 버튼 누르면 프로세스 종료</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<ol start="4" type="1">
-<li>Swing Container 구조</li>
-</ol>
+<section id="기본-구조" class="level2">
+<h2 class="anchored" data-anchor-id="기본-구조">기본 구조</h2>
+<p><img src="images/2022-12-20-11-02-06.png" class="img-fluid"></p>
+<p>GUI를 만들려면, 적어도 1개의 컨테이너 객체가 있어야 한다.</p>
+<section id="swing-container-종류" class="level3">
+<h3 class="anchored" data-anchor-id="swing-container-종류">Swing Container 종류</h3>
+<ul>
+<li>Panel: 컴포넌트를 윈도우에 배열하기 위한 컨테이너</li>
+<li>Frame: 완전하게 작동하는 윈도우</li>
+<li>Dialog: 팝업 윈도우처럼 쓰임</li>
+</ul>
+</section>
+<section id="swing-container-구조" class="level3">
+<h3 class="anchored" data-anchor-id="swing-container-구조">Swing Container 구조</h3>
 <p><img src="images/2022-12-19-22-04-38.png" class="img-fluid"></p>
 <ul>
 <li>GlassPane: 다른 패널 위에 존재하면서 기본적으로 숨겨져 있는 투명한 판</li>
 <li>JMenuBar: <code>jFrame.setJMenuBar ( new JMenuBar());</code></li>
 <li>ContentPane: UI 컴포넌트가 배치되는 판. <code>jFrame.getContentPane().add( new JButton("확인"), BorderLayout.SOUTH );</code></li>
 <li>LayeredPane: 여러 컴포넌트들이 겹쳐질 때 각 컴포넌트의 상하 위치를 결정.</li>
-<li>JWindow: 윈도우 경계선, 제목 표시줄, 메뉴바가 모두 없는 윈도우를 만드는 컨테이너</li>
-<li>JFrame: 윈도우 경계선, 제목 표시줄, 메뉴바가 있는 윈도우를 만드는 컨테이너 클래스</li>
 <li>JTabbedPane: 탭 별로 다른 내용을 보여주기 위해 사용되는 컨테이너</li>
 <li>JScrollPane: 포함된 컴포넌트의 크기가 JScrollPane 자신보다 큰 경우 수평 또는 수직 스크롤 바를 이용해서 볼 수 있게 해준다</li>
 </ul>
+</section>
+<section id="윈도우-종류" class="level3">
+<h3 class="anchored" data-anchor-id="윈도우-종류">윈도우 종류</h3>
+<ul>
+<li>JWindow: 완전한 윈도우 창 형태를 갖고 있는 최상위 레벨 컨테이너. 윈도우 경계선, 제목 표시줄, 메뉴바가 모두 없는 윈도우를 만드는 컨테이너.<br>
+</li>
+<li>JFrame: 완전한 윈도우 창 형태를 갖고 있는 최상위 레벨 컨테이너. 윈도우 경계선, 제목 표시줄, 메뉴바가 있는 윈도우를 만드는 컨테이너 클래스</li>
+<li>JDialog: 완전한 윈도우 창 형태를 갖고 있는 최상위 레벨 컨테이너.</li>
+</ul>
+</section>
+</section>
+<section id="구현" class="level2">
+<h2 class="anchored" data-anchor-id="구현">구현</h2>
+<section id="구현-순서" class="level3">
+<h3 class="anchored" data-anchor-id="구현-순서">구현 순서</h3>
+<ol type="1">
+<li>프레임 만들기</li>
+<li>레이아웃 정하기</li>
+<li>프레임에 컴포넌트 붙이기</li>
+</ol>
+</section>
+</section>
+<section id="프레임-만들기" class="level2">
+<h2 class="anchored" data-anchor-id="프레임-만들기">프레임 만들기</h2>
+<ul>
+<li>JFrame 클래스 상속: <code>public class App extends JFrame { ... }</code></li>
+<li>JFrame 객체 생성: <code>JFrame frame = new JFrame()</code></li>
+</ul>
+<section id="main-함수에서-생성자-호출하고-jframe-나타내기" class="level3">
+<h3 class="anchored" data-anchor-id="main-함수에서-생성자-호출하고-jframe-나타내기">main() 함수에서 생성자 호출하고 JFrame 나타내기</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        App frame <span class="op">=</span> <span class="kw">new</span> <span class="fu">App</span><span class="op">(</span><span class="st">" "</span><span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="생성자에서-타이틀-크기-위치-버튼-지정." class="level3">
+<h3 class="anchored" data-anchor-id="생성자에서-타이틀-크기-위치-버튼-지정.">생성자에서 타이틀, 크기, 위치, 버튼 지정.</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="fu">App</span><span class="op">(</span><span class="bu">String</span> title<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setTitle</span><span class="op">(</span>title<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setSize</span><span class="op">(</span><span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span>                    <span class="co">// 화면 중앙에 위치</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setDefaultCloseOperation</span><span class="op">(</span><span class="bu">JFrame</span><span class="op">.</span><span class="fu">EXIT_ON_CLOSE</span><span class="op">);</span> <span class="co">// 종료 버튼 누르면 프로세스 종료</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="버튼-추가" class="level3">
+<h3 class="anchored" data-anchor-id="버튼-추가">버튼 추가</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> App <span class="kw">extends</span> <span class="bu">JFrame</span><span class="op">{</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    App frame <span class="op">=</span> <span class="kw">new</span> <span class="fu">App</span><span class="op">(</span><span class="st">" "</span><span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    frame<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="fu">App</span><span class="op">(</span><span class="bu">String</span> title<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setDefaultCloseOperation</span><span class="op">(</span><span class="bu">JFrame</span><span class="op">.</span><span class="fu">EXIT_ON_CLOSE</span><span class="op">);</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setTitle</span><span class="op">(</span>title<span class="op">);</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setSize</span><span class="op">(</span><span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span>            <span class="co">// frame을 화면 중앙에 위치</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">JButton</span> btn1 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"click1"</span><span class="op">);</span>   <span class="co">// 추가 코드</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="bu">JButton</span> btn2 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"click2"</span><span class="op">);</span>   <span class="co">// 추가 코드</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span>btn1<span class="op">);</span>        <span class="co">// 추가 코드</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">this</span><span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span>btn2<span class="op">);</span>        <span class="co">// 추가 코드</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><img src="images/2022-12-20-14-47-33.png" class="img-fluid"></p>
+<p><strong>문제점 =&gt; 두 버튼의 겹쳐진다.</strong> =&gt; <strong>레이아웃 매니저 필요</strong></p>
+</section>
+<section id="기본-컴포넌트-구현" class="level3">
+<h3 class="anchored" data-anchor-id="기본-컴포넌트-구현">기본 컴포넌트 구현</h3>
+<p><img src="images/javaSwing.png" class="img-fluid"></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> App<span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">//Creating the Frame</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JFrame</span> frame <span class="op">=</span> <span class="kw">new</span> <span class="bu">JFrame</span><span class="op">(</span><span class="st">"Test"</span><span class="op">);</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setDefaultCloseOperation</span><span class="op">(</span><span class="bu">JFrame</span><span class="op">.</span><span class="fu">EXIT_ON_CLOSE</span><span class="op">);</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setSize</span><span class="op">(</span><span class="dv">400</span><span class="op">,</span> <span class="dv">400</span><span class="op">);</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">//Creating the MenuBar and adding components</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JMenuBar</span> mb <span class="op">=</span> <span class="kw">new</span> <span class="bu">JMenuBar</span><span class="op">();</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JMenu</span> m1 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JMenu</span><span class="op">(</span><span class="st">"FILE"</span><span class="op">);</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JMenu</span> m2 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JMenu</span><span class="op">(</span><span class="st">"Help"</span><span class="op">);</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        mb<span class="op">.</span><span class="fu">add</span><span class="op">(</span>m1<span class="op">);</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        mb<span class="op">.</span><span class="fu">add</span><span class="op">(</span>m2<span class="op">);</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JMenuItem</span> m11 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JMenuItem</span><span class="op">(</span><span class="st">"Open"</span><span class="op">);</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JMenuItem</span> m22 <span class="op">=</span> <span class="kw">new</span> <span class="bu">JMenuItem</span><span class="op">(</span><span class="st">"Save as"</span><span class="op">);</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        m1<span class="op">.</span><span class="fu">add</span><span class="op">(</span>m11<span class="op">);</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        m1<span class="op">.</span><span class="fu">add</span><span class="op">(</span>m22<span class="op">);</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">//Creating the panel at bottom and adding components</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JPanel</span> panel <span class="op">=</span> <span class="kw">new</span> <span class="bu">JPanel</span><span class="op">();</span> <span class="co">// the panel is not visible in output</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JLabel</span> label <span class="op">=</span> <span class="kw">new</span> <span class="bu">JLabel</span><span class="op">(</span><span class="st">"Enter Text"</span><span class="op">);</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JTextField</span> tf <span class="op">=</span> <span class="kw">new</span> <span class="bu">JTextField</span><span class="op">(</span><span class="dv">10</span><span class="op">);</span> <span class="co">// accepts up to 10 characters</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JButton</span> send <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"Send"</span><span class="op">);</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JButton</span> reset <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"Reset"</span><span class="op">);</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        panel<span class="op">.</span><span class="fu">add</span><span class="op">(</span>label<span class="op">);</span> <span class="co">// Components Added using Flow Layout</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        panel<span class="op">.</span><span class="fu">add</span><span class="op">(</span>tf<span class="op">);</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        panel<span class="op">.</span><span class="fu">add</span><span class="op">(</span>send<span class="op">);</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        panel<span class="op">.</span><span class="fu">add</span><span class="op">(</span>reset<span class="op">);</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="co">// Text Area at the Center</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JTextArea</span> ta <span class="op">=</span> <span class="kw">new</span> <span class="bu">JTextArea</span><span class="op">();</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JScrollPane</span> tas <span class="op">=</span> <span class="kw">new</span> <span class="bu">JScrollPane</span><span class="op">(</span>ta<span class="op">);</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="co">//Adding Components to the frame.</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span><span class="bu">BorderLayout</span><span class="op">.</span><span class="fu">SOUTH</span><span class="op">,</span> panel<span class="op">);</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span><span class="bu">BorderLayout</span><span class="op">.</span><span class="fu">NORTH</span><span class="op">,</span> mb<span class="op">);</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span><span class="bu">BorderLayout</span><span class="op">.</span><span class="fu">CENTER</span><span class="op">,</span> tas<span class="op">);</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>        frame<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="참고-자료" class="level2">
+<h2 class="anchored" data-anchor-id="참고-자료">참고 자료</h2>
+<p><a href="https://www.youtube.com/watch?v=NwNK-dj-HG4" target="_blank">어라운드 허브 스튜디오</a> <a href="https://www.guru99.com/java-swing-gui.html" target="_blank">Java Swing Tutorial: How to Create a GUI Application in Java</a> <a href="https://www.javatpoint.com/java-swing" target="_blank">Java Swing Tutorial</a></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

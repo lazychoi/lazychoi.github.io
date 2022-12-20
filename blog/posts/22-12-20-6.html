@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lazychoi">
-<meta name="dcterms.date" content="2022-10-31">
+<meta name="dcterms.date" content="2022-12-21">
 
-<title>👀 - 리스트 내장 함수</title>
+<title>👀 - Java Swing - 텍스트 필드에 문자 넣고 지우기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -182,124 +182,95 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Java Swing - 텍스트 필드에 문자 넣고 지우기</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">자바</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 21, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">목차</h2>
-   
-  <ul>
-  <li><a href="#리스트-컴프리헨션" id="toc-리스트-컴프리헨션" class="nav-link active" data-scroll-target="#리스트-컴프리헨션"><span class="toc-section-number">1</span>  리스트 컴프리헨션</a>
-  <ul class="collapse">
-  <li><a href="#예제" id="toc-예제" class="nav-link" data-scroll-target="#예제"><span class="toc-section-number">1.1</span>  예제</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">리스트 내장 함수</h1>
-</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">저자</div>
-    <div class="quarto-title-meta-contents">
-             <p>lazychoi </p>
-          </div>
-  </div>
-    
-    <div>
-    <div class="quarto-title-meta-heading">공개</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">October 31, 2022</p>
-    </div>
-  </div>
-  
-    <div>
-    <div class="quarto-title-meta-heading">Modified</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date-modified">November 19, 2022</p>
-    </div>
-  </div>
-    
-  </div>
-  
-
-</header>
-
-<section id="리스트-컴프리헨션" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="리스트-컴프리헨션"><span class="header-section-number">1</span> 리스트 컴프리헨션</h2>
-<ul>
-<li>if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.</li>
-<li>for문을 중첩해서 쓸 수 있다.</li>
-<li>if문을 중첩해 쓸 수 있다.</li>
-<li>사용자 정의 함수를 사용할 수 있다.</li>
-</ul>
-<section id="예제" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="예제"><span class="header-section-number">1.1</span> 예제</h3>
-<ul>
-<li>1에서 10까지 수 중 3의 배수만 출력 -&gt; for if문 사용</li>
-</ul>
-<div class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[i <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">10</span>) <span class="cf">if</span>  i <span class="op">%</span> <span class="dv">3</span> <span class="op">==</span> <span class="dv">0</span>]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>[3, 6, 9]</code></pre>
-</div>
-</div>
-<ul>
-<li>짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -&gt; if else for문 사용</li>
-</ul>
-<div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[ <span class="st">'짝수'</span> <span class="cf">if</span> i <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="st">'홀수'</span> <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">10</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']</code></pre>
-</div>
-</div>
-<ul>
-<li>구구단에서 짝이 되는 숫자 출력(2단만) -&gt; for문 중첩 사용</li>
-</ul>
-<div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>[ [i, j] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">2</span>, <span class="dv">3</span>) <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="dv">10</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]</code></pre>
-</div>
-</div>
-<ul>
-<li>성적에 따라 수우미양가 출력 -&gt; 사용자 정의 함수 사용</li>
-</ul>
-<div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> grade(num):</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> num <span class="op">&gt;=</span> <span class="dv">90</span>:</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'수'</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> num <span class="op">&gt;=</span> <span class="dv">80</span>:</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'우'</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> num <span class="op">&gt;=</span> <span class="dv">70</span>:</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'미'</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> num <span class="op">&gt;=</span> <span class="dv">60</span>:</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'양'</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">'가'</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>[grade(i) <span class="cf">for</span> i <span class="kw">in</span> np.random.randint(<span class="dv">1</span>, <span class="dv">100</span>, size<span class="op">=</span><span class="dv">10</span>)]</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>['가', '가', '가', '가', '가', '가', '미', '가', '가', '수']</code></pre>
-</div>
-</div>
+<p><img src="images/2022-12-20-18-26-58.png" class="img-fluid"></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode java code-with-copy"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="kw">class</span> ButtonEvent <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">public</span> <span class="dt">static</span> <span class="dt">void</span> <span class="fu">main</span><span class="op">(</span><span class="bu">String</span><span class="op">[]</span> args<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JFrame</span> fr <span class="op">=</span> <span class="kw">new</span> <span class="bu">JFrame</span><span class="op">();</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">setTitle</span><span class="op">(</span><span class="st">"Button Event"</span><span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">setSize</span><span class="op">(</span><span class="dv">300</span><span class="op">,</span><span class="dv">200</span><span class="op">);</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">setLocationRelativeTo</span><span class="op">(</span><span class="kw">null</span><span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JTextField</span> textField <span class="op">=</span> <span class="kw">new</span> <span class="bu">JTextField</span><span class="op">(</span><span class="dv">50</span><span class="op">);</span>  <span class="co">// 하단에 버튼 2개 넣기(FlowLayout)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JPanel</span> btns <span class="op">=</span> <span class="kw">new</span> <span class="bu">JPanel</span><span class="op">();</span> </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JButton</span> clickBtn <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"click"</span><span class="op">);</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">JButton</span> resetBtn <span class="op">=</span> <span class="kw">new</span> <span class="bu">JButton</span><span class="op">(</span><span class="st">"reset"</span><span class="op">);</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        btns<span class="op">.</span><span class="fu">add</span><span class="op">(</span>clickBtn<span class="op">);</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        btns<span class="op">.</span><span class="fu">add</span><span class="op">(</span>resetBtn<span class="op">);</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 상하단에 텍스트필드와 버튼 추가</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span><span class="bu">BorderLayout</span><span class="op">.</span><span class="fu">NORTH</span><span class="op">,</span> textField<span class="op">);</span> </span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">getContentPane</span><span class="op">().</span><span class="fu">add</span><span class="op">(</span><span class="bu">BorderLayout</span><span class="op">.</span><span class="fu">SOUTH</span><span class="op">,</span> btns<span class="op">);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        fr<span class="op">.</span><span class="fu">setVisible</span><span class="op">(</span><span class="kw">true</span><span class="op">);</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">// 버튼 이벤트 - 텍스트 필드에 문자열 추가, 지우기</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        clickBtn<span class="op">.</span><span class="fu">addActionListener</span><span class="op">(</span><span class="kw">new</span> <span class="bu">ActionListener</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="at">@Override</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>            <span class="kw">public</span> <span class="dt">void</span> <span class="fu">actionPerformed</span><span class="op">(</span><span class="bu">ActionEvent</span> e<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                textField<span class="op">.</span><span class="fu">setText</span><span class="op">(</span><span class="st">"Hello, Java Swing!"</span><span class="op">);</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        <span class="op">});</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        resetBtn<span class="op">.</span><span class="fu">addActionListener</span><span class="op">(</span><span class="kw">new</span> <span class="bu">ActionListener</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="at">@Override</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            <span class="kw">public</span> <span class="dt">void</span> <span class="fu">actionPerformed</span><span class="op">(</span><span class="bu">ActionEvent</span> e<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>                textField<span class="op">.</span><span class="fu">setText</span><span class="op">(</span><span class="st">""</span><span class="op">);</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="op">});</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
-</section>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
