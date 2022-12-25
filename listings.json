@@ -2,6 +2,7 @@
   {
     "listing": "/project.html",
     "items": [
+      "/project/2212_javaswing.html",
       "/project/2211_recommend.html",
       "/project/2210_pet_choropleth.html",
       "/project/2209_mlops.html",
@@ -356,9 +357,9 @@
     "items": [
       "/review/algorithm/data_structure/quickSort.html",
       "/review/algorithm/data_structure/03_recur3.html",
-      "/review/algorithm/data_structure/01_stack1.html",
       "/review/algorithm/data_structure/01_stack2.html",
       "/review/algorithm/data_structure/03_recur1.html",
+      "/review/algorithm/data_structure/01_stack1.html",
       "/review/algorithm/data_structure/04_search2.html",
       "/review/algorithm/data_structure/02_queue1.html",
       "/review/algorithm/data_structure/03_recur2.html",
