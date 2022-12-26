@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-12-27">
+
+<title>👀 - 자바 Servlet 기초</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">자바 Servlet 기초</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">자바</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 27, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#apache-tomcat-설치-brew-install-tomcat9" id="toc-apache-tomcat-설치-brew-install-tomcat9" class="nav-link active" data-scroll-target="#apache-tomcat-설치-brew-install-tomcat9">Apache Tomcat 설치: brew install tomcat@9</a></li>
+  <li><a href="#apache-tomcat-실행-brew-services-restart-tomcat9" id="toc-apache-tomcat-실행-brew-services-restart-tomcat9" class="nav-link" data-scroll-target="#apache-tomcat-실행-brew-services-restart-tomcat9">Apache Tomcat 실행: <code>brew services restart tomcat@9</code></a></li>
+  <li><a href="#리눅스-폴더-구조" id="toc-리눅스-폴더-구조" class="nav-link" data-scroll-target="#리눅스-폴더-구조">리눅스 폴더 구조</a></li>
+  <li><a href="#throws" id="toc-throws" class="nav-link" data-scroll-target="#throws">throws</a></li>
+  <li><a href="#서블릿" id="toc-서블릿" class="nav-link" data-scroll-target="#서블릿">서블릿</a></li>
+  <li><a href="#web.xml" id="toc-web.xml" class="nav-link" data-scroll-target="#web.xml">web.xml</a></li>
+  <li><a href="#jsp" id="toc-jsp" class="nav-link" data-scroll-target="#jsp">jsp</a></li>
+  <li><a href="#이클립스-설정" id="toc-이클립스-설정" class="nav-link" data-scroll-target="#이클립스-설정">이클립스 설정</a></li>
+  <li><a href="#웹-프로젝트-만들고-서버-구동" id="toc-웹-프로젝트-만들고-서버-구동" class="nav-link" data-scroll-target="#웹-프로젝트-만들고-서버-구동">웹 프로젝트 만들고 서버 구동</a></li>
+  <li><a href="#servlet-html-jsp-만들고-실행" id="toc-servlet-html-jsp-만들고-실행" class="nav-link" data-scroll-target="#servlet-html-jsp-만들고-실행">servlet, html, jsp 만들고 실행</a></li>
+  </ul>
+</nav>
+</nav>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>Backend</p>
+<ul>
+<li>웹서버 : 아파치 톰캣(AT) 대부분 OS 사용 가능. 오픈소스</li>
+<li>java : 라이브러리: servlet, jsp(내부적으로는 servlet으로 변환되어 컴파일), 프레임워크: spring</li>
+<li>python : 프레임워크: Django, 경량 프레임워크: Flask</li>
+</ul>
+<section id="apache-tomcat-설치-brew-install-tomcat9" class="level3">
+<h3 class="anchored" data-anchor-id="apache-tomcat-설치-brew-install-tomcat9">Apache Tomcat 설치: brew install tomcat@9</h3>
+<p>설치 위치 : <code>/opt/homebrew/opt/tomcat/bin/catalina</code></p>
+<pre><code>Configuration files: /opt/homebrew/etc/tomcat@9
+
+tomcat@9 is keg-only, which means it was not symlinked into /opt/homebrew,
+because this is an alternate version of another formula.
+
+If you need to have tomcat@9 first in your PATH, run:
+  echo 'export PATH="/opt/homebrew/opt/tomcat@9/bin:$PATH"' &gt;&gt; ~/.zshrc
+
+
+To restart tomcat@9 after an upgrade:
+  brew services restart tomcat@9
+Or, if you don't want/need a background service you can just run:
+  /opt/homebrew/opt/tomcat@9/bin/catalina run
+==&gt; Summary
+🍺  /opt/homebrew/Cellar/tomcat@9/9.0.70: 628 files, 15.4MB
+==&gt; Running `brew cleanup tomcat@9`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).</code></pre>
+<p>echo ‘export PATH=“/opt/homebrew/opt/tomcat@9/bin:$PATH”’ &gt;&gt; ~/.zshrc</p>
+</section>
+<section id="apache-tomcat-실행-brew-services-restart-tomcat9" class="level3">
+<h3 class="anchored" data-anchor-id="apache-tomcat-실행-brew-services-restart-tomcat9">Apache Tomcat 실행: <code>brew services restart tomcat@9</code></h3>
+<p>웹서버 실행: <code>brew services start tomcat@9</code> 웹서버 중지: <code>brew services stop tomcat@9</code></p>
+<p>확인 -&gt; 웹 브라우저 localhost:8080</p>
+<p>서비스 제공 파일 위치하는 폴더: /opt/homebrew/Cellar/tomcat/10.1.4/libexec/webapps/docs</p>
+</section>
+<section id="리눅스-폴더-구조" class="level3">
+<h3 class="anchored" data-anchor-id="리눅스-폴더-구조">리눅스 폴더 구조</h3>
+<ul>
+<li>bin: 실행파일 포함</li>
+<li>lib: 라이브러리 포함</li>
+<li>conf: 환경설정</li>
+</ul>
+</section>
+<section id="throws" class="level3">
+<h3 class="anchored" data-anchor-id="throws">throws</h3>
+<p>파일 안의 여러 try-catch 문이 같은 오류를 처리할 때 이를 각각 처리하지 않고 부모 클래스로 던져 부모가 처리하게 하는 것</p>
+</section>
+<section id="서블릿" class="level3">
+<h3 class="anchored" data-anchor-id="서블릿">서블릿</h3>
+<p>서블릿 파일 함수 안에 html 코드 삽입</p>
+</section>
+<section id="web.xml" class="level3">
+<h3 class="anchored" data-anchor-id="web.xml">web.xml</h3>
+<p>서블릿이 만든 여러 파일을 관리 웹서버 요청이 들어오면 먼저 web.xml 파일을 검사</p>
+</section>
+<section id="jsp" class="level3">
+<h3 class="anchored" data-anchor-id="jsp">jsp</h3>
+<p>html 문서 안에 자바 코드 삽입 컴파일, web.xml에 등록하지 않아도 됨(내부에서 자동으로 해줌)</p>
+</section>
+<section id="이클립스-설정" class="level3">
+<h3 class="anchored" data-anchor-id="이클립스-설정">이클립스 설정</h3>
+<p>Help -&gt; Install new Software -&gt; (in work with put in: https://download.eclipse.org/releases/2020-12/) -&gt; (open drop down menu)Web, XML, Java EE and OSGi Enterprise Development -&gt; Select options :JST Server Adapters, JST Server Adapters Extensions, JST Server UI (the last one is for the event that the server ui isnt present which it wasnt on my version of eclipse)</p>
+<p>in the event that you already have one of these installed it won’t run an install on that particular one but run an update on it instead.</p>
+<p>apache tomcat이 안 보일 때 <img src="images/2022-12-26-11-13-28.png" class="img-fluid"> <img src="images/2022-12-26-11-29-48.png" class="img-fluid"></p>
+<p>dynamic web project 안 보일 때 <img src="images/2022-12-26-11-34-54.png" class="img-fluid"></p>
+<p>-&gt; 우측 하단에 설치 진행과정 표시 확인</p>
+<p>runtime environment 등록</p>
+<p><img src="images/2022-12-26-11-27-37.png" class="img-fluid"></p>
+</section>
+<section id="웹-프로젝트-만들고-서버-구동" class="level3">
+<h3 class="anchored" data-anchor-id="웹-프로젝트-만들고-서버-구동">웹 프로젝트 만들고 서버 구동</h3>
+<p><img src="images/2022-12-26-16-39-10.png" class="img-fluid"></p>
+<p>File &gt;&gt; new &gt;&gt; others &gt;&gt; Dynamic Web Project</p>
+<p><img src="images/2022-12-26-11-44-39.png" class="img-fluid"></p>
+<p>Project Explorer에 Servers 폴더가 만들어지고, 중앙 하단의 Servers 탭에 Tomcat 서버가 나타나야 한다.</p>
+<p><img src="images/2022-12-26-11-45-43.png" class="img-fluid"> <img src="images/2022-12-26-16-20-52.png" class="img-fluid"> <img src="images/2022-12-26-16-23-11.png" class="img-fluid"></p>
+<p>web.xml 자동 생성에 꼭!! 체크</p>
+<p>톰캣 서버 우클릭 후 start -&gt; 오류가 나면 실행된 톰캣 서버가 있을 수 있으니 서버 중지(brew services stop tomcat@9)</p>
+<p>이클립스 비정상 종료 등의 이유로 8080 포트가 사용되고 있을 때 강제 종료 : - 프로세스 확인 : <code>lsof -i tcp:8080</code> - 강제 종료: <code>kill $(lsof -t -i:8080)</code></p>
+</section>
+<section id="servlet-html-jsp-만들고-실행" class="level3">
+<h3 class="anchored" data-anchor-id="servlet-html-jsp-만들고-실행">servlet, html, jsp 만들고 실행</h3>
+<ul>
+<li><p>java 폴더 우 클릭 &gt;&gt; new &gt;&gt; other &gt;&gt; Servlet <img src="images/2022-12-26-16-15-39.png" class="img-fluid"></p></li>
+<li><p>webapp 폴더 우클릭 &gt;&gt; new &gt;&gt; HTML 파일 -&gt; html 파일 작성 <img src="images/2022-12-26-16-17-28.png" class="img-fluid"></p></li>
+<li><p>web.xml 파일 작성</p></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode xml code-with-copy"><code class="sourceCode xml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">"1.0"</span><span class="ot"> encoding=</span><span class="st">"UTF-8"</span><span class="fu">?&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">web-app</span><span class="ot"> xmlns:xsi=</span><span class="st">"http://www.w3.org/2001/XMLSchema-instance"</span><span class="ot"> xmlns=</span><span class="st">"http://xmlns.jcp.org/xml/ns/javaee"</span><span class="ot"> xsi:schemaLocation=</span><span class="st">"http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"</span><span class="ot"> id=</span><span class="st">"WebApp_ID"</span><span class="ot"> version=</span><span class="st">"4.0"</span>&gt;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">display-name</span>&gt;studyServlet&lt;/<span class="kw">display-name</span>&gt;</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">servlet</span>&gt;</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">servlet-name</span>&gt;adder-servlet1&lt;/<span class="kw">servlet-name</span>&gt;  <span class="co">&lt;!--  서블릿 이름은 아무 이름이나 작성 --&gt;</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">servlet-class</span>&gt;AdderServlet&lt;/<span class="kw">servlet-class</span>&gt;  <span class="co">&lt;!--  서블릿 파일명과 같게 --&gt;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">servlet</span>&gt;</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">servlet-mapping</span>&gt;</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">servlet-name</span>&gt;adder-servlet1&lt;/<span class="kw">servlet-name</span>&gt;  <span class="co">&lt;!--  서블릿 이름을 위와 같은 이름으로 --&gt;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">url-pattern</span>&gt;/adder&lt;/<span class="kw">url-pattern</span>&gt;            <span class="co">&lt;!--  action에 지정한 경로 "/" 반드시 포함 --&gt;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">servlet-mapping</span>&gt;</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">web-app</span>&gt;</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>먼저 servlet 파일 run as 하여 컴파일</li>
+<li>webapp 폴더 안의 html 파일 우클릭 &gt;&gt; run as &gt;&gt; Run on Server &gt;&gt; Tomcat 선택 &gt;&gt; restart 선택 -&gt; 웹브라우저 열리며 실행됨</li>
+<li>servlet 파일을 찾지 못할 경우 Tomcat 서버 더블클릭 &gt;&gt; 하단의 Modules 탭 &gt;&gt; Add &gt;&gt; Path가 “/”인 것 추가</li>
+</ul>
+<p><img src="images/2022-12-26-16-35-07.png" class="img-fluid"></p>
+<ul>
+<li>jsp 파일도 같은 방법으로 작성 -&gt; /Users/jun/eclipse-workspace/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/work/Catalina/localhost/firstWeb/org/apache/jsp 폴더 안에 변환된 java와 class 파일 존재</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
