@@ -37,6 +37,7 @@ website:
         - books/pandas_in_action.md
         - books/numpy_for_ml_dl.md
         - books/python_machine_learning.md
+        - books/python_design_pattern.md
         # - section: "이것이 코딩 테스트다"
         #   contents: 
         # - section: "21가지 작고 재미난 파이썬 프로젝트"
@@ -49,6 +50,7 @@ website:
         - review.md
         - review/python.md
         - review/algorithm.md
+        - review/javaSwing.md
         - review/pkm.md
         - review/de.md
         - review/eda.md
