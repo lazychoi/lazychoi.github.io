@@ -2,1146 +2,1158 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://lazychoi.github.io/project.html</loc>
-    <lastmod>2022-12-26T22:00:59.694Z</lastmod>
+    <lastmod>2022-12-27T13:06:33.458Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/numpy_for_ml_dl/01_array.html</loc>
-    <lastmod>2022-12-26T22:01:00.141Z</lastmod>
+    <lastmod>2022-12-27T13:06:33.856Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project.html</loc>
-    <lastmod>2022-12-26T22:01:00.487Z</lastmod>
+    <lastmod>2022-12-27T13:06:34.188Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification1_perceptron.html</loc>
-    <lastmod>2022-12-26T22:01:00.830Z</lastmod>
+    <lastmod>2022-12-27T13:06:34.509Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification2_logistic.html</loc>
-    <lastmod>2022-12-26T22:01:01.267Z</lastmod>
+    <lastmod>2022-12-27T13:06:34.868Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification4_decesion_tree.html</loc>
-    <lastmod>2022-12-26T22:01:01.633Z</lastmod>
+    <lastmod>2022-12-27T13:06:35.244Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/02_perceptron_adaline.html</loc>
-    <lastmod>2022-12-26T22:01:02.033Z</lastmod>
+    <lastmod>2022-12-27T13:06:35.618Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/04_preprocessing2_category.html</loc>
-    <lastmod>2022-12-26T22:01:02.389Z</lastmod>
+    <lastmod>2022-12-27T13:06:35.963Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification3_svm.html</loc>
-    <lastmod>2022-12-26T22:01:03.008Z</lastmod>
+    <lastmod>2022-12-27T13:06:36.575Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification5_random_forest.html</loc>
-    <lastmod>2022-12-26T22:01:03.336Z</lastmod>
+    <lastmod>2022-12-27T13:06:36.890Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/03_classification6_knn.html</loc>
-    <lastmod>2022-12-26T22:01:03.644Z</lastmod>
+    <lastmod>2022-12-27T13:06:37.181Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning/04_preprocessing1_missing.html</loc>
-    <lastmod>2022-12-26T22:01:03.994Z</lastmod>
+    <lastmod>2022-12-27T13:06:37.514Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/pandas_in_action/pandas_in_action_keywords.html</loc>
-    <lastmod>2022-12-26T22:01:04.514Z</lastmod>
+    <lastmod>2022-12-27T13:06:38.019Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/pandas_in_action/duplicated.html</loc>
-    <lastmod>2022-12-26T22:01:05.042Z</lastmod>
+    <lastmod>2022-12-27T13:06:38.490Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/05stack_queue_recursion.html</loc>
-    <lastmod>2022-12-26T22:01:05.364Z</lastmod>
+    <lastmod>2022-12-27T13:06:38.801Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/06insertion_sort.html</loc>
-    <lastmod>2022-12-26T22:01:05.852Z</lastmod>
+    <lastmod>2022-12-27T13:06:39.266Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/07binarySearch.html</loc>
-    <lastmod>2022-12-26T22:01:06.363Z</lastmod>
+    <lastmod>2022-12-27T13:06:39.771Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/09floyd-warshall.html</loc>
-    <lastmod>2022-12-26T22:01:06.687Z</lastmod>
+    <lastmod>2022-12-27T13:06:40.076Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/06quick_sort.html</loc>
-    <lastmod>2022-12-26T22:01:07.183Z</lastmod>
+    <lastmod>2022-12-27T13:06:40.539Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/07sequentialSearch.html</loc>
-    <lastmod>2022-12-26T22:01:07.505Z</lastmod>
+    <lastmod>2022-12-27T13:06:40.860Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/05bfs.html</loc>
-    <lastmod>2022-12-26T22:01:08.016Z</lastmod>
+    <lastmod>2022-12-27T13:06:41.338Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/08dynamicProgramming.html</loc>
-    <lastmod>2022-12-26T22:01:08.558Z</lastmod>
+    <lastmod>2022-12-27T13:06:41.850Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/09dijkstra.html</loc>
-    <lastmod>2022-12-26T22:01:08.883Z</lastmod>
+    <lastmod>2022-12-27T13:06:42.176Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/04implementation.html</loc>
-    <lastmod>2022-12-26T22:01:09.181Z</lastmod>
+    <lastmod>2022-12-27T13:06:42.459Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/10cycle.html</loc>
-    <lastmod>2022-12-26T22:01:14.081Z</lastmod>
+    <lastmod>2022-12-27T13:06:47.455Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/10topology.html</loc>
-    <lastmod>2022-12-26T22:01:16.547Z</lastmod>
+    <lastmod>2022-12-27T13:06:49.654Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/05dfs.html</loc>
-    <lastmod>2022-12-26T22:01:17.095Z</lastmod>
+    <lastmod>2022-12-27T13:06:50.161Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/05gcd.html</loc>
-    <lastmod>2022-12-26T22:01:17.396Z</lastmod>
+    <lastmod>2022-12-27T13:06:50.458Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/06count_sort.html</loc>
-    <lastmod>2022-12-26T22:01:17.911Z</lastmod>
+    <lastmod>2022-12-27T13:06:50.957Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/07parametricSearch.html</loc>
-    <lastmod>2022-12-26T22:01:18.254Z</lastmod>
+    <lastmod>2022-12-27T13:06:51.265Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/10disjoint.html</loc>
-    <lastmod>2022-12-26T22:01:20.531Z</lastmod>
+    <lastmod>2022-12-27T13:06:53.519Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/06selection_sort.html</loc>
-    <lastmod>2022-12-26T22:01:21.021Z</lastmod>
+    <lastmod>2022-12-27T13:06:54.001Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/09heap.html</loc>
-    <lastmod>2022-12-26T22:01:21.515Z</lastmod>
+    <lastmod>2022-12-27T13:06:54.480Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/06sorting_quiz.html</loc>
-    <lastmod>2022-12-26T22:01:21.842Z</lastmod>
+    <lastmod>2022-12-27T13:06:54.794Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/10spanning_tree.html</loc>
-    <lastmod>2022-12-26T22:01:24.059Z</lastmod>
+    <lastmod>2022-12-27T13:06:56.998Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/10problems.html</loc>
-    <lastmod>2022-12-26T22:01:24.460Z</lastmod>
+    <lastmod>2022-12-27T13:06:57.385Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test/03greedy.html</loc>
-    <lastmod>2022-12-26T22:01:24.793Z</lastmod>
+    <lastmod>2022-12-27T13:06:57.718Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/pandas_in_action.html</loc>
-    <lastmod>2022-12-26T22:01:25.107Z</lastmod>
+    <lastmod>2022-12-27T13:06:58.010Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/01_ot.html</loc>
-    <lastmod>2022-12-26T22:01:25.435Z</lastmod>
+    <lastmod>2022-12-27T13:06:58.328Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/05_howler.html</loc>
-    <lastmod>2022-12-26T22:01:25.747Z</lastmod>
+    <lastmod>2022-12-27T13:06:58.625Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/02_crowsnest.html</loc>
-    <lastmod>2022-12-26T22:01:26.055Z</lastmod>
+    <lastmod>2022-12-27T13:06:58.912Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/04_jump.html</loc>
-    <lastmod>2022-12-26T22:01:26.357Z</lastmod>
+    <lastmod>2022-12-27T13:06:59.214Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/03_picnic.html</loc>
-    <lastmod>2022-12-26T22:01:26.676Z</lastmod>
+    <lastmod>2022-12-27T13:06:59.547Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/07_gashlycrumb.html</loc>
-    <lastmod>2022-12-26T22:01:26.981Z</lastmod>
+    <lastmod>2022-12-27T13:06:59.836Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/tiny_python_project/06_wc.html</loc>
-    <lastmod>2022-12-26T22:01:27.319Z</lastmod>
+    <lastmod>2022-12-27T13:07:00.150Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_machine_learning.html</loc>
-    <lastmod>2022-12-26T22:01:27.669Z</lastmod>
+    <lastmod>2022-12-27T13:07:00.503Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/SQL 데이터조작.html</loc>
-    <lastmod>2022-12-26T22:01:27.977Z</lastmod>
+    <lastmod>2022-12-27T13:07:00.789Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/database02.html</loc>
-    <lastmod>2022-12-26T22:01:28.281Z</lastmod>
+    <lastmod>2022-12-27T13:07:01.080Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/SQL 데이터정의.html</loc>
-    <lastmod>2022-12-26T22:01:28.582Z</lastmod>
+    <lastmod>2022-12-27T13:07:01.365Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/정규형과 정규화예제.html</loc>
-    <lastmod>2022-12-26T22:01:28.891Z</lastmod>
+    <lastmod>2022-12-27T13:07:01.666Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/개념적 데이터 모델링.html</loc>
-    <lastmod>2022-12-26T22:01:29.192Z</lastmod>
+    <lastmod>2022-12-27T13:07:01.962Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/index.html</loc>
-    <lastmod>2022-12-26T22:01:29.490Z</lastmod>
+    <lastmod>2022-12-27T13:07:02.249Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/데이터베이스 시스템.html</loc>
-    <lastmod>2022-12-26T22:01:29.790Z</lastmod>
+    <lastmod>2022-12-27T13:07:02.537Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/관계데이터 연산.html</loc>
-    <lastmod>2022-12-26T22:01:30.128Z</lastmod>
+    <lastmod>2022-12-27T13:07:02.874Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/개념적 데이터 모델링 실습.html</loc>
-    <lastmod>2022-12-26T22:01:30.411Z</lastmod>
+    <lastmod>2022-12-27T13:07:03.162Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/database01.html</loc>
-    <lastmod>2022-12-26T22:01:30.706Z</lastmod>
+    <lastmod>2022-12-27T13:07:03.471Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/이상현상과 함수종속.html</loc>
-    <lastmod>2022-12-26T22:01:31.005Z</lastmod>
+    <lastmod>2022-12-27T13:07:03.762Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/관계 데이터 모델링 실습.html</loc>
-    <lastmod>2022-12-26T22:01:31.316Z</lastmod>
+    <lastmod>2022-12-27T13:07:04.064Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/kocw_database_modeling/관계 데이터 모델링.html</loc>
-    <lastmod>2022-12-26T22:01:31.627Z</lastmod>
+    <lastmod>2022-12-27T13:07:04.367Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_design_pattern/2022_12_26_05_58_28.html</loc>
-    <lastmod>2022-12-26T22:01:31.912Z</lastmod>
+    <lastmod>2022-12-27T13:07:04.652Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_design_pattern/2022_12_26_05_52_07.html</loc>
-    <lastmod>2022-12-26T22:01:32.198Z</lastmod>
+    <lastmod>2022-12-27T13:07:04.940Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/This_is_coding_test.html</loc>
-    <lastmod>2022-12-26T22:01:32.647Z</lastmod>
+    <lastmod>2022-12-27T13:07:05.370Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/python_design_pattern.html</loc>
-    <lastmod>2022-12-26T22:01:32.938Z</lastmod>
+    <lastmod>2022-12-27T13:07:05.644Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books/numpy_for_ml_dl.html</loc>
-    <lastmod>2022-12-26T22:01:33.240Z</lastmod>
+    <lastmod>2022-12-27T13:07:05.946Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-21.html</loc>
-    <lastmod>2022-12-26T22:01:33.809Z</lastmod>
+    <lastmod>2022-12-27T13:07:06.480Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-15.html</loc>
-    <lastmod>2022-12-26T22:01:34.097Z</lastmod>
+    <lastmod>2022-12-27T13:07:06.770Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-1.html</loc>
-    <lastmod>2022-12-26T22:01:34.400Z</lastmod>
+    <lastmod>2022-12-27T13:07:07.061Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-05.html</loc>
-    <lastmod>2022-12-26T22:01:34.686Z</lastmod>
+    <lastmod>2022-12-27T13:07:07.336Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-11.html</loc>
-    <lastmod>2022-12-26T22:01:34.973Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lazychoi.github.io/blog/posts/2022_12_27_06_55_44.html</loc>
-    <lastmod>2022-12-26T22:01:35.281Z</lastmod>
+    <lastmod>2022-12-27T13:07:07.609Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-25.html</loc>
-    <lastmod>2022-12-26T22:01:36.161Z</lastmod>
+    <lastmod>2022-12-27T13:07:08.490Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-5.html</loc>
-    <lastmod>2022-12-26T22:01:36.491Z</lastmod>
+    <lastmod>2022-12-27T13:07:08.814Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/korean_embedding.html</loc>
-    <lastmod>2022-12-26T22:01:36.841Z</lastmod>
+    <lastmod>2022-12-27T13:07:09.130Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-10.html</loc>
-    <lastmod>2022-12-26T22:01:37.143Z</lastmod>
+    <lastmod>2022-12-27T13:07:09.447Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-22-3.html</loc>
-    <lastmod>2022-12-26T22:01:37.493Z</lastmod>
+    <lastmod>2022-12-27T13:07:09.788Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-4.html</loc>
-    <lastmod>2022-12-26T22:01:37.817Z</lastmod>
+    <lastmod>2022-12-27T13:07:10.104Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-19-2.html</loc>
-    <lastmod>2022-12-26T22:01:38.133Z</lastmod>
+    <lastmod>2022-12-27T13:07:10.416Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-01.html</loc>
-    <lastmod>2022-12-26T22:01:38.433Z</lastmod>
+    <lastmod>2022-12-27T13:07:10.721Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-10.html</loc>
-    <lastmod>2022-12-26T22:01:38.739Z</lastmod>
+    <lastmod>2022-12-27T13:07:11.024Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-24.html</loc>
-    <lastmod>2022-12-26T22:01:39.021Z</lastmod>
+    <lastmod>2022-12-27T13:07:11.324Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-4.html</loc>
-    <lastmod>2022-12-26T22:01:39.369Z</lastmod>
+    <lastmod>2022-12-27T13:07:11.664Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-22-2.html</loc>
-    <lastmod>2022-12-26T22:01:39.699Z</lastmod>
+    <lastmod>2022-12-27T13:07:11.996Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-5.html</loc>
-    <lastmod>2022-12-26T22:01:40.036Z</lastmod>
+    <lastmod>2022-12-27T13:07:12.301Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-19-3.html</loc>
-    <lastmod>2022-12-26T22:01:40.370Z</lastmod>
+    <lastmod>2022-12-27T13:07:12.634Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-14.html</loc>
-    <lastmod>2022-12-26T22:01:40.656Z</lastmod>
+    <lastmod>2022-12-27T13:07:12.927Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-1.html</loc>
-    <lastmod>2022-12-26T22:01:40.967Z</lastmod>
+    <lastmod>2022-12-27T13:07:13.220Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-04.html</loc>
-    <lastmod>2022-12-26T22:01:41.256Z</lastmod>
+    <lastmod>2022-12-27T13:07:13.494Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-30.html</loc>
-    <lastmod>2022-12-26T22:01:41.573Z</lastmod>
+    <lastmod>2022-12-27T13:07:13.795Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22_12_27_09_18_33.html</loc>
+    <lastmod>2022-12-27T13:07:14.090Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22_12_27_06_53_48.html</loc>
+    <lastmod>2022-12-27T13:07:14.384Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-25.html</loc>
-    <lastmod>2022-12-26T22:01:41.855Z</lastmod>
+    <lastmod>2022-12-27T13:07:14.661Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-11.html</loc>
-    <lastmod>2022-12-26T22:01:42.156Z</lastmod>
+    <lastmod>2022-12-27T13:07:14.950Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-05.html</loc>
-    <lastmod>2022-12-26T22:01:42.463Z</lastmod>
+    <lastmod>2022-12-27T13:07:15.238Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-15.html</loc>
-    <lastmod>2022-12-26T22:01:42.795Z</lastmod>
+    <lastmod>2022-12-27T13:07:15.578Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-01.html</loc>
-    <lastmod>2022-12-26T22:01:43.098Z</lastmod>
+    <lastmod>2022-12-27T13:07:15.869Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-21.html</loc>
-    <lastmod>2022-12-26T22:01:43.388Z</lastmod>
+    <lastmod>2022-12-27T13:07:16.157Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-25.html</loc>
-    <lastmod>2022-12-26T22:01:43.693Z</lastmod>
+    <lastmod>2022-12-27T13:07:16.451Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-31.html</loc>
-    <lastmod>2022-12-26T22:01:44.023Z</lastmod>
+    <lastmod>2022-12-27T13:07:16.755Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-05.html</loc>
-    <lastmod>2022-12-26T22:01:44.356Z</lastmod>
+    <lastmod>2022-12-27T13:07:17.029Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/using_pandas.html</loc>
-    <lastmod>2022-12-26T22:01:45.205Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lazychoi.github.io/blog/posts/2022_12_27_06_49_11.html</loc>
-    <lastmod>2022-12-26T22:01:45.578Z</lastmod>
+    <lastmod>2022-12-27T13:07:17.789Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-14.html</loc>
-    <lastmod>2022-12-26T22:01:45.909Z</lastmod>
+    <lastmod>2022-12-27T13:07:18.078Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22_12_27_09_04_47.html</loc>
+    <lastmod>2022-12-27T13:07:18.366Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-20.html</loc>
-    <lastmod>2022-12-26T22:01:46.204Z</lastmod>
+    <lastmod>2022-12-27T13:07:18.657Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-30.html</loc>
-    <lastmod>2022-12-26T22:01:46.497Z</lastmod>
+    <lastmod>2022-12-27T13:07:18.955Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-04.html</loc>
-    <lastmod>2022-12-26T22:01:46.786Z</lastmod>
+    <lastmod>2022-12-27T13:07:19.231Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-24.html</loc>
-    <lastmod>2022-12-26T22:01:47.087Z</lastmod>
+    <lastmod>2022-12-27T13:07:19.520Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-10.html</loc>
-    <lastmod>2022-12-26T22:01:47.372Z</lastmod>
+    <lastmod>2022-12-27T13:07:19.795Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-14.html</loc>
-    <lastmod>2022-12-26T22:01:47.684Z</lastmod>
+    <lastmod>2022-12-27T13:07:20.112Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-19.html</loc>
-    <lastmod>2022-12-26T22:01:47.970Z</lastmod>
+    <lastmod>2022-12-27T13:07:20.401Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-17.html</loc>
-    <lastmod>2022-12-26T22:01:48.257Z</lastmod>
+    <lastmod>2022-12-27T13:07:20.705Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-23.html</loc>
-    <lastmod>2022-12-26T22:01:48.555Z</lastmod>
+    <lastmod>2022-12-27T13:07:20.998Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22-12-27.html</loc>
+    <lastmod>2022-12-27T13:07:21.286Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-13.html</loc>
-    <lastmod>2022-12-26T22:01:48.876Z</lastmod>
+    <lastmod>2022-12-27T13:07:21.597Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-07.html</loc>
-    <lastmod>2022-12-26T22:01:49.177Z</lastmod>
+    <lastmod>2022-12-27T13:07:21.873Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-09.html</loc>
-    <lastmod>2022-12-26T22:01:49.478Z</lastmod>
+    <lastmod>2022-12-27T13:07:22.172Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-9.html</loc>
-    <lastmod>2022-12-26T22:01:49.794Z</lastmod>
+    <lastmod>2022-12-27T13:07:22.484Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-29.html</loc>
-    <lastmod>2022-12-26T22:01:50.116Z</lastmod>
+    <lastmod>2022-12-27T13:07:22.786Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-27.html</loc>
-    <lastmod>2022-12-26T22:01:50.421Z</lastmod>
+    <lastmod>2022-12-27T13:07:23.085Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22_12_27_06_49_11.html</loc>
+    <lastmod>2022-12-27T13:07:23.400Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-07.html</loc>
-    <lastmod>2022-12-26T22:01:50.739Z</lastmod>
+    <lastmod>2022-12-27T13:07:23.715Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-13.html</loc>
-    <lastmod>2022-12-26T22:01:51.027Z</lastmod>
+    <lastmod>2022-12-27T13:07:24.004Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/study_konlpy.html</loc>
-    <lastmod>2022-12-26T22:01:51.328Z</lastmod>
+    <lastmod>2022-12-27T13:07:24.303Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-8.html</loc>
-    <lastmod>2022-12-26T22:01:51.640Z</lastmod>
+    <lastmod>2022-12-27T13:07:24.606Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-28.html</loc>
-    <lastmod>2022-12-26T22:01:51.931Z</lastmod>
+    <lastmod>2022-12-27T13:07:24.880Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-26.html</loc>
-    <lastmod>2022-12-26T22:01:52.225Z</lastmod>
+    <lastmod>2022-12-27T13:07:25.173Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-06.html</loc>
-    <lastmod>2022-12-26T22:01:53.202Z</lastmod>
+    <lastmod>2022-12-27T13:07:26.145Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-12.html</loc>
-    <lastmod>2022-12-26T22:01:53.493Z</lastmod>
+    <lastmod>2022-12-27T13:07:26.433Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-16.html</loc>
-    <lastmod>2022-12-26T22:01:53.833Z</lastmod>
-  </url>
-  <url>
-    <loc>https://lazychoi.github.io/blog/posts/2022_12_27_06_53_48.html</loc>
-    <lastmod>2022-12-26T22:01:54.132Z</lastmod>
+    <lastmod>2022-12-27T13:07:26.775Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-18.html</loc>
-    <lastmod>2022-12-26T22:01:54.451Z</lastmod>
+    <lastmod>2022-12-27T13:07:27.082Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/07-working-with-text-data.html</loc>
-    <lastmod>2022-12-26T22:01:54.840Z</lastmod>
+    <lastmod>2022-12-27T13:07:27.449Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-16.html</loc>
-    <lastmod>2022-12-26T22:01:55.175Z</lastmod>
+    <lastmod>2022-12-27T13:07:27.776Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-02.html</loc>
-    <lastmod>2022-12-26T22:01:55.476Z</lastmod>
+    <lastmod>2022-12-27T13:07:28.051Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-22.html</loc>
-    <lastmod>2022-12-26T22:01:55.760Z</lastmod>
+    <lastmod>2022-12-27T13:07:28.336Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-26.html</loc>
-    <lastmod>2022-12-26T22:01:56.048Z</lastmod>
+    <lastmod>2022-12-27T13:07:28.632Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-12.html</loc>
-    <lastmod>2022-12-26T22:01:56.809Z</lastmod>
+    <lastmod>2022-12-27T13:07:29.370Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-06.html</loc>
-    <lastmod>2022-12-26T22:01:57.106Z</lastmod>
+    <lastmod>2022-12-27T13:07:29.646Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-08.html</loc>
-    <lastmod>2022-12-26T22:01:57.410Z</lastmod>
+    <lastmod>2022-12-27T13:07:29.934Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-09.html</loc>
-    <lastmod>2022-12-26T22:01:57.937Z</lastmod>
+    <lastmod>2022-12-27T13:07:30.464Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-13.html</loc>
-    <lastmod>2022-12-26T22:01:58.222Z</lastmod>
+    <lastmod>2022-12-27T13:07:30.737Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-29.html</loc>
-    <lastmod>2022-12-26T22:01:58.517Z</lastmod>
+    <lastmod>2022-12-27T13:07:31.022Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-27.html</loc>
-    <lastmod>2022-12-26T22:01:58.804Z</lastmod>
+    <lastmod>2022-12-27T13:07:31.311Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-7.html</loc>
-    <lastmod>2022-12-26T22:01:59.107Z</lastmod>
+    <lastmod>2022-12-27T13:07:31.618Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-22-1.html</loc>
-    <lastmod>2022-12-26T22:01:59.403Z</lastmod>
+    <lastmod>2022-12-27T13:07:31.908Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-6.html</loc>
-    <lastmod>2022-12-26T22:01:59.723Z</lastmod>
+    <lastmod>2022-12-27T13:07:32.217Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-03.html</loc>
-    <lastmod>2022-12-26T22:02:00.007Z</lastmod>
+    <lastmod>2022-12-27T13:07:32.502Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-23.html</loc>
-    <lastmod>2022-12-26T22:02:00.347Z</lastmod>
+    <lastmod>2022-12-27T13:07:32.830Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-19.html</loc>
-    <lastmod>2022-12-26T22:02:00.642Z</lastmod>
+    <lastmod>2022-12-27T13:07:33.132Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-17.html</loc>
-    <lastmod>2022-12-26T22:02:00.962Z</lastmod>
+    <lastmod>2022-12-27T13:07:33.421Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-3.html</loc>
-    <lastmod>2022-12-26T22:02:01.300Z</lastmod>
+    <lastmod>2022-12-27T13:07:33.744Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-2.html</loc>
-    <lastmod>2022-12-26T22:02:01.655Z</lastmod>
+    <lastmod>2022-12-27T13:07:34.079Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-22-5.html</loc>
-    <lastmod>2022-12-26T22:02:02.024Z</lastmod>
+    <lastmod>2022-12-27T13:07:34.420Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-07.html</loc>
-    <lastmod>2022-12-26T22:02:02.324Z</lastmod>
+    <lastmod>2022-12-27T13:07:34.720Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-09.html</loc>
-    <lastmod>2022-12-26T22:02:02.611Z</lastmod>
+    <lastmod>2022-12-27T13:07:35.010Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-19-4.html</loc>
-    <lastmod>2022-12-26T22:02:02.929Z</lastmod>
+    <lastmod>2022-12-27T13:07:35.332Z</lastmod>
+  </url>
+  <url>
+    <loc>https://lazychoi.github.io/blog/posts/22_12_27_06_55_44.html</loc>
+    <lastmod>2022-12-27T13:07:35.625Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-22.html</loc>
-    <lastmod>2022-12-26T22:02:03.459Z</lastmod>
+    <lastmod>2022-12-27T13:07:36.146Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-18.html</loc>
-    <lastmod>2022-12-26T22:02:03.752Z</lastmod>
+    <lastmod>2022-12-27T13:07:36.448Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-16.html</loc>
-    <lastmod>2022-12-26T22:02:04.043Z</lastmod>
+    <lastmod>2022-12-27T13:07:36.738Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-2.html</loc>
-    <lastmod>2022-12-26T22:02:04.404Z</lastmod>
+    <lastmod>2022-12-27T13:07:37.086Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-21-3.html</loc>
-    <lastmod>2022-12-26T22:02:04.710Z</lastmod>
+    <lastmod>2022-12-27T13:07:37.394Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-22-4.html</loc>
-    <lastmod>2022-12-26T22:02:05.070Z</lastmod>
+    <lastmod>2022-12-27T13:07:37.744Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-06.html</loc>
-    <lastmod>2022-12-26T22:02:05.386Z</lastmod>
+    <lastmod>2022-12-27T13:07:38.047Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-19-5.html</loc>
-    <lastmod>2022-12-26T22:02:05.716Z</lastmod>
+    <lastmod>2022-12-27T13:07:38.384Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-08.html</loc>
-    <lastmod>2022-12-26T22:02:06.058Z</lastmod>
+    <lastmod>2022-12-27T13:07:38.730Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-12.html</loc>
-    <lastmod>2022-12-26T22:02:06.344Z</lastmod>
+    <lastmod>2022-12-27T13:07:39.001Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-10-28.html</loc>
-    <lastmod>2022-12-26T22:02:06.653Z</lastmod>
+    <lastmod>2022-12-27T13:07:39.296Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-26.html</loc>
-    <lastmod>2022-12-26T22:02:06.937Z</lastmod>
+    <lastmod>2022-12-27T13:07:39.570Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-20-6.html</loc>
-    <lastmod>2022-12-26T22:02:07.247Z</lastmod>
+    <lastmod>2022-12-27T13:07:39.885Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-19-1.html</loc>
-    <lastmod>2022-12-26T22:02:07.542Z</lastmod>
+    <lastmod>2022-12-27T13:07:40.161Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-11-02.html</loc>
-    <lastmod>2022-12-26T22:02:07.829Z</lastmod>
+    <lastmod>2022-12-27T13:07:40.458Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/posts/22-12-18.html</loc>
-    <lastmod>2022-12-26T22:02:08.124Z</lastmod>
+    <lastmod>2022-12-27T13:07:40.751Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/blog/blog.html</loc>
-    <lastmod>2022-12-26T22:02:09.927Z</lastmod>
+    <lastmod>2022-12-27T13:07:42.492Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2211_recommend.html</loc>
-    <lastmod>2022-12-26T22:02:10.288Z</lastmod>
+    <lastmod>2022-12-27T13:07:42.855Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2205_mbti.html</loc>
-    <lastmod>2022-12-26T22:02:10.828Z</lastmod>
+    <lastmod>2022-12-27T13:07:43.371Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2212_javaswing.html</loc>
-    <lastmod>2022-12-26T22:02:11.270Z</lastmod>
+    <lastmod>2022-12-27T13:07:43.813Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2209_mlops.html</loc>
-    <lastmod>2022-12-26T22:02:11.553Z</lastmod>
+    <lastmod>2022-12-27T13:07:44.099Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2210_pet_choropleth.html</loc>
-    <lastmod>2022-12-26T22:02:13.039Z</lastmod>
+    <lastmod>2022-12-27T13:07:45.454Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/project/2205_president_stock.html</loc>
-    <lastmod>2022-12-26T22:02:13.672Z</lastmod>
+    <lastmod>2022-12-27T13:07:46.085Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/index.html</loc>
-    <lastmod>2022-12-26T22:02:13.953Z</lastmod>
+    <lastmod>2022-12-27T13:07:46.382Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning.html</loc>
-    <lastmod>2022-12-26T22:02:14.469Z</lastmod>
+    <lastmod>2022-12-27T13:07:46.855Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/eda/folium.html</loc>
-    <lastmod>2022-12-26T22:02:19.258Z</lastmod>
+    <lastmod>2022-12-27T13:07:51.415Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/eda/koreanfont.html</loc>
-    <lastmod>2022-12-26T22:02:19.582Z</lastmod>
+    <lastmod>2022-12-27T13:07:51.723Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/javaSwing.html</loc>
-    <lastmod>2022-12-26T22:02:20.180Z</lastmod>
+    <lastmod>2022-12-27T13:07:52.297Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python.html</loc>
-    <lastmod>2022-12-26T22:02:20.629Z</lastmod>
+    <lastmod>2022-12-27T13:07:52.739Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/list_comprehension.html</loc>
-    <lastmod>2022-12-26T22:02:23.217Z</lastmod>
+    <lastmod>2022-12-27T13:07:55.215Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/class.html</loc>
-    <lastmod>2022-12-26T22:02:23.505Z</lastmod>
+    <lastmod>2022-12-27T13:07:55.491Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/argparse.html</loc>
-    <lastmod>2022-12-26T22:02:23.823Z</lastmod>
+    <lastmod>2022-12-27T13:07:55.800Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/str-translate.html</loc>
-    <lastmod>2022-12-26T22:02:24.424Z</lastmod>
+    <lastmod>2022-12-27T13:07:56.388Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/show_line.html</loc>
-    <lastmod>2022-12-26T22:02:24.727Z</lastmod>
+    <lastmod>2022-12-27T13:07:56.682Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/json_crawling.html</loc>
-    <lastmod>2022-12-26T22:02:25.029Z</lastmod>
+    <lastmod>2022-12-27T13:07:56.974Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/shallow_copy-deep_copy.html</loc>
-    <lastmod>2022-12-26T22:02:25.530Z</lastmod>
+    <lastmod>2022-12-27T13:07:57.452Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/numpy.html</loc>
-    <lastmod>2022-12-26T22:02:25.832Z</lastmod>
+    <lastmod>2022-12-27T13:07:57.753Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/list_reverse.html</loc>
-    <lastmod>2022-12-26T22:02:28.019Z</lastmod>
+    <lastmod>2022-12-27T13:07:59.952Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/crawling_in_wsl.html</loc>
-    <lastmod>2022-12-26T22:02:28.338Z</lastmod>
+    <lastmod>2022-12-27T13:08:00.258Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/os-module.html</loc>
-    <lastmod>2022-12-26T22:02:28.624Z</lastmod>
+    <lastmod>2022-12-27T13:08:00.536Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/gil.html</loc>
-    <lastmod>2022-12-26T22:02:28.947Z</lastmod>
+    <lastmod>2022-12-27T13:08:00.850Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/all_object.html</loc>
-    <lastmod>2022-12-26T22:02:29.244Z</lastmod>
+    <lastmod>2022-12-27T13:08:01.157Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/jupyter_notebook_error.html</loc>
-    <lastmod>2022-12-26T22:02:29.555Z</lastmod>
+    <lastmod>2022-12-27T13:08:01.443Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/Dictionary Methods List.html</loc>
-    <lastmod>2022-12-26T22:02:29.852Z</lastmod>
+    <lastmod>2022-12-27T13:08:01.735Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/meaning_of_a_is_1.html</loc>
-    <lastmod>2022-12-26T22:02:30.153Z</lastmod>
+    <lastmod>2022-12-27T13:08:02.039Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/python/string.html</loc>
-    <lastmod>2022-12-26T22:02:32.373Z</lastmod>
+    <lastmod>2022-12-27T13:08:04.240Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/eda.html</loc>
-    <lastmod>2022-12-26T22:02:32.683Z</lastmod>
+    <lastmod>2022-12-27T13:08:04.552Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/05_categorical_data/nan.html</loc>
-    <lastmod>2022-12-26T22:02:32.992Z</lastmod>
+    <lastmod>2022-12-27T13:08:04.845Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/05_categorical_data/imbalance.html</loc>
-    <lastmod>2022-12-26T22:02:33.300Z</lastmod>
+    <lastmod>2022-12-27T13:08:05.153Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/05_categorical_data/encoding.html</loc>
-    <lastmod>2022-12-26T22:02:33.637Z</lastmod>
+    <lastmod>2022-12-27T13:08:05.474Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/12_model_selection.html</loc>
-    <lastmod>2022-12-26T22:02:33.945Z</lastmod>
+    <lastmod>2022-12-27T13:08:05.787Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/12_model_selection/sklearn.html</loc>
-    <lastmod>2022-12-26T22:02:34.245Z</lastmod>
+    <lastmod>2022-12-27T13:08:06.082Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/12_model_selection/module_list.html</loc>
-    <lastmod>2022-12-26T22:02:34.529Z</lastmod>
+    <lastmod>2022-12-27T13:08:06.358Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/01_numpy.html</loc>
-    <lastmod>2022-12-26T22:02:34.855Z</lastmod>
+    <lastmod>2022-12-27T13:08:06.665Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/13_linear_regression/knn.html</loc>
-    <lastmod>2022-12-26T22:02:35.188Z</lastmod>
+    <lastmod>2022-12-27T13:08:07.001Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/03_data_wrangling/map_appply.html</loc>
-    <lastmod>2022-12-26T22:02:35.488Z</lastmod>
+    <lastmod>2022-12-27T13:08:07.291Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/03_data_wrangling/na.html</loc>
-    <lastmod>2022-12-26T22:02:35.824Z</lastmod>
+    <lastmod>2022-12-27T13:08:07.624Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/03_data_wrangling/make_dataframe.html</loc>
-    <lastmod>2022-12-26T22:02:36.123Z</lastmod>
+    <lastmod>2022-12-27T13:08:07.915Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/07_datetime.html</loc>
-    <lastmod>2022-12-26T22:02:36.427Z</lastmod>
+    <lastmod>2022-12-27T13:08:08.208Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/02_data_load.html</loc>
-    <lastmod>2022-12-26T22:02:36.731Z</lastmod>
+    <lastmod>2022-12-27T13:08:08.503Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/02_data_load/csv.html</loc>
-    <lastmod>2022-12-26T22:02:37.028Z</lastmod>
+    <lastmod>2022-12-27T13:08:08.778Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/01_numpy/resize.html</loc>
-    <lastmod>2022-12-26T22:02:37.329Z</lastmod>
+    <lastmod>2022-12-27T13:08:09.070Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/01_numpy/linear_independent.html</loc>
-    <lastmod>2022-12-26T22:02:37.644Z</lastmod>
+    <lastmod>2022-12-27T13:08:09.374Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/01_numpy/statistic.html</loc>
-    <lastmod>2022-12-26T22:02:37.952Z</lastmod>
+    <lastmod>2022-12-27T13:08:09.675Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/06_text_data.html</loc>
-    <lastmod>2022-12-26T22:02:38.244Z</lastmod>
+    <lastmod>2022-12-27T13:08:09.968Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/05_categorical_data.html</loc>
-    <lastmod>2022-12-26T22:02:38.556Z</lastmod>
+    <lastmod>2022-12-27T13:08:10.281Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/08_image_data.html</loc>
-    <lastmod>2022-12-26T22:02:38.850Z</lastmod>
+    <lastmod>2022-12-27T13:08:10.574Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data.html</loc>
-    <lastmod>2022-12-26T22:02:39.178Z</lastmod>
+    <lastmod>2022-12-27T13:08:10.904Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/09_feature_extraction.html</loc>
-    <lastmod>2022-12-26T22:02:39.475Z</lastmod>
+    <lastmod>2022-12-27T13:08:11.195Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/outlier.html</loc>
-    <lastmod>2022-12-26T22:02:39.791Z</lastmod>
+    <lastmod>2022-12-27T13:08:11.499Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/nan.html</loc>
-    <lastmod>2022-12-26T22:02:40.111Z</lastmod>
+    <lastmod>2022-12-27T13:08:11.805Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/group_samples.html</loc>
-    <lastmod>2022-12-26T22:02:40.414Z</lastmod>
+    <lastmod>2022-12-27T13:08:12.098Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/feature_engineering.html</loc>
-    <lastmod>2022-12-26T22:02:40.739Z</lastmod>
+    <lastmod>2022-12-27T13:08:12.417Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/scaling.html</loc>
-    <lastmod>2022-12-26T22:02:41.054Z</lastmod>
+    <lastmod>2022-12-27T13:08:12.709Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/04_numeric_data/bin.html</loc>
-    <lastmod>2022-12-26T22:02:41.395Z</lastmod>
+    <lastmod>2022-12-27T13:08:13.056Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/10_feature_selection.html</loc>
-    <lastmod>2022-12-26T22:02:41.695Z</lastmod>
+    <lastmod>2022-12-27T13:08:13.350Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/11_metrics.html</loc>
-    <lastmod>2022-12-26T22:02:41.999Z</lastmod>
+    <lastmod>2022-12-27T13:08:13.642Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/03_data_wrangling.html</loc>
-    <lastmod>2022-12-26T22:02:42.317Z</lastmod>
+    <lastmod>2022-12-27T13:08:13.953Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/07_datetime/resample.html</loc>
-    <lastmod>2022-12-26T22:02:42.635Z</lastmod>
+    <lastmod>2022-12-27T13:08:14.259Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/machine_learning/13_linear_regression.html</loc>
-    <lastmod>2022-12-26T22:02:42.948Z</lastmod>
+    <lastmod>2022-12-27T13:08:14.554Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/de.html</loc>
-    <lastmod>2022-12-26T22:02:43.265Z</lastmod>
+    <lastmod>2022-12-27T13:08:14.865Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm.html</loc>
-    <lastmod>2022-12-26T22:02:43.667Z</lastmod>
+    <lastmod>2022-12-27T13:08:15.256Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/03_recur2.html</loc>
-    <lastmod>2022-12-26T22:02:43.972Z</lastmod>
+    <lastmod>2022-12-27T13:08:15.550Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/quickSort.html</loc>
-    <lastmod>2022-12-26T22:02:44.278Z</lastmod>
+    <lastmod>2022-12-27T13:08:15.844Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/03_recur1.html</loc>
-    <lastmod>2022-12-26T22:02:44.596Z</lastmod>
+    <lastmod>2022-12-27T13:08:16.150Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/03_recur3.html</loc>
-    <lastmod>2022-12-26T22:02:44.946Z</lastmod>
+    <lastmod>2022-12-27T13:08:16.489Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/02_queue1.html</loc>
-    <lastmod>2022-12-26T22:02:45.249Z</lastmod>
+    <lastmod>2022-12-27T13:08:16.772Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/01_stack2.html</loc>
-    <lastmod>2022-12-26T22:02:45.935Z</lastmod>
+    <lastmod>2022-12-27T13:08:17.446Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/02_queue2.html</loc>
-    <lastmod>2022-12-26T22:02:46.267Z</lastmod>
+    <lastmod>2022-12-27T13:08:17.772Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/04_search2.html</loc>
-    <lastmod>2022-12-26T22:02:46.555Z</lastmod>
+    <lastmod>2022-12-27T13:08:18.049Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/heapSort.html</loc>
-    <lastmod>2022-12-26T22:02:46.887Z</lastmod>
+    <lastmod>2022-12-27T13:08:18.355Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/data_structure/01_stack1.html</loc>
-    <lastmod>2022-12-26T22:02:47.189Z</lastmod>
+    <lastmod>2022-12-27T13:08:18.649Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/16_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:47.523Z</lastmod>
+    <lastmod>2022-12-27T13:08:18.955Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/25_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:47.840Z</lastmod>
+    <lastmod>2022-12-27T13:08:19.270Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/23_lv3.html</loc>
-    <lastmod>2022-12-26T22:02:48.171Z</lastmod>
+    <lastmod>2022-12-27T13:08:19.590Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/22_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:48.482Z</lastmod>
+    <lastmod>2022-12-27T13:08:19.893Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/17_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:48.783Z</lastmod>
+    <lastmod>2022-12-27T13:08:20.196Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/29_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:49.124Z</lastmod>
+    <lastmod>2022-12-27T13:08:20.511Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/11_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:49.427Z</lastmod>
+    <lastmod>2022-12-27T13:08:20.813Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/24_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:49.757Z</lastmod>
+    <lastmod>2022-12-27T13:08:21.130Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/28_lv3.html</loc>
-    <lastmod>2022-12-26T22:02:50.093Z</lastmod>
+    <lastmod>2022-12-27T13:08:21.476Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/30_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:50.437Z</lastmod>
+    <lastmod>2022-12-27T13:08:21.797Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/19_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:50.751Z</lastmod>
+    <lastmod>2022-12-27T13:08:22.097Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/14_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:51.077Z</lastmod>
+    <lastmod>2022-12-27T13:08:22.401Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/doksan_algorithm.html</loc>
-    <lastmod>2022-12-26T22:02:51.430Z</lastmod>
+    <lastmod>2022-12-27T13:08:22.731Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/21_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:51.733Z</lastmod>
+    <lastmod>2022-12-27T13:08:23.032Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/27_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:52.047Z</lastmod>
+    <lastmod>2022-12-27T13:08:23.362Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/18_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:52.360Z</lastmod>
+    <lastmod>2022-12-27T13:08:23.660Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/15_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:52.660Z</lastmod>
+    <lastmod>2022-12-27T13:08:23.961Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/20_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:52.976Z</lastmod>
+    <lastmod>2022-12-27T13:08:24.263Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/26_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:53.323Z</lastmod>
+    <lastmod>2022-12-27T13:08:24.620Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/12_lv1.html</loc>
-    <lastmod>2022-12-26T22:02:53.624Z</lastmod>
+    <lastmod>2022-12-27T13:08:24.909Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm/basic_30/13_lv2.html</loc>
-    <lastmod>2022-12-26T22:02:53.910Z</lastmod>
+    <lastmod>2022-12-27T13:08:25.209Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/gitignore_not_working.html</loc>
-    <lastmod>2022-12-26T22:02:54.197Z</lastmod>
+    <lastmod>2022-12-27T13:08:25.496Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/ananconda_settings_in_window.html</loc>
-    <lastmod>2022-12-26T22:02:54.500Z</lastmod>
+    <lastmod>2022-12-27T13:08:25.783Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/PATH.html</loc>
-    <lastmod>2022-12-26T22:02:54.790Z</lastmod>
+    <lastmod>2022-12-27T13:08:26.057Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/Material_for_MkDocs.html</loc>
-    <lastmod>2022-12-26T22:02:55.092Z</lastmod>
+    <lastmod>2022-12-27T13:08:26.359Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/vscode_extension.html</loc>
-    <lastmod>2022-12-26T22:02:55.412Z</lastmod>
+    <lastmod>2022-12-27T13:08:26.657Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/obsidian to github.html</loc>
-    <lastmod>2022-12-26T22:02:55.700Z</lastmod>
+    <lastmod>2022-12-27T13:08:26.941Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/vundle.html</loc>
-    <lastmod>2022-12-26T22:02:56.192Z</lastmod>
+    <lastmod>2022-12-27T13:08:27.429Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/git.html</loc>
-    <lastmod>2022-12-26T22:02:56.490Z</lastmod>
+    <lastmod>2022-12-27T13:08:27.717Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/quarto.html</loc>
-    <lastmod>2022-12-26T22:02:56.990Z</lastmod>
+    <lastmod>2022-12-27T13:08:28.237Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/create_vscode_snippets.html</loc>
-    <lastmod>2022-12-26T22:02:57.481Z</lastmod>
+    <lastmod>2022-12-27T13:08:28.723Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/markdown_link_new_window.html</loc>
-    <lastmod>2022-12-26T22:02:57.958Z</lastmod>
+    <lastmod>2022-12-27T13:08:29.200Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/pkm/obsidian_template.html</loc>
-    <lastmod>2022-12-26T22:02:58.265Z</lastmod>
+    <lastmod>2022-12-27T13:08:29.492Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/deep_learning/pytorch_dl.html</loc>
-    <lastmod>2022-12-26T22:02:58.893Z</lastmod>
+    <lastmod>2022-12-27T13:08:30.111Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/java_swing/2022_12_25_05_39_35.html</loc>
-    <lastmod>2022-12-26T22:02:59.193Z</lastmod>
+    <lastmod>2022-12-27T13:08:30.409Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/algorithm.html</loc>
-    <lastmod>2022-12-26T22:02:59.679Z</lastmod>
+    <lastmod>2022-12-27T13:08:30.905Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/deep_learning.html</loc>
-    <lastmod>2022-12-26T22:03:00.000Z</lastmod>
+    <lastmod>2022-12-27T13:08:31.201Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/de/wsl2.html</loc>
-    <lastmod>2022-12-26T22:03:00.300Z</lastmod>
+    <lastmod>2022-12-27T13:08:31.483Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/de/set_jupyter_notebook.html</loc>
-    <lastmod>2022-12-26T22:03:00.615Z</lastmod>
+    <lastmod>2022-12-27T13:08:31.802Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review/de/shell_prompt.html</loc>
-    <lastmod>2022-12-26T22:03:00.927Z</lastmod>
+    <lastmod>2022-12-27T13:08:32.107Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/review.html</loc>
-    <lastmod>2022-12-26T22:03:01.215Z</lastmod>
+    <lastmod>2022-12-27T13:08:32.395Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/about.html</loc>
-    <lastmod>2022-12-26T22:03:01.486Z</lastmod>
+    <lastmod>2022-12-27T13:08:32.679Z</lastmod>
   </url>
   <url>
     <loc>https://lazychoi.github.io/books.html</loc>
-    <lastmod>2022-12-26T22:03:01.773Z</lastmod>
+    <lastmod>2022-12-27T13:08:32.953Z</lastmod>
   </url>
 </urlset>

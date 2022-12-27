@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-12-27">
 
-<title>👀 – quarto-inputae70879d</title>
+<title>👀 - Java Swing 쿠키런 게임 따라만들기</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -117,196 +119,73 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Java Swing 쿠키런 게임 따라만들기</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">자바</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 27, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#준비" id="toc-준비" class="nav-link active" data-scroll-target="#준비">준비</a></li>
+  <li><a href="#연습" id="toc-연습" class="nav-link" data-scroll-target="#연습">연습</a></li>
+  </ul>
+</nav>
+</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<p><a href="http://www.kocw.net/home/search/kemView.do?kemId=1163794">강의 보기</a></p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091427.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815091609.png" class="img-fluid" alt="| 800"> 이번 시간에 공부할 부분은 3단계 논리적 설계</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091638.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091720.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092051.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092410.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092452.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092717.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092757.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092827.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092836.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093124.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093225.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093325.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815093910.png" class="img-fluid" alt="| 800"> 후보키로 ‘① 고객아이디 ② (고객이름, 주소)’ 를 꼽을 수 있으나 주소에 NULL이 포함될 수 있기 때문에 기본키에서는 제외한다.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094057.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094147.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094224.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094442.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094523.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094659.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094910.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095025.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095150.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095319.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095353.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095431.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
+
+<section id="준비" class="level2">
+<h2 class="anchored" data-anchor-id="준비">준비</h2>
+<ol type="1">
+<li>이클립스에 WindowBuilder 설치: Help &gt;&gt; Eclipse Marketplace &gt;&gt; windowbuilder 검색 후 설치</li>
+<li><a href="https://aljjabaegi.tistory.com/481" target="_blank">lombok이란?</a></li>
+</ol>
+</section>
+<section id="연습" class="level2">
+<h2 class="anchored" data-anchor-id="연습">연습</h2>
+<ul>
+<li><a href="https://ondolroom.tistory.com/280">자바 스윙 마우스 클릭하여 이미지 변경</a></li>
+</ul>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

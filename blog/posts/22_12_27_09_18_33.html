@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2022-12-27">
 
-<title>👀 – quarto-inputae70879d</title>
+<title>👀 - 수업 - Java Servlet 이용해 HTML FORM 처리</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -117,196 +119,108 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">수업 - Java Servlet 이용해 HTML FORM 처리</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">자바</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">December 27, 2022</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#프로젝트-만들기" id="toc-프로젝트-만들기" class="nav-link active" data-scroll-target="#프로젝트-만들기">프로젝트 만들기</a></li>
+  <li><a href="#html-파일-작성" id="toc-html-파일-작성" class="nav-link" data-scroll-target="#html-파일-작성">HTML 파일 작성</a></li>
+  <li><a href="#servlet-파일-작성" id="toc-servlet-파일-작성" class="nav-link" data-scroll-target="#servlet-파일-작성">Servlet 파일 작성</a></li>
+  <li><a href="#톰캣-서버-설정" id="toc-톰캣-서버-설정" class="nav-link" data-scroll-target="#톰캣-서버-설정">톰캣 서버 설정</a></li>
+  <li><a href="#java.servlet-등에-오류-나는-것-해결" id="toc-java.servlet-등에-오류-나는-것-해결" class="nav-link" data-scroll-target="#java.servlet-등에-오류-나는-것-해결">java.servlet 등에 오류 나는 것 해결</a></li>
+  <li><a href="#not-found-에러-해결" id="toc-not-found-에러-해결" class="nav-link" data-scroll-target="#not-found-에러-해결">404 not found 에러 해결</a></li>
+  </ul>
+</nav>
+</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<p><a href="http://www.kocw.net/home/search/kemView.do?kemId=1163794">강의 보기</a></p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091427.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815091609.png" class="img-fluid" alt="| 800"> 이번 시간에 공부할 부분은 3단계 논리적 설계</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091638.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091720.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092051.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092410.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092452.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092717.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092757.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092827.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092836.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093124.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093225.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093325.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815093910.png" class="img-fluid" alt="| 800"> 후보키로 ‘① 고객아이디 ② (고객이름, 주소)’ 를 꼽을 수 있으나 주소에 NULL이 포함될 수 있기 때문에 기본키에서는 제외한다.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094057.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094147.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094224.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094442.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094523.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094659.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094910.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095025.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095150.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095319.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095353.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095431.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
+
+<section id="프로젝트-만들기" class="level2">
+<h2 class="anchored" data-anchor-id="프로젝트-만들기">프로젝트 만들기</h2>
+<p><img src="images/2022-12-27-09-19-27.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-09-20-17.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-09-20-31.png" class="img-fluid"></p>
+</section>
+<section id="html-파일-작성" class="level2">
+<h2 class="anchored" data-anchor-id="html-파일-작성">HTML 파일 작성</h2>
+<p>src &gt;&gt; main &gt;&gt; webapp 우클릭 &gt;&gt; New &gt;&gt; HTML File</p>
+</section>
+<section id="servlet-파일-작성" class="level2">
+<h2 class="anchored" data-anchor-id="servlet-파일-작성">Servlet 파일 작성</h2>
+<p>src &gt;&gt; main &gt;&gt; java 우클릭 &gt;&gt; New &gt;&gt; other &gt;&gt; Web &gt;&gt; Servlet</p>
+</section>
+<section id="톰캣-서버-설정" class="level2">
+<h2 class="anchored" data-anchor-id="톰캣-서버-설정">톰캣 서버 설정</h2>
+<p><img src="images/2022-12-27-09-41-40.png" class="img-fluid"></p>
+<ul>
+<li>이클립스 재설치: homebrew로 설치하지 않고 홈페이지에서 설치 파일을 내려받아 설치. 웹 개발도 해야 하므로 Eclipse IDE for Enterprise Java and Web Developers 버전 설치</li>
+</ul>
+<p><img src="images/2022-12-27-10-45-57.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-10-57-20.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-10-57-37.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-10-57-51.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-10-59-22.png" class="img-fluid"></p>
+</section>
+<section id="java.servlet-등에-오류-나는-것-해결" class="level2">
+<h2 class="anchored" data-anchor-id="java.servlet-등에-오류-나는-것-해결">java.servlet 등에 오류 나는 것 해결</h2>
+<ol type="1">
+<li>Properties &gt;&gt; Server에 톰캣이 등록되어 있어야 함</li>
+</ol>
+<p><img src="images/2022-12-27-11-12-44.png" class="img-fluid"></p>
+<p>서버에 톰캣 등록하는 방법은 하단의 Server 탭에서</p>
+<ol start="2" type="1">
+<li>Properties &gt;&gt; Java Build Path &gt;&gt; Libraries &gt;&gt; Add Libraries &gt;&gt; Server Runtime &gt;&gt; 톰캣 선택</li>
+</ol>
+<p><img src="images/2022-12-27-11-13-27.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-11-13-54.png" class="img-fluid"></p>
+</section>
+<section id="not-found-에러-해결" class="level2">
+<h2 class="anchored" data-anchor-id="not-found-에러-해결">404 not found 에러 해결</h2>
+<p><img src="images/2022-12-27-12-05-42.png" class="img-fluid"></p>
+<p><img src="images/2022-12-27-12-01-40.png" class="img-fluid"></p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
