@@ -25,6 +25,10 @@
     ]
   },
   {
+    "listing": "/books/dom_enlightenment.html",
+    "items": []
+  },
+  {
     "listing": "/books/pandas_in_action.html",
     "items": [
       "/books/pandas_in_action/pandas_in_action_keywords.html",

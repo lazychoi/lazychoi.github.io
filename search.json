@@ -63,6 +63,55 @@
     "text": "01장 파이썬 프로그램 작성 및 테스트 방법\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n02장 문자열 처리\n\n\n\n\n\n\n\n\n\n\n\n\nOct 10, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n03장 리스트\n\n\n\n\n\n\n\n\n\n\n\n\nOct 11, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n04장 딕셔너리\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n05장 파일 및 STDOUT 사용\n\n\n\n\n\n\n\n\n\n\n\n\nOct 17, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n06장 단어 세기 프로그램 만들기\n\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n\n\n07장 특정 단어로 시작하는 텍스트 출력\n\n\n\n\n\n\n\n\n\n\n\n\nOct 18, 2022\n\n\nlazychoi\n\n\n\n\n\n\n일치 없음"
   },
   {
+    "objectID": "books/dom_enlightenment.html",
+    "href": "books/dom_enlightenment.html",
+    "title": "DOM을 깨우치다",
+    "section": "",
+    "text": "DOM의 목적은 JavaScript를 사용해서 이 문서에 대한 스크립트 자겅(삭제, 추가, 바꾸기, 이벤트 처리, 수정)을 위한 프로그래밍 인터페이스를 제공하는 것이다."
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#노드-개체-유형-출력",
+    "href": "books/dom_enlightenment.html#노드-개체-유형-출력",
+    "title": "DOM을 깨우치다",
+    "section": "노드 개체 유형 출력",
+    "text": "노드 개체 유형 출력\nfor(let key in Node){\n    console.log(key + ' = ' + Node[key]);\n};\n/* 결과\nELEMENT_NODE = 1\nATTRIBUTE_NODE = 2\nTEXT_NODE = 3\nCDATA_SECTION_NODE = 4\nENTITY_REFERENCE_NODE = 5\nENTITY_NODE = 6\nPROCESSING_INSTRUCTION_NODE = 7\nCOMMENT_NODE = 8\nDOCUMENT_NODE = 9\nDOCUMENT_TYPE_NODE = 10\nDOCUMENT_FRAGMENT_NODE = 11\nNOTATION_NODE = 12\nDOCUMENT_POSITION_DISCONNECTED = 1\nDOCUMENT_POSITION_PRECEDING = 2\nDOCUMENT_POSITION_FOLLOWING = 4\nDOCUMENT_POSITION_CONTAINS = 8\nDOCUMENT_POSITION_CONTAINED_BY = 16\nDOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 32\n*/\n모든 노드는 Node로부터 상속받는 nodeType 및 nodeName 속성을 가진다. Text 노드의 nodeTyep 코드는 3이며, nodeName 값은 #text이다.\n노드 유형을 판별하는 가장 빠른 방법은 nodeType 속성을 확인하는 것이다. 노드 유형을 판별하는 것은 해당 노드에서 사용 가능한 속성과 메서드를 알 수 있게 하므로 매우 유용하다.\nnodeValue 속성은 Text와 Comment를 제외한 대부분 노드 유형에서 null값을 반환한다. 이 속성의 용도는 Text와 Comment 노드에서 텍스트 문자열을 추출하는 데 초점을 맞추고 있다.\n<a href=\"#\">Hi</a>\n<script>console.log(document.querySelector('a').firstChild.nodeValue);</script>\n<!-- Hi 출력 -->"
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#메서드-사용하여-노드-생성-createelement-createtextnode",
+    "href": "books/dom_enlightenment.html#메서드-사용하여-노드-생성-createelement-createtextnode",
+    "title": "DOM을 깨우치다",
+    "section": "메서드 사용하여 노드 생성 : createElement(), createTextNode()",
+    "text": "메서드 사용하여 노드 생성 : createElement(), createTextNode()\nlet body = document.body;   // <body>​</body>​\nlet textNode = document.createTextNode('Hi');\nbody.appendChild(textNode); // <body>​Hi</body>\n\nlet divA = document.createElement('div'); \ndivA.innerHTML = \"<strong>Hello</strong>\"; // <strong>Hello</strong>\nbody.appendChild(divA); // <div><strong>Hello</strong></div>"
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml",
+    "href": "books/dom_enlightenment.html#문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml",
+    "title": "DOM을 깨우치다",
+    "section": "문자열 사용하여 노드 생성 : innerHTML, outerHTML, textContext, insertAdjacentHTML()",
+    "text": "문자열 사용하여 노드 생성 : innerHTML, outerHTML, textContext, insertAdjacentHTML()\nouterHTML : 기존 노드를 지정한 노드로 대체 -> 문자열 내의 HTML 요소를 실제 DOM 노드로 변환\ndivA.outerHTML = '<h2>안녕하세요</h2>'; // <div><strong>Hello</strong></div> => <h2>안녕하세요</h2>\ntextContent -> 실제 DOM 노드로 변환되지 않고 텍스트 노드를 생성하는 데만 사용됨. <script>, <style> 요소를 포함한 모든 요소의 내용을 가져올 수 있지만 innerText는 그렇지 않다.\ndivA.textContent; // 'Hello' <- 이전 텍스트가 반환됨(html에는 보이지 않음)\ndivA.textContent = '2023년 새해입니다'; // textContents 바꿈 '2023년 새해입니다'(html에는 보이지 않음)\ninsertAdjacentHTML() : Element 노드에서만 동작. 시작 태그 앞/뒤, 종료 태그 앞/뒤에 노드 삽입 가능\nbody.appendChild(divA);    // <div>​2023년 새해입니다​</div>​\ndivA.insertAdjacentHTML('beforebegin', '<span>오늘은 </span>');  // <span>오늘은 </span><div>​2023년 새해입니다​</div>​\ndivA.insertAdjacentHTML('afterbegin', '<span>1월 1일</span>');   // <span>오늘은 </span><div>​<span>1월 1일</span>​2023년 새해입니다​</div>​\ndivA.insertAdjacentHTML('beforeend', '<span> 해돋이를</span>');  // <span>오늘은 </span><div>​<span>1월 1일</span>​2023년 새해입니다​<span> 해돋이를</span></div>\ndivA.insertAdjacentHTML('afterend', '<span>봤나요?</span>');    // // <span>오늘은 </span><div>​<span>1월 1일</span>​2023년 새해입니다​<span> 해돋이를</span></div><span>봤나요?</span>\ninnerAjacentHTML의 beforebegin, afterend 옵션은 노드가 DOM 트리 내에 존재하고 부모 요소를 가진 경우에만 동작한다. outerText도 부모 요소를 가진 경우에만 동작한다."
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext",
+    "href": "books/dom_enlightenment.html#dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext",
+    "title": "DOM을 깨우치다",
+    "section": "DOM 트리 일부를 문자열로 추출 : innerHTML, outerHTML, textContent, innerText, outerText",
+    "text": "DOM 트리 일부를 문자열로 추출 : innerHTML, outerHTML, textContent, innerText, outerText\n<div id=\"a\"><i>안녕</i></div>\n<div id=\"b\">여러분 <strong>반가워</strong></div>\n<script>\n  console.log(document.getElementById('a').innerHTML);    // <i>안녕</i>\n  console.log(document.getElementById('a').outerHTML);    // <div id=\"a\"><i>안녕</i></div>\n  console.log(document.getElementById('b').textContent);  // 여러분 반가워\n  console.log(document.getElementById('b').innerText);    // 여러분 반가워\n  console.log(document.getElementById('b').outerText);    // 여러분 반가워\n</script>"
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#노드-개체를-dom에-추가-appendchild-insertbefore",
+    "href": "books/dom_enlightenment.html#노드-개체를-dom에-추가-appendchild-insertbefore",
+    "title": "DOM을 깨우치다",
+    "section": "노드 개체를 DOM에 추가 : appendChild(), insertBefore()",
+    "text": "노드 개체를 DOM에 추가 : appendChild(), insertBefore()\n\nappendChild() : 매개변수로 받은 노드를 자식 노드의 끝에 추가 = append()\n\n<p>안녕</p>\n<script>\n  let elementNode = document.createElement('strong');\n  let textNode = document.createTextNode(' Dude');\n\n  document.querySelector('p').appendChild(elementNode);\n  document.querySelector('strong').appendChild(textNode);\n\n  console.log(document.body.innerHTML); // <p>안녕<strong> Dude</strong></p>\n</script>\n\ninsertBefore() : 매개변수로 받은 노드를 자식 노드의 맨 앞에 추가 = prepend()\n\n<ul>\n  <li>2</li>\n  <li>3</li>\n</ul>\n<script>\n  let elementNode = document.createElement('li');\n  let textNode = document.createTextNode('1');\n  elementNode.appendChild(textNode);  // <li>1</li>\n\n  let ul = document.querySelector('ul');\n  ul.insertBefore(elementNode, ul.firstChild);\n  console.log(document.body.innerHTML);\n  // <ul>\n  //   <li>1</li>\n  //   <li>2</li>\n  //   <li>3</li>\n  // </ul>\n</script>\n\nbefore() = insertAdjacentHTML-‘beforebegin’\nafter() = insertAdjacentHTML-‘afterend’\nprepend() = insertAdjacentHTML-‘afterbegin’\nappend() = insertAdjacentHTML-‘afterend’"
+  },
+  {
+    "objectID": "books/dom_enlightenment.html#이해-안-된-문장",
+    "href": "books/dom_enlightenment.html#이해-안-된-문장",
+    "title": "DOM을 깨우치다",
+    "section": "이해 안 된 문장",
+    "text": "이해 안 된 문장\n\n기본적으로 writh() 메서드는 전달된 값을 페이지가 로딩 및 해석되는 동안 페이지에 출력한다. writh() 메서드를 사용하면 로딩된 HTML 문서가 해석되는 것을 지연/차단하게 된다는 것에 유의\ninnerHTML이 무겁고 비싼 대가를 치르는 HTML 파서를 호출하는 데 비해 텍스트 노드 생성은 간단히 처리되므로 innerHTML 계열의 사용을 삼가해야 한다."
+  },
+  {
     "objectID": "books/python_machine_learning/03_classification1_perceptron.html",
     "href": "books/python_machine_learning/03_classification1_perceptron.html",
     "title": "03장 사이킷런 - Perceptron",
@@ -2629,7 +2678,7 @@
     "href": "project/22-12-31-11-08-49.html",
     "title": "👀",
     "section": "",
-    "text": "map()은 배열의 각 요소를 함수에 전달하고 반환받은 결과를 모아 새로운 배열을 만든다.\n배열.map( 콜백함수(요소) );"
+    "text": "map()은 배열의 각 요소를 함수에 전달하고 반환받은 결과를 모아 새로운 배열을 만든다.\n배열.map( 콜백함수(요소) );\n\n\n\n\n<div class=\"display\"></div>\n<script>\n    let numbers = [1, 4, 9];\n    let roots = numbers.map(Math.sqrt);\n    for(let i=0; i<roots.length; i++)\n    {\n        document.querySelector(\".display\").innerText = roots[i];\n    }\n</script>"
   },
   {
     "objectID": "project/2211_recommend.html",
@@ -2783,21 +2832,7 @@
     "href": "project/2212_javascript_rich_text_editor.html",
     "title": "순수 자바스크립트로 rich text editor 만들기",
     "section": "",
-    "text": "깃허브: https://github.com/lazychoi/ankiLike\n=> 여기를 눌러 사용해볼 수 있다"
-  },
-  {
-    "objectID": "project/2212_javascript_rich_text_editor.html#마친-직후-느낌",
-    "href": "project/2212_javascript_rich_text_editor.html#마친-직후-느낌",
-    "title": "순수 자바스크립트로 rich text editor 만들기",
-    "section": "마친 직후 느낌",
-    "text": "마친 직후 느낌\n향후 중단될 수 있는(deprecated) execCommand() 함수를 사용하지 않고 contenteditable 속성과 document.getSelection() 함수를 주로 사용해 구현했다.\n사용자가 영역을 선택할 때와 선택하지 않을 때, 커서가 편집 영역에 있을 때와 없을 때, 버튼을 누를 때 생각하지 못한 상황이 발생했다. DOM을 만들고 없애고 필요한 곳에 넣고 빼는 일이 쉽지 않다는 걸 절감했다. 기본적인 작동은 하지만 이곳저곳에서 예상한대로 작동하지 않는 경우가 종종 발생한다. 버튼 하나마다 신경써야 할 부분이 한두 가지가 아니다. 아래아 한글과 MS워드 제작자에게 경의를 표한다.\n구현해야 할 기능과 잡아야 할 버그는 많지만 일단 멈추고 시행착오를 통해 배운 것을 정리하며 난잡한 코드도 정리해야겠다.\n리치 텍스트 편집기는 위 링크를 눌러 사용해볼 수 있고, 소스 코드는 editor.html, css/editor.css, js/editor.js 세 파일이다."
-  },
-  {
-    "objectID": "project/2212_javascript_rich_text_editor.html#배운-부분-정리미완성",
-    "href": "project/2212_javascript_rich_text_editor.html#배운-부분-정리미완성",
-    "title": "순수 자바스크립트로 rich text editor 만들기",
-    "section": "배운 부분 정리(미완성)",
-    "text": "배운 부분 정리(미완성)\n\nUI\n\n자바스크립트 map() 함수로 드롭다운 버튼 목록 생성 -> 폰트, 폰트 사이즈\n\n자바스크립트\n\n현재 커서 위치의 부모 태그 가져오기\n현재 커서 위치의 모든 형제를 선택 영역으로 설정하기\n선택한 영역의 부모 태그 가져오기\n선택한 영역의 시작 인덱스와 끝 인덱스 가져오기\n선택한 영역의 텍스트 가져오기\n선택한 영역의 텍스트 중 줄바꿈 문자를  태그로 바꾸기\n노드를 만들어 선택한 영역을 포함하기\n새로 만든 노드에 속성 추가하기\n선택한 영역을 삭제하기\n선택한 영역에 새로운 노드 추가하기\n\n구현하지 못한 부분\n\n문단과 문장 구분하여 처리하기(미완성)\n텍스트 상태를 실시간 반영하여 버튼의 활성화 비활성화 상태 변경\n리스트 태그 넣기"
+    "text": "깃허브: https://github.com/lazychoi/ankiLike"
   },
   {
     "objectID": "project/2210_pet_choropleth.html",
@@ -2958,7 +2993,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '가', '미', '가', '양', '가', '가', '우', '미']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '가', '수', '가', '가', '우', '가', '우', '가']"
   },
   {
     "objectID": "review/python/class.html",

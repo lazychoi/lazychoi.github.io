@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>👀 - DOM을 깨우치다</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-listing/list.min.js"></script>
+<script src="../site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: [{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: [],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  })
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#노드-개체-유형-출력" id="toc-노드-개체-유형-출력" class="nav-link active" data-scroll-target="#노드-개체-유형-출력">노드 개체 유형 출력</a></li>
+  <li><a href="#메서드-사용하여-노드-생성-createelement-createtextnode" id="toc-메서드-사용하여-노드-생성-createelement-createtextnode" class="nav-link" data-scroll-target="#메서드-사용하여-노드-생성-createelement-createtextnode">메서드 사용하여 노드 생성 : createElement(), createTextNode()</a></li>
+  <li><a href="#문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml" id="toc-문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml" class="nav-link" data-scroll-target="#문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml">문자열 사용하여 노드 생성 : innerHTML, outerHTML, textContext, insertAdjacentHTML()</a></li>
+  <li><a href="#dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext" id="toc-dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext" class="nav-link" data-scroll-target="#dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext">DOM 트리 일부를 문자열로 추출 : innerHTML, outerHTML, textContent, innerText, outerText</a></li>
+  <li><a href="#노드-개체를-dom에-추가-appendchild-insertbefore" id="toc-노드-개체를-dom에-추가-appendchild-insertbefore" class="nav-link" data-scroll-target="#노드-개체를-dom에-추가-appendchild-insertbefore">노드 개체를 DOM에 추가 : appendChild(), insertBefore()</a></li>
+  <li><a href="#이해-안-된-문장" id="toc-이해-안-된-문장" class="nav-link" data-scroll-target="#이해-안-된-문장">이해 안 된 문장</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DOM을 깨우치다</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+</header>
+
+<p><strong>DOM의 목적</strong>은 JavaScript를 사용해서 이 문서에 대한 스크립트 자겅(삭제, 추가, 바꾸기, 이벤트 처리, 수정)을 위한 프로그래밍 인터페이스를 제공하는 것이다.</p>
+<section id="노드-개체-유형-출력" class="level2">
+<h2 class="anchored" data-anchor-id="노드-개체-유형-출력">노드 개체 유형 출력</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(<span class="kw">let</span> key <span class="kw">in</span> <span class="bu">Node</span>){</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(key <span class="op">+</span> <span class="st">' = '</span> <span class="op">+</span> <span class="bu">Node</span>[key])<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* 결과</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">ELEMENT_NODE = 1</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">ATTRIBUTE_NODE = 2</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">TEXT_NODE = 3</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">CDATA_SECTION_NODE = 4</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">ENTITY_REFERENCE_NODE = 5</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">ENTITY_NODE = 6</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">PROCESSING_INSTRUCTION_NODE = 7</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">COMMENT_NODE = 8</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_NODE = 9</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_TYPE_NODE = 10</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_FRAGMENT_NODE = 11</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">NOTATION_NODE = 12</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_DISCONNECTED = 1</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_PRECEDING = 2</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_FOLLOWING = 4</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_CONTAINS = 8</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_CONTAINED_BY = 16</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 32</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co">*/</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>모든 노드는 Node로부터 상속받는 nodeType 및 nodeName 속성을 가진다. Text 노드의 nodeTyep 코드는 3이며, nodeName 값은 #text이다.</p>
+<p>노드 유형을 판별하는 가장 빠른 방법은 nodeType 속성을 확인하는 것이다. 노드 유형을 판별하는 것은 해당 노드에서 사용 가능한 속성과 메서드를 알 수 있게 하므로 매우 유용하다.</p>
+<p>nodeValue 속성은 Text와 Comment를 제외한 대부분 노드 유형에서 null값을 반환한다. 이 속성의 용도는 Text와 Comment 노드에서 텍스트 문자열을 추출하는 데 초점을 맞추고 있다.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;a</span> <span class="er">href</span><span class="ot">=</span><span class="st">"#"</span><span class="kw">&gt;</span>Hi<span class="kw">&lt;/a&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;script&gt;</span><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'a'</span>)<span class="op">.</span><span class="at">firstChild</span><span class="op">.</span><span class="at">nodeValue</span>)<span class="op">;</span><span class="kw">&lt;/script&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Hi 출력 --&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="메서드-사용하여-노드-생성-createelement-createtextnode" class="level2">
+<h2 class="anchored" data-anchor-id="메서드-사용하여-노드-생성-createelement-createtextnode">메서드 사용하여 노드 생성 : createElement(), createTextNode()</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> body <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">;</span>   <span class="co">// &lt;body&gt;​&lt;/body&gt;​</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> textNode <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createTextNode</span>(<span class="st">'Hi'</span>)<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>body<span class="op">.</span><span class="fu">appendChild</span>(textNode)<span class="op">;</span> <span class="co">// &lt;body&gt;​Hi&lt;/body&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> divA <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElement</span>(<span class="st">'div'</span>)<span class="op">;</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="at">innerHTML</span> <span class="op">=</span> <span class="st">"&lt;strong&gt;Hello&lt;/strong&gt;"</span><span class="op">;</span> <span class="co">// &lt;strong&gt;Hello&lt;/strong&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>body<span class="op">.</span><span class="fu">appendChild</span>(divA)<span class="op">;</span> <span class="co">// &lt;div&gt;&lt;strong&gt;Hello&lt;/strong&gt;&lt;/div&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml" class="level2">
+<h2 class="anchored" data-anchor-id="문자열-사용하여-노드-생성-innerhtml-outerhtml-textcontext-insertadjacenthtml">문자열 사용하여 노드 생성 : innerHTML, outerHTML, textContext, insertAdjacentHTML()</h2>
+<p>outerHTML : 기존 노드를 지정한 노드로 대체 -&gt; 문자열 내의 HTML 요소를 실제 DOM 노드로 변환</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="at">outerHTML</span> <span class="op">=</span> <span class="st">'&lt;h2&gt;안녕하세요&lt;/h2&gt;'</span><span class="op">;</span> <span class="co">// &lt;div&gt;&lt;strong&gt;Hello&lt;/strong&gt;&lt;/div&gt; =&gt; &lt;h2&gt;안녕하세요&lt;/h2&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>textContent -&gt; 실제 DOM 노드로 변환되지 않고 텍스트 노드를 생성하는 데만 사용됨. <code>&lt;script&gt;</code>, <code>&lt;style&gt;</code> 요소를 포함한 모든 요소의 내용을 가져올 수 있지만 innerText는 그렇지 않다.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="at">textContent</span><span class="op">;</span> <span class="co">// 'Hello' &lt;- 이전 텍스트가 반환됨(html에는 보이지 않음)</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="at">textContent</span> <span class="op">=</span> <span class="st">'2023년 새해입니다'</span><span class="op">;</span> <span class="co">// textContents 바꿈 '2023년 새해입니다'(html에는 보이지 않음)</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>insertAdjacentHTML() : Element 노드에서만 동작. 시작 태그 앞/뒤, 종료 태그 앞/뒤에 노드 삽입 가능</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>body<span class="op">.</span><span class="fu">appendChild</span>(divA)<span class="op">;</span>    <span class="co">// &lt;div&gt;​2023년 새해입니다​&lt;/div&gt;​</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="fu">insertAdjacentHTML</span>(<span class="st">'beforebegin'</span><span class="op">,</span> <span class="st">'&lt;span&gt;오늘은 &lt;/span&gt;'</span>)<span class="op">;</span>  <span class="co">// &lt;span&gt;오늘은 &lt;/span&gt;&lt;div&gt;​2023년 새해입니다​&lt;/div&gt;​</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="fu">insertAdjacentHTML</span>(<span class="st">'afterbegin'</span><span class="op">,</span> <span class="st">'&lt;span&gt;1월 1일&lt;/span&gt;'</span>)<span class="op">;</span>   <span class="co">// &lt;span&gt;오늘은 &lt;/span&gt;&lt;div&gt;​&lt;span&gt;1월 1일&lt;/span&gt;​2023년 새해입니다​&lt;/div&gt;​</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="fu">insertAdjacentHTML</span>(<span class="st">'beforeend'</span><span class="op">,</span> <span class="st">'&lt;span&gt; 해돋이를&lt;/span&gt;'</span>)<span class="op">;</span>  <span class="co">// &lt;span&gt;오늘은 &lt;/span&gt;&lt;div&gt;​&lt;span&gt;1월 1일&lt;/span&gt;​2023년 새해입니다​&lt;span&gt; 해돋이를&lt;/span&gt;&lt;/div&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>divA<span class="op">.</span><span class="fu">insertAdjacentHTML</span>(<span class="st">'afterend'</span><span class="op">,</span> <span class="st">'&lt;span&gt;봤나요?&lt;/span&gt;'</span>)<span class="op">;</span>    <span class="co">// // &lt;span&gt;오늘은 &lt;/span&gt;&lt;div&gt;​&lt;span&gt;1월 1일&lt;/span&gt;​2023년 새해입니다​&lt;span&gt; 해돋이를&lt;/span&gt;&lt;/div&gt;&lt;span&gt;봤나요?&lt;/span&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p><code>innerAjacentHTML</code>의 beforebegin, afterend 옵션은 노드가 DOM 트리 내에 존재하고 부모 요소를 가진 경우에만 동작한다. <code>outerText</code>도 부모 요소를 가진 경우에만 동작한다.</p>
+</section>
+<section id="dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext" class="level2">
+<h2 class="anchored" data-anchor-id="dom-트리-일부를-문자열로-추출-innerhtml-outerhtml-textcontent-innertext-outertext">DOM 트리 일부를 문자열로 추출 : innerHTML, outerHTML, textContent, innerText, outerText</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"a"</span><span class="kw">&gt;&lt;i&gt;</span>안녕<span class="kw">&lt;/i&gt;&lt;/div&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">id</span><span class="ot">=</span><span class="st">"b"</span><span class="kw">&gt;</span>여러분 <span class="kw">&lt;strong&gt;</span>반가워<span class="kw">&lt;/strong&gt;&lt;/div&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;script&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">'a'</span>)<span class="op">.</span><span class="at">innerHTML</span>)<span class="op">;</span>    <span class="co">// &lt;i&gt;안녕&lt;/i&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">'a'</span>)<span class="op">.</span><span class="at">outerHTML</span>)<span class="op">;</span>    <span class="co">// &lt;div id="a"&gt;&lt;i&gt;안녕&lt;/i&gt;&lt;/div&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">'b'</span>)<span class="op">.</span><span class="at">textContent</span>)<span class="op">;</span>  <span class="co">// 여러분 반가워</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">'b'</span>)<span class="op">.</span><span class="at">innerText</span>)<span class="op">;</span>    <span class="co">// 여러분 반가워</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="fu">getElementById</span>(<span class="st">'b'</span>)<span class="op">.</span><span class="at">outerText</span>)<span class="op">;</span>    <span class="co">// 여러분 반가워</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/script&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="노드-개체를-dom에-추가-appendchild-insertbefore" class="level2">
+<h2 class="anchored" data-anchor-id="노드-개체를-dom에-추가-appendchild-insertbefore">노드 개체를 DOM에 추가 : appendChild(), insertBefore()</h2>
+<ul>
+<li>appendChild() : 매개변수로 받은 노드를 자식 노드의 끝에 추가 = <code>append()</code></li>
+</ul>
+<div class="sourceCode" id="cb8"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;p&gt;</span>안녕<span class="kw">&lt;/p&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;script&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> elementNode <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElement</span>(<span class="st">'strong'</span>)<span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> textNode <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createTextNode</span>(<span class="st">' Dude'</span>)<span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'p'</span>)<span class="op">.</span><span class="fu">appendChild</span>(elementNode)<span class="op">;</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'strong'</span>)<span class="op">.</span><span class="fu">appendChild</span>(textNode)<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">innerHTML</span>)<span class="op">;</span> <span class="co">// &lt;p&gt;안녕&lt;strong&gt; Dude&lt;/strong&gt;&lt;/p&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/script&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>insertBefore() : 매개변수로 받은 노드를 자식 노드의 맨 앞에 추가 = <code>prepend()</code></li>
+</ul>
+<div class="sourceCode" id="cb9"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;ul&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;li&gt;</span>2<span class="kw">&lt;/li&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">&lt;li&gt;</span>3<span class="kw">&lt;/li&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/ul&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;script&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> elementNode <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createElement</span>(<span class="st">'li'</span>)<span class="op">;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> textNode <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">createTextNode</span>(<span class="st">'1'</span>)<span class="op">;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  elementNode<span class="op">.</span><span class="fu">appendChild</span>(textNode)<span class="op">;</span>  <span class="co">// &lt;li&gt;1&lt;/li&gt;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> ul <span class="op">=</span> <span class="bu">document</span><span class="op">.</span><span class="fu">querySelector</span>(<span class="st">'ul'</span>)<span class="op">;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  ul<span class="op">.</span><span class="fu">insertBefore</span>(elementNode<span class="op">,</span> ul<span class="op">.</span><span class="at">firstChild</span>)<span class="op">;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="bu">document</span><span class="op">.</span><span class="at">body</span><span class="op">.</span><span class="at">innerHTML</span>)<span class="op">;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="co">// &lt;ul&gt;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">//   &lt;li&gt;1&lt;/li&gt;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">//   &lt;li&gt;2&lt;/li&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">//   &lt;li&gt;3&lt;/li&gt;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="co">// &lt;/ul&gt;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/script&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>before() = insertAdjacentHTML-‘beforebegin’</li>
+<li>after() = insertAdjacentHTML-‘afterend’</li>
+<li>prepend() = insertAdjacentHTML-‘afterbegin’</li>
+<li>append() = insertAdjacentHTML-‘afterend’</li>
+</ul>
+</section>
+<section id="이해-안-된-문장" class="level2">
+<h2 class="anchored" data-anchor-id="이해-안-된-문장">이해 안 된 문장</h2>
+<ul>
+<li>기본적으로 writh() 메서드는 전달된 값을 페이지가 로딩 및 해석되는 동안 페이지에 출력한다. writh() 메서드를 사용하면 로딩된 HTML 문서가 해석되는 것을 지연/차단하게 된다는 것에 유의</li>
+<li>innerHTML이 무겁고 비싼 대가를 치르는 HTML 파서를 호출하는 데 비해 텍스트 노드 생성은 간단히 처리되므로 innerHTML 계열의 사용을 삼가해야 한다.</li>
+</ul>
+
+
+
+</section>
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+
+</div>
+<div class="listing-no-matching d-none">
+일치 없음
+</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

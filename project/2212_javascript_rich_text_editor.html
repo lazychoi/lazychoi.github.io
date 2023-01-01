@@ -122,14 +122,7 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">목차</h2>
-   
-  <ul>
-  <li><a href="#마친-직후-느낌" id="toc-마친-직후-느낌" class="nav-link active" data-scroll-target="#마친-직후-느낌">마친 직후 느낌</a></li>
-  <li><a href="#배운-부분-정리미완성" id="toc-배운-부분-정리미완성" class="nav-link" data-scroll-target="#배운-부분-정리미완성">배운 부분 정리(미완성)</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -158,48 +151,8 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <p><a href="https://github.com/lazychoi/ankiLike">깃허브: https://github.com/lazychoi/ankiLike</a></p>
-<p><img src="https://github.com/lazychoi/ankiLike/blob/main/images/Screenshot2022-12-305.05.37.png?raw=true"></p>
-<ul>
-<li>기간: 2022년 12월 28일 - 30일</li>
-</ul>
-<p>=&gt; <a href="https://lazychoi.github.io/ankiLike/editor.html">여기를 눌러 사용해볼 수 있다</a></p>
-<section id="마친-직후-느낌" class="level2">
-<h2 class="anchored" data-anchor-id="마친-직후-느낌">마친 직후 느낌</h2>
-<p>향후 중단될 수 있는(deprecated) execCommand() 함수를 사용하지 않고 <code>contenteditable</code> 속성과 <code>document.getSelection()</code> 함수를 주로 사용해 구현했다.</p>
-<p>사용자가 영역을 선택할 때와 선택하지 않을 때, 커서가 편집 영역에 있을 때와 없을 때, 버튼을 누를 때 생각하지 못한 상황이 발생했다. DOM을 만들고 없애고 필요한 곳에 넣고 빼는 일이 쉽지 않다는 걸 절감했다. 기본적인 작동은 하지만 이곳저곳에서 예상한대로 작동하지 않는 경우가 종종 발생한다. 버튼 하나마다 신경써야 할 부분이 한두 가지가 아니다. 아래아 한글과 MS워드 제작자에게 경의를 표한다.</p>
-<p>구현해야 할 기능과 잡아야 할 버그는 많지만 일단 멈추고 시행착오를 통해 배운 것을 정리하며 난잡한 코드도 정리해야겠다.</p>
-<p>리치 텍스트 편집기는 위 링크를 눌러 사용해볼 수 있고, 소스 코드는 <code>editor.html, css/editor.css, js/editor.js</code> 세 파일이다.</p>
-</section>
-<section id="배운-부분-정리미완성" class="level2">
-<h2 class="anchored" data-anchor-id="배운-부분-정리미완성">배운 부분 정리(미완성)</h2>
-<ul>
-<li>UI
-<ul>
-<li><a href="../project/22-12-31-11-08-49.html">자바스크립트 map() 함수로 드롭다운 버튼 목록 생성 -&gt; 폰트, 폰트 사이즈</a></li>
-</ul></li>
-<li>자바스크립트
-<ul>
-<li><a href="#">현재 커서 위치의 부모 태그 가져오기</a></li>
-<li><a href="#">현재 커서 위치의 모든 형제를 선택 영역으로 설정하기</a></li>
-<li><a href="#">선택한 영역의 부모 태그 가져오기</a></li>
-<li><a href="#">선택한 영역의 시작 인덱스와 끝 인덱스 가져오기</a></li>
-<li><a href="#">선택한 영역의 텍스트 가져오기</a></li>
-<li><a href="#">선택한 영역의 텍스트 중 줄바꿈 문자를 <br> 태그로 바꾸기</a></li>
-<li><a href="#">노드를 만들어 선택한 영역을 포함하기</a></li>
-<li><a href="#">새로 만든 노드에 속성 추가하기</a></li>
-<li><a href="#">선택한 영역을 삭제하기</a></li>
-<li><a href="#">선택한 영역에 새로운 노드 추가하기</a></li>
-</ul></li>
-<li>구현하지 못한 부분
-<ul>
-<li><a href="#">문단과 문장 구분하여 처리하기(미완성)</a></li>
-<li><a href="#">텍스트 상태를 실시간 반영하여 버튼의 활성화 비활성화 상태 변경</a></li>
-<li><a href="#">리스트 태그 넣기</a></li>
-</ul></li>
-</ul>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
