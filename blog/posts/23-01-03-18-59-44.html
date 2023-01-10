@@ -7,9 +7,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="lazychoi">
-<meta name="dcterms.date" content="2022-12-29">
 
-<title>👀 - javascript - textarea 선택영역을 <b></b>로 감싸기</title>
+<title>👀 - CSS - 차가 움직이는 애니메이션</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -185,11 +184,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">javascript - textarea 선택영역을 <code>&lt;b&gt;&lt;/b&gt;</code>로 감싸기</h1>
-                                <div class="quarto-categories">
-                <div class="quarto-category">자바스크립트</div>
-              </div>
-                  </div>
+      <h1 class="title">CSS - 차가 움직이는 애니메이션</h1>
+                      </div>
   </div>
     
   
@@ -202,12 +198,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
             </div>
     </div>
       
-      <div>
-      <div class="quarto-title-meta-heading">공개</div>
-      <div class="quarto-title-meta-contents">
-        <p class="date">December 29, 2022</p>
-      </div>
-    </div>
     
       
     </div>
@@ -216,15 +206,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">목차</h2>
-   
-  <ul>
-  <li><a href="#참고-예제" id="toc-참고-예제" class="nav-link active" data-scroll-target="#참고-예제">참고 예제</a></li>
-  <li><a href="#mutationobserver" id="toc-mutationobserver" class="nav-link" data-scroll-target="#mutationobserver">MutationObserver</a></li>
-  <li><a href="#range-안의-글자-바꾸기" id="toc-range-안의-글자-바꾸기" class="nav-link" data-scroll-target="#range-안의-글자-바꾸기">range 안의 글자 바꾸기</a></li>
-  </ul>
-</nav>
+    
 </nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
@@ -235,32 +217,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+<p><img src="images/Jan-03-2023-18-58-20.gif" class="img-fluid"></p>
 <ul>
-<li><code>textarea</code> 태그는 html 태그가 그대로 보여 사용할 수 없음</li>
-<li><code>div</code> 태그에 <code>contenteditable='true'</code>로 하면 내부에 html 태그가 삽입되지만 렌더링되지 않는다.</li>
+<li><a href="https://webgradients.com/" target="_blank">gradient 코드 샘플 제공 사이트</a>
+<ul>
+<li><code>body{ linear-gradient(to right, #6a11cb 0%, #2575fc 100%); }</code></li>
+</ul></li>
+<li><code>overflow: hidden;</code> : 땅이 움직이는 효과를 위해 이미지 넓이를 500%로 늘렸다. 화면보다 큰 부분을 보이지 않게 설정한다. 이것을 적용하지 않으면 가운데 사각형 바깥에도 땅이 보인다.</li>
+<li><code>background-size: cover;</code> : 배경 그림을 키우거나 줄여 영역 크기에 맞춘다.</li>
+<li><code>background-repeat: repeat-x;</code> : 배경 그림을 X축 방향으로 반복한다.</li>
+<li><code>animation: moveRight 6s linear infinite;</code> : moveRight에 설정한 애니매이션을 선형으로 6초마다 무한 반복한다.</li>
+<li><code>moveRight{ 100%{transform: translate(-2950px);} }</code> :</li>
 </ul>
-<section id="참고-예제" class="level2">
-<h2 class="anchored" data-anchor-id="참고-예제">참고 예제</h2>
-</section>
-<section id="mutationobserver" class="level2">
-<h2 class="anchored" data-anchor-id="mutationobserver">MutationObserver</h2>
-<ol type="1">
-<li>MuatationObserver 객체 만들기</li>
-<li>객체가 무엇을 관찰할지 지정하기</li>
-<li>관찰된 변화에 무엇을 할지 정하기</li>
-</ol>
-</section>
-<section id="range-안의-글자-바꾸기" class="level2">
-<h2 class="anchored" data-anchor-id="range-안의-글자-바꾸기">range 안의 글자 바꾸기</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// input과 textarea 태그에서만 먹힘</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> start <span class="op">=</span> writingArea<span class="op">.</span><span class="at">selectionStart</span><span class="op">;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> end <span class="op">=</span> writingArea<span class="op">.</span><span class="at">selectionEnd</span><span class="op">;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> selected <span class="op">=</span> writingArea<span class="op">.</span><span class="at">value</span><span class="op">.</span><span class="fu">slice</span>(start<span class="op">,</span> end)<span class="op">;</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>writingArea<span class="op">.</span><span class="fu">setRangeText</span>(<span class="vs">`&lt;b&gt;</span><span class="sc">${</span>selected<span class="sc">}</span><span class="vs">&lt;/b&gt;`</span>)<span class="op">;</span> </span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>`</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode css code-with-copy"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>body { <span class="kw">margin</span>: <span class="dv">0</span><span class="op">;</span> <span class="kw">background-image</span>: <span class="fu">linear-gradient(</span>to <span class="dv">right</span><span class="op">,</span> <span class="cn">#6a11cb</span> <span class="dv">0</span><span class="dt">%</span><span class="op">,</span> <span class="cn">#2575fc</span> <span class="dv">100</span><span class="dt">%</span><span class="fu">)</span><span class="op">;</span> <span class="kw">overflow</span>: <span class="dv">hidden</span><span class="op">;</span>}</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.night</span> { <span class="kw">height</span>: <span class="dv">80</span><span class="dt">vh</span><span class="op">;</span> <span class="kw">width</span>: <span class="dv">70</span><span class="dt">vw</span><span class="op">;</span> <span class="kw">margin</span>: <span class="dv">5</span><span class="dt">rem</span> <span class="bu">auto</span><span class="op">;</span> <span class="kw">background-image</span>: <span class="fu">url(</span><span class="st">'./images/night.png'</span><span class="fu">)</span><span class="op">;</span> <span class="kw">background-size</span>: <span class="dv">cover</span><span class="op">;</span> <span class="kw">position</span>: <span class="dv">relative</span><span class="op">;</span> <span class="kw">box-shadow</span>: <span class="dv">1</span><span class="dt">px</span> <span class="dv">2</span><span class="dt">px</span> <span class="dv">60</span><span class="dt">px</span> <span class="fu">rgba(</span><span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">4</span><span class="fu">)</span><span class="op">;</span> <span class="kw">overflow-x</span>: <span class="dv">hidden</span><span class="op">;</span>}</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">.surface</span> { <span class="kw">height</span>: <span class="dv">140</span><span class="dt">px</span><span class="op">;</span> <span class="kw">width</span>: <span class="dv">500</span><span class="dt">%</span><span class="op">;</span> <span class="kw">background</span>: <span class="fu">url(</span><span class="st">./images/earth.png</span><span class="fu">)</span><span class="op">;</span> <span class="kw">display</span>: <span class="dv">block</span><span class="op">;</span> <span class="kw">position</span>: <span class="dv">absolute</span><span class="op">;</span> <span class="kw">bottom</span>: <span class="dv">0</span><span class="dt">%</span><span class="op">;</span> <span class="kw">left</span>: <span class="dv">0</span><span class="dt">%</span><span class="op">;</span> <span class="kw">background-repeat</span>: <span class="dv">repeat-x</span><span class="op">;</span> <span class="kw">animation</span>: moveRight <span class="dv">6</span><span class="dt">s</span> <span class="dv">linear</span> <span class="dv">infinite</span><span class="op">;</span>}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">.car</span> { <span class="kw">position</span>: <span class="dv">absolute</span><span class="op">;</span> <span class="kw">bottom</span>: <span class="dv">7</span><span class="dt">%</span><span class="op">;</span> <span class="kw">left</span>: <span class="dv">24</span><span class="dt">%</span><span class="op">;</span> <span class="kw">animation</span>: suspension <span class="dv">1</span><span class="dt">s</span> <span class="dv">linear</span> <span class="dv">infinite</span><span class="op">;</span>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">/* Animation*/</span>  </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">@keyframes</span> moveRight{ <span class="dv">100%</span>{<span class="kw">transform</span>: <span class="fu">translate(</span><span class="dv">-2950</span><span class="dt">px</span><span class="fu">)</span><span class="op">;</span>} }</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">@keyframes</span> suspension{ <span class="dv">100%</span>{<span class="kw">transform</span>: translateY(<span class="dv">-1</span><span class="dt">px</span>)<span class="op">;</span>} <span class="dv">50%</span>{<span class="kw">transform</span>: translateY(<span class="dv">2</span><span class="dt">px</span>)<span class="op">;</span>} <span class="dv">0%</span>{<span class="kw">transform</span>: translateY(<span class="dv">-1</span><span class="dt">px</span>)<span class="op">;</span>}}</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"night"</span><span class="kw">&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"surface"</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;div</span> <span class="er">class</span><span class="ot">=</span><span class="st">"car"</span><span class="kw">&gt;&lt;img</span> <span class="er">src</span><span class="ot">=</span><span class="st">"./images/bus2.png"</span> <span class="er">alt</span><span class="ot">=</span><span class="st">""</span><span class="kw">&gt;&lt;/div&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/div&gt;</span></span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
