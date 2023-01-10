@@ -1,5 +1,5 @@
 ---
-title: "Java Swing으로 MySQL 연동하여 CRUD 구현"
+title: "독산 미니프로젝트 - Java Swing으로 MySQL 연동하여 CRUD 구현"
 date: 2022-12-23
 ---
 

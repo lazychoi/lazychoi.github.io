@@ -32,6 +32,8 @@ website:
       background: light
       contents:
         - books.md
+        - books/cs_os.md
+        - books/dom_enlightenment.md
         - books/This_is_coding_test.md
         - books/tiny_python_project.md
         - books/pandas_in_action.md
