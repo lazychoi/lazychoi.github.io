@@ -135,6 +135,13 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#데이터-개수-확인-hive-select-count-from-project" id="toc-데이터-개수-확인-hive-select-count-from-project" class="nav-link" data-scroll-target="#데이터-개수-확인-hive-select-count-from-project">데이터 개수 확인: <code>[hive] select count(*) from project;</code></a></li>
   <li><a href="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" id="toc-타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null">타겟에 null 존재 여부 확인: <code>[hive] select * from project where travel_insurance is null;</code></a></li>
   <li><a href="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" id="toc-null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null">null이 대부분인 행 삭제: <code>[hive]delete from project where travel_insurance is null;</code></a></li>
+  <li><a href="#여전히-hive에서-문제-발생" id="toc-여전히-hive에서-문제-발생" class="nav-link" data-scroll-target="#여전히-hive에서-문제-발생">여전히 hive에서 문제 발생</a></li>
+  <li><a href="#보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교" id="toc-보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교" class="nav-link" data-scroll-target="#보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교">보험 가입, 미가입 그룹별로 나이, 연수입, 가족수 평균 비교</a></li>
+  </ul></li>
+  <li><a href="#pig로-데이터-분석" id="toc-pig로-데이터-분석" class="nav-link" data-scroll-target="#pig로-데이터-분석">pig로 데이터 분석</a>
+  <ul class="collapse">
+  <li><a href="#csv-파일-변수로-로드" id="toc-csv-파일-변수로-로드" class="nav-link" data-scroll-target="#csv-파일-변수로-로드">csv 파일 변수로 로드:</a></li>
+  <li><a href="#보험-가입-유무-인원-비교" id="toc-보험-가입-유무-인원-비교" class="nav-link" data-scroll-target="#보험-가입-유무-인원-비교">보험 가입 유무 인원 비교</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -278,7 +285,39 @@ STORED AS TEXTFILE;</code></pre>
 <p>Error: Error while compiling statement: FAILED: SemanticException [Error 10414]: Attempt to do update or delete on table default.project that is insert-only transactional (state=42000,code=10414)</p>
 <p>에러가 뜬다. 이를 수정하려 <code>/etc/hive/conf/hive-site.xml</code> 파일을 수정했더니 hiveserver가 실행되지 않는 사태 발생!!!</p>
 <p>pig로 대신하려 했으나 dump 실행하면 무한 retry 현상 발생!!!!</p>
-<p>결국 hortonworks 재설치</p>
+<p>결국 hortonworks 재설치 ===&gt; 재설치 중 오류 메시지 ===&gt; 다시 재설치</p>
+<p>재설치하려고 교재를 다시 보니 Ambari 대시보드가 있는 걸 알았다. 교재에 있는 아이디와 비밀번호로 로그인하면 모든 프로그램의 상태를 볼 수 있다.</p>
+<p><img src="images/hadoop07.png" class="img-fluid"></p>
+</section>
+<section id="여전히-hive에서-문제-발생" class="level3">
+<h3 class="anchored" data-anchor-id="여전히-hive에서-문제-발생">여전히 hive에서 문제 발생</h3>
+<p>이전과 똑같은 방식으로 진행했다. 그런데 pig파일로 warehouse 내로 파일을 보내는 것은 정상적으로 됐으나 hive로 테이블을 만들 때 string형 컬럼만 들어오고 int형 컬럼은 들어오지 않는다. 여러 번 해도 마찬가지.ㅜㅜ</p>
+<p><img src="images/hadoop08.png" class="img-fluid"></p>
+<p><img src="images/hadoop09.png" class="img-fluid"></p>
+<p>강사님 말씀대로 hive에서 자료형을 모두 string으로 바꾸니 모두 들어왔다.</p>
+<p><img src="images/hadoop10.png" class="img-fluid"></p>
+</section>
+<section id="보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교" class="level3">
+<h3 class="anchored" data-anchor-id="보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교">보험 가입, 미가입 그룹별로 나이, 연수입, 가족수 평균 비교</h3>
+<p><code>select AVG(age) as age,AVG(annual_income) as income, AVG(family_members) as family from project2 group by travel_insurance;</code></p>
+<p><img src="images/hadoop11.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="pig로-데이터-분석" class="level2">
+<h2 class="anchored" data-anchor-id="pig로-데이터-분석">pig로 데이터 분석</h2>
+<section id="csv-파일-변수로-로드" class="level3">
+<h3 class="anchored" data-anchor-id="csv-파일-변수로-로드">csv 파일 변수로 로드:</h3>
+<pre class="pig"><code>A = load 'travel.csv' using PigStorage(',') as (num:int,age:int,employment_type:chararray,graduate_or_not:chararray,annual_income:int,family_members:int,chronic_disease_or_not:int,frequent_flyer:chararray,traveled_abroad:chararray,travel_insurance:int);</code></pre>
+</section>
+<section id="보험-가입-유무-인원-비교" class="level3">
+<h3 class="anchored" data-anchor-id="보험-가입-유무-인원-비교">보험 가입 유무 인원 비교</h3>
+<ol type="1">
+<li>타겟 컬럼인 보험 가입 유무 변수로 그룹화: <code>insur = GROUP A BY travel_insurance;</code></li>
+<li>그룹별 인원 구하기: <code>total_insur = foreach insur generate group, (chararray)COUNT(A) AS total;</code></li>
+<li>화면 표시: <code>dump total_insur;</code></li>
+</ol>
+<p>결과 (0, 1277) (1, 710)</p>
+<p>=&gt; 보험에 가입하지 않은 사람은 1277명으로 전체의 64% 가입한 사람은 710명으로 전체의 36%이다.</p>
 
 
 </section>

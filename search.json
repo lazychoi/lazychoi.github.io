@@ -3028,7 +3028,14 @@
     "href": "project/2301_hadoop.html#데이터-분석",
     "title": "독산 미니프로젝트 - hadoop, pig, hive 활용하여 데이터 분석",
     "section": "데이터 분석",
-    "text": "데이터 분석\n\n데이터 개수 확인: [hive] select count(*) from project;\n\n\n\n타겟에 null 존재 여부 확인: [hive] select * from project where travel_insurance is null;\n\n\n\nnull이 대부분인 행 삭제: [hive]delete from project where travel_insurance is null;\nError: Error while compiling statement: FAILED: SemanticException [Error 10414]: Attempt to do update or delete on table default.project that is insert-only transactional (state=42000,code=10414)\n에러가 뜬다. 이를 수정하려 /etc/hive/conf/hive-site.xml 파일을 수정했더니 hiveserver가 실행되지 않는 사태 발생!!!\npig로 대신하려 했으나 dump 실행하면 무한 retry 현상 발생!!!!\n결국 hortonworks 재설치"
+    "text": "데이터 분석\n\n데이터 개수 확인: [hive] select count(*) from project;\n\n\n\n타겟에 null 존재 여부 확인: [hive] select * from project where travel_insurance is null;\n\n\n\nnull이 대부분인 행 삭제: [hive]delete from project where travel_insurance is null;\nError: Error while compiling statement: FAILED: SemanticException [Error 10414]: Attempt to do update or delete on table default.project that is insert-only transactional (state=42000,code=10414)\n에러가 뜬다. 이를 수정하려 /etc/hive/conf/hive-site.xml 파일을 수정했더니 hiveserver가 실행되지 않는 사태 발생!!!\npig로 대신하려 했으나 dump 실행하면 무한 retry 현상 발생!!!!\n결국 hortonworks 재설치 ===> 재설치 중 오류 메시지 ===> 다시 재설치\n재설치하려고 교재를 다시 보니 Ambari 대시보드가 있는 걸 알았다. 교재에 있는 아이디와 비밀번호로 로그인하면 모든 프로그램의 상태를 볼 수 있다.\n\n\n\n여전히 hive에서 문제 발생\n이전과 똑같은 방식으로 진행했다. 그런데 pig파일로 warehouse 내로 파일을 보내는 것은 정상적으로 됐으나 hive로 테이블을 만들 때 string형 컬럼만 들어오고 int형 컬럼은 들어오지 않는다. 여러 번 해도 마찬가지.ㅜㅜ\n\n\n강사님 말씀대로 hive에서 자료형을 모두 string으로 바꾸니 모두 들어왔다.\n\n\n\n보험 가입, 미가입 그룹별로 나이, 연수입, 가족수 평균 비교\nselect AVG(age) as age,AVG(annual_income) as income, AVG(family_members) as family from project2 group by travel_insurance;"
+  },
+  {
+    "objectID": "project/2301_hadoop.html#pig로-데이터-분석",
+    "href": "project/2301_hadoop.html#pig로-데이터-분석",
+    "title": "독산 미니프로젝트 - hadoop, pig, hive 활용하여 데이터 분석",
+    "section": "pig로 데이터 분석",
+    "text": "pig로 데이터 분석\n\ncsv 파일 변수로 로드:\nA = load 'travel.csv' using PigStorage(',') as (num:int,age:int,employment_type:chararray,graduate_or_not:chararray,annual_income:int,family_members:int,chronic_disease_or_not:int,frequent_flyer:chararray,traveled_abroad:chararray,travel_insurance:int);\n\n\n보험 가입 유무 인원 비교\n\n타겟 컬럼인 보험 가입 유무 변수로 그룹화: insur = GROUP A BY travel_insurance;\n그룹별 인원 구하기: total_insur = foreach insur generate group, (chararray)COUNT(A) AS total;\n화면 표시: dump total_insur;\n\n결과 (0, 1277) (1, 710)\n=> 보험에 가입하지 않은 사람은 1277명으로 전체의 64% 가입한 사람은 710명으로 전체의 36%이다."
   },
   {
     "objectID": "project/2301_lottery.html",
@@ -3126,7 +3133,7 @@
     "href": "review/python/list_comprehension.html",
     "title": "리스트 내장 함수",
     "section": "",
-    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['우', '수', '우', '가', '양', '가', '미', '양', '수', '양']"
+    "text": "if문만 쓸 때는 for문 오른쪽에, if else문을 쓸 때는 for문 왼쪽에 쓴다.\nfor문을 중첩해서 쓸 수 있다.\nif문을 중첩해 쓸 수 있다.\n사용자 정의 함수를 사용할 수 있다.\n\n\n\n\n1에서 10까지 수 중 3의 배수만 출력 -> for if문 사용\n\n\n[i for i in range(2, 10) if  i % 3 == 0]\n\n[3, 6, 9]\n\n\n\n짝수일 때는 ‘짝수’를, 홀수일 때는 ’홀수’ 출력 -> if else for문 사용\n\n\n[ '짝수' if i % 2 == 0 else '홀수' for i in range(1, 10)]\n\n['홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수', '짝수', '홀수']\n\n\n\n구구단에서 짝이 되는 숫자 출력(2단만) -> for문 중첩 사용\n\n\n[ [i, j] for i in range(2, 3) for j in range(1, 10)]\n\n[[2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9]]\n\n\n\n성적에 따라 수우미양가 출력 -> 사용자 정의 함수 사용\n\n\nimport numpy as np\n\ndef grade(num):\n    if num >= 90:\n        return '수'\n    elif num >= 80:\n        return '우'\n    elif num >= 70:\n        return '미'\n    elif num >= 60:\n        return '양'\n    else:\n        return '가'\n[grade(i) for i in np.random.randint(1, 100, size=10)]\n\n['가', '가', '가', '가', '가', '수', '가', '가', '양', '수']"
   },
   {
     "objectID": "review/python/class.html",
