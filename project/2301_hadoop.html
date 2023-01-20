@@ -21,6 +21,69 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1.6em;
   vertical-align: middle;
 }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -135,6 +198,9 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#데이터-개수-확인-hive-select-count-from-project" id="toc-데이터-개수-확인-hive-select-count-from-project" class="nav-link" data-scroll-target="#데이터-개수-확인-hive-select-count-from-project">데이터 개수 확인: <code>[hive] select count(*) from project;</code></a></li>
   <li><a href="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" id="toc-타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null">타겟에 null 존재 여부 확인: <code>[hive] select * from project where travel_insurance is null;</code></a></li>
   <li><a href="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" id="toc-null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null">null이 대부분인 행 삭제: <code>[hive]delete from project where travel_insurance is null;</code></a></li>
+  </ul></li>
+  <li><a href="#장애-발생-hive-서버가-실행되지-않는다." id="toc-장애-발생-hive-서버가-실행되지-않는다." class="nav-link" data-scroll-target="#장애-발생-hive-서버가-실행되지-않는다.">장애 발생!!! hive 서버가 실행되지 않는다.</a>
+  <ul class="collapse">
   <li><a href="#여전히-hive에서-문제-발생" id="toc-여전히-hive에서-문제-발생" class="nav-link" data-scroll-target="#여전히-hive에서-문제-발생">여전히 hive에서 문제 발생</a></li>
   <li><a href="#보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교" id="toc-보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교" class="nav-link" data-scroll-target="#보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교">보험 가입, 미가입 그룹별로 나이, 연수입, 가족수 평균 비교</a></li>
   </ul></li>
@@ -198,54 +264,52 @@ ul.task-list li input[type="checkbox"] {
 <li>리눅스에 있는 csv 파일을 하둡의 project 디렉토리에 전송: <code>[Linux] hadoop fs -put /root/project/TravelInsurancePrediction.csv /user/root/project</code></li>
 <li>하둡에 있는 csv 파일을 hive의 warehouse로 저장할 스크립트 파일 작성: <code>[Linux] vi project.pig</code></li>
 </ol>
-<p><code>insurance = LOAD '/user/root/project/TravelInsurancePrediction.csv' USING PigStorage(',');</code></p>
-<p>하둡의 ‘/user/root/project/TravelInsurancePrediction.csv’ 파일을 읽어(LOAD) 쉼표로 구분하여(USING PigStorage(‘,’)) insurance 변수에 저장한다.</p>
-<pre><code>project_insure = FOREACH insurance GENERATE 
-    $0 AS num:int 
-    $1 AS age:int,
-    (이하 생략)</code></pre>
+<p>하둡의 ‘/user/root/project/TravelInsurancePrediction.csv’ 파일을 읽어(LOAD) 쉼표로 구분하여(USING PigStorage(‘,’)) insurance 변수에 저장한다. : <code>insurance = LOAD '/user/root/project/TravelInsurancePrediction.csv' USING PigStorage(',');</code></p>
 <p>insurance 변수의 첫 번째($0) 컬럼은 int 자료형의 num 변수로, 두 번째($1) 컬럼은 int 자료형의 age 변수로 생성한다. csv의 모든 컬럼을 이렇게 변수로 생성해 project_insure 변수로 저장한다.</p>
-<p><code>STORE project_insure INTO '/warehouse/tablespace/managed/hive/project/';</code></p>
-<p>project_insure 변수를 hive가 관리하는 ‘/warehouse/tablespace/managed/hive/project/’ 디렉토리에 저장한다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>project_insure <span class="op">=</span> FOREACH insurance GENERATE </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    $<span class="dv">0</span> <span class="kw">AS</span> num<span class="ch">:int</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    $<span class="dv">1</span> <span class="kw">AS</span> age<span class="ch">:int</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    (이하 생략)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>project_insure 변수를 hive가 관리하는 ‘/warehouse/tablespace/managed/hive/project/’ 디렉토리에 저장한다.: <code>STORE project_insure INTO '/warehouse/tablespace/managed/hive/project/';</code></p>
 <p>전체 코드</p>
-<pre><code>insurance = LOAD '/user/root/project/TravelInsurancePrediction.csv' USING PigStorage(',');
-project_insure = FOREACH insurance GENERATE
-        $0 AS num:int,
-        $1 AS age:int,
-        $2 AS employment_type:chararray,
-        $3 AS graduate_or_not:chararray,
-        $4 AS annual_income:int,
-        $5 AS family_members:int,
-        $6 AS chronic_disease_or_not:int,
-        $7 AS frequent_flyer:chararray,
-        $8 AS traveled_abroad:chararray,
-        $9 AS travel_insurance:int;
-STORE project_insure INTO '/warehouse/tablespace/managed/hive/project/';</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>insurance <span class="op">=</span> LOAD <span class="st">'/user/root/project/TravelInsurancePrediction.csv'</span> <span class="kw">USING</span> PigStorage(<span class="st">','</span>);</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>project_insure <span class="op">=</span> FOREACH insurance GENERATE</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">0</span> <span class="kw">AS</span> num<span class="ch">:int</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">1</span> <span class="kw">AS</span> age<span class="ch">:int</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">2</span> <span class="kw">AS</span> employment_type<span class="ch">:chararray</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">3</span> <span class="kw">AS</span> graduate_or_not<span class="ch">:chararray</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">4</span> <span class="kw">AS</span> annual_income<span class="ch">:int</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">5</span> <span class="kw">AS</span> family_members<span class="ch">:int</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">6</span> <span class="kw">AS</span> chronic_disease_or_not<span class="ch">:int</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">7</span> <span class="kw">AS</span> frequent_flyer<span class="ch">:chararray</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">8</span> <span class="kw">AS</span> traveled_abroad<span class="ch">:chararray</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        $<span class="dv">9</span> <span class="kw">AS</span> travel_insurance<span class="ch">:int</span>;</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">STORE</span> project_insure <span class="kw">INTO</span> <span class="st">'/warehouse/tablespace/managed/hive/project/'</span>;</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol start="6" type="1">
 <li>데이터베이스 테이블을 만들 hive 스크립트 작성 : <code>[Linux] vi project.hive</code></li>
 </ol>
-<pre><code>create table project (
-        num int,
-        age int,
-        (이하 생략)</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> project (</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        num <span class="dt">int</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        age <span class="dt">int</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        (이하 생략)</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>pig 스크립트에서 지정한 변수명과 동일하게 작성한다. 문자 자료형을 pig에서는 chararray로, hive에서는 string으로 설정하는 점이 다르다.</p>
-<pre><code>ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
-STORED AS TEXTFILE;</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span class="kw">BY</span> <span class="st">'</span><span class="ch">\t</span><span class="st">'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>STORED <span class="kw">AS</span> TEXTFILE;</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>hive는 pig로 저장한 파일을 불러와 테이블을 생성한다. csv 파일은 쉼표(,)로 구분되어 있지만, pig로 변환하면서 탭(으로 바뀌었다. 스크립트를 실행한 후에 <code>hadoop fs -cat /warehouse/tablespace/managed/hive/project/*</code> 명령으로 파일 내용을 보면 탭으로 구분되어 있음을 확인할 수 있다.</p>
 <p>전체 코드</p>
-<pre><code>create table project (
-        num int,
-        age int,
-        employment_type string,
-        graduate_or_not string,
-        annual_income int,
-        family_members int,
-        chronic_disease_or_not int,
-        frequent_flyer string,
-        traveled_abroad string,
-        travel_insurance int)
-ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
-STORED AS TEXTFILE;</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">create</span> <span class="kw">table</span> project (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>        num <span class="dt">int</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        age <span class="dt">int</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        employment_type string,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>        graduate_or_not string,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>        annual_income <span class="dt">int</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        family_members <span class="dt">int</span>,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        chronic_disease_or_not <span class="dt">int</span>,</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        frequent_flyer string,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        traveled_abroad string,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        travel_insurance <span class="dt">int</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">ROW</span> FORMAT DELIMITED FIELDS TERMINATED <span class="kw">BY</span> <span class="st">'</span><span class="ch">\t</span><span class="st">'</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>STORED <span class="kw">AS</span> TEXTFILE;</span></code><button title="클립보드 복사" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <ol start="6" type="1">
 <li>먼저 pig 스크립트 파일을 실행한다.: <code>[Linux] pig project.pig</code></li>
 <li>pig 스크립트가 잘 실행되어 csv 파일이 hive가 불러들을 수 있게 저장되었는지 확인: <code>hadoop fs -cat /warehouse/tablespace/managed/hive/project/*</code> -&gt; 탭으로 구분된 데이터가 보이지 않으면 경로를 잘못 지정했을 수 있으니 확인해서 스크립트를 수정 후 다시 실행한다.</li>
@@ -283,12 +347,16 @@ STORED AS TEXTFILE;</code></pre>
 <section id="null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" class="level3">
 <h3 class="anchored" data-anchor-id="null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null">null이 대부분인 행 삭제: <code>[hive]delete from project where travel_insurance is null;</code></h3>
 <p>Error: Error while compiling statement: FAILED: SemanticException [Error 10414]: Attempt to do update or delete on table default.project that is insert-only transactional (state=42000,code=10414)</p>
-<p>에러가 뜬다. 이를 수정하려 <code>/etc/hive/conf/hive-site.xml</code> 파일을 수정했더니 hiveserver가 실행되지 않는 사태 발생!!!</p>
-<p>pig로 대신하려 했으나 dump 실행하면 무한 retry 현상 발생!!!!</p>
+<p>행 삭제가 안 된다. 아마도 막아둔 것 같다.</p>
+</section>
+</section>
+<section id="장애-발생-hive-서버가-실행되지-않는다." class="level2">
+<h2 class="anchored" data-anchor-id="장애-발생-hive-서버가-실행되지-않는다.">장애 발생!!! hive 서버가 실행되지 않는다.</h2>
+<p>위 에러를 없애기 위해 <code>/etc/hive/conf/hive-site.xml</code> 파일을 수정했다. 그런데, hiveserver가 실행되지 않는 사태 발생!!! 이래저래 시도해도 고쳐지지 않았다.</p>
+<p>포기하고 pig로 대신하려 했으나 dump를 실행하면 무한 retry 현상 발생!!!!</p>
 <p>결국 hortonworks 재설치 ===&gt; 재설치 중 오류 메시지 ===&gt; 다시 재설치</p>
 <p>재설치하려고 교재를 다시 보니 Ambari 대시보드가 있는 걸 알았다. 교재에 있는 아이디와 비밀번호로 로그인하면 모든 프로그램의 상태를 볼 수 있다.</p>
 <p><img src="images/hadoop07.png" class="img-fluid"></p>
-</section>
 <section id="여전히-hive에서-문제-발생" class="level3">
 <h3 class="anchored" data-anchor-id="여전히-hive에서-문제-발생">여전히 hive에서 문제 발생</h3>
 <p>이전과 똑같은 방식으로 진행했다. 그런데 pig파일로 warehouse 내로 파일을 보내는 것은 정상적으로 됐으나 hive로 테이블을 만들 때 string형 컬럼만 들어오고 int형 컬럼은 들어오지 않는다. 여러 번 해도 마찬가지.ㅜㅜ</p>
@@ -301,6 +369,8 @@ STORED AS TEXTFILE;</code></pre>
 <h3 class="anchored" data-anchor-id="보험-가입-미가입-그룹별로-나이-연수입-가족수-평균-비교">보험 가입, 미가입 그룹별로 나이, 연수입, 가족수 평균 비교</h3>
 <p><code>select AVG(age) as age,AVG(annual_income) as income, AVG(family_members) as family from project2 group by travel_insurance;</code></p>
 <p><img src="images/hadoop11.png" class="img-fluid"></p>
+<p>희안하게도 string 자료형인데 평균 계산이 된다. 자동형변환을 해주는 건가?</p>
+<p>윗줄이 보험미가입 그룹, 아랫줄이 보험가입 그룹이다. 나이와 가족수는 차이가 없고 연수입은 차이가 난다는 것을 알 수 있다. 수입이 많은 사람이 적은 사람보다 여행자 보험에 더 많이 가입함을 보여준다.</p>
 </section>
 </section>
 <section id="pig로-데이터-분석" class="level2">
