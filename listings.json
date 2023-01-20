@@ -2,6 +2,7 @@
   {
     "listing": "/project.html",
     "items": [
+      "/project/2301_hadoop.html",
       "/project/2301_jspPhotoGallery.html",
       "/project/2301_lottery.html",
       "/project/2212_javascript_rich_text_editor.html",
@@ -90,6 +91,7 @@
       "/blog/posts/23-01-02-11-58-37.html",
       "/blog/posts/study_konlpy.html",
       "/blog/posts/23-01-03-18-59-44.html",
+      "/blog/posts/23-01-11.html",
       "/blog/posts/23-01-05.html",
       "/blog/posts/23-01-03.html",
       "/blog/posts/typeScriptGlossary.html",

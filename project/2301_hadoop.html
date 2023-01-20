@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="kr" xml:lang="kr"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2023-01-20">
+
+<title>👀 - 독산 미니프로젝트 - hadoop, pig, hive 활용하여 데이터 분석</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "일치 없음",
+    "search-matching-documents-text": "일치된 문서",
+    "search-copy-link-title": "검색 링크 복사",
+    "search-hide-matches-text": "추가 검색 결과 숨기기",
+    "search-more-match-text": "추가 검색결과",
+    "search-more-matches-text": "추가 검색결과",
+    "search-clear-button-title": "제거",
+    "search-detached-cancel-button-title": "취소",
+    "search-submit-button-title": "검색"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">👀</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html">
+ <span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../books.html">
+ <span class="menu-text">읽은 책</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../review.html">
+ <span class="menu-text">오답노트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../project.html">
+ <span class="menu-text">프로젝트</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../blog/blog.html">
+ <span class="menu-text">블로그</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html">
+ <span class="menu-text">Contact</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/lazychoi/lazychoi.github.io/issues"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#프로젝트-과제" id="toc-프로젝트-과제" class="nav-link active" data-scroll-target="#프로젝트-과제">프로젝트 과제</a></li>
+  <li><a href="#데이터" id="toc-데이터" class="nav-link" data-scroll-target="#데이터">데이터</a></li>
+  <li><a href="#데이터를-하둡에-업로드-후-pig---hive-형식으로-저장" id="toc-데이터를-하둡에-업로드-후-pig---hive-형식으로-저장" class="nav-link" data-scroll-target="#데이터를-하둡에-업로드-후-pig---hive-형식으로-저장">데이터를 하둡에 업로드 후 pig -&gt; hive 형식으로 저장</a></li>
+  <li><a href="#생성한-테이블-확인" id="toc-생성한-테이블-확인" class="nav-link" data-scroll-target="#생성한-테이블-확인">생성한 테이블 확인</a></li>
+  <li><a href="#데이터-분석" id="toc-데이터-분석" class="nav-link" data-scroll-target="#데이터-분석">데이터 분석</a>
+  <ul class="collapse">
+  <li><a href="#데이터-개수-확인-hive-select-count-from-project" id="toc-데이터-개수-확인-hive-select-count-from-project" class="nav-link" data-scroll-target="#데이터-개수-확인-hive-select-count-from-project">데이터 개수 확인: <code>[hive] select count(*) from project;</code></a></li>
+  <li><a href="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" id="toc-타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null">타겟에 null 존재 여부 확인: <code>[hive] select * from project where travel_insurance is null;</code></a></li>
+  <li><a href="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" id="toc-null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" class="nav-link" data-scroll-target="#null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null">null이 대부분인 행 삭제: <code>[hive]delete from project where travel_insurance is null;</code></a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">독산 미니프로젝트 - hadoop, pig, hive 활용하여 데이터 분석</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">공개</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 20, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="프로젝트-과제" class="level2">
+<h2 class="anchored" data-anchor-id="프로젝트-과제">프로젝트 과제</h2>
+<ol type="1">
+<li>프로젝트 기간 : 2023. 1. 20. 금요일</li>
+<li>방법: 캐글에서 데이터 받아 하둡에 저장하고 pig, hive를 활용해 데이터를 분석한다.</li>
+</ol>
+</section>
+<section id="데이터" class="level2">
+<h2 class="anchored" data-anchor-id="데이터">데이터</h2>
+<ol type="1">
+<li>출처 : <a href="https://www.kaggle.com/datasets/tejashvi14/travel-insurance-prediction-data?resource=download" target="_blank">Travel Insurance Prediction Data</a></li>
+<li>목적 : 여행자보험에 가입하는 고객의 특성 파악</li>
+<li>수집 데이터 : 나이, 직업유형, 대학졸업여부, 연수입, 가족수, 만성질환유무, 잦은항공기탑승여부, 해외여행경험유무</li>
+<li>타깃 데이터 : 고객의 여행자보험가입여부</li>
+<li>데이터 형태 : TravelInsurancePrediction.csv</li>
+</ol>
+</section>
+<section id="데이터를-하둡에-업로드-후-pig---hive-형식으로-저장" class="level2">
+<h2 class="anchored" data-anchor-id="데이터를-하둡에-업로드-후-pig---hive-형식으로-저장">데이터를 하둡에 업로드 후 pig -&gt; hive 형식으로 저장</h2>
+<ol type="1">
+<li>hortonworks 리눅스에 프로젝트 디렉토리 생성: <code>[Linux] mkdir /root/project</code></li>
+<li>윈도우에 있는 csv 파일을 hortonworks 리눅스의 ‘/root/project’ 디렉토리에 전송(윈도우 터미널에서 실행): <code>scp -P 2222 TravelInsurancePrediction.csv root@localhost:/root/project</code></li>
+<li>하둡에 project 디렉토리 만듦: <code>[Linux] hadoop fs -mkdir /user/root/project</code></li>
+<li>리눅스에 있는 csv 파일을 하둡의 project 디렉토리에 전송: <code>[Linux] hadoop fs -put /root/project/TravelInsurancePrediction.csv /user/root/project</code></li>
+<li>하둡에 있는 csv 파일을 hive의 warehouse로 저장할 스크립트 파일 작성: <code>[Linux] vi project.pig</code></li>
+</ol>
+<p><code>insurance = LOAD '/user/root/project/TravelInsurancePrediction.csv' USING PigStorage(',');</code></p>
+<p>하둡의 ‘/user/root/project/TravelInsurancePrediction.csv’ 파일을 읽어(LOAD) 쉼표로 구분하여(USING PigStorage(‘,’)) insurance 변수에 저장한다.</p>
+<pre><code>project_insure = FOREACH insurance GENERATE 
+    $0 AS num:int 
+    $1 AS age:int,
+    (이하 생략)</code></pre>
+<p>insurance 변수의 첫 번째($0) 컬럼은 int 자료형의 num 변수로, 두 번째($1) 컬럼은 int 자료형의 age 변수로 생성한다. csv의 모든 컬럼을 이렇게 변수로 생성해 project_insure 변수로 저장한다.</p>
+<p><code>STORE project_insure INTO '/warehouse/tablespace/managed/hive/project/';</code></p>
+<p>project_insure 변수를 hive가 관리하는 ‘/warehouse/tablespace/managed/hive/project/’ 디렉토리에 저장한다.</p>
+<p>전체 코드</p>
+<pre><code>insurance = LOAD '/user/root/project/TravelInsurancePrediction.csv' USING PigStorage(',');
+project_insure = FOREACH insurance GENERATE
+        $0 AS num:int,
+        $1 AS age:int,
+        $2 AS employment_type:chararray,
+        $3 AS graduate_or_not:chararray,
+        $4 AS annual_income:int,
+        $5 AS family_members:int,
+        $6 AS chronic_disease_or_not:int,
+        $7 AS frequent_flyer:chararray,
+        $8 AS traveled_abroad:chararray,
+        $9 AS travel_insurance:int;
+STORE project_insure INTO '/warehouse/tablespace/managed/hive/project/';</code></pre>
+<ol start="6" type="1">
+<li>데이터베이스 테이블을 만들 hive 스크립트 작성 : <code>[Linux] vi project.hive</code></li>
+</ol>
+<pre><code>create table project (
+        num int,
+        age int,
+        (이하 생략)</code></pre>
+<p>pig 스크립트에서 지정한 변수명과 동일하게 작성한다. 문자 자료형을 pig에서는 chararray로, hive에서는 string으로 설정하는 점이 다르다.</p>
+<pre><code>ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;</code></pre>
+<p>hive는 pig로 저장한 파일을 불러와 테이블을 생성한다. csv 파일은 쉼표(,)로 구분되어 있지만, pig로 변환하면서 탭(으로 바뀌었다. 스크립트를 실행한 후에 <code>hadoop fs -cat /warehouse/tablespace/managed/hive/project/*</code> 명령으로 파일 내용을 보면 탭으로 구분되어 있음을 확인할 수 있다.</p>
+<p>전체 코드</p>
+<pre><code>create table project (
+        num int,
+        age int,
+        employment_type string,
+        graduate_or_not string,
+        annual_income int,
+        family_members int,
+        chronic_disease_or_not int,
+        frequent_flyer string,
+        traveled_abroad string,
+        travel_insurance int)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t'
+STORED AS TEXTFILE;</code></pre>
+<ol start="6" type="1">
+<li>먼저 pig 스크립트 파일을 실행한다.: <code>[Linux] pig project.pig</code></li>
+<li>pig 스크립트가 잘 실행되어 csv 파일이 hive가 불러들을 수 있게 저장되었는지 확인: <code>hadoop fs -cat /warehouse/tablespace/managed/hive/project/*</code> -&gt; 탭으로 구분된 데이터가 보이지 않으면 경로를 잘못 지정했을 수 있으니 확인해서 스크립트를 수정 후 다시 실행한다.</li>
+</ol>
+<p><img src="images/hadoop01.png" class="img-fluid"></p>
+<ol start="8" type="1">
+<li>hive 스크립트 파일을 실행한다 : <code>[Linux] hive -f project.hive</code></li>
+</ol>
+</section>
+<section id="생성한-테이블-확인" class="level2">
+<h2 class="anchored" data-anchor-id="생성한-테이블-확인">생성한 테이블 확인</h2>
+<ol type="1">
+<li>hive로 들어가서 테이블이 만들어졌는지 확인한다. 새로 만든 테이블 이름은 project다.: <code>[hive] show tables;</code></li>
+</ol>
+<p><img src="images/hadoop02.png" class="img-fluid"></p>
+<ol start="2" type="1">
+<li>테이블 스키마를 출력한다.: <code>[hive] describe project;</code></li>
+</ol>
+<p><img src="images/hadoop03.png" class="img-fluid"></p>
+<ol start="3" type="1">
+<li>10개 데이터만 출력해본다.: `[hive] select * from project limit 10;</li>
+</ol>
+<p><img src="images/hadoop04.png" class="img-fluid"></p>
+</section>
+<section id="데이터-분석" class="level2">
+<h2 class="anchored" data-anchor-id="데이터-분석">데이터 분석</h2>
+<section id="데이터-개수-확인-hive-select-count-from-project" class="level3">
+<h3 class="anchored" data-anchor-id="데이터-개수-확인-hive-select-count-from-project">데이터 개수 확인: <code>[hive] select count(*) from project;</code></h3>
+<p><img src="images/hadoop05.png" class="img-fluid"></p>
+</section>
+<section id="타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null" class="level3">
+<h3 class="anchored" data-anchor-id="타겟에-null-존재-여부-확인-hive-select-from-project-where-travel_insurance-is-null">타겟에 null 존재 여부 확인: <code>[hive] select * from project where travel_insurance is null;</code></h3>
+<p><img src="images/hadoop06.png" class="img-fluid"></p>
+</section>
+<section id="null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null" class="level3">
+<h3 class="anchored" data-anchor-id="null이-대부분인-행-삭제-hivedelete-from-project-where-travel_insurance-is-null">null이 대부분인 행 삭제: <code>[hive]delete from project where travel_insurance is null;</code></h3>
+<p>Error: Error while compiling statement: FAILED: SemanticException [Error 10414]: Attempt to do update or delete on table default.project that is insert-only transactional (state=42000,code=10414)</p>
+<p>에러가 뜬다. 이를 수정하려 <code>/etc/hive/conf/hive-site.xml</code> 파일을 수정했더니 hiveserver가 실행되지 않는 사태 발생!!!</p>
+<p>pig로 대신하려 했으나 dump 실행하면 무한 retry 현상 발생!!!!</p>
+<p>결국 hortonworks 재설치</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "복사완료!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "복사완료!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

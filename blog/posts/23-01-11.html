@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="lazychoi">
+<meta name="dcterms.date" content="2023-01-11">
 
-<title>👀 – quarto-input8e43190c</title>
+<title>👀 - 23-01-11(수)</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed">
+<body class="docked nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -117,196 +119,111 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">23-01-11(수)</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">2022-12</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">저자</div>
+      <div class="quarto-title-meta-contents">
+               <p>lazychoi </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">공개</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">January 11, 2023</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse sidebar-navigation docked overflow-auto">
+    <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">목차</h2>
+   
+  <ul>
+  <li><a href="#하둡" id="toc-하둡" class="nav-link active" data-scroll-target="#하둡">하둡</a></li>
+  <li><a href="#하둡-문제점-개선" id="toc-하둡-문제점-개선" class="nav-link" data-scroll-target="#하둡-문제점-개선">하둡 문제점 개선</a></li>
+  <li><a href="#nosql" id="toc-nosql" class="nav-link" data-scroll-target="#nosql">NOSQL</a></li>
+  <li><a href="#기술-개념" id="toc-기술-개념" class="nav-link" data-scroll-target="#기술-개념">기술 개념</a></li>
+  <li><a href="#빅데이터-단계" id="toc-빅데이터-단계" class="nav-link" data-scroll-target="#빅데이터-단계">빅데이터 단계</a></li>
+  <li><a href="#하둡-설치" id="toc-하둡-설치" class="nav-link" data-scroll-target="#하둡-설치">하둡 설치</a></li>
+  </ul>
+</nav>
+</nav>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content quarto-banner-title-block" id="quarto-document-content">
 
 
 
-<p><a href="http://www.kocw.net/home/search/kemView.do?kemId=1163794">강의 보기</a></p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091427.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815091609.png" class="img-fluid" alt="| 800"> 이번 시간에 공부할 부분은 3단계 논리적 설계</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091638.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815091720.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092051.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092410.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092452.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092717.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092757.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092827.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815092836.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093124.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093137.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093225.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093325.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815093456.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<p><img src="Pasted image 20220815093910.png" class="img-fluid" alt="| 800"> 후보키로 ‘① 고객아이디 ② (고객이름, 주소)’ 를 꼽을 수 있으나 주소에 NULL이 포함될 수 있기 때문에 기본키에서는 제외한다.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094057.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094147.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094224.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094442.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094523.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094659.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815094910.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095025.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095150.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095319.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095353.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Pasted image 20220815095431.png" class="img-fluid figure-img"></p>
-<p></p><figcaption class="figure-caption">| 800</figcaption><p></p>
-</figure>
-</div>
+
+<section id="하둡" class="level2">
+<h2 class="anchored" data-anchor-id="하둡">하둡</h2>
+<ul>
+<li>HDFS : 하둡 분산 파일 시스템. 파일을 여러 대의 하드디스크(컴퓨터)에 나누어 저장</li>
+<li>Mapreduce : 병렬처리하게 하는 라이브러리. 자바로 만듦</li>
+</ul>
+</section>
+<section id="하둡-문제점-개선" class="level2">
+<h2 class="anchored" data-anchor-id="하둡-문제점-개선">하둡 문제점 개선</h2>
+<ul>
+<li>NOSQL : 비정형데이터베이스. 4종류(key-value, Column??, Graph, document)</li>
+<li>SPARK : 고속 메모리 처리 + 머신러닝 라이브러리 + 시각화 라이브러리 + SQL 인터페이스</li>
+</ul>
+</section>
+<section id="nosql" class="level2">
+<h2 class="anchored" data-anchor-id="nosql">NOSQL</h2>
+<ul>
+<li>스케일업 : cpu, ram 같은 하드웨어 추가</li>
+<li>스케일아웃 : 컴퓨터 추가 &lt;- NOSQL</li>
+</ul>
+<p>NOSQL만으로 분산 환경 구성 가능</p>
+</section>
+<section id="기술-개념" class="level2">
+<h2 class="anchored" data-anchor-id="기술-개념">기술 개념</h2>
+<ul>
+<li>RDBMS : ACID</li>
+<li>NOSQL : CAP</li>
+</ul>
+</section>
+<section id="빅데이터-단계" class="level2">
+<h2 class="anchored" data-anchor-id="빅데이터-단계">빅데이터 단계</h2>
+<p><img src="images/2023-01-11-18-21-29.png" class="img-fluid"></p>
+</section>
+<section id="하둡-설치" class="level2">
+<h2 class="anchored" data-anchor-id="하둡-설치">하둡 설치</h2>
+<ol type="1">
+<li>독립형:</li>
+<li>의사가상분산환경: 리눅스에 하둡 1개 설치 -&gt; 여러 개 하둡처럼 작동</li>
+<li>완전분산: 여러대 컴퓨터에 설치</li>
+</ol>
+<ul>
+<li>VirtualBox-6.1.18-142142-Win.exe</li>
+<li>ubuntu-20.04.2.0-desktop-amd64.iso</li>
+<li>HDP_3.0.1_virtualbox_181205.ova</li>
+</ul>
+<p>윈도우에 VirtualBox 설치 -&gt; 가상환경 4개 추가 후 각각 우분투 설치</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
