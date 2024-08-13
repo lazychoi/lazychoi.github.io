@@ -81,10 +81,18 @@ body {
 }
 
 #results li .meaning {
+    width: 100%;    /* 이미지 크기를 배경의 50%에 맞추기 위해 부모 크기 설정*/
+    height: 100%;   /* 이미지 크기를 배경의 50%에 맞추기 위해 부모 크기 설정*/
     font-size: 16px;
     color: #5f6368;
     margin-top: 5px;
     line-height: 150%;
+}
+
+.meaning img {
+    display: block;
+    width: 50%;    /* 이미지 자체 크기의 50%가 아니라 부모의 50% 크기로*/
+    height: auto;
 }
 
 #loadingMessage {
@@ -93,3 +101,4 @@ body {
     text-align: center;
     margin-top: 20px;
 }
+
