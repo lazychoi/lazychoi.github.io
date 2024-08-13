@@ -1,9 +1,1 @@
-/.quarto/
-/_site/
-.ipynb_checkpoints/
 .DS_Store
-docs/
-__pycache__/
-cache/
-MNIST/
-data/

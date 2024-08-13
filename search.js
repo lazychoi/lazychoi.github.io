@@ -21,10 +21,12 @@ function loadTermsFromJSON() {
 function searchTerms() {
     const query = document.getElementById('searchTerm').value.toLowerCase();
     const results = document.getElementById('results');
+    const copyright = document.getElementById('copyright');
     results.innerHTML = ''; // 결과 리스트를 초기화
 
     if (query === '') {
         results.style.display = 'none'; // 검색어가 없을 때 결과를 숨김
+        copyright.style.display = 'block'; 
         return;
     }
 
@@ -39,15 +41,35 @@ function searchTerms() {
     // 검색 결과를 DOM에 추가
     filteredTerms.forEach(t => {
         const li = document.createElement('li');
-        li.innerHTML = `
-            <span class="term">${t['기존용어']} (${t['원어']}) → <span class="easyTerm">${t['쉬운용어']}</span></span>
-            <div class="meaning">${t['뜻']}</div>
-        `;
+        if(t['원어'] == "" && t['쉬운용어'] == ""){
+            li.innerHTML = `
+                <span class="term">${t['기존용어']}</span>
+                <div class="meaning">${t['뜻']}</div>
+            `;
+        } else if(t['쉬운용어'] == ""){
+            li.innerHTML = `
+                <span class="term">${t['기존용어']}(${t['원어']})</span>
+                <div class="meaning">${t['뜻']}</div>
+            `;
+        } else if(t['원어'] == ""){
+            li.innerHTML = `
+                <span class="term">${t['기존용어']} → <span class="easyTerm">${t['쉬운용어']}</span></span>
+                <div class="meaning">${t['뜻']}</div>
+            `;
+        } else{
+            li.innerHTML = `
+                <span class="term">${t['기존용어']}(${t['원어']}) → <span class="easyTerm">${t['쉬운용어']}</span></span>
+                <div class="meaning">${t['뜻']}</div>
+            `;
+        }
 
         // 'results' 요소가 이미 다른 요소에 포함되어 있지 않은지 확인
         if (li.parentElement !== results) {
             results.appendChild(li); // li 요소를 results에 추가
         }
+
+        // 결과화면에서 copyright 감추기
+        copyright.style.display = 'none'; 
     });
 
     if (filteredTerms.length === 0) {
