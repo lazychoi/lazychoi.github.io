@@ -96,7 +96,7 @@ a {
 
 .meaning img {
     display: block;
-    width: 50%;    /* 이미지 자체 크기의 50%가 아니라 부모의 50% 크기로*/
+    width: 80%;    /* 이미지 자체 크기의 50%가 아니라 부모의 50% 크기로*/
     height: auto;
 }
 
