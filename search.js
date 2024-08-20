@@ -50,11 +50,11 @@ function searchTerms() {
 
     results.style.display = 'block'; // 검색어가 있을 때 결과를 표시
 
-    // 기존용어와 쉬운용어 모두 검색 대상으로 포함
+    // 용어와 쉬운용어 모두 검색 대상으로 포함
     const filteredTerms = terms.filter(t => 
         t.term.toLowerCase().includes(query) || 
         t.easyTerm.toLowerCase().includes(query)
-        // t['기존용어'].toLowerCase().includes(query) || 
+        // t['용어'].toLowerCase().includes(query) || 
         // t['쉬운용어'].toLowerCase().includes(query)
     );
 
@@ -84,22 +84,22 @@ function searchTerms() {
         }
         // if(t['원어'] == "" && t['쉬운용어'] == ""){
         //     li.innerHTML = `
-        //         <span class="term">${t['기존용어']}</span>
+        //         <span class="term">${t['용어']}</span>
         //         <div class="meaning">${t['뜻']}</div>
         //     `;
         // } else if(t['쉬운용어'] == ""){
         //     li.innerHTML = `
-        //         <span class="term">${t['기존용어']}(${t['원어']})</span>
+        //         <span class="term">${t['용어']}(${t['원어']})</span>
         //         <div class="meaning">${t['뜻']}</div>
         //     `;
         // } else if(t['원어'] == ""){
         //     li.innerHTML = `
-        //         <span class="term">${t['기존용어']} → <span class="easyTerm">${t['쉬운용어']}</span></span>
+        //         <span class="term">${t['용어']} → <span class="easyTerm">${t['쉬운용어']}</span></span>
         //         <div class="meaning">${t['뜻']}</div>
         //     `;
         // } else{
         //     li.innerHTML = `
-        //         <span class="term">${t['기존용어']}(${t['원어']}) → <span class="easyTerm">${t['쉬운용어']}</span></span>
+        //         <span class="term">${t['용어']}(${t['원어']}) → <span class="easyTerm">${t['쉬운용어']}</span></span>
         //         <div class="meaning">${t['뜻']}</div>
         //     `;
         // }
