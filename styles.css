@@ -108,13 +108,14 @@ a {
 }
 
 #copyright {
-    position: absolute;
-    bottom: 0rem;
+    /* position: absolute; */
+    /* bottom: 0rem; */
     max-width: 600px;
     color: #686869;
-    border-top: 1px solid #686869;
-    padding-top: 5px;
-    font-size: small;
+    /* border-top: 1px solid #686869; */
+    padding: 10px 10px;
+    font-size: medium;
+    line-height: 1.5;
 }
 
 #copyright > a > b {
