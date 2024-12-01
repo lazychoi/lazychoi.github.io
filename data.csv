@@ -34,6 +34,12 @@ T/R율;top-root ratio;;식물체에서 뿌리에 대한 지상부의 비율.
 WSY;① weaning pigs per sow per year ② weight sow year;① 모돈두당 연간이유두수 ② 모돈두당 연간출하중량	;	
 pH;;;산성, 중성, 염기성을 표현하는 수단. 수학적 정의는 수소이온 농도의 음의 로그값이다(-logH+). 용액의 산성도를 측정치로서 pH가 낮아질수록 용액은 더 산성이다. 로그 형태이기 때문에 pH가 한 단계 변한다는 것은 수소이온 농도가 10배 만큼 변한다는 것을 의미한다.
 pOH;;;용액의 수산화이온(OH^-) 농도
+가격결정력;價格決定力, price power;;<p>상품의 가격을 좌우하거나 자유롭게 판매가격을 결정할 수 있는 힘. </p><p>[동] 가격결정권(價格決定權)</p>
+가격정책;價格政策, price policy;;<p>정부의 정책적인 개입을 통해서 가격을 안정시키는 정책.</p>
+가격탄력성;價格彈力性, price elasticity of demand;;<p>가격의 변화율에 대한 수요량의 변화비율. 일반적으로 고급재의 가격탄력성은 크고, 축산물의 가격 탄력성은 작다.</p>
+가격패리티지수;price parity index;;<p>물가 상승과 연동하여 농축산물 가격을 산출할 때 사용하는 지수. 기준 연도의 농가 총 구입가격을 100으로 하여 비교 연도의 농가 총 구입가격 등락률을 지수로 나타낸 것이다.</p>
+가격효과;價格效果, price effect;;<p>어떤 재화의 가격 변화가 그 재화의 수요 또는 소비량에 미치는 효과. </p><p><br></p><p>한 재화의 가격이 하락하면 실질소득이 증가해 그 만큼 그 재화를 더 구입하게 되는 <strong>소득효과</strong>와 상대 가격의 변화에 의하여 그 재화를 더 구입하는 <strong>대체 효과</strong>로 구분할 수 있다. </p><p><br></p><p>가격효과 = 소득효과 + 대체 효과.</p>
+가경;假莖, pseudo-stem;;<p>(거짓 가, 줄기 경) 잎의 엽초가 나선형으로 중첩되어 만든 거짓줄기. 바나나에서 볼 수 있다. [동] 위경(<span style="color: rgb(102, 102, 102);">僞</span>莖)</p><p>[[pseudostemInBanana.jpeg]]</p><p>[[pseudostemCutInBanana.jpeg]]</p>
 가수 산화물, 수산화물;Hydroxide, Hydroxyl oxide;;<p>금속이온(양이온)과 수산화이온(OH<sup>-</sup>)이 결합하여 형성된 화합물로, 토양에서는 주로 알루미늄, 철, 망간 등의 금속이온이 수산화이온과 결합한 형태로 존재한다. 이들은 토양 내에서 양이온과 음이온을 흡착하는 교환체 역할을 한다.</p><p>
 pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</strong> 특성을 가져 토양 pH가 높아지면 음전하가 증가하여 양이온을 흡착하고 토양 pH가 낮아지면 양전하가 증가하여 음이온을 흡착한다.
 </p><p><br></p><p>고온다습한 열대 또는 아열대지역에서는 풍화 속도가 빠르고 비가 많이 내려 광물의 분해와 가용성 성분의 용탈이 쉽게 일어난다. 이런 기후조건에서는 규산염 점토광물까지도 분해되어 대부분의 규산은 용탈되고, 용해도가 낮은 산화철 Fe<sub>2</sub>O<sub>3</sub> 또는 산화알루미늄 Al<sub>2</sub>O<sub>3</sub> 등 2, 3산화물의 수산화물 Fe(OH)<sub>3</sub>, Al(OH)<sub>3</sub>가 남게된다. 
@@ -112,8 +118,9 @@ pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</st
 건답직파;乾畓直播;마른논 씨뿌리기;
 건마;乾麻;마른 삼;
 건못자리;乾못자리;마른 못자리, 건못자리;
+건물;乾物, dry matter;마른 물질;<p>식물체를 구성하는 성분 가운데 수분을 제외한 나머지. 건물의 95%는 유기화합물이며 5%가 무기화합물이다.</p>
 건물률;乾物率;마른 물질 비율;
-건물중;乾物重, Dry Weight;마른 무게;식물체에서 수분함량을 제외한 무게를 말하며 생체중의 5~20%에 해당
+건물중;乾物重, Dry Weight;마른 무게;<p>식물체에서 수분함량을 제외한 무게를 말하며 생체중의 5~20%에 해당. 신선한 식물체를 110℃의 건조기에서 24시간 이상 말린 후의 무게.</p>
 건사;乾飼;마른 먹이;
 건습구습도계;Psychrometer;;온도와 습도를 동시에 측정하도록 고안된 것으로 항상 물통에 물이 있어야 함. 건구 온도와 습구 온도로 상대습도를 측정할수 있으며 프리바, 호겐드론, 홀티맥스 등 대부분의 복합환경제어기에서 활용하고 있음
 건시;乾枾;곶감, 말린 감;
@@ -313,6 +320,7 @@ pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</st
 광가역현상;光可逆現狀;광변화;
 광강도;Light Intensity;;빛의 세기 정도. 광포화점의 수준에 따른 작물의 유형분류가 가능한데, 광포화점이 40klux 이상이면 강광형, 20~40klux는 중광형, 20klux는 약광형으로 분류됨
 광독지;鑛毒地;쇠독땅;
+광물성 원소;;;<p>N, P, K 등. 고분자 유기화합물의 구성성분으로서 토양에서 흡수되며 다양한 생리 현상을 조절한다.</p>
 광발아종자;光發芽種子;빛 발아 종자, 광발아종자;
 광산파;廣散播;전면 파종;
 광엽;廣葉;넓은 잎;
@@ -433,7 +441,7 @@ pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</st
 기형과;畸形果;기형 과일;
 기형수;畸形穗;기형 이삭;
 길경;桔梗;도라지;
-길항작용;拮抗作用;대항 작용;
+길항작용;拮抗作用;대항 작용;<p><span style="color: rgb(0, 0, 0);">서로&nbsp;반대되는&nbsp;두&nbsp;가지&nbsp;요인이&nbsp;동시에&nbsp;작용하여&nbsp;그&nbsp;효과를&nbsp;서로&nbsp;상쇄시키는&nbsp;일.&nbsp;심장&nbsp;박동을&nbsp;촉진하는 교감&nbsp;신경과&nbsp;이를&nbsp;억제하는&nbsp;부교감&nbsp;신경의&nbsp;작용,&nbsp;약물을&nbsp;병용한&nbsp;경우에&nbsp;서로&nbsp;약효를&nbsp;약화시키는&nbsp;작용&nbsp;따위가&nbsp;이에&nbsp;해당한다.&nbsp;약물,&nbsp;세균,&nbsp;근육,&nbsp;신경&nbsp;등에서&nbsp;볼&nbsp;수&nbsp;있다. [반] 상조작용</span></p>
 깻묵;;;기름을 짜고 남은 깨의 찌꺼기
 나라시;均し, ならし;고루 펴기, 고루 놓기;
 나맥;裸麥;쌀보리;
@@ -520,6 +528,7 @@ pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</st
 누관;淚管;눈물관;
 누낭;淚囊;눈물주머니;
 누수답;漏水畓;시루논;
+능동적 수송;active transport;;<p>세포막을 사이에 두고 농도가 낮은 쪽에서 높은 쪽으로, 즉 전기화학적 기울기에 역행하여 수송하는 것. 세포막에서 생체에너지인 ATP를 사용하여 막 양쪽의 농도 기울기를 거슬러 전기화학적 퍼텐셜이 낮은 쪽에서 높은 쪽으로 이온이나 당 등을 선택적으로 흡수하거나 배출하는 물질수송법. </p><p>[[2024-11-30-000027.png]]</p>
 다;茶;차;
 다년생;多年生;여러해살이;
 다년생초화;多年生草花;여러해살이꽃;
@@ -549,7 +558,7 @@ pH에 따라 표면전하가 변하는 <strong>변위전하(variable charge)</st
 단백뇨;蛋白尿;단백질오줌, 단백뇨;
 단소전정;短小剪定;짧게 가지치기;
 단수;斷水;물끊기;
-단순확산;simple diffusion;;<p>세포막을 사이에 두고 농도가 높은 쪽에서 낮은 쪽으로 분자들이 수송되는 것.</p>
+단순확산;simple diffusion;;<p>세포막을 사이에 두고 농도가 높은 쪽에서 낮은 쪽으로 분자들이 수송되는 것. </p>
 단시형;短翅型;짧은 날개꼴;
 단아;單芽;홑눈;
 단아삽;單芽揷;홑눈 꺾꽂이;
@@ -768,7 +777,7 @@ Si<sup>4+</sup>가 Al<sup>3+</sup>으로 치환되면 음전하 과잉으로 결
 - 몬모릴로나이트: 알루미나 8면체의 Al<sup>3+</sup>이 Mg<sup>2+</sup>(때로는 Fe<sup>2+</sup>)으로 동형치환된 것. 산성 백토, 벤토나이트(bentonite)의 주 원료.<br>
 - 베이델라이트(beidellite): 규산 4면체의 Si<sup>4+</sup>가 Al<sup>3+</sup>으로 동형치환된 것<br>
 [[2024-11-24-222010.png]]
-몰;mole;;
+몰;mole;;<p>1mol: 어떤 입자가 6.0221415 x 10<sup>23</sup>개 있을 때의 단위</p>
 몰농도;molarity;;
 몰랄농도;molality: Cm;;
 몽과;檬果;망고;
@@ -1053,9 +1062,11 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 불탈견아;不脫繭蛾;못 나온 나방;
 불포화용액;unsaturated solution;;용질이 용해도 미만으로 용해되는 용액
 브릭;Brick;사료덩이;
+비광물성 원소;;;<p>C, H, O. 광합성과 호흡작용에 이용되는 유기화합물의 기본 구성성분.</p>
 비래;飛來;날아옴;
 비래해충;飛來害蟲;(외국에서) 날아오는 해충;
 비료;肥料;거름, 비료;
+비료요소;;;<p>필요한 원소 중에서 토양 중의 자연함량으로는 부족하여 인공적으로 보급할 필요가 있는 원소.</p><ul><li>비료의 3요소: 질소, 인, 칼륨</li><li>비료의 4요소: 질소, 인, 칼륨, 칼슘</li></ul>
 비료의 3요소;;;<p>질소, 인, 칼륨</p>
 비료의 4요소;;;<p>질소, 인, 칼륨, 칼슘</p>
 비료의 5요소;;;<p>질소, 인, 칼륨, 칼슘, 마그네슘</p>
@@ -1068,6 +1079,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 비유;泌乳;젖나기;
 비육;肥育;살찌우기, 비육;
 비육양돈;肥育養豚;돼지살찌우기;
+비이동성 원소;;;<p>토양에서 흡수된 후 체내에서 잘 이동되지 않는 원소로서 나이든 잎에서 어린 잎으로 재순환이 잘 되지 않는다. <span style="color: rgb(230, 0, 0);">칼슘(Ca), 황(S), 철(Fe), 붕소(B), 구리(Cu)</span></p><p><br></p><p>※ 식물체 내에서의 이동성과 결핍 시의 재수송 경향을 토대로 한 무기원소의 분류</p><ul><li>이동성: N, K, Mg, P, Cl, Na, Zn, Mo. ⇒ 결핍 증상이 <strong>늙은 잎</strong>에서 잘 나타남</li><li>비이동성: Ca, S, Fe, B, Cu ⇒ 결핍 증상이 생육이 왕성한 식물체의 정단이나 <strong>어린잎</strong>에서 잘 나타남</li></ul>
 비장;脾臟;지라, 비장;
 비절;肥絶;비료 부족;
 비점;;끓는점;용액의 증기압이 대기압과 동일해지는 온도
@@ -1147,6 +1159,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 살서제;殺鼠劑;쥐약;
 살파;;;포장전면에 종자를 흩어 뿌리는 방법. 파종 노력이 적게 드나 제초 등의 관리 작업이 불편하다.
 삼중결합;triple bond;;
+삼투;滲透, osmosis;;<p>(스며들 삼, 꿰뚤 투)</p><p>반투과성 막(semipermeable membrane)을 통하여 물이 확산되는 현상. 농도가&nbsp;다른&nbsp;두&nbsp;액체를&nbsp;반투막으로&nbsp;막아&nbsp;놓았을&nbsp;때에,&nbsp;농도가&nbsp;낮은&nbsp;쪽에서&nbsp;농도가&nbsp;높은&nbsp;쪽으로&nbsp;용매가&nbsp;옮겨&nbsp;가는현상.&nbsp;용매가&nbsp;스며든&nbsp;결과&nbsp;두&nbsp;액체의&nbsp;농도는&nbsp;서로&nbsp;같게&nbsp;된다.</p>
 삼투성;渗透性;스밀성, 삼투성;
 삼투압;;;용매만이 통과할 수 있는 반투막을 사이에 두고 양편에 용질의 농도가 다른 용액이 존재할 때, 농도가 동일해질 때까지 농도가 낮은 쪽에서 농도가 높은 쪽으로 용매가 이동하는데 농도가 높은 용액에 압력을 가하면 용매가 이동하지 않는다. 용매가 이동하지 못하도록 하는 데 필요한 최소한의 압력을 삼투압이라 한다.
 삽목;揷木;꺾꽂이;(꽃을 삽) 식물의 가지, 줄기, 잎 따위를 자르거나 꺾어 흙 속에 꽂아 뿌리 내리게 하는 일.
@@ -1211,7 +1224,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 생초;生草;생풀;
 생태적 분류;ecological classification;;원산지나 온도, 광, 토양 등의 환경에 대한 반응 등 채소의 여러 가지 생태적 특성을 기준으로 하여 분류하는 방법이다. 그 채소의 기원지에 따라 서양 원산종과 동양 원산종으로 분류할 수가 있는데 고추, 호박, 토마토, 양배추 등은 서양에서 기원한 채소들이며, 배추, 파류 등은 동양에서 유래한 것들이다. 원산지에 따른 분류는 그 작물의 생리·생태적 특성을 이해하는 데 중요하다. 또한 각각의 채소들은 원산지 부근에서 오랫동안 이용되어 왔기 때문에 일부 채소는 관련 지역에서만 재배되고 있다.
 서강사료;薯糠飼料;겨감자먹이, 서강사료;
-서상층;鋤床層;쟁기밑층;
+서상층;鋤床層;쟁기밑층;<p>(호미 서, 평상 상)</p><p>작토의 바로 밑에 있는 층이며, 작토보다 부식이 적다.</p>
 서혜임파절;鼠蹊淋巴節;샅임파절, 서혜임파절;
 석답;潟畓;갯논;
 석분;石粉;돌가루;
@@ -1262,6 +1275,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 세지;細枝;잔 가지;
 세척;洗滌;씻기, 세척;
 세포간교;細胞間橋;세포다리;
+셀룰로오스;cellulose;;<p>식물의 세포벽을 구성하는 성분. 주성분이 단순다당류이며 산에는 약한 특성을 띠지만 물에는 녹지 않는 성질을 갖고 있다.</p>
 소각;燒却;태우기, 소각;
 소광;巢框;벌집틀;
 소국;小菊;작은 국화;
@@ -1309,7 +1323,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 쇄토;碎土;흙부수기;
 수간;樹間;나무사이;
 수견;收繭;고치따기;
-수경재배;水耕栽培;물가꾸기, 수경재배;
+수경재배;水耕栽培, hydroponics;물가꾸기, 수경재배;<p>토양 대신에 무기양분을 고루 갖춘 양액만을 이용하여 식물을 재배하는 것.</p>
 수고;樹高;나무키;
 수고병;穗枯病;이삭마름병;
 수과;瘦果;여윈 열매;
@@ -1318,6 +1332,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 수도이앙기;水稻移秧機;모심개;
 수도작;水稻作;벼농사;
 수동분무기;手動噴霧器;손뿜개, 수동분무기;
+수동적 수송;passive transport;;<p>무기양분이 세포막을 통과할 때 에너지가 필요하지 않은 단순확산과 촉진확산</p><p>[[2024-11-30-000027.png]]</p>
 수두;獸痘;짐승 마마;
 수란우;輸卵牛;인공수정 암소;
 수령;樹齡;나무나이;
@@ -1332,6 +1347,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 수병;銹病;녹병;
 수분;受粉;꽃가루받이;
 수분수;授粉樹;꽃가루받이나무;(가루 분) 다른 꽃의 꽃가루를 받을 수 있도록 섞어 심는, 품종이 다른 과실나무.
+수분퍼텐셜;water potential;;<p><span style="color: rgb(0, 0, 0);">생체막을&nbsp;포함하여&nbsp;반투막을&nbsp;사이에&nbsp;두고&nbsp;한쪽에는&nbsp;물,&nbsp;다른&nbsp;쪽에는&nbsp;삼투압을&nbsp;갖는&nbsp;용액이&nbsp;있을&nbsp;때,&nbsp;물&nbsp;쪽에서&nbsp;용액쪽으로&nbsp;발생하는&nbsp;압력의&nbsp;원동력. 식물체 내에서 물은 수분퍼텐셜이 높은 곳에서 낮은 곳으로 이동한다. 작물이 수분을 흡수하고 체내 이동을 거쳐 체외로 배출되는 과정이 수분퍼텐셜의 차이에 의해 일어난다.</span></p><p><span style="color: rgb(0, 0, 0);"><span class="ql-cursor">﻿﻿</span></span></p><p><span style="color: rgb(0, 0, 0);">단위는 bar 또는 Mpa(megapascal). 파스칼은 1m</span><sup style="color: rgb(0, 0, 0);">2</sup><span style="color: rgb(0, 0, 0);">에 균일하게 작용하는 1Newton의 힘이며, 1bar는 10</span><sup style="color: rgb(0, 0, 0);">5</sup><span style="color: rgb(0, 0, 0);">Pa에 해당한다.</span></p><p><br></p><p><span class="ql-formula" data-value="\Psi_w = \frac{\mu_w-\mu^{\circ}_w}{V_w}">﻿<span contenteditable="false">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Ψ</mi><mi>w</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>μ</mi><mi>w</mi></msub><mo>−</mo><msubsup><mi>μ</mi><mi>w</mi><mo lspace="0em" rspace="0em">∘</mo></msubsup></mrow><msub><mi>V</mi><mi>w</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">\Psi_w = \frac{\mu_w-\mu^{\circ}_w}{V_w}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.8333em; vertical-align: -0.15em;"></span><span class="mord"><span class="mord">Ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1514em;"><span class="" style="top: -2.55em; margin-left: 0em; margin-right: 0.05em;"><span class="pstrut" style="height: 2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.15em;"><span class=""></span></span></span></span></span></span><span class="mspace" style="margin-right: 0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right: 0.2778em;"></span></span><span class="base"><span class="strut" style="height: 1.4792em; vertical-align: -0.4451em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 1.0341em;"><span class="" style="top: -2.655em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right: 0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1645em;"><span class="" style="top: -2.357em; margin-left: -0.2222em; margin-right: 0.0714em;"><span class="pstrut" style="height: 2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.143em;"><span class=""></span></span></span></span></span></span></span></span></span><span class="" style="top: -3.23em;"><span class="pstrut" style="height: 3em;"></span><span class="frac-line" style="border-bottom-width: 0.04em;"></span></span><span class="" style="top: -3.5102em;"><span class="pstrut" style="height: 3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1645em;"><span class="" style="top: -2.357em; margin-left: 0em; margin-right: 0.0714em;"><span class="pstrut" style="height: 2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.143em;"><span class=""></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.7485em;"><span class="" style="top: -2.214em; margin-left: 0em; margin-right: 0.0714em;"><span class="pstrut" style="height: 2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em;">w</span></span></span><span class="" style="top: -2.931em; margin-right: 0.0714em;"><span class="pstrut" style="height: 2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∘</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.286em;"><span class=""></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.4451em;"><span class=""></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>﻿</span>﻿</span></p><ul><li><em style="color: rgb(36, 41, 46); background-color: rgb(246, 248, 250);">μ</em><sub style="color: rgb(36, 41, 46); background-color: rgb(246, 248, 250);">w: </sub>용액 중의 물의 화학퍼텐셜</li><li><em style="background-color: rgb(246, 248, 250); color: rgb(36, 41, 46);">μ</em>˚<sub style="background-color: rgb(246, 248, 250); color: rgb(36, 41, 46);">w: </sub>대기압 하, 같은 온도에서 순수한 물의 화학퍼텐셜</li><li>V<sub>w</sub>: 물의 부분몰용적(물 1몰의 부피, 18cm<sup>3</sup>/mol)</li></ul>
 수비;穗肥;이삭거름;
 수세;樹勢;나무자람새;
 수소 결합;hydrogen bond;;정전기에 의해 생기며 쌍극자-쌍극자 상호작용의 특별한 경우로 생각할 수 있다. 산소(O), 질소(N), 불소(F)와 같은 강한 음전하성 원자에 수소가 공유결합되어 있으면 극성결합으로 인해 수소는 부분적인 양전하를 띤다. 이때 수소 원자의 부분 양전하와 다른 분자의 부분 음전하(음이온) 사이의 쌍극자-쌍극자 힘(쌍극자-이온 힘)을 수소 결합이라고 한다. 수소결합은 '분자 간 힘'이다. O-H, N-H, F-H
@@ -1445,8 +1461,8 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 심재;心材;속재목;
 심지;芯止;순멎음, 순멎이;
 심층시비;深層施肥;거름 깊이 주기;
-심토;心土;속흙;
-심토층;心土層;속흙층;
+심토;心土, sub soil;속흙;<p><br></p>
+심토층;心土層;속흙층;<p>서상(鋤床) 밑의 하층으로 부식이 극히 적고 구조가 치밀하다. 심토가 너무 치밀하여 투수와 통기가 불량하면 과수 등의 뿌리가 깊게 뻗지 못하여 생육이 불량해진다. 논에서는 토양공기가 부족하여 유기물 분해가 억제되고 유해가스가 발생하며 경우에 따라서 지온이 낮아져 벼의 생육이 나빠진다.</p>
 심피;心皮, carpel;;암술을 구성하는 기본 단위. 암술머리(주두, stigma), 암술대(화주, style), 씨방(자방, ovary)의 세 부분으로 구성된다.<br><br>[[flower_structure1.png]]
 십자화과;十字花科;배추과;
 쌍극자;dipole;;양전하 말단과 음전하 말단을 모두 가지고 있는 결합. 물은 분자 구조가 구부러져 있는 물질이며 그 결합각은 104.3°이다. 그리고 전자가 두 결합에 불균등하게 배분된 상태로 공유되어 있으며, 이것이 CO_2의 경우에서처럼 상쇄되지는 않는다. 결과적으로 분자의 수소원자 쪽보다는 산소원자 쪽에서 결합 전자들이 발견될 확률이 더 높다.<br><br>[[water_structure.png]]
@@ -1680,6 +1696,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 완초;莞草;왕골;
 완충용액;buffer solution;;강산이나 강염기가 소량 첨가되었을 때 pH의 변화를 견디려는 경향
 완충제;buffer;;변화를 견뎌내는 물질
+완효성;緩效性;효과 느린;<p><br></p>
 왕대;王臺;여왕벌집, 왕대;
 왕봉;王蜂;여왕벌;
 왜성대목;倭性臺木;난장이바탕나무, 왜성대목;
@@ -1759,6 +1776,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 위황병;萎黃病;누른 오갈병, 위황병;
 유거수;流去水;;지표면을 따라 흐르는 물. 비가 내릴 때, 비탈진 토양이나 침투성이 낮은 토양에서는 그 양이 현저히 많아 토양 침식의 원인이 된다.
 유근;幼根;어린 뿌리;
+유기화합물;;;<p>하나 혹은 다수의 탄소가 주로 수소, 산소, 질소와 공유결합하여 이루어지는 광범위한 화합물의 종류</p>
 유당;乳糖;젖당, 유당;
 유대재배;有袋栽培;봉지재배;
 유두;乳頭;젖꼭지;
@@ -1791,7 +1809,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 유용종;乳用種;우유 생산종;
 유우;幼牛;젖먹이송아지;
 유우사;乳牛舍;젖소우리;
-유익원소;;;<p>식물의 성장에 유익한 작용을 하는 규소(Si), 나트륨(Na), 코발트(Co), 셀레늄(Se) 등.</p><p><br></p><ul><li>규소: 벼의 세포벽에 축적되어 줄기를 강화시킴. 비바람이나 병해충에 저항성 증대.</li><li>나트륨: 염생식물에 필요.</li><li>코발트: 질소고정 세균에 필요하여 콩과식물에 필수.</li><li>셀레늄: 면역력 강화.</li></ul>
+유익원소;beneficial element;;<p><strong>특정식물</strong>의 생육에 유익한 작용을 하는 규소(Si), 나트륨(Na), 코발트(Co), 셀레늄(Se) 등.</p><p><br></p><ul><li>규소: 벼의 세포벽에 축적되어 줄기를 강화시킴. 비바람이나 병해충에 저항성 증대.</li><li>나트륨: 염생식물의 삼투퍼텐셜 유지</li><li>코발트: 질소고정 세균에 필요하여 콩과식물에 필수.</li><li>셀레늄: 사료작물, 동물의 필수원소. 면역력 강화.</li></ul>
 유인제;誘引劑;꾀임약, 유인제;
 유제;油劑;기름약, 유제;
 유지;乳脂;젖기름;
@@ -1973,8 +1991,9 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 작용기작;作用機作;작용 원리;
 작조;作條;골타기;
 작조기;作條機;골타개;
-작토;作土;갈이흙;
+작토;作土, surface soil;갈이흙;<p>작물의 뿌리가 주로 발달하는 곳으로 계속 경운되는 층위이다.</p><p>[동] 경토(<span style="color: rgb(102, 102, 102);">耕土</span>)</p>
 작토심;作土深;겉층 토양 깊이;
+작토층;作土層, plow layer, cultivation layer;;<p>작물을 키우는 데 뿌리가 뻗어 나갈 수 있는 토양층. 부식이 많고, 흙이 검으며, 떼알의 형성도 좋다. 작물의 생육과 가장 밀접한 관계가 있기 때문에 깊이갈이[<span style="color: rgb(102, 102, 102);">深耕</span>]를 실시하고, 유기물을 충분히 주며, 토양산도를 재배작물에 맞게 교정하여 좋은 작토층이 깊게 형성되도록 해야 한다.</p><p>채소는 작토층이 얕은 편이고 과수는 깊다. </p>
 작형;作型, cropping type;가꿈꼴;재배방식, 재배 시기와 시설 사용 여부를 기준으로 구분하는 재배방식으로 보통재배, 조숙재배, 촉성재배, 반촉성재배, 억제재배로 분류한다.
 작황;作況;됨새, 작황;
 작휴재배;作畦栽培;이랑재배;
@@ -2156,6 +2175,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 정백률;精白率;백미 생산율;
 정부기부;頂部基部;끝부분, 밑부분;
 정선;精選;잘고르기;
+정수압;靜水壓;;<p><span style="color: rgb(0, 0, 0);">흐름이&nbsp;멈추어&nbsp;있는&nbsp;물속에서&nbsp;생기는&nbsp;압력.&nbsp;물속의&nbsp;한 점에&nbsp;작용하는&nbsp;압력은&nbsp;방향에&nbsp;관계없이&nbsp;같은&nbsp;크기이며,&nbsp;그 크기는&nbsp;물의&nbsp;밀도ㆍ중력&nbsp;가속도ㆍ깊이의&nbsp;곱과&nbsp;같다.</span></p>
 정식;定植;아주심기;
 정아;頂芽;끝눈, 마루눈;줄기나 가지의 끝에 달린 눈. 꽃, 잎 또는 줄기로 발달할 수 있다. <br>[[apical.png]]
 정아우세, 정부우세;頂芽優勢;;식물체에서 끝눈이 자라면 그 가지의 곁눈이 자라지 못하는 현상.
@@ -2348,6 +2368,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 질소과잉;窒素過剩;질소넘침;
 질소기아;窒素饑餓;질소부족;
 질소잠재지력;窒素潛在地力;질소 스민 땅심;
+집단류;集團流, mass flow, bulk flow;;<p><span style="color: rgb(0, 0, 0);">압력의&nbsp;기울기에&nbsp;따라&nbsp;물&nbsp;분자가&nbsp;집단으로 이동하는&nbsp;현상.&nbsp;압력퍼텐셜 또는 정수압(</span>靜水壓<span style="color: rgb(0, 0, 0);">)의 기울기 차이에 따라 일어나는 물의 이동. 물질의 이동은 이동하는 물질에 중력이나 압력과 같은 힘이 외부로부터 작용하기 때문에 압력 기울기에 따라 물질의 분자는 하나의 집단으로 </span><strong style="color: rgb(0, 0, 0);">같은 방향으로</strong><span style="color: rgb(0, 0, 0);"> 모두 함께 이동한다. 대표적인 예는 대류, 고무호스를 통한 물의 이동, 강물의 흐름, 강우에서 볼 수 있다. </span></p><p><br></p><p><span style="color: rgb(0, 0, 0);">물관부 조직의 통도세포에서 또는 물이 뿌리로 이동하는 식물에서 물의 일부는 집단류에 의하여 이동한다. 줄기의 물관부에 있는 수액은 유체역학적 장력, 뿌리로부터 지상부를 향하여 존재하는 정수압 또는 압력퍼텐셜의 기울기가 원인이 되는 집단류에 의해 식물의 물관부를 통하여 장거리 이동한다. 토양과 식물조직의 세포벽을 통하여 일어나는 물의 이동은 대부분 이에 속한다.</span></p><p><br></p>
 집단사육;集團飼育;모아기르기, 집단사육;
 집단재배;集團栽培;집단 가꾸기, 집단재배;
 집수정;集水井;물웅덩이;
@@ -2437,6 +2458,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 촉서;蜀黍;수수;
 촉성재배;促成栽培, forcing cultivation;속성재배;시설 내에서 생육의 전 기간을 가온이나 보온을 하면서 재배하는 방식으로서 수확기가 가장 빠르며 수익성도 그만큼 크다. 재배의 전 기간이 저온기이므로 남부의 온난한 지방이 난방비 절감 등에서 경영적으로 유리하다.
 촉진;觸診;만짐진단, 촉진;
+촉진확산;促進擴散, facilitated diffusion;;<p>생체막에서 무기양분이 운반체 단백질에 의해 농도나 전기화학적 퍼텐셜이 높은 쪽에서 낮은 쪽으로 이동하는 확산현상. 생체막의 운반체 단백질이 선택적으로 무기 양분과 결합하여 막을 가로질러서 물질을 수송한다.</p><p>전하를 띠고 있는 이온화된 무기양분이나 단백질, 탄수화물 등 크기가 큰 분자들은 세포막을 통한 단순확산으로 투과되지 않고, 막의 수송관단백질(channel protein)이나 운반체단백질(carrier protein)에 의해 수송된다. 수송관단백질은 주로 이온들을 빠르게 수송하는 것으로 알려져 있다. 세포막 바깥쪽에서 분자들과 결합한 운반체단백질은 3차적 구조가 변형되면서 그 분자들은 세포막 안쪽으로 수송된다. </p><p>[[2024-11-30-000027.png]]</p>
 총;蔥;파;
 총괄계획가제도;總括計劃家制度;도시 개발 전문가 제도;
 총생;叢生;무리지어 남, 총생;
@@ -2565,7 +2587,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 토양유실;Soil Erosion;;지표면의 토양이 물이나 바람에 의해 침식되어 원래의 위치에서 탈리되어 이동되는 현상
 토육;兎肉;토끼고기;
 토입;土入;흙넣기;
-토층;土層;흙층, 토층;
+토층;土層;흙층, 토층;<p>토양이 수직적으로 분화된 층위. 경작지에서는 작토(경토), 서상, 심토(하층토) 세 가지 토층으로 흔히 분류한다.</p>
 톱교배;top 交配;품종 간 교배;
 통기;通氣;바람트기, 통기;
 통상화;筒狀花;통꽃;
@@ -2632,7 +2654,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 폭립종;爆粒種;튀김씨, 폭립종;
 표충;瓢虫;무당벌레;
 표층시비;表層施肥;겉층 거름 주기;
-표토;表土;겉흙;
+표토;表土, top soil;겉흙;<p>농경지의 작토와 같은 부식이 풍부한 층위가 표면에만 얕게 형성되어 있는 것.</p>
 표피;表皮;겉껍질;
 표형견;俵形繭;땅콩형고치;
 풍건;風乾;바람말림, 풍건;
@@ -2654,7 +2676,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 피해경;被害莖;피해줄기, 피해경;
 피해립;被害粒;상한 낟알;
 피해주;被害株;피해포기, 피해주;
-필수원소;;;<p>식물의 생육에 꼭 필요한 원소로서 다음 3가지 기준을 만족시켜야 한다.</p><p><br></p><ul><li>원소가 결핍되었을 경우, 식물의 생활환(life cycle)이 완성되지 못한다.</li><li>원소의 기능이 특이적이고 다른 원소로 대체될 수 없어야 한다. 원소가 식물에 직접 작용해서 효과를 발휘해야 하며, 다른 원소에 대한 길항적 또는 상조적 작용 등의 간접적인 것은 포함되지 않는다.</li><li>원소가 식물의 생육에 필수적인 생체물질의 구성성분이거나 대사활동에 직접적으로 관련되어야 한다.</li></ul><p><br></p><p>다량원소(macro-element): 식물체 중의 함량이 % 수준. 탄소(C), 수소(H), 산소(O), 질소(N), 인(P), 칼륨(K), 칼슘(Ca), 마그네슘(Mg), 황(S). → 암기 Tip: CHO, NPK, CMS</p><p>미량원소(micro-element): 5~200mg/kg 수준으로 함유. 염소(Cl), 철(Fe), 망간(Mn), 아연(Zn), 구리(Cu), 몰르브덴(Mo), 붕소(B), 니켈(Ni) → 암기 Tip: 염소가 철망 아래 구멍으로 몰래 붕 뀌었니? BC, CF, MZ, MN</p>
+필수원소;必須元素 essential element;;<p>식물의 생육에 꼭 필요한 원소로서 다음 기준을 만족시켜야 한다.</p><p><br></p><ul><li>결핍되면 자신의 생활환(life cycle)을 완성할 수 없다.</li><li>식물체의 필수적인 성분(엽록소 등)의 구성성분이다.</li><li>기능과 효과면에서 다른 원소로 대체할 수 없다. </li><li>단순히 상호작용의 효과 때문에 요구되는 것이 아니다.</li></ul><p><br></p><p>식물체 내에서의 분포농도를 기준으로 30mmol/kg 이상이면 다량원소, 3mmol/kg 이하는 미량원소로 분류한다.</p><ul><li><strong>다량원소(macro-element)</strong>: 식물체 중의 함량이 % 수준. 탄소(C), 수소(H), 산소(O), 질소(N), 인(P), 칼륨(K), 칼슘(Ca), 마그네슘(Mg), 황(S). → 암기 Tip: CHO, NPK, CMS</li><li><strong>미량원소(micro-element)</strong>: 5~200mg/kg 수준으로 함유. 염소(Cl), 철(Fe), 망간(Mn), 아연(Zn), 구리(Cu), 몰르브덴(Mo), 붕소(B), 니켈(Ni) → 암기 Tip: 염소가 철망 아래 구멍으로 몰래 붕 뀌었니? BC, CF, MZ, MN</li></ul><p><br></p><p>[[essential_element.jpeg]]</p>
 하계파종;夏季播種;여름뿌림;
 하고;夏枯;더위시듦;
 하기전정;夏期剪定;여름가지치기;
@@ -2691,6 +2713,7 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 향일성;向日性;빛 따름성;
 향지성;向地性;땅굽성;
 헤르니아;Hernia;창자빠짐, 탈장;
+헤미셀룰로오스;hemicellulose;;<p>식물체의 세포벽에 존재하는 셀룰로오스를 제외한 다당류.</p>
 혈관;血管;핏줄, 혈관;
 혈구;血球;피톨, 혈구;
 혈뇨;血尿;피오줌, 혈뇨;
@@ -2764,9 +2787,10 @@ H<sub>2</sub>O + H<sub>2</sub>O ⇌ H<sub>3</sub>O<sup>+</sup> + OH<sup>-</sup><
 화피;花被, perianth;꽃껍질;식물의 꽃받침과 꽃잎을 합친 부분.
 화피편;花被片, perianth sepal, perianth lobe, perianth segment;;화피(花被)란 꽃받침과 꽃잎으로 구성 되어 있는데 꽃받침이 꽃잎 모양으로 되어 이 둘이 구별되지 않는 화피 부분.
 화학비료;化學肥料;화학거름, 화학비료;
+화학퍼텐셜;;;<p>어떤 반응 또는 이동에 이용될 수 있는 에너지의 측정값으로서 어느 물질 1g 분자량의 자유에너지. 상대적인 값으로서 주어진 상태에서의 한 물질의 퍼텐셜과 표준상태에서 같은 물질의 퍼텐셜과의 차이로 나타낸다. </p><p><br></p><p>단위는 joules/mol(1mol 당 에너지)이나 식물생리 분야에서는 사용하기 불편하여 수분퍼텐셜이라는 용어를 쓴다. </p>
 화형;花型;꽃모양;
 화훼;花卉;화초, 화훼;
-확산;擴散;퍼짐;
+확산;擴散, diffusion;퍼짐;<p>수분퍼텐셜의 기울기 차이에 의해 일어나는 물의 이동. 모든 물질의 구성분자는 절대온도 이상에서는 운동에너지를 가지고 움직임으로써 <strong>방향성 없이</strong> 서로 충돌하면서 평형상태를 유지하기 위해 분자들은 화학퍼텐셜이 높은 부위에서 낮은 부위로 확산된다.</p><p><br></p><p>온도가 높아지거나 용액에 압력을 주면 수분퍼텐셜이 증가되어 온도나 압력이 높은 쪽에서 낮은 쪽으로 확산된다. 용질입자를 용액에 첨가하거나 건조한 단백질과 당류입자와 같이 물과 결합하려고 하는 표면을 가진 기질이 존재하면 수분퍼텐셜이 상당히 낮아져서 물분자는 수분퍼텐셜의 기울기에 따라 용질이 첨가된 용액이나 단백질과 당류로 확산된다.</p>
 환금작물;環金作物;돈벌이작물, 환금작물;
 환모;渙毛;털갈이;
 환상박피;環狀剝皮;껍질돌려벗기기, 돌려벗기기;
