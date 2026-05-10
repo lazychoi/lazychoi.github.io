@@ -1,9 +1,6 @@
 let terms = [];
 
 // CSV 파일을 읽어오는 함수
-// search.js
-
-// TSV 파일을 읽어오는 함수
 function loadTermsFromCSV() {
     fetch('data.csv')
         .then(response => response.text())
@@ -12,7 +9,7 @@ function loadTermsFromCSV() {
             lines.forEach((line, index) => {
                 if (index === 0 || !line.trim()) return; // 첫 번째 라인(헤더)이나 빈 줄은 건너뜁니다.
                 
-                const values = line.split(';').map(value => value ? value.trim() : '');
+                const values = line.split('|').map(value => value ? value.trim() : '');
                 if (values.length >= 4) {  // 최소 4개의 값이 있는지 확인
                     terms.push({
                         term: values[0] || '',
@@ -36,11 +33,8 @@ function loadTermsFromCSV() {
         });
 }
 
-// ... 나머지 코드는 동일
-
 
 // 용어를 검색하는 함수
-// search.js
 function searchTerms() {
     const query = document.getElementById('searchTerm').value.toLowerCase();
     const results = document.getElementById('results');

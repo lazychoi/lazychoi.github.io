@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>한자 찾기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+KR:wght@700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #818cf8;
+      --accent-hover: #6366f1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      overflow: hidden;
+      /* Drag area for frameless window if enabled */
+      -webkit-app-region: drag;
+    }
+
+    .container {
+      -webkit-app-region: no-drag;
+      width: 100%;
+      max-width: 900px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 30px 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .input-group {
+      width: 100%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.2);
+      color: var(--text-main);
+      font-size: 18px;
+      outline: none;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+    }
+
+    input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .result-container {
+      width: 100%;
+      height: 400px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      align-items: start;
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 16px;
+      border: 1px solid var(--glass-border);
+      overflow-y: auto;
+      padding: 15px;
+      gap: 12px;
+      transition: all 0.3s ease;
+    }
+
+    /* Custom Scrollbar */
+    .result-container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .result-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .result-container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
+
+    .hanja-item {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 32px;
+      color: var(--accent);
+      text-shadow: 0 2px 10px rgba(129, 140, 248, 0.3);
+      text-align: center;
+      padding: 12px 5px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      animation: fadeInScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    .hanja-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(129, 140, 248, 0.2);
+    }
+
+    .hanja-item:active {
+      transform: translateY(0);
+    }
+
+    @keyframes fadeInScale {
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .status {
+      height: 24px;
+      font-size: 14px;
+      color: var(--text-muted);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+
+    .status.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .meaning-display {
+      font-size: 16px;
+      color: #fbbf24;
+      /* A nice amber/gold color for meaning */
+      text-align: center;
+      min-height: 24px;
+      margin-top: 10px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .meaning-display.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .toast {
+      position: absolute;
+      bottom: 100px;
+      /* Positioned above the status text */
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--accent);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 100;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(15%);
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h2>한글 → 한자</h2>
+
+    <div class="input-group">
+      <input type="text" id="koreanInput" placeholder="한글 입력 (예: 가관)" autocomplete="off">
+    </div>
+
+    <div id="resultList" class="result-container">
+    </div>
+
+    <div id="toast" class="toast">클립보드에 복사되었습니다!</div>
+
+    <div id="status" class="status">입력 대기 중...</div>
+    <div id="meaningDisplay" class="meaning-display"></div>
+  </div>
+
+  <script src="app.js"></script>
+
+</body>
+
+</html>
