@@ -1,20 +1,157 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>쉬운 농업 용어 검색</title>
-    <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
-    <div class="search-container">
-        <h1><a href="https://lazychoi.github.io/">농업 용어 사전</a></h1>
-        <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()">
-        <div id="loadingMessage">데이터를 로드하는 중입니다...</div>
-        <ul id="results"></ul>
-        <p id="copyright">이곳은 농업에 발을 내딛은 이들이 가장 힘들어하는 용어 학습을 위해 "알기 쉬운 농업 용어집(농촌진흥청, 2016)", "농업생명과학 용어대사전(류수노 외, 2015)"을 비롯한 <a href="references.html"><b>여러 책</b></a>을 참고하여 작성했습니다. 초보 농업인을 위해 지난한 작업을 해주신 분들께 깊이 감사드립니다. 하나하나 출처를 표시해야 하나 정리하고 익히기에도 벅차 그렇게 하지 못했습니다. 또한 학습용으로 만들었기에 저작권을 고려하지도 못했습니다. 머리 숙여 사죄드립니다. 이곳에 글이나 사진 등이 보여지기를 원치 않는 저작권자께서는 eduroad@gmail.com으로 연락주시면 바로 삭제하도록 하겠습니다.</p>
-    </div>
+    <title>내 앱 모음</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Sans+KR:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --card-bg: #ffffff;
+            --primary: #3b82f6;
+            --secondary: #10b981;
+        }
 
-    <script src="search.js"></script>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 60px 20px 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+
+        p.subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-decoration: none;
+            color: inherit;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card.farm::before {
+            background: var(--secondary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            font-size: 1rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 24px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="grid">
+            <a href="farm.html" class="card farm">
+                <div class="icon">🌱</div>
+                <h2 class="card-title">농업 용어 사전</h2>
+                <p class="card-desc">초보 농업인을 위한 알기 쉬운 농업 용어 검색 프로그램입니다.</p>
+            </a>
+
+            <a href="hanja.html" class="card">
+                <div class="icon">🔤</div>
+                <h2 class="card-title">한자 찾기</h2>
+                <p class="card-desc">한글을 입력하면 해당하는 한자와 뜻을 쉽게 찾아볼 수 있습니다.</p>
+            </a>
+        </div>
+    </div>
 </body>
+
 </html>

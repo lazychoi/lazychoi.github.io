@@ -163,3 +163,39 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 transition: box-shadow 0.3s ease;
 }
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    body {
+        background-color: white; 
+    }
+
+    .search-container {
+        margin-top: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 15px;
+        width: 100%;
+        max-width: none;
+        min-height: 100vh;
+    }
+
+    #searchTerm {
+        width: 100%;
+        top: 10px;
+        box-sizing: border-box;
+    }
+
+    #results li {
+        padding: 12px;
+    }
+
+    .search-container h1 {
+        font-size: 20px;
+        margin-bottom: 15px;
+    }
+
+    #copyright {
+        font-size: 14px;
+    }
+}
