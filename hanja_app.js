@@ -106,6 +106,41 @@ function findHanja(word) {
   });
 }
 
+/**
+ * 한자 문자열의 총 획수를 계산해 툴팁 텍스트를 반환합니다.
+ *
+ * 알고리즘:
+ * 1. Array.from()으로 문자열을 유니코드 안전하게 개별 문자 배열로 분리
+ *    (split('')은 보조 문자를 2개로 잘못 분리할 수 있어 Array.from 사용)
+ * 2. strokeMap에서 각 문자의 획수를 조회
+ * 3. 획수가 있으면 합산, 없으면 '?'로 표시
+ * 4. 단일 문자면 "12획", 복합 문자면 "총 22획 (朝 12 + 家 10)" 형식으로 반환
+ */
+function getStrokeInfo(hanja) {
+  const chars = Array.from(hanja); // 유니코드 안전 분리
+  let total = 0;
+  let hasUnknown = false;
+  const parts = chars.map(char => {
+    const count = strokeMap.get(char);
+    if (count !== undefined) {
+      total += count;
+      return `${char} ${count}`;
+    } else {
+      hasUnknown = true;
+      return `${char} ?`;
+    }
+  });
+
+  if (chars.length === 1) {
+    // 단일 한자: "12획" 또는 "?획"
+    return hasUnknown ? '획수 정보 없음' : `${total}획`;
+  } else {
+    // 복합 한자: "총 22획 (朝 12 + 家 10)"
+    const detail = parts.join(' + ');
+    return hasUnknown ? `총 ?획 (${detail})` : `총 ${total}획 (${detail})`;
+  }
+}
+
 input.addEventListener('input', () => {
   const word = input.value.trim();
 
@@ -141,9 +176,20 @@ input.addEventListener('input', () => {
     hanjas.forEach((itemObj, index) => {
       const item = document.createElement('div');
       item.className = 'hanja-item';
-      item.textContent = itemObj.hanja;
       // Stagger animation delay
       item.style.animationDelay = `${index * 0.05}s`;
+
+      // 한자 텍스트 노드
+      item.appendChild(document.createTextNode(itemObj.hanja));
+
+      // 획수 레이블: .hanja-item 안에 <span>으로 삽입
+      // CSS position:absolute (부모 .hanja-item 기준)로 한자 위에 표시
+      // hover는 CSS ".hanja-item:hover .stroke-label { opacity: 1 }"으로 처리
+      // → 외부 요소 위치 계산 불필요, overflow/stacking context 문제 없음
+      const label = document.createElement('span');
+      label.className = 'stroke-label';
+      label.textContent = getStrokeInfo(itemObj.hanja);
+      item.appendChild(label);
 
       item.addEventListener('click', async () => {
         try {
