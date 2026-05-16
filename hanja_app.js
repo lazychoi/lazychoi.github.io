@@ -8,66 +8,91 @@ let toastTimeout;
 const hanjaMap = new Map();
 const strokeMap = new Map();
 
-// Initialize the app by fetching the manifest and data files
+// 파일 하나를 fetch → 파싱 → hanjaMap에 추가
+async function fetchAndParseFile(file) {
+  const response = await fetch(`data/${file}`);
+  const arrayBuffer = await response.arrayBuffer();
+
+  // Auto-detect encoding: check for UTF-16LE BOM (FF FE)
+  const uint8Array = new Uint8Array(arrayBuffer);
+  let decoder;
+  if (uint8Array.length >= 2 && uint8Array[0] === 0xff && uint8Array[1] === 0xfe) {
+    decoder = new TextDecoder('utf-16le');
+  } else {
+    decoder = new TextDecoder('utf-8');
+  }
+
+  const text = decoder.decode(arrayBuffer);
+  text.split('\n').forEach(line => {
+    const parts = line.trim().split('|');
+    if (parts.length >= 2) {
+      const korean = parts[0];
+      const hanja = parts[1];
+      const meaning = parts[2] || '';
+      if (!hanjaMap.has(korean)) {
+        hanjaMap.set(korean, new Map());
+      }
+      hanjaMap.get(korean).set(hanja, meaning);
+    }
+  });
+}
+
 async function initApp() {
   try {
     statusText.textContent = '사전 데이터 불러오는 중...';
     statusText.classList.add('show');
 
-    // Fetch the list of text files
+    // manifest.json fetch
     const manifestResponse = await fetch('data/manifest.json');
     if (!manifestResponse.ok) {
       throw new Error('manifest.json을 찾을 수 없습니다. 배포 전 build.js를 실행했는지 확인하세요.');
     }
     const files = await manifestResponse.json();
 
-    // Fetch stroke data
-    try {
-      const strokesResponse = await fetch('data/strokes.json');
-      if (strokesResponse.ok) {
-        const strokesData = await strokesResponse.json();
-        for (const [char, count] of Object.entries(strokesData)) {
-          strokeMap.set(char, count);
-        }
-      }
-    } catch (e) {
-      console.warn('Failed to load strokes.json', e);
-    }
+    // ─────────────────────────────────────────────────────────────
+    // 1단계: strokes.json + 가장 작은 파일(h11ka.txt)을 먼저 로드
+    //        → 완료되는 즉시 입력창 활성화
+    // ─────────────────────────────────────────────────────────────
+    const PRIORITY_FILES = ['h11ka.txt']; // 크기가 작아 빨리 로드되는 파일
+    const remainingFiles = files.filter(f => !PRIORITY_FILES.includes(f));
 
-    // Fetch and parse each file
-    for (const file of files) {
-      const response = await fetch(`data/${file}`);
-      const arrayBuffer = await response.arrayBuffer();
-
-      // Auto-detect encoding: check for UTF-16LE BOM (FF FE)
-      const uint8Array = new Uint8Array(arrayBuffer);
-      let decoder;
-      if (uint8Array.length >= 2 && uint8Array[0] === 0xff && uint8Array[1] === 0xfe) {
-        decoder = new TextDecoder('utf-16le');
-      } else {
-        decoder = new TextDecoder('utf-8'); // Default to UTF-8
-      }
-
-      const text = decoder.decode(arrayBuffer);
-
-      text.split('\n').forEach(line => {
-        const parts = line.trim().split('|');
-        if (parts.length >= 2) {
-          const korean = parts[0];
-          const hanja = parts[1];
-          const meaning = parts[2] || '';
-
-          if (!hanjaMap.has(korean)) {
-            hanjaMap.set(korean, new Map());
+    // strokes + 우선순위 파일을 병렬로 fetch
+    const strokesPromise = fetch('data/strokes.json')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data) {
+          for (const [char, count] of Object.entries(data)) {
+            strokeMap.set(char, count);
           }
-          hanjaMap.get(korean).set(hanja, meaning);
         }
-      });
-    }
+      })
+      .catch(e => console.warn('Failed to load strokes.json', e));
 
-    statusText.textContent = '입력 대기 중...';
+    const priorityPromises = PRIORITY_FILES.map(f => fetchAndParseFile(f));
+
+    // 1단계 완료 대기
+    await Promise.all([strokesPromise, ...priorityPromises]);
+
+    // ── 입력창 즉시 활성화 ──
     input.disabled = false;
     input.focus();
+    statusText.textContent = `입력 대기 중... (나머지 사전 로딩 중)`;
+
+    // ─────────────────────────────────────────────────────────────
+    // 2단계: 나머지 파일들을 모두 병렬로 fetch (백그라운드)
+    // ─────────────────────────────────────────────────────────────
+    const remainingPromises = remainingFiles.map(f => fetchAndParseFile(f));
+
+    // 백그라운드 로딩 — 사용자는 이미 검색 가능
+    Promise.all(remainingPromises)
+      .then(() => {
+        statusText.textContent = '입력 대기 중...';
+      })
+      .catch(err => {
+        console.error('일부 사전 파일 로딩 실패:', err);
+        statusText.textContent = '일부 사전 파일 로딩 실패';
+      });
+
   } catch (error) {
     console.error(error);
     statusText.textContent = '데이터 로딩 실패: ' + error.message;
@@ -163,6 +188,6 @@ function showToast() {
 
 // Start loading data
 window.addEventListener('DOMContentLoaded', () => {
-  input.disabled = true; // Disable input until loaded
+  input.disabled = true; // Disable input until 1단계 완료
   initApp();
 });
