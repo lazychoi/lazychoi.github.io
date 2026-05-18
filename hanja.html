@@ -5,41 +5,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>한자 찾기</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Noto+Serif+KR:wght@700&display=swap"
-    rel="stylesheet">
+  <link rel="stylesheet" href="common.css">
   <style>
-    :root {
-      --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-      --glass-bg: rgba(255, 255, 255, 0.05);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --accent: #818cf8;
-      --accent-hover: #6366f1;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
+    /* ── hanja 전용 레이아웃 ── */
+    body {
+      height: 100vh;
+      overflow: hidden;
       padding: 0;
     }
 
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-main);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      overflow: hidden;
-      /* Drag area for frameless window if enabled */
-      -webkit-app-region: drag;
-    }
-
     .container {
-      -webkit-app-region: no-drag;
       width: 100%;
       max-width: 900px;
       background: var(--glass-bg);
@@ -54,6 +29,7 @@
       align-items: center;
       gap: 20px;
       position: relative;
+      margin-top: 16px;
     }
 
     h2 {
@@ -92,7 +68,7 @@
       color: var(--text-muted);
     }
 
-    /* 스크롤을 담당하는 래퍼: 툴팁이 잘리지 않도록 grid와 분리 */
+    /* ── 스크롤 래퍼 ── */
     .result-wrapper {
       width: 100%;
       height: 400px;
@@ -102,23 +78,10 @@
       border-radius: 16px;
       border: 1px solid var(--glass-border);
       transition: all 0.3s ease;
+      padding-top: 20px;
     }
 
-    /* Custom Scrollbar */
-    .result-wrapper::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    .result-wrapper::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .result-wrapper::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.2);
-      border-radius: 10px;
-    }
-
-    /* 그리드를 담당하는 컨테이너: overflow visible로 툴팁이 경계 밖으로 표시 */
+    /* ── 그리드 컨테이너 ── */
     .result-container {
       width: 100%;
       display: grid;
@@ -129,6 +92,7 @@
       gap: 12px;
     }
 
+    /* ── 한자 아이템 ── */
     .hanja-item {
       font-family: 'Noto Serif KR', serif;
       font-size: 32px;
@@ -143,26 +107,16 @@
       transition: all 0.2s ease;
       animation: fadeInScale 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
       position: relative;
-      /* 툴팁 위치 기준점 */
     }
 
-    /* 획수 레이블: 각 .hanja-item 안에 <span>으로 삽입, hover 시 CSS만으로 표시
-       - overflow 문제 없음: 아이템 내부에 있으므로 컨테이너 경계를 빗어나지 않음
-       - stacking context 문제 없음: position 부모 체인에 종속
-       - 첫 번째 줄 클리핑: result-wrapper에 padding-top을 줘서 툴팁이 내부에서 보이도록함 */
-    .result-wrapper {
-      padding-top: 20px;
-      /* 첫 줄 툴팁 공간 확보 */
-    }
-
+    /* ── 획수 레이블 ── */
     .stroke-label {
       position: absolute;
       bottom: calc(100% + 6px);
-      /* 한자 위 6px */
       left: 50%;
       transform: translateX(-50%);
       background: rgba(15, 23, 42, 0.92);
-      color: #fbbf24;
+      color: var(--amber);
       font-family: 'Inter', sans-serif;
       font-size: 11px;
       font-weight: 600;
@@ -204,6 +158,7 @@
       }
     }
 
+    /* ── 상태 / 뜻 / 토스트 ── */
     .status {
       height: 24px;
       font-size: 14px;
@@ -220,8 +175,7 @@
 
     .meaning-display {
       font-size: 16px;
-      color: #fbbf24;
-      /* A nice amber/gold color for meaning */
+      color: var(--amber);
       text-align: center;
       min-height: 24px;
       margin-top: 10px;
@@ -239,7 +193,6 @@
     .toast {
       position: absolute;
       bottom: 100px;
-      /* Positioned above the status text */
       left: 50%;
       transform: translateX(-50%) translateY(20px);
       background: var(--accent);
@@ -260,19 +213,19 @@
       opacity: 1;
     }
 
-    /* Mobile Responsiveness */
+    /* ── Mobile ── */
     @media (max-width: 600px) {
       body {
-        padding: 0;
         height: 100dvh;
       }
 
       .container {
         border-radius: 0;
         border: none;
-        height: 100%;
+        height: calc(100% - 46px);
         padding: 20px 15px;
         box-shadow: none;
+        margin-top: 0;
       }
 
       h2 {
@@ -309,6 +262,17 @@
 </head>
 
 <body>
+  <nav class="nav">
+    <a href="index.html" class="nav-link">
+      <span class="nav-icon">🏠</span> 홈
+    </a>
+    <a href="farm.html" class="nav-link">
+      <span class="nav-icon">🌱</span> 농업 용어
+    </a>
+    <a href="hanja.html" class="nav-link active">
+      <span class="nav-icon">📗</span> 한글(한자)
+    </a>
+  </nav>
 
   <div class="container">
     <h2>한글 → 한자</h2>
@@ -328,7 +292,6 @@
   </div>
 
   <script src="hanja_app.js"></script>
-
 </body>
 
 </html>

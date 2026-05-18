@@ -38,12 +38,10 @@ function loadTermsFromCSV() {
 function searchTerms() {
     const query = document.getElementById('searchTerm').value.toLowerCase();
     const results = document.getElementById('results');
-    const copyright = document.getElementById('copyright');
     results.innerHTML = '';
 
     if (query === '') {
         results.style.display = 'none';
-        copyright.style.display = 'block'; 
         return;
     }
 
@@ -92,8 +90,6 @@ function searchTerms() {
         if (li.parentElement !== results) {
             results.appendChild(li);
         }
-
-        copyright.style.display = 'none'; 
     });
 
     if (filteredTerms.length === 0) {
