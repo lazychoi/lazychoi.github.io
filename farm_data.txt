@@ -5,7 +5,7 @@ BT|biotecnology|생명공학|
 Bale||(압축)건초무더기|
 Binder||베어묶개, 바인더|
 Brick||사료덩이|
-Catheter||삽입기구, 삽입관|
+Catheter||삽입기구, 삽입관|[[catheter.png]]
 Cold chain system||저온유통체계|
 Cultivator||중경제초기|
 Ensilage||담근 먹이|
@@ -31,7 +31,7 @@ Shift suckling||수유제한|
 Silage||담근 먹이, 발효 사료, 매장 사료|
 Silo||사료저장장|
 T/R율|top-root ratio||식물체에서 뿌리에 대한 지상부의 비율.
-WSY|① weaning pigs per sow per year<br>② weight sow year|① 모돈두당 연간이유두수 <br>② 모돈두당 연간출하중량	|	
+WSY|① weaning pigs per sow per year<br>② weight sow year|① 모돈두당 연간이유두수 <br>② 모돈두당 연간출하중량|
 pH|||산성, 중성, 염기성을 표현하는 수단. 수학적 정의는 수소이온 농도의 음의 로그값이다(-logH+). 용액의 산성도를 측정치로서 pH가 낮아질수록 용액은 더 산성이다. 로그 형태이기 때문에 pH가 한 단계 변한다는 것은 수소이온 농도가 10배 만큼 변한다는 것을 의미한다.
 pOH|||용액의 수산화이온(OH^-) 농도
 가격결정력|價格決定力, price power||<p>상품의 가격을 좌우하거나 자유롭게 판매가격을 결정할 수 있는 힘. </p><p>[동] 가격결정권(價格決定權)</p>
@@ -419,7 +419,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 급이기|給飴器|먹이통|
 기공|氣孔|숨구멍|
 기관|氣管|숨통, 기관|
-기근|岐根, forking |곁뿌리|직근류 뿌리가 신장하다가 여러 갈래로 갈라지는 것 또는 그런 장해현상. 돌, 나뭇 조각, 단단한 점토층, 거친 퇴비 등과 만났을 때 발생한다. 해충의 피해를 입거나 뿌리가 비료에 직접 닿아 일부가 고사한 경우, 토양이 심하게 건조할 때도 일어난다. 뿌리가 긴 장근종에서 많이 발생한다.<br><br>[[pithiness.png]]
+기근|岐根, forking|곁뿌리|직근류 뿌리가 신장하다가 여러 갈래로 갈라지는 것 또는 그런 장해현상. 돌, 나뭇 조각, 단단한 점토층, 거친 퇴비 등과 만났을 때 발생한다. 해충의 피해를 입거나 뿌리가 비료에 직접 닿아 일부가 고사한 경우, 토양이 심하게 건조할 때도 일어난다. 뿌리가 긴 장근종에서 많이 발생한다.<br><br>[[pithiness.png]]
 기류|杞柳|고리버들|
 기별사양|期別飼養|단계별사양|
 기비|基肥|밑거름|씨를 뿌리거나 모종하기 전에 주는 거름.
@@ -433,7 +433,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 기형과|畸形果|기형 과일|
 기형수|畸形穗|기형 이삭|
 길경|桔梗|도라지|
-길항작용|拮抗作用|대항 작용|<p><span style="color: rgb(0, 0, 0)|">서로&nbsp|반대되는&nbsp|두&nbsp|가지&nbsp|요인이&nbsp|동시에&nbsp|작용하여&nbsp|그&nbsp|효과를&nbsp|서로&nbsp|상쇄시키는&nbsp|일.&nbsp|심장&nbsp|박동을&nbsp|촉진하는 교감&nbsp|신경과&nbsp|이를&nbsp|억제하는&nbsp|부교감&nbsp|신경의&nbsp|작용,&nbsp|약물을&nbsp|병용한&nbsp|경우에&nbsp|서로&nbsp|약효를&nbsp|약화시키는&nbsp|작용&nbsp|따위가&nbsp|이에&nbsp|해당한다.&nbsp|약물,&nbsp|세균,&nbsp|근육,&nbsp|신경&nbsp|등에서&nbsp|볼&nbsp|수&nbsp|있다. [반] 상조작용</span></p>
+길항작용|拮抗作用|대항 작용|서로 반대되는 두 가지 요인이 동시에 작용하여 그 효과를 서로 상쇄시키는 일. 심장 박동을 촉진하는 교감 신경과 이를 억제하는 부교감 신경의 작용, 약물을 병용한 경우에 서로 약효를 약화시키는 작용 따위가 이에 해당한다. 약물, 세균, 근육, 신경 등에서 볼 수 있다. [반] 상조작용
 깻묵|||기름을 짜고 남은 깨의 찌꺼기
 나라시|均し, ならし|고루 펴기, 고루 놓기|
 나맥|裸麥|쌀보리|
@@ -524,7 +524,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 다|茶|차|
 다년생|多年生|여러해살이|
 다년생초화|多年生草花|여러해살이꽃|
-다다기성|다다기性, female/male ratio ||식물줄기 특성의 하나로 마디가 많이 생기는 성질. 오이는 품종에 따라 마디 형성에 차이가 있는데 다다기성은 마디가 많고 암꽃 착생이 많아 많은 열매를 맺을 수 있다.
+다다기성|다다기性, female/male ratio||식물줄기 특성의 하나로 마디가 많이 생기는 성질. 오이는 품종에 따라 마디 형성에 차이가 있는데 다다기성은 마디가 많고 암꽃 착생이 많아 많은 열매를 맺을 수 있다.
 다다기오이|||중부지방에서 주로 재배하는 오이품종의 하나. 절성(節成)이 좋고 눈마다 오이가 열리는 특성이 있다. 취청오이보다 저온저항성은 약하지만 고온에는 강한 편이어서 봄재배와 가을재배를 하기에 적합하다. 열매의 색은 어깨 부위는 녹색이지만 중간부터는 흰색 내지 엷은 녹색을 띠는 반백색이고, 열매의 길이는 20~23cm 정도이다. 혹침이 대부분이지만 근래에 백침계 품종들도 속속 개발되고 있다.
 다독아|茶毒蛾|차나무독나방|
 다두사육|多頭飼育|무리기르기|
@@ -1017,7 +1017,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 분의법|粉衣法||종자 소독을 할 때 분제 또는 종자 처리제를 종자의 외피에다 골고루 묻혀서 살균하거나 살충하는 방법.
 분의처리|粉依處理|가루묻힘|
 분자|molecule||
-분자량|molecule weight| Mw|
+분자량|molecule weight|Mw|
 분제|粉劑|가루약, 분제|
 분주|分株|포기나눔|
 분지|分枝|가지벌기|
@@ -1133,7 +1133,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 살서제|殺鼠劑|쥐약|
 살파|||포장전면에 종자를 흩어 뿌리는 방법. 파종 노력이 적게 드나 제초 등의 관리 작업이 불편하다.
 삼중결합|triple bond||
-삼투|滲透, osmosis||<p>(스며들 삼, 꿰뚤 투)</p><p>반투과성 막(semipermeable membrane)을 통하여 물이 확산되는 현상. 농도가&nbsp|다른&nbsp|두&nbsp|액체를&nbsp|반투막으로&nbsp|막아&nbsp|놓았을&nbsp|때에,&nbsp|농도가&nbsp|낮은&nbsp|쪽에서&nbsp|농도가&nbsp|높은&nbsp|쪽으로&nbsp|용매가&nbsp|옮겨&nbsp|가는현상.&nbsp|용매가&nbsp|스며든&nbsp|결과&nbsp|두&nbsp|액체의&nbsp|농도는&nbsp|서로&nbsp|같게&nbsp|된다.</p>
+삼투|滲透, osmosis||<p>(스며들 삼, 꿰뚤 투)</p><p>반투과성 막(semipermeable membrane)을 통하여 물이 확산되는 현상. 농도가 다른 두 액체를 반투막으로 막아 놓았을 때에, 농도가 낮은 쪽에서 농도가 높은 쪽으로 용매가 옮겨 가는현상. 용매가 스며든 결과 두 액체의 농도는 서로 같게 된다.</p>
 삼투성|渗透性|스밀성, 삼투성|
 삼투압|||용매만이 통과할 수 있는 반투막을 사이에 두고 양편에 용질의 농도가 다른 용액이 존재할 때, 농도가 동일해질 때까지 농도가 낮은 쪽에서 농도가 높은 쪽으로 용매가 이동하는데 농도가 높은 용액에 압력을 가하면 용매가 이동하지 않는다. 용매가 이동하지 못하도록 하는 데 필요한 최소한의 압력을 삼투압이라 한다.
 삽목|揷木|꺾꽂이|(꽃을 삽) 식물의 가지, 줄기, 잎 따위를 자르거나 꺾어 흙 속에 꽂아 뿌리 내리게 하는 일.
@@ -1321,7 +1321,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 수병|銹病|녹병|
 수분|受粉|꽃가루받이|
 수분수|授粉樹|꽃가루받이나무|(가루 분) 다른 꽃의 꽃가루를 받을 수 있도록 섞어 심는, 품종이 다른 과실나무.
-수분퍼텐셜|water potential||<p><span style="color: rgb(0, 0, 0)|">생체막을&nbsp|포함하여&nbsp|반투막을&nbsp|사이에&nbsp|두고&nbsp|한쪽에는&nbsp|물,&nbsp|다른&nbsp|쪽에는&nbsp|삼투압을&nbsp|갖는&nbsp|용액이&nbsp|있을&nbsp|때,&nbsp|물&nbsp|쪽에서&nbsp|용액쪽으로&nbsp|발생하는&nbsp|압력의&nbsp|원동력. 식물체 내에서 물은 수분퍼텐셜이 높은 곳에서 낮은 곳으로 이동한다. 작물이 수분을 흡수하고 체내 이동을 거쳐 체외로 배출되는 과정이 수분퍼텐셜의 차이에 의해 일어난다.</span></p><p><span style="color: rgb(0, 0, 0)|"><span class="ql-cursor">﻿﻿</span></span></p><p><span style="color: rgb(0, 0, 0)|">단위는 bar 또는 Mpa(megapascal). 파스칼은 1m</span><sup style="color: rgb(0, 0, 0)|">2</sup><span style="color: rgb(0, 0, 0)|">에 균일하게 작용하는 1Newton의 힘이며, 1bar는 10</span><sup style="color: rgb(0, 0, 0)|">5</sup><span style="color: rgb(0, 0, 0)|">Pa에 해당한다.</span></p><p><br></p><p><span class="ql-formula" data-value="|Psi_w = |frac{|mu_w-|mu^{|circ}_w}{V_w}">﻿<span contenteditable="false">﻿<span contenteditable="false"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="normal">Ψ</mi><mi>w</mi></msub><mo>=</mo><mfrac><mrow><msub><mi>μ</mi><mi>w</mi></msub><mo>−</mo><msubsup><mi>μ</mi><mi>w</mi><mo lspace="0em" rspace="0em">∘</mo></msubsup></mrow><msub><mi>V</mi><mi>w</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">|Psi_w = |frac{|mu_w-|mu^{|circ}_w}{V_w}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height: 0.8333em| vertical-align: -0.15em|"></span><span class="mord"><span class="mord">Ψ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1514em|"><span class="" style="top: -2.55em| margin-left: 0em| margin-right: 0.05em|"><span class="pstrut" style="height: 2.7em|"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em|">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.15em|"><span class=""></span></span></span></span></span></span><span class="mspace" style="margin-right: 0.2778em|"></span><span class="mrel">=</span><span class="mspace" style="margin-right: 0.2778em|"></span></span><span class="base"><span class="strut" style="height: 1.4792em| vertical-align: -0.4451em|"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 1.0341em|"><span class="" style="top: -2.655em|"><span class="pstrut" style="height: 3em|"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right: 0.2222em|">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1645em|"><span class="" style="top: -2.357em| margin-left: -0.2222em| margin-right: 0.0714em|"><span class="pstrut" style="height: 2.5em|"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em|">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.143em|"><span class=""></span></span></span></span></span></span></span></span></span><span class="" style="top: -3.23em|"><span class="pstrut" style="height: 3em|"></span><span class="frac-line" style="border-bottom-width: 0.04em|"></span></span><span class="" style="top: -3.5102em|"><span class="pstrut" style="height: 3em|"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight"><span class="mord mathnormal mtight">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.1645em|"><span class="" style="top: -2.357em| margin-left: 0em| margin-right: 0.0714em|"><span class="pstrut" style="height: 2.5em|"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em|">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.143em|"><span class=""></span></span></span></span></span></span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathnormal mtight">μ</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height: 0.7485em|"><span class="" style="top: -2.214em| margin-left: 0em| margin-right: 0.0714em|"><span class="pstrut" style="height: 2.5em|"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight" style="margin-right: 0.0269em|">w</span></span></span><span class="" style="top: -2.931em| margin-right: 0.0714em|"><span class="pstrut" style="height: 2.5em|"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">∘</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.286em|"><span class=""></span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height: 0.4451em|"><span class=""></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span>﻿</span>﻿</span></p><ul><li><em style="color: rgb(36, 41, 46)| background-color: rgb(246, 248, 250)|">μ</em><sub style="color: rgb(36, 41, 46)| background-color: rgb(246, 248, 250)|">w: </sub>용액 중의 물의 화학퍼텐셜</li><li><em style="background-color: rgb(246, 248, 250)| color: rgb(36, 41, 46)|">μ</em>˚<sub style="background-color: rgb(246, 248, 250)| color: rgb(36, 41, 46)|">w: </sub>대기압 하, 같은 온도에서 순수한 물의 화학퍼텐셜</li><li>V<sub>w</sub>: 물의 부분몰용적(물 1몰의 부피, 18cm<sup>3</sup>/mol)</li></ul>
+수분퍼텐셜|water potential||<p>생체막을 포함하여 반투막을 사이에 두고 한쪽에는 물, 다른 쪽에는 삼투압을 갖는 용액이 있을 때, 물 쪽에서 용액쪽으로 발생하는 압력의 원동력. 식물체 내에서 물은 수분퍼텐셜이 높은 곳에서 낮은 곳으로 이동한다. 작물이 수분을 흡수하고 체내 이동을 거쳐 체외로 배출되는 과정이 수분퍼텐셜의 차이에 의해 일어난다.</p><p>단위는 bar 또는 Mpa(mega pascal). 파스칼은 1m<sup>2</sup>에 균일하게 작용하는 1Newton의 힘이며, 1bar는 10<sup>5</sup>Pa에 해당한다.</p>
 수비|穗肥|이삭거름|
 수세|樹勢|나무자람새|
 수소 결합|hydrogen bond||정전기에 의해 생기며 쌍극자-쌍극자 상호작용의 특별한 경우로 생각할 수 있다. 산소(O), 질소(N), 불소(F)와 같은 강한 음전하성 원자에 수소가 공유결합되어 있으면 극성결합으로 인해 수소는 부분적인 양전하를 띤다. 이때 수소 원자의 부분 양전하와 다른 분자의 부분 음전하(음이온) 사이의 쌍극자-쌍극자 힘(쌍극자-이온 힘)을 수소 결합이라고 한다. 수소결합은 '분자 간 힘'이다. O-H, N-H, F-H
@@ -1522,7 +1522,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 양열재료|釀熱材料|열 낼 재료|
 양유|羊乳|양젖|
 양육|羊肉|양고기|
-양이온 교환|cation exchange||<p>정전기적 인력에 의해 콜로이드 입자 표면에 흡착되어 있는 양이온이 용액 중의 양이온과 교환하는 현상.</p>[[2024-11-25-155322.png]]<ul><li> 교환성 K, Ca, Mg 등은 식물영양소의 주된 공급원이다.<li> 산성토양의 pH를 올리기 위한 석회요구량은 CEC가 클수록 커진다.<li> 흡착된 Ca<sup>2+</sup>, Mg<sup>2+</sup>, K<sup>+</sup>, Na<sup>+</sup>, NH<sub>4</sub><sup>+</sup> 이온들은 쉽게 용탈되지 않는다.<li> 토양에 비료로 시용된 K<sup>+</sup>, NH<sub>4</sub><sup>+</sup> 은 토양에서 이동성이 급격하게 감소한다.<li> 중금속Cd<sup>2+</sup>, Zn<sup>2+</sup>, Ni<sup>2+</sup>, Pb<sup>2+</sup>）들을 흡착하여 지하수 및 지표수로의 이동을 억제하여 오염 확산을 방지한다.</ul>양이온 교환 침입력, 양이온 교환 선택성|||<p>용액으로부터 콜로이드 입자표면으로 침입하는 경향. 용액 속의 양이온의 농도가 높을수록, 원자가가 클수록 토양에 흡착되기 쉽다. 원자가가 같으면 수화된 원자 직경이 작을수록 콜로이드 입자표면에 가까이 이동하여 강하게 흡착된다.</p><p><b>Al<sup>3+</sup> ~ H<sup>+</sup>  > Ca<sup>2+</sup> > Mg<sup>2+</sup> > K<sup>+</sup> = NH<sub>4</sub>  > Na</b></p><p>조건이 달라지면 이 순위는 달라진다. 예를 들어, 토양 용액 내 K<sup>+</sup> 농도가 매우 높아지면(예: 칼리질 비료 시비), 토양용액 속의 이온과 콜로이드 표면에 흡착된 이온의 화학평형이 깨진다. 따라서새로운 평형에 도달하기 위해 콜로이드의 Ca<sup>2+</sup>가 떨어지고 K<sup>+</sup>가 붙게된다.</p>양이온 교환용량|cation exchange capacity, CEC||일정량의 토양이나 교질물이 양이온을 흡착, 교환할 수 있는 능력. 건조 토양 1kg이 교환할 수 있는 양이온의 총량을 cmol<sub>c</sub>/kg 또는 cmol<sup>+</sup>/kg (토양 1kg당 centimol 단위의 전하량)로 나타낸다.(cmol<sup>+</sup>/kg은 cmol<sub>c</sub>/kg와 같은 의미이지만, 특별히 양이온(+)에 초점을 맞춘 표현임)<br><br>- cmol: centimol = 0.01 mol (100분의 1 몰)<br>- c: 전하(charge)<br>- mol<sub>c</sub>: 전하의 몰 수 
+양이온 교환|cation exchange||<p>정전기적 인력에 의해 콜로이드 입자 표면에 흡착되어 있는 양이온이 용액 중의 양이온과 교환하는 현상.</p>[[2024-11-25-155322.png]]<ul><li> 교환성 K, Ca, Mg 등은 식물영양소의 주된 공급원이다.<li> 산성토양의 pH를 올리기 위한 석회요구량은 CEC가 클수록 커진다.<li> 흡착된 Ca<sup>2+</sup>, Mg<sup>2+</sup>, K<sup>+</sup>, Na<sup>+</sup>, NH<sub>4</sub><sup>+</sup> 이온들은 쉽게 용탈되지 않는다.<li> 토양에 비료로 시용된 K<sup>+</sup>, NH<sub>4</sub><sup>+</sup> 은 토양에서 이동성이 급격하게 감소한다.<li> 중금속Cd<sup>2+</sup>, Zn<sup>2+</sup>, Ni<sup>2+</sup>, Pb<sup>2+</sup>）들을 흡착하여 지하수 및 지표수로의 이동을 억제하여 오염 확산을 방지한다.</ul>양이온 교환 침입력, 양이온 교환 선택성|||<p>용액으로부터 콜로이드 입자표면으로 침입하는 경향. 용액 속의 양이온의 농도가 높을수록, 원자가가 클수록 토양에 흡착되기 쉽다. 원자가가 같으면 수화된 원자 직경이 작을수록 콜로이드 입자표면에 가까이 이동하여 강하게 흡착된다.</p><p><b>Al<sup>3+</sup> ~ H<sup>+</sup>  > Ca<sup>2+</sup> > Mg<sup>2+</sup> > K<sup>+</sup> = NH<sub>4</sub>  > Na</b></p><p>조건이 달라지면 이 순위는 달라진다. 예를 들어, 토양 용액 내 K<sup>+</sup> 농도가 매우 높아지면(예: 칼리질 비료 시비), 토양용액 속의 이온과 콜로이드 표면에 흡착된 이온의 화학평형이 깨진다. 따라서새로운 평형에 도달하기 위해 콜로이드의 Ca<sup>2+</sup>가 떨어지고 K<sup>+</sup>가 붙게된다.</p>양이온 교환용량|cation exchange capacity, CEC||일정량의 토양이나 교질물이 양이온을 흡착, 교환할 수 있는 능력. 건조 토양 1kg이 교환할 수 있는 양이온의 총량을 cmol<sub>c</sub>/kg 또는 cmol<sup>+</sup>/kg (토양 1kg당 centimol 단위의 전하량)로 나타낸다.(cmol<sup>+</sup>/kg은 cmol<sub>c</sub>/kg와 같은 의미이지만, 특별히 양이온(+)에 초점을 맞춘 표현임)<br><br>- cmol: centimol = 0.01 mol (100분의 1 몰)<br>- c: 전하(charge)<br>- mol<sub>c</sub>: 전하의 몰 수
 양잠|養蠶|누에치기, 양잠|
 양접|揚接|딴자리접|
 양질미|良質米|좋은 쌀|
@@ -1715,7 +1715,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 원자가전자쌍 반발이론|valence shell electron pair repulsion theory||
 원자량|atomic mass||원자의 양성자 수와 중성자 수의 합계
 원자번호|||원자의 양성자 개수
-원자질량단위|atomic mass unit| amu|
+원자질량단위|atomic mass unit|amu|
 원종포|原種圃||원원종포에서 얻은 씨를 재배하여 고유한 품종의 원종을 골라내기 위하여 만든 포전.
 원추형|圓錐形|원뿔꼴|
 원형질막|plasma membrane||세포를 주변환경과 분리시켜 물리적으로 세포내외를 구분하여 경계를 짓는 막으로 특징적 구조와 다양한 기능을 가진다.
@@ -2124,7 +2124,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 정백률|精白率|백미 생산율|
 정부기부|頂部基部|끝부분, 밑부분|
 정선|精選|잘고르기|
-정수압|靜水壓||<p><span style="color: rgb(0, 0, 0)|">흐름이&nbsp|멈추어&nbsp|있는&nbsp|물속에서&nbsp|생기는&nbsp|압력.&nbsp|물속의&nbsp|한 점에&nbsp|작용하는&nbsp|압력은&nbsp|방향에&nbsp|관계없이&nbsp|같은&nbsp|크기이며,&nbsp|그 크기는&nbsp|물의&nbsp|밀도ㆍ중력&nbsp|가속도ㆍ깊이의&nbsp|곱과&nbsp|같다.</span></p>
+정수압|靜水壓||흐름이 멈추어 있는 물속에서 생기는 압력. 물속의 한 점에 작용하는 압력은 방향에 관계없이 같은 크기이며, 그 크기는 물의 밀도ㆍ중력 가속도ㆍ깊이의 곱과 같다.
 정식|定植|아주심기|
 정아|頂芽|끝눈, 마루눈|줄기나 가지의 끝에 달린 눈. 꽃, 잎 또는 줄기로 발달할 수 있다. <br>[[apical.png]]
 정아우세, 정부우세|頂芽優勢||식물체에서 끝눈이 자라면 그 가지의 곁눈이 자라지 못하는 현상.
@@ -2317,7 +2317,7 @@ pOH|||용액의 수산화이온(OH^-) 농도
 질소과잉|窒素過剩|질소넘침|
 질소기아|窒素饑餓|질소부족|
 질소잠재지력|窒素潛在地力|질소 스민 땅심|
-집단류|集團流, mass flow, bulk flow||<p><span style="color: rgb(0, 0, 0)|">압력의&nbsp|기울기에&nbsp|따라&nbsp|물&nbsp|분자가&nbsp|집단으로 이동하는&nbsp|현상.&nbsp|압력퍼텐셜 또는 정수압(</span>靜水壓<span style="color: rgb(0, 0, 0)|">)의 기울기 차이에 따라 일어나는 물의 이동. 물질의 이동은 이동하는 물질에 중력이나 압력과 같은 힘이 외부로부터 작용하기 때문에 압력 기울기에 따라 물질의 분자는 하나의 집단으로 </span><strong style="color: rgb(0, 0, 0)|">같은 방향으로</strong><span style="color: rgb(0, 0, 0)|"> 모두 함께 이동한다. 대표적인 예는 대류, 고무호스를 통한 물의 이동, 강물의 흐름, 강우에서 볼 수 있다. </span></p><p><br></p><p><span style="color: rgb(0, 0, 0)|">물관부 조직의 통도세포에서 또는 물이 뿌리로 이동하는 식물에서 물의 일부는 집단류에 의하여 이동한다. 줄기의 물관부에 있는 수액은 유체역학적 장력, 뿌리로부터 지상부를 향하여 존재하는 정수압 또는 압력퍼텐셜의 기울기가 원인이 되는 집단류에 의해 식물의 물관부를 통하여 장거리 이동한다. 토양과 식물조직의 세포벽을 통하여 일어나는 물의 이동은 대부분 이에 속한다.</span></p><p><br></p>
+집단류|集團流, mass flow, bulk flow||<p>압력의 기울기에 따라 물 분자가 집단으로 이동하는 현상. 압력퍼텐셜 또는 정수압(靜水壓)의 기울기 차이에 따라 일어나는 물의 이동. 물질의 이동은 이동하는 물질에 중력이나 압력과 같은 힘이 외부로부터 작용하기 때문에 압력 기울기에 따라 물질의 분자는 하나의 집단으로 <strong>같은 방향으로</strong> 모두 함께 이동한다. 대표적인 예는 대류, 고무호스를 통한 물의 이동, 강물의 흐름, 강우에서 볼 수 있다.</p><p>물관부 조직의 통도세포에서 또는 물이 뿌리로 이동하는 식물에서 물의 일부는 집단류에 의하여 이동한다. 줄기의 물관부에 있는 수액은 유체역학적 장력, 뿌리로부터 지상부를 향하여 존재하는 정수압 또는 압력퍼텐셜의 기울기가 원인이 되는 집단류에 의해 식물의 물관부를 통하여 장거리 이동한다. 토양과 식물조직의 세포벽을 통하여 일어나는 물의 이동은 대부분 이에 속한다.</p>
 집단사육|集團飼育|모아기르기, 집단사육|
 집단재배|集團栽培|집단 가꾸기, 집단재배|
 집수정|集水井|물웅덩이|
@@ -2811,9 +2811,2173 @@ pOH|||용액의 수산화이온(OH^-) 농도
 흡혈|吸血|피빨이|
 희석|稀釋|묽히기|
 희잠|姬蠶|민누에|
-전력구매계약|PPA||Power Purchase Agreement. 전력을 생산하는 발전사업자와 전력이 필요한 구매자(기업 또는 하이퍼스케일러)가 사전에 정해진 가격으로 일정 기간 동안 전력을 거래하기로 맺는 장기 계약으로, 보통 10년에서 20년 선의 장기 계약으로 진행되며 중간에 전력 시장 가격이 변동하더라도 계약된 고정 가격으로 거래를 지속하는 경우가 많다.
-생산세액공제|PTC||Production Tax Credit. 미국 정부가 친환경 에너지를 확산하기 위해 제공하는 대표적인 세금 감면 혜택으로 발전사업자가 태양광, 풍력 등 재생에너지를 통해 전력을 생산하고 이를 그리드(전력망)에 판매한 양(kWh)에 비례하여 세금을 깎아주는 제도.
-인플레이션 감축법|IRA||2022년 미국 정부가 통과시킨 법안으로, 이름은 인플레이션 감축이지만 실질적으로는 친환경 에너지와 기후변화 대응에 막대한 보조금을 지급하는 법.
-균등화발전비용|LCOE||Levelized Cost of Electricity. 발전소를 짓고 운영하는 데 드는 모든 비용(초기 건설비, 연료비, 유지보수비, 철거비 등)을 계산한 뒤, 이를 통해 생산한 총 전력량으로 나눈 '전기 1kWh를 만드는 데 드는 실제 총비용'입니다. 서로 다른 발전원(원전, 석탄, 태양광 등)의 경제성을 공평하게 비교할 때 쓴다.
-초고압직류송전|HVDC||High Voltage Direct Current. 전소에서 생산된 교류(AC) 전기를 고압의 직류(DC)로 변환시켜서 멀리 보내고, 받는 곳에서 다시 교류로 바꿔 공급하는 기술. 
-고체산화물 연료전지|SOFC||Solid Oxide Fuel Cell. 수소(또는 천연가스)와 산소의 화학 반응을 통해 직접 전기를 생산하는 고효율·친환경 발전기.
+PPA|Power Purchase Agreement, 전력구매계약||전력을 생산하는 발전사업자와 전력이 필요한 구매자(기업 또는 하이퍼스케일러)가 사전에 정해진 가격으로 일정 기간 동안 전력을 거래하기로 맺는 장기 계약으로, 보통 10년에서 20년 선의 장기 계약으로 진행되며 중간에 전력 시장 가격이 변동하더라도 계약된 고정 가격으로 거래를 지속하는 경우가 많다.
+PTC|Production Tax Credit, 생산세액공제||미국 정부가 친환경 에너지를 확산하기 위해 제공하는 대표적인 세금 감면 혜택으로 발전사업자가 태양광, 풍력 등 재생에너지를 통해 전력을 생산하고 이를 그리드(전력망)에 판매한 양(kWh)에 비례하여 세금을 깎아주는 제도.
+IRA|인플레이션 감축법||2022년 미국 정부가 통과시킨 법안으로, 이름은 인플레이션 감축이지만 실질적으로는 친환경 에너지와 기후변화 대응에 막대한 보조금을 지급하는 법.
+LCOE|Levelized Cost of Electricity, 균등화발전비용|| 발전소를 짓고 운영하는 데 드는 모든 비용(초기 건설비, 연료비, 유지보수비, 철거비 등)을 계산한 뒤, 이를 통해 생산한 총 전력량으로 나눈 '전기 1kWh를 만드는 데 드는 실제 총비용'입니다. 서로 다른 발전원(원전, 석탄, 태양광 등)의 경제성을 공평하게 비교할 때 쓴다.
+HVDC|High Voltage Direct Current, 초고압직류송전|| 전소에서 생산된 교류(AC) 전기를 고압의 직류(DC)로 변환시켜서 멀리 보내고, 받는 곳에서 다시 교류로 바꿔 공급하는 기술.
+SOFC|Solid Oxide Fuel Cell, 고체산화물 연료전지||수소(또는 천연가스)와 산소의 화학 반응을 통해 직접 전기를 생산하는 고효율·친환경 발전기.
+MLCC|Multi-Layer Ceramic Capacitors, 적층세라믹콘덴서||전자제품 내부에서 전기를 보관했다가 필요한 만큼 안정적으로 공급하는 핵심 부품이다. <p>전자회로가 작동할 때 전류가 불규칙하게 흐르면 부품이 망가지거나 오작동을 일으킬 수 있는데, MLCC가 일종의 '댐'이나 '완충지대' 역할을 하며 전류를 일정하게 조절해 준다. 스마트폰 1대에는 약 1,000개, 최신 전기차 1대에는 대략 1만 개에서 2만 개 이상의 MLCC가 들어간다. 스마트폰, 컴퓨터, 가전제품뿐만 아니라 자동차(전장), 우주항공 등 전기가 통하는 거의 모든 현대 전자제품에 필수적으로 쓰이기 때문에 '전자산업의 쌀'이라고 불린다.</p>
+COE|Cost of Equity|자기자본비용|주주들이 회사(또는 시장)에 주식 투자를 하면서 "최소한 이 정도 수익률은 나와야 한다"고 요구하는 기대수익률
+주식 수익률|Earning Yield||주식의 매력을 평가하는 간단한 지표로서 주가수익비율(PER)의 역수($\frac{1}{PER}$), 즉, 주가 대비 기업이 버는 돈의 비율을 뜻한다. KOSPI의 PER가 21.7배라면 주가수익비율은 1/21.7
+엽록체|chloroplast||진핵생물의 소기관으로 태양 에너지로부터 에너지를 흡수하여 이산화탄소($CO_2$)와 물($H_2O$)로부터 유기 화합물을 합성하는데 사용한다.
+식물형태학(植物形態學)|plant morphology||植(심을 식) + 物(물건 물) = 식물形(모양 형) + 態(모습 태) = 형태學(배울 학) = 학문→ 식물의 기관 및 이를 구성하는 조직과 세포의 종류, 모양, 구조, 배열, 체제, 발달 등에 관한 외부 형태와 내부 구조를 연구하는 식물학의 한 분과. plant: 고대영어 plante (라틴어 planta, 새싹·발바닥)morphology: 그리스어 morphē(형태) + logos(학문·말)→ 형태를 연구하는 학문
+자연사(自然史)|natural history||→ 자연 세계의 역사적 기록. natural: 라틴어 naturalis (natura, 본성·자연)history: 그리스어 historia (historein, 탐구하다)→ 자연을 탐구하여 기록한 학문
+기관학(器官學)|organography||器(그릇 기) + 官(벼슬 관) = 기관(기능을 가진 구조물)學(배울 학) = 학문→ 기관: 일정(一定)한 모양(模樣)과 생리(生理) 기능(機能)을 가지고 있는 생물체(生物體)의 부분(部分). 형태적(形態的)으로 독립(獨立)되어 있으며, 여러 개의 조직(組織)이 일정(一定)한 질서(秩序)로 결합(結合)되어 이루어지며 이들이 모여 기관계(器管系)를 형성(形成)하고 기관(器官) 혹은 기관계(器管系)가 모여 개체(個體)를 구성(構成)한다. organo-: 그리스어 organon (도구·기관)-graphy: 그리스어 graphein (쓰다·기록하다)→ 기관을 기록·기재하는 학문
+영양기관(營養器官)|vegetative organ||영양기관 營(경영할 영) + 養(기를 양) = 영양(몸을 기름)器(그릇 기) + 官(벼슬 관) = 기관→ 몸을 영양하는 기능을 하는 기관 (줄기·잎·뿌리 등). vegetative: 라틴어 vegetare (성장시키다·활성화하다)organ: 그리스어 organon (도구·기관)→ 식물의 성장과 생존을 담당하는 기관
+생식기관(生殖器官)|reproductive organ||生(날 생) + 殖(불릴 식) = 생식(자손을 낳아 퍼뜨림)器(그릇 기) + 官(벼슬 관) = 기관→ 번식에 관여하는 기관기관. reproductive: 라틴어 re-(다시) + producere (앞으로 이끌다)organ: 그리스어 organon (도구·기관)→ 다시 생산해내는 기관
+식물해부학(植物解剖學)|plant anatomy||植(심을 식) + 物(물건 물) = 식물解(풀 해) + 剖(쪼갤 부) = 해부(잘라서 분석함)學(배울 학) = 학문→ 식물을 잘라 내부 구조를 연구하는 학문. plant: 라틴어 planta (새싹)anatomy: 그리스어 ana-(위로·다시) + temnein(자르다)→ (몸을) 다시 잘라서 살펴보는 학문
+조직학(組織學)|histology||組(짤 조) + 織(짤 직) = 조직(짜여진 구조)學(배울 학) = 학문→ (세포들이) 짜여진 구조를 연구하는 학문;histo-: 그리스어 histos (직물·조직, 원래 '돛대'에서 유래)-logy: 그리스어 logos (학문)→ 조직(직물처럼 짜인 구조)을 연구하는 학문
+세포학(細胞學)|cytology||細(가늘 세) + 胞(태보 포) = 세포(작은 주머니 모양 구조)學(배울 학) = 학문→ 작은 주머니 구조(세포)를 연구하는 학문. cyto-: 그리스어 kytos (속이 빈 그릇·세포)-logy: 그리스어 logos (학문)→ 세포를 연구하는 학문
+미세구조(微細構造)|ultrastructure||微(작을 미) + 細(가늘 세) = 미세(매우 작고 가늘음)構(얽을 구) + 造(만들 조) = 구조→ 매우 작고 정밀한 내부 구조. ultra-: 라틴어 ultra (넘어서·초월한)structure: 라틴어 structura (짓다·쌓다, struere에서)→ 일반 현미경 수준을 초월한 미세한 구조
+개체생물학(個體生物學)|organismal biology||個(낱 개) + 體(몸 체) = 개체(하나의 독립된 생물체)生(날 생) + 物(물건 물) = 생물學(배울 학) = 학문→ 개별 생물체 수준에서 연구하는 학문. organismal: 그리스어 organon (도구·기관) → organismbiology: 그리스어 bios(생명) + logos(학문)→ 생물 개체(유기체)를 연구하는 생물학
+계통분류학(系統分類學)|systematics||系(이을 계) + 統(거느릴 통) = 계통(연결된 줄기·혈통)分(나눌 분) + 류(무리 류) = 분류學(배울 학) = 학문→ 진화적 계통 관계에 따라 생물을 분류하는 학문. systematics: 그리스어 systema (함께 세운 것, syn-+histanai)→ 생물을 체계적으로 배열·분류하는 학문
+상동성(相同性)|homology||相(서로 상) + 同(같을 동) = 상동(서로 같음)性(성질 성) = 성질·특성→ 진화적 기원이 같음에서 비롯된 구조적 유사성. homo-: 그리스어 homos (같은)-logy: 그리스어 logos (학문·관계)→ 기원이 같은 구조 사이의 대응 관계
+상사성(相似性)|analogy||相(서로 상) + 似(닮을 사) = 상사(서로 닮음)性(성질 성) = 성질·특성→ 기원과 무관하게 기능이나 형태가 유사한 성질. ana-: 그리스어 ana (위로·비례하여)-logy: 그리스어 logos (말·관계)→ 비례적으로 대응하는 유사 관계(기능적 유사)
+표현형(表現型)|phenotype||表(겉 표) + 現(나타날 현) = 표현(겉으로 드러남)型(틀 형) = 유형·형태→ 유전자가 겉으로 드러난 형질. pheno-: 그리스어 phainein (나타내다·빛나다)-type: 그리스어 typos (틀·인상)→ 겉으로 드러나는 형질의 유형
+자연선택(自然選擇)|natural selection||自(스스로 자) + 然(그러할 연) = 자연選(가릴 선) + 擇(고를 택) = 선택(가려서 고름)→ 자연환경이 적응한 개체를 '선택'하는 진화 메커니즘. natural: 라틴어 naturalis (본성에 따른)selection: 라틴어 selectio (se-따로 + legere 고르다)→ 자연이 적합한 것을 가려내는 과정
+적자생존(適者生存)|survival of the fittest||適(맞을 적) + 者(놈 자) = 적자(적합한 자)生(날 생) + 存(있을 존) = 생존(살아남음)→ 환경에 적합한 개체가 살아남는다는 원리. survival: 라틴어 super-(위에) + vivere(살다)fittest: fit(적합한)의 최상급→ 가장 적합한 것이 살아남음
+적응력(適應力)|adaptability||適(맞을 적) + 應(응할 응) = 적응(환경에 맞추어 반응함)力(힘 력) = 능력·힘→ 환경에 맞추어 반응하는 능력. adapt: 라틴어 adaptare (ad-~을 향해 + aptare 맞추다)-ability: 라틴어 -abilitas (할 수 있는 능력)→ 환경에 맞출 수 있는 능력
+선태식물(蘚苔植物)|bryophytes||蘚(이끼 선) + 苔(이끼 태) = 선태(이끼류)植(심을 식) + 物(물건 물) = 식물→ 이끼류 식물 (육상식물 중 가장 원시적). [ˈbraɪəˌfaɪt] bryo-: 그리스어 bryon (이끼·선태류)-phyte: 그리스어 phyton (식물, phyein 자라다에서)→ 이끼 형태의 식물
+석송식물(石松植物)|lycophytes||石(돌 석) + 松(소나무 송) = 석송(돌 위에 자라는 소나무 닮은 식물)植(심을 식) + 物(물건 물) = 식물→ 석송류 식물. lyco-: 그리스어 lykos (늑대) → Lycopodium(석송속, 늑대 발 모양)-phyte: 그리스어 phyton (식물)→ 석송속에 속하는 식물군
+양치식물(羊齒植物)|pteridophytes||羊(양 양) + 齒(이 치) = 양치(양의 이빨처럼 생긴 잎)植(심을 식) + 物(물건 물) = 식물→ 잎이 양의 이빨처럼 생긴 식물. [ˈtɛrɪdoʊˌfaɪt] pterido-: 그리스어 pteris (고사리, pteron 날개에서)-phyte: 그리스어 phyton (식물)→ 날개(깃털) 모양 잎을 가진 식물
+나자식물(裸子植物)|gymnosperms||裸(벗을 나) + 子(씨 자) = 나자(씨앗이 드러남)植(심을 식) + 物(물건 물) = 식물→ 씨앗(밑씨)이 열매 없이 노출된 식물. gymnos-: 그리스어 gymnos (벌거벗은·노출된)sperm: 그리스어 sperma (씨앗)→ 씨앗이 노출된(벌거벗은) 식물
+피자식물(被子植物)|angiosperms||被(입을 피) + 子(씨 자) = 피자(씨앗이 덮여 있음)植(심을 식) + 物(물건 물) = 식물→ 씨앗이 열매에 싸여 있는 식물. angio-: 그리스어 angeion (그릇·용기·씨방)sperm: 그리스어 sperma (씨앗)→ 씨앗이 그릇(씨방) 속에 담긴 식물
+유관속식물(維管束植物)|tracheophyte||維(이을 유) + 管(대롱 관) + 束(묶을 속) = 유관속(관다발)植(심을 식) + 物(물건 물) = 식물→ 물관·체관으로 이루어진 관다발을 가진 식물. [ˈtreikiəˌfait] tracheo-: 그리스어 tracheia (통로, 관pipe) → tracheia arteria(기도) → 라틴어 trachia → 물관(tracheary element)-phyte: 그리스어 phyton (식물)→ 물관(트라케아)을 가진 식물
+유관속조직(維管束組織)|vascular tissue||維(이을 유) + 管(대롱 관) + 束(묶을 속) = 유관속組(짤 조) + 織(짤 직) = 조직→ 물관부와 체관부로 이루어진 관다발 조직. vascular: 라틴어 vasculum (작은 그릇·혈관, vas그릇에서)tissue: 고대 프랑스어 tissu (짜인 것, tistre 짜다에서)→ 관(혈관처럼 생긴 통로)으로 짜인 조직
+표피계(表皮系)|epidermal system||表(겉 표) + 皮(가죽 피) = 표피(겉껍질)系(이을 계) = 계통·계(체계)→ 식물체 바깥을 덮는 껍질 조직계. epidermal: 그리스어 epi-(위에) + derma(피부·가죽)system: 그리스어 systema (함께 세운 것)→ 피부(껍질) 위를 덮는 조직 체계
+각피(角皮)|cuticle||角(뿔 각) = 단단하고 불투명한 물질(케라틴 연상)皮(가죽 피) = 껍질·막→ 식물 표면의 단단한 왁스질 보호막. cut-: 라틴어 cutis (피부·가죽)-icle: 라틴어 축소 접미사 -icula (작은)→ 피부 위의 얇은 보호막
+수피(樹皮)|bark||樹(나무 수) + 皮(가죽 피)→ 나무의 겉껍질. bark: 고대 노르드어 börkr (나무껍질)→ 나무 줄기의 외부 보호층
+유배식물(有胚植物)|embryophytes||有(있을 유) + 胚(밸 배) = 유배(배가 있음)植(심을 식) + 物(물건 물) = 식물→ 배(embryo)가 조직으로 보호되는 육상식물 전체. embryо-: 그리스어 embryon (자궁 안의 것, en-안에+bryein 자라다)-phyte: 그리스어 phyton (식물)→ 배(씨눈)를 가진 식물
+배(胚)|embryo||胚(밸 배) = 수정란이 발생하여 생긴 어린 생명체→ 수정 후 발생 초기의 어린 식물체. embryо: 그리스어 embryonen-(안에) + bryein (자라다·부풀다)→ 안에서 자라고 있는 것
+계통발생(系統發生)|phylogeny||系(이을 계) + 統(거느릴 통) = 계통(혈통·진화적 연결)發(필 발) + 生(날 생) = 발생→ 생물 계통(종)의 진화적 역사. [faiˈlɑdʒəni] phylo-: 그리스어 phylon (종족·부족)-geny: 그리스어 genesis (기원·발생)→ 종족의 기원과 진화적 역사
+선택압(選擇壓)|selection pressure||選(가릴 선) + 擇(고를 택) = 선택壓(누를 압) = 압력→ 자연선택이 작용하는 진화적 압력. selection: 라틴어 selectio (se-따로 + legere 고르다)pressure: 라틴어 pressura (누르는 힘, premere 누르다)→ 특정 형질을 선택하도록 작용하는 환경적 압력
+종자식물(種子植物)|seed plants, spermatophyte||種(씨 종) + 子(씨 자) = 종자(씨앗)植(심을 식) + 物(물건 물) = 식물→ 씨앗으로 번식하는 식물. seed: 고대영어 sǣd (씨앗, 라틴어 semen과 동근)plant: 라틴어 planta (새싹·발바닥) [ˈspɜrmətoʊˌfaɪt] sperma(그리스어: 씨앗) + phyton(그리스어: 식물)→ 씨앗을 맺는 식물
+녹조류(綠藻類)|green algae||綠(초록 록) + 藻(수초 조) = 녹조(녹색 조류)類(무리 류) = 무리·분류군→ 엽록소를 가진 녹색 조류. [ˈælˌdʒi, ˈælɡiː] singular alga [ˈælɡə] green: 고대영어 grēne (녹색)algae: 라틴어 alga (수초·해초) 복수형→ 녹색을 띠는 조류
+물관부(木部)|xylem||木(나무 목) + 部(나눌 부) = 목부→ 뿌리에서 흡수한 물과 무기물질을 위로 운반하는 조직. xylem: 그리스어 xylon (나무·목재)→ 나무(목질)로 이루어진 물 운반 조직
+체관부(篩部)|phloem||篩(체 사) + 部(나눌 부) = 사부 篩는 '체'를 뜻하며, 체처럼 구멍 뚫린 관→ 광합성 산물(유기물)을 운반하는 조직. [|floʊem]phloem: 그리스어 phloos (나무껍질·수액)→ 수액(영양물질)을 운반하는 조직
+형태발생(形態發生)|morphogenesis||形(모양 형) + 態(모습 태) = 형태發(필 발) + 生(날 생) = 발생→ 식물의 형태(구조)가 만들어지는 발생 과정. morpho-: 그리스어 morphē (형태)genesis: 그리스어 genesis (기원·발생)→ 형태가 만들어지는 발생 과정
+지상부(地上部) 또는 경엽부(莖葉部)|shoot system||莖(줄기 경) + 엽(잎 엽) + 部(부분 부)→ 땅 위의 식물체 부분 (줄기+잎+꽃 포함). shoot: 고대영어 scēotan (쏘다·빠르게 자라나다)→ 뿌리계를 제외한 모든 부분(줄기, 잎, 꽃, 씨, 열매, 곁눈, 끝눈, 가지, 덩굴손, 가시 등)
+유식물(幼植物)|seedling||幼(어릴 유) + 植(심을 식) + 物(만물 물)→ 어린 식물체, 발아 직후의 식물. Old English: sēd(씨앗) + -ling(작은 것을 나타내는 접미사) → 씨앗에서 막 자라난 작은 식물
+뿌리계(根系)|root system||根(뿌리 근) + 系(이어맬 계)→ 뿌리들이 서로 연결된 체계. Latin: radix / Old English: rōt(뿌리) → 땅속으로 뻗어 물·무기물을 흡수하는 기관 전체
+분열조직(分裂組織)|meristem||分(나눌 분) + 裂(찢을 열) + 組(짤 조) + 織(짤 직)→ 세포가 나뉘어 새 세포를 만드는 조직. 그리스어: meristos(나누다, merizein에서 유래) → 세포분열이 활발히 일어나는 조직
+정단분열조직(頂端分裂組織)|apical meristem||頂(꼭대기 정) + 端(끝 단) + 分裂(분열) + 組織(조직)→ 슈트·뿌리 끝에서 길이생장을 담당하는 분열조직. Latin: apex(꼭대기, 끝) + 그리스어: meristos(나눔) → 끝부분에 위치한 분열조직
+측재분열조직(側在分裂組織)|lateral meristem||側(곁 측) + 在(있을 재) + 分裂組織→ 줄기·뿌리 측면에 위치하여 부피생장을 담당. Latin: latus(옆, 측면) + 그리스어: meristos(나눔) → 측면에 위치하여 부피를 늘리는 분열조직
+유관속형성층(維管束形成層)|vascular cambium||維(벼리 유) + 管(대롱 관) + 束(묶을 속) + 形成(이룰 형성) + 層(층 층)→ 관다발을 형성하는 층. Latin: vasculum(작은 그릇·관) + cambium(교환하다, cambiare) → 물관부와 체관부를 새로 만들어내는 형성층
+코르크형성층(形成層)|cork cambium (phellogen)||形(이룰 형) + 成(이룰 성) + 層(층 층)→ 코르크조직을 만드는 층. [ˈfɛləˌdʒɛn] 포르투갈어: cortiça(코르크참나무 껍질) 그리스어: phellos(코르크) + genēs(만들다) → 코르크 조직을 생성하는 측재분열조직
+일기생장(一期生長)|primary growth||一(한 일) + 期(기간 기) + 生(날 생) + 長(길 장)→ 첫 번째 생장, 길이방향 생장. Latin: primarius(첫 번째의, primus에서) → 정단분열조직에 의한 길이생장
+이기생장(二期生長)|secondary growth||二(둘 이) + 期(기간 기) + 生長→ 두 번째 생장, 부피·두께방향 생장. Latin: secundarius(두 번째의, secundus에서) → 측재분열조직에 의한 부피(둘레)생장
+일기분열조직(一期分裂組織)|primary meristem||一期(일기) + 分裂(분열) + 組織(조직)→ 정단분열조직에서 직접 파생된 첫 번째 분열조직. Latin: primarius(첫 번째의) → 원표피·기본분열조직·전형성층을 포함하는 초기 분열조직
+원표피(原表皮)|protoderm||原(근원 원) + 表(겉 표) + 皮(가죽·껍질 피)→ 표피의 근원이 되는 조직. 그리스어: protos(첫째, 최초) + derma(피부, 껍질) → 표피를 형성하는 최초의 분열조직
+기본분열조직(基本分裂組織)|ground meristem||基(기초 기) + 本(근본 본) + 分열조직→ 기본조직의 근원이 되는 분열조직. Old English/Latin: grund(기초) + 그리스어: meristos → 피층·수 등 기본조직을 형성하는 분열조직
+전형성층(前形成層)|procambium||前(앞 전) + 形成層(형성층)→ 유관속형성층보다 앞서 존재하는 형성층. Latin: pro(앞에, 이전에) + cambium(교환하다) → 유관속조직을 형성하기 전 단계의 분열조직
+표피조직(表皮組織)|epidermis / epidermal tissue||表(겉 표) + 皮(껍질 피) + 組織(조직)→ 식물체 표면을 덮는 조직. [ˌɛpəˈdɜrmɪs]  그리스어: epi(위에, 바깥에) + derma(피부) → 식물체 바깥쪽을 덮는 보호 조직
+기본조직(基本組織)|ground tissue||基(기초 기) + 本(근본 본) + 組織(조직)→ 식물체의 기초를 이루는 조직(광합성·저장·지지). Old English: grund(기초, 바닥) → 표피·유관속 이외의 나머지 기본 조직
+조직계(組織系)|tissue system||組(짤 조) + 織(짤 직) + 系(이어맬 계)→ 조직들이 연결되어 이루는 상위 체계. Latin: textus(짜인 것, texere에서) → 동일 기능의 조직이 식물 전체에 걸쳐 연결된 계
+물관부(木部)|xylem||木(나무 목) + 部(부분 부)→ 나무질 성분의 관으로 이루어진 부분(물·무기물 수송). [ˈzaɪləm, ˈzaɪlɛm] 그리스어: xylon(나무, 목재) → 목질화된 세포로 구성된 물 수송 조직
+체관부(篩部)|phloem||篩(체 사) + 部(부분 부)→ 체(篩)처럼 구멍 뚫린 관으로 이루어진 부분(유기물 수송). [ˈfloʊˌɛm] 그리스어: phloios(나무껍질, 수피) → 유기양분을 체관을 통해 수송하는 조직
+피층(皮層)|cortex||皮(껍질 피) + 層(층 층)→ 표피 바로 안쪽의 층. Latin: cortex(껍질, 수피) → 표피와 유관속 사이의 기본조직 층
+수(髓)|pith||髓(골수·속 수)→ 줄기 중심부에 위치한 조직. Old English: piþa(속, 중심부) → 줄기 가장 안쪽의 유연한 기본조직
+유세포(柔細胞)|parenchyma cell||광합성·저장 담당
+후각세포(厚角細胞)|collenchyma cell||厚(두꺼울 후) + 角(모퉁이 각) + 細胞→ 모서리가 두꺼워진 세포벽을 가진 세포. [kəˈlɛŋkɪmə] 그리스어: kolla(풀, 아교) + enchyma(붓다) → 모서리 부분이 두껍게 굳어 지지 기능을 하는 세포
+후벽세포(厚壁細胞)|sclerenchyma cell||厚(두꺼울 후) + 壁(벽 벽) + 細胞→ 세포벽 전체가 균일하게 두꺼워진 세포. [sklɪˈrɛŋkəmə] 그리스어: skleros(딱딱한) + enchyma(붓다) → 균일하게 두꺼운 세포벽으로 식물을 지지·강화하는 세포
+주피(周皮)|periderm||周(두를 주) + 皮(껍질 피)→ 식물체를 둘러싸는 껍질. 2기생장 후 표피를 대체
+진정쌍자엽식물(眞正雙子葉植物)|eudicot (eudicotyledon)||眞正(참 진, 바를 정) + 雙(쌍 쌍) + 子葉(씨 자, 잎 엽) + 植物→ 진짜 두 장의 떡잎을 갖는 식물군. [ˌjuːdaɪˌkɒtɪˈliːdən] 그리스어: eu(진짜, 참된) + di(둘) + kotyledon(오목한 그릇→떡잎) → 진정한 두 떡잎을 가진 쌍자엽식물
+단자엽식물(單子葉植物)|Monocot (Monocotyledon)||單(홀 단) + 子葉(씨잎 자엽) + 植物→ 한 장의 떡잎을 가진 식물군. [ˌmɑnoʊˌkɑtəˈlidən, ˌmɑnəˌkɑtəˈlidən] 그리스어: monos(하나) + kotyledon(떡잎) → 떡잎이 한 장인 식물
+자엽(子葉)|cotyledon, 떡잎||子(씨 자) + 葉(잎 엽)→ 씨앗 속 배에 있는 잎
+잎맥(葉脈)|leaf vein||葉(잎 엽) + 脈(줄기·맥 맥)→ 잎 안의 관다발 줄기. Latin: vena(혈관, 맥) → 잎에서 물과 양분을 수송하는 유관속 줄기
+망상맥(網狀脈)|reticulate venation / net venation||網(그물 망) + 狀(모양 상) + 脈(맥 맥)→ 그물 모양으로 퍼진 엽맥 (쌍자엽식물 특징). [rɪˈtɪkjəlɪt] Latin: rete(그물) + vena(맥) → 그물처럼 연결된 엽맥 패턴
+평행맥(平行脈)|parallel venation||平(평평할 평) + 行(다닐 행) + 脈(맥 맥)→ 나란히 뻗은 엽맥 (단자엽식물 특징). Latin: parallēlus(나란한, 그리스어 parallēlos에서) → 잎맥이 나란히 평행하게 배열된 구조
+마디(節)|node||節(마디 절)→ 줄기에서 잎이 붙어 있는 부위. Latin: nodus(매듭, 마디) → 줄기에서 잎·눈이 붙는 지점
+마디사이(節間)|internode||節(마디 절) + 間(사이 간)→ 마디와 마디 사이의 줄기 구간. Latin: inter(사이) + nodus(마디) → 두 마디 사이의 줄기 부분
+끝눈(頂芽)|terminal bud / apical bud||頂(꼭대기 정) + 芽(싹 아)→ 줄기 끝에 있는 눈(芽). Latin: terminalis(끝의) + bud(Old English: budda, 싹) → 줄기 선단에 위치하여 길이생장을 담당하는 눈
+곁눈(側芽)|axillary bud / lateral bud||側(곁 측) + 芽(싹 아)→ 줄기 옆에 달리는 눈(腋芽, 액아라고도 함). [ˈæksəˌlɛri, ækˈsɪləri] Latin: axilla(겨드랑이) → 잎과 줄기 사이 겨드랑이에 위치한 눈 → 가지 분기나 꽃을 형성할 수 있는 측면의 눈
+수분(受粉)|pollination||受(받을 수) + 粉(가루 분)→ 꽃가루를 받아들임, 수분 과정. Latin: pollen(고운 가루) + -ation(행위를 나타내는 접미사) → 꽃가루가 암술머리에 도달하는 과정
+수정(受精)|fertilization||受(받을 수) + 精(정자 정)→ 정세포와 난세포가 결합하는 과정. [ˌfɜːrtləˈzeiʃən] Latin: fertilis(열매를 맺는, ferre에서) + -ization → 정세포와 난세포가 융합하여 수정란을 형성하는 과정
+중복수정(重複受精)|double fertilization||重(겹칠 중) + 複(겹칠 복) + 受精→ 두 번의 수정이 동시에 일어남 (피자식물 특유). Latin: duplus(두 배의) + fertilis → 피자식물에서 난세포+정세포, 극핵+정세포가 동시에 융합하는 현상
+밑씨(胚珠)|ovule||胚(배아 배) + 珠(구슬 주)→ 수정 후 씨앗이 될 구슬 같은 구조. [ˈɑvˌjul, ˈoʊˌvjul] Latin: ovulum(작은 알, ovum의 지소형) → 수정 후 종자가 되는 씨방 안의 구조물
+씨방(子房)|ovary||子(씨 자) + 房(방 방)→ 밑씨를 담고 있는 방(암술의 아랫부분). [ˈoʊvəri] Latin: ovarium(알이 있는 곳, ovum에서) → 밑씨를 보호하며 수정 후 열매로 발달하는 기관
+배낭(胚囊)|embryo sac||胚(배아 배) + 囊(주머니 낭)→ 배아를 포함한 주머니 모양의 자성배우자. 그리스어: embryon(배아) + Latin: saccus(자루, 주머니) → 난세포·극핵 등을 포함하는 자성배우자체
+배유(胚乳)|endosperm||胚(배아 배) + 乳(젖 유)→ 배아에게 영양을 공급하는 조직. 그리스어: endon(안에) + sperma(씨앗) → 씨앗 안에서 배의 발달을 위한 영양조직
+종피(種皮)|seed coat (testa)||種(씨 종) + 皮(껍질 피)→ 씨앗을 둘러싸는 껍질. Latin: testa(단단한 껍질, 항아리) → 씨앗을 외부환경으로부터 보호하는 외피
+광합성(光合成)|Photosynthesis||光(빛 광) + 合(합할 합) + 成(이룰 성)→ 빛을 이용해 유기물을 합성하는 과정. 그리스어: phos/photos(빛) + synthesis(함께 놓다, syn+tithenai) → 빛에너지를 이용해 이산화탄소와 물로 유기물을 합성
+일년생(一年生)|annual (plant)||一(한 일) + 年(해 년) + 生(날 생)→ 1년 안에 생활사를 마치는 식물. Latin: annualis(1년의, annus에서) → 한 해 안에 발아~결실~고사까지 마치는 식물
+이년생(二年生)|biennial (plant)||二(둘 이) + 年(해 년) + 生→ 2년에 걸쳐 생활사를 마치는 식물. Latin: biennium(2년, bi=둘 + annus=해) → 2년에 걸쳐 생활사를 완성하는 식물
+다년생(多年生)|perennial (plant)||多(많을 다) + 年(해 년) + 生→ 여러 해 동안 생장·번식을 반복하는 식물. Latin: perennis(영속하는, per=통하여 + annus=해) → 여러 해 동안 지속적으로 생육하는 식물
+초본(草本)|Herb / Herbaceous plant||草(풀 초) + 本(근본 본)→ 풀 성질의 식물. 목질화되지 않은 식물
+관목(灌木)|shrub||灌(물 댈 관, 여기서는 '덤불'의 의미) + 木(나무 목)→ 키가 작고 줄기가 여러 개로 갈라지는 목본식물. Old English: scrobb(관목, 덤불) → 키가 작고 여러 줄기로 분지하는 목본식물
+교목(喬木)|tree||喬(높을 교) + 木(나무 목)→ 키가 큰 나무. 원줄기가 뚜렷한 목본식물
+목본(木本)|woody plant||木(나무 목) + 本(근본 본)→ 나무 성질의 식물. 목질화된 줄기를 가진 식물
+발아구(發芽口)|Aperture (of pollen) / germination pore||發(필 발) + 芽(싹 아) + 口(입·구멍 구)→ 꽃가루관이 자라 나오는 구멍 (꽃가루 위의). Latin: apertura(열린 곳, aperire에서) → 꽃가루에서 꽃가루관이 출아하는 구멍
+가소성|plasticity||세포가 발생 과정에서 또는 분화 후 정체성을 바꿀 수 있는 능력
+간세포 성장인자|HGF||세포 이동·증식·분화를 촉진하는 성장인자
+갈락토시다아제|β-galactosidase||lacZ 유전자로 발현되는 효소로 젖당을 분해해 에너지원으로 사용 가능하게 함
+골격근|skeletal muscle||가로무늬·수의근
+골수이식|bone marrow transplantation||공여자의 골수를 수혜자에게 이식해 조혈줄기세포를 제공하는 기술
+극성|polarity||세포가 3차원 공간에서 비대칭적 구조를 갖는 성질
+기저막|basement membrane||상피세포 아래에 위치하는 단백질 기반 시트형 구조
+기형종|teratoma||여러 분화 계통의 세포를 포함하는 종양
+난할|cleavage||빠른 세포분열로 전체 크기 변화 없이 할구 증가가 일어나는 초기 배아 과정
+낭배형성|gastrulation||외배엽·중배엽·내배엽 세 배엽이 형성되는 발생 과정
+내배엽|endoderm||폐·간·췌장·장 등을 형성하는 배엽
+네프론|nephron||신장의 기능적 단위
+뉴클레오솜|nucleosome||DNA가 히스톤에 감긴 염색질 기본 단위
+다능성|multipotency||여러 세포 유형으로 분화할 수 있는 능력
+다클론성|polyclonal||여러 세포 집단에서 유래한 특성
+대립유전자|allele||유전자 자리에서 동일 기능을 가지나 형태가 다른 유전자 변이
+동형접합|homozygous||같은 대립유전자를 두 개 가진 상태
+만능성|pluripotency||거의 모든 세포로 분화 가능한 능력
+만능세포주|pluripotent cell line||다양한 세포로 분화 가능한 세포주
+모자이크 모델|mosaic model||난자 내 요인 분포가 배아 형질을 결정한다는 가설
+무척추동물|invertebrate||척추가 없는 동물
+미세 전이|micrometastasis||감지되지 않는 수준의 소규모 암 전이
+박테리오파지|bacteriophage||세균을 감염시키는 바이러스
+반응력|competence||세포가 특정 신호에 반응할 수 있는 능력
+반응성|induction competence||세포가 특정 유도 신호에 반응해 특정 운명을 취할 수 있는 상태
+발달생물학|developmental biology||개체 발생 연구 분야
+발생모세포|blastema||조직 재생 시 나타나는 미분화 세포 집합체
+발현|expression||유전자 정보가 RNA/단백질로 실행되는 과정
+배반엽|blastoderm||배아 표면의 단층 세포
+배반포|blastocyst||속세포덩이와 영양막으로 구성된 포유류 초기 배아
+배아 치사성|embryonic lethality||유전자 결함으로 배아가 생존하지 못하는 현상
+비대|hypertrophy||세포 크기 증가로 인한 조직 비대
+상동재조합|homologous recombination||상동 DNA 간의 교환 과정
+상실배|morula||16~32세포 초기 배아 덩어리
+상피|epithelium||신체 표면을 덮는 세포층
+생식세포|gamete||정자와 난자를 포함한 생식 세포
+생식질설|germ plasm theory||난자 내 물질이 분화를 결정한다는 이론
+생체지표|biomarker||특정 생리·병리 상태의 지표
+세대 간 유전|transgenerational inheritance||형질이 여러 세대에 걸쳐 전달되는 현상
+세포 고사|cell death||세포가 사멸하는 현상
+세포 운명|cell fate||세포가 이후 무엇이 될지 결정되는 과정
+세포 이론|cell theory||모든 생명체는 세포로 이루어짐을 의미하는 기본 개념
+세포 이식|cellular transplantation||한 개체·부위에서 다른 곳으로 세포를 옮기는 기술
+세포 치료|cell therapy||세포를 이용한 치료 방법
+세포골격|cytoskeleton||세포 형태 유지·수송·운동을 담당하는 단백질 구조물
+세포질|cytoplasm||핵을 제외한 세포 내부 영역
+속세포덩이|inner cell mass||배반포 내부에서 배아 본체가 되는 세포
+수렴과 확장|convergent extension||세포 이동을 통해 조직이 길어지는 발생 현상
+시냅스|synapse||신경세포 간 신호 전달 지점
+식균작용|phagocytosis||세포가 이물질을 포식하는 현상
+신경 발생|neurogenesis||신경세포 생성·분화 과정
+아교세포|glial cell||신경계의 지지·보조 세포
+아포토시스|apoptosis||프로그램된 세포 사멸
+암 줄기세포|cancer stem cell||종양 유지·재발·전이에 중요한 줄기세포성 세포
+암줄기세포 표지자|CSC marker||암줄기세포를 식별하는 표지자
+양파 껍질 조직|onion epidermis||현미경 실험에서 관찰되는 단층 상피조직
+역분화|dedifferentiation||분화된 세포가 미분화 상태로 되돌아가는 과정
+역유전학|reverse genetics||유전자를 먼저 변형한 뒤 기능을 밝히는 연구방식
+유도만능줄기세포|iPSC||체세포를 역분화시켜 얻은 만능 줄기세포
+유사분열|mitosis||염색체가 동일하게 분배되는 세포 분열
+유성생식|sexual reproduction||정자와 난자의 결합으로 개체 발생
+유전자 가위|CRISPR-Cas9||특정 DNA를 절단하여 교정하는 유전자 편집 기술
+유전자 변형 생물체|GMO||유전자 조작으로 형질이 변경된 생물체
+유전자 전달|gene delivery||유전자를 세포 내로 도입하는 과정
+유전자형|genotype||개체의 유전적 구성
+융합|fusion||두 세포가 하나로 합쳐지는 현상
+이배체|diploid||2세트의 염색체를 가진 세포
+이식편 거부반응|graft rejection||면역계가 이식 조직을 공격하는 현상
+인공합성 생물학|synthetic biology||새로운 생물학적 기능을 설계·구현하는 분야
+인구집단|population||같은 종의 개체 집단
+인지|recognition||세포·분자가 특정 신호를 식별하는 과정
+자가 재생|self-renewal||세포가 동일한 세포를 계속 생성하는 능력
+자라기축|patterning axis||배아의 전후·등배 방향 등 위치 정보를 결정하는 축
+재생|regeneration||손상된 조직이 기능을 회복하는 생물학적 과정
+재프로그래밍|reprogramming||세포 운명을 다시 설정하는 과정
+전사인자|transcription factor||DNA에 결합하여 유전자 발현을 조절하는 단백질
+전사체학|transcriptomics||세포의 RNA 전체를 분석하는 분야
+전지전능성|totipotency||모든 세포 유형과 태반까지 형성 가능한 능력
+전형성|classicality||전형적·기준적 특성
+절단면|cut surface||조직을 절단했을 때 보이는 단면
+접합자|zygote||정자와 난자가 수정해 형성된 최초의 세포
+정단 기저 극성|apical–basal polarity||세포의 위·아래 비대칭성
+정자 발생|spermatogenesis||성숙 정자를 생성하는 과정
+줄기세포 틈새|stem cell niche||줄기세포 분화·자가재생을 조절하는 미세환경
+줄기세포|stem cell||자가 재생 및 분화 능력을 가진 세포
+중배엽|mesoderm||근육·뼈·혈액·신장 등을 형성하는 배엽
+지방세포|adipocyte||지방 저장과 대사에 관여하는 세포
+진핵생물|eukaryote||핵막으로 둘러싸인 핵을 가진 생물
+체성줄기세포|adult stem cell||성체 조직의 줄기세포
+체세포 돌연변이|somatic mutation||체세포에서 일어나는 유전적 변화
+체세포|somatic cell||생식세포를 제외한 몸의 모든 세포
+체세포핵이식|SCNT||체세포 핵을 난자에 주입하는 복제 기술
+초파리 발생|Drosophila development||초파리의 발생 과정
+초파리|Drosophila||유전학·발생학 모델 생물
+촉매|enzyme||반응 속도를 높이는 생물학적 촉매
+치사형|lethal phenotype||개체 생존이 불가능한 표현형
+카스파제|caspase||세포 사멸을 유도하는 단백질 분해효소
+컷앤런|CUT&RUN||크로마틴 결합 단백질의 위치 분석 기술
+크로마토그래피|chromatography||물질 분리 분석 기술
+크로마틴|chromatin||DNA와 히스톤 단백질 복합체
+크리스퍼|CRISPR||유전자 편집 체계
+키메라|chimera||서로 다른 유전형 세포가 공존하는 개체
+타가 세포|heterologous cell||다른 개체에서 유래한 세포
+태반|placenta||모체와 태아 간 물질 교환 기관
+투과성|permeability||막을 통한 물질 이동 정도
+판데르발스 힘|van der Waals force||약한 분자 간 인력
+펩티드|peptide||아미노산 짧은 사슬
+포배|blastula||속이 빈 공 모양의 배아 단계
+포배강|blastocoel||포배 내부의 공동
+포배막|trophoblast||배반포 외층으로 태반 형성에 관여
+포유류 발생|mammalian development||포유류의 특징적 배아 발생 과정
+표지|marker||세포·조직을 구분하는 지표
+표피 성장인자|EGF||세포 증식을 유도하는 성장 인자
+표피|epidermis||생물체의 가장 바깥 세포층
+후성유전 조절자|epigenetic regulator||유전자 발현을 후성유전적으로 조절하는 인자
+흑색종|melanoma||멜라닌 세포 기원의 악성 피부암
+DNA 메틸화|DNA methylation||DNA 염기의 메틸화로 전사 억제에 관여
+1기 분열조직|primary meristem||정단 분열조직의 3 파생 분열조직(원표피, 전형성층, 기본분열조직).
+1기 생장|primary growth||줄기와 뿌리를 신장시키는 정단 분열조직에 의한 생장.
+1염색체성|monosomic||정상적인 2개의 염색체 대신 한 개의 염색체를 가지는 경우.
+1차 구조|primary structure||아미노산의 서열을 나타내는 단백질 구조의 단계.
+1차 면역반응|primary immune response||항원에 의해 처음으로 나타나는 후천성 면역반응으로 약 10~17일 후에 나타난다.
+1차 생산|primary production||주어진 기간에 생태계에서 독립영양생물에 의해 화학에너지(유기물 화합물)로 변환된 빛에너지의 양.
+1차 생산자|primary producer||독립영양생물. 보통 광합성 생물; 궁극적으로 모든 다른 단계의 생물을 부양하게 되는, 생태계의 영양 단계에 속하는 모든 독립영양생물.
+1차 세포벽|primary cell wall||어린 식물세포의 원형질막을 둘러싸는 비교적 얇고 유연한 층.
+1차 소비자|primary consumer||초식동물. 생태계의 영양 단계에서 식물이나 조류를 먹는 생물.
+1차 전사물|primary transcript||초기 RNA 전사물. 단백질을 암호화하는 유전자로부터 전사되었을 때 pre-mRNA(mRNA 전구체)라고도 한다.
+1차 전자수용체|primary electron acceptor||엽록체의 틸라코이드막이나 혹은 몇몇 원핵생물의 막에서, 반응중심 복합체의 한 쌍의 엽록소 a 분자와 반응중심을 공유하는 특수화된 분자. 이 특별한 쌍의 엽록소로부터 전자를 받아들인다.
+1차 천이|primary succession||본래 생물이 없으며 토양이 아직 형성되지 않은 지역에서 나타나는 생태천이의 유형.
+1차 총생산량(GPP)|gross primary production(GPP)||생태계의 1차 생산량의 총합.
+1회 결실|semelparity||단 한 번에 모든 자손을 낳는 생물의 생식. 빅뱅생식이라고도 부른다.
+1회 호흡량|tidal volume||동물이 한 번에 숨을 들이 마시고 내쉬는 양.
+2기 생장|secondary growth||목본류의 뿌리와 어린 싹을 비후시키는 측생 분열조직에 의한 생장.
+2당류|disaccharide||두 개의 단당류가 응축 반응 동안 형성된 글리코시드 결합에 의해 연결된 당류.
+2배엽성의|diploblastic||2개의 배엽을 가지는.
+2배체 세포|diploid cell||염색체 2조(2n)를 포함하고 있는 세포. 각 조는 양친 각각으로부터 물려받는다.
+2차 구조|secondary structure||펩타이드 결합 사이의 수소 결합의 형성으로 인해 단백질 폴리펩타이드 골격의 국소적이고 반복된 꼬임이나 접힘.
+2차 면역반응|secondary immune response||특정 항원에 2차로 혹은 계속된 노출에 의해 유도된 후천성 면역반응. 2차 면역반응은 1차 면역반응에 비해 보다 더 빠르며, 강도가 세고 오래 지속된다.
+2차 생산|secondary production||소비자의 음식물에 있는 화학에너지의 양으로, 주어진 시간 동안 새로운 생물량으로 전환된다.
+2차 세포내공생|secondary endosymbiosis||종속영양 진핵세포가 삼킨 광합성 원핵세포가 종속영양 진핵세포 내에서 공생관계를 유지하게 되는 진핵생물 진화의 과정.
+2차 세포벽|secondary cell wall||식물세포의 보호와 지지를 위해 여러 얇은 판이 겹쳐져 된 층에 축적된 강하고 내구성 있는 물질.
+2차 소비자|secondary consumer||초식동물을 먹는 육식동물.
+2차 신호전달자|second messenger||세포 내에서 수용기로부터 세포 활동이 일어나는 표적으로 신호를 전달하는 분자.
+2차 천이|secondary succession||존재하고 있는 군집이 어떤 교란에 의해 없어지지만 토양이나 기질은 그대로 남아 있는 장소에서 일어나는 천이 유형.
+2핵체|dikaryotic||한 세포에 각 양친으로부터 물려받은 두 개의 반수체 핵을 가진 균류의 균사체를 일컫는 말.
+3배엽성 동물|triploblastic||외배엽, 내배엽과 중배엽의 3개 배엽을 가지는 동물. 모든 좌우대칭 동물은 3배엽성이다.
+3염색체성|trisomic||정상적인 2개가 아닌 3개의 특정 염색체를 가지는 세포를 일컫는 용어.
+3자 암호|triplet code||폴리펩타이드 사슬의 아미노산을 지정하는 3개의 염기가 한 조로 이루어진 암호.
+3중 반응|triple response||줄기 신장의 둔화, 줄기의 비후, 줄기가 수평으로 자라게 하는 구부러짐을 포함하는 기계적 스트레스에 대한 식물 생장 전략.
+3차 구조|tertiary structure||소수성 상호작용, 이온 결합, 수소 결합과 이황화 결합이 관련된 곁사슬의 상호작용으로 인해 단백질 분자가 불규칙하게 배열된 구조.
+3차 소비자|tertiary consumer||다른 육식동물을 먹는 육식동물.
+4차 구조|quaternary structure||폴리펩타이드인 각 구성 단위체의 3차원 배열에 의해 규정되는 복잡한 단백질 집합체의 특정한 형태.
+5' 캡|5' cap||mRNA 전구체의 5' 말단에 있는 뉴클레오타이드에 첨가되는, 구아닌(G) 뉴클레오타이드의 변형.
+ABC 가설|ABC hypothesis||4가지 형태의 꽃 기관 형성을 결정하는 3가지 유형의 꽃 기관 결정 유전자에 의한 꽃 형성 모델.
+ATP 합성효소|ATP synthase||양성자가 확산하는 통로를 제공하는 다수의 막단백질 복합체. 인접한 전자전달계와 함께 화학삼투에 작용하여 수소 이온 농도 기울기의 에너지를 이용하여 ATP를 합성한다. ATP 합성효소는 진핵세포의 미토콘드리아 내막과 원핵세포의 세포막에 존재한다.
+A자리|A site||번역 동안 tRNA가 결합하는 3개의 리보솜 자리 중의 하나. A자리는 폴리펩타이드 사슬에 더해질 다음 번의 아미노산을 운반하는 tRNA가 결합하는 자리이다. (A는 aminoacyl tRNA를 의미한다.)
+B세포|B cell||골수에서 생성되고 성숙되는 림프구로, 체액성 면역의 효과기 세포로 된다.
+C3 식물|C3 plant||이산화탄소를 유기물로 고정하는 초기 단계에 캘빈회로를 이용하는 식물로, 처음 안정화된 물질로 3탄소물질을 형성한다.
+C4 식물|C4 plant||이산화탄소를 먼저 4탄소물질로 고정한 후 캘빈회로를 수행하는 식물.
+CAM 식물|CAM plant||건조한 지역에서 광합성을 할 수 있도록 적응된 크래슐산대사를 하는 식물유형. CO2는 밤 동안에 열려진 기공을 통해 들어가 유기물로 전환된 후 기공이 닫힌 낮 동안에 CO2를 방출하여 캘빈회로가 진행되게 한다.
+DNA 메틸화|DNA methylation||동물, 식물과 균류의 DNA 염기(보통 사이토신)에 메틸기의 존재. (또한 이 용어는 DNA 염기에 메틸기를 부착하는 과정을 언급하기도 한다.)
+DNA 미세배열 분석|DNA microarray assay||수천 개 유전자의 발현을 한 번에 감지하고 측정할 수 있는 방법. 다른 유전자를 나타내는 많은 수의 단일가닥 DNA 절편을 슬라이드 글라스 위에 고정시키고 표지된 cDNA 시료로 혼성화하여 검사한다.
+DNA 복제 원점|origin of replication||특별한 서열의 뉴클레오타이드로 이루어진 DNA 분자의 복제가 시작되는 지점.
+DNA 복제|DNA replication||DNA 분자가 복제되는 과정, DNA 합성이라고도 불린다.
+DNA 연결효소|DNA ligase||DNA 복제에 필수적인 연결효소로, 한 DNA 절편의 3' 말단(오카자키 절편과 같은)을 다른 절편(신장 중인 DNA 사슬과 같은)의 5' 말단으로 공유 결합하는 것을 촉매한다.
+DNA 염기서열 결정|DNA sequencing||유전자 또는 DNA 절편의 완전한 뉴클레오타이드 서열을 결정하는 것.
+DNA 조작 기술|DNA technology||DNA의 염기서열을 결정하고 조작하는 기술.
+DNA 중합효소|DNA polymerase||존재하는 DNA 사슬에 뉴클레오타이드를 첨가함으로써 복제분기점과 같은 새로운 DNA의 신장을 촉매하는 효소. 여러 종류의 DNA 중합효소가 있다. DNA 중합효소 III와 DNA 중합효소 I이 원핵생물의 DNA 복제에 중요한 역할을 한다.
+DNA 클로닝|DNA cloning||특정 DNA 절편을 여러 사본 생산하는 것.
+DNA 회전효소, 토포이소머레이스|topoisomerase||DNA 가닥을 절단하고 회전시키며 다시 연결하는 단백질. DNA 복제 동안 이 효소는 복제 분기점의 앞부분에서 이중 나선의 구조를 풀어주는 기능을 한다.
+DNA, 디옥시리보핵산|DNA(deoxyribonucleic acid)||디옥시리보오스당과 질소염기 아데닌(A), 구아닌(G), 사이토신(C)과 타이민(T)을 가지는 뉴클레오타이드 단량체로 이루어진, 보통 폴리뉴클레오타이드의 이중 나선 가닥인 핵산 분자. 복제를 할 수 있으며 세포 단백질의 고유 구조를 결정한다.
+E자리|E site||번역 동안 리보솜의 tRNA 결합자리 3개 중 하나. E 자리는 리보솜에서 tRNA가 아미노산을 내려놓고 떠나는 자리이다. E는 exit을 의미한다.
+F 인자|F factor||세균에서 DNA를 공여체에서 수용체로 이동시키는 접합을 수행하는 선모를 형성하는 능력을 부여하는 DNA 부분. F 인자는 플라스미드 형태로 존재하거나 세균 염색체에 삽입되어 존재한다.
+F 플라스미드|F plasmid||F 인자의 플라스미드 형태.
+F1 세대|F1 generation||일련의 유전교배에서 첫 번째(잡종) 자손.
+F2 세대|F2 generation||F1 세대의 잡종의 교배로 태어난 자손.
+G 단백질|G protein||G 단백질 연계 수용체로 알려진 원형질막의 수용체로부터의 신호를 세포내 다른 신호전달 분자에게 전달하는 GTP 결합 단백질.
+G 단백질결합 수용체|G protein-coupled receptor(GPCR)||G 단백질을 활성화시켜 신호 분자의 결합에 반응하는, 세포막에 존재하는 신호 수용체 단백질. G 단백질 연결 수용체라고도 불린다.
+G0기|G0 phase||세포 주기를 떠난 비분열 상태.
+G1기|G1 phase||DNA 복제 전의 간기로 이루어진 세포 주기 중 첫 번째 간격 또는 생장기.
+G2기|G2 phase||DNA 복제 후의 간기로 이루어진 세포 주기 중 두 번째 간격 또는 생장기.
+K-선택|K-selection||비교적 소수의 자손을 낳아 모두 생존시키는 데 초점이 맞추어진 생활사. 때로 밀도의존적 선택이라고 한다.
+NAD+|니코틴아미드아데닌다이뉴클레오타이드||산화된 형태로, 전자를 받아들여 NADH로 되는 조효소이다. NADH는 세포호흡 동안 일시적으로 전자를 저장한다.
+NADH|니코틴아미드아데닌다이뉴클레오타이드||환원된 형태로, 세포호흡 동안 일시적으로 전자를 저장한다. NADH는 전자전달 사슬에서 전자 공여자로 작용한다.
+NADP+|니코틴아미드아데닌다이뉴클레오타이드 인산||산화된 형태로, 전자를 받아들여 NADPH로 되는 전자운반체이다. NADPH 명반응 동안 생성된 전자(흥분된 전자)를 일시적으로 저장한다.
+NADPH|니코틴아미드아데닌다이뉴클레오타이드 인산||환원된 형태로, 명반응 동안 생성된 전자(흥분된 전자)를 일시적으로 저장한다. NADPH는 환원제로 작용한다.
+P 세대|P generation||유전 연구에서 F1 잡종을 생산하는 동형의 순계 부모 개체. (P는 'parent'를 의미한다.)
+P 자리|P site||번역 동안 tRNA가 결합하는 3개의 리보솜에 있는 자리 중 하나. 신장되는 폴리펩타이드 사슬을 가지고 있는 tRNA를 붙든다. P는 peptidyl tRNA를 의미한다.
+p53 유전자|p53 gene||세포 주기 억제 단백질 합성을 촉진하는 특수전사인자를 암호화하는 종양 억제유전자.
+PEP 카르복실화효소|PEP carboxylase||C4 식물에서, 이산화탄소를 포스포엔올피루브산(PEP)에 첨가하여 옥살아세트산을 형성하는 효소. 광합성 이전에 작용한다.
+pH|수소 이온의 농도||-log[H+]로 나타낸 것으로 수소 이온 농도 지수라고 한다. 0~14의 범위를 가진다.
+R 플라스미드|R plasmid||특정 항생제에 저항성을 부여하는 유전자를 가지고 있는 세균 플라스미드.
+ras 유전자|ras gene||원형질막에 존재하는 생장 인자 수용체로부터 생장신호를, 궁극적으로 세포 주기를 촉진하는 단백질카이네이스의 신호전달 체계로 전달하는 G 단백질인 Ras 단백질을 암호화하는 유전자.
+RNA 가공|RNA processing||인트론을 제거하고 엑손을 연결하며 5'과 3' 말단의 변형을 포함하는 RNA 전사물의 변형.
+RNA 간섭|RNA interference(RNAi)||특정 유전자의 발현을 억제시키는 기작. RNA 간섭은 특정 유전자의 염기서열과 일치하는 두 가닥 RNA 분자를 siRNA로 가공하여 이 유전자 mRNA의 전사를 억제하거나 분해를 촉진시키는 방법이다. 이것은 일부 세포에서 자연적으로 일어나며 또한 실험실에서 수행할 수도 있다.
+RNA 염기서열 결정|RNA sequencing(RNA-seq)||cDNA를 생성한 후 이것의 염기서열 결정을 통해 대량으로 RNA를 분석하는 방법.
+RNA 이어맞추기|RNA splicing||진핵생물의 1차 RNA 전사물이 합성된 후, mRNA에 포함되지 않을 전사물 부분(인트론)의 제거.
+RNA 중합효소|RNA polymerase||전사 동안 신장 중인 RNA 사슬에 리보뉴클레오타이드를 연결하는 효소.
+r-선택|r-selection||많은 수의 자손이 생산되지만 각 자손은 생존 가능성이 낮은 생활사. 때로는 밀도비의존적 선택이라고도 한다.
+SAR|진핵생물의 진화 역사||현재의 가설에서 제안된 4가지 진핵생물 큰무리(supergroup) 중 하나. 이 큰무리는 크고 매우 다양한 3중 무리의 원생생물을 포함한다: 스트라메노파일, 피하낭류 및 리자리아. 또한 섭식구굴착류, 원시색소체생물 및 단편모류 참조.
+S기|S phase||세포 주기 중 합성 단계. 간기의 한 부분으로 DNA가 복제되는 시기.
+TATA 상자|TATA box||전사 개시복합체를 형성하는 데 필수적인 진핵생물 프로모터의 DNA 염기서열.
+T세포|T cell||가슴샘(흉선)에서 성숙하는 림프구의 종류로, 세포성 면역반응의 효과기 세포와 적응 면역의 양 부류에 필요한 도움 세포 모두를 포함한다.
+X선 결정학|X-ray crystallography||분자의 각 원자에 의한 X선의 회절에 의존한 기술로, 분자의 3차원 구조의 연구를 위해 사용된다.
+X-연관 유전자|X-linked gene||X염색체상에 위치한 유전자. 이러한 유전자는 독특한 유전양상을 보인다.
+가계도|pedigree||부모와 자손에서의 유전적 특징의 출현을 여러 세대에 걸쳐 나타낸 가족도.
+가는 필라멘트|thin filament||두 가닥의 액틴과 서로 꼬여 있는 두 가닥의 조절 단백질로 이루어진 필라멘트, 근육섬유의 근원섬유 성분이다.
+가로세관, T 세관|transverse(T) tubule||골격근 세포에서 원형질막이 안으로 접힘.
+가벼운 사슬|light chain||항체 분자와 B세포 수용체를 구성하는 두 종류의 폴리펩타이드 사슬 중 하나로 항원결합 부위인 가변부와 불변부로 구성된다.
+가설|hypothesis||잘 짜여진 질문에 대한 임시적인 해답으로, 검증을 요하는 이론이나 주제보다 좁은 영역을 가진다.
+가수분해|hydrolysis||중합체를 단량체로 분해시키는 기능을 하는, 물을 첨가하여 분자를 분해하는 화학적 과정.
+가슴샘, 흉선|thymus||척추동물의 흉강에 있는 작은 기관으로 T세포의 성숙이 완성된다.
+가시고기류|acanthodian||데본기에 존재하던 고대의 턱이 있는 물고기(유악어류)의 종류.
+가시광선|visible light||약 380 nm에서 740 nm 파장 사이의 빛으로, 사람의 눈에 의해 감지되는 전자기 스펙트럼의 범위.
+가운데귀, 중이|middle ear||척추동물 귀의 중요한 3부분 중 하나. 포유류에서 고막으로부터의 진동을 난원창으로 전달하는 3개의 작은 뼈(등자뼈, 모루뼈, 망치뼈)를 포함하는 공간이다.
+각인|imprinting||동물 행동에서, 특정 개체나 물체에 반응하여 오래 지속되는 행동반응을 활성 중 특정 단계에서 형성하는 것. 유전체 각인 참조.
+각태류|hornwort||뿔이끼문에 속하는 작은 초본류의 비관다발식물.
+간|liver||척추동물의 몸에서 가장 큰 기관; 간은 쓸개즙 생산, 질소노폐물의 처분 준비, 혈액 내 독성물질의 분해 등 다양한 기능을 수행한다.
+간극연접|gap junction||세포 사이에 물질이나 전류를 통하게 하는 동물세포의 세포간 연접.
+간기|interphase||세포가 분열하지 않는, 세포 주기의 한 부분. 간기 동안 세포의 대사활동은 높으며 염색체와 세포소기관이 복제되며 세포 크기가 증가한다. 세포 주기의 약 90%를 차지한다.
+간문맥|hepatic portal vein||작은 창자로부터 영양분이 많은 혈액을 간으로 운반하는 혈관 시스템으로 혈액의 영양분 양을 조절한다.
+갈조류|brown algae||색소체에 카로티노이드로부터 유래된 갈색 혹은 올리브색을 특징으로 가지는 다세포성 광합성 원생생물. 대부분의 갈조류는 해양성이며, 일부는 식물과 유사한 구조를 가진다.
+감각 수용|sensory reception||감각세포에 의한 자극에너지의 감지.
+감각 신경세포|sensory neuron||외부와 내부 환경으로부터 정보를 받아 신호를 중추신경계로 보내는 신경세포.
+감각 적응|sensory adaptation||반복적으로 자극을 받았을 때 감각 뉴런이 덜 민감해지는 경향.
+감각 전환|sensory transduction||자극에너지를 감각수용체의 막전위 변화로 전환하는 것.
+감각수용기|sensory receptor||동물의 외부 및 내부 환경으로부터의 자극에 반응하는 세포 혹은 세포 내의 구조.
+감수 II 분열|meiosis II||2단계의 세포분열 결과 원래 세포의 반에 해당하는 염색체 수를 가지는 세포를 형성하게 되는 세포분열 중 두 번째 분열.
+감수 I 분열|meiosis I||2단계의 세포분열 결과 원래 세포의 반에 해당하는 염색체 수를 가지는 세포를 형성하게 되는 세포분열 중 첫 번째 분열.
+감수분열|meiosis||단지 한 번의 DNA 복제로 2회의 세포분열을 하는, 유성 생식을 하는 생물에서 일어나는 세포분열의 변형된 유형. 그 결과 원래 세포의 반에 해당하는 염색체 수를 가지는 세포를 형성한다.
+감응기, 수용기|sensor||항상성에서, 자극을 감지하는 수용체.
+갑상샘|thyroid gland||기도의 밑면에 존재하는 내분비샘으로, 아이오딘(요오드)을 포함하는 두 종류의 호르몬(트라이아이오도타이로닌, T3 및 타이록신, T4)과 칼시토닌을 생성 분비한다.
+갑상샘 호르몬|thyroid hormone||갑상샘에서 분비되는 아이오딘을 포함하는 두 호르몬(트라이아이오도타이로닌과 타이록신) 중 하나로서, 척추동물의 물질대사, 발생 및 성숙을 조절한다.
+강|class||분류에서 목(order)의 상위 단계.
+강축|tetanus||연속적인 자극에 의한 활동전위의 빠른 빈도가 일으키는, 최대대로 유지되는 골격근의 수축.
+강화|reinforcement||접합전 생식장벽을 강화시켜 잡종의 형성을 감소시키는 자연선택 과정. 이런 과정은 잡종이 부모종에 비해 적응력이 떨어지는 경우에 일어난다.
+개방순환계|open circulatory system||혈림프라고 불리는 액체가 조직과 기관에 직접 접해 있는 혈관계로, 순환하는 액체와 세포사이액과의 구별이 없다.
+개시지점|start point||전사에서 RNA 중합효소가 RNA 합성을 시작하는 프로모터 상의 뉴클레오타이드의 위치.
+개인 맞춤의학|personalized medicine||각 환자의 특정 유전적 양상으로 질병과 관련된 정보 또는 특히 위험에 처해 있는 사람의 상태를 파악함으로써 의료서비스 결정을 돕는 한 가지 의료 형태.
+개체군|population||상호교잡이 가능하며 생식능력이 있는 자손을 생산할 수 있는 동일한 생물종에 속하는 개체의 지역적 무리.
+개체군 동태론|population dynamics||개체군 크기의 변화에 영향을 미치는 생물적, 비생물적 요인 간의 복잡한 상호작용에 관한 연구.
+개체군생태학|population ecology||개체군의 밀도와 분포, 연령구조와 집단의 크기 변화에 대한 환경의 영향을 포함한 환경과 관련한 집단의 연구.
+개체군통계학|demography||집단의 출생 및 사망과 관련된 통계 연구.
+개체생태학|organismal ecology||개체가 생물적 및 비생물적 환경에 처했을 때 형태적, 생리적 및 행동 양식과 관련된 생태학의 한 분야.
+개폐성 이온 통로|gated ion channel||특정 이온의 통로; 이온 통로를 열거나 닫음으로써 세포는 막전위를 변경시킨다.
+개화호르몬, 화성소|florigen||화학적으로 확인되지 않은 개화신호로, 한 종의 호르몬이나 여러 호르몬의 농도 변화로 여겨진다.
+거울상 이성질체|enantiomer||서로 거울상을 가지는 두 분자 중 하나.
+거친면소포체, 조면소포체|rough ER||리보솜이 붙어 있는 소포체 부분.
+건생식물|xerophyte||건조한 기후에 적응한 식물.
+검정교배|testcross||미지의 유전자형을 가진 생물의 유전자형을 결정하기 위해 열성 동형개체와 교배하는 것. 자손에서 표현형의 비율이 미지의 유전자형을 결정한다.
+겉씨식물|gymnosperm||노출된 씨앗(보호하는 방에 의해 둘러싸이지 않는 씨앗)을 형성하는 관다발식물.
+겉질 네프론, 피질 네프론|cortical nephron||포유류와 조류에서 거의 신장(콩팥) 겉질 전반에 걸쳐 위치하는 헨레고리를 가지는 네프론.
+게임 이론|game theory||결과가 각 개체의 전략뿐만이 아니라 다른 개체의 전략에도 의존하는 상황에서 선택적인 전략을 평가하는 연구 방법; 집단에서 특정 행동의 적응도가 다른 행동에 의해 영향을 받는 상황에서 행동 진화에 관한 사고법.
+격벽|septum||균류의 균사를 세로로 나누는 가로벽의 하나. 격벽은 일반적으로 리보솜, 미토콘드리아 심지어 핵도 통과할 수 있는 크기의 통로를 가진다.
+결실|deletion||(1) 손상으로 인한 염색체 절편의 손실. (2) 유전자로부터 하나 혹은 그 이상의 뉴클레오타이드의 손실.
+결정|determination||배가 발생함에 따라 각 세포의 운명이 보다 더 제한되게 하는 발생 잠재력의 점진적인 제한. 결정의 마지막에서는 세포의 운명이 결정된다.
+결정적 난할|determinate cleavage||각 배세포의 발생 운명을 매우 초기에 확고하게 결정하는 선구동물의 배발생 유형.
+결합 조직|connective tissue||세포외기질 전체에 흩어져 있는 산재한 세포집단을 가지며, 주로 다른 조직을 지지하거나 결합하는 기능을 가지는 동물 조직.
+겹눈|compound eye||수천 개의 홑눈으로 이루어진 곤충과 갑각류의 다매체 눈으로, 움직임을 감지하는 데 매우 뛰어나다.
+경고색|aposematic coloration||포식자에 대한 경고로 작용하는 데 매우 효과적인 물리적, 화학적 방어 수단인 동물의 밝은 색상.
+경골어류|osteichthyan||턱과 뼈를 가지는 척추동물의 한 무리.
+경관|landscape||에너지의 교환, 물질과 생물에 의해서 연결된 몇 종류의 다른 생태계를 포함하는 지역.
+경관생태학|landscape ecology||서식지 종류의 공간 배열이 어떻게 개체의 분포와 빈도 및 생태계 과정에 영향을 미치는지를 연구하는 학문.
+경쟁|competition||다른 종의 개체가 생존과 번식을 제한하는 자원을 놓고 경쟁할 때 일어나는 +/- 상호작용.
+경쟁 배제, 경쟁 배타|competitive exclusion||두 유사한 종의 집단이 제한된 자원을 두고 경쟁을 하면, 한 종은 그 자원을 보다 효과적으로 이용하며 생식적으로 성공하게 되어 결과적으로 다른 집단을 제거하게 된다는 개념.
+경쟁 저해제|competitive inhibitor||구조가 비슷하여 기질 대신에 효소의 활성자리에 결합하여 효소의 활성을 감소시키는 물질.
+곁눈|axillary bud||곁싹이나 곁가지를 형성할 수 있는 능력을 가진 구조. 이 눈은 잎과 줄기 사이에서 형성된다.
+곁뿌리, 측근|lateral root||이미 형성된 뿌리 내층으로부터 생기는 뿌리.
+결사구체 장치|juxtaglomerular apparatus(JGA)||혈압이나 혈액의 양이 감소되었을 때 레닌효소를 분비하는 네프론의 특수화된 조직.
+계|kingdom||역(영역) 다음으로 넓은 분류 단위.
+계면활성제|surfactant||허파꽈리에 의해 분비되는 물질로 허파꽈리를 덮은 용액의 표면 장력을 감소시킨다.
+계통발생|phylogeny||종이나 연관된 종 무리의 진화 역사.
+계통분류학|systematics||생물을 분류하고 그들의 진화적 관련성을 연구하는 학문 분야.
+계통수|phylogenetic tree||생물 무리의 진화 역사에 관한 가정을 나타내는 분지도.
+고리형 AMP|cyclic AMP(cAMP)||고리형 아데노신 1인산. ATP로부터 생성되는 고리 모양의 분자. 진핵세포의 세포내 신호 분자(2차 신호전달자)로 매우 일반적이다. 또한 일부 세균의 오페론 조절물질로도 작용한다.
+고막|tympanic membrane||겉귀와 가운데귀 사이의 막.
+고밀도 지질단백질|high-density lipoprotein(HDL)||수천 개의 콜레스테롤 분자 및 다른 지질이 단백질과 결합되어 이루어진 혈액 내 입자. HDL은 과도한 콜레스테롤을 제거하는 역할을 한다.
+고분자|macromolecule||보통 축합 반응에 의해 작은 분자들이 결합하여 형성하는 거대 분자. 다당류, 단백질 및 핵산 등이 고분자이다.
+고색소체류|Archaeplastida||진핵생물의 진화역사의 현재 가설에서 제안된 진핵생물의 3대 큰무리 중 하나. 홍조류, 녹조류 및 육상식물을 포함하는 이 단계군은 남세균을 삼킨 원시 원생생물 조상으로부터 유래되었다. 섭식구굴착류, SAR 및 단편모류 참조.
+고생물학|paleontology||화석을 연구하는 학문.
+고세균|Archaea||원핵생물의 두 영역 중 하나로 다른 하나는 세균이다.
+고인류학|paleoanthropology||인간의 기원과 진화에 관한 학문.
+고장액의|hypertonic||두 종류의 용액을 비교하였을 때, 더 높은 용질의 농도를 가지는 용액을 일컫는 용어. 고장액이 세포를 둘러싸게 되면 세포는 물을 잃게 된다.
+고정행동양식|fixed action pattern||동물행동에서 기본적으로 변화되지 않는 일련의 행동으로, 한 번 시작되면 끝을 봄.
+고혈압|hypertension||혈압이 비정상적으로 높게 유지되는 장애.
+곧은 창자, 직장|rectum||대변이 배출될 때까지 머무르는 큰창자의 마지막 부분.
+골격 단백질|scaffolding protein||이 단백질에 다른 전달 단백질들이 동시에 결합하여 신호전달의 효율을 증진시키는 큰 전달 단백질 유형.
+골격근|skeletal muscle||일반적으로 몸의 수의운동에 관여하는 근육. 가로무늬근이라고도 한다.
+골지체|Golgi apparatus||진핵세포에서 소포체의 산물을 변형시키고 저장하며 분배하는 기능을 하는, 막으로 이루어진 납작한 주머니가 쌓인 모양의 세포소기관으로, 주로 비셀룰로오스 탄수화물을 생성한다.
+곰팡이|mold||선형 균류를 비공식적으로 지칭하는 용어. 유사분열에 의해 반수체 포자를 생성하며 눈으로 관찰되는 균사를 형성한다.
+곱셈법칙|multiplication rule||둘 또는 그 이상의 독립적인 사건이 함께 일어날 확률은 그들 각각의 확률을 곱함으로써 결정될 수 있는 확률 법칙.
+공간 학습|spatial learning||환경의 공간구조를 반영하는 기억의 확립.
+공통우성|codominance||각 대립유전자가 각기 구분되는 방법으로 표현형에 영향을 미치므로, 두 대립유전자의 표현형이 이형 접합으로 나타나는 상황.
+공룡류|dinosaur||몸의 모양과 크기 및 서식지가 매우 다양한 고대 파충류 무리.
+공변세포|guard cells||기공 측면에 위치하여 기공 개폐를 조절하는 두 세포.
+공생|symbiosis||서로 다른 두 종의 생물이 직접적이고 친밀한 접촉에 의해 함께 살아가는 생태적 관계.
+공생체|symbiont||공생관계에서 숙주 속이나 혹은 위에서 살아가는 작은 공생 참여자.
+공유 조상 형질|shared ancestral character||그 분기군의 일원이 아닌, 조상으로부터 유래된 특정 분기군 일원에 의해 공유되는 형질.
+공유 파생 형질|shared derived character||특정 분기군의 독특한 진화적 특성.
+공유 결합|covalent bond||두 원자가 한 쌍 혹은 그 이상의 전자를 공유함으로써 형성되는 매우 강한 화학 결합.
+공진화|coevolution||서로에 의해 유발된 선택에 반응하여 생기는, 상호작용하는 두 종 간의 공동의 진화.
+과|family||분류에서 속의 상위 단계.
+과민 반응|hypersensitive response||감염된 부위 주변의 세포의 죽음을 수반하는, 병원균에 의한 식물의 국지적 반응.
+과분극|hyperpolarization||휴지전위 상태일 때에 비해 세포 내부가 바깥쪽에 비해 더 음전하를 띠는 전기적 변화. 과분극은 뉴런에 의한 신경자극의 전달을 감소하게 한다.
+과실|fruit||꽃의 성숙한 씨방. 과실은 휴면 중인 씨앗을 보호하고 씨앗의 분산을 돕는다.
+과오돌연변이, 미스센스돌연변이|missense mutation||다른 아미노산을 암호화하는 코돈을 유발하는 염기쌍 치환.
+과학|science||자연 세계를 이해하기 위한 접근.
+관다발 조직|vascular tissue||식물체에 영양분 및 물을 수송하는, 관으로 연결된 세포로 이루어진 식물조직.
+관다발형성층|vascular cambium||2차 목부(목부)와 2차 체관이라 불리는 2차 관다발조직층을 형성하는 목본류의 원통형 분열 조직.
+관다발식물|vascular plant||관다발 조직을 가지는 식물. 관다발식물은 이끼, 우산이끼와 붕어마름을 제외한 모든 종을 포함한다.
+관문(개폐성) 통로|gated channel||특정 자극에 반응하여 열리고 닫히는, 세포막에 존재하는 막 관통 단백질 통로.
+관족|tube foot||극피동물 수관계의 많은 확장 부분 중의 하나. 이동, 먹이 섭취와 기체 교환 기능을 수행한다.
+괄약근|sphincter||근육으로 된 관에서 변형된 근육으로 이루어진 고리 모양의 밸브로, 소화관의 몇몇 구획 통과를 조절한다.
+광계 I|photosystem I(PSI)||엽록체의 틸라코이드막이나 일부 원핵생물막에 위치한 두 종류의 광수집 단위 중 하나로, 반응중심에 두 분자의 P700 엽록소 a가 존재한다.
+광계 II|photosystem II(PSII)||엽록체의 틸라코이드막이나 일부 원핵생물막에 위치한 두 종류의 광수집 단위 중 하나로, 반응중심에 두 분자의 P680 엽록소 a가 존재한다.
+광계|photosystem||많은 수의 집광복합체에 둘러싸인 반응중심으로 이루어진, 엽록체의 틸라코이드막에 위치한 광 수집 단위로, 광계 I과 II 등 두 종류가 있으며 각각은 제일 잘 흡수하는 파장의 빛이 서로 다르다.
+광독립영양생물|photoautotroph||빛에너지를 이용하여 이산화탄소로부터 유기 화합물을 합성하는 생물.
+광수용기|photoreceptor||가시광선을 감지하는 전자기 수용기.
+광익류|eurypterid||장구애비라 불리는 멸종된 육식성의 협각류.
+광인산화|photophosphorylation||광합성의 명반응 동안 엽록체의 틸라코이드막에 의해 생성되는 광자에 의한 힘에 의해 ADP와 인산으로부터 ATP를 생성하는 과정.
+광자|photon||입자처럼 행동하는 빛에너지의 양자.
+광종속영양생물|photoheterotroph||빛에너지를 ATP 생성에 사용하지만 대부분 유기물의 형태로 탄소를 흡수하여야 하는 생물.
+광주기성|photoperiodism||생물이 빛에 노출되는 24시간 주기인 광주기에 대한 생리적 반응. 꽃이 피는 것은 광주기성의 한 예이다.
+광학현미경|light microscope(LM)||가시광선을 굴절시켜 시료의 상을 확대시키는 광학 기구.
+광합성|photosynthesis||빛에너지를 화학에너지로 전환하여 포도당이나 다른 유기화합물로 저장. 식물, 조류 및 특정 원핵생물에서 일어난다.
+광형태형성|photomorphogenesis||식물 형태에 대한 빛의 영향.
+광호흡|photorespiration||ATP와 산소를 소비하고 이산화탄소를 방출하는 대사 경로이며 광합성의 산출량을 감소시킨다. 일반적으로 뜨겁고 건조하며 밝은 날 기공이 닫힌 잎에서의 산소 농도가 이산화탄소 농도를 초과할 때 일어난다.
+교감신경계|sympathetic division||척추동물 자율신경계의 3부분 중 하나로, 일반적으로 에너지 지출을 늘리고 몸이 활동할 준비를 한다.
+교란|disturbance||생물군집을 변화시키고 보통 군집으로부터 개체를 제거시키는 자연적 혹은 인간에 의한 사건. 화재와 폭풍과 같은 교란은 많은 생물군집의 구조에 중요한 역할을 한다.
+교차|crossing over||감수 I분열 전기에 일어나는 비자매 염색분체 사이의 유전물질의 교환.
+교차 양육연구|cross-fostering study||한 종의 어린 개체를 다른 종의 성체가 양육하게 하는 행동 연구.
+교차점|chiasma||감수분열 동안 상동염색분체들 교차에 의한 유전물질의 교환된 부위를 나타내는 X 모양의 현미경적 부위로, 두 상동염색체는 자매 염색분체의 결합으로 붙어 있게 된다.
+구강|oral cavity||동물의 입.
+구조 이성질체|structural isomer||동일한 구조식을 가지나 원자의 결합 배열이 다른 유기화합물.
+국소 분비|paracrine||이웃하는 세포를 표적으로 삼는 분비된 분자의 특성.
+국소 조절자|local regulator||인접한 세포에 영향을 미치는 분비된 분자.
+군집|community||특정 지역에 서식하는 모든 생물의 집합으로 잠재적인 상호작용이 가능하도록 충분히 가깝게 살아가는 다른 종 집단의 집합.
+군집 구조|community structure||생태계 군집에 존재하는 종의 수, 존재하는 특정 종 및 이들 종의 상대 풍부도.
+군집생태학|community ecology||군집의 구조와 구성에 영향을 미치는 종 사이의 상호관계를 연구하는 학문.
+굴광성|phototropism||식물 또는 다른 생물이 빛이 있는 방향이나(양성 굴광성) 빛의 반대 방향으로(음성 굴광성) 휘는 현상.
+굴성|tropism||모든 식물기관이 차등적인 세포 신장률로 인해 자극 방향 혹은 반대 방향으로 휘게 하는 생장 반응.
+굴중성|gravitropism||동물이나 식물이 중력에 반응하는 것.
+굴촉성|thigmotropism||접촉에 반응하여 식물이 방향성을 가지고 생장하는 현상.
+굵은 필라멘트|thick filament||마이오신 분자의 배열로 이루어진 섬유로, 근섬유에서 근원섬유의 구성 성분.
+귀납적 추리|inductive reasoning||많은 수의 관찰에 의해 일반화하는 논리 유형.
+귀두|glans||성적 흥분과 관련된, 음핵이나 음경 끝에 있는 둥근 구조.
+규조류|diatom||스트라메노파일 분기군에 속하는 광합성 조류. 유기 기질에 박혀 있는 이산화규소로 이루어진 유리와 같은 독특한 세포벽을 가진다.
+균근|mycorrhiza||식물 뿌리와 균류의 상리공생 관계.
+균사|hypha||균류의 총체적인 몸체를 형성하는 다수의 연결섬유 중의 하나.
+균사체|mycelium||균류의 균사에서 매우 심하게 분지된 망상 조직.
+균형 선택|balancing selection||집단에서 2개 혹은 그 이상의 표현형 형태를 유지시키는 자연선택.
+그라나|granum||엽록체에서 막으로 둘러싸인 틸라코이드가 쌓여진 부분. 그라나는 광합성의 명반응을 수행한다.
+그람양성|Gram-positive||그람음성세균에 비해 세포벽이 구조적으로 덜 복잡하며 보다 더 많은 양의 펩티도글리칸을 포함하는 세균 집단을 일컬음. 그람양성세균은 그람음성세균에 비해 종종 덜 유독하다.
+그람염색법|Gram stain||서로 다른 두 종류의 세균 세포벽을 구분하는 염색 방법.
+그람음성|Gram-negative||그람양성세균에 비해 세포벽이 구조적으로 더 복잡하며 보다 더 적은 양의 펩티도글리칸을 포함하는 세균 집단을 일컬음. 그람양성세균은 그람음성세균에 비해 종종 더 유독하다.
+극성 공유 결합|polar covalent bond||전기음성도가 다른 원자 사이에서의 공유 결합으로, 공유된 전자는 전기음성도가 보다 더 큰 원자 쪽으로 당겨져서 이 원자를 약간 음전하를 띠게 만들며, 다른 원자는 양전하를 띠게 만든다.
+극성|polarity||대칭성이 없음. 식물의 뿌리 끝과 싹의 끝처럼 생물이나 구조의 반대편의 구조적 차이.
+극성 분자|polar molecule||물과 같이 분자의 다른 쪽 끝에 반대되는 전하를 띠는 분자.
+극성화 활성대|zone of polarizing activity(ZPA)||사지 싹의 뒤편이 몸에 부착되는 외배엽 바로 아래 위치한 중배엽 덩어리. 싹의 앞-뒤축을 따라 적절한 패턴 형성에 요구된다.
+극피동물|echinoderm||느리게 움직이거나 고착 생활을 하는 해양 후구동물로 수관계를 가지며 성체는 방사 대칭의 구조를 가진다. 불가사리, 거미 불가사리, 성게, 갯고사리와 해삼 등이 이에 속한다.
+극호열균|extreme thermophile||60~80°C 혹은 그 이상의 고온의 환경에서 서식하는 생물.
+극호염균|extreme halophile||사해나 그레이트 솔트레이크와 같은 고염의 환경에서 서식하는 생물.
+근권|rhizosphere||식물 뿌리 근처의 토양 부분으로 높은 수준의 미생물 활동이 특징이다.
+근권 세균|rhizobacterium||식물 뿌리와 가까운 토양 부위인 근권에서 개체군 크기가 매우 증가되는 토양 세균.
+근소포체|sarcoplasmic reticulum(SR)||세포질에서 칼슘의 농도를 조절하는 특수한 소포체.
+근원섬유|myofibril||근섬유(세포)에서 길이로 다발을 이루는 원섬유 집합체; 액틴 필라멘트와 조절 단백질 그리고 마이오신 필라멘트로 구성된다.
+근위세뇨관|proximal tubule||척추동물 신장에서 여액을 운반하고 정제하는 보먼주머니 바로 다음에 위치하는 네프론 부분.
+근육 조직|muscle tissue||신경신호에 의해 자극되었을 때 수축할 수 있는 긴 근육세포로 이루어진 조직.
+근절|sarcomere||Z선에 의해 구분되는 가로무늬근의 기본 반복 단위.
+근초|coleorhiza||초본류 종자 배의 어린 뿌리의 덮개.
+글루카곤|glucagon||혈액 내의 포도당 농도를 높이는 역할을 하는 호르몬으로 이자의 알파세포에서 분비된다. 간에 의한 글리코젠의 분해와 포도당의 방출을 촉진한다.
+글리세르알데하이드-3-인산(G3P)|glyceraldehyde-3-phosphate(G3P)||캘빈회로로부터 직접적으로 생긴 3탄소 탄수화물. 또한 해당과정의 중간산물이다.
+글리코시드 결합|glycosidic linkage||탈수 반응에 의해 두 단당류 사이에 형성되는 공유 결합.
+글리코젠|glycogen||동물의 간이나 근육에 존재하는 가지가 매우 많은 포도당 저장 다당류; 식물의 녹말에 해당한다.
+긍정적 상호작용|positive interaction||+/+ 또는 +/0 생태적 상호작용으로서, 상호작용하는 최소 하나의 종이 이득을 얻지만 아무도 해를 입지 않는 경우이다. 긍정적 상호작용은 상리공생과 편리공생을 포함한다.
+기계적수용기|mechanoreceptor||압력, 접촉, 늘임, 운동, 소리와 연관된 환경의 물리적인 변화를 감지하는 수용체.
+기공|stoma||잎과 줄기의 표피의 공변세포에 의해 둘러싸인 미세한 통로로 외부 환경과 식물체 내부와의 기체교환을 가능하게 한다.
+기관|organ||여러 다른 조직으로 이루어져 몸의 기능을 수행하는 구조.
+기관계|organ system||생명체의 생명 유지에 필요한 기능을 수행하기 위해 함께 일하는 기관의 무리.
+기관계|tracheal system||몸에 퍼져 있으며 산소를 직접 세포로 운반하는, 분지되고 키틴이 덮여 있는 관으로 이루어진 기체교환계.
+기관지|bronchus||기도로부터 허파에 이르는 분지된 한 쌍의 호흡관.
+기관형성과정|organogenesis||낭배기 후 3배엽으로부터 기관 근원이 발생하는 과정.
+기도|trachea||후두에서 기관지로 통하는 호흡관의 한 부분. 숨통이라고도 한다.
+기본조직계|ground tissue system||저장, 광합성, 지지 등의 작용을 하는, 유관속계나 표피계가 아닌 식물 조직.
+기생|parasitism||한 생물(기생생물)이 손해를 보는 다른 생물(숙주)로부터 양분을 얻어 이득을 취하는 +/- 생태적 상호작용. 몇몇 기생생물은 숙주 내부에서 내부조직을 먹으며 살아가고, 다른 몇몇은 외부에 붙어 숙주의 표면을 먹으며 살아간다.
+기생생물|parasite||다른 생물(숙주)의 내부나 혹은 외부에 붙어서 숙주의 세포 내용물, 조직과 체액을 섭취하며 살아가는 생물. 기생생물은 숙주에 해를 끼치지만 죽이지는 않는다.
+기술|technology||특정 목적을 위한 과학 지식의 응용으로, 기초 지식뿐만이 아니라 종종 기업이나 상업과 관련된다.
+기억세포|memory cell||1차 면역반응 동안 생성되는 수명이 긴 림프구 클론의 하나로, 그것의 생성을 유발한 것과 동일한 항원에 노출되어 활성화될 때까지 림프기관에 존재한다. 활성화된 기억세포는 2차 면역반응을 유발한다.
+기저 분류군|basal taxon||한 분류군의 진화적 계통이 그 무리의 역사 초기에서 분기된 한 특정한 생물 무리.
+기저속씨식물|basal angiosperm||현존하는 꽃식물의 초기에 세 갈래로 나누어진 3분기군의 하나. 예로는 엠보렐라(Amborella), 수련과 붓순나무(star anise) 및 이들 관련 종이 있다.
+기저체|basal body||9 + 0의 미세소관 배열을 이루는 진핵생물의 세포소기관. 편모와 섬모의 미세소관 구조를 이루며, 중심립과 구조적으로 매우 유사하다.
+기질|substrate||효소가 작용하는 반응물.
+기질 섭식자|substrate feeder||자신의 먹이 위나 먹이 속에 사는 동물.
+기질수준 인산화|substrate-level phosphorylation||동화작용에서 중간기질로부터 인산기를 직접 ADP로 전달하는 효소에 의한 ATP 생성.
+기체 교환|gas exchange||환경으로부터 산소를 흡수하고 이산화탄소를 내보냄.
+기초대사율|basal metabolic rate(BMR)||편안한 온도에서 스트레스를 받지 않은 휴식 상태의 내온성 동물의 대사율.
+기초종|foundation species||커다란 크기와 높은 풍부도, 또는 군집 동태에서의 핵심적인 역할로 말미암아 군집에 커다란 영향을 미치는 종. 기초종은 다른 종들에게 중요한 서식지 또는 먹이를 제공한다. 또한 이들은 중요한 자원을 이용하는데 경쟁적으로 우위를 점한다.
+기화열|heat of vaporization||1 g의 액체가 기체로 변화할 때 반드시 흡수하여야 하는 열의 양.
+기후|climate||한 지역의 날씨 조건.
+기후 변화|climate change||세계 기후의 온도, 강수 또는 다른 측면에서 30년 또는 그 이상 지속되는 지향성 변화.
+기후도|climograph||특정 지역의 온도와 강수 도표.
+긴 비암호화(비번역) RNA|long noncoding RNA(lncRNA)||200 뉴클레오타이드 이상의 길이를 가지며, 단백질을 암호화하지는 않으나 상당한 발현량을 보이는 RNA.
+긴장성|tonicity||세포가 수분을 얻거나 잃게 하는 세포 주위 용액의 능력.
+깃세포, 동정세포|choanocyte||해면동물에 존재하는 편모를 가진 섭식세포. 편모 기저부에 먹이를 잡아들이는 깃 모양의 고리를 가지기 때문에 깃세포라고도 한다.
+껍데기|test||소공 원생생물에서, 탄산칼슘으로 단단하게 굳어진 유기물로 이루어진 다공성 껍데기.
+껍질눈, 피목|lenticel||뿌리와 줄기의 수피에서 돌출된 작은 부분으로, 세포와 바깥 공기 사이에 기체교환을 가능하게 한다.
+꽃|flower||속씨식물에서 유성 생식을 담당하는 4종류의 변형된 잎을 가지는 짧은 줄기.
+꽃가루|pollen grain||종자식물에서, 화분벽에 둘러싸인 수컷 배우자를 포함하는 구조.
+꽃가루관|pollen tube||화분 입자의 발아 후 생성된 관으로 정자를 밑씨로 운반하는 기능을 한다.
+꽃받침|sepal||속씨식물에서 개화 전의 꽃봉오리를 보호하고 감싸는 변형된 잎.
+꽃밥|anther||속씨식물에서 수술의 꽃가루주머니로, 꽃가루는 정핵을 생성하는 수컷 생식세포 형태를 포함한다.
+꽃잎|petal||꽃피는 식물의 변형된 잎. 종종 곤충이나 다른 수분 매개자를 끌어들이기 위해 가장 색채가 풍부한 부분이다.
+꽃차례, 화서|inflorescence||밀접하게 무리를 이룬 꽃의 무리.
+나선형 난할|spiral cleavage||접합체를 세포 구형의 세포로 전환시키는 세포분열판이 배의 수직축에 대각선인 원구동물 발생의 유형. 그 결과 각 층의 세포가 인접한 세포층 사이의 홈에 걸쳐 있게 된다.
+낙태|abortion||진행 중인 임신의 중단.
+난관|oviduct||난소로부터 무척추동물에서는 질로, 척추동물에서는 자궁으로 연결되는 관. 나팔관이라고도 한다.
+난관묶기|tubal ligation||여성의 두 수관(나팔관)의 일부를 제거하여 난자가 자궁에 이르지 못하도록 하는 불임수술 방법.
+난모세포|oocyte||난자를 형성하기 위해 분화하는 암컷 생식계에 있는 세포.
+난생|oviparous||어린새끼가 모체 밖에 낳은 알에서부터 부화하는 발생유형을 일컫는 용어.
+난소 주기|ovarian cycle||포유류 난소에서 호르몬의 조절에 의한 난포기, 배란 및 황체기의 반복.
+난원세포|oogonium||유사분열을 통해 난모세포를 형성하는 세포.
+난원창|oval window||척추동물 귀에서 두개골 아래에 존재하는 막으로 둘러싸인 공간; 이곳을 통하여 음파가 가운뎃귀에서 속귀로 간다.
+난자|egg||암컷 배우자.
+난자형성과정|oogenesis||난소에서 일어나는 암컷 생식세포를 형성하는 과정.
+난태생|ovoviviparous||어린 새끼가 알에서 부화하여 모체의 자궁 내에 있는 발생유형을 일컫는 용어.
+난포|follicle||발생 중인 난자를 포함하고 있으며, 에스트로젠을 분비하는 난소에 존재하는 현미경적 구조.
+난포자극호르몬|follicle-stimulating hormone(FSH)||뇌하수체 전엽에서 생성되고 분비되는 자극호르몬으로, 난소에서의 난자 생성과 정소에서의 정자 생성을 촉진한다.
+난할, 분할|cleavage||(1) 세포막의 만입에 의한 동물세포의 세포질분열 과정. (2) 접합체를 공 모양의 세포덩어리로 변화시키는 초기 배발생 동안의 생장이 수반되지 않은 연속된 빠른 세포분열.
+난할구, 분열구|cleavage furrow||동물세포에서 난할의 첫 번째 신호로 세포분열 중기판 근처의 세포 표면에 존재하는 얕은 홈.
+난황|yolk||난자에 저장된 영양물질.
+낫모양적혈구 빈혈증|sickle-cell disease||열성 대립유전자에 의해 헤모글로빈 단백질의 부분인 글로빈 폴리펩타이드에 하나의 아미노산이 치환되어 생기는 사람의 유전병으로, 변형된 적혈구 세포로 인해 여러 증상을 유발하는 특징을 가진다.
+낭배|gastrula||3가지 층(내배엽, 중배엽, 외배엽)의 형성을 완성하는 동물의 배발생 단계.
+낭배형성과정|gastrulation||동물 발생에서, 포배기 단계의 배가 안으로 접히는 일련의 세포와 조직의 이동으로, 3개의 층을 가진 배인 낭배를 형성한다.
+낭성섬유증|cystic fibrosis||Cl 채널(통로)의 열성 대립유전자에 의해 생기는 사람 유전병으로 과다한 점액 분비와 이에 따른 감염이 특징이다. 치료하지 않으면 치명적이다.
+낱눈|ommatidium||절지동물과 일부 다모류의 겹눈을 구성하는 개개의 눈.
+내군|ingroup||주어진 분석에서 진화관계를 알고자 하는 종이나 종의 무리.
+내골격|endoskeleton||동물의 부드러운 조직내부에 존재하는 딱딱한 골격으로 해면동물의 침골, 극피동물의 판이나 척추동물의 단단한 뼈 등이 이에 속한다.
+내막계|endomembrane system||직접적인 물리적 접촉이나 소낭에 의한 전달과 관련된 진핵세포 내부나 주변에 존재하는 모든 막의 총칭. 활면 소포체와 조면 소포체, 골지체, 리소좀과 액포를 포함한다.
+내배엽|endoderm||동물배의 3가지 중요 배엽 중 제일 안쪽 배엽. 이러한 구조를 가지는 종에서 원장의 막을 형성하며 간, 이자, 허파와 소화관의 막을 형성한다.
+내부기생생물|endoparasite||숙주 내부에서 생활하는 기생생물.
+내부독소|endotoxin||특정 그람음성세균 바깥 막의 독소 성분으로 세균이 죽을 경우에만 방출된다.
+내분비계|endocrine system||동물에서, 호르몬, 호르몬을 분비하는 관이 없는 분비샘, 호르몬에 반응하는 표적세포 표면 또는 내부에 존재하는 분자 수용체를 포함하는 내부 화학 통신계; 신경계와 함께 내부 조절 및 항상성에 영향을 미친다.
+내분비샘|endocrine gland||관이 없는 분비샘으로 호르몬을 직접 세포사이액으로 분비하며 여기로부터 혈류로 확산되어 들어간다.
+내생균근균|glomeromycete||수지상 균근(식물 뿌리와 공생하는)의 독특한 가지 형태를 형성하는 특징을 가지는 균류문의 한 종류.
+내생생물|endophyte||식물의 세포 사이나 다세포 조류에 생존하는 무해한 균류 또는 때때로 다른 생물.
+내생포자|endospore||혹독한 조건에 노출되었을 경우 세균 세포에서 생성되는 두꺼운 표피와 저항성을 가지는 세포.
+내세포 덩어리, 내세포괴|inner cell mass||포유류 배반포에 존재하는 세포덩어리로 배반포강의 한쪽 끝으로 뻗어나가 배 자체와 일부 배외막으로 발생한다.
+내온성|endothermic||대사작용에 의해 생성된 열로 따뜻한 체온을 유지하는 동물을 일컫는 용어. 이 열은 보통 주위환경보다 보다 높은 체온을 일정하게 유지한다.
+내장낭|visceral mass||연체동물의 주요 세 부분 중 하나. 대부분의 내장기관을 포함하고 있다. 발과 외투막 참조.
+내재 단백질|integral protein||막의 내부로 뻗어 소수성 인 막의 내부에 완전히 걸쳐 있는 소수성 부분을 가지며, 또한 막의 양쪽 편에 수용액과 접촉하는(통로 단백질의 경우는 통로를 형성하는) 친수성 부분을 가지는 전형적인 막관통 단백질.
+내적 증가율|intrinsic rate of increase(r)||개체군 모델에서, 지속적으로 성장하는 개체군에서의 개체당 순간증가율.
+내초|pericycle||겉뿌리가 발생하는 관다발기둥의 가장 바깥층.
+내피|endodermis||뿌리 피층의 가장 안쪽 층; 세포 하나 두께의 원통 모양으로 피층과 관다발 기둥 사이의 경계를 이룬다.
+내피|endothelium||혈관의 내강을 형성하는 세포의 간단한 비늘 모양의 층.
+네프론|nephron||척추동물 신장의 관 모양의 배설 단위.
+노르에피네프린|norepinephrine||에피네프린과 화학적, 기능적으로 유사한 호르몬.
+노화|senescence||완전한 성숙에서부터 죽음에 이르는 식물체나 식물체 부분(잎과 같은)에서의 생장 단계.
+녹말|starch||α-글리코시드 결합에 의해 결합된 순수하게 포도당 단량체로만 이루어진 저장 다당류.
+녹조류|green algae||식물의 엽록체와 유사한 구조와 색소 조성을 가지는 녹색엽록체를 가짐으로써 이름이 유래된 광합성 원생생물. 녹조류는 측계통군으로 일부 녹조류는 다른 녹조류에 비해 식물과 더 가깝게 연관된다.
+농도 기울기|concentration gradient||화학물질의 농도가 증가 혹은 감소하는 부위.
+뇌|brain||정보가 가공되고 통합되는 중추신경계의 기관.
+뇌간, 뇌줄기|brainstem||성인의 뇌에서 중뇌, 뇌교, 연수를 포함하는 집합적 구조로 항상성 유지, 운동의 조절 및 중심부로의 정보 전달의 기능을 가진다.
+뇌교|pons||수질에 있는 호흡중추의 조절과 같은 어떤 자율적이며 항상적인 기능을 수행하는 뇌의 부분.
+뇌량|corpus callosum||태반 포유류에서 좌우 대뇌 반구를 연결하는 굵은 신경섬유다발로 반구가 함께 정보를 처리할 수 있게 한다.
+뇌졸중|stroke||머리의 동맥이 막히거나 파열하여 생기는 뇌신경 조직의 괴사.
+뇌하수체 전엽|anterior pituitary||여러 자극 혹은 비자극 호르몬을 합성 및 분비하는 내분비세포로 이루어진 비신경 조직으로부터 발생된 뇌하수체의 한 부분.
+뇌하수체 후엽|posterior pituitary||시상하부에서 생성된 옥시토신과 ADH를 분비하는 신경 조직으로 이루어진 시상하부의 돌출부로, 이들 호르몬의 일시적인 저장 장소이기도 하다.
+뇌하수체|pituitary gland||시상하부 기저부에 존재하는 내분비샘; 시상하부에 의해 생성되는 두 호르몬을 저장 분비하는 후엽과 여러 신체 기능을 조절하는 많은 호르몬을 생산 분비하는 전엽으로 이루어져 있다.
+뉴런, 신경세포|neuron||세포막을 통한 전기적인 신호를 전달하는 구조와 특성을 가지는 신경계의 기본 단위.
+뉴클레아리아류|nucleariid||다른 원생생물보다 균류에 더 가깝게 관련된 단세포의 아메바성 원생생물군의 하나.
+뉴클레오솜|nucleosome||진핵세포에서 기본적인 구슬과 같은 DNA의 응축 단위로 네 종류의 히스톤 각각 2개씩으로 이루어진 단백질 핵을 감싸고 있는 DNA의 부분으로 구성된다.
+뉴클레오타이드|nucleotide||5탄당이 질소 염기와 인산에 공유 결합되어 있는 핵산의 구성 단위.
+뉴클레오타이드 절제 수선|nucleotide excision repair||손상을 입지 않은 DNA 가닥을 참고로 사용하여 손상을 입은 DNA 부분을 제거하고 바르게 대체하는 수선 시스템.
+뉴클레오타이드쌍 치환|nucleotide-pair substitution||한 DNA 가닥에서 하나의 뉴클레오타이드와 상보적인 가닥에서 그에 해당하는 뉴클레오타이드가 다른 쌍의 뉴클레오타이드로 치환된 점돌연변이의 한 유형.
+뉴클리에이스, 핵산분해효소|nuclease||하나 혹은 몇 개의 염기를 제거하거나 구성성분인 뉴클레오타이드로 완전하게 분해하여, RNA 또는 DNA를 절단하는 효소.
+느린 연축섬유, 지근섬유|slow-twitch fiber||수축을 오래 유지할 수 있는 근육섬유.
+능동 면역|active immunity||특정 항원에 대한 B세포와 T세포의 작용과 결과로 생긴 기억 B세포와 T세포에 의해 장기간 지속되는 면역. 자연적인 감염이나 면역의 결과로 생긴다.
+능동 수송|active transport||에너지와 특정 수송 단백질의 도움으로 농도나 전기화학 기울기를 거스른 생체막을 통한 물질의 이동.
+다능성|pluripotent||전부는 아니지만 많은 세포유형을 유발할 수 있는 세포를 언급하는 말.
+다당류|polysaccharide||많은 단당류가 응축 반응에 의해 연결된 중합체.
+다량영양소|macronutrient||생명체가 비교적 많은 양을 섭취하여야 하는 화학물질.
+다른자리 입체성조절|allosteric regulation||단백질의 한 자리에 어떤 분자의 결합에 의해 그 단백질의 다른 부위의 기능에 영향을 미치는 조절 방식.
+다면발현|pleiotropy||하나의 유전자가 복합적인 효과를 나타내는 능력.
+다배체성|polyploidy||생물이 세 벌 이상의 염색체를 가지는 염색체 변화. 세포분열의 오류로 생긴다.
+다분지|polytomy||계통수에서 둘 이상의 자손 분류군이 나타나는 분기점. 다분지는 자손의 분류군 사이에서 진화 관계가 명확하지 않음을 나타낸다.
+다수정|polyspermy||둘 이상의 정자에 의한 난자의 수정.
+다운증후군|Down syndrome||21번 염색체가 하나 더 존재함으로써 생기는 인간 유전병으로, 지적장애와 심장 및 호흡계 장애를 가진다.
+다원적|polyphyletic||아주 먼 유연관계를 보이는 생물은 포함하지만 가장 최근의 공통조상은 포함하지 않는 분류군에 속한다.
+다유전자 유전|polygenic inheritance||하나의 표현형 특징을 나타내는 둘 혹은 그 이상의 유전좌위의 첨가효과.
+다유전자족|multigene family||아마도 공통 기원을 가지는, 같거나 혹은 유사한 염기서열을 갖는 유전자의 집합.
+다육식물 유기산대사|crassulacean acid metabolism(CAM)||돌나물과에서 처음 발견된 건조한 조건에서의 광합성 적응. 이 과정에서 식물은 이산화탄소를 밤 동안에 흡수하여 여러 가지 유기산으로 고정한다. 낮 동안에 이산화탄소는 여러 유기산으로부터 방출되어 캘빈회로에 이용된다.
+다이아실글리세롤|diacylglycerol(DAG)||특정 종류의 인지질의 분해에 의해 생성되는 원형질막의 2차 신호 전달자.
+다인자성|multifactorial||많은 유전자와 환경 요인에 의해 영향을 받는 표현 특성을 일컫는 용어.
+다지류|myriapod||많은 체절과 체절마다 한 쌍 혹은 두 쌍의 다리를 가지는 육상 절지동물. 노래기와 지네가 이 강을 형성한다.
+다핵체 균류|coenocytic fungus||격막이 없으므로 몸체가 연속된 세포질 덩어리로 이루어져 수백 수천 개의 핵을 포함한 균류.
+단계적 세포내공생|serial endosymbiosis||미토콘드리아, 엽록체와 다른 세포내 구조가 작은 원핵생물이 순차적으로 큰 세포에 의해 삼켜져서 진핵생물이 형성되었다는 진핵생물 기원 가설.
+단계통군|monophyletic||공통조상과 그 모든 자손으로 이루어진 분류군에 속하는 단계통군은 분기군과 동등하다.
+단공류|monotreme||오리너구리와 바늘두더쥐와 같이 알을 낳는 포유류. 모든 포유류처럼 단공류는 털을 가지며 젖을 생성하나, 젖꼭지가 없다.
+단과, 홀열매|simple fruit||하나의 암술이나 혹은 여러 개의 암술이 융합된 것으로부터 유래된 과실.
+단궁류|synapsid||두개골의 각 측면에 하나씩 구멍을 가지는 특징의 양막류 무리. 포유류가 포함된다.
+단기기억|short-term memory||정보, 예상 혹은 목표를 한동안 가지고 있다가 이것이 쓸모없어졌을 때 방출하는 능력.
+단당류|monosaccharide||가장 간단한 탄수화물; 단독으로 사용되거나 혹은 이당류나 다당류의 단위체로 작용한다. 단당류의 구조식은 보통 CH2O의 배수로 표시된다.
+단량체|monomer||중합체의 구성물로 작용하는 단위체.
+단백질|protein||하나 혹은 그 이상의 폴리펩타이드가 특수한 3차 구조로 접혀지고 꼬여서 이루어진 기능성 생물 분자.
+단백질 가수분해효소|protease||가수분해에 의해 단백질을 소화시키는 효소.
+단백질 인산화효소|protein kinase||ATP의 인산기를 단백질로 전달하는 효소로, 단백질을 인산화시킨다.
+단백질 탈인산화효소|protein phosphatase||단백질에서 인산기를 제거(탈인산화)하는 효소. 종종 단백질 인산화효소와 반대 효과를 보인다.
+단백질체|proteome||특정 세포 또는 세포 무리에 의해 발현되는 완전한 단백질 세트.
+단백질체학|proteomics||빈도, 화학적 변화 및 상호작용을 포함하여 단백질 세트와 그 특성에 대한 체계적인 연구.
+단성잡종|monohybrid||특정 유전좌위에 대하여 이형접합인 생물. 다른 대립유전자에 대해 동형인 양친 사이에서의 교배에 의해 생긴 자손은 모두 단성잡종이다. 예를 들어, 유전자형이 AA와 aa인 양친은 유전자형이 Aa인 단성잡종을 생산한다.
+단성잡종 교배|monohybrid cross||추적하는 형질에 대해서 이형접합인 두 생물 사이의 교배(또는 한 이형접합인 식물의 자가수분).
+단속 평형|punctuated equilibrium||화석 기록에서, 종이 거의 형태적인 변화를 겪지 않는 긴 기간의 안정 상태로, 비교적 짧은 기간의 급격한 변화에 의해 중단된다.
+단순 반복서열 DNA|simple sequence DNA||많은 수의 직렬 반복된 짧은 서열을 포함하는 DNA 서열.
+단위생식|parthenogenesis||암컷이 수정되지 않은 알로부터 자손을 생산하는 무성 생식.
+단일 결합|single bond||단일 공유 결합. 두 전자에 의한 한 쌍의 원자가 전자의 공유.
+단일 순환|single circulation||혈액이 기체교환 장소로부터 심장으로 들어가기 전에 몸의 나머지 부분을 흐르는, 하나의 펌프와 순환으로 이루어진 순환계.
+단일가닥 결합 단백질|single-strand binding protein||DNA 복제 동안 쌍을 이루지 않은 DNA 가닥에 결합하는 단백질로서, 상보적인 DNA 가닥의 합성을 위한 주형으로 작용하는 동안 그 가닥에 결합하여 두 가닥이 떨어진 채로 있게 한다.
+단일식물|short-day plant||낮의 길이가 임계 길이보다 짧을 때(보통 늦은 여름, 가을 혹은 겨울)만 꽃 피는 식물.
+단일염기다형성|single nucleotide polymorphism(SNP)||개체군의 최소 1%에서 뉴클레오타이드 변이가 발견되는, 유전체의 단일 염기 쌍의 자리.
+단일클론 항체|monoclonal antibody||단일클론된 배양세포에 의해 생성된 항체로 동일한 항원 인식 부위를 가진다.
+단계적 세포내공생|serial endosymbiosis||미토콘드리아, 엽록체와 다른 세포내 구조가 작은 원핵생물이 순차적으로 큰 세포에 의해 삼켜져서 진핵생물이 형성되었다는 진핵생물 기원 가설.
+단편모류|Unikonta||진핵생물의 진화역사의 현재 가설에서 제안된 진핵생물의 4대 큰무리(supergroup) 중 하나. 마이오신 단백질 연구와 몇몇 DNA 연구결과 이 분기군은 아메바문과 오피스토콘트로 이루어진다. 섭식구굴착류, SAR 및 원시색소체생물 참조.
+달톤|dalton||원자와 소립자의 무게 단위. 원자 질량 단위(amu)와 동일하다.
+달팽이관, 와우|cochlea||코르티기관을 포함하고 있는 복잡하고 감겨진 모양의 청각기관.
+담륜자 유생|trochophore larva||일부 환형동물과 연체동물을 포함하는 특정 무척추동물에서 관찰되는 독특한 유생 단계.
+담자과|basidiocarp||자낭균 이핵성 균사체의 자실체.
+담자균|basidiomycete||담자균문에 속하는 균류. 곤봉 모양의 담자기로부터 이름이 유래.
+담자기|basidium||버섯(자낭균)의 주름에 위치하며 생식포자를 형성하는 생식 부속기.
+당공급원|sugar source||광합성이나 녹말의 분해에 의해 당을 생성하는 식물기관. 성숙한 잎이 중요 식물의 당 공급원이다.
+당뇨병|diabetes mellitus||포도당 항상성을 유지하지 못하는 내분비계 교란. 1형 당뇨병은 인슐린 분비세포의 자가면역 파괴의 결과로 생기며, 하루에 몇 번씩의 인슐린 주사로 치료한다. 2형 당뇨병은 대부분 표적세포의 인슐린 반응의 감소에 의해 생긴다. 비만과 운동 부족이 위험 요소이다.
+당단백질|glycoprotein||하나 혹은 그 이상의 탄수화물이 공유 결합으로 연결된 단백질.
+당수용부|sugar sink||당을 소비하거나 저장하는 식물기관. 생장 중인 뿌리나 어린 싹 부분, 줄기와 과실 등이 체관에 의해 공급된 당의 수용부이다.
+당지질|glycolipid||탄수화물이 공유 결합으로 연결된 지질.
+당질코르티코이드|glucocorticoid||포도당 대사와 면역 기능에 영향을 미치는 부신겉질에서 분비되는 스테로이드호르몬.
+대공|osculum||해면 위강과 바깥 환경을 연결시키는 해면동물에 존재하는 큰 통로.
+대뇌|cerebrum||척추동물 전뇌의 후위 부분으로 좌우반구로 이루어져 있다. 기억, 학습, 감정 및 기타 다른 매우 복잡한 중추신경계의 기능을 담당한다.
+대뇌 겉질, 대뇌 피질|cerebral cortex||대뇌의 표면. 포유류 뇌의 가장 크고 복잡한 부분으로 대뇌의 감각 및 운동 신경세포체를 포함하고 있다. 진화 동안 가장 많이 변화된 척추동물의 뇌 부분.
+대량 멸종|mass extinction||지구 환경의 변화가 지구 전체에 걸쳐 대부분의 종이 제거되도록 하는 시기.
+대립유전자|allele||구분되는 표현형질을 야기하는 유전자의 다른 어떠한 형태.
+대목|stock||접붙이기 할 때 뿌리부분 쪽을 제공하는 식물.
+대변|feces||소화관으로부터의 노폐물.
+대사 경로|metabolic pathway||복잡한 분자를 형성하거나(동화 경로) 또는 복잡한 분자를 단순한 분자로 분해하는(이화 경로) 일련의 화학 반응.
+대식세포|macrophage||미생물을 파괴하여 선천성 면역 기능을 수행하며, 또한 항원제시세포로 작용하여 후천성 면역 기능을 수행하는, 많은 조직에 존재하는 식세포.
+대양 생물군계|oceanic pelagic biome||바닷가에서 멀리 떨어진, 항상 해류가 섞이는 대부분의 해양.
+대엽|megaphyll||고도로 분지된 관다발계를 가지고 있으므로, 대부분의 관다발식물의 특징이다.
+대음순|labia majora||소음순과 질 입구를 감싸고 보호하는 한 쌍의 두터운 지방질의 융기.
+대조 실험|controlled experiment||실험군이 조사하고자 하는 요소에서만 변화된 대조군과 비교되는 실험.
+대조군, 대조구|control group||통제된 실험에서 검사하고자 하는 특정 요소를 가지지 않는 일련의 대상. 이상적으로 대조군은 실험군과 다른 면에서는 동일하다.
+대진화|macroevolution||종 단계 이상에서의 진화적 변화. 대진화적 변화의 예는 일련의 종분화를 통한 새로운 생물 무리의 기원과 생물다양성에 대한 대량멸종의 영향과 이어지는 회복을 포함한다.
+대포자|megaspore||암컷 배우체로 발생하는 이형포자 식물종의 포자.
+덧과실, 부과|accessory fruit||육질 부분이 대부분 혹은 전적으로 씨방이 아닌 다른 조직으로부터 유래된 과실이나 과실의 집합.
+덧셈 법칙|addition rule||2 또는 그 이상의 상호배타적인 사건이 일어날 확률은 그들 각각의 확률을 더함으로써 결정될 수 있는 확률 법칙.
+덩어리 섭식자|bulk feeder||비교적 큰 조각의 음식물을 섭취하는 동물.
+덩어리|bolus||윤활된 저작된 음식물 덩어리.
+데스모솜|desmosome||고정시키는 역할을 하는 동물세포의 세포간 접합.
+데이터|data||기록된 관찰.
+도시생태학|urban ecology||도시와 근교에서 생물과 그 환경의 연구.
+도약 전도|saltatory conduction||활동전위가 막의 수초 부분을 건너뛰며 한 랑비에결절에서 다른 결절로 도약한 결과로 생기는 축삭돌기를 따라 이동하는 신경자극의 빠른 전달.
+도움 T세포|helper T cell||활성화되었을 때 B세포와 세포독성 T세포의 분비를 촉진하는 사이토카인을 분비하는 세포.
+도움 이주|assisted migration||인간에 의해 유발된 위협으로부터 종을 보호하기 위해 한 종이 자신의 자연적인 범위를 벗어난 유리한 서식지로 이동하는 것.
+도입유전자|transgene||자연상태로 또는 유전자재조합 기술에 의해 한 생물로부터 다른 생물로 전달된 유전자.
+도입종|introduced species||고의적이든 우연이든 사람에 의해 원산지에서 새로운 지리적 지역으로 이동한 종으로, 비토착종 또는 외국종이라고도 한다.
+독립 변수|independent variable||다른 변수(종속변수)에 대해 미치는 영향을 보여주기 위해 실험 동안에 값이 변하는 변수.
+독립영양생물, 자가영양생물|autotroph||유기 음식물을 다른 생물이나 혹은 다른 생물에서 유래된 물질로부터 섭취하지 않고 직접 만드는 생물. 독립 영양생물은 태양이나 혹은 무기물을 산화시켜 얻은 에너지를 이용하여 무기물로부터 유기물을 합성한다.
+독립의 법칙|law of independent assortment||멘델의 제2법칙; 대립유전자의 각 쌍은 생식세포 형성 동안 독립적으로 분리한다는 법칙; 두 개의 형질을 가지는 유전자가 상동염색체의 다른 쌍에 위치하였을 때 적용된다.
+독성파지|virulent phage||오직 용균성 회로에 의해서만 생식하는 파지.
+돌연변이|mutation||궁극적으로 유전적 다양성을 유발하는 생명체 DNA의 뉴클레오타이드 변화. 돌연변이는 바이러스의 DNA 또는 RNA에서도 일어날 수 있다.
+돌연변이유발원|mutagen||DNA와 작용하여 돌연변이를 일으키는 화학적 물리적 요인.
+동공|pupil||빛이 척추동물 눈의 내부로 들어오게 하는 홍채의 열린 부분. 홍채의 근육이 동공의 크기를 조절한다.
+동령군|cohort||집단에서 같은 나이에 속한 개체의 무리.
+동류형성|homoplasy||두 종에서 독립적으로 진화한 유사한(상사) 구조 혹은 분자 서열.
+동맥|artery||심장으로부터 온몸의 기관으로 혈액을 운반하는 혈관.
+동맥경화|atherosclerosis||플라크라고 불리는 지방 침전물이 동맥의 안쪽 벽에 형성되어 혈관을 막아 딱딱하게 만드는 심혈관계 질환.
+동면|hibernation||물질대사가 감소하고, 심장과 호흡계의 활동이 낮아지며 체온을 정상보다 낮게 유지하는 생리적인 상태.
+동물극|animal pole||최소한의 난황이 존재하는 반구에서 난자의 끝 부분; 식물극의 반대쪽.
+동물성 포자|zoospore||병골균류와 일부 원생생물에 존재하는 편모성 포자.
+동반세포|companion cell||많은 원형질연락사에 의해 체관요소로 연결된 식물세포로, 이것의 핵과 리보솜이 인접한 체관 요소를 돕는다.
+동반수송|cotransport||어떤 물질의 한 방향으로의 확산과 짝을 이루는 다른 물질의 반대 방향으로의 확산.
+동방결절|sinoatrial(SA) node||모든 심장근육 세포가 수축하는 속도와 시간을 정하는 심장의 우심방에 있는 부위. 박동원이라고도 한다.
+동성내 선택|intrasexual selection||다른 성의 개체를 짝으로 선택함에 있어 반대 성 개체(주로 수컷) 사이의 직접적인 경쟁이 존재하는 자연선택의 한 형태.
+동소 종분화|sympatric speciation||동일한 지리적 지역에 살고 있는 개체군에서 새로운 종의 형성.
+동원체|kinetochore||각 자매 염색분체를 방추사에 부착시키는 역할을 하는 동원체가 부착하는 단백질 구조.
+동위원소|isotope||각각 동일한 수의 양성자를 가지나 다른 수의 중성자를 가지고 있어 원자량이 다른 원소의 여러 원자 형태 중의 하나.
+동종유사 유전자|paralogous genes||유전자 복제의 결과로 동일한 유전체 내에서 발견되는 상동유전자.
+동질다배체|autopolyploid||한 종에서 유래된 3조 이상의 염색체를 가지는 개체.
+동형|isomorphic||일부 조류에서 비록 염색체 수는 다르지만 배우체와 포자체의 모양이 비슷하게 나타나는 세대교번.
+동형접합성|homozygous||주어진 유전자에서 2개의 동일한 대립유전자를 가지는.
+동형접합체|homozygote||형질을 암호화하는 한 유전자의 동일한 한 쌍의 대립유전자를 가지는 개체.
+동형포자성|homosporous||전형적으로 양성의 배우체로 발생하는 단일 종류의 포자를 가지는 식물종을 일컫는 말.
+동화작용 경로|anabolic pathway||간단한 물질로부터 복잡한 분자를 합성하는 물질대사 경로.
+되먹임 억제|feedback inhibition||대사 경로의 최종 산물이 그 경로상의 한 효소의 억제제로 작용하는 물질대사의 조절 방법.
+되먹임 조절|feedback regulation||대사 경로의 결과물 또는 최종 산물에 의한 과정의 조절.
+되새김 동물|ruminant||소나 양과 같이 초식에 특화된 여러 개의 위 구획을 가지는 되새김질 동물.
+듀센 근위축증|Duchenne muscular dystrophy||성연관 열성 대립유전자에 의해 생기는 인간 유전병으로 근육 조직의 점진적인 약화와 손실이 수반된다.
+뒤쪽|posterior||좌우대칭 동물에서 뒤쪽 혹은 꼬리쪽에 속하는.
+등장의|isotonic||다른 용액과 동일한 용질 농도를 가지는, 따라서 세포의 안쪽으로나 바깥쪽으로의 물의 통과에 아무런 효과가 없다.
+등쪽|dorsal||방사대칭 혹은 좌우대칭 동물의 위쪽에 속하는.
+디네인|dynein||섬모류와 편모류에서 하나의 쌍 미세소관으로부터 인접한 쌍 미세소관으로 뻗은 큰 수축 단백질. ATP 가수분해가 디네인 모양을 변화시켜 섬모와 편모가 휘어지게 한다.
+디옥시리보오스|deoxyribose||RNA 뉴클레오타이드의 당 성분인 리보오스에 비해 하나의 히드록실기가 없는 DNA 뉴클레오타이드의 당 성분.
+디옥시리보핵산|deoxyribonucleic acid(DNA)||디옥시리보오스 당과 질소 염기 아데닌(A), 구아닌(G), 사이토신(C)과 타이민(T)을 가지는 뉴클레오타이드 단량체로 이루어진 이중가닥의 나선 핵산 분자. 복제를 할 수 있으며 세포 단백질의 고유구조를 결정한다.
+떡잎|cotyledon||속씨식물 배의 종자 잎. 종에 따라 하나 혹은 두 개를 가진다.
+라이소자임|lysozyme||세균 세포벽을 분해하는 효소. 포유류에서는 땀, 눈물과 침에 존재한다.
+랑비에결절|node of Ranvier||활동전위가 발생하는 축삭돌기의 수초에 있는 간격. 도약전도에서 각 결절마다 활동전위가 다시 발생하여 축삭돌기를 따라 결절에서 결절로 도약하는 것처럼 나타난다.
+레닌-안지오텐신-알도스테론계|renin-angiotensin-aldosterone system(RAAS)||혈압과 혈액량의 조절을 돕는 단계적 호르몬 경로.
+레트로바이러스|retrovirus||자신의 RNA를 DNA로 역전시킨 다음 이 DNA를 세포 염색체에 삽입시켜서 생식하는 RNA 바이러스. 암 유발 바이러스의 중요한 종류이다.
+레트로트랜스포존|retrotransposon||레트로트랜스포존 DNA의 전사물인 RNA를 매개체로 하여 유전체 내에서 이동하는 전이인자.
+레티날|retinal||척추동물 눈에서 막대세포와 원뿔세포에 있는 빛을 흡수하는 색소.
+로돕신|rhodopsin||레티날과 옵신으로 구성된 색소. 빛을 받으면 레티날의 모양이 변화되어 옵신으로부터 분리된다. 이후 원상태로 돌아간다.
+로지스트형 개체군 성장|logistic population growth||집단의 크기가 수용능력에 도달함에 따라 집단의 생장이 감소하는 모델.
+루비스코|rubisco||RuBP에 CO2를 첨가하는 캘빈 회로의 첫 번째 단계를 촉매하는 효소인 리불로오스이인산카르복실화효소. 과다한 O2가 존재하거나 CO2의 농도가 낮으면 산소와 결합하여 광호흡을 일으킨다.
+리간드 개폐성 이온 통로|ligand-gated ion channel||신호화학물질(리간드)에 반응하여 여닫는 원형질막의 단백질 통로로, 특정 이온을 출입을 조절한다.
+리간드|ligand||다른 분자, 보통 큰 분자와 특이적으로 결합하는 분자.
+리그닌|lignin||관다발식물 세포벽의 셀룰로오스 기질에 박혀 있는 강한 중합체로, 육상에서 구조적 지지 역할을 한다.
+리보솜|ribosome||세포에서 생성되는 세포질에서의 단백질 합성 장소로 rRNA와 단백질로 구성되며 2개의 단위체로 이루어져 있다.
+리보솜 RNA|ribosomal RNA(rRNA)||가장 많은 유형의 RNA로 단백질과 함께 리보솜을 구성한다.
+리보오스|ribose||RNA 뉴클레오타이드의 당 성분.
+리보자임|ribozyme||RNA 이어맞추기 동안 반응을 촉매하는 효소의 기능을 하는 RNA 분자.
+리보핵산|ribonucleic acid(RNA)||리보오스당과 아데닌(A), 사이토신(C), 구아닌(G)과 유라실(U) 등의 질소 염기로 구성된 핵산 종류로 보통 단일가닥이다. 단백질 합성, 유전자 조절과 일부 바이러스의 유전체 기능을 한다.
+리소좀|lysosome||동물세포와 일부 원생생물의 세포질에 존재하는 가수분해효소를 포함하고 있는 막으로 둘러싸인 소낭.
+리자리아|rhizaria||SAR의 진핵생물 큰무리(supergroup)의 3개 주요 작은무리(subgroup) 중 하나. 이 분기군에 속하는 많은 종은 실과 같은 헛발을 가지는 아메바 특성을 보인다.
+림프|lymph||척추동물 림프계에 존재하는 세포 사이액으로부터 유래된 무색의 액체.
+림프계|lymphatic system||순환계와 구분된 림프관과 림프절로 이루어진 시스템으로 액체 및 단백질과 세포를 혈액으로 되돌린다.
+림프구|lymphocyte||후천성 면역에 관여하는 백혈구의 일종. 두 가지 중요 종류는 B세포와 T세포이다.
+림프절|lymph node||림프관을 따라 위치한 기관. 림프를 거르며 바이러스나 세균의 공격을 방어한다.
+마디|node||식물의 줄기를 따라서 잎이 붙어 있는 지점.
+마디사이|internode||잎이 부착되어 있는 지점 사이의 식물 줄기 부분.
+마이오글로빈|myoglobin||근육세포에서 산소를 저장하는 색소 단백질.
+마이오신|myosin||액틴과 함께 근세포의 수축을 유발하는 단백질 섬유의 일종.
+마이크로 RNA(miRNA)|microRNA(miRNA)||두 가닥의 RNA 전구체로부터 생성되는 작은 단일 가닥의 RNA 분자. 마이크로 RNA는 하나 혹은 그 이상의 단백질과 결합하여 복합체를 형성하여 상보적인 서열을 가지는 mRNA의 번역을 방해하거나 분해할 수 있다.
+마주보는 엄지손가락|opposable thumb||엄지의 지문이 있는 쪽이 다른 4개 손가락 끝의 지문이 있는 쪽과 접촉할 수 있는 손가락의 배열.
+막관통 단백질|transmembrane protein||막 전체에 걸쳐 있는 내재 단백질의 한 종류.
+막대 그래프|bar graph||독립변수를 무리 또는 수치가 아닌 범주로 나타내고 종속변수의 값을 막대로 나타내는 그래프.
+막대세포|rod||낮은 강도의 빛에 민감한, 척추동물 망막에 있는 막대 모양의 세포.
+막전위|membrane potential||이온의 불균등 분포에 의한 세포의 세포질과 세포외 용액 사이의 전하 차이. 막전위는 흥분성 세포의 활동과 모든 하전된 물질의 막통과에 영향을 미친다.
+말기|telophase||유사분열의 5번째이자 마지막 단계로 딸세포 핵이 형성되고 세포질분열이 시작된다.
+말초신경계|peripheral nervous system (PNS)||중추신경계로 연결하여 주는 감각 및 운동 뉴런.
+말피기관|Malpighian tubule||소화관으로 배설하고, 혈림프로부터 질소 노폐물을 제거하며, 삼투 조절 기능을 수행하는 곤충의 독특한 배설기관.
+맛봉오리, 미뢰|taste bud||혀와 입의 여러 부분에 흩어져 존재하는 변형된 상피세포의 하나로, 사람에서 맛의 수용체이다.
+망막|retina||척추동물 눈의 가장 안쪽 층으로 광수용체(막대세포와 원뿔세포)와 뉴런이 존재한다. 렌즈에 의해 형성된 상을 시신경을 통해 뇌로 보낸다.
+매끈면소포체, 활면소포체|smooth ER||리보솜이 없는 소포체 부분.
+맥박|pulse||각 심장박동에 따른 동맥벽의 주기적 팽창.
+맹장, 막창자|cecum||큰창자의 시작 부근에 존재하는 막다른 주머니 모양의 공간.
+먹이그물|food web||생태계에서 서로 얽힌 먹이 관계.
+먹이사슬|food chain||생산자로부터 시작하여 한 영양 단계로부터 다른 영양 단계로 먹이 에너지가 이동하는 경로.
+먹이찾기|foraging||먹이를 찾거나 획득하는 것.
+먹장어|hagfish||매우 축소된 척추와 연골로 된 두개골을 가지는 턱이 없는 해양척추동물. 대부분의 먹장어는 해양 바닥에서 죽은 동물을 먹고 산다.
+메가파스칼|megapascal(MPa)||약 10기압의 압력에 해당되는 압력의 단위.
+메타개체군|metapopulation||이입과 이출을 통해서 상호작용하는 단일 종의 공간적으로 분리된 집단의 무리.
+메타유전체학|metagenomics||여러 종으로부터의 DNA의 수집과 염기서열 결정. 보통 미생물의 환경시료를 말한다. 컴퓨터를 이용하여 시료를 구성하는 각각 종의 부분적 유전체 서열을 분류한다.
+메탄생성균|methanogen||이산화탄소를 이용하여 수소를 산화시켜 에너지를 얻는 생물로 메탄이 부산물로 생성된다. 알려진 모든 메탄생성균은 고세균 영역에 속한다.
+메틸기|methyl group||산소가 3 수소 원자와 결합한 화학기. 메틸기는 탄소나 다른 원자에 부착할 수 있다.
+멜라토닌|melatonin||송과샘에서 분비되는 호르몬으로 계절의 낮 길이와 관련된 몸의 기능을 조절한다.
+면역|immunization||인위적인 방법으로 면역상태를 유도하는 과정. 백신접종에서는 정상적으로는 병원성인 미생물의 비병원성 변형체를 주입하여 B세포와 T세포 반응과 면역기억을 유도한다. 수동면역에서는 특정 병원체의 항체를 주입하여 즉각적이지만 임시적인 방어를 유도한다.
+면역계|immune system||질병을 일으키는 병원체에 대한 생물의 방어 시스템.
+면역글로불린|immunoglobulin(Ig)||항체 참조.
+멸종위기종|endangered species||멸종의 위험에 처해 있는 종.
+멸종위협종|threatened species||가까운 장래에 멸종 가능성이 있는 종.
+멸종의 소용돌이|extinction vortex||근친교배와 유전적 부동의 양성 되먹임 고리가 집단의 크기를 축소시키고, 나아가 만약 변액이 반전되지 않으면 멸종되는 집단의 변혁.
+명반응, 빛반응|light reactions||캘빈회로에 앞서는 광합성의 중요한 처음 두 단계. 엽록체의 틸라코이드 막 위나 일부 원생생물의 막 위에서 일어나는 이 반응은 빛에너지를 ATP와 NADPH의 화학에너지로 전환시키며, 이 과정에서 산소가 발생한다.
+모계영향 유전자|maternal effect gene||모계에서 돌연변이가 일어났을 때 자손의 유전형과는 상관없이 자손에서도 돌연변이 표현형이 나타나는 유전자. 배아극성유전자라고도 불리는 모계영향 유전자는 초파리(Drosophila melanogaster)에서 최초로 발견되었다.
+모델 생물|model organism||실험실에서 기르기 쉽고 큰 무리를 대표하기 때문에, 다양한 생물학 분야의 연구에 이용하기 위해서 선택한 특별한 생물종.
+모상체|trichome||식물의 싹에 털 모양으로 돌출된 특수화된 표피세포.
+모세혈관|capillary||조직을 통과하는 미세한 혈관으로 한 층의 내피세포로 이루어져 있어 혈액과 세포 사이액 사이의 교환이 가능하다.
+모세혈관망|capillary bed||조직 또는 기관에 존재하는 모세혈관의 조직망.
+모형|model||가설이나 과정의 설명.
+목|order||분류에서 과의 상위 단계.
+목련류|magnoliid||진정 쌍떡잎식물과 매우 밀접하게 연관된 속씨식물 분기군의 일원. 예로는 목련, 월계수와 후추나무 등이 있다.
+몰|mole(mol)||달톤으로 표시하는 분자량 또는 원자량과 동일한 물질의 그램수. 1몰은 아보가드로 수의 분자나 원자를 포함한다.
+몰농도|molarity||용액 1 L당 용질의 몰수로 나타내는 용질의 농도 측정.
+무거운 사슬|heavy chain||항체 분자와 B세포 수용체를 구성하는 두 종류의 폴리펩타이드 사슬 중 하나; 항원결합 부위인 가변부와 불변부로 구성된다.
+무경농업|no-till agriculture||밭고랑을 만들어 토양의 파헤침을 최소화하는 경작기법.
+무광대|aphotic zone||해양이나 호수의 투광대 아래층으로, 광합성에 충분한 빛이 도달하지 못한다.
+무기질|mineral||영양에서, 무기물이며 따라서 합성할 수 없는 간단한 영양물질.
+무기질 코르티코이드|mineralocorticoid||염분과 물의 항상성을 조절하는 부신겉질로부터 분비되는 스테로이드호르몬.
+무산소 호흡|anaerobic respiration||전자전달계의 마지막 단계에서 산소 대신 다른 유기 분자를 이용하는 세포호흡.
+무생물|abiotic||살아 있지 않은, 환경의 물리적 화학적 속성을 일컫는 말.
+무성 생식|asexual reproduction||배우자의 결합없이 오직 한 쪽의 부모로부터 자손의 생산. 대부분의 경우 자손은 부모와 유전적으로 동일하다.
+무수정 생식|apomixis||수컷 배우자에 의한 수정에 의하지 않고 종자를 통해 무성적으로 생식하는 몇몇 식물의 능력.
+무수휴면|anhydrobiosis||생물에서 거의 모든 수분의 손실을 포함하는 휴면 상태.
+무종자 관다발식물|seedless vascular plant||관다발은 있으나 종자가 없는 식물의 비공식적 명칭. 무종자식물은 석송문(석송과 그 친족)과 양치문(고사리와 그 친족)을 포함하는 측계통군을 형성한다.
+무척추동물|invertebrate||등뼈가 없는 동물. 동물의 약 95%를 차지한다.
+무체강동물|acoelomate||장관과 바깥 체벽 사이에 강이 없는 동물.
+무한 생장|indeterminate growth||생존하는 동안 계속 자라는 식물에 특징적인 생장 유형.
+문|phylum||분류에서, 강 상위의 분류 단위.
+문제해결|problem solving||실제나 혹은 명백한 장애물에 부딪혔을 때 한 상태에서 다른 상태로 나아가는 방법을 고안하는 인식 활동.
+문화|culture||집단 내에서 개인의 행동에 영향을 미치는 사회적 학습이나 교습을 통한 정보전달 시스템.
+물관|vessel||대부분의 속씨식물과 일부 꽃피지 않는 관다발식물에서 발견되는 물을 통과시키는 연속적인 미세관.
+물관 요소|vessel element||대부분의 속씨식물과 일부 꽃피지 않는 관다발식물의 체관에서 발견되는 짧으며 넓고 물을 통과시키는 세포. 성숙하면 죽게 되며, 물관요소는 끝과 끝이 서로 맞붙어 물관이라고 하는 미세관을 형성한다.
+물관부|xylem||뿌리에서부터 식물의 다른 부분으로 물과 무기염류를 수송하는 기능을 하는, 주로 관 모양의 죽은 세포로 이루어진 식물의 관다발 조직.
+물관액|xylem sap||물관과 헛물관에 의해 수송되는 물과 무기물의 희석된 용액.
+물질|matter||공간과 질량을 차지하는 어떤 것.
+물질대사, 대사|metabolism||동화 경로와 이화 경로로 이루어지는 한 생물에서 일어나는 화학 반응의 총합으로, 세포의 물질과 에너지 근원을 조절한다.
+물질대사율|metabolic rate||시간 단위당 동물이 사용하는 에너지의 총량.
+뮐러 의태|Müllerian mimicry||맛이 없는 두 종 간의 상호 의태.
+뮤코로균류|Mucoromycete||유성 생식 동안 접합 포자낭이라고 불리는 단단한 구조물을 형성하는 특징을 가지는 뮤코로균문(Mucoromycota)에 속하는 균류.
+미각 자극 물질|tastant||맛봉오리에서 감각수용기를 자극하는 화학물질.
+미각|gustation||맛의 감각.
+미기후|microclimate||통나무 아래의 특수한 기후 조건과 같은 매우 세밀한 기후 형태.
+미량 원소|trace element||지극히 적은 양만이 요구되는 생명활동에 반드시 필요한 원소.
+미량영양소|micronutrient||매우 적은 양만을 필요한 필수 원소.
+미생물군집|microbiome||한 생물의 표면이나 속에서 살아가는 미생물의 집합으로 유전물질도 포함한다.
+미세섬유|microfilament||거의 모든 진핵세포의 세포질에 존재하는 섬유상 액틴 단백질로 이루어진 섬유로, 세포골격을 이루며 마이오신과 함께 혹은 단독으로 근수축에 관여한다. 액틴 필라멘트라고도 불린다.
+미세소관|microtubule||모든 진핵세포의 세포질과 섬포, 편모 및 세포골격에 존재하는 튜불린 단백질로 이루어진 속이 빈 막대 모양의 관.
+미세융모|microvillus||작은창자의 내벽에 표면적을 넓히기 위해서 존재하는 많은 수의 미세하고 손가락 모양의 상피세포의 돌기.
+미세플라스틱|microplastic||5 mm보다 작은 크기의 플라스틱 조각. 미세플라스틱은 세계 대양뿐만 아니라 담수 및 육상 생태계를 오염시키고 있다.
+미토콘드리아 기질|mitochondrial matrix||시트르산 회로에 필요한 효소와 기질을 가지고 있는 내막으로 둘러싸인 미토콘드리아 부분.
+미토콘드리아|mitochondria||세포호흡을 담당하는 진핵세포의 세포소기관. 산소를 사용하여 유기물을 분해하여 ATP를 생성한다.
+미포자충균류|microsporidian||미포자충군문에 속하는 균류. 원생생물과 동물에 기생하는 단세포 균류이다. 미포자충균류와 그들의 자매 분류군(크립토균류)은 한 기저균류계통이다.
+밀도 비의존성|density independent||집단의 밀도에 영향을 받지 않는 특성을 일컫는 용어.
+밀도 의존성|density dependent||집단의 밀도 증가에 따라 변하는 특성을 일컫는 용어.
+밀도 의존성 억제|density-dependent inhibition||정상적인 동물세포에서 관찰되는 현상으로서, 다른 세포와 접촉하게 되면 분열을 멈춘다.
+밀도|density||단위 면적이나 부피당 개체수.
+밀착연접|tight junction||세포 사이의 물질 누출을 막는 동물세포의 세포간 연접의 한 종류.
+밑씨, 배주|ovule||종자식물의 씨방 내에서 발생하는 구조로 암 배우체를 포함하고 있다.
+바깥귀, 외이|outer ear||조류를 포함한 파충류와 포유류의 귀의 중요한 3부분 중 하나. 이도로 이루어져 있으며, 많은 조류와 포유류에서는 귓바퀴가 존재한다.
+바소체|Barr body||포유류 암컷세포의 핵 내부에 존재하는 응축된 물질로 불활성화된 X 염색체이다.
+바소프레신, 항이뇨 호르몬|vasopressin||항이뇨 호르몬(ADH) 참조.
+바이러스|virus||세포내부에서 복제하는 능력을 가지는 감염성 입자. 단백질껍질(캡시드)로, 일부 바이러스는 피막으로 둘러싸인 DNA 또는 RNA 유전체를 가진다.
+바이러스 피막|viral envelope||바이러스 유전체를 둘러싸는 껍질을 싸는 막.
+박출량|stroke volume||한 번의 수축으로 심실에서 내뿜는 혈액의 양.
+박테로이드|bacteroid||뿌리혹 세포에서 형성되는 소낭에 포함되어 있는 뿌리혹세균(Rhizobium)의 형태.
+박테리오파지|bacteriophage||세균을 감염시키는 바이러스; 파지라고도 한다.
+반감기|half-life||방사성 동위원소의 50%가 붕괴되는 데 걸리는 시간.
+반고리관|semicircular canals||평형 유지 기능을 담당하는 속귀의 세 부분으로 된 공간.
+반달판막|semilunar valve||심장의 두 출구에 위치한 판막으로, 이곳에서 대동맥이 좌심실을 떠나고 허파동맥이 우심실을 떠난다.
+반데르발스 인력|van der Waals interactions||국소적인 전하 변동을 유발하는, 분자 사이나 혹은 분자의 부분 사이에서의 약한 인력.
+반보존적 복제 모형|semiconservative model||복제된 이중 나선이 하나의 오래된 가닥과 다른 하나의 새롭게 형성된 가닥으로 이루어진 DNA 복제 유형.
+반복생식|iteroparity||성체가 여러 해에 걸쳐 많은 수의 자손을 생산하는 생식. repeated reproduction이라고도 한다.
+반복서열 DNA|repetitive DNA||진핵생물에서 보통 암호화하지 않으며 많은 사본 수로 존재하는 염기서열. 반복 단위는 유전체 내에 보통 짧고 순차적이거나 혹은 길고 흩어져 존재한다.
+반사|reflex||척수나 하등한 뇌에 의해 매개되는 자극에 대한 자동 반응.
+반성 유전자|sex-linked gene||성 염색체(보통 X 염색체)에 위치한 유전자로, 유전의 독특한 양상을 제공한다.
+반수체 세포|haploid cell||단지 염색체의 한 세트(n)만 가지고 있는 세포.
+반응|response||(1) 세포신호전달에서, 세포 외부로부터 전달된 신호에 의해 야기되는 특정 세포 활동의 변화. (2) 항상성에서, 변수를 원래의 지점으로 되돌리는 것을 돕는 생리적 활동.
+반응물|reactant||화학 반응의 시작 물질.
+반응중심 복합체|reaction-center complex||한 쌍의 특별한 엽록소 a 분자와 1차 전자 수용체와 결합된 단백질 복합체. 광계 중심에 위치하며 이 복합체가 광합성의 명반응을 유발시킨다. 빛에너지에 의해서 흥분된 엽록소 중 하나가 1차 전자 수용체에 전자를 공여하며 이 전자가 전자전달계를 통과한다.
+발|foot||(1) 운반세포를 통하여 부모 생식세포로부터 당, 아미노산, 물과 무기염류를 모으는 선태식물의 포자체 부분. (2) 연체동물의 세 가지 주요 부분 중 하나로 이동에 이용되는 근육구조. 외투막과 내장낭 참조.
+발생 단계 변화|phase change||(1) 한 발생 상태에서 다른 상태로의 이동. (2) 식물의 정단 분열 조직의 활동으로 한 상태에서 일어나는 형태적 변화.
+발생|development||한 생물이 단순한 형태에서 보다 복잡하고 특수화된 형태로 점차 변화하는 과정과 관련된 사건.
+발암 유전자|oncogene||암으로 이를 수 있는 분자 사건을 유발하는 데 관련된 바이러스 또는 세포 유전체에서 발견되는 유전자.
+발열 반응|exergonic reaction||자유에너지가 방출되는 자발적 화학 반응.
+발정 주기|estrous cycle||고등 영장류를 제외하고 모든 포유류 암컷에서 나타나는 생식 주기의 특성으로, 임신하지 않은 자궁내막이 떨어져 나오기보다는 다시 흡수되고 발정기 중에만 성적 반응이 나타난다.
+발현 벡터|expression vector||진핵세포 유전자가 삽입되는 제한 부위의 위쪽에 세균 프로모터를 포함하는 클로닝 벡터로, 세균 세포 내에서 유전자가 발현되게 한다.
+발효|fermentation||포도당으로부터 전자전달계를 거치지 않고 제한된 양의 ATP를 생성하는 이화작용 과정으로, 알코올과 젖산과 같은 최종 산물을 생성한다.
+방광|urinary bladder||배출에 앞서 오줌이 저장되는 주머니.
+방사 대칭|radial symmetry||파이나 술통 모양(왼쪽과 오른쪽이 없는)으로 생긴 몸의 특징으로, 중심축을 따른 어떠한 면에 의해서 반대편 쪽을 가지지만 동등하게 나눌 수 있다.
+방사상 난할|radial cleavage||접합자를 공 모양의 세포덩어리로 변환시키는 세포분열면이 배의 수직축에 평행하거나 혹은 수직으로 위치하여 세포의 배열이 한 세포 위쪽에 다른 세포를 배열하게 되는 후구동물의 배발생 유형.
+방사성 동위원소|radioactive isotope||불안정한 동위원소로 핵이 자발적으로 분해되면서 검출 가능한 입자와 에너지를 방출한다.
+방사성 연대측정법|radiometric dating||방사성 동위원소의 반감기에 근거하여 바위나 화석의 절대 나이를 측정하는 방법.
+방사형 지느러미 어류|ray-finned fish||참치, 농어, 청어와 같이 긴 방사조직에 의해 지지되는 지느러미를 가지는 해양 경골어류인 조기강(Actinopterygii) 분기군에 속하는 무리.
+방산충류|radiolarian||일반적으로 규소로 만들어진 껍질과 몸의 중심에서 방사상으로 뻗어 나간 위족을 가지는 보통 해양 원생생물.
+방실 결절|atrioventricular(AV) node||우심방과 우심실 사이에 있는 특수화된 근육 조직으로 전기 자극이 심실에 도달하여 심실을 수축시키기 전에 약 0.1초간 지연시킨다.
+방실 판막|atrioventricular(AV) valve||심장의 각 심방과 심실 사이에 있는 판막으로 심실이 수축할 때 혈액이 역류하는 것을 방지한다.
+방향성 선택|directional selection||표현형 범위의 한쪽 끝에 존재하는 개체가 다른 개체에 비해 더 성공적으로 생존하거나 생식할 수 있는 자연선택.
+배낭|embryo sac||8개의 반수체 핵을 가진 다세포 구조로 대표자가 생장과 분열로부터 형성되는 속씨식물의 암배우체.
+배란|ovulation||난소로부터 난자의 방출. 사람에서는 난소의 난포가 각 생리 주기 동안 난자를 방출한다.
+배반포|blastocyst||내세포집단, 공간, 영양아층인 바깥층으로 이루어진 포유류의 배발생의 포배 단계. 사람에서는 배반포가 수정 후 1주일 내에 형성된다.
+배뿌리|radicle||식물의 배 뿌리(배근).
+배설|excretion||물질대사 결과로 생긴 질소 노폐물의 제거.
+배아 치사|embryonic lethal||배나 유충을 죽음에 이르게 하는 돌연변이.
+배엽|germ layers||낭배에서 동물의 여러 조직이나 기관을 형성하는 3개의 중요한 층 중의 하나.
+배외막|extraembryonic membrane||파충류와 포유류에서 발생하는 배를 보호하는 배 바깥에 존재하는 4가지의 막(난황주머니, 양막, 융모막, 요막) 중 하나.
+배우자선택 모방|mate-choice copying||명백히 사회적 학습의 결과로 인해 한 집단에서의 한 개체가 짝을 선택 시 다른 개체의 짝 선택을 모방하는 행동.
+배젖|endosperm||속씨식물에서 중복 수정 동안 하나의 정핵과 2개의 극핵이 결합하여 형성된 영양분이 풍부한 조직으로, 속씨식물에서 배 발생 동안 영양분을 공급해 주는 기능을 한다.
+배쪽|ventral||좌우대칭 동물에서 아래쪽에 속하는(대부분의 동물), 또는 몸체(똑바로 선 자세를 가지는 동물)의 앞.
+배출, 배설|elimination||동물에서 음식물 가공의 4번째이자 마지막 단계로, 소화되지 않은 음식물 부분을 통과시킴.
+백색질|white matter||중추신경계에서 축삭돌기가 모여 있는 부분.
+백신|vaccine||특정 병원체에 대한 방어를 위해 숙주의 면역계를 자극하게 하는 무해한 병원체의 유도체나 변형.
+백혈구|leukocyte||감염에 저항하여 싸우는 혈구세포.
+번역|translation||mRNA 분자에 암호화되어 있는 유전정보를 이용한 폴리펩타이드의 합성. 핵산으로부터 아미노산으로의 언어 변화가 수반된다.
+번역틀|reading frame||mRNA 상에서 폴리펩타이드 합성 동안 번역기구에 의해 사용되는 리보뉴클레오타이드의 3 염기조 집합.
+번역틀이동 돌연변이|frameshift mutation||3의 배수가 아닌 소수의 뉴클레오타이드가 삽입되거나 결실되어 생긴 돌연변이로, 그 결과 뉴클레오타이드가 코돈으로 부적절하게 짜여지게 된다.
+범갑각류|pancrustacean||곤충 및 6개의 다리를 가지는 곤충의 친척뿐만 아니라 바닷가재, 게, 따개비와 그 외 갑각류를 포함하는 다양한 절지동물 분기군의 무리.
+범유행성, 세계적 유행성|pandemic||세계적으로 퍼지는.
+베이츠 의태|Batesian mimicry||무해한 종이 포식자에게 독이 있거나 혹은 유해한 종으로 보이게 하는 의태 형태.
+베타 병풍구조|beta (β) pleated sheet||폴리펩타이드 사슬이 앞뒤로 접히는 단백질 2차 구조의 하나. 사슬의 두 부위가 서로 평행하게 놓여져 있고 그 사이는 수소 결합으로 연결되어 있다.
+베타 산화|beta oxidation||시트르산 회로로 아세틸 조효소 A(아세틸 CoA)로 들어가게 하기 위해 지방산을 2탄소 물질로 분해하는 물질대사 과정.
+벡터|vector||한 숙주에서 다른 숙주로 병원균을 전달하는 생물.
+변성|denaturation||단백질에서는 단백질이 풀리면서 고유의 구조를 잃어버려 생물학적으로 불활성화되는 과정을 말하며, DNA에서는 이중 나선의 두 가닥이 풀리는 것을 말한다. 변성은 극한의 비세포적 pH, 염의 농도와 온도에서 일어난다.
+변수|variable||실험에서 변하는 요소.
+변이|variation||동일한 종 사이에서 개체 간의 차이.
+변태|metamorphosis||동물의 애벌레가 성체를 닮았지만 아직 성적으로 성숙하지 않은 유충으로 변하는 발생적 전이.
+변형아메바|amoebocyte||헛발(위족)로 이동하는 아메바 모양의 세포. 종에 따라서 음식물을 소화시키며 분배하기도 하며, 노폐물을 처리하며 골격섬유를 형성하기도 하고 또한 감염에 맞서 싸우며 다른 세포 모양으로 변하기도 한다.
+병균균|chytrid||병균균문에 속하는 균류로 대부분 원시균류 계통을 나타내는 편모성 유주자를 가지는 수생 균류이다.
+병목 효과|bottleneck effect||생존하는 집단이 더 이상 원래집단을 유전적으로 대표할 수 없을 정도의 큰 자연 재앙에 의한 것과 같은 집단의 감소로 인한 유전적 부동.
+병원체 관련 분자패턴|pathogen-associated molecular pattern(PAMP)||특정 병원체에 특이적인 분자서열.
+병원체|pathogen||질병을 유발하는 생물이나 바이러스.
+보먼주머니|Bowman's capsule||척추동물의 신장에서 컵 모양의 구조로서 여액이 혈관으로 들어가는 네프론의 늘어난 부분.
+보어 효과|Bohr shift||pH의 감소에 의해 야기된 헤모글로빈의 산소 친화도 감소; 조직 근처에서 헤모글로빈이 산소의 방출을 용이하게 한다.
+보인자|carrier||유전학에서 특정 유전좌위에 하나의 정상 대립유전자와 하나의 잠재적으로 유해한 열성 대립유전자를 가지는 이형의 개체. 표현형은 정상이나 유해한 대립유전자를 자손에 전달한다.
+보전생물학|conservation biology||모든 수준에서 생물의 다양성을 유지시키고자 하는 생태학, 진화학, 생리학, 분자생물학과 유전학의 통합학문.
+보조억제자|corepressor||세균의 억제 단백질에 결합하여 모양을 변화시켜 오페론 작동을 중지시키는 작은 분자.
+보조인자|cofactor||효소의 완전한 기능을 위해 요구되는 비단백질 분자나 이온. 보조인자는 활성 부위에 영구히 결합되거나 촉매 반응 동안 기질에 느슨하게 결합되기도 한다.
+보체계|complement system||염증 반응을 증폭시키며 식세포작용을 증진시키거나 혹은 직접적으로 병원균을 용해시키는 약 30종의 혈액 단백질군.
+보호색|cryptic coloration||포식자로 하여금 주변 색과 구별이 되지 않도록 하는 위장.
+복제 분기점|replication fork||복제 중인 DNA 분자에서 부모가닥이 풀어지고 새로운 가닥이 자라는 Y 모양 부위.
+복합과|multiple fruit||꽃차례(화서: 밀집하게 함께 뭉쳐진 꽃의 무리)로부터 발생한 과실.
+부갑상샘|parathyroid gland||갑상샘 표면에 존재하는 4개의 작은 내분비샘으로 부갑상샘 호르몬을 분비한다.
+부갑상샘 호르몬|parathyroid hormone(PTH)||부갑상샘에 의해 분비되는 호르몬으로 뼈로부터 칼슘 방출과 신장에 의한 칼슘의 유지를 촉진시켜 혈액 내의 칼슘량을 높인다.
+부교감 신경계|parasympathetic division||자율신경계 중 하나로 소화나 감소된 심장박동과 같이 일반적으로 에너지를 얻거나 보존하는 몸의 활동을 증가시킨다.
+부기저체류|parabasalia||트리코모나드와 같은 변형된 미토콘드리아를 가지는 원생생물.
+부등편모조류|Stramenopila||SAR 분기군의 진핵생물 큰무리(supergroup)의 3개 주요 작은무리(subgroup) 중 하나. 이 분기군에 2차 세포내공생에 의해 생겨났으며 규조류와 갈조류를 포함한다.
+부레|swim bladder||수생 경골어류가 물속에서 물고기의 부력을 조절하는 공기주머니.
+부모형|parental type||표현형이 부모의 표현형 하나와 일치하는 자손. 또한 표현형 그 자체를 언급하기도 한다.
+부식질|humus||표토의 성분인 분해 중인 유기물.
+부신|adrenal gland||포유류에서 신장 옆에 위치한 두 내분비샘 중 하나. 바깥 부위(겉질)에 존재하는 내분비세포는 부신피질자극호르몬(ACTH)에 반응하여 장기간 지속되는 스트레스 동안 항상성을 유지시키는 스테로이드호르몬을 분비한다. 중앙 부위(속질)에 위치하고 있는 신경분비세포는 단기간의 스트레스에 의해 유발된 신경 입력에 반응하여 에피네프린과 노르에피네프린을 분비한다.
+부영양 호수|eutrophic lake||높은 율의 영양 주기에 의해 높은 율의 생물 생산성을 보이는 호수.
+부영양화|eutrophication||특히 인과 질소와 같은 영양물질이 물에서 아주 높게 농축되는 과정으로 조류 또는 넘세균과 같은 생물의 증가를 유발한다.
+부유물 섭식자|suspension feeder||포획 또는 여과 기작을 통해 주위로부터 부유하는 음식물 입자를 먹고 사는 동물.
+부정소|epididymis||정소에 붙어 있는 돌돌 감긴 세관으로 정자가 저장된다.
+부착 의존성|anchorage dependence||세포가 분열하기 위하여 기층에 부착하여야만 하는 요구성.
+부착기|holdfast||해조류를 부착시키는 뿌리와 유사하게 생긴 구조.
+부피 유동|bulk flow||두 장소의 압력차에 의한 물의 이동.
+북방 침엽수림|northern coniferous forest||길고 추운 겨울이 특징이며, 구과 목본류가 우점종인 육상 생물군계.
+분광광도계|spectrophotometer||색소용액에 의해 흡수되거나 통과되는 여러 파장의 빛의 양을 측정하는 기구.
+분기군|clade||조상과 그 모든 자손을 포함하는 종의 무리. 분기군은 단계군과 동일하다.
+분기성 선택|disruptive selection||표현형 범위의 양 극단에 존재하는 개체가 중간의 표현형을 가지는 개체에 비해 더 성공적으로 생존하거나 생식할 수 있는 자연선택.
+분기점|branch point||공통조상으로부터 둘 혹은 그 이상의 분류군의 분기 계통수에 있는 표시. 대부분의 분기점은 가지가 2개의 분지(각각은 자손 분류군을 나타낸다)로 조상계통이 분리되는 것을 나타내는, 양갈래 분지로 표시된다.
+분기학|cladistics||공통조상이, 분기군으로 무리지음에 의해 생물을 분류하는 데 이용되는 중요 기준이 되는 분류학적 접근.
+분류군|taxon||분류의 한 단계에서의 분류 단위.
+분류학|taxonomy||다양한 형태의 생물을 명명하고 분류하는 학문 분야.
+분리의 법칙|law of segregation||멘델의 제1법칙; 생식세포 형성 동안 쌍으로 존재하는 각 대립유전자는 다른 생식세포로 분리되어 들어간다는 법칙.
+분비|secretion||(1) 세포에 의해 합성된 분자의 배출. (2) 배설계에서 체액의 노폐물이나 특정 용질을 여액으로 능동 수송하는 과정.
+분산|dispersal||부모가 있는 곳으로부터 멀어지는 개체나 배우자의 이동. 이 이동은 때로 개체군이나 개체의 지리적 범위를 확장시킨다.
+분산|dispersion||지리적 집단의 경계 안에서의 개체 사이의 간격 양상.
+분생자|conidiun||무성 생식 동안 자낭균류의 특별한 균사 끝에서 생성되는 빈수체 포자.
+분야|soredium||지의류에서 조류가 박혀 있는 작은 균사덩어리.
+분압|partial pressure||혼합기체에서 특정 기체에 의한 압력(예를 들어, 공기 중에서 산소에 의한 압력).
+분열 조직|meristem||식물이 생존하는 동안 배 상태로 남아 있는 식물조직으로 무한 생장이 가능하게 한다.
+분열|fission||부모가 2개 혹은 그 이상의 비슷한 크기의 개체로 분리되는 것.
+분자|molecule||둘 혹은 그 이상의 원자가 공유 결합으로 합쳐진 것.
+분자량|molecular mass||분자에 있는 모든 원자 질량의 합.
+분자시계|molecular clock||유전체의 몇몇 부분이 일정한 속도로 진화되는 것에 근거한, 주어진 양의 진화 변화에 요구되는 시간을 측정하는 방법.
+분절증식, 분절생식|fragmentation||모체가 여러 조각으로 나누어져 완전한 하나의 개체로 분화하는 무성 생식의 수단.
+분해자|decomposer||사체나 떨어진 낙엽, 생물의 노폐물과 같은 죽은 유기물을 흡수하여 이것을 무기물 형태로 변환시키는 부생균류나 원핵생물 종류. 잔재물 섭식자.
+분화|differentiation||세포 또는 세포 무리가 구조와 기능에서 특수화되는 과정.
+불완전 균류|deuteromycete||알려진 성단계가 없는 균류의 고전적 분류.
+불완전 꽃|incomplete flower||4개의 기본 꽃기관인 꽃받침, 꽃잎, 심피 및 수술 중 하나 혹은 그 이상이 없거나 기능을 하지 못하는 꽃.
+불완전 변태|incomplete metamorphosis||메뚜기와 같은 일부 곤충에서처럼 애벌레가 성체를 닮지만 크기는 작고 몸의 비율이 다른 성체와 다른 발생 유형. 애벌레는 각 시기가 성체와 모양이 점점 비슷해지는 탈피를 거쳐 완전한 크기에 도달한다.
+불완전 우성|incomplete dominance||이형접합자의 표현형이 각 대립유전자의 동형 접합체 개체의 표현형의 중간을 나타내는 상황.
+불응기|refractory period||활동전위 다음에 이어지는 짧은 시기로, 전압개폐성 소듐 통로의 불활성화로 인해 뉴런이 다른 자극에 반응하지 않는다.
+불포화 지방산|unsaturated fatty acid||탄화수소 고리에 있는 탄소 사이에 하나 이상의 이중 결합을 가지는 지방산. 이러한 결합은 탄소골격에 부착된 수소 원자의 수를 감소시킨다.
+브라시노스테로이드|brassinosteroid||세포 신장, 잎의 노화 지연, 물관 분화 촉진 등 다양한 기능을 가지는 식물의 스테로이드호르몬.
+비결정적 난할|indeterminate cleavage||후구동물의 배발생 유형으로 초기 난할에 의해 생성된 각 세포는 완전한 배로 발생할 수 있는 능력을 가진다.
+비경쟁적 저해제|noncompetitive inhibitor||효소의 활성자리와는 먼 다른 곳에 결합하여 효소의 구조를 변화시켜 활성자리가 더 이상 효과적으로 작용할 수 없도록 효소의 활성을 감소시키는 물질.
+비극성 공유 결합|nonpolar covalent bond||전자가 비슷한 전기음성도를 가지는 두 원자 사이에서 공평하게 공유되는 공유 결합의 유형.
+비만세포|mast cell||염증 반응과 알레르기에 관여하는 히스타민을 분비하는 면역세포.
+비분리|nondisjunction||감수분열 혹은 유사분열에서 한 쌍의 상동염색체 모두나 자매 염색분체가 서로 적절하게 나누어지지 못하는 실수.
+비순환적 전자 흐름|linear electron flow||광합성의 명반응 동안 광계 I과 II가 모두 관여하여 ATP, NADPH와 O2를 생성하는 전자 흐름의 경로. 순전자 흐름은 H2O로부터 NADP+로 일어난다.
+비열|specific heat||물질 1 g의 온도를 1°C 변경하는 데 흡수하거나 혹은 잃어야 하는 열량.
+비타민|vitamin||매우 적은 양이 식사에 요구되는 유기 분자. 주로 조효소나 조효소의 일부분으로 작용한다.
+비평형 모형|nonequilibrium model||군집이 교란에 의해 충격을 받은 후 안정되게 있지 않고 끊임없이 변화함을 강조하는 군집의 모형.
+빈도의존적 선택|frequency-dependent selection||집단 내에 너무 공통적으로 되어버린 표현형을 가지는 개체의 생식 성공이 감소하는 것.
+빈영양 호수|oligotrophic lake||식물성 플랑크톤이 거의 없으며 영양소가 빈약한 맑은 호수.
+빠른수축섬유, 속근섬유|fast-twitch fiber||빠르고 강력한 수축에 사용되는 근육섬유.
+뼈|bone||콜라겐 섬유의 단단한 구조 안에 칼슘염이 존재하는 살아 있는 세포로 구성된 결합 조직의 일종.
+뿌리|root||관다발식물에서 식물체를 고정시키는 기관으로 토양으로부터 물과 무기염류를 흡수한다.
+뿌리 골무|root cap||식물 뿌리 끝에 있는 원뿔 모양을 형성하는 세포 무리로 정단 분열조직을 보호한다.
+뿌리계|root system||식물체를 토양에 고정시키며 물과 무기염류를 흡수하고 양분을 저장하는 모든 식물의 뿌리.
+뿌리압|root pressure||뿌리의 관다발 조직에서 물관액을 위로 미는 힘.
+뿌리의 rooted|rooted||모든 분류군의 가장 마지막 공통조상을 나타내는 분기점(일반적으로 가장 왼쪽에 있는)을 포함하는 계통수를 언급한다.
+뿌리털|root hair||뿌리 표피세포의 매우 작은 돌출부로, 물과 무기질의 흡수 면적을 증가시킨다.
+뿌리혹|nodule||콩과식물 뿌리에서 팽윤된 부위. 뿌리 혹은 질소고정세균인 뿌리혹 세균속을 포함하는 식물세포로 이루어져 있다.
+사구체|glomerulus||네프론에 존재하는 보먼주머니를 싸고 있는 모세혈관 덩어리로 신장에서 여과 장소이다.
+사람류|hominin||사람과 침팬지보다 우리와 더 가까이 연관된 멸종된 종을 포함하는 무리.
+사람 유전체 사업|Human Genome Project||인간 유전체 DNA의 염기서열을 결정하고 지도를 작성하는 국제 공동 연구.
+사막|desert||매우 적은 강수가 특징이 육상생물군계.
+사바나 지대|savanna||나무가 흩어져 존재하며 큰 초식동물이 살아가는 열대초원 생물군계로, 간헐적인 화재와 가뭄으로 유지된다.
+사이클린 의존성 인산화효소|cyclin-dependent kinase(Cdk)||특정 사이클린과 결합하였을 때만 활성을 가지는 단백질 인산화효소.
+사이클린|cyclin||농도가 주기적으로 변하는 세포 단백질로 세포 주기의 조절에 중요한 역할을 한다.
+사이토카인|cytokine||대식세포와 도움 T세포를 포함하는 다수의 세포 유형에 의해 분비되는 작은 단백질 무리로서, 다른 세포의 기능을 조절한다.
+사이토크롬|cytochrome||진핵세포의 미토콘드리아와 엽록체와 원핵세포의 세포막에 존재하는 전자전달계의 성분인 철 함유 단백질.
+사이토키닌|cytokinin||노화를 지연시키며 옥신과 함께 세포분열을 촉진하고 분화 경로에 영향을 미치며 정아 우성을 조절하는 식물 호르몬 종류.
+사정|ejaculation||수정관, 사정관과 요도를 통해 부정소로부터의 정액 분출.
+사지류|tetrapod||4개의 사지를 가지는 척추동물. 포유류, 양서류, 조류 및 다른 파충류를 포함한다.
+사회생물학|sociobiology||진화론에 근거한 사회 행동의 연구.
+사회적 학습|social learning||다른 개체의 관찰을 통한 행동의 변화.
+삭병|seta||선태식물 포자체의 긴 자루.
+삭치모|peristome||이끼의 포자낭 상부에 위치한 서로 맞물린 이빨 같은 고리 모양의 구조. 종종 점진적으로 포자를 방출하도록 특성화되었다.
+산|acid||용액에서 수소 이온 농도를 증가시키는 물질.
+산소 호흡, 호기성 호흡|aerobic respiration||산소와 유기물을 소비하고 ATP를 생성하는 이화작용 경로. 이것은 가장 효과적인 이화작용 경로이며, 대부분의 진핵세포와 많은 원핵세포에서 수행된다.
+산점도|scatter plot||데이터의 각 값을 점으로 나타낸 그래프. 산포도는 모든 변수의 데이터가 숫자로 나타내고 연속적일 때 이용된다.
+산호초|coral reef||주로 정주성의 자포류에 의해 분비되는 딱딱한 골격구조를 특징으로 가지는 전형적으로 따뜻한 열대 해양생태계. 일부 산호초는 차고 깊은 물에 존재한다.
+산화|oxidation||산화 환원 반응이 관련되며 한 물질로부터 전자를 잃는 것.
+산화 환원 반응|redox reaction||한 반응물에서 다른 반응물로 하나 혹은 그 이상의 완전하거나 또는 부분적인 전자전달이 관련된 화학 반응.
+산화적 인산화|oxidative phosphorylation||전자전달계의 산화 환원 반응으로부터 유래한 에너지를 이용하여 ATP를 생성하는 것. 세포호흡의 3번째 주요 단계.
+산화제|oxidizing agent||산화 환원 반응에서 전자 수용.
+산화질소|nitric oxide(NO)||많은 종류의 세포에 의해 생성되는 기체로, 국소적 조절자와 신경전달물질로 작용한다.
+살리실산|salicylic acid||병원체에 대한 전신성획득 저항(SAR)에 부분적으로 관련된 식물의 신호 분자.
+삼투 농도|osmolarity||몰농도로 표시된 용질의 농도.
+삼투 조절|osmoregulation||세포나 생명체에 의한 용질의 농도 및 물의 균형 조절.
+삼투순응자|osmoconformer||주변 환경과 삼투가 같은 동물.
+삼투조절자|osmoregulator||외부 환경과 무관하게 내부 삼투 농도를 조절하는 동물.
+삼투현상|osmosis||선택적 반투과막을 통한 물의 확산.
+삽입|insertion||유전자에 하나 혹은 그 이상의 염기가 추가되는 돌연변이.
+상대 적응도|relative fitness||개체군에서 다른 개체의 기여도와 비교하여, 다음 세대의 유전자 풀을 형성하는 개체의 기여도.
+상대풍부도|relative abundance||군집 안에서 다른 종의 비례적 풍부도.
+상동기관|homologous structure||다른 종 사이에서 동일한 조상으로 인해 구조가 유사한 기관.
+상동성|homology||공통된 조상으로 인한 특징의 유사성.
+상동쌍|homologous pair||상동염색체 참조.
+상동염색체|homologous chromosome(homolog)||상응하는 유전자 좌위에 같은 형질의 유전자를 가지는 염색체의 쌍으로 염색체의 길이, 중심절의 위치와 염색 양상이 동일하다. 상동염색체 하나는 부계로부터, 다른 하나는 모계로부터 물려받는다. 상동쌍이라고도 불린다.
+상동염색체|homolog||상동염색체(homologous chromosome)와 동일.
+상리공생|mutualism||참여자 모두가 이득을 얻는 공생관계.
+상배축|epicotyl||속씨식물의 배에서 떡잎 부착 지점 위쪽과 처음 나오는 작은 잎 아래의 배축.
+상보성 DNA|complementary DNA(cDNA)||mRNA를 주형으로 역전사효소와 DNA 중합효소를 이용하여 시험관 내에서 만들어진 이중가닥 DNA. cDNA 분자는 유전자의 엑손 부분에 해당한다.
+상사|analogy||같은 형질을 가지는 공통조상에서 비롯된 자손이기보다는 수렴진화에 의한 두 종 간의 유사성.
+상사적|analogous||상동성 때문이 아니라 수렴진화로 인해 유사한 특징을 가지는.
+상염색체|autosome||성 결정에 직접적으로 관여하지 않는 염색체로 성염색체와 대비된다.
+상위|epistasis||한 유전자가 독립적으로 유전되는 다른 유전자의 표현형을 변화시키는 유전자 상호작용의 한 종류.
+상피|epithelium||상피 조직.
+상피 조직|epithelial tissue||기관과 체강뿐만 아니라 바깥쪽 표면을 감싸는 단단히 포개진 세포층.
+상향식 모델|bottom-up model||무기영양물이 식물의 숫자를 조절하고 이것이 초식동물의 수를 결정하며 다시 이것이 포식자의 숫자를 결정하는 무기영양물이 군집의 조직을 결정하는 군집조직의 한 모델.
+상호 이타주의|reciprocal altruism||현재의 수혜자가 역전되면 현재에 이타적인 행동을 하는 개체가 미래에서는 수혜자가 되는, 관련되지 않은 개체 간의 이타행동.
+상호작용|communication||동물행동에서 신호의 전달, 수용 및 반응을 포함하는 과정. 이 용어는 다세포 생물에서, 개개 세포에서 뿐만이 아니라 다른 생물들 사이의 관계에도 사용된다.
+색소세포 자극호르몬|melanocyte-stimulating hormone(MSH)||뇌하수체 전엽에 의해 생성되고 분비되는 호르몬으로 일부 척추동물에서 피부의 색소세포의 활동을 조절한다.
+색소체|plastid||엽록체, 잡색체와 녹말체(백색체)를 포함하는 밀접하게 연관된 식물 세포소기관의 무리. 색소체는 광합성 생물의 세포에 존재한다.
+생리(학)|physiology||생명체의 과정과 기능(및 그 연구).
+생명공학|biotechnology||생명체나 그 구성요소를 조절하여 유용한 물질을 생산하는 기술.
+생명체|organism||하나 또는 그 이상의 세포로 구성된 살아 있는 개체.
+생명표|life table||집단의 사망률을 종합한 표.
+생물 연료|biofuel||생물량(biomass)으로부터 생산된 연료.
+생물 정화|bioremediation||생물을 이용하여 오염되고 파괴된 생태계를 복원하는 기술.
+생물 증폭|biological magnification||물질이 먹이사슬의 각 단계에서 점점 농축되는 과정.
+생물군계|biome||현저한 식생에 따라 분류되고 특정 환경에의 생물 적응으로 특징짓는 주요 생태계.
+생물권|biosphere||생명체가 존재하는 지구의 모든 부분; 지구 생태계를 모두 합친 것.
+생물다양성 중요지점|biodiversity hot spot||예외적으로 많은 고유종과 많은 수의 멸종 위기종이 집중되어 있는 좁은 지역.
+생물량|biomass||특정 서식지의 생물집단을 구성하는 유기물의 전체 중량.
+생물막|biofilm||표면층을 이루는 원핵생물 군체로 대사 협동작용에 관여한다.
+생물에너지학|bioenergetics||(1) 한 생명체에서 에너지의 전체적인 흐름과 변환. (2) 생명체를 통하여 어떻게 에너지가 흐르는지의 연구.
+생물적|biotic||환경에서 살아 있는 생물에 속하는.
+생물정보학|bioinformatics||컴퓨터와 여러 프로그램 및 수학적 모델을 이용하여 대량의 데이터로부터 생물 정보를 통합하는 학문.
+생물지리학|biogeography||과거와 현재 종의 분포에 관한 과학적 연구.
+생물학|biology||생명의 과학적 연구.
+생물학적 종개념|biological species concept||종의 정의로서, 한 집단의 개체 간에 자연 상태에서 서로 교잡이 가능하고 생존이 가능하며 생식 능력이 있는 자손을 생산하지만 다른 집단의 개체와는 생존이 가능하며 생식 능력이 있는 자손을 생산하지 못하는 집단.
+생물학적 촉진|biological augmentation||파괴된 생태계에 필요한 물질을 더하는 방법으로 생물을 이용하는 생태계의 복원 방법.
+생산 효율|production efficiency||호흡에 사용되거나 노폐물로 제거되지 않는, 음식물에 저장된 에너지의 부분.
+생산자|producer||빛을 이용하거나(광합성) 무기물을 산화(몇몇 원핵생물에 의해 수행되는 화학합성)시켜 CO2로부터 유기물을 생산하는 생물.
+생성물|product||화학 반응 결과 생긴 물질.
+생식세포|gamete||난자와 정자와 같은 반수체 생식세포. 생식세포는 유성 생식 동안 합쳐져서 2배체의 접합자를 형성한다.
+생식세포낭병|gametophore||이끼에서 생식세포체의 성숙한 생식세포를 생성하는 구조.
+생식세포주머니|gametangium||생식세포가 형성되는 식물의 다세포성 구조. 암 배우자주머니는 장란기라고 하며 수 배우자주머니는 장정기라고 한다.
+생식세포체|gametophyte||세대교번을 겪는 생물(식물과 일부 조류)에서, 유사분열에 의해 반수체 생식세포를 생산하는 다세포성 반수체. 반수체 배우체는 합쳐져서 포자체로 발생한다.
+생식세포형성과정|gametogenesis||포유류에서 생식세포가 형성되는 과정.
+생식소|gonad||암컷과 수컷의 생식기관; 대부분의 동물에서 생식세포 형성기관이다.
+생식적 격리|reproductive isolation||두 종이 생식력이 있는 잡종을 생산하는 것을 막는 생물장벽의 존재.
+생장 인자|growth factor||(1) 배양 배지나 동물 체내에서 특정 세포의 발생과 생장을 위해 세포외 환경에 존재하는 단백질. (2) 인근 세포의 분열과 분화를 자극하는 국소조절자.
+생장 호르몬|growth hormone||다양한 조직에 직접 작용하거나 혹은 자극호르몬으로 작용하는 뇌하수체 전엽에서 생성 분비되는 호르몬.
+생존곡선|survivorship curve||각 연령마다 생존하는 개체의 수를 나타낸 도표로, 특정 연령층의 사망률을 나타내는 한 가지 방법이다.
+생지화학적 순환|biogeochemical cycle||생태계의 생물학적 비생물학적 요소를 모두 포함하는 여러 영양물의 순환.
+생체 시계|biological clock||생명체의 주기를 조절하는 내생 시계. 생체 시계는 환경 신호에 따라 혹은 관계없이 시간을 표시하나 종종 적절한 주기를 유지하기 위해서는 환경의 신호를 필요로 한다. 일주기성 리듬 참조.
+생태계 공학자|ecosystem engineer||환경에 물리적 변화를 야기함으로써 군집의 구조에 영향을 미치는 생물.
+생태계|ecosystem||주어진 장소에서의 모든 생물과 이들이 상호작용하는 비생물적 요소. 하나 또는 그 이상의 군집과 이들의 물리적 환경.
+생태계생태학|ecosystem ecology||생태계에서 다양한 생물적 비생물적 요소 사이에서 화학물질과 에너지 흐름의 연구.
+생태계서비스|ecosystem service||생태계가 직간접적으로 인간에게 이득을 주는 기능.
+생태발자국|ecological footprint||소비하는 모든 자원을 생산하고 발생한 모든 쓰레기를 흡수하는, 개인, 도시 또는 국가가 필요로 하는 땅과 물의 면적.
+생태적 지위|ecological niche||한 종이 환경에서 이용하는 생물적 및 비생물적 자원의 총합.
+생태적 천이|ecological succession||군집의 생태적 교란에 따른 종 조성의 변이. 불모지에서 생물군집의 형성.
+생태학|ecology||생명체가 그들 간에 그리고 환경과 어떻게 상호작용하는지를 연구하는 학문.
+생태학적 종개념|ecological species concept||생태적 역할(지위)과 관련된 종의 규정. 종의 일원이 어떻게 그들의 환경에서 생물 및 비생물 부분과 상호작용하는지의 개요.
+생활사|life cycle||한 생물의 생식사에서 세대와 세대 간의 단계.
+생활사|life history||한 생물의 생식과 생존의 일정에 영향을 미치는 특성.
+샤논 다양성 지수|Shannon diversity index||H 부호로 나타내며 H = -(pA lnpA + pB lnpB + pC lnpC + ...)의 식으로 나타내는 군집다양성의 지수. A, B, C는 군집에서의 종이며, p는 각종의 상대빈도, ln은 자연로그이다.
+샤페로닌|chaperonin||다른 단백질의 적절한 접힘을 도와주는 단백질.
+석송식물|lycophyte||석송문에 속하는 식물의 비공식적 명칭. 석송, 물부추 등이 이에 속한다.
+선구동물 발생|protostome development||원구로부터 입이 발생하는 특징을 가지는 동물의 발생 양식으로, 종종 나선난할과 중배엽의 고형 덩어리 사이의 갈라진 틈으로 형성되는 체강의 특징을 가진다.
+선그래프|line graph||데이터의 각 측정점이 다음의 측정점과 직선으로 연결된 그래프.
+선도가닥|leading strand||5'->3' 방향으로 복제 분기점 방향으로 주형가닥을 따라 연속적으로 합성되는 새로운 상보적 DNA 가닥.
+선모|fimbria||기질이나 다른 세포에 부착하는 것을 돕는 짧고 머리카락 같은 원핵생물의 부속지.
+선모|pillus||세균에서 접합을 시작할 때 다른 세포와 연결하는 구조. 또한 성선모 또는 접합선모로도 불린다.
+선천성 면역|innate immunity||병원균에 노출되었을 때 즉시 활성화하는 모든 동물에 공통적인 방어 형태. 이전에 병원균에 이미 노출되었든 혹은 노출되지 않았든지 간에 동일하다.
+선천적 행동|innate behavior||강한 유전적 조절에 의해 발생적으로 고정된 동물행동. 본능적 행동은 내적 외적 환경이 다르더라도 일생 동안 집단의 모든 개체에게 거의 같게 나타난다.
+선태식물|bryophyte||이끼, 우산이끼, 붕어마름의 비공식적 명칭. 육상에 사는 비관다발식물로 다른 많은 관다발식물처럼 육상에 적응이 떨어진다.
+선택적 RNA 이어맞추기|alternative RNA splicing||어떤 RNA 부분이 엑손으로 작용하고 또 어떤 부분이 인트론으로 작용하는지에 따라 동일한 1차 전사물로부터 서로 다른 mRNA 분자가 만들어지는 RNA 가공의 조절 단계에서의 진핵생물의 유전자 조절의 한 유형.
+선택적 투과성|selective permeability||물질의 통과를 조절하는 생체막의 특성.
+설정점|set point||동물의 몸에서, 항상성을 이루기 위해 체온이나 용질의 농도와 같은 특정 변수를 위해 유지되는 값.
+섬모|cilium||미세소관을 포함하는 세포 부속지. 운동성의 섬모는 이동을 위해 특수화되었고, 확장된 원형질막에 둘러싸인 9개의 바깥 쌍 미세소관 중심과 2개의 안쪽 단일 미세소관으로 형성(9+2 구조)된다. 1차 섬모는 보통 비운동성이며 감각과 신호 역할을 수행한다. 2개의 안쪽 단일 미세소관이 없다(9+0 구조).
+섬모충류|cilliate||섬모를 이용하여 움직이는 원생생물의 한 종류.
+섬유아세포|fibroblast||세포외 섬유의 단백질 성분을 분비하는 소성 결합 조직의 세포 유형.
+섭식구굴착류|Excavata||진핵생물의 진화역사의 현재 가설에서 제안된 진핵생물의 4대 큰무리(supergroup) 중 하나. 섭식구굴착류는 독특한 세포골격 특징을 가지며, 일부 종은 세포의 한쪽에 굴 모양(excavated)의 먹이 홈을 가진다. SAR, 원시색소체 생물과 단편모류 참조.
+섭취|ingestion||동물에서 음식물 가공의 첫 번째 단계, 먹는 행동.
+성선모|sexpilus||세균에서, 접합 초기에 한 세포를 다른 세포와 연결시키는 구조. 접합선모라고도 알려져 있다.
+성숙촉진인자|maturation-promoting factor(MPF)||M기 촉진인자; 간기에서 분열기(M기)로의 진입에 요구되는 단백질 복합체. 활성형은 사이클린과 단백질 인산화효소로 구성되어 있다.
+성염색체|sex chromosome||개체의 성을 결정하는 염색체.
+성적 선택|sexual selection||특정 유전형질을 가진 개체가 다른 개체에 비해 짝을 찾기가 더 용이한 자연선택의 형태.
+성적 이형성|sexual dimorphism||남성과 여성의 2차성징 사이의 뚜렷한 차이.
+세관주위 모세혈관|peritubular capillary||신장의 근위세뇨관과 원위세뇨관을 둘러싸는 망상구조를 형성하는 작은 혈관의 하나.
+세균|Bacteria||원핵생물의 두 영역 중 하나로, 다른 하나는 고세균이다.
+세기관지|bronchiole||허파꽈리(폐포)로 공기를 보내는 기관지의 미세한 가지.
+세대교번|alternation of generation||다세포성 2배체 상태인 포자체와 다세포성 반수체 상태인 배우체 상태를 모두 가지는 생활사. 식물과 일부 조류의 특징이다.
+세동맥|arteriole||동맥과 모세혈관 사이로 혈액을 운반하는 혈관.
+세력권|territoriality||한 동물이 경계가 있는 물리적 공간을 보통 같은 종의 다른 개체에 의한 침입으로부터 방어하는 행동.
+세정관|seminiferous tubule||정소에서 정자가 생성되는 심하게 돌돌 말린 관.
+세정맥|venule||모세혈관과 정맥 사이로 혈액을 운반하는 혈관.
+세포|cell||생명의 구조적 기능적 기본 단위. 생명에 필요한 모든 활동을 수행할 수 있는 가장 작은 구조 단위.
+세포골격|cytoskeleton||미세소관, 미세섬유와 중간섬유의 그물 조직으로 세포질 전반에 걸쳐 분지되어 있으며 다양한 기계적 수송 기능을 담당한다.
+세포기질|cytosol||세포질의 반유동체 부분.
+세포내공생|endosymbiosis||한 생물이 다른 생물의 세포 내에서 살아가는 두 종 사이의 관계. 세포내공생설 참조.
+세포내공생설|endosymbiont theory||미토콘드리아와 엽록체를 포함하는 색소체가 숙주세포에 의해 삼켜진 원핵생물에서 기원하였다는 설. 그 후 삼켜진 세포와 숙주세포가 하나의 개체로 진화하였다. 세포내공생 참조.
+세포내섭취작용, 엔도사이토시스|endocytosis||세포막으로부터 새로운 소낭형성에 의한 생물 분자나 미립자 물질의 세포내 흡수.
+세포독성 T세포|cytotoxic T cell||활성화되면 감염된 세포, 암세포와 이식된 세포를 죽이는 림프구.
+세포막|plasma membrane||모든 세포의 경계를 이루는 막으로서 선택적인 장벽으로 작용하여 세포의 화학적 조성을 조절한다.
+세포벽|cell wall||식물, 원핵생물, 균류와 일부 원생생물의 세포막 외부에 존재하는 보호층. 셀룰로오스와 같은 다당류(식물과 일부 원생생물), 키틴(균류)과 펩티도글리칸(세균)이 세포벽의 주요 구성성분이다.
+세포분열|cell division||세포의 생식.
+세포 분획|cell fractionation||세포의 분쇄와 원심분리에 의한 세포소기관의 분리.
+세포사이액|interstitial fluid||세포 사이를 채우는 액체로 이루어진 척추동물의 내부환경.
+세포성 면역반응|cell-mediated immune response||세포독성T세포의 활성이 수반되는 후천성 면역의 일종으로 감염된 세포의 방어를 담당한다.
+세포소기관|organelle||진핵세포의 세포질에 존재하는 특수화된 기능을 갖는 막으로 둘러싸인 여러 구조물 중 하나.
+세포외기질|extracellular matrix(ECM)||세포에 의해 합성되고 분비되는 단백질과 탄수화물로 이루어진 동물세포를 둘러싸고 있는 물질.
+세포외배출작용|exocytosis||거대 분자를 포함하는 소낭의 원형질막 융합에 의한 거대 분자의 세포 배출.
+세포 주기|cell cycle||모세포에서 시작하여 두 개의 세포로 나누어지는 진핵생물 생활사의 일련의 연속된 과정으로 간기(G1, S, G2기)와 M기(핵분열과 세포질분열)로 구분된다.
+세포 주기 조절 시스템|cell cycle control system||세포 주기를 시작하여 주요 사건을 조절하는 세포에서 주기적으로 작동하는 분자 시스템.
+세포질|cytoplasm||핵을 제외한 세포의 전체 내용으로, 세포막으로 둘러싸여 있다.
+세포질 결정인자|cytoplasmic determinant||세포의 발생 운명에 영향을 미치는 유전자의 발현을 조절하여 초기발생의 진로에 미치는 난자에 존재하는 모계성 물질.
+세포질분열|cytokinesis||유사분열 감소 1분열과 감소 II분열에 뒤이은 세포질분열로 딸세포를 둘로 분리한다.
+세포질유동|cytoplasmic streaming||세포질의 순환으로 마이오신과 액틴이 관여하며, 세포내 물질의 분배를 촉진시킨다.
+세포질융합|plasmogamy||두 개체의 세포로부터의 세포질융합으로, 배우자 합체(수정)의 한 단계로 나타난다.
+세포체|cell body||핵 및 다른 세포소기관을 함유하는 뉴런의 부분.
+세포판|cell plate||분열 중인 식물세포의 가운데에 형성되는 이중막으로, 세포질분열 동안 형성되는 새로운 세포벽이다.
+세포호흡|cellular respiration||유기 분자를 분해하여 ATP를 생산하는 산소호흡과 무산소호흡의 동화작용 경로.
+셀룰로오스|cellulose||β 글리코시드 결합으로 연결된 포도당 단량체로 이루어진 세포벽의 구조 다당류.
+소낭|vesicle||세포질에서 막으로 이루어진 주머니.
+소뇌|cerebellum||배후에 위치하는 척추동물의 후뇌 부분으로 운동과 균형의 불수의적 통합 기능을 한다.
+소듐-포타슘 펌프, Na+-K+ 펌프|sodium-potassium pump||소듐을 세포 밖으로, 포타슘을 세포 안으로 능동적으로 수송하는 동물세포의 원형질막에 존재하는 수송 단백질.
+소비자|consumer||생산자, 다른 소비자 또는 비생물 유기물을 먹고 사는 생물.
+소수성|hydrophobic||물에 대한 회피성을 가지는; 물에서 서로 융합하여 액적을 형성하게 된다.
+소수성 상호작용|hydrophobic interaction||물과 섞이지 않는 분자가 융합하여 물을 배척시킬 때 형성되는 약한 화학 결합.
+소엽|microphyll||석송류에서 하나의 가지 없는 잎맥을 가지는 작은 잎.
+소음순|labia minora||질 입구를 감싸고 보호하는 한 쌍의 얇은 피부.
+소진화|microevolution||종 단위 이하에서의 진화적 변화. 한 세대에서 다른 세대로의 대립유전자 빈도의 변화.
+소포자|microspore||수컷 배우체로 발생하는 이형포자 식물종의 포자.
+소포체|endoplasmic reticulum(ER)||진핵세포에서 핵의 외막과 연결된 광범위한 막의 망상구조로 리보솜이 부착되어 있거나(거친면 소포체, RER) 혹은 없기도 한다(매끈면 소포체, SER).
+소화|digestion||동물에서 음식물 공정의 두 번째 단계. 음식물을 체내로 흡수되도록 충분히 작은 크기로 분해시키는 과정.
+소화관|alimentary canal||입과 항문 사이에 걸쳐 있는 관 모양의 소화관.
+속|genus||종 위 단계에 있는 분류 범주로 이명법 종의 학명 중 첫 번째 명칭.
+속귀, 내이|inner ear||척추동물 귀의 중요한 3부분 중 하나. 코르티기관이 존재하는 달팽이관과 반고리관을 포함한다.
+속씨식물|angiosperm||씨방을 가지는 씨앗을 형성하는 꽃식물.
+송과샘|pineal gland||척추동물 전뇌의 후면 표면에 존재하는 작은 샘으로 멜라토닌을 분비한다.
+수|pith||줄기에서 관다발 조직의 내부에 존재하는 기본 조직으로 많은 외떡잎식물의 뿌리에서는 관다발기둥의 중심부를 형성하는 유조직 세포이다.
+수각류|theropod||두 발을 가진 육식동물이었던 고대공룡 무리.
+수경 재배|hydroponic culture||토양 대신 무기질 용액을 이용하여 식물체를 배양하는 방법.
+수관계|water vascular system||이동, 먹이 섭취 및 기체교환 기능을 하는 관족이라고 불리는 돌출가지를 형성하는 극피동물에 특징적인 수압관의 망상구조.
+수관층|canopy||육상생물군계에서 식생의 제일 위층.
+수동 면역|passive immunity||모체의 항체가 태아나 젖먹이로 전달될 때 일어나는 것과 같은. 항체의 전달에 의한 단기간의 면역.
+수동 수송|passive transport||에너지의 소모가 없는 생체막을 통한 물질의 확산.
+수렴 진화|convergent evolution||독립적인 진화계통에서 유사한 특징의 진화.
+수분 퍼텐셜|water potential(ψ)||용질의 농도와 그에 따른 압력에 의해서 생기는 물의 흐름 방향을 나타내는 물리적 특성.
+수분|pollination||수정에 앞서 요구되는 과정으로 밑씨를 포함하고 있는 종자식물의 부분으로 화분의 전달.
+수산 이온, 수산화 이온|hydroxide ion||양성자를 잃은 물 분자: (OH-).
+수산기|hydroxyl group||극성 공유 결합에 의해 산소 원자와 결합된 수소 원자로 이루어진 작용기. 이 기를 가지는 분자는 수용성이며 알코올이라 불린다.
+수상돌기|dendrite||많은 수의 짧은 가지가 매우 많은 신경세포의 돌기로, 세포체 쪽으로 신경 자극을 전달한다.
+수소 결합|hydrogen bond||한 분자에서 극성 공유결합을 하는 약한 양전하를 띤 수소 원자가 다른 분자에서 극성 공유 결합을 하는 약한 음전하를 띤 원자와의 인력에 의해 생기는 약한 화학 결합.
+수소 이온|hydrogen ion||+1의 전하를 가지는 하나의 양성자. 물의 분해는 수소 이온(H+)과 수산화 이온(OH-)을 생성한다. 물에서 수소 이온(H+)은 단독으로 존재하지 않고 하나의 물 분자와 결합하여 하이드로늄 이온(H3O+)을 형성한다.
+수송 단백질|transport protein||특정 물질 혹은 밀접히 연관된 종류의 물질의 막 통과를 돕는 막관통 단백질.
+수송 상피|transport epithelium||용질의 이동을 조절하는 한 층 혹은 그 이상의 특수화된 상피세포.
+수송 소낭|transport vesicle||세포에 의해 생산된 분자를 수송하는 세포질에 존재하는 막으로 된 작은 주머니.
+수술|stamen||꽃밥과 수술대로 이루어진 꽃의 화분 생성 생식기관.
+수술대, 화사|filament||속씨식물에서 꽃의 화분 생성 생식기관인 수술의 줄기.
+수온약층|thermocline||해양이나 많은 온대 지역 호수에서 빠른 온도 변화를 보이는 좁은 층.
+수용|reception||세포의 소통에서, 신호 분자가 세포표면이나 세포 내에 존재하는 수용체에 의해 감지되는 신호 경로의 첫 번째 단계.
+수용능력|carrying capacity||가용한 자원에 의해 유지되는 집단의 최대 크기로 K로 표현한다.
+수용액|aqueous solution||용매가 물인 용액.
+수용체 전위|receptor potential||수용체 세포에서 일어나는 전위의 변화.
+수용체매개 세포내섭취작용|receptor-mediated endocytosis||세포 내부로 섭취되는 분자에 특이적인 수용체 자리를 가지는 단백질을 포함하는 막이 안으로 접힘에 의해 특정 분자를 세포 내로 이동시키는 작용; 세포가 다량의 특정 물질을 섭취할 수 있도록 한다.
+수정, 시비|fertilization||(1) 2배체 접합자를 형성하기 위한 반수체 배우체의 접합. (2) 토양에 무기 영양물질을 첨가.
+수정낭, 저장낭|spermatheca||많은 곤충에서, 암컷 생식계에 존재하는 정자 저장주머니.
+수정막|fertilization envelope||알의 난황막층이 세포막으로부터 부풀어 오를 때 형성되는 보호층으로서, 피층 반응 동안 세포 밖으로 배출되는 분자에 의해서 수정 후 굳어진다.
+수정체|lens||망막에 빛의 초점을 맞추는 눈의 구조.
+수지상 균근|arbuscular mycorrhiza||식물의 뿌리계와 균류의 연합체로, 균류가 숙주세포의 세포막을 침입한다.
+수지상 균근균류|arbuscular mycorrhiza fungus||균사가 식물 뿌리의 세포벽을 통과하여 자라 뿌리 세포까지 뻗는 공생 균류(뿌리세포 세포막의 만입에 의해 형성된 관으로 둘러싸인다).
+수지상세포|dendritic cell||주로 림프 조직과 피부에 존재하는 항원제시세포로, 특히 항원을 도움T세포에 제시하여 중요 면역반응을 시작하게 하는 기능을 가진다.
+수지상체|arbuscule||몇몇 상리공생 균류에서 발견되는 특수화된 분지된 균사로서 살아 있는 식물세포와 영양분을 교환한다.
+수질옆 네프론|juxtamedullary nephron||포유류와 조류에서, 신수질 쪽으로 깊이 뻗어 있는 발달된 헨레고리를 가지는 네프론.
+수초|myelin sheath||뉴런의 축삭 주위의 슈반세포 또는 희소돌기아교세포의 막을 절연하는 덮개. 도약전도가 일어날 때 랑비에결절에 의해 중간이 끊어진다.
+수축기 혈압|systolic pressure||심실의 수축 시 동맥에서의 혈압.
+수축기|systole||심장근육이 수축하여 심실이 혈액을 내보내는 심장 주기 단계.
+수축포|contractile vacuole||일부 담수 원생생물로부터 과잉의 물을 제거하는 데 도움을 주는 막구조의 주머니.
+수평적 유전자 전달|horizontal gene transfer||전이인자, 플라스미드 교환, 바이러스 활동과 아마도 다른 생물과의 융합과 같은 메커니즘을 통하여 한 유전체로부터 다른 유전체로의 유전자 전달.
+수피, 나무껍질|bark||형성층 외부에 존재하는 모든 조직으로 주로 2차 체관과 주피층으로 이루어져 있다.
+수화껍질|hydration shell||용해된 이온 주위에 구 모양으로 둘러싼 물 분자.
+숙주|host||공생관계에서 더 큰 참여자로 공생자의 생활공간과 먹이를 제공해 준다.
+숙주 범위|host range||다른 유형의 바이러스가 감염되고 기생할 수 있는 숙주세포의 제한된 범위.
+순1차 생산량|net primary production(NPP)||생태계의 총1차 생산에서 생산자의 호흡에 의해 사용된 에너지를 뺀 것.
+순생태계 생산량|net ecosystem production(NEP)||생태계의 총1차 생산에서 모든 독립영양생물과 종속영양생물에 의해 호흡으로 사용된 에너지를 뺀 것.
+순응|acclimatization||환경 변화에 대한 생리적 적응.
+순응자|conformer||체내의 조건이 외부 변화에 응하는 동물.
+순종, 순계|true-breeding||자가수분하였을 때 동일한 변종의 자손만을 생산하는 식물체.
+순환적 전자 흐름|cyclic electron flow||광합성의 명반응 동안 단지 하나의 광계만 관련된 전자의 흐름 경로. ATP는 생성되지만 NADPH나 산소는 생성되지 않는다.
+숨쉬기|breathing||들숨과 날숨을 통한 허파의 기체교환.
+슈반세포|Schwann cell||말초신경계에서 뉴런의 축삭돌기 주위의 미엘린 수초를 절연하는 신경교세포의 종류.
+스테로이드|steroid||다양한 기능기가 부착된 4개의 고리로 이루어진 탄소골격을 특징으로 가지는 지질 종류.
+스트로마|stroma||엽록체 내부의 틸라코이드막을 둘러싸는 엽록체의 진한 액체로, 이산화탄소와 물로부터 유기물을 합성하는 데 관여한다.
+스트로마톨라이트|stromatolite||얇은 침전물 층과 함께 결합한 원핵생물의 활동으로 생성된 층을 이룬 암석.
+스트리고락톤|strigolactone||가지의 분지를 억제하고 기생성 식물 종자의 발아를 촉진하며 뿌리와 균근균류의 상호작용을 촉진하는 식물 호르몬의 한 종류.
+스포로폴레닌|sporopollenin||윤조강 조류의 노출된 접합자를 덮고 식물 포자의 벽을 형성하여 건조로부터 보호하는 내구성 있는 중합체.
+습지|wetland||최소한 얼마 동안 물에 잠기는 서식지로, 물이 포화된 토양에 적응한 식물이 자라게 된다.
+시냅스|synapse||신경전달경로에서 한 뉴런이 다른 뉴런에 신호를 전달하는 접합 부위로, 축삭돌기의 시냅스 쪽 말단 부위와 다른 뉴런 혹은 효과기 세포의 신호수용 부위(수상돌기나 세포체) 사이의 좁은 간격. 시냅스 말단에서 분비된 신경전달 분자가 시냅스를 가로질러 수상돌기나 효과기로 신호를 전달한다.
+시드는 현상|wilting||식물세포가 시들은 결과로 잎과 줄기의 처짐.
+시든|flaccid||식물세포에서 볼 수 있듯이 단단함이 부족한 상태(세포벽을 가진 세포가 주위로부터 세포 내로 물이 유입되지 않으면 시든다).
+시상|thalamus||척추동물 전뇌의 두 통합 부위 중 하나. 시상에서 세포체를 가진 뉴런이 입력된 신경신호를 대뇌 피질의 특수한 지역으로 전달하며 어떤 정보가 대뇌 겉질로 갈 것인가를 조절한다.
+시상교차상핵|suprachiasmatic nuclei(SCN)||생체시계의 기능을 하는 포유류의 시상하부에 존재하는 뉴런의 집단.
+시상하부|hypothalamus||척추동물 전뇌의 아래쪽 부분으로 특히 내분비계와 신경계를 조화시켜 항상성을 유지하는 기능을 한다. 뇌하수체 후엽호르몬과 뇌하수체 전엽을 조절하는 요소를 분비한다.
+시스템생물학|systems biology||모든 생물계의 동적인 행동을 모델화하고자 하는 생물 연구의 접근 방식.
+시스트랜스 이성질체|cis-trans isomer||동일한 분자식과 원자 사이의 공유 배열을 가지나 이중 결합의 강직성 때문에 원자의 공간 배열이 다른 여러 화합물의 하나. 이전에는 기하이성질체라고 불렸다.
+시트르산 회로|citric acid cycle||해당작용에서 시작된 포도당 분자를 피루브산의 산화작용에 의해 이산화탄소로 완전 분해하는 8단계의 반응을 포함한 화학회로. 진핵세포에서는 미토콘드리아에서 일어나며, 원핵세포에서는 세포질에서 일어난다. 세포호흡의 두 번째 주요 단계.
+시험관 수정|in vitro fertilization(IVF)||시험관 내에서 난자를 수정시킨 다음 초기 배를 모체의 자궁에 인위적으로 착상시키는 것.
+시험관내 돌연변이유발|in vitro mutagenesis||클로닝된 유전자의 염기서열을 일부 변경시킨 후, 이 돌연변이된 유전자를 세포로 도입하여 결과의 돌연변이체의 표현형을 조사함으로써 유전자의 기능을 알아보는 기술.
+식도|esophagus||연동운동에 의해 인두로부터 위로 음식물을 보내는 통로.
+식물 환경정화법|phytoremediation||몇몇 식물종이 토양으로부터 중금속이나 다른 오염물질을 흡수하여 식물체 내 쉽게 수확할 수 있는 부분에 축적시키는 능력을 이용하여 오염된 지역을 적은 비용으로 정화시키는 기술.
+식물극|vegetal pole||대부분의 난황이 몰려 있는 반구에서 난자의 끝 부분에 있는 지점으로, 동물극의 반대쪽.
+식세포작용|phagocytosis||세포에 의해 크고 입자성 물질이 흡수되는 세포내섭취. 몇몇 원생생물과 특정 면역세포(포유류에서 주로 대식세포, 호중구와 수지상세포)에 의해 수행된다.
+식포|food vacuole||미생물의 식세포작용에 의해 형성되거나 또는 세포에 의해 먹이로 사용되는 입자에 의해 형성된 막의 소낭.
+신경|nerve||주로 뉴런의 축삭다발로 이루어진 섬유.
+신경 가소성|neuronal plasticity||경험에 따라 변화하는 신경계의 수용력.
+신경 조직|nervous tissue||뉴런과 지지세포로 이루어진 조직.
+신경 호르몬|neurohormone||뉴런에 의해 분비되고 체액을 따라 이동하다가 특정 표적세포의 기능을 변화시키기 위해 표적세포에 작용하는 분자.
+신경계|nervous system||동물에서 감각수용기, 신경세포망과 신경신호에 반응하는 근육과 샘의 연결을 포함하는 빠르게 활동하는 내부 상호작용 시스템. 내부 조절과 항상성을 유지하기 위해서 내분비계와 협력하여 작용한다.
+신경관|neural tube||몸의 등축을 따라 존재하는 안으로 접혀진 외배엽 세포의 관으로 척삭의 배후에 위치한다. 중추신경계를 형성한다.
+신경교세포|glia(glial cells)||신경계의 기능을 지지하고, 조절하며 증가시키는 신경계의 세포.
+신경능선|neural crest||척추동물에서 외배엽으로부터 나온 신경관의 측면을 따라서 위치한 부위. 신경능선 세포는 배의 여러 부분으로 이동하여 피부에서 색소세포, 두개골의 일부, 치아, 부신과 말초신경계를 형성한다.
+신경전달물질|neurotransmitter||화학적 시냅스를 가지는 뉴런의 시냅스 말단에서 방출되는 분자로 시냅스 간극을 가로질러 확산되어 시냅스 후세포에 반응을 유발한다.
+신경절|ganglion||신경세포체의 다발.
+신경펩타이드|neuropeptide||신경전달물질로 작용하는 비교적 짧은 아미노산 사슬.
+신우|renal pelvis||척추동물 신장의 수집관으로부터 여과액을 받아들이는 깔대기 모양의 방으로, 요관으로 연결된다.
+신장 겉질, 신장 피질|renal cortex||척추동물 신장의 바깥 부분.
+신장 속질, 신장 수질|renal medulla||신장 겉질 아래에 위치하는 척추동물 신장의 안쪽 부분.
+신장, 콩팥|kidney||혈액을 걸러 오줌을 형성하는 척추동물의 한 쌍의 배설 기관.
+신호|signal||한 생물에서 다른 생물로, 또는 한 생물의 한 부위에서 다른 부위로의 전달되는 정보.
+신호 자극|sign stimulus||동물에 의해 정해진 양상의 행동을 유발시키는 외부 감각신호.
+신호 펩타이드|signal peptide||폴리펩타이드의 아미노 말단 또는 말단 부근에 존재하는 약 20개의 아미노산 서열로, 진핵세포에서 폴리펩타이드를 소포체나 다른 세포소기관으로 보내는 기능을 한다.
+신호인식입자|signal-recognition particle(SRP)||리보솜에서 나오는 신호펩타이드를 인식하는 단백질-RNA 복합체로, ER에 존재하는 수용체 단백질과의 결합에 의해 리보솜을 소포체로 보내는 것을 돕는다.
+신호전달|signal transduction||특정 세포반응에 대한 기계적, 화학적 또는 전기적 자극을 연결하는 일련의 단계.
+신호전달경로|signal transduction pathway||물리적 혹은 화학적 자극을 특정 세포반응으로 연결시키는 기작.
+실험|experiment||통제된 조건에서 수행되는 과학적 검정. 한 시스템에서 하나 또는 그 이상의 요소변화 효과를 보기 위해 이들의 조작을 포함한다.
+실험군, 실험 집단|experimental group||통제된 실험에서 검사하고자 하는 특정 요소를 가지는(또는 받는) 일련의 대상.
+심박률|heart rate||심장 수축의 빈도.
+심박출량|cardiac output||좌심실에서 1분간 내보내는 피의 양.
+심방 나트륨이뇨 펩타이드|atrial natriuretic peptide(ANP)||고혈압에 반응하여 심장의 심실세포에서 분비되는 펩타이드호르몬. 신장에 대한 ANP의 효과는 이온과 물의 이동을 변화시켜 혈압을 낮춘다.
+심방|atrium||척추동물에서 정맥으로부터 혈액을 받아들이고 심실로 전달하는 심장의 공간.
+심실, 뇌실|ventricle||(1) 심장에서 혈액을 내보내는 방. (2) 뇌척수액으로 채워진 척추동물 뇌 공간.
+심장|heart||순환액(혈액과 림프)의 유체 압력을 높이기 위해 대사에너지를 이용하는 근육 펌프. 혈액은 압력기울기를 따라 혈관을 통해 흐른 다음 최종적으로 다시 심장으로 돌아온다.
+심장 주기|cardiac cycle||심장에서 교대로 일어나는 수축과 이완.
+심장근|cardiac muscle||심장의 수축벽을 이루는 근육. 세포는 각 심장박동을 전달하는 개재판으로 연결되어 있다.
+심장마비|heart attack||하나 혹은 그 이상의 관상동맥이 오랫동안 막힌 결과로 인한 심장근육 조직의 손상이나 괴사.
+심잡음|heart murmur||대부분 심장에서 판막이 새는 곳을 통하여 피가 반대 방향으로 분출할 때 나는 소리.
+심전도|electrocardiogram(ECG, EKG)||심박동 주기 동안 심장근육을 따라 이동하는 전기적 자극의 기록.
+심플라스트|symplast||식물에서 두 세포 사이에 원형질연락사로 이어진 세포질의 연속체.
+심피|carpel||밑씨를 형성하는 꽃의 생식기관으로 암술머리, 암술대와 씨방으로 이루어져 있다.
+심해대|abyssal zone||해저 2,000~6,000 m 사이 해양의 저상대 부분.
+심혈관계|cardiovascular system||심장과 동맥, 모세혈관과 정맥으로 구성된 폐쇄혈관계로 척추동물의 특징이다.
+십이지장|duodenum||위로부터의 산성 유미즙이 이자, 간, 쓸개와 작은창자 벽의 소화샘으로부터 나온 소화액과 섞이는 작은창자의 첫 번째 부분.
+쌍궁류|diapsid||두개골 양편에 한 쌍의 구멍을 가지는 양막류 분기군의 종류. 인룡류와 조룡류가 이에 속한다.
+쌍떡잎식물|dicot (dicotyledon)||2개의 떡잎을 가지는 꽃피는 식물을 가르키는 용어로 최근의 분자생물학 증거는 쌍떡잎식물은 단분기군을 형성하지 않는다. 한때 쌍떡잎으로 분류되었던 종이 지금은 진정쌍떡잎, 목련류와 기본적인 속씨식물의 계통으로 분류된다.
+쓸개, 담낭|gallbladder||쓸개즙(담즙)을 보관하며 필요 시 작은창자로 분비하는 기관.
+쓸개즙, 담즙|bile||간에서 생산되며 쓸개(담낭)에 저장되는 물질의 혼합체로 몸에서 지방 액적 형성을 하게 한다. 지방 흡수와 소화를 돕는다.
+씨방, 난소|ovary||(1) 꽃의 암술부분으로 이곳에서 난자를 포함하는 밑씨(배주)가 발생한다. (2) 동물에서 암컷 생식세포와 생식호르몬을 생산하는 곳.
+아가미뚜껑|operculum||경골어류에서 아가미를 덮고 보호하는 뼈가 있는 보호판.
+아데노신 3인산|adenosine triphosphate (ATP)||아데닌을 포함하는 뉴클레오티드 3인산으로 인산 결합이 가수분해될 때 자유에너지를 방출한다. 이 에너지가 자유에너지 증가반응을 일으키는 데 이용된다.
+아데닐산 고리화효소|adenylyl cyclase||화학신호에 반응하여 ATP를 cAMP로 전환시키는 효소.
+아메바|amoeba||혓발(위족)을 특징으로 가지는 원생생물.
+아메바문|amoebozoan||둥근 모양이나 또는 관 모양을 혓발을 가지는 많은 종을 포함하는 분기군에 있는 원생생물.
+아메바성 편모충류|cercozoan||실 모양의 혓발(위족)로 먹이를 잡는 아메바성 또는 편모성 원생생물.
+아미노기|amino group||2개의 수소 원자에 결합된 하나의 질소 원자로 이루어진 화학작용기. 용액 상태에서는 수소 이온을 받아들여 전하 +1을 획득함으로써 염기로 작용한다.
+아미노산|amino acid||카르복실기와 아미노기를 모두 갖는 유기 분자. 폴리펩타이드의 단량체로 작용한다.
+아미노아실-tRNA 합성효소|aminoacyl-tRNA synthetase||각 아미노산을 적절한 tRNA에 연결하는 효소.
+아밀레이스|amylase||녹말(식물의 포도당 중합체)과 글리코젠(동물의 포도당 중합체)을 작은 다당류와 이당류 말토오스로 가수분해하는 효소.
+아세틸 조효소 A|acetyl CoA||세포호흡에서 시트르산 회로로 들어가는 물질로 피루브산 조각에 조효소가 붙어 생성된다.
+아세틸콜린|acetylcholine||가장 일반적인 신경전달물질의 하나. 수용체에 결합한 후 시냅스후 막의 특정 이온에 대한 막의 투과성을 변화시켜 막을 탈분극시키거나 혹은 과분극시킴으로써 인해 작용한다.
+아쿠아포린|aquaporin||특이적으로 세포막을 통한 물의 확산인 삼투를 촉진시키는 세포막에 존재하는 통로 단백질.
+아포플라스트|apoplast||식물에서 세포벽과 세포외 공간의 연속체.
+아포토시스, 예정세포사|apoptosis||조절된 세포자살 프로그램으로 죽을 운명을 가지는 세포에서 일련의 자살 단백질의 활성을 유발시키는 신호에 의해 촉발된다.
+악성 종양|malignant tumor||하나 혹은 그 이상의 기관에 침입하여 그 기능을 방해하는 암 종양.
+안드로젠|androgen||테스토스테론과 같이 남성 생식계와 2차 성징을 발달시키고 유지시키는 스테로이드호르몬.
+안정성|stability||진화생물학에서 잡종이 지속적으로 생성되는 잡종 지대를 일컫는 용어. 이것은 잡종 지대가 시간이 흐름에 따라 안정되도록 한다.
+안정화 선택|stabilizing selection||극단적인 표현형에 비해 중간 정도의 표현형이 보다 성공적으로 생존 또는 생식하는 자연선택.
+안지오텐신 II|angiotensin II||모세관전 세동맥의 수축을 자극하고 신장의 근위세뇨관에 의한 물과 NaCl의 흡수를 증가시켜 혈압과 혈액의 양을 증가시키는 펩타이드호르몬.
+안티코돈|anticodon||tRNA 분자의 끝 부분에 존재하는 특별한 3 뉴클레오타이드조(3 염기조) 암호로, mRNA 분자에 존재하는 특정한 상보적인 코돈을 인식한다.
+알도스테론|aldosterone||신장의 세뇨관에서 Na+과 K+의 수송을 조절하는 스테로이드호르몬.
+알츠하이머병|Alzheimer's disease||나이와 관련된 정신 질환으로 혼돈, 기억력 감소 등의 증상을 보인다.
+알칼리성 열수구|alkaline vent||뜨겁기보다는 다소 따뜻하며(40~90℃) 높은 pH로 인해 염기성을 띠는 물을 방출하는 심해열수구. 이 열수구는 일부 과학자들이 초기 비생물적 유기화합물의 합성장소였다고 가정하는 철분과 그의 촉매무기물로 덮인 작은 구멍으로 이루어져 있다.
+알코올 발효|alcohol fermentation||해당작용 이후 피루브산의 이산화탄소와 에탄올로의 변화.
+알파 나선구조|alpha(α) helix||단백질의 2차 구조의 한 형태를 이루는 나선 모양으로 특정 수소 결합에 의해 형성된다.
+암모나이트|ammonite||백악기(6,550만 년 전) 말에 멸종되기까지 수백만 년 동안 주된 해양 포식자로 존재하였던 껍질이 있는 두족류 무리의 하나.
+암모니아|ammonia||질소 고정 과정 및 단백질과 핵산분해대사의 노폐물로 생성되는 작으며 독성이 매우 강한 분자(NH3).
+암수딴몸, 자웅이주|dioecious||식물학에서 동일한 종의 다른 개체에 암컷과 수컷 생식기관을 가짐.
+암수한몸, 자웅동체|hermaphrodite||유성 생식에서 정자나 난자 둘 모두를 생산하여 암컷과 수컷 모두의 기능을 가지는 개체.
+암수한몸성|hermaphroditism||한 개체가 유성 생식에서 정자나 난자 둘 모두를 생산하여 암컷과 수컷 모두의 기능을 가지는 상황.
+암술|pistil||하나의 심피(단일 심피)나 혹은 융합된 심피 무리(복합 심피).
+암술대|style||꽃 심피의 줄기로 아랫부분은 씨방이며 윗부분은 암술머리이다.
+암술머리|stigma||화분 입자를 잡는 꽃 심피의 끈적끈적한 부분.
+암호 가닥|coding strand||유라실(U) 대신 타이민(T)이 존재하는 것만 제외하고는 mRNA 서열과 동일한 DNA의 비주형가닥.
+압력 퍼텐셜|pressure potential (ψp)||용액의 물리적 압력으로 이루어진 수분 퍼텐셜의 구성요소. 양의 값, 0 및 음의 값을 가질 수 있다.
+앞쪽|anterior||좌우대칭 동물에서 머리 혹은 앞쪽 부분.
+액체 섭식자|fluid feeder||다른 생물로부터 영양분이 풍부한 액체를 빨아먹고 사는 동물.
+액틴|actin||근육 및 다른 종류의 세포에서 미세섬유(액틴 필라멘트)를 형성하는 것으로, 사슬을 형성하는 구상 단백질 두 가닥이 서로 나선으로 꼬인 형태를 띤다.
+액포|vacuole||많은 종류의 세포에서 다양한 기능을 수행하는 막으로 둘러싸인 주머니.
+앱시스산|abscisic acid (ABA)||종종 성장 호르몬에 의한 성장을 둔화시키는 식물 호르몬. 앱시스산의 기능 중 중요한 두 가지는 종자의 휴면과 가뭄 저항성을 증진시키는 것이다.
+야생형|wild type||자연 개체군에서 가장 흔하게 관찰되는 표현형을 가지는 개체. 표현형 그 자체를 일컫기도 함.
+양막란|amniotic egg||액체로 채워진 양막주머니에서 배가 발생하며 난황에 의해 영양분을 공급받는 껍질이 있는 알. 파충류(조류를 포함)와 알을 낳는 포유류에서 생성되며, 건조한 육상에서 생활사를 마칠 수 있게 한다.
+양막류|amniote||배를 보호하는 특수한 막인 액체로 채워진 양막을 포함하는 양막란을 주요 특징으로 가짐으로써 그 이름을 얻게 된 사족류의 분기군 종류. 양막류는 포유류, 조류와 다른 파충류 등을 포함한다.
+양서류|amphibian||사족류의 분기군에 속하는 무리로서, 도롱뇽, 개구리와 나사(무족류의 양서류 일종) 등이 이에 속한다.
+양성 되먹임|positive feedback||한 변화가 변화를 증폭시키는 기작을 유발하는 생리적 조절 기작.
+양성 종양|benign tumor||생성된 장소에 머무르는 비정상적인 세포 덩어리.
+양성자|proton||원자의 핵에서 발견되는, 1.7 * 10^-24 g의 질량을 가지는 하나의 양전하를 띠는 소립자.
+양성자 구동력, 수소 이온의 이동력|proton-motive force||화학삼투 동안 수소 이온을 막을 통해 이동시키므로 생기는, 전기화학 기울기의 형태로 저장된 위치에너지.
+양성자 펌프|proton pump||세포막에서 ATP를 이용하여 수소 이온을 세포 밖으로 수송하는 능동 수송 단백질로 막전위를 발생시킨다.
+양성잡종|dihybrid||두 유전자의 관점에서 보았을 때 이형접합인 생물. 다른 대립유전자들이 둘 다 동형인 양친을 교배시켰을 경우 그 자손은 모두 양성잡종이 된다. 예를 들어, 양친의 유전자형이 AABB와 aabb인 경우 AaBb의 양성잡종을 생산한다.
+양성잡종 교배|dihybrid cross||추적하는 두 형질 모두에서 각각 이형접합인 두 생물 사이의 교배(또는 두 형질에서 이형접합인 식물 사이의 자가수분).
+양수 검사|amniocentesis||자궁 내로 주사기를 이용해 양수를 뽑아내 분석하여 태아의 유전병이나 선천성 결함을 탐지하는 출생 전 진단의 기법.
+양압 숨쉬기, 양압 호흡|positive pressure breathing||공기가 폐로 강압적으로 들어가는 호흡 방법.
+양이온 교환|cation exchange||토양 내의 수소 이온이 흙 입자로부터 무기물 이온을 바꿈으로써 양전하를 띤 무기물이 식물에 의해 흡수되도록 하는 과정.
+양이온|cation||양전하를 띠는 이온.
+양적 형질|quantitative character||양자택일의 형태보다는 어떤 범위에 걸쳐 연속적으로 변하는 유전적 특성.
+양치식물문|monilophyte||고사리, 쇠뜨기, 솔잎고사리와 그의 친족을 포함하며 양치식물문에 속하는 식물을 부르는 비공식적 용어.
+양친매성|amphipathic||친수성과 소수성 부위를 모두 가지는.
+양토|loam||대략 동일한 양의 모래, 침니와 점토로 이루어진 가장 비옥한 토양.
+억제성 시냅스후전위|inhibitory postsynaptic potential (IPSP)||시냅스전 세포로부터의 억제성 신경전달물질이 시냅스후 수용체에 결합함으로써 유발되는 시냅스후 뉴런막의 과분극. 시냅스후 뉴런이 활동전위를 발생하기 더 어렵게 만든다.
+억제자|repressor||유전자의 전사를 억제하는 단백질. 원핵생물에서 억제자는 프로모터나 혹은 근처에 위치한 DNA에 결합한다. 진핵생물에서는 인핸서 내의 조절요소, 활성자 혹은 다른 단백질에 결합하여 활성자가 DNA에 결합하는 것을 방해하게 된다.
+에너지|energy||변화, 특히 일을 할 수 있는 능력(물질을 반대하는 힘에 대항하여 움직일 수 있는 능력).
+에너지 가설|energetic hypothesis||먹이사슬의 길이는 사슬의 길이에 따른 에너지 전달의 비효율성에 의해 제한된다는 가설.
+에너지 연계, 에너지 짝물림|energy coupling||세포 물질대사에서 발열 반응에 의해 방출된 에너지가 흡열 반응에 사용됨.
+에디아카라 생물군|Ediacaran biota||6억 3,500만 년 전에서 5억 4,100만 년 전 사이의 화석으로부터 알려진 거대하고 부드러운 몸을 가진 초기 생물군.
+에스트라디올|estradiol||여성의 생식계와 2차 성징의 발달 및 유지를 촉진하는 스테로이드호르몬. 포유류의 주요 에스트로젠이다.
+에스트로젠|estrogen||에스트라디올과 같은 여성의 생식계와 2차 성징의 발달 및 유지를 촉진하는 스테로이드호르몬.
+에틸렌|ethylene||유일한 가스 형태의 식물 호르몬; 물리적 스트레스, 예정세포사멸, 잎의 노화와 과실 성숙 등에 관여한다.
+에피네프린|epinephrine||단기간의 스트레스에 반응하는 부신속질에서 분비되는 카테콜아민 호르몬으로 신경전달물질로도 작용한다. 아드레날린으로도 알려져 있다.
+엑손|exon||RNA 가공 후 RNA 분자에 남아 있는 1차 전사물 내에 있는 서열. 또한 전사되는 DNA 부분을 일컫는다.
+엔도르핀|endorphin||고통의 감지를 억제하며 뇌와 뇌하수체 전엽에서 분비되는 호르몬.
+엔트로피|entropy||분자의 무질서 또는 무작위 정도.
+여과 섭식자|filter feeder||주위환경으로부터 작은 생물이나 음식물 입자를 여과 기작을 이용하여 먹고 사는 동물.
+여과|filtration||배설계에서 체액으로부터 물과 대사 노폐물을 포함한 작은 용질을 배설계로 거르는 작용.
+여과액|filtrate||체액으로부터 배설계에 의해 걸러진 세포가 포함되지 않은 액체.
+역, 영역|domain||(1) 분류에서 계 위의 범주. 3역은 고세균, 세균과 진핵생물이다. (2) 단백질에서 독립적으로 접히는 부분.
+역류 교환|countercurrent exchange||반대 방향으로 흐르는 두 액체 사이의 물질이나 열의 교환. 예를 들어, 아가미에서 혈액은 물이 아가미를 지나는 방향과 반대쪽으로 흐름으로써 산소의 흡수와 이산화탄소의 방출을 최대화한다.
+역류 증폭계|countercurrent multiplier system||물질교환을 촉진시키고 농도 기울기를 형성하기 위해 에너지가 능동 수송으로 사용되는 역류 시스템.
+역위|inversion||염색체의 일부가 원래의 염색체에 방향을 거꾸로 하여 다시 부착된 결과 생기는 염색체의 구조이상.
+역전사효소|reverse transcriptase||RNA를 주형으로 하여 DNA를 생성하는 레트로바이러스에 의해 생성되는 효소.
+역전사효소-중합효소연쇄반응|reverse transcriptase-polymerase chain reaction(RT-PCR)||특정 유전자의 발현을 결정하는 기법. 이 방법은 역전사효소와 DNA 중합효소를 사용하여 시료에 존재하는 모든 mRNA로부터 cDNA를 제작한 다음, 관심 있는 유전자 특이 프라이머를 사용하여 그 cDNA를 PCR로 증폭한다.
+역치|threshold||흥분성 세포막이 활동전위를 생성하기 위해 반드시 도달해야 하는 전위.
+역평행|antiparallel||이중 나선 DNA 구조에서 당-인산 골격의 서로 반대되는 배열.
+연골|cartilage||콘드로이틴 황에 다량의 콜라겐 섬유가 박혀 있는 유연성이 있는 결합 조직.
+연골어류|chondrichthyan||상어와 가오리와 같이 골격의 대부분이 연골로 이루어진 척추동물 종류.
+연관 유전자|linked genes||한 염색체상에 충분히 가까이 위치한 유전자로, 보통 함께 유전된다.
+연관 지도|linkage map||상동염색체의 교차 중에 일어나는 표지 사이의 재조합 빈도에 근거한 유전자 지도.
+연동운동|peristalsis||(1) 소화관을 따라 음식물을 밀어내는, 소화관 내벽을 이루는 평활근의 교대적인 수축과 이완. (2) 많은 환형동물에서와 같이 주기적인 근육 수축의 파동을 앞에서 뒤쪽으로 보냄에 의해 땅 위를 움직임.
+연령 구조|age structure||집단에서 특정 연령대에 있는 개체의 상대적인 수.
+연상학습|associative learning||하나의 환경 특성(색과 같은)을 다른 것(위험과 같은)과 연관시키는 후천적 능력.
+연수|medulla oblongata||척추동물 뇌의 가장 아랫부분으로 일반적으로 수질이라 부르기도 한다. 호흡, 심장 및 혈관작용, 삼키기, 소화 및 토하기 등을 포함하는 자율적이며 항상성적인 기능을 조절하는 전방 척수의 후방에 자리잡은 후뇌의 팽윤 부분.
+연안대|littoral zone||호수에서 빛이 잘 드는 호숫가에서 가까운 지역.
+연역적 추리|deductive reasoning||일반적인 가정으로부터 특정 결과를 예측하는 논리.
+연합뉴런, 연합신경세포|interneuron||뉴런의 집합체로 감각뉴런, 운동 뉴런과 시냅스를 형성하고 감각수용과 운동 출력을 통합하는 중추신경계 내부의 신경세포.
+열|heat||한 물질에서 다른 물질로 전달되는 열에너지.
+열대 건조림|tropical dry forest||전반적으로 높은 온도와 강수량을 보이지만 뚜렷한 건기가 존재하는 육상생물군계.
+열대 우림|tropical rain forest||비교적 많은 양의 강수와 일년 내내 따뜻한 온도가 특징인 육상생물군계.
+열대 지방|tropics||북위 23.5도와 남위 23.5도 사이의 위도.
+열성 대립유전자|recessive allele||표현형이 이형접합체에서는 나타나지 않는 대립유전자.
+열수분출구|hydrothermal vent||심해 바닥에 존재하는 지역으로, 지구 내부로부터 뜨거운 물과 무기물이 바닷물로 분출하여 어둡고 뜨거우면 산소가 결핍된 환경을 만든다. 이 지역 군집에서의 생산자는 화학독립영양생활을 하는 원핵생물이다.
+열에너지|thermal energy||물질의 원자나 분자의 무작위적인 움직임에 의한 운동에너지. 열에너지가 가장 무질서한 형태의 에너지이다. 열 참조.
+열역학|thermodynamics||물질의 집합에서 일어나는 에너지 변환의 연구. 열역학 제1법칙과 제2법칙 참조.
+열역학 제1법칙|first law of thermodynamics||에너지 보존의 법칙. 에너지는 전달되고 변형될 수 있지만 결코 창조되거나 파괴되지 않는다.
+열역학 제2법칙|second law of thermodynamics||모든 에너지 변환은 엔트로피를 증가시킨다는 원리. 질서정연한 형태의 에너지는 최소한 부분적으로 열로 전환된다.
+열충격 단백질|heat-shock protein||열 스트레스 동안 다른 단백질을 보호하는 단백질. 열충격 단백질은 동물과 식물 그리고 미생물에서 발견된다.
+염|salt||이온 결합으로 형성된 화합물로, 이온 결합물이라고도 한다.
+염기|base||용액의 수소 이온 농도를 감소시키는 물질.
+염색질|chromatin||진핵생물의 염색체를 구성하는 DNA와 단백질의 복합체. 세포가 분열하지 않을 때에는 염색질은 매우 길고 가는 섬유 형태로 존재하여 광학현미경으로 관찰되지 않는다.
+염색체|chromosome||하나의 DNA 분자와 관련 단백질 분자로 이루어진 세포내 구조. (유전체 염기서열 결정과 같은 의미에서 염색체는 DNA만을 언급하기도 한다.) 일반적으로 진핵세포는 핵에 존재하는 다수의 선형 염색체를 가진다. 원핵생물은 보통 막으로 둘러싸여 있지 않은 핵양체에 위치한 하나의 원형 염색체를 가진다. 염색질 참조.
+염증 반응|inflammatory response||물리적인 상처나 조직 감염 등에 의해 유발되는 선천적인 면역반응으로, 부기를 촉진하고 백혈구의 침투를 향상시키는 물질의 분비를 포함하며, 조직을 수리하거나 침입한 병원균 파괴를 돕는다.
+엽록소|chlorophyll||식물과 조류의 엽록체와 그리고 일부 원핵생물의 막에 존재하는 녹색 색소. 엽록소 a는 직접 명반응에 참여하여 빛에너지를 화학에너지로 변환시킨다.
+엽록소 a|chlorophyll a||명반응에 직접 참여하는 광합성 색소로, 빛에너지를 화학에너지로 전환시킨다.
+엽록소 b|chlorophyll b||에너지를 엽록소 a로 전달하는 보조 광합성 색소의 하나.
+엽록체|chloroplast||식물과 광합성 원생생물에서만 존재하는 세포소기관으로 태양빛을 흡수하여 이산화탄소와 물로부터 유기물을 합성한다.
+엽육 조직|mesophyll||두 층의 표피 사이에 끼어 있는 잎의 기본 조직으로 광합성을 수행한다.
+엽육세포|mesophyll cell||C4 식물에서, 잎의 표면과 유관속초 사이에 느슨하게 배열되어 있는 광합성세포.
+영양|nutrition||생물이 음식물을 섭취하여 이용하는 과정.
+영양 구조|trophic structure||생태계에서 서로 다른 먹이 섭취 관계로, 에너지 흐름의 경로와 화학적 순환의 양상을 결정한다.
+영양단계|trophic level||먹이 사슬에서 한 생물이 차지하는 위치.
+영양 번식|vegetative propagation||사람에 의해 이루어지는 식물의 무성 생식.
+영양 생식|vegetative production||식물의 무성 생식.
+영양 효율|trophic efficiency||한 영양 단계에서 다음의 높은 영양 단계로 전달되는 생산의 비율.
+영양세포아층|trophoblast||포유류 배반포의 바깥 상피. 태반의 태아 부분을 형성하며, 배의 발생을 돕지만 배가 적절한 부분으로 형성되는 것을 돕지는 않는다.
+예측|prediction||연역적 추리에서 가설을 논리적으로 따르는 예측. 실험으로 이 예측을 검증함으로써 특정 가설을 기각할 수 있다.
+오비탈|orbital||전자가 90% 이상의 시간을 머무르는 3차원의 공간.
+오카자키 절편|Okazaki fragment||DNA 복제 동안 주형가닥에 있는 복제 원점으로부터 멀어지는 방향으로 합성되는 짧은 DNA 절편으로, 서로 연결되어 새로이 합성된 DNA의 지연가닥을 형성한다.
+오페론|operon||프로모터, 작동자와 동등하게 조절되는 기능이 관련된 유전자의 무리로 이루어진, 세균과 파지에서 발견되는 유전자의 기능 단위.
+옥시토신|oxytocin||뇌하수체 후엽에서 분비되는 호르몬. 자궁 근육의 수축을 유도하고 수유기간 동안 젖샘이 젖을 분비하도록 한다.
+옥신|auxin||세포 신장, 뿌리 형성이나 2차 생장 및 과실 생장 등 다양한 효과를 내는 식물호르몬인 인돌아세트산(IAA)을 주로 말한다.
+온대 초원|temperate grassland||화본과 초본과 광엽초본이 우점하는 육상생물군계.
+온대 활엽수림|temperate broadleaf forest||크고 잎이 넓은 낙엽수의 생장에 필요한 충분한 습도가 있는, 중위도 지역에 걸쳐 위치한 생물군계.
+온도|temperature||한 물질의 원자와 분자의 평균 운동에너지(열에너지)의 정도를 측정한 것.
+온도수용기|thermoreceptor||열이나 추위에 의해 자극되는 자극수용기.
+온실 효과|greenhouse effect||대기에 축적된 이산화탄소와 다른 기체가 반사된 적외선을 흡수하고 이 일부를 다시 지구로 반사시켜 유발되는 지구의 온난화.
+옵신|opsin||빛 흡수 색소 분자에 결합되어 있는 막단백질.
+와편모류|dinoflagellate||세포를 덮고 있는 셀룰로오스 판에 존재하는 수직의 홈에 위치하고 있는 두 개의 편모를 가진, 대부분이 단세포성인 광합성 조류.
+완전 변태|complete metamorphosis||유충이 모습이 매우 다른 성체로의 전이. 성체는 종종 유충에 비해 환경에 매우 다르게 행동한다.
+완전 우성|complete dominance||이형접합체와 우성 동형접합체의 표현형이 구분이 되지 않는 경우.
+완전꽃|complete flower||4개의 기본 꽃기관인 꽃받침, 꽃잎, 심피 및 수술을 모두 가지고 있는 꽃.
+완족동물|branchiopod||껍질이 등과 배쪽으로 나눠진 해양 촉수동물류. 파리조개라고도 한다.
+완충 용액|buffer||외부에서 산과 염기가 더해졌을 때 급격한 pH의 변화를 최소화하는, 산과 염기의 형태로 이루어진 물질을 가지는 용액.
+외골격|exoskeleton||연체동물의 껍질이나 절지동물의 각피와 같이 동물 표면의 단단한 껍데기; 보호기능을 가지며 근육의 부착점을 제공한다.
+외군|outgroup||연구 중인 종의 무리를 포함하는 계통 이전에 분기한 것으로 알려진 진화계통으로부터의 종이나 종의 무리. 외부군은 그 구성원이 연구 중인 종의 무리와 밀접하게 관련되어 있으나 어떠한 연구 무리의 일원과는 서로서로 밀접하게 관련되어 있지 않기 때문에 선택된다.
+외독소|exotoxin||원핵생물과 병원균에 의해 분비되는 독성 단백질로, 병원균이 더 이상 존재하지 않아도 증상을 일으킨다.
+외떡잎식물|monocot||하나의 떡잎(종자 잎)을 가지는 꽃식물 분기군의 일원.
+외배엽|ectoderm||동물 배의 3 중요 배엽 중 제일 바깥 배엽으로 제일 바깥 표피를 형성하고 일부 문에서는 신경계, 내이와 눈의 렌즈를 형성한다.
+외부기생생물|ectoparasite||숙주의 외부 표면에서 먹이를 섭취하는 기생생물.
+외생균근|ectomycorrhiza||균류가 뿌리를 둘러싸지만 숙주세포의 세포막 안으로 침입하지 않는 식물 뿌리계와 균류의 연합.
+외생균근 균류|ectomycorrhizal fungus||식물 뿌리의 표면에 균사막을 형성하는 공생 균류로, 뿌리 피층의 세포와 공간으로 자라기도 한다.
+외온성|ectothermic||체온 조절을 위해 외부로부터 열의 중요한 근원을 얻는 동물을 일컫는 말.
+외투강|mantle cavity||연체동물의 아가미, 항문 및 배설공이 존재하는 물로 채워진 공간.
+외투막|mantle||연체동물의 3가지 중요한 부분 중 하나. 연체동물의 내장낭을 덮으며 껍질을 분비하는 조직의 주름. 발과 내장낭 참조.
+외항동물|ectoproct||보통 태충류(bryozoan)라 불리는 고착생활을 하며 군체를 형성하는 촉수동물류.
+요관|ureter||신장에서 방광으로 이르는 관.
+요도|urethra||여성에서는 질 근처의 부분에서, 남성에서는 음경을 통하여 포유류 몸으로부터 오줌을 배출하는 관. 남성에서는 생식계의 출구관으로 사용된다.
+요산|uric acid||단백질과 퓨린 대사물질의 산물로 곤충, 육상 달팽이와 많은 파충류의 주요 질소 노폐물이다. 요산은 비교적 비독성이며 대체로 불용성이다.
+요소|urea||암모니아와 이산화탄소를 결합시키는 대사회로에 의해 간에서 생성되는 수용성 질소 노폐물.
+용균성 생활사|lytic cycle||숙주세포를 용해시켜 새로운 파지를 방출하는 파지 복제 주기의 한 유형.
+용매|solvent||용액에서 녹이는 물질. 물은 알려진 가장 좋은 용매이다.
+용액|solution||둘 혹은 그 이상 물질의 균일한 혼합 액체.
+용원성 생활사|lysogenic cycle||바이러스 유전체가 프로파지로 세균 숙주의 유전체로 끼어든 후 세균을 죽이지 않는 파지 생식 주기의 하나.
+용원성 파지|temperate phage||용균성 회로나 혹은 용원성 회로를 통하여 생식할 수 있는 능력이 있는 파지.
+용질|solute||용액에 녹아 있는 물질.
+용질 퍼텐셜|solute potential (ψs)||수분 퍼텐셜의 구성요소로, 용액에 녹아 있는 용질의 수에 비례하며 수분 이동의 방향에 대한 용질의 효과를 측정한다. 삼투 퍼텐셜이라고도 하며 0 혹은 음의 값을 가진다.
+우산이끼, 태류|liverwort||태류문에 속하는 작은 초본류의 비관다발식물.
+우성 대립유전자|dominant allele||이형접합체의 표현형에서 완전히 발현되는 대립유전자.
+우울증|major depression disorder||우울한 감정, 자존심의 부족, 공허함 혹은 거의 모든 일에 대한 흥미를 잃음 등으로 특징지어지는 기분 장애.
+운동 단백질|motor protein||세포골격 요소와 다른 세포 요소와 상호작용하는 단백질로, 전체 세포나 세포 일부분의 이동을 담당한다.
+운동 단위|motor unit||하나의 운동 뉴런과 그것이 조절하는 모든 근섬유.
+운동계|motor system||외부 자극에 반응하여 신호를 골격근으로 전달하는 운동 뉴런으로 이루어진 척추동물 말초신경계의 원심성 가지.
+운동뉴런|motor neuron||뇌나 척수로부터 근육이나 샘으로 신호를 전달하는 신경세포.
+운동에너지|kinetic energy||물체의 상대적 운동과 관련된 에너지. 움직이는 물질은 다른 물질에 운동을 나누어줌으로써 일을 한다.
+운동핵 편모류|kinetoplastid||핵외 DNA를 가지는 하나의 큰 미토콘드리아를 갖고 있는 트라파노소마와 같은 원생생물.
+운명예정도|fate map||배발생에서 각 세포와 조직의 미래 발생을 나타내는 지도.
+운반 RNA|transfer RNA (tRNA)||특정 아미노산을 선택하여 mRNA의 적당한 코돈을 인지함으로써 핵산이라는 언어와 단백질 언어 사이의 통역 역할을 하는 RNA 분자.
+워블|wobble||tRNA 안티코돈의 5' 말단에 존재하는 염기가 코돈의 3번째 위치에서(3' 말단) 한 종류 이상의 염기와 쌍을 이룰 수 있는 염기 쌍 규칙의 유연성.
+원거리 조절부위, 인핸서|enhancer||그것이 전사를 조절하는 유전자보다 보통 멀리 떨어져 위치하는 많은 조절요소를 포함하고 있는 진핵생물 DNA 부위.
+원구|blastopore||낭배기에서 원장의 열린 부분으로, 선구동물에서는 입이 되며 후구동물에서는 항문이 된다.
+원구류|cyclostome||중요한 두 척추동물 분기군에 속하는 무리. 턱이 없으며 칠성장어와 먹장어가 이에 속한다. 유악동물 참조.
+원구배선부|dorsal lip||양서류 배의 등쪽에 있는 원구의 위쪽.
+원발암 유전자|proto-oncogene||발암 유전자가 되는 잠재력을 지닌 정상의 세포 유전자.
+원뿌리|taproot||배뿌리에서 발생하며 곁뿌리를 형성하는 주 수직 뿌리.
+원뿔세포|cone||척추동물 눈의 망막에 존재하며, 색에 민감한 원뿔 모양의 세포.
+원사체|protonema||발아하는 이끼 포자에 의해 형성되는 녹색의 가지가 많은 한 세포 두께의 섬유 덩어리.
+원생생물|protist||식물, 동물이나 균류가 아닌 다른 모든 진핵생물을 일컫는 비공식 용어. 일부 군체를 형성하거나 다세포인 원생생물도 존재하지만 대부분의 원생생물은 단세포이다.
+원소|element||화학 반응에 의해 어떠한 다른 물질로 분해될 수 없는 물질.
+원시세포|protocell||막과 유사한 구조를 가지며, 그 내부가 둘러싸고 있는 외부와는 다르게 유지되는, 살아 있는 세포의 비생물적 전구체.
+원신관|protonephridium||신구라 불리는 외부로 연결된 통로를 가지나 내부의 통로는 존재하지 않는 닫혀진 관의 구조로 이루어진 편형동물의 불꽃세포 배설계와 같은 배설계.
+원양대|pelagic zone||수생생물군계의 외해 요소.
+원위세뇨관|distal tubule||척추동물의 신장에서 여액을 정제한 후 수집관으로 보내는 작용을 하는 네프론의 부분.
+원자 번호|atomic number||원자의 핵 속에 존재하는 양성자의 수; 각 원소마다 고유하며 첨자로 표시한다.
+원자|atom||원소의 성질을 그대로 유지하는 물질의 최소 단위.
+원자가|valence||원자의 결합 능력. 보통 원자의 최외각에 존재하는 쌍을 이루지 못한 전자의 수와 같다.
+원자가 껍질|valence shell||원자의 화학 반응에 관여하는 원자가 전자를 포함하고 있는 원자의 가장 바깥의 에너지 궤도.
+원자가 전자|valence electron||최외각에 존재하는 전자.
+원자량|atomic mass||1몰수의 원자를 g 단위로 나타낸 원자의 총질량. (둘 이상의 동위원소를 가지는 원소의 원자량은 자연적으로 존재하는 동위원소 존재량의 무게 평균으로 나타낸다.)
+원자핵|atomic nucleus||중성자와 양성자를 포함하고 있는 원자의 고밀도 중심 부위.
+원장|archenteron||낭배기 동안 형성되는 내배엽으로 둘러싸인 공간으로 동물의 소화관으로 발달.
+원핵생물|prokaryote||세균과 고세균 영역에 속하는 단세포 생물.
+원핵세포|prokaryotic cell||막으로 둘러싸인 핵과 세포소기관이 없는 세포. 원핵세포를 가진 생물(세균과 고세균)을 원핵생물이라고 한다.
+원형질분리|plasmolysis||세포를 가진 세포에서 고장액 환경으로 인해 세포가 수분을 잃게 될 때 세포질이 수축하여 원형질막이 세포벽에서 떨어져 나가는 현상.
+원형질연락사|plasmodesmata||식물세포벽에 존재하는 열린 통로이며 이곳을 통하여 세포질이 인접한 세포와 연결된다.
+원형질체|protoplast||원형질막을 포함하는 식물 세포의 살아 있는 부분.
+월경|menstruation||월경 주기 동안 자궁 내막을 떨어뜨려 내보냄.
+월경 주기|menstrual cycle||사람 및 그 외 영장류에서 자궁내막의 주기적인 생장과 임신이 되지 않았을 때의 탈리.
+위|stomach||음식물을 저장하고 소화의 예비 단계를 수행하는 소화계의 한 기관.
+위강|spongocoel||해면동물의 중심강.
+위산|gastric juice||위에서 분비되는 소화액.
+위수강|gastrovascular cavity||소화와 영양물질의 분배 기능을 하는, 일부 동물의 주머니 모양의 몸에서의 중심 체강.
+유사유전자, 유사유전자|pseudogene||진정한 유전자와 매우 비슷하나 기능을 가지는 산물을 생산하지 않는 DNA 절편. 돌연변이 때문에 특정 종에서 불활성화된 유전자로 기능을 하였던 DNA 조각.
+위치에너지|potential energy||위치나 공간 배열(구조)의 결과로 물질에 저장된 에너지.
+위치정보|positional information||동물이나 식물의 배 구조에서, 몸의 축과 관련 있는 세포의 위치를 지시함으로써 패턴 형성을 조절하는 분자신호.
+유공충류|foram (foraminiferan)||탄산칼슘을 포함하고 있는 단단한 껍질을 분비하며 껍질에 있는 구멍을 통해 혓발을 뻗는 수생 원생생물.
+유관속초세포, 관다발초세포|bundle-sheath cell||C4 식물에서 잎맥 주변의 단단하게 싸여 있는 엽초로 배열되어 있는 광합성세포 유형.
+유글레나류|euglenid||앞부분에 하나 혹은 2개의 편모가 나오는 공간을 특징으로 가지는 유글레나와 같은 원생생물.
+유글레나조아류|euglenozoan||포식성 종속영양생물, 광합성 독립영양생물과 병원성 기생생물을 포함하는 편모성 원생생물의 다양한 분기군의 하나.
+유기물잔해, 유기퇴적물|detritus||죽은 유기물.
+유기화학|organic chemistry||탄소화합물(유기물)에 관한 연구.
+유대류|marsupial||코알라, 캥거루나 주머니쥐와 같이 어린 자식이 배발생을 육아낭이라고 불리는 모체의 주머니에서 완성하는 포유류.
+유도|induction||한 무리의 세포 또는 조직이 밀접한 상호작용을 통해 다른 세포나 조직의 발생에 영향을 미치는 과정.
+유도 적합|induced fit||기질이 들어감으로써 유도된, 효소가 보다 편안하게 기질에 결합할 수 있도록 기질에 의한 효소의 활성자리 모양의 변화.
+유도자|inducer||세균 억제자 단백질에 결합하여 모양을 변화시켜 억제자가 작동자에 결합하지 못하게 함으로써 오페론을 활성화시키는 특수한 작은 분자.
+유동 모자이크 모형|fluid mosaic model||현재 받아들여지고 있는 막구조 모델; 이 모델에서 막은 유동성 인지질층을 좌우로 떠다니는 모자이크 양상의 단백질 분자를 가진다.
+유모세포|hair cell||세포 표면의 털과 같은 돌기가 움직일 때 신경계로의 출력을 변경시키는 기계적 감각세포.
+유미관|lacteal||창자의 융털돌기 중심으로 뻗은, 흡수된 유미입자를 받아들이는 작은 림프관.
+유미즙|chyme||위에서 형성된 부분적으로 소화된 음식물과 소화즙의 혼합물.
+유배식물|embryophyte||다세포성 배의 공통된 형질을 언급하는 육상식물의 다른 이름.
+유사분열|mitosis||통상 전기, 전중기, 중기, 후기 및 말기 등 5단계로 나누어지는 진핵세포의 핵분열 과정. 유사분열은 복제된 염색체를 두 딸세포로 똑같이 나누어 주어 염색체 수를 보존한다.
+유사분열 방추체|mitotic spindle||유사분열 동안 염색체의 이동에 관여하는 미세소관과 관련 단백질의 조합.
+유사분열기|mitotic (M) phase||유사분열과 세포질 분열을 포함하는 세포 주기의 한 단계.
+유사파충류|parareptile||대부분 크고 땅딸막하며 다리 4개를 가진 초식동물로 진화한 초기의 중요 파충류 무리. 삼첩기 말기에 멸종.
+유생, 유충|larva||일부 동물의 생활사에서 독립생활을 하는 성적으로 미성숙한 형태인데 형태적인 면, 영양적인 면 혹은 서식지에서 성체 동물과 다르기도 하다.
+유성 생식|sexual reproduction||두 생식세포의 융합으로부터 비롯되는 생식 유형.
+유세포|parenchyma cell||비교적 특수화되지 않은 식물세포로 대부분의 대사작용을 수행하며 유기물을 합성 저장하고 더 분화된 세포 유형으로 발생한다.
+유스타키오관|Eustachian tube||가운데귀와 인두를 연결하는 관.
+유악동물|gnathostome||턱을 가지는 척추동물의 무리. 유악동물은 상어, 가오리, 실러캔스, 방사형지느러미 어류, 폐어, 양서류, 파충류 및 포유류를 포함한다.
+유전 변이|genetic variation||유전자 또는 DNA 절편 조성의 개인적 차이.
+유전|heredity||한 세대에서 다음 세대로의 형질의 전달.
+유전공학|genetic engineering||실용적 목적을 위한 직접적인 유전자 조작.
+유전의 염색체설|chromosome theory of inheritance||유전자가 염색체상에 존재하며 감수분열 동안 염색체의 행동이 유전 양상을 조절한다는 생물학의 기본 원리.
+유전자|gene||DNA(일부 바이러스에서는 RNA)에서 특정 염기서열로 이루어진 유전정보의 개별적 단위.
+유전자 드라이브|gene drive||한 특정 대립유전자가 다른 대립유전자에 비해 유전이 잘 이루어지도록 하여 선호된 대립유전자가 집단 내에 널리 퍼지도록 유전을 편향시키는 과정.
+유전자 발현|gene expression||DNA가 단백질 합성을 지령하는 과정으로, 일부 경우는 단지 RNA 합성만을 지시한다.
+유전자 재조합|genetic recombination||형질의 조합이 부모에 존재하는 그것과 다른 자손을 생산할 때 쓰는 일반적 용어.
+유전자 주석달기|gene annotation||단백질을 암호화하는 유전자를 확인하고 그 산물의 기능을 결정하는 유전체 염기서열의 분석.
+유전자 지도|genetic map||염색체상의 유전자 좌위의 순서.
+유전자 치료|gene therapy||치료목적으로 유전병을 가진 사람에게 유전자를 도입.
+유전자 클로닝|gene cloning||많은 수의 유전자 복사체의 생산.
+유전자 편집|gene editing||특이적이며 예측 가능한 방법으로 유전자를 교체하는 기술.
+유전자 풀|gene pool||한 집단에서 모든 개체에 존재하는 모든 유전자 자리의 모든 대립유전자의 집합. 유전자 풀이라는 용어는 한 집단에서 단지 하나 혹은 몇 개의 유전자 자리의 대립유전자의 집합을 말하는 보다 제한된 의미로 사용되기도 한다.
+유전자 흐름|gene flow||생식력이 있는 개체나 배우체의 이동으로 인한 한 개체군에서 다른 개체군으로의 유전자 전달.
+유전자변형 생물|genetically modified organism (GMO)||인위적인 방법으로 하나 이상의 유전자를 획득한 생물. 형질전환 생물이라고도 한다.
+유전자형|genotype||한 생물의 대립유전자의 구성.
+유전적 부동|genetic drift||우연한 사건이 한 세대에서 다음 세대로 예측할 수 없는 유전자빈도의 변화를 유발하는 과정. 유전적 부동의 효과는 작은 집단에서 두드러진다.
+유전적 양상|genetic profile||지금은 대부분 PCR에 의해, 이전에는 전기영동과 핵산 탐침에 의해서 검출되는 개인의 유전적 표지자의 독특한 세트.
+유전체|genome||생물 또는 바이러스의 유전물질. 비암호화 핵산 염기서열을 포함한 생물 또는 바이러스의 유전자의 전량.
+유전체 각인|genomic imprinting||자손에서 대립유전자의 발현이 대립유전자가 부계로부터 혹은 모계로부터 유전했는지의 여부에 따라 달라지는 상황.
+유전체학|genomics||종 내 한 세트의 유전자(또는 DNA)와 그들의 상호작용뿐만 아니라 종 사이의 유전체 비교를 연구하는 체계적인 연구.
+유전학|genetics||유전과 유전변이에 관한 학문.
+유체 골격|hydrostatic skeleton||폐쇄된 몸의 구획에서 압력을 가지는 액체로 이루어진 골격계; 대부분의 자포류, 편형동물, 선충류와 환형동물의 주요 골격계이다.
+유한생장|determinate growth||일정한 크기에 도달하면 생장이 멈추는 대부분의 동물과 일부 식물기관의 생장 특성.
+유행성|epidemic||일반적인 질병의 창궐.
+유형형성|paedomorphosis||성체가 진화 조상의 어린 형태를 유지하는 것.
+유효 개체군 크기|effective population size||성공적으로 교배할 수 있는 암수의 숫자에 근거한 집단의 크기 예측. 일반적으로 모든 집단보다 작다.
+육식동물|carnivore||다른 동물을 먹는 동물.
+윤작|crop rotation||주로 토양의 생산성을 보존하기 위해 동일한 토지에 서로 다른 작물을 번갈아 경작하는 것.
+융모|villus||(1) 작은창자의 내부 표면에 존재하는 손가락 모양의 돌기. (2) 포유류 태반 융모막의 손가락 모양의 돌기. 많은 수의 융모는 이들 기관의 표면적을 증가시킨다.
+융모막 융모 채취법|chorionic villus sampling(CVS)||태반에서 태아 조직의 일부를 떼내어 태아의 유전적 선천성 결합을 조사하는 태아 진단법의 하나.
+융합|fusion||진화 생물학에서 두 종 사이의 생식장벽을 약화시킬 수 있는 잡종 자손을 형성할 수 있는 두 종 사이의 유전자 흐름. 이 과정은 두 종의 유전자 풀을 점진적으로 같게 만들어 두 종이 하나의 종으로 융합될 수 있게 한다.
+음경|penis||수컷 포유류의 교미구조.
+음낭|scrotum||정소를 싸고 있는 피부주머니로, 정자형성 과정에 필요한 낮은 온도에서 정소를 유지하게 한다.
+음문|vulva||여성 외부 생식기의 집합적 명칭.
+음성 되먹임|negative feedback||생물에 의해 항상 감시되는 생리적인 변화가 처음의 변화를 상쇄하는 반응을 유도하게 하는 항상성의 중요 기작.
+음세포작용|pinocytosis||액체나 거기에 녹아 있는 용질을 흡수하는 세포내 섭취작용의 한 종류.
+음압 숨쉬기, 음압 호흡|negative pressure breathing||공기가 폐 속으로 끌려 들어가는 호흡 방식.
+음이온|anion||음성으로 대전된 이온.
+음핵|clitoris||혈액으로 충혈된 여성의 기관으로, 성적 흥분 시 발기한다.
+응집|cohesion||보통 수소 결합에 의한 같은 분자의 결합력.
+응집-장력 가설|cohesion-tension hypothesis||물관액의 상승에 대한 가장 적절한 설명. 증산작용이 물관액을 끌어당겨 물관액이 음의 압력 또는 장력에 놓이게 만들고, 물 분자의 응집력이 꼭대기로부터 뿌리까지 전 길이를 통해 이 장력을 전달한다.
+이끼|moss||선태식물문에 속하는 작은 초본류의 비관다발식물.
+이노시톨 3인산|inositol trisphosphate(IP3)||세포질의 Ca2+ 농도를 높임으로써, 특정 신호 분자와 다음의 2차 신호전달물질인 Ca2+ 사이를 매개시키는 역할을 하는 2차 신호전달물질.
+이동|locomotion||한 장소에서 다른 장소로의 능동적인 움직임.
+이동 통로|movement corridor||서식지를 고립되지 않도록 서로 연결하여 주는 일련의 작은 숲 혹은 좁은 띠.
+이론|theory||새로운 가설을 일반화시키는 설명으로 많은 증거에 의해 지지된다.
+이명법|binomial||속명과 종소명의 두 부분으로 이루어진 한 종을 명명하는 라틴어 명명법. 이명식 명칭이라고도 한다.
+이분법|binary fission||반으로 나누어지는 것에 의한 원핵생물의 무성 생식 방법. 원핵생물에서 이분법은 유사분열을 수반하지 않으나, 이분법을 겪는 단세포 진핵생물에서는 유사분열이 이 과정의 하나이다.
+이성간 선택|intersexual selection||자연선택의 하나로서, 한쪽 성의 개체(주로 암컷)가 다른 성의 개체를 짝으로 선택함에 있어 까다로운 선택으로, 짝 선택이라고도 한다.
+이성질체|isomer||동일한 원소의 원자 수는 같지만 구조가 달라서 성질이 다른 둘 이상의 화합물 중 하나.
+이소 종분화|allopatric speciation||한 개체군으로부터 지리적으로 격리된 개체군에서 새로운 종의 형성.
+이소적|ectopic||비정상적인 장소에서 일어나는.
+이수성|aneuploidy||하나 혹은 그 이상의 염색체가 더 존재하거나 부족한 염색체 이상.
+이시성|heterochrony||개체 발생의 시기나 속도에서의 진화적 변화.
+이어맞추기 복합체|spliceosome||단백질과 RNA 분자로 이루어진 큰 복합체로, RNA 이어맞추기에서 RNA 인트론 끝 부분과 작용하여 인트론을 방출하고 인접한 두 엑손을 연결한다.
+이온|ion||하나 혹은 그 이상의 전자를 잃거나 얻어 전하를 띤 원자.
+이온 결합|ionic bond||반대 전하를 띤 이온 사이에서의 화학적 결합.
+이온 통로|ion channel||특정 이온을 농도 기울기의 순방향으로 통과시키는 막관통 단백질 통로.
+이온 화합물|ionic compound||이온 결합의 결과로 생긴 화합물로 염이라고도 한다.
+이완기|diastole||심장근육이 이완되어 심실과 심방이 혈액으로 채워지는 심장박동 주기의 한 단계.
+이완기 혈압|diastolic pressure||심실이 이완되었을 때 동맥의 혈압.
+이용|exploitation||+/- 생태적 상호작용으로서, 한 쪽은 다른 종을 먹음으로써 이득을 얻는 반면 다른 쪽은 해를 입는다. 포식, 초식 및 기생이 이에 속한다.
+이입|immigration||다른 지역으로부터 새로운 개체의 유입.
+이자, 췌장|pancreas||외분비 및 내분비 조직을 가지는 분비샘. 외분비 기능으로는 효소와 염기성 용액을 관을 통해 작은창자로 분비함으로써 소화에 관여한다. 관이 없는 내분비 기능으로는 인슐린과 글루카곤을 혈액으로 분비함으로써 항상성 유지에 관여한다.
+이종상동 유전자|orthologous genes||종의 분화로 인해 다른 종에서도 발견되는 상동 유전자.
+이주|migration||주기적인 먼 거리의 위치 변화.
+이중 결합|double bond||이중 공유 결합. 두 원자에 의한 두 쌍의 원자가 전자의 공유.
+이중 나선|double helix||인접한 두 가닥이 가상의 축을 따라 나선 모양을 형성하는 DNA의 형태.
+이중 순환|double circulation||각 순환을 마친 후 혈액이 심장을 통하여 흐르는, 분리된 폐순환과 체순환을 가지는 순환계.
+이질다배체|allopolyploid||서로 다른 두 종의 상호 교배 결과 염색체가 서로 결합한 결과 3 염색체 세트 이상을 가지는 임성의 개체.
+이질세포|heterocyst||일부 섬유상 남세균에서 질소고정에 관여하는 특수화된 세포.
+이질염색질|heterochromatin||간기 동안 심하게 응축되어 있고 보통 전사되지 않는 진핵생물의 염색질.
+이출|emigration||한 집단에서 나가는 개체의 이동.
+이타주의|altruism||자신의 적응은 감소시키나 다른 개체의 적응을 증가시키는 행동양식.
+이핵체|heterokaryon||세포당 2개 이상의 반수체 핵을 포함하는 균류의 균사체.
+이형|heteromorphic||포자체와 배우체 세대가 형태면에서 다른 식물과 일부 조류의 생활사를 언급함.
+이형접합의|heterozygous||주어진 유전자좌에서 두 개의 다른 대립유전자를 가지는.
+이형접합체|heterozygote||형질을 암호화하는 한 유전자의 서로 다른 두 대립유전자를 가지는 개체.
+이형포자성|heterosporous||수컷 배우체로 발생하는 소포자와 암컷 배우체로 발생하는 대포자 등 두 종류의 포자를 가지는 식물종을 일컫음.
+이화작용 경로|catabolic pathway||복잡한 분자를 간단한 분자로의 분해에 의해 에너지를 방출하는 물질대사 경로.
+이황화 결합|disulfide bridge||한 시스테인 잔기의 황과 다른 시스테인 잔기의 황 사이에 형성되는 강력한 공유 결합.
+익룡|pterosaur||공룡시대에 살았던 날개 달린 파충류.
+익스팬신|expansin||셀룰로오스 미세섬유와 다른 세포벽 성분 사이의 수소 결합을 절단하는 식물효소로 세포벽을 느슨하게 한다.
+인|nucleolus||다양한 염색체에 의해 형성된 핵에 존재하는 특수화된 구조로 리보솜을 합성한다.
+인간 면역결핍 바이러스(HIV)|human immunodeficiency virus(HIV)||AIDS(후천성면역결핍증)를 일으키는 감염원. HIV는 레트로바이러스이다.
+인구 통계적 전이|demographic transition||출생률과 사망률이 높은 0의 인구 증가율에서 출생률과 사망률이 낮은 0의 인구 증가율로의 전환.
+인대|ligament||관절과 함께 뼈를 연결하는 섬유상 연결 조직.
+인두|pharynx||(1) 공기와 음식물이 통과하는 척추동물의 인후(목구멍)에 존재하는 부위. (2) 편형동물에서는 몸의 배 부분에서 시작하여 입에서 끝나는 근육으로 이루어진 관.
+인두열|pharyngeal slit||척삭동물의 배에서 인두열로부터 형성되는 틈새의 하나로, 인두로 연결되며 나중에 많은 척추동물에서 아가미틈으로 발생한다.
+인두홈|pharyngeal cleft||척삭동물의 배에서 인두의 바깥 표면을 따라 일련의 아치 형태의 구조를 구분하는 홈의 하나로 인두열(pharyngeal slit)로 발생한다.
+인룡류|lepidosaur||도마뱀, 뱀, 큰도마뱀(tuatara)이라 불리는 두 종류의 뉴질랜드 동물을 포함하는 파충류 무리.
+인산기|phosphate group||4개의 산소 원자와 결합한 인 원자로 이루어진 화학기. 에너지 전달에 중요하다.
+인산화 연쇄반응|phosphorylation cascade||인산화효소에 의해 매개되는 세포신호전달 동안 일어나는 일련의 화학 반응으로, 각 인산화효소가 다음 인산화효소를 인산화시키고 궁극적으로 많은 단백질을 인산화시키게 된다.
+인산화 중간산물|phosphorylated intermediate||인산기가 공유 결합으로 부착된 분자(종종 반응물)로 인산화되지 않은 분자에 비해 덜 안정적이어서 활성이 더 크다.
+인수공통 병원균|zoonotic pathogen||사람에서 다른 동물로 전파되는 병원균.
+인슐린|insulin||혈당을 낮추는 작용을 하는 이자 베타세포에서 분비되는 호르몬. 대부분 세포의 글루코오스 흡수, 간에서 글리코겐의 합성과 저장을 촉진하며 또한 단백질과 지방의 합성을 자극한다.
+인위 선택|artificial selection||원하는 형질을 얻기 위해 동식물을 선택적으로 육종하는 것.
+인지|cognition||자각, 추리, 회상 및 판단을 포함하는 지식 과정.
+인지|perception||뇌에 의한 입력 감각의 해석.
+인지 지도|cognitive map||동물 환경에 존재하는 물체 사이의 공간적인 관계 신경 표시.
+인지질|phospholipid||글리세롤이 2개의 지방산과 하나의 인산기와 결합한 지질. 지방산의 탄화수소 사슬은 비극성이며 소수성 꼬리로 작용하고, 나머지는 극성이며 친수성 머리로 작용한다. 인지질은 생체막 기능을 하는 이중층을 형성한다.
+인터페론|interferon||항바이러스나 면역조절기능을 가지는 단백질. 예를 들어 바이러스에 감염된 세포에서 분비되는 인터페론은 인근의 세포가 바이러스 감염에 저항하는 것을 돕는다.
+인테그린|integrin||동물세포에서, 세포외기질과 세포골격을 연결해 주는 막관통 수용체 단백질.
+인트론|intron||1차 전사물 안에 암호화하지 않고 끼어 있는 부분으로, RNA 가공 동안 전사물로부터 제거된다. 또한 인트론이 전사되는 DNA 부분을 일컫는다.
+인핸서|enhancer||유전자의 전사되는 부위보다 보통 더 멀리 떨어져서 위치하는, 많은 조절요소를 포함하고 있는 진핵생물 DNA 부위.
+일부일처제|monogamous||한 수컷이 단지 하나의 암컷과만 짝을 이루는 관계의 유형을 일컫는 용어.
+일액현상|guttation||일부 식물에서 뿌리의 압력에 의해 생기는 물방울의 분비.
+일주기성 리듬|circadian rhythm||모든 진핵생물에 존재하는 약 24시간의 생리적 주기로 외부의 신호 없이도 유지된다.
+임계기|sensitive period||특정 행동의 학습이 일어나는 제한된 동물발생 시기. Critical period라고도 한다.
+임신|pregnancy||자궁에 하나 혹은 그 이상의 배를 가지고 있는 상태.
+임신, 수태|conception||사람에서 정자에 의한 난자의 수정.
+잉태|gestation||임신 참조.
+잎|leaf||관다발식물에서 주된 광합성 기관.
+잎몸, 엽신|blade||(1) 해초에서 광합성을 위한 대부분의 면적을 제공하는 잎과 같은 구조, (2) 전형적인 식물 잎의 납작한 부분.
+잎사귀형 지느러미|lobe-fin||사지류를 탄생시킨 계통뿐만이 아니라 실러칸스와 폐어를 포함하는 막대기 모양의 근육 지느러미를 가지는 경골어류인 육기어류에 속하는 무리.
+잎원기|leaf primordium||어린 싹의 정단 분열조직에서 붙어 있는 손가락 모양의 작은 돌출부로 여기서 잎이 나온다.
+잎자루|petiole||엽병; 잎을 줄기의 마디에 부착시키는 잎의 자루.
+자가면역 질환|autoimmune disease||면역계가 자신을 공격하는 면역질환.
+자가분비|autocrine||분비세포를 표적으로 삼는 분비된 분자의 속성.
+자가불화합성|self-incompatibility||자신의 화분이나 때로는 매우 밀접하게 관련된 개체의 화분을 받아들이지 않는 종자식물의 능력.
+자궁|uterus||난자가 수정되고 발생이 일어나는 암컷 생식 기관.
+자궁 경부|cervix||질로 연결된 자궁의 목 부분.
+자궁 주기|uterine cycle||사람 및 일부 영장류에서, 임신되지 않은 자궁내막이 자궁 경부를 거쳐 질로 나오는 생식 주기의 한 유형. 생리주기라고도 한다.
+자궁내막|endometrium||많은 혈관이 분포된 자궁의 안쪽 막.
+자궁내막증|endometriosis||자궁에서 자궁내막 조직의 존재로 인한 이상.
+자극|stimulus||되먹임 조절에서 반응을 유발하는 변수의 변동.
+자낭|ascus||자낭균류의 2핵성 균사의 끝부분에 위치하는 주머니 모양의 포자 캡슐.
+자낭과|ascocarp||자낭균류의 자실체.
+자낭균류|ascomycete||자낭균문에 속하는 균류. 자낭균류는 단세포인 효모, 작은 일반범 균류에서 복잡한 주발버섯(cup fungi)과 곰보버섯에 이르기까지 그 크기와 복잡성이 매우 다양하다. 약 절반 정도의 자낭균류는 지의류의 형태로 조류나 남세균과 공생한다.
+자루|stipe||해초류의 줄기 비슷한 구조.
+자매 분류군|sister taxa||직접적인 공통조상을 공유함으로써 가장 가까운 친족인 생물의 무리.
+자매 염색분체|sister chromatid||중심절에서, 때로는 염색체 팔 전반에 걸쳐, 단백질에 의해 서로 연결된 복제된 염색체의 두 사본 중 하나. 연결되어 있는 동안 두 자매 염색분체는 하나의 염색체를 형성한다. 염색분체는 결국 체세포분열이나 감수분열 동안 분리된다.
+자발적 과정|spontaneous process||전반적인 에너지의 투입 없이 자발적으로 일어나는 과정.
+자세포|cnidocyte||자포류에 독특한 특수화된 세포, 감격질 실을 포함하는 캡슐과 같은 주머니를 가지는데 이 실이 바깥쪽으로 뻗어 나와 먹이를 잡거나 방어에 이용된다.
+자스몬산|jasmonate||식물에서 다양한 발생 과정을 조절하고 초식동물에 대한 식물의 방어에 중요한 역할을 하는 호르몬의 한 종류.
+자연 선택|natural selection||어떤 유전적 특성을 가진 생물이 다른 특성을 가진 생물에 비해 보다 더 잘 생존하고 생식하는 과정.
+자연살생세포|natural killer cell||종양세포와 바이러스에 감염된 세포를 죽이는 백혈구 종류. 선천성 면역의 중요한 구성요소.
+자엽초|coleoptile||초본류 종자 배의 어린 싹 덮개.
+자원 분배|resource partitioning||함께 공존하는 종에 의한 환경 자원이 분리됨으로써 각 종의 서식지가 함께 공존하는 종의 서식지에 비해 하나 혹은 그 이상의 중요 요소에서 다르다.
+자유에너지|free energy||계를 통한 온도와 압력이 일정할 때 일을 수행할 수 있는 생물계의 에너지 부분. [계의 자유에너지 변화는 ΔG = ΔH - TΔS 방정식으로 계산된다. 여기에서 ΔH는 엔탈피(생물계에서 전체 에너지와 동등함), ΔT는 절대온도이며 ΔS는 엔트로피의 변화이다.]
+자율신경계|autonomic nervous system||내부 환경을 조절하는 척추동물 말초신경계로부터 나오는 가지로, 교감신경과 부교감신경 그리고 장신경계로 구성되어 있다.
+자포|nematocyst||자포류의 자세포에 존재하는, 발사되었을 때 먹이의 체벽을 관통할 수 있는 감겨진 실을 포함하는 캡슐 모양의 세포소기관.
+작동자|operator||세균 DNA에서 오페론의 시작 지점 부근에 존재하는 짧은 염기서열로 억제자가 결합하는 자리이다. 억제자가 결합하면 RNA 중합효소가 프로모터에 결합하는 것을 방해하며 따라서 오페론 유전자의 전사가 방해된다.
+작용 스펙트럼|action spectrum||특정 작용을 수행하는 데 있어 여러 파장의 상대적인 효과를 예측하는 그래프.
+작용기|functional group||일반적으로 탄소골격에 부착된 원자의 특수한 배열로 보통 화학 반응에 관여한다.
+작은 간섭 RNA|small interfering RNA(siRNA)||긴 이중가닥 RNA로부터 세포기구에 의해 생성되는 작은 단일가닥 RNA 분자. siRNA는 하나 혹은 그 이상의 단백질과 복합체를 형성하고 상보적인 서열로 mRNA의 번역을 막거나 분해시킬 수 있다.
+작은창자, 소장|small intestine||소화관의 가장 긴 부분으로, 큰창자에 비해 작은 지름으로 인해 이름이 붙여졌다. 효소에 의한 음식물의 가수분해와 영양물질의 흡수가 일어나는 가장 중요한 곳이다.
+잔류공기량|residual volume||강제로 내보낸 후 폐에 잔류하는 공기의 양.
+잘록창자, 결장|colon||척추동물 큰창자의 가장 큰 부위로 주로 물 흡수와 대변을 형성하는 기능을 가진다.
+잡식동물|omnivore||동물뿐만 아니라 식물 또는 조류를 정기적으로 먹는 동물.
+잡종|hybrid||서로 다른 두 종에 속하는 개체의 교잡으로 생겨난 자손.
+잡종강세|heterozygote advantage||이형접합 개체의 동형접합 개체에 비해 생식 높은 성공. 유전자 풀에서 변이를 보존하는 경향이 있다.
+잡종지대|hybrid zone||서로 다른 종의 개체가 만나 교잡하여 최소 얼마간의 혼합된 조상의 자손을 생산하는 지리적 지역.
+잡종형성|hybridization||유전학에서 두 순종의 교잡.
+잡혼성|polygamous||한 성의 개체가 다수의 다른 성의 개체와 짝짓는 관계 유형을 일컫는 용어.
+장 신경계|enteric nervous system||직접적 또는 부부분적으로 소화관, 이자와 쓸개를 독립적으로 조절하는 별도의 신경망.
+장기 기억|long-term memory||일생에 걸쳐 정보를 저장하고 연관시키며 기억할 수 있는 능력.
+장기 상승작용|long-term potentiation(LTP)||수용 뉴런에 의한 활동전위에 대한 증가된 반응.
+장란기|archegonium||식물에서 암컷 배우자낭으로 배우체가 발생하는 습한 방.
+장일 식물|long-day plant||보통 늦은 봄이나 이른 여름처럼 빛의 길이가 임계 길이보다 길 때만 꽃피는 식물.
+장정기|antheridium||식물에서 수컷 배우자낭으로 배우체가 발생하는 습한 방.
+재조합 DNA 분자|recombinant DNA molecule||다른 근원의 DNA 절편을 가지도록 시험관에서 조작된 DNA 분자.
+재조합 염색체|recombinant chromosome||양 부모로부터의 DNA가 교차에 의해 하나의 DNA로 결합되어 생기는 염색체.
+재조합형|recombinant type(recombinant)||표현형이 부모와는 다른 자손. 표현형 자체를 일컫기도 한다.
+재흡수|reabsorption||배설계에서 여액으로부터 용질과 물을 회수하는 것.
+저밀도 지질단백질|low-density lipoprotein(LDL)||인지질의 단일층으로 둘러싸인, 콜레스테롤 및 다른 지질에 단백질이 박혀 있는 구조의 혈액 내 입자. LDL 입자는 HDL에 비해 콜레스테롤을 더 많이 운반한다. 혈액 내의 높은 LDL 양은 심장질환과 혈관이 막히는 위험성이 증가된다.
+저서대|benthic zone||해양 환경의 바닥층.
+저서생물|benthos||해양 생물군계의 저생대에 사는 생물군집.
+저장소|reservoir||생물지구화학 순환에서 생물에 의해 직접적으로 사용될 수 있거나 또는 영양분으로 사용하기 부적절한 유기물 또는 무기물로 이루어진 화학 원소의 장소.
+저장액의|hypotonic||두 종류의 용액을 비교하였을 때, 더 낮은 용질의 농도를 가지는 용액을 일컫는 용어. 저장액이 세포를 둘러싸게 되면 세포는 물을 흡수하게 된다.
+적응|adaptation||특정 환경에서 생존과 생식을 향상시키는 생물의 유전적 특성.
+적응 면역|adaptive immunity||T 림프구와 B 림프구에 의한 척추동물 특이적 방어 기작. 특이성, 기억 및 자신과 자신이 아닌 것을 구분하는 특징을 보인다. 후천성 면역이라고도 한다.
+적응 방산|adaptive radiation||생물의 무리가 새로운 많은 종을 형성하여, 그들의 적응이 군집 내에 비어 있는 생태적 역할을 채우게 하는 진화 변화의 기간.
+적응 진화|adaptive evolution||생물이 그들의 환경에 보다 잘 적응하는 진화.
+적혈구|erythrocyte||헤모글로빈을 함유하고 있으며 순환계에서 산소를 운반하는 혈구세포.
+적혈구생성인자|erythropoietin(EPO)||적혈구의 생성을 촉진하는 호르몬. 몸의 조직이 충분한 양의 산소를 받지 못할 때 신장에서 분비된다.
+전기|prophase||염색질이 응축되며 방추사가 형성되기 시작하나 핵막과 인은 그대로 존재하는 유사분열의 첫 번째 단계.
+전기발생 펌프|electrogenic pump||막을 통해 전기를 발생하는 이온수송 단백질.
+전기음성도|electronegativity||공유 결합을 하는 전자들에 대한 원자의 인력.
+전기천공법|electroporation||세포를 포함하고 있는 용액에 짧은 전기충격을 주어 세포 내로 재조합 DNA를 도입하는 방법. 짧은 전기충격(펄스)은 세포막에 DNA가 들어가기에 충분한 정도의 일시적인 통로를 만든다.
+전기화학적 기울기|electrochemical gradient||막을 통한 이온의 농도 차이(화학적 힘)와 막전위의 상대적 이동(전기적 힘) 합력을 설명하는 위치에너지의 종류를 나타내는 이온의 확산 기울기.
+전뇌|forebrain||척추동물 뇌의 3배 부분 중 하나; 시상, 시상하부 및 대뇌로 발생한다.
+전능성|totipotent||하나의 세포가 배와 성체의 부분뿐만이 아니라 배외막을 가진 종에서는 배외막까지도 형성할 수 있는 것을 일컫는 용어.
+전도 현상|turnover||호수에서 수온 변화로 인한 물의 섞임.
+전도|conduction||서로 접촉하고 있는 물체의 분자 사이로의 열의 직접적인 전달.
+전령 RNA|messenger RNA(mRNA)||DNA를 주형으로 합성되는 RNA의 한 종류로, 세포질에서 리보솜에 결합하여 단백질 합성의 암호를 제공한다.
+전립샘, 전립선|prostate gland||정액의 산성 중화 요소를 분비하는, 남성에 존재하는 분비샘.
+전사|transcription||DNA를 주형으로 RNA의 합성.
+전사 개시복합체|transcription initiation complex||프로모터에 결합한 전사인자와 RNA 중합체로 이루어진 완전한 복합체.
+전사 단위|transcription unit||RNA 분자로 전사되는 DNA 분자의 부분.
+전사인자|transcription factor||DNA에 결합하여 특정 유전자의 전사를 조절하는 조절 단백질.
+전신성 획득 저항성|systemic acquired resistance||병원체의 침입으로부터 건강한 조직을 보호하는 데 도움을 주는 감염된 식물의 방어 반응.
+전압개폐성 이온 통로|voltage-gated ion channel||막전위의 변화에 반응하여 여닫는 특수화한 이온 통로.
+전유전체 샷건 방식|whole genome shotgun approach||유전체를 중복되는 많은 수의 짧은 절편으로 무작위로 절단한 다음 염기서열을 결정한 후 컴퓨터 프로그램에 의해 완전한 염기서열로 조립하는 유전체 염기서열 결정 방식.
+전유전체 연관연구|genome-wide association study||특정한 표현형이나 질병을 가지는 많은 사람의 대규모 유전체 분석으로서, 그 특정한 표현형이나 질병과 연관된 유전적 표지자를 찾는 목적을 가진다.
+전이|metastasis||원래 있던 곳에서부터 멀리 떨어진 지역으로 암세포가 퍼짐.
+전이인자|transposable element||DNA 혹은 RNA 중간매체를 이용하여 세포의 유전체 내에서 이동할 수 있는 DNA 절편. 전이 유전인자라고도 불린다.
+전자|electron||1의 전자 음전하와 중성자와 양성자 질량의 약 1/2,000의 질량을 갖는 소립자. 하나 혹은 그 이상의 전자가 원자 주위를 움직인다.
+전자기 수용기|electromagnetic receptor||가시광선이나 전기, 자기 등과 같은 전자기 에너지의 수용체.
+전자기 스펙트럼|electromagnetic spectrum||나노미터에서부터 킬로미터보다 더 큰 파장에 이르기까지의 완전한 방사선 스펙트럼.
+전자껍질|electron shell||원자의 핵으로부터 전자까지의 거리로 나타내는 에너지 준위.
+전자전달계, 전자전달사슬|electron transport chain||산화 환원 반응 동안 전자들을 운반하여 ATP를 생성할 수 있는 에너지를 방출하는 일련의 전자 운반체(막단백질).
+전자현미경|electron microscope(EM)||시료를 통한 전자빔의 초점을 맞추는 현미경으로 해상도가 광학현미경에 비해 수천 배 높다. 투과전자현미경(TEM)은 세포 박편의 내부구조를 관찰하는 데 이용되며, 주사전자현미경(SEM)은 세포 표면을 상세하게 연구할 때 이용된다.
+전좌, 운반|translocation||(1) 염색체의 절편이 비상동염색체에 부착되어 생기는 염색체 구조 이상. (2) 단백질 합성에서 신장 중인 폴리펩타이드를 운반하는 RNA가 리보솜의 A 자리로부터 P 자리로 이동하는 사슬 신장의 3번째 단계. (3) 운반: 관다발식물의 체관에서 유기 영양물질의 수송.
+전중기|prometaphase||동일한 자매 염색분체로 이루어진 뚜렷한 염색체가 나타나며, 핵막이 소실되며 방추사가 염색체의 방추사부착점에 붙는 유사분열의 두 번째 단계.
+절대혐기성생물|obligate anaerobe||오직 발효나 무산소 호흡을 수행하는 생물. 산소를 사용할 수 없으며 실제로 산소가 독이 되기도 된다.
+절대호기성생물|obligate aerobe||세포호흡을 위해 산소를 필요로 하며 산소 없이는 살 수 없는 생물.
+절지동물|arthropod||키틴질의 외골격과 부속지 및 체절을 가지는 탈피동물. 잘 아는 예로는 곤충, 거미, 노래기, 게 등이 있다.
+점돌연변이|point mutation||유전자에서 하나의 염기쌍 변화.
+점액|mucus||허파와 위를 포함하여 체강의 안쪽을 이루는 막을 축축하게 하고 보호하는 끈적거리며 미끄러운 당단백질, 세포, 염류와 물의 복합체.
+점증|recruitment||근육을 조절하는 운동 뉴런을 점점 더 자극시켜 근육의 신장력을 점진적으로 향상시키는 과정.
+점착성 말단|sticky end||이중가닥의 DNA 제한효소 절편에서 단일가닥 말단.
+접가지, 접순|scion||접목 시 대목에 접붙여지는 가지.
+접촉형태형성|thigmomorphogenesis||지속적인 기계적 자극에 대한 식물의 반응으로 에틸렌 생성이 증가된다. 강한 바람에 의한 줄기의 비후가 예이다.
+접합 복합체|synaptonemal complex||두 상동염색체의 길이를 따라 단단하게 연결하는 단백질로 이루어진, 지퍼처럼 생긴 구조.
+접합, 시냅스|synapsis||감수 1분열 전기 동안 복제된 상동염색체의 짝짓기와 물리적 연결.
+접합|conjugation||원핵생물에서 임시적으로 결합된 두 세포 사이(같은 종이거나 혹은 다른 종 사이)에서의 직접적인 DNA 전달. 섬모충류에서는 두 세포 사이에 반수체 소핵을 교환하는 생식 과정이다.
+접합균류|zygomycete||유성 생식 동안 접합포자낭이라 불리는 견고한 구조를 갖는 접합균문의 생물.
+접합자, 수정란|zygote||반수체 생식세포의 결합으로 형성된 2배체.
+접합전 장벽|prezygotic barrier||종 사이의 교잡을 방해하거나 종 사이의 교잡이 시도되었을 경우 난자의 수정을 방해하는 생식 장벽.
+접합포자낭|zygosporangium||접합균류에서 핵융합과 감수분열이 일어나는 견고한 다핵구조.
+접합후 장벽|postzygotic barrier||서로 다른 두 종으로부터 생성되는 잡종이 생식능력을 가지는 성체로 발달하는 것을 억제하는 생식 장벽.
+정관|vas deferens||포유류에서, 정자가 부정소에서 요도로 이동하는 남성 생식계의 관.
+정관수술|vasectomy||수정관을 자른 후 막아 정자가 요도로 들어가는 것을 방지한다.
+정낭|seminal vesicle||정자를 윤활하게 하고 영양분을 공급하는 정액의 액체 성분을 분비하는 남성 분비샘.
+정단 분열조직|apical meristem||뿌리의 끝부분과 어린 싹의 눈에 존재하는 식물 배조직. 정단 분열조직의 분열하는 세포는 식물의 길이 생장을 가능하게 한다.
+정단 외배엽 융기(AER)|apical ectodermal ridge||사지싹(limb bud)의 생장을 촉진하는 사지싹의 끝부분에 존재하는 비후된 외배엽 부분.
+정단복합체포자충류|apicomplexan||동물에 기생하는 많은 종을 포함하는 무리의 원생생물. 몇몇 정단복합체포자충류는 사람에 질병을 일으킨다.
+정맥, 잎맥|vein||(1) 동물 심장으로 혈액을 보내는 혈관. (2) 식물에서 잎의 관다발.
+정소|testis||정자와 생식호르몬이 생성되는 수컷의 생식소.
+정신분열증|schizophrenia||환자가 실제와 환각을 구별하는 능력을 상실한 증상의 발현이 특징인 중증정신 장애.
+정아 우성|apical dominance||식물의 줄기 끝부분에 생장이 집중되는 현상으로 정아가 부분적으로 측아의 생장을 억제한다.
+정아, 끝눈|apical bud||줄기의 끝에 있는 눈.
+정액|semen||오르가즘 동안 수컷에 의해 사출되는 액체로, 정자와 수컷 생식 기관의 여러 분비샘에서 나온 분비물을 포함한다.
+정원세포|spermatogonium||유사분열을 통해 정모세포를 형성하는 세포.
+정원창|round window||포유류의 귀에서 등자뼈(등골)의 진동이 와우각에 존재하는 액체에 일련의 압력파를 형성하는 곳이다.
+정자|sperm||수컷 생식세포.
+정자형성과정|spermatogenesis||정소에서 계속되는 많은 성숙한 정자의 생산.
+젖산 발효|lactic acid fermentation||해당과정 후, 이산화탄소의 방출이 없는 피루브산의 젖산으로의 변환.
+젖샘|mammary gland||어린 자식을 기르기 위해 젖을 분비하는 외분비샘. 이 샘은 포유류의 특징이다.
+제1 난모세포|primary oocyte||감수 1분열을 완성하기 전의 난모세포.
+제2 난모세포|secondary oocyte||감수 1분열을 마친 난모세포.
+제로 개체군 성장(ZPG)|zero population growth||일인당 출산율과 사망률이 같은 집단의 크기가 안정화된 시기.
+제자리혼성화|in situ hybridization||온전한 생명체에서 표지된 탐침으로 핵산혼성화를 이용하여 특정 mRNA의 위치를 검출하는 데 사용되는 방법.
+제한 양분|limiting nutrient||특정 지역에서 생산성을 높이기 위해 더해져야만 하는 원소.
+제한효소|restriction enzyme||파지 DNA처럼 세균에는 외래인 DNA 분자를 인식하고 절단하는 핵산내부분해효소. 이 효소는 특정 뉴클레오타이드 서열(제한자리)을 절단한다.
+제한효소 자리|restriction site||제한효소에 의해 인식되고 절단되는 DNA 가닥 위의 특정 염기서열.
+제한효소 절편|restriction fragment||제한효소에 의해 절단된 DNA 절편.
+젤 전기영동|gel electrophoresis||젤에서 전장을 통한 이동 속도를 측정함으로써 크기나 전하에 근거한 핵산이나 단백질을 분리하는 기법.
+조간대|intertidal zone||육지와 물이 만나는, 썰물선과 밀물선 사이 해양의 얕은 지역.
+조건부 혐기성 생물|facultative anaerobe||산소가 존재하는 경우에는 호기성 호흡에 의해 ATP를 생성하고, 혐기(무산소) 조건에서는 발효로 전환하는 생물.
+조룡류|archosaur||악어, 공룡, 조류 등을 포함하는 파충류 집단.
+조류|alga||단세포 형태나 다세포 형태의 다양한 광합성 원생생물. 조류종은 진핵생물 3대 큰 무리(supergroup)에 포함된다(섭식구굴착류, SAR, 원시색소체).
+조울증|bipolar disorder||정신 상태가 기쁘고 우울한 양극 상태를 오가는 장애; 양극 장애라고도 한다.
+조절 요소|control element||비암호화하는 DNA 부분으로 전사인자라고 불리는 단백질과의 결합에 의해 전사작용을 조절한다. 진핵생물 유전자의 인핸서에는 다수의 조절요소가 존재한다.
+조절유전자|regulatory gene||다른 유전자나 유전자 무리의 전사를 조절하는 억제자와 같은 단백질을 암호화하는 유전자.
+조절자|regulator||외부 환경 변화에 직면했을 때 내부환경을 조절하기 위해 항상성 기작을 사용하는 동물.
+조직|tissue||공통의 기능과 구조 혹은 이 모두를 가지는 통합된 세포 집단.
+조직계|tissue system||식물의 기관을 연결하는 하나 혹은 그 이상의 조직으로 구성된 기능적 단위.
+조효소|coenzyme||보조인자로 작용하는 유기 분자. 대부분의 비타민은 물질대사 반응에서 조효소로 작용한다.
+종|species||자연 조건에서 상호 교배가 가능하며 생존력이 있고 생식력이 있는 자손을 생산하지만, 다른 무리의 일원과는 생존력이 있고 생식력이 있는 자손을 생산하지 못하는, 개체군이나 개체군 무리.
+종간 상호작용|interspecific interaction||군집에서 둘 혹은 그 이상의 종의 개체 간의 관계.
+종결돌연변이|nonsense mutation||아미노산 코돈이 3정지 코돈의 하나로 변화하는 돌연변이로, 그 결과 길이가 짧고 보통 기능을 상실한 단백질이 생성된다.
+종결서열|terminator||세균에서 유전자의 끝을 표시하는 DNA의 염기서열. 종결서열은 RNA 중합효소에 새로이 생성된 RNA 분자를 방출하도록 신호를 보내서 RNA 분자가 유전자에서 떨어져 나가게 한다.
+종다양성|species diversity||생물군집에서 종의 수와 상대 빈도.
+종분화|speciation||한 종이 하나 혹은 그 이상의 종으로 분리되는 진화의 과정.
+종속 변수|dependent variable||다른 변수(독립변수)에 의해 영향을 받는지를 알아보기 위해 실험 동안 그 값이 측정되는 변수.
+종속영양생물|heterotroph||다른 생물이나 그들로부터 유래된 물질을 먹이로 유기음식물을 섭취하는 생물.
+종-면적 곡선|species-area curve||군집의 지리적 면적이 크면 클수록 종의 수가 많아진다는, 훔볼트(Alexander von Humboldt)에 의해 처음 언급된 생물다양성 양상.
+종양 억제유전자|tumor-suppressor gene||단백질 산물이 세포분열을 억제하여 조절이 안 되는 암으로 이르는 세포생성의 발생을 막는 유전자.
+종자|seed||껍질 속에 저장된 양식을 함께 가진 배로 구성된 육상식물의 적응 형태.
+종자 껍질|seed coat||밑씨의 바깥층으로부터 형성되는 종자를 싸고 있는 단단한 껍질. 꽃식물에서 종자껍질은 배와 배젖을 보호한다.
+종풍부도|species richness||생물군집에서 종의 수.
+좌우기능분화|lateralization||뇌의 좌우 반구 겉질에서 기능의 분리.
+좌우대칭|bilateral symmetry||세로 중심면을 기준으로 몸체를 두 동등한 부분으로 나눌 수 있는 체형의 특징.
+좌우대칭 동물|bilaterian||좌우대칭과 세 배엽을 가지는 동물 분기군의 무리.
+좌위|locus||염색체를 따라 특정 유전자가 위치하는 자리.
+주공|micropyle||밑씨(배주)의 주피에 존재하는 통로.
+주변 단백질|peripheral protein||막의 표면이나 내재성 단백질 부분에 느슨하게 결합되어 있으며 지질막에는 묻히지 않은 단백질.
+주사전자현미경(SEM)|scanning electron microscope(SEM)||전자파를 이용하여 시료의 표면을 주사하여 세부 윤곽을 연구하는 데 이용하는 현미경.
+주성|taxis||자극 쪽으로 향하거나 혹은 반대 방향으로의 방향성이 있는 이동.
+줄|joule(J)||에너지의 단위로 1 J = 0.239 cal; 1 cal = 4.184 J.
+주조류, 주금류|ratite||날지 못하는 조류.
+주조직적합성 복합체|major histocompatibility complex(MHC)||항원제시 기능을 수행하는 큰 세트의 세포 표면 단백질을 암호화하는 유전자군.
+주파고균류|zoopagomycete||주파고균아문에 속하며, 동물에 기생 혹은 편리공생체로 살아가는 다세포 균류.
+주피|integument||종자식물의 밑씨구조를 형성하는 포자체 조직.
+주피|periderm||2차 성장 동안 식물의 표피를 대체하는 보호막으로 코르크와 코르크형성층으로 형성됨.
+주형가닥|template strand||RNA 전사물의 염기서열을 결정하는 주형을 제공하는 DNA 가닥.
+주형류|arachnid||절지동물 무리인 협각류 분기군에 속하는 작은 무리(subgroup).
+준조광대|limnetic zone||호수에서 빛이 잘 드는 호숫가에서 멀리 떨어진 수면대.
+줄기|stem||잎과 생식구조를 지지하는, 마디와 마디 사이를 교대로 가지는 관다발식물의 기관.
+줄기세포|stem cell||한 번의 세포분열에 의해 하나의 동일한 딸세포와, 더 분화될 수 있는 보다 더 특수화된 딸세포를 생산하는 비교적 분화되지 않은 세포.
+중간 교란 가설|intermediate disturbance hypothesis||적절한 수준의 교란이 적거나 많은 교란에 비해 종의 다양성을 증가시킨다는 가설.
+중간 라멜라|middle lamella||식물에서, 인접한 어린 세포의 1차벽 사이에 존재하는 점착성의 세포외 물질(주로 펙틴)로 이루어진 얇은 층.
+중간 섬유|intermediate filament||미세소관과 미세섬유 사이의 굵기를 가지는 모든 섬유를 포함하는 세포골격의 구성 성분.
+중교|mesohyl||해면동물의 두 층 세포 사이에 존재하는 젤라틴 지역.
+중기|metaphase||유사분열의 3번째 단계; 방추사가 완성되고 방추사부착점에서 미세소관에 붙어 염색체가 중기판에 배열한다.
+중기판|metaphase plate||증기에서 세포의 양극 사이의 가운데에 위치하는 가상의 면으로서, 복제된 모든 염색체의 중심절이 위치한다.
+중뇌|midbrain||척추동물 뇌의 3배 부분 중 하나; 감각 정보를 대뇌로 보내는 기능을 하는 감각 통합 및 전달 중심부로 발달한다.
+중립 변이|neutral variation||선택의 장점이나 단점을 제공하는 것으로 보이지 않는 유전적 다양성.
+중배엽|mesoderm||초기 배의 중요 배엽 중 중간 배엽으로, 이 구조를 가지는 종에서 척삭, 체강의 벽, 근육, 뼈, 생식소, 신장과 대부분의 순환계로 발생한다.
+중복|duplication||상동염색체로부터 나온 절편의 융합에 의한 염색체 구조이상으로 한 부분의 염색체가 중복된다.
+중복 수정|double fertilization||2개의 정핵이 암컷의 배우체(배낭)에 존재하는 두 세포와 각각 결합하여 배와 배젓을 형성하는 속씨식물의 수정기작.
+중복편모충류|diplomonad||변형된 미토콘드리아, 동일한 크기의 핵 2개와 많은 수의 편모를 가지는 원생생물.
+중성자|neutron||원자의 핵 속에 존재하는 1.7 x 10^-24 g의 무게를 가지는 전하를 띠지 않은 원자 구성입자.
+중심립|centriole||미세소관이 9 + 0의 구조로 이루어진 실린더 모양의 동물세포 내 구조로, 중심체는 한 쌍의 중심립을 갖는다.
+중심액포|central vacuole||성숙한 식물세포에 존재하는 막주머니로 생식, 생장과 발생 등 다양한 역할을 수행한다.
+중심와, 소광|fovea||눈 초점의 중심 부분으로 광수용체가 집중되어 있는 망막의 부분.
+중심절|centromere||복제된 염색체에서 각 자매염색분체상의 부위로서 동원체 DNA에 결합하는 단백질에 의해 서로 가장 가까이 부착한 부위이다.
+중심주|stele||줄기나 뿌리의 관다발 조직.
+중심체|centrosome||세포분열에 중요한 동물세포의 세포질에 존재하는 구조로 미세소관 형성 장소이다.
+중일 식물|day-neutral plant||꽃의 형성이 광주기나 일장에 영향을 받지 않는 식물.
+중추신경계|central nervous system(CNS)||신호통합이 일어나는 신경계 부분. 척추동물의 뇌와 척수.
+중합체|polymer||많은 수의 유사한 혹은 동일한 단량체가 서로 연결되어 이루어진 긴 분자.
+중합효소연쇄반응|polymerase chain reaction(PCR)||DNA를 증폭하는 기술.
+증발냉각|evaporative cooling||증발 동안 높은 운동력을 가지는 분자가 기체 상태로 소실됨으로써 표면이 더 냉각되는 액체의 성질.
+증발산량|evapotranspiration||토양으로부터의 물의 증발과 식물로부터의 물의 증산을 합친 것.
+증산|transpiration||식물이 물을 증발로 잃는 것.
+증폭|amplification||신호전달 중 자극에너지의 증강.
+지구생태학|global ecology||생물권에 걸친 생물의 기능과 분포, 그리고 지역적 에너지와 물질교환이 어떻게 그들에게 영향을 미치는지를 연구.
+지도 단위|map unit||유전자 사이의 거리를 재는 단위. 1 지도 단위는 1%의 교차율에 해당한다.
+지방|fat||하나의 글리세롤 분자와 연결된 3분자의 지방산을 포함하는 지질. 트리아실글리세롤 또는 트리글리세라이드라고도 한다.
+지방 조직|adipose tissue||몸의 단열과 연료의 저장작용을 하는 연결 조직으로 지방세포라고 불리는 지방 저장세포를 포함하고 있다.
+지방산|fatty acid||긴 탄소 사슬을 가진 카르복실산.
+지베렐린|gibberellin||줄기와 잎의 생장을 촉진하고, 종자의 발아와 눈의 휴면을 깨뜨리며, 과실의 발생을 자극하는 식물호르몬 종류.
+지상계, 슈트계|shoot system||식물체의 지상부분으로 줄기, 잎과 속씨식물에서는 꽃을 포함한다.
+지속 가능한 발전|sustainable development||미래 세대가 필요로 하는 것을 충족시킬 수 있도록 하면서 현재의 사람이 필요한 것을 충족시키는 개발.
+지속적 농업|sustainable agriculture||환경적으로 안전한 장기간의 농업 생산 방법.
+지속적 개체군 성장|exponential population growth||이상적이고 제한요소가 없는 환경에서 자라는 집단의 성장.
+지연가닥|lagging strand||복제 분기점으로부터 5' -> 3' 방향으로 합성되는 오카자기 절편으로 신장되는 불연속적으로 합성되는 DNA 가닥.
+지의류|lichen||균류와 광합성 조류(또는 남세균)와 상리공생관계로 이루어진 공생체.
+지중해성 관목지대|chaparral||겨울이 길고 뜨거우며 건조한 여름이 특징인 지역.
+지질|lipid||지방, 인지질 및 스테로이드를 포함하는 화합물의 한 종류로 물에 거의 녹지 않는다.
+지질학적 기록|geologic record||지구역사를 4 누대(eon)로 나누어 놓은 표준시간 척도.
+직립혈관|vasa recta||신장에서 헨레고리를 이루는 모세혈관관계.
+진균증|mycosis||균류 감염의 일반적인 용어.
+진원류|anthropoid||꼬리 없는 원숭이와 유인원, 인간으로 이루어진 영장류.
+진정쌍떡잎식물|eudicot||2개의 떡잎을 가지는 거의 대다수의 꽃피는 식물로 이루어진 분기군.
+진정염색질|euchromatin||전사가 가능하도록 보다 열려 있고 풀려진 형태의 진핵생물의 염색질.
+진정후생동물|eumetazoan||진정한 조직을 가지는 동물 분기군.
+진체강|coelom||오직 중배엽으로부터 유래된 조직에 의해 완전히 둘러싸인 체강.
+진핵생물|eukaryote||진핵세포로 이루어진 단세포 또는 다세포 생물. 원생생물, 식물, 균류와 동물을 포함.
+진핵생물 영역|Eukarya||모든 진핵생물을 포함하는 영역.
+진핵세포|eukaryotic cell||막으로 둘러싸인 핵과 여러 세포소기관을 가지는 세포 종류.
+진화|evolution||변형이 있는 유전. 세대에 걸친 개체군의 유전적 조성의 변화.
+진화 계통|evolutionary lineage||특정 분류군으로 이르는 조상 개체의 계열.
+진화 계통수|evolutionary tree||생물무리 간의 진화적 관련성에 대한 가설을 반영하는 분지도.
+진화발생생물학(학), 이보-디보|evo-devo||생물의 발생 과정을 비교하여 진화적 변화를 연구하는 생물학 분야.
+질|vagina||자궁과 외부 통로 사이에 위치하는 암컷 생식계의 부분.
+질량 보존의 법칙|law of conservation of mass||물질은 형태를 변화시킬 수 있으나 창조되거나 파괴되지 않는다는 물리 법칙.
+질량수|mass number||원자의 핵에서 양성자 수와 중성자 수를 합한 것.
+질소 고정|nitrogen fixation||대기 중 질소(N2)를 암모니아(NH3)로 전환하는 과정.
+질소 순환|nitrogen cycle||대기나 분해된 유기물로부터 나온 질소가 토양 세균에 의해 식물에 흡수되고 다시 순환하는 과정.
+집광 복합체|light-harvesting complex||엽록소 a, 엽록소 b 및 카로티노이드와 같은 색소 분자가 결합된 단백질 복합체.
+집합과|aggregate fruit||하나의 꽃으로부터 생긴 과실.
+집합관|collecting duct||신장에서 세뇨관으로부터 오줌이라고 불리는 여과액이 모이는 장소.
+짝틀림 수선|mismatch repair||부적절하게 쌍을 이룬 뉴클레오타이드를 제거하고 대체하는 세포 과정.
+짧은 직렬 반복|short-tandem repeat(STR)||다수의 직렬로 반복된 2~5개의 뉴클레오타이드 단위를 포함하는 단쇄 서열 DNA.
+차등 전위|graded potential||뉴런에서 신호 강도와 비례하는 진폭을 가지며 전도됨에 따라 줄어드는 막 전위의 변화.
+차등적 유전자 발현|differential gene expression||동일한 유전체에서 세포에 따른 다른 유전자들의 발현.
+착생식물|epiphyte||스스로 영양분은 만들지만 지지를 위해 다른 식물의 표면에서 자라는 식물.
+창고기|lancelet||두삭동물아문에 속하는 무리로 등뼈가 없으며 작고 칼날 모양의 해양 척삭동물.
+창발성|emergent properties||생물의 계급구조에서 복잡성이 증가함에 따라 나타나는 새로운 성질.
+창시자 효과|founder effect||일부의 개체가 큰 집단으로부터 고립되어 생긴 새로운 집단의 유전자 풀이 원래 집단을 반영하지 못할 때 나타나는 유전적 부동.
+책해파|book lung||거미의 기체교환 기관으로 내부 공간에서 여러 겹으로 쌓여진 판으로 구성.
+척삭|notochord||단단하게 찬 중배엽 세포로 이루어진 길고 유연성 있는 막대로 몸의 등쪽 부분에서 앞-뒤축 축을 따라 뻗어 있다.
+척삭동물|chordate||척삭동물문에 속하는 동물로서, 발생의 한 시기에 척삭, 등쪽에 구형의 신경삭 등을 가진다.
+척추동물|vertebrate||등뼈를 형성하는 일련의 뼈인 척추를 가지는 척삭동물.
+천해대|neritic zone||대륙붕과 겹치는 해양의 낮은 지역.
+첨체|acrosome||정자의 머리끝에 위치하는 가수분해효소와 단백질을 포함하는 주머니.
+첨체 반응|acrosomal reaction||정자가 난자에 접근하거나 접촉하였을 때 첨체로부터 가수분해효소의 방출.
+청색광 수용체|blue-light receptor||식물에 존재하는 광수용체의 일종으로 광주기성 등에 관여.
+체강|body cavity||소화관과 체벽 사이의 액체 혹은 기체로 채워진 공간.
+체관 요소|sieve-tube element||속씨식물 체관에서 당과 유기 영양물을 운반하는 세포.
+체관부|phloem||신장된 관 모양의 살아있는 세포로 이루어진 관다발식물의 조직.
+체관액|phloem sap||체관에 의해 운반되는 당이 풍부한 용액.
+체세포|somatic cell||다세포 생물에서 정자와 난자를 제외한 모든 세포.
+체순환계|systemic circuit||기체교환과 관련된 폐순환을 제외하고 몸의 모든 기관에 혈액을 공급하는 순환계의 한 부분.
+체액성 면역반응|humoral immune response||B세포의 활성화와 그로 인한 항체의 생성으로 체액 내의 바이러스나 세균의 공격을 방어하는 면역.
+체온 조절|thermoregulation||조절 가능한 범위 내에서 내부 체온의 유지.
+체절|somite||척추동물 배 척삭 측면에 쌍으로 존재하는 일련의 중배엽 덩어리.
+체제, 몸설계|body plan||동물에서 생물의 전체적인 기능으로 통합되는 형태학적 발생학적 특성.
+체판|sieve plate||체관요소의 끝부분에 있는 벽으로 체관액의 흐름을 촉진한다.
+초식동물|herbivore||주로 식물이나 조류를 먹는 동물.
+초식성|herbivory||초식동물이 식물이나 조류의 부분을 먹는 관계.
+촉매|catalyst||소모되지 않으면서 반응 속도를 변화시키는 화학물질.
+촉매 작용|catalysis||촉매라고 불리는 화학작용제가 반응에 의해 소모되지 않으면서 선택적으로 반응 속도를 증가시키는 과정.
+촉수관|lophophore||완족류를 포함하는 몇몇 촉수담륜동물에서 먹이를 섭취하는 기능을 하는 촉수.
+촉수담륜동물|lophotrochozoa||좌우대칭동물의 주요 3계통 중 하나.
+촉진 확산|facilitated diffusion||특정 막관통 수송 단백질을 통하여 분자와 이온의 생체막을 가로지르는 자발적 통과.
+총배설강|cloaca||일부 포유류와 많은 비포유류 척추동물에서 발견되는 소화관, 비뇨관 및 생식관의 통로.
+최대 개연성|maximum likelihood||다양한 계통발생 가설을 고려할 경우 시간에 따라 어떻게 DNA가 변화하는가에 대한 원리.
+최대 단순성|maximum parsimony||관찰에 대한 복수의 해석을 고려할 경우 사실과 부합되는 가장 간단한 해석을 먼저 조사하여야 한다는 원리.
+최소 생존 개체군|minimum viable population(MVP)||한 종이 종의 수를 유지하고 생존할 수 있는 가장 작은 집단의 크기.
+최적 먹이찾기 이론|optimal foraging theory||먹이를 먹는 데 들이는 에너지와 먹이로부터 얻는 에너지를 어떻게 절충할 것인가 하는 행동 분석의 기초.
+추이대|ecotone||이행대; 숲에서 초원대로의 전이와 같이 한 종류의 서식지나 생태계에서 다른 종류로의 전이.
+축삭|axon||신경자극을 세포체로부터 표적세포 방향으로 전달하는 신경세포의 긴 돌출 부분.
+춘화처리|vernalization||식물이 꽃피는 것을 유도하기 위한 저온의 이용.
+충수, 막창자꼬리|appendix||척추동물의 맹장에 존재하는 작은 손가락 모양의 돌기; 면역에 관여.
+취기제|odorant||후각계의 감각수용기에 의해 검출될 수 있는 분자.
+측계통군|paraphyletic||한 조상종과 모두는 아니지만 몇몇 그의 자손으로 이루어진 종의 무리.
+측생 분열조직|lateral meristem||목본류에서 뿌리와 어린 싹을 비후시키는 분열조직.
+측선계|lateral line system||물고기와 수생 양서류의 몸의 측면을 따라 있는 일련의 구멍과 수용체 단위로 이루어진 기계적 수용체 시스템.
+층|stratum||암석층 새로운 퇴적물층이 오래된 층을 덮은 후 압착할 때 생긴 암석층.
+치설|radula||많은 연체동물이 먹이를 먹을 때 사용하는 줄처럼 씨는 끈 모양의 기관.
+친수성|hydrophilic||물에 대한 친화력을 가지는.
+친족 선택|kin selection||친족의 생식 능력을 향상시킴으로써 이타적 행동을 선호하는 자연선택.
+칠성장어|lamprey||담수나 해양에서 살아가는 척추동물의 한 종류로 턱이 없는 척추동물.
+침묵돌연변이|silent mutation||관찰되는 표현형의 효과가 없는 뉴클레오타이드 쌍의 치환.
+침샘|salivary gland||음식물을 윤활시키고 화학소화를 시작하는 물질을 분비하는 구강과 관련된 분비샘.
+침엽수|conifer||가장 큰 겉씨식물문. 대부분의 침엽수는 소나무, 전나무와 같이 구과식물이다.
+침윤|imbibition||구조의 내부 표면으로의 물의 물리적 흡수.
+카로티노이드|carotenoid||식물의 엽록체에 존재하는 노란색이나 오렌지색의 보조색소.
+카보닐기|carbonyl group||알데하이드기와 케톤기에 존재하는 화학기로 하나의 탄소 원자에 이중 결합으로 연결된 산소 원자로 이루어져 있다.
+카복실기|carboxyl group||유기산에 존재하는 화학기로 하나의 탄소 원자에 이중 결합으로 연결된 산소 원자로 이루어져 있으며 히드록실기에 결합되어 있다.
+카스파리띠|Casparian strip||식물 내피세포에 존재하는 왁스로 된 방수층으로 세포벽을 통하여 수 쪽으로 물이나 용질이 새는 것을 방지한다.
+칼로리|calorie(cal)||1 g의 물을 1'C 올리는 데 필요한 열량.
+칼시토닌|calcitonin||갑상샘에서 분비되는 호르몬으로 뼈에서 칼슘의 축적과 신장으로부터 칼슘의 배출을 촉진함으로써 혈액내 칼슘의 양을 낮추는 역할을 한다.
+캄브리아기 폭발|Cambrian explosion||오늘날 알려진 중요한 몸 체제를 가지는, 크고 딱딱한 몸을 가지는 동물 형태가 화석 기록에 나타난 지질역사의 비교적 짧은 기간.
+캘러스|callus||상처부위 또는 조직배양에서 식물의 분열하는 분화되지 않은 세포 덩어리.
+캘빈 회로|Calvin cycle||광합성의 중요한 두 단계 중 명반응에 이은 두 번째 단계로 대기 중의 이산화탄소를 고정한 후 고정된 탄소를 탄수화물로 환원시킨다.
+캡시드|capsid||바이러스 유전체를 싸고 있는 단백질 껍질.
+코노돈트|conodont||두드러진 눈과 치아 요소를 가지는 물렁한 몸체를 가진 초기 척추동물.
+코돈|codon||DNA나 RNA에서 특정 아미노산이나 종결신호를 지정하는 3염기로 유전암호의 기본 단위.
+코르크 형성층|cork cambium||내피를 보다 두껍고 단단한 코르크 세포로 대체하는 목본식물의 분열조직.
+코르티기관|organ of Corti||내이의 달팽이관 바닥에 위치한 척추동물 귀의 실질적인 청각기관.
+콘돔|condom||정액을 담을 수 있는 얇은 합성 고무나 자연적인 막으로 만든 피임 기구.
+콜라겐|collagen||동물세포의 세포외기질에 있는 당단백질로 강한 섬유를 형성하며 결합 조직과 뼈에 특히 많다.
+콜레스테롤|cholesterol||동물세포막에 필수 구성성분인 스테로이드이며 다른 생물학적으로 중요한 호르몬과 같은 스테로이드를 합성하는 전구물질로 작용한다.
+큐티클|cuticle||(1) 육상식물에서 건조를 막기 위해 줄기나 잎의 표면에 존재하는 왁스층. (2) 다양한 기능을 수행할 수 있도록 변형된 단백질과 키틴으로 이루어진 절지동물의 외골격.
+크리스테|crista||전자전달계와 ATP 합성효소를 포함하고 있는 미토콘드리아 내막의 안주름.
+크리스퍼/캐스9 시스템|CRISPR/cas9 system||살아있는 세포에서의 유전자 편집 기술.
+크립토균류|cryptomycete||크립토균문(Cryptomycota)에 속한 편모 달린 포자를 가지는 단세포 균류.
+큰창자|large intestine||작은창자와 항문 사이에 위치하는 척추동물 소화관으로 주로 물 흡수와 대변을 형성하는 기능을 가진다.
+클로닝 벡터|cloning vector||유전공학에서 숙주세포로 외부 DNA를 운반하여 그곳에서 복제시키는 DNA 분자.
+클론|clone||(1) 유전적으로 동일한 개체나 세포의 계통, (2) 보다 일반적으로는 다른 개체와 유전적으로 동일한 개체를 일컫는다. (3) 동사형으로서 개체나 세포의 유전적 복제품을 만드는 것을 말한다. 유전자 클로닝 참조.
+클론 선택|clonal selection||항원이 항원에 특이적인 수용체를 가지는 림프구에만 선택적으로 결합하여 활성화시키는 과정.
+키틴|chitin||많은 균류의 세포벽과 절지동물의 외골격에 존재하는 아미노산 단량체로 이루어진 구조 다당류.
+킬로미크론|chylomicron||지질을 운반하는 작은 소구체.
+킬로칼로리|kilocalorie(kcal)||1,000칼로리; 1kg의 물의 온도를 1'C 올리는 데 요구되는 열에너지의 양.
+타가수분|cross-pollination||속씨식물에서 한 식물의 수술로부터의 꽃가루가 같은 종 다른 식물의 암술머리로의 이동.
+타이로신 인산화효소 수용체|receptor tyrosine kinase(RTK)||세포막에 걸쳐 존재하는 수용체 단백질로, 세포외 신호 분자의 결합을 담당하고 이후 이량체에 존재하는 다른 수용체의 세포질 부분에 존재하는 타이로신을 인산화시킨다.
+타이록신|thyroxine (T4)||척추동물의 물질대사, 발생과 성장을 조절하는, 갑상샘에서 생성 분비되는 아이오딘을 포함하는 두 종류의 호르몬 중의 하나.
+탄소고정|carbon fixation||식물과 같은 광합성 생물이나 화학합성 생물이 이산화탄소를 유기물로 고정시키는 초기 과정.
+탄수화물|carbohydrate||당(단당류) 혹은 이의 이중체(이당류) 혹은 중합체(다당류).
+탄화수소|hydrocarbon||오직 탄소와 수소만으로 이루어진 유기 분자.
+탈분극|depolarization||휴지전위에 비해 세포 안쪽이 바깥쪽에 비해 보다 덜 음전하를 띤 흥분된 세포의 전기적 상태의 변화.
+탈수 반응|dehydration reaction||두 분자가 물 한 분자를 제거하면서 공유 결합하는 화학 반응.
+탈피|molting||탈피동물에서 보다 큰 외골격 생산에 의한 성장을 하기 위해서 주기적으로 외골격을 버리는 과정.
+탈피동물|Ecdysozoan||좌우대칭동물의 세 주요 계통 중 하나.
+탈황화|de-etiolation||햇빛에 반응하는 식물 싹의 변화; 이전에는 녹화(greening)로 알려졌다.
+탐구|inquiry||보통 특정 질문에 초점을 맞춘 정보와 설명의 탐색.
+태반|placenta||임신한 유태반 포유류의 자궁의 한 구조로, 모체의 혈액을 공급한다.
+태반류|eutherian||태반을 가지는 포유류.
+태생|viviparous||태반의 혈액에 의해 자궁에서 길러진 후 새끼가 태어나는 발생의 유형.
+태아|fetus||임신 9주부터 출산까지 발생 중인 인간. 태아는 성체의 주요 구조를 모두 가진다.
+테스토스테론|testosterone||남성의 생식계의 발생, 정자형성과정과 남성의 2차 성징에 요구되는 스테로이드호르몬.
+테이-삭스병|Tay-Sachs disease||열성 대립유전자에 의해 유발되는 사람의 유전병으로 특정 지질이 뇌에 축적된다.
+텔로미어, 염색체말단부|telomere||계속되는 복제 동안 생물의 유전자가 짧아지는 것을 보호하는, 진핵생물 염색체의 DNA 분자 끝에 존재하는 직렬 반복 DNA.
+토양 층위|soil horizon||땅 표면과 평행한 토양층으로 위 아래층과는 물리적 특성이 다르다.
+토착의|endemic||특수하고 비교적 좁은 지역에 서식지이 제한되어 있는 종을 일컫는 말.
+토탄|peat||주로 습지 이끼인 물이끼(Sphagnum)에 의해 형성되는 부식되지 않은 유기물의 과다한 축적.
+톨유사 수용체|Toll-like receptor(TLR)||일련의 병원균에 공통적인 분자의 조각을 인식하는, 식작용을 하는 백혈구의 막 수용체.
+통각수용기|nociceptor||유해하거나 혹은 통증 자극에 반응하는 감각수용기.
+투과전자현미경|transmission electron microscope(TEM)||전자빔이 매우 얇은 시료를 통과하는 현미경으로, 세포의 내부 초미세구조를 연구하는 데 이용된다.
+투광대|photic zone||광합성을 하기에 충분한 빛이 투과되는 해양이나 호수의 위층.
+투명대|zona pellucida||포유류 난자의 세포외부 기질.
+툰드라|tundra||식물 생장의 극단 한계에 위치한 생물군계.
+트랜스지방|trans fat||하나 혹은 그 이상의 트랜스 이중 결합을 포함하는 불포화 지방.
+트랜스포존, 전이인자|transposon||DNA 중간 매체를 이용하여 유전체 내에서 이동하는 인자.
+트로포닌 복합체|troponin complex||가는 필라멘트에서 트로포마이오신의 위치를 조절하는 조절 단백질.
+트로포마이오신|tropomyosin||액틴 분자의 마이오신 결합자리를 막는 조절 단백질.
+트리아실글리세롤|triacylglycerol||하나의 글리세롤 분자에 연결된 3 지방산 분자.
+틸라코이드|thylakoid||엽록체 내부에 존재하는 막으로 된 납작한 주머니.
+파이브로넥틴|fibronectin||동물세포의 세포외기질에 부착하는 것을 돕는 당단백질.
+파이토크롬|phytochrome||식물의 광수용체의 종류로, 발아와 개화 등을 조절한다.
+파장|wavelength||전자기 스펙트럼의 파장과 같이 파의 마루와 마루 사이의 거리.
+파지|phage||세균을 감염시키는 바이러스로 박테리오파지라고도 부른다.
+파충류|reptile||큰도마뱀(tuatara), 도마뱀, 뱀, 거북이, 악어를 포함하는 양막류 무리.
+파킨슨병|Parkinson's disease||점진적인 뇌질환에 의한 운동 기능 장애로 움직임을 시작하기 어려우며 움직임이 둔화되며 경직되는 특징을 보인다.
+판게아|Pangaea||판의 이동에 의해 육지를 모두 붙여놓은 고생대가 끝날 무렵에 형성된 거대 대륙.
+판구조론|plate tectonics||대륙은 뜨겁고 밑에 있는 맨틀의 부분에 떠다니는 지각의 큰 판의 일부였다는 이론.
+판피어류|placoderm||턱을 가지고 있었으며 강한 외부 방호피복으로 둘러싸인 멸종된 어류와 같은 척추동물 종류.
+패턴 형성|pattern formation||3차원 공간에 기관과 조직을 특징적인 장소에 배열하는, 다세포 생물의 공간적 구조의 발생.
+팽압|turgor pressure||세포벽을 가지는 세포가 삼투현상에 의해 세포 내로 물의 유입됨으로써 세포벽에 미치는 압력.
+팽윤|turgid||식물세포에서와 같이 팽창된 상태.
+퍼넷 사각형|Punnett square||유전적 교잡에서 무작위 수정의 예상되는 결과를 보여주는 유전의 연구에 이용되는 도표.
+퍼옥시좀|peroxisome||다양한 기질로부터 수소를 산소로 전달하는 효소를 가지고 있는 세포소기관.
+페로몬|pheromone||동물과 균류에서 작은 분자로 같은 종 사이의 구성원 간에 의사소통 기능을 한다.
+펩시노겐|pepsinogen||위의 위오목(gastric pit)에 위치한 주세포(chief cell)에서 분비되는 펩신의 불활성화 형태.
+펩신|pepsin||단백질의 가수분해를 시작하는 위액에 존재하는 효소.
+펩타이드 결합|peptide bond||탈수 반응에 의해 형성되는 한 아미노산의 카르복실기와 다음 아미노산의 아미노기 사이의 공유 결합.
+펩티도글리칸|peptidoglycan||짧은 폴리펩타이드와 연결된 변형된 당으로 이루어진 세균 세포벽에 존재하는 중합체.
+편도체|amygdala||감정을 처리하는 데 중요한 역할을 하는 척추동물 뇌의 측두엽에 있는 구조.
+편리공생|commensalism||한 생물은 이득을 얻으나 다른 한쪽은 도움을 받지도 해를 입지도 않는 공생관계.
+편모|flagellum||이동할 수 있도록 특수화된 세포 부속기.
+평균|mean||데이터에서 모든 측정점의 합을 측정점의 수로 나눈 값.
+평형 전위|equilibrium potential(E_ion)||평형 상태에 있을 때 막전위의 크기.
+평형석|statolith||(1) 식물에서 밀집된 녹말입자를 포함하고 있고 중력을 감지하는 데 이용되는 특수화된 색소체. (2) 무척추동물에서 평형 기능을 담당하는 감각기관에 존재하는, 중력에 반응하는 입자.
+평형포|statocyst||평형석의 이용을 통해 무척추동물에서 평형 기능을 하는 기계적 감각수용체.
+평활근|smooth muscle||세포에 마이오신 섬유가 고루 분포되어 있어 골격근과 심장근에 존재하는 무늬가 없는 근육.
+폐경기|menopause||여성의 생식 기간의 끝을 나타내는 배란과 생리의 중단.
+폐쇄순환계|closed circulatory system||혈액이 혈관 내로만 순환하는 순환계.
+폐활량|vital capacity||한 번의 호흡으로 포유동물이 들이마시고 내쉬는 공기의 최대량.
+포괄 적응도|inclusive fitness||자기 자손을 생산하거나 아주 가까운 친족이 그들의 자손 생산을 증가시키도록 도움을 줌으로 인해 한 개체의 유전자를 퍼뜨리는 총체적 효과.
+포배|blastula||동물의 초기 배발생 중 난할의 마지막 단계인 속이 빈 공 모양의 세포 단계.
+포배강, 할강|blastocoel||포배의 중심에 형성되는 액체로 채워진 공간.
+포식|predation||한 종(포식자)이 다른 종(피식자)을 먹는 중간의 상호작용.
+포유류|mammal||젖을 생산하는 젖샘을 가지는 양막류.
+포자|spore||(1) 세대교번을 하는 식물이나 조류 생활사에서, 감수분열에 의해 포자체에서 생성되는 반수체 세포. (2) 균류에서 유성 생식 혹은 무성 생식에 의해 생성된 반수체 세포.
+포자 모세포|sporocyte||포자낭 속의 2배체 세포로, 감수분열을 겪어 반수체 포자를 생성한다.
+포자낭군|sorus||고사리 포자엽에 있는 포자낭 무리.
+포자수|strobilus||대부분의 겉씨식물과 일부 무종자 관다발식물에 존재하는 포자엽의 무리.
+포자엽|sporophyll||포자낭을 생성함으로써 생식을 하도록 변형된 잎.
+포자주머니, 포자낭|sporangium||감수분열이 일어나며 반수체가 발생하는 균류와 식물의 다세포 기관.
+포자체|sporophyte||세대교번을 하는 생물(식물과 일부 조류)에서, 생식세포의 접합으로 생기는 다세포 2배체.
+포화 지방산|saturated fatty acid||탄화수소 꼬리에 있는 모든 탄소가 단일 결합으로 연결되어 탄소골격에 부착되는 수소의 수를 최대화한 지방산.
+폴리 A 꼬리|poly-A tail||mRNA 전구체 분자의 3' 말단에 첨가되는 50~250개의 아데닌 뉴클레오타이드 서열.
+폴리뉴클레오타이드|polynucleotide||많은 뉴클레오타이드 단량체의 사슬로 이루어진 중합체.
+폴리좀|polyribosome(polysome)||번역 중인 동일한 mRNA 분자에 부착된 여러 리보솜의 무리.
+폴리펩타이드|polypeptide||펩타이드 결합에 의해 서로 연결된 많은 아미노산의 중합체.
+폴립형|polyp||자포동물 체제의 고착형.
+표면 장력|surface tension||액체 표면의 늘어나거나 부서지는 정도의 측정.
+표준 편차|standard deviation||한 세트의 데이터 측정점에서 발견되는 변이의 측정.
+표준대사율|standard metabolic rate(SMR)||특정 온도에서 휴식을 하며 단식 중인 스트레스를 받지 않은 외온동물의 대사율.
+표준유전체|reference genome||여러 개체들로부터 염기서열이 결정된 유전체를 종합하여, 한 생물종의 유전체를 가장 잘 대표한다고 연구자들이 동의하는 완전한 염기서열.
+표지-재포획법|mark-recapture method||동물 개체군의 크기를 예측하는 데 이용되는 시료 채취 방법.
+표토|topsoil||암석과 살아 있는 생물 및 부식토로부터 유래된 입자의 혼합물.
+표피|epidermis||(1) 단단히 밀착된 세포층으로 이루어진 목본류가 아닌 식물의 피층. (2) 동물의 바깥 덮개층.
+표피 조직|dermal tissue||식물의 바깥쪽 보호 덮개.
+표현형|phenotype||유전자에 의해 결정되는 생물의 물리적 생리적 형질.
+퓨린|purine||6각형 고리와 5각형 고리가 융합된 특징을 가지는 질소염기 중 하나. 아데닌(A)과 구아닌(G)이 퓨린이다.
+프라이머, 시발체|primer||자유로운 3' 말단을 가지는 짧은 RNA 가닥으로, DNA 복제 동안 DNA 뉴클레오타이드에 의해 신장된다.
+프로모터|promoter||DNA에 존재하는 특수한 염기서열로 적절한 위치에 RNA 중합효소가 결합하며 RNA 전사 시작점을 표시한다.
+프로바이러스|provirus||숙주 염색체에 영구적으로 삽입된 바이러스 유전체.
+프로스타글란딘|prostaglandin||국소조절자와 같은 다양한 기능을 수행하는 거의 모든 조직으로부터 분비되는 변형된 지방산.
+프로게스테론|progesterone||임신을 위해 자궁을 준비하는 스테로이드호르몬.
+프로제스틴|progestin||임신을 위해 자궁을 준비하는 프로게스테론을 포함한 스테로이드호르몬의 한 부류.
+프로테오글리칸|proteoglycan||동물세포의 세포외기질에 존재하는 많은 탄수화물 사슬을 가진 작은 중심 단백질로 이루어진 당단백질.
+프로파지|prophage||세균 염색체의 특정 부분에 삽입된 파지 유전체.
+프롤락틴|prolactin||포유류에서는 생장과 젖샘에서의 젖 분비를 자극하는 호르몬.
+프리메이스|primase||프라이머를 형성하기 위해 부모 DNA 가닥을 주형으로 사용하여 RNA 뉴클레오타이드를 결합시키는 효소.
+프리온|prion||정상적인 세포 단백질이 잘못 접혀진 감염원.
+플라나리아|planarian||오염되지 않은 연못이나 개울에서 독립생활을 하는 편형동물.
+플라스미드|plasmid||세균 염색체의 유전자와 구별되는 부속 유전자를 가지고 있는 작은 원형의 이중가닥 DNA 분자.
+피낭동물|tunicate||등뼈가 없는 고착성 해양 척삭동물.
+피리미딘|pyrimidine||6각형 고리의 특징을 가지는 질소염기 중 하나. 사이토신(C)과 타이민(T) 그리고 유라실(U)이 피리미딘이다.
+피막|capsule||(1) 세포 표면을 보호하거나 때로는 세포가 다른 표면에 붙는 것을 돕는 끈끈한 층. (2) 이끼, 우산이끼 등과 같은 선태식물의 포자낭.
+피부계|integumentary system||피부, 털과 손발톱 등을 포함하는 포유류 몸의 제일 바깥층.
+피임|contraception||임신의 의도적 방지.
+피임약|birth control pill||배란을 억제하고 황체 형성을 늦추거나 혹은 정자가 자궁으로 들어가지 못하게 자궁 경부의 점액을 변화시키는 피임약.
+피층|cortex||(1) 세포막 바로 아래에 위치하며 미세섬유로 인해 안보다 더 젤 같은 농도를 띤 진핵세포 세포질의 바깥 부위. (2) 식물에서, 뿌리와 쌍떡잎식물 줄기에서 표피와 관다발 조직 사이에 있는 기본 조직.
+피하낭류|alveolate||진핵생물 3대 큰무리(supergroup)의 하나인 SAR. 이 분기군은 2차 세포내공생에 의해서 생겼다.
+필수 아미노산|essential amino acid||동물이 합성하지 못하므로 반드시 음식물에서 섭취하여야 하는 아미노산. 사람 성인에게는 8종이 있다.
+필수 영양소|essential nutrient||다른 물질로부터 합성되지 못하므로 미리 합성된 형태로 섭취하여야만 하는 물질.
+필수 원소|essential element||식물이 씨앗으로부터 씨앗의 형태로 다음 세대를 생성하기까지 완전한 생활사를 마칠 수 있도록 성장하는 데 필요한 화학물질.
+필수 지방산|essential fatty acid||동물에게는 필수적이나 동물이 합성하지 못하는 불포화지방산.
+하구, 강어귀|estuary||담수·하천이 해양과 만나는 지역.
+하디-바인베르크 평형|Hardy-Weinberg equilibrium||멘델의 법칙과 대립유전자의 재조합이 적용된다면, 한 집단에서 대립유전자와 유전자형의 빈도는 세대를 거듭하여도 변하지 않는다는 진술.
+하배축|hypocotyl||속씨식물의 배에서 떡잎이 붙는 지점의 아래쪽과 어린뿌리의 위쪽에 존재하는 배의 축.
+하이드로늄 이온|hydronium ion||여분의 중성자가 부착된 물 분자. H3O+, 흔히 H+로 나타낸다.
+하향식 모형|top-down model||포식활동이 초식동물의 수를 조절함으로써 군집 구조에 영향을 미치고, 이것이 다시 식물이나 식물성 플랑크톤의 수를 조절하는 모델.
+학습|learning||특정 경험에 근거한 행동의 변형.
+한계량|critical load||보통 질소와 인과 같은 생태계의 보전에는 영향력을 미치지 않으면서 더해진 영양물질의 양.
+할구|blastomere||초기 배의 난할 단계 동안 생성되는 초기 배세포.
+합|summation||시냅스 후 세포의 막전위는 한 시냅스의 빠른 전달 또는 다른 시냅스에서 동시에 생성된 EPSP 또는 IPSP의 연합된 효과에 의해 결정된다는 신경통합의 현상.
+항상성|homeostasis||몸의 일정한 생리적 상태.
+항원 수용체|antigen receptor||항원과 결합하여 후천성 면역반응을 유발하는 B세포와 T세포의 표면에 존재하는 표면 단백질.
+항원|antigen||B세포나 T세포 수용체에 결합하여 림프구에 의한 면역반응을 유발하는 물질.
+항원결정부|epitope||항원수용체나 항체가 결합하는 항원의 작은 부위.
+항원제시 세포|antigen presenting cell||병원균이나 병원균 단백질을 삼켰을 때 MHC 분자에 결합하는 펩타이드 절편을 생성하여 도움T세포의 표면에 노출시키는 기능을 하는 세포.
+항원제시|antigen presentation||MHC 분자가 세포 내 단백질 항원의 절편에 결합하여 세포 표면으로 이동시켜 그곳에서 노출시킴으로써 T세포에 의해 인지되게 하는 과정.
+항이뇨 호르몬|antidiuretic hormone (ADH)||신장이 물을 보유하도록 촉진하는 바소프레신이라고 알려진 펩타이드호르몬.
+항체|antibody||분화된 B세포인 형질(플라스마) 세포로부터 분비되는 단백질로 특정 항원에 결합하여 제거되도록 표지한다.
+해당과정|glycolysis||포도당의 피루브산으로의 분해.
+해밀턴의 원리|Hamilton's rule||이타적 행위에 유리한 자연선택은 이타적 행위의 비용을 능가하여야만 한다는 원리.
+해부학|anatomy||생명체의 구조와 그의 연구.
+해양 산성화|ocean acidification||과다한 대기 이산화탄소가 바다에 녹아 탄산(H2CO3)을 형성할 때 바닷물의 pH 감소(산성화)하는 과정.
+해양 저서대|marine benthic zone||해양의 바닥.
+해파리형, 메두사형|medusa||부유하는 납작한 입이 아래로 향한 자포류의 몸의 체제.
+핵|nucleus||(1) 중성자와 양성자를 포함하고 있는 원자의 중심 부분. (2) 진핵세포에서 염색체를 포함하고 있는 세포소기관. (3) 뉴런의 다발.
+핵막|nuclear envelope||진핵세포에서 핵을 싸고 있는 이중막으로, 세포질과 핵을 구분한다.
+핵막층|nuclear lamina||핵의 모양을 유지하는 단백질 섬유의 망상구조 배열.
+핵산|nucleic acid||많은 뉴클레오타이드 단량체로 이루어진 중합체. DNA와 RNA 두 종류가 있다.
+핵산 탐침|nucleic acid probe||DNA 공학에서 핵산 시료의 특정 염기서열을 표시하는 데 이용되는 표지된 단일가닥의 핵산 분자.
+핵산 혼성화|nucleic acid hybridization||한 핵산 분자의 한 가닥이 다른 핵산 분자 가닥의 상보성 염기서열과의 염기쌍 형성.
+핵심종|keystone species||반드시 많이 존재할 필요는 없으나 생태적 역할이나 지위의 본질로 말미암아 군집의 구조에 매우 중요한 조절 역할을 하는 종.
+핵양체|nucleoid||원핵세포에서 염색체가 존재하는 막으로 둘러싸이지 않은 지역.
+핵융합|karyogamy||배우자 합체(수정)의 일부로, 두 세포핵의 융합.
+핵형|karyotype||크기와 모양에 의해 정렬한 한 세포의 염색체 쌍의 배열.
+행동|behavior||개별적으로는 자극에 반응하여 신경계의 조절에 의해 근육이나 샘에 의해 수행되는 행동.
+행동생태학|behavioral ecology||동물행동의 진화적 생태학적 근원에 관한 학문.
+허파|lung||가느다란 관으로 대기와 연결시키는 육상 척추동물, 육상 달팽이와 거미의 호흡 표면.
+허파꽈리, 폐포|alveolus||끝이 막힌 다엽의 공기주머니로 허파의 표면에서의 공기교환을 담당한다.
+헌팅턴병|Huntington's disease||우성 대립유전자에 의한 사람의 유전병으로, 조절이 안 되는 몸의 움직임과 신경계의 퇴행이 특징.
+헛물관|tracheid||모든 관다발식물의 물관에서 발견되는, 길고 끝이 가늘게 된 물 수송세포.
+헛발, 위족|pseudopodium||아메바형 세포에서 이동과 먹이 섭취에 사용되는 외부 돌출.
+헛뿌리, 가근|rhizoid||선태식물을 땅에 고정하는 긴 관 모양으로 된 하나의 세포 혹은 세포의 섬유.
+형질|character||관찰할 수 있는 유전적 특성.
+형질|trait||유전형질에서 탐지되는 변이.
+형질도입, 전달|transduction||파지(바이러스)가 한 세균 숙주로부터 다른 세균 숙주로 세균 DNA를 전달하는 과정.
+형질전환|transformation||(1) 정상적인 세포가 암세포와 같이 무한으로 분열할 수 있는 상태로의 전환. (2) 외부 DNA의 세포내 도입에 의한 유전자형과 표현형의 변화.
+형질전환된|transgenic||종이 동일하거나 혹은 같지 않은 다른 생물로부터 유래된 유전자를 자신의 유전체에 포함하고 있는 생물을 일컫는 용어.
+형질치환|character displacement||동일한 두 종의 이소성 집단보다 다른 종의 동소성 집단에서 형질이 보다 발산하는 경향.
+형태학적 종 개념|morphological species concept||측정 가능한 형태학적 기준에 근거한 종의 정의.
+형태형성과정|morphogenesis||한 생물의 몸의 형태와 구조 발생.
+형태형성물질|morphogen||초파리의 비코이드 단백질과 같이 배축을 따라 농도 기울기를 형성하여 위치 정보를 제공하는 물질.
+호극한성 생물|extremophile||다른 생물이 생존하지 못하는 극한 환경에 서식하는 생물.
+호르몬|hormone||다세포 생물에서 특수한 세포에서 생성되어 체액을 따라 이동하며 몸의 다른 부위에 있는 특수한 표적세포에 작용하여 그들의 기능을 변화시키는 화학물질.
+호미오 유전자|homeotic gene||동물, 식물 및 균류에서 세포군의 발생 운명을 조절함으로써 몸 체제의 위치와 공간적 구조를 조절하는 주된 조절 유전자의 하나.
+호미오박스|homeobox||호미오 유전자나 혹은 일부 발생 유전자 내에 존재하는 동물에서 폭넓게 보존되어 있는 180개의 염기서열.
+호산구|eosinophil||파괴시키는 효소를 분비하고 다세포 병원체의 방어에 도움을 주는 면역 세포.
+호열균|thermophile||극호열균 참조.
+호염생물|halophile||극호염균 참조.
+호중구|neutrophil||가장 많이 존재하는 백혈구 유형; 호중구는 대식작용을 하며 외부 침입자를 파괴한다.
+호흡 색소|respiratory pigment||혈액 또는 혈림프에서 대부분의 산소를 운반하는 단백질.
+혼합영양생물|mixotroph||광합성과 종속영양을 동시에 수행하는 능력을 가지는 생물.
+홍조류|red algae||엽록소에 가리는 붉은 색소로 인해 이름이 지어진 광합성 원생생물.
+홍채|iris||척추동물 눈의 색깔 있는 부분.
+홑눈|single-lens eye||해파리, 다모류, 거미류와 많은 연체동물에서 발견되는 카메라와 비슷한 눈.
+화석|fossil||과거에 생존하였던 생물의 보존된 자국이나 흔적.
+화탁|receptacle||꽃의 기저부; 꽃기관의 부착지점인 줄기의 부분.
+화학 결합|chemical bond||최외각 전자의 공유나 혹은 원자의 반대전하로 인한 두 원자 간의 인력.
+화학 반응|chemical reaction||화학 결합의 형성과 분해로, 물질의 조성을 바꾼다.
+화학 에너지|chemical energy||화학 반응에서 방출되기 위해 분자에 필요한 에너지로, 위치에너지의 한 형태.
+화학 평형|chemical equilibrium||화학 반응에서 순방향의 반응 속도와 역방향의 반응 속도가 같은 상태.
+화학독립영양생물|chemoautotroph||오직 이산화탄소만을 탄소원으로 사용하는 생물로서, 무기물의 산화에 의해 에너지를 얻는다.
+화학삼투|chemiosmosis||막 사이의 수소 이온 기울기의 형태로 저장된 에너지를 이용하여 ATP 합성과 같은 세포내 과정을 수행하는 에너지 커플링 메커니즘.
+화학수용기|chemoreceptor||용질이나 냄새물질과 같은 화학자극에 반응하는 감각수용기.
+화학종속영양생물|chemoheterotroph||에너지와 탄소원을 얻기 위해 유기물을 소비해야 하는 생물.
+화합물|compound||2개 혹은 그 이상의 원소가 정해진 비율로 이루어진 물질.
+확산|diffusion||액체, 고체 및 기체 입자의 무작위적인 열운동.
+확인점|checkpoint||세포 주기에서 언제 세포 주기를 멈추는지 혹은 계속 진행하는가를 결정하는 지점.
+환기|ventilation||호흡 표면을 통한 공기 또는 물의 흐름.
+환원|reduction||산화 환원 반응이 관련되는 한 물질에 전자를 첨가하는 것.
+환원제|reducing agent||산화 환원 반응에서 전자를 공여체.
+활동전위|action potential||자극에 의해 야기된 Na+와 K+ 통로의 선택적인 열림과 닫힘에 의해 유도되는 세포에서 막전위의 빠른 변화.
+활성 부위|active site||다수의 약한 화학 결합으로 기질과 결합하며 촉매 반응이 일어나는 곳에 오목한 모양을 형성하는, 효소의 특정 부위.
+활성자|activator||DNA에 결합하여 특정 유전자의 전사를 활성화시키는 단백질.
+활성화 에너지|activation energy||반응물이 반응을 시작하기 전에 반드시 흡수하여야 하는 에너지의 양. 자유 활성화 에너지라고도 한다.
+활주 필라멘트 모형|sliding-filament model||근육구조의 기본 단위인 근절 내부에서의 변화에 근거한 근육 수축을 설명하는 설.
+황체|corpus luteum||배란 후에 퇴화된 난포에서 형성되며 프로제스테론을 생산하는 난소의 분비세포.
+황체형성 호르몬|luteinizing hormone(LH)||여성의 배란과 남성의 안드로젠 형성을 촉진하는 기능.
+황화수소기|sulfhydryl group||수소 원자와 결합된 황 원자로 이루어진 기능기.
+황화현상|etiolation||어두운 곳에서 자라는 식물의 형태적 적응.
+회백질|gray matter||중추신경계에서 수상돌기와 뉴런의 세포체가 밀집된 부분.
+횡격막, 폐서리|diaphragm||(1) 횡격막; 포유류 흉강의 아래쪽 벽을 형성하는 근육막으로, 수축시 허파로 공기를 끌어들인다. (2) 폐서리; 성교 전 질의 윗부분을 막는 돔 모양의 마개로 정자가 자궁으로 가는 데 있어 물리적 장벽으로 작용한다.
+효과기 세포|effector cell||(1) 자극에 대해 몸이 반응하게 하는 근육세포나 샘세포; 뇌나 신경계의 다른 정보처리 장소에서 온 신호에 반응한다. (2) 클론 선발을 겪어 후천적 면역반응을 매개할 수 있는 림프구.
+효과기 단백질|효과기(effector) 참조.||
+효모|yeast||이분법이나 출아법에 의해 무성으로 번식하는 단세포성 균류.
+효소|enzyme||반응 동안 소비되지 않고 반응 속도를 변화시키는 촉매로 작용하는 거대 분자.
+효소-기질 복합체|enzyme-substrate complex||효소가 기질 분자에 결합하여 형성된 일시적인 복합체.
+후각|olfaction||냄새 감각.
+후각세포|collenchyma cell||생장을 억제하지 않으며 식물의 어린 부분을 지지하는 실이나 원통 모양의 유연한 식물세포 종류.
+후구동물 발생|deuterostome development||원구로부터 항문의 발생이 특징인 동물의 발생 양상으로, 종종 방사상 난할과 중배엽 조직의 바깥주머니로 형성되는 몸의 체강 발생의 특징을 가진다.
+후구동물|Deuterostomia||3가지 중요한 좌우대칭동물 계통 중 하나. 탈피동물과 촉수담륜동물 참조.
+후기|anaphase||유사분열의 4번째 단계로 각 염색체의 염색분체가 분리되고 딸 염색체가 세포의 양극으로 이동한다.
+후뇌|hindbrain||척추동물 뇌의 세 배 부분 중 하나. 연수, 뇌교 및 소뇌로 발생한다.
+후두|larynx||성대를 포함하는 호흡관의 일부. 소리 상자라고도 한다.
+후벽세포|sclerenchyma cell||원형질이 없으며 성숙 시 리그닌에 의해 강화된 두터운 2차벽을 가지는 단단한 지지세포.
+후성유전학|epigenetics||뉴클레오타이드의 서열이 관련되지 않은 메커니즘에 의해 전달되는 형질의 유전 연구.
+후신관|metanephridium||전형적으로 섬모로 싸인 내부 통로와 바깥 통로를 연결하는 관으로 이루어진 많은 무척추동물의 배설기관.
+후천성 면역 결핍증|acquired immunodeficiency syndrome(AIDS)||HIV 감염의 후기 단계 동안 나타나는 증상과 징후. T세포 수의 감소와 2차 감염의 특징이 나타남에 의해 정의된다.
+후편모류, 오피스토콘트|opisthokont||균류, 동물 및 밀접하게 연관된 일부 원생생물 무리를 포함하는 진핵생물의 매우 다양한 분기군.
+휴면|dormancy||아주 느린 물질대사율과 생장과 발생의 중지를 특징으로 하는 상태.
+휴면|torpor||활동이 저하되고 물질대사율이 감소하는 생리 상태.
+휴지전위|resting potential||세포 안의 전위가 바깥에 비해 더 음성적인, 전도하지 않으며 흥분될 수 있는 세포의 막전위.
+흔적 구조|vestigial structure||생물에서 거의 사용되지 않는 기관. 흔적구조는 조상에게서는 중요한 기능을 하였던 잔여 기관이다.
+흡수|absorption||동물의 음식물 처리 과정 중 3번째의 단계로, 생물에 의한 작은 영양 분자의 섭취.
+흡수 스펙트럼|absorption spectrum||색소가 흡수하는 다양한 파장의 빛의 범위. 또한 그러한 범위의 그래프.
+흡열 반응|endergonic reaction||주변으로부터 자유 에너지가 흡수되는 비자발적인 화학 반응.
+흡착|adhesion||서로 다른 분자 간의 친화력.
+흥분성 시냅스후전위|excitatory postsynaptic potential(EPSP)||시냅스전 세포로부터 나온 흥분성 신경전달물질이 시냅스후전세포의 수용체에 결합함으로써 생기는 시냅스후신경세포 막의 전위변화(탈분극).
+희소돌기아교세포|oligodendrocyte||중추신경계에서 뉴런의 축삭돌기 주위에 절연체인 미엘린 수초를 형성하는 신경교세포의 일종.
+히스타민|histamine||비만세포에 의해 분비되는 물질로 염증 반응 및 알러지 반응 동안 혈관을 확장시키고 투과성이 높아지도록 한다.
+히스토그램|histogram||수치로 나타낸 데이터를 먼저 그룹으로 나눈 후 변수를 균등한 간격으로 x축 위에 그린 막대 그래프의 변형.
+히스톤 아세틸화|histone acetylation||히스톤 단백질의 특정 아미노산에 아세틸기의 결합.
+히스톤|histone||양전하의 아미노산을 많이 가지는 작은 단백질로, 음전하를 띤 DNA에 결합하며 염색질 구조에 중요한 역할을 한다.
+힘줄|tendon||근육을 뼈에 부착하는 섬유성 결합 조직.

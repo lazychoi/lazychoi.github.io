@@ -4,9 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>농업 용어 노트</title>
+  <title>용어 노트</title>
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="farm_styles.css">
+  <!-- KaTeX for rendering LaTeX math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
 </head>
 
 <body>
@@ -15,7 +19,7 @@
       <span class="nav-icon">🏠</span> 홈
     </a>
     <a href="farm.html" class="nav-link active">
-      <span class="nav-icon">🌱</span> 농업 용어
+      <span class="nav-icon">🌱</span> 용어 노트
     </a>
     <a href="hanja.html" class="nav-link">
       <span class="nav-icon">📗</span> 한글(한자)
@@ -23,7 +27,7 @@
   </nav>
 
   <div class="search-container">
-    <h1>농업 용어 노트</h1>
+    <h1>용어 노트</h1>
     <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()">
     <div id="loadingMessage">데이터를 로드하는 중입니다...</div>
     <ul id="results"></ul>

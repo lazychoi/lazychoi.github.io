@@ -1,15 +1,16 @@
-# 농업 용어 사전 및 한글을 한자로 변환하는 앱
+# 용어 사전 및 한글을 한자로 변환하는 앱
 
 ## 파일 구성
 
-### 농업 용어 사전
+### 용어 사전
 
 - farm.html
 - farm_styles.css
 - farm_search.js
 - references.html: 참고 도서 목록
-- data.csv: 농업 용어 사전 데이터
-- /img: 농업 용어 사전 데이터 이미지 파일
+- farm_data.txt: 용어 노트 데이터
+- /img: 용어 노트 데이터 이미지 파일
+- farm_add.html, farm_add.js, admin_server.py: 용어 입력 앱(Local)
 
 ### 한글-한자 변환 앱
 

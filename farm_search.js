@@ -9,7 +9,18 @@ function loadTermsFromCSV() {
             lines.forEach((line, index) => {
                 if (index === 0 || !line.trim()) return; // 첫 번째 라인(헤더)이나 빈 줄은 건너뜁니다.
                 
-                const values = line.split('|').map(value => value ? value.trim() : '');
+                // Safe parsing: only split by the first 3 '|' separators to keep formulas containing '|' in the meaning column.
+                const parts = [];
+                let temp = line;
+                for (let i = 0; i < 3; i++) {
+                    const idx = temp.indexOf('|');
+                    if (idx === -1) break;
+                    parts.push(temp.substring(0, idx));
+                    temp = temp.substring(idx + 1);
+                }
+                parts.push(temp);
+
+                const values = parts.map(value => value ? value.trim() : '');
                 if (values.length >= 4) {  // 최소 4개의 값이 있는지 확인
                     terms.push({
                         term: values[0] || '',
@@ -89,6 +100,42 @@ function searchTerms() {
 
         if (li.parentElement !== results) {
             results.appendChild(li);
+        }
+
+        // Render KaTeX for math formulas
+        if (typeof katex !== 'undefined') {
+            // 1. Render ql-formula spans (with '|' replaced with '\')
+            li.querySelectorAll('.ql-formula').forEach(el => {
+                let formula = el.getAttribute('data-value');
+                if (formula) {
+                    formula = formula.replace(/\|/g, '\\');
+                    try {
+                        katex.render(formula, el, {
+                            throwOnError: false,
+                            displayMode: false
+                        });
+                    } catch (err) {
+                        console.error('KaTeX ql-formula error:', err);
+                    }
+                }
+            });
+
+            // 2. Render standard inline/block LaTeX ($...$, $$...$$) using auto-render
+            if (typeof renderMathInElement === 'function') {
+                try {
+                    renderMathInElement(li, {
+                        delimiters: [
+                            {left: '$$', right: '$$', display: true},
+                            {left: '$', right: '$', display: false},
+                            {left: '\\(', right: '\\)', display: false},
+                            {left: '\\[', right: '\\]', display: true}
+                        ],
+                        throwOnError: false
+                    });
+                } catch (err) {
+                    console.error('KaTeX auto-render error:', err);
+                }
+            }
         }
     });
 
