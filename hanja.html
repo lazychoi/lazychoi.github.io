@@ -27,17 +27,74 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       position: relative;
       margin-top: 16px;
+      height: calc(100% - 100px);
     }
 
     h2 {
       font-size: 24px;
       font-weight: 600;
       color: var(--text-main);
-      margin-bottom: 10px;
+      margin-bottom: 5px;
       letter-spacing: -0.5px;
+    }
+
+    /* ── 검색 모드 탭 스타일 ── */
+    .search-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 5px;
+      width: 100%;
+      max-width: 500px;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      border-color: var(--accent);
+    }
+
+    .tab-btn.active {
+      background: rgba(129, 140, 248, 0.15);
+      color: var(--accent);
+      border-color: var(--accent);
+      box-shadow: 0 0 15px rgba(129, 140, 248, 0.15);
+    }
+
+    /* ── 검색 패널 토글 ── */
+    .search-panel {
+      display: none;
+      width: 100%;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .search-panel.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .input-group {
@@ -68,17 +125,226 @@
       color: var(--text-muted);
     }
 
+    /* ── 필기 인식 스타일 ── */
+    .draw-container {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      max-width: 600px;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .canvas-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    #drawCanvas {
+      background: rgba(0, 0, 0, 0.4);
+      border: 2px dashed rgba(129, 140, 248, 0.4);
+      border-radius: 16px;
+      cursor: crosshair;
+      touch-action: none;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.3s ease;
+    }
+
+    #drawCanvas:hover, #drawCanvas:active {
+      border-color: var(--accent);
+    }
+
+    .canvas-controls {
+      display: flex;
+      gap: 8px;
+    }
+
+    .control-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .control-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--text-muted);
+    }
+
+    .candidates-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px;
+      min-width: 180px;
+    }
+
+    .candidates-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .candidates-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-content: start;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 250px;
+    }
+
+    .no-candidates {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin: auto;
+      text-align: center;
+    }
+
+    .candidate-chip {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 22px;
+      color: var(--accent);
+      background: rgba(129, 140, 248, 0.08);
+      border: 1px solid rgba(129, 140, 248, 0.2);
+      border-radius: 8px;
+      width: 42px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .candidate-chip:hover {
+      background: rgba(129, 140, 248, 0.2);
+      border-color: var(--accent);
+      transform: scale(1.08);
+    }
+
+    .candidate-chip:active {
+      transform: scale(0.95);
+    }
+
+    /* ── 획수/초성 필터 스타일 ── */
+    .filter-container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .filter-title {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .filter-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .filter-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+
+    .filter-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 5px;
+    }
+
+    .reset-btn {
+      max-width: 120px;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+
+    /* ── 결과 분리 레이아웃 ── */
+    .result-section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .result-section-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--amber);
+      border-left: 3px solid var(--amber);
+      padding-left: 8px;
+      margin-left: 5px;
+    }
+
+    .result-section-title.pronunciation {
+      color: var(--accent);
+      border-left-color: var(--accent);
+    }
+
     /* ── 스크롤 래퍼 ── */
     .result-wrapper {
       width: 100%;
-      height: 400px;
+      height: 0;
+      flex-grow: 1;
       overflow-y: auto;
       overflow-x: visible;
       background: rgba(0, 0, 0, 0.15);
       border-radius: 16px;
       border: 1px solid var(--glass-border);
       transition: all 0.3s ease;
-      padding-top: 20px;
+      padding-top: 10px;
     }
 
     /* ── 그리드 컨테이너 ── */
@@ -213,6 +479,136 @@
       opacity: 1;
     }
 
+    /* ── 부수/획수 검색 디자인 ── */
+    .radical-search-container {
+      width: 100%;
+      max-width: 700px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.20);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .radical-group-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 10px;
+    }
+
+    .radical-tab {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .radical-tab:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .radical-tab.active {
+      background: rgba(129, 140, 248, 0.15);
+      color: var(--accent);
+      border-color: rgba(129, 140, 248, 0.3);
+    }
+
+    .radical-list-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      padding: 4px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .radical-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      gap: 2px;
+    }
+
+    .radical-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    .radical-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+      box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+    }
+
+    .rad-char {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .rad-name {
+      font-size: 10px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .radical-btn.active .rad-name {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .radical-selected-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid var(--glass-border);
+      padding-top: 12px;
+      margin-top: 5px;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .selected-radical-info {
+      font-size: 13px;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .selected-radical-info .highlight {
+      color: var(--amber);
+      font-size: 16px;
+      font-family: 'Noto Serif KR', serif;
+    }
+
+    .remaining-strokes-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
     /* ── Mobile ── */
     @media (max-width: 600px) {
       body {
@@ -223,14 +619,61 @@
         border-radius: 0;
         border: none;
         height: calc(100% - 46px);
-        padding: 20px 15px;
+        padding: 16px 12px;
         box-shadow: none;
         margin-top: 0;
+        gap: 12px;
       }
 
       h2 {
         font-size: 20px;
-        margin-bottom: 5px;
+        margin-bottom: 2px;
+      }
+
+      .search-tabs {
+        gap: 6px;
+      }
+
+      .tab-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+      }
+
+      .draw-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+      }
+
+      #drawCanvas {
+        width: 260px;
+        height: 260px;
+      }
+
+      .candidates-wrapper {
+        width: 100%;
+        min-width: unset;
+        padding: 10px;
+      }
+
+      .candidates-container {
+        max-height: 120px;
+      }
+
+      .radical-search-container {
+        padding: 10px;
+        gap: 10px;
+      }
+
+      .radical-list-container {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        max-height: 140px;
+      }
+
+      .filter-btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-width: 28px;
       }
 
       .input-group {
@@ -277,12 +720,72 @@
   <div class="container">
     <h2>한글 → 한자</h2>
 
-    <div class="input-group">
-      <input type="text" id="koreanInput" placeholder="한글 입력 (예: 가관)" autocomplete="off">
+    <div class="search-tabs">
+      <button class="tab-btn active" id="tabSearchBtn">🔍 음/뜻 검색</button>
+      <button class="tab-btn" id="tabDrawBtn">✏️ 필기 인식</button>
+      <button class="tab-btn" id="tabFilterBtn">📖 부수/획수 검색</button>
+    </div>
+
+    <!-- 1. 음/뜻 검색 패널 -->
+    <div id="panelSearch" class="search-panel active">
+      <div class="input-group">
+        <input type="text" id="koreanInput" placeholder="한글 음 또는 한자 뜻 입력 (예: 가관, 하늘)" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- 2. 필기 인식 패널 -->
+    <div id="panelDraw" class="search-panel">
+      <div class="draw-container">
+        <div class="canvas-wrapper">
+          <canvas id="drawCanvas" width="300" height="300"></canvas>
+          <div class="canvas-controls">
+            <button id="clearBtn" class="control-btn">🧹 전체 지우기</button>
+            <button id="undoBtn" class="control-btn">↩️ 1획 지우기</button>
+          </div>
+        </div>
+        <div class="candidates-wrapper">
+          <div class="candidates-title">인식 결과 (클릭하여 검색)</div>
+          <div id="candidatesList" class="candidates-container">
+            <span class="no-candidates">글자를 그려주세요</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. 부수/획수 검색 패널 -->
+    <div id="panelFilter" class="search-panel">
+      <div class="radical-search-container">
+        <div id="radicalSelectionArea" style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+          <div class="filter-group">
+            <div class="filter-title">부수 획수 선택</div>
+            <div class="radical-group-tabs" id="radicalGroupTabs"></div>
+          </div>
+          <div class="filter-group">
+            <div class="filter-title">부수 선택</div>
+            <div class="radical-list-container" id="radicalListContainer">
+              <span class="no-candidates">위의 부수 획수를 선택해 주세요</span>
+            </div>
+          </div>
+        </div>
+        <div class="radical-selected-container" id="radicalSelectedContainer" style="display: none; width: 100%;">
+          <div class="selected-radical-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; flex-wrap: wrap;">
+            <div class="selected-radical-info" style="margin: 0;">
+              선택된 부수: <span id="selectedRadicalChar" class="highlight"></span> (<span id="selectedRadicalName"></span>) - 총 <span id="selectedRadicalStrokes"></span>획
+            </div>
+            <button id="changeRadicalBtn" class="control-btn" style="margin: 0; padding: 6px 12px; width: auto; font-size: 12px; height: 32px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+              🔄 다른 부수 선택
+            </button>
+          </div>
+          <div class="remaining-strokes-group" style="width: 100%; margin-top: 5px;">
+            <div class="filter-title">부수 제외 나머지 획수 선택</div>
+            <div id="remainingStrokesButtons" class="filter-buttons"></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="result-wrapper">
-      <div id="resultList" class="result-container"></div>
+      <div id="resultList"></div>
     </div>
 
     <div id="toast" class="toast">클립보드에 복사되었습니다!</div>

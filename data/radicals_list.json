@@ -1,0 +1,2002 @@
+[
+  {
+    "id": 1,
+    "radical": "一",
+    "name": "한일",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 2,
+    "radical": "丨",
+    "name": "뚫을곤",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 3,
+    "radical": "丶",
+    "name": "점주",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 4,
+    "radical": "丿",
+    "name": "삐침별",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 5,
+    "radical": "乙",
+    "name": "새을",
+    "strokes": 1,
+    "variants": "乚",
+    "is_variant": false
+  },
+  {
+    "id": 6,
+    "radical": "亅",
+    "name": "갈고리궐",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 7,
+    "radical": "二",
+    "name": "두이",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 8,
+    "radical": "亠",
+    "name": "돼지해머리",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 9,
+    "radical": "人",
+    "name": "사람인",
+    "strokes": 2,
+    "variants": "亻",
+    "is_variant": false
+  },
+  {
+    "id": 10,
+    "radical": "儿",
+    "name": "어진사람인",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 11,
+    "radical": "入",
+    "name": "들입",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 12,
+    "radical": "八",
+    "name": "여덟팔",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 13,
+    "radical": "冂",
+    "name": "멀경",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 14,
+    "radical": "冖",
+    "name": "민갓머리",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 15,
+    "radical": "冫",
+    "name": "이수변",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 16,
+    "radical": "几",
+    "name": "안석궤",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 17,
+    "radical": "凵",
+    "name": "위터진입구",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 18,
+    "radical": "刀",
+    "name": "칼도",
+    "strokes": 2,
+    "variants": "刂",
+    "is_variant": false
+  },
+  {
+    "id": 19,
+    "radical": "力",
+    "name": "힘력",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 20,
+    "radical": "勹",
+    "name": "쌀포",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 21,
+    "radical": "匕",
+    "name": "비수비",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 22,
+    "radical": "匚",
+    "name": "터진입구",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 23,
+    "radical": "匸",
+    "name": "감출혜",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 24,
+    "radical": "十",
+    "name": "열십",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 25,
+    "radical": "卜",
+    "name": "점복",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 26,
+    "radical": "卩",
+    "name": "병부절",
+    "strokes": 2,
+    "variants": "㔾",
+    "is_variant": false
+  },
+  {
+    "id": 27,
+    "radical": "厂",
+    "name": "민엄호",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 28,
+    "radical": "厶",
+    "name": "마늘모",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 29,
+    "radical": "又",
+    "name": "또우",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 30,
+    "radical": "口",
+    "name": "입구",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 31,
+    "radical": "囗",
+    "name": "큰입구",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 32,
+    "radical": "土",
+    "name": "흙토",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 33,
+    "radical": "士",
+    "name": "선비사",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 34,
+    "radical": "夂",
+    "name": "뒤져올치",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 35,
+    "radical": "夊",
+    "name": "천천히걸을쇠",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 36,
+    "radical": "夕",
+    "name": "저녁석",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 37,
+    "radical": "大",
+    "name": "큰대",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 38,
+    "radical": "女",
+    "name": "계집녀",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 39,
+    "radical": "子",
+    "name": "아들자",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 40,
+    "radical": "宀",
+    "name": "갓머리",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 41,
+    "radical": "寸",
+    "name": "마디촌",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 42,
+    "radical": "小",
+    "name": "작을소",
+    "strokes": 3,
+    "variants": "⺌",
+    "is_variant": false
+  },
+  {
+    "id": 43,
+    "radical": "尢",
+    "name": "절름발이왕",
+    "strokes": 3,
+    "variants": "兀, 尢",
+    "is_variant": false
+  },
+  {
+    "id": 44,
+    "radical": "尸",
+    "name": "주검시",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 45,
+    "radical": "屮",
+    "name": "풀싹날철",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 46,
+    "radical": "山",
+    "name": "메산",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 47,
+    "radical": "巛",
+    "name": "개미허리",
+    "strokes": 3,
+    "variants": "川",
+    "is_variant": false
+  },
+  {
+    "id": 48,
+    "radical": "工",
+    "name": "장인공",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 49,
+    "radical": "己",
+    "name": "몸기",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 50,
+    "radical": "巾",
+    "name": "수건건",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 51,
+    "radical": "干",
+    "name": "방패간",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 52,
+    "radical": "幺",
+    "name": "작을요",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 53,
+    "radical": "广",
+    "name": "엄호",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 54,
+    "radical": "廴",
+    "name": "민책받침",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 55,
+    "radical": "廾",
+    "name": "밑스물입",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 56,
+    "radical": "弋",
+    "name": "주살익",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 57,
+    "radical": "弓",
+    "name": "활궁",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 58,
+    "radical": "彐",
+    "name": "튼가로왈",
+    "strokes": 3,
+    "variants": "彑",
+    "is_variant": false
+  },
+  {
+    "id": 59,
+    "radical": "彡",
+    "name": "터럭삼",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 60,
+    "radical": "彳",
+    "name": "두인변",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 61,
+    "radical": "心",
+    "name": "마음심",
+    "strokes": 4,
+    "variants": "忄, 㣺",
+    "is_variant": false
+  },
+  {
+    "id": 62,
+    "radical": "戈",
+    "name": "창과",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 63,
+    "radical": "戶",
+    "name": "지게호",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 64,
+    "radical": "手",
+    "name": "손수",
+    "strokes": 4,
+    "variants": "扌",
+    "is_variant": false
+  },
+  {
+    "id": 65,
+    "radical": "支",
+    "name": "지탱할지",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 66,
+    "radical": "攴",
+    "name": "등글월문",
+    "strokes": 4,
+    "variants": "攵",
+    "is_variant": false
+  },
+  {
+    "id": 67,
+    "radical": "文",
+    "name": "글월문",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 68,
+    "radical": "斗",
+    "name": "말두",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 69,
+    "radical": "斤",
+    "name": "날근",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 70,
+    "radical": "方",
+    "name": "모방",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 71,
+    "radical": "无",
+    "name": "없을무",
+    "strokes": 4,
+    "variants": "旡",
+    "is_variant": false
+  },
+  {
+    "id": 72,
+    "radical": "日",
+    "name": "날일",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 73,
+    "radical": "曰",
+    "name": "가로왈",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 74,
+    "radical": "月",
+    "name": "달월",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 75,
+    "radical": "木",
+    "name": "나무목",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 76,
+    "radical": "欠",
+    "name": "하품흠",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 77,
+    "radical": "止",
+    "name": "그칠지",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 78,
+    "radical": "歹",
+    "name": "죽을사",
+    "strokes": 4,
+    "variants": "歺",
+    "is_variant": false
+  },
+  {
+    "id": 79,
+    "radical": "殳",
+    "name": "갖은등글월문",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 80,
+    "radical": "毋",
+    "name": "말무",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 81,
+    "radical": "比",
+    "name": "견줄비",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 82,
+    "radical": "毛",
+    "name": "터럭모",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 83,
+    "radical": "氏",
+    "name": "각시씨",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 84,
+    "radical": "气",
+    "name": "기운기",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 85,
+    "radical": "水",
+    "name": "물수",
+    "strokes": 4,
+    "variants": "氵, 氺",
+    "is_variant": false
+  },
+  {
+    "id": 86,
+    "radical": "火",
+    "name": "불화",
+    "strokes": 4,
+    "variants": "灬",
+    "is_variant": false
+  },
+  {
+    "id": 87,
+    "radical": "爪",
+    "name": "손톱조",
+    "strokes": 4,
+    "variants": "爫",
+    "is_variant": false
+  },
+  {
+    "id": 88,
+    "radical": "父",
+    "name": "아비부",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 89,
+    "radical": "爻",
+    "name": "점괘효",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 90,
+    "radical": "爿",
+    "name": "장수장변",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 91,
+    "radical": "片",
+    "name": "조각편",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 92,
+    "radical": "牙",
+    "name": "어금니아",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 93,
+    "radical": "牛",
+    "name": "소우",
+    "strokes": 4,
+    "variants": "牜",
+    "is_variant": false
+  },
+  {
+    "id": 94,
+    "radical": "犬",
+    "name": "개견",
+    "strokes": 4,
+    "variants": "犭",
+    "is_variant": false
+  },
+  {
+    "id": 95,
+    "radical": "玄",
+    "name": "검을현",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 96,
+    "radical": "玉",
+    "name": "구슬옥",
+    "strokes": 5,
+    "variants": "王",
+    "is_variant": false
+  },
+  {
+    "id": 97,
+    "radical": "瓜",
+    "name": "오이과",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 98,
+    "radical": "瓦",
+    "name": "기와와",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 99,
+    "radical": "甘",
+    "name": "달감",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 100,
+    "radical": "生",
+    "name": "날생",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 101,
+    "radical": "用",
+    "name": "쓸용",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 102,
+    "radical": "田",
+    "name": "발전",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 103,
+    "radical": "疋",
+    "name": "필필",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 104,
+    "radical": "疒",
+    "name": "병질엄",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 105,
+    "radical": "癶",
+    "name": "필발머리",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 106,
+    "radical": "白",
+    "name": "흰백",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 107,
+    "radical": "皮",
+    "name": "가죽피",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 108,
+    "radical": "皿",
+    "name": "그릇명",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 109,
+    "radical": "目",
+    "name": "눈목",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 110,
+    "radical": "矛",
+    "name": "창모",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 111,
+    "radical": "矢",
+    "name": "화살시",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 112,
+    "radical": "石",
+    "name": "돌석",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 113,
+    "radical": "示",
+    "name": "보일시",
+    "strokes": 5,
+    "variants": "礻",
+    "is_variant": false
+  },
+  {
+    "id": 114,
+    "radical": "禸",
+    "name": "짐승발자국유",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 115,
+    "radical": "禾",
+    "name": "벼화",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 116,
+    "radical": "穴",
+    "name": "구멍혈",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 117,
+    "radical": "立",
+    "name": "설립",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 118,
+    "radical": "竹",
+    "name": "대죽",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 119,
+    "radical": "米",
+    "name": "쌀미",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 120,
+    "radical": "糸",
+    "name": "실사",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 121,
+    "radical": "缶",
+    "name": "장군부",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 122,
+    "radical": "网",
+    "name": "그물망",
+    "strokes": 6,
+    "variants": "罒, 𦉰, 㓁",
+    "is_variant": false
+  },
+  {
+    "id": 123,
+    "radical": "羊",
+    "name": "양양",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 124,
+    "radical": "羽",
+    "name": "깃우",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 125,
+    "radical": "老",
+    "name": "늙을로",
+    "strokes": 6,
+    "variants": "耂",
+    "is_variant": false
+  },
+  {
+    "id": 126,
+    "radical": "而",
+    "name": "말이을이",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 127,
+    "radical": "耒",
+    "name": "쟁기뢰",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 128,
+    "radical": "耳",
+    "name": "귀이",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 129,
+    "radical": "聿",
+    "name": "붓율",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 130,
+    "radical": "肉",
+    "name": "고기육",
+    "strokes": 6,
+    "variants": "月, ⺼",
+    "is_variant": false
+  },
+  {
+    "id": 131,
+    "radical": "臣",
+    "name": "신하신",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 132,
+    "radical": "自",
+    "name": "스스로자",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 133,
+    "radical": "至",
+    "name": "이를지",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 134,
+    "radical": "臼",
+    "name": "절구구",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 135,
+    "radical": "舌",
+    "name": "혀설",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 136,
+    "radical": "舛",
+    "name": "어그러질천",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 137,
+    "radical": "舟",
+    "name": "배주",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 138,
+    "radical": "艮",
+    "name": "머무를간",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 139,
+    "radical": "色",
+    "name": "빛색",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 140,
+    "radical": "艸",
+    "name": "초두",
+    "strokes": 6,
+    "variants": "艹",
+    "is_variant": false
+  },
+  {
+    "id": 141,
+    "radical": "虍",
+    "name": "범호밑",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 142,
+    "radical": "虫",
+    "name": "벌레충",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 143,
+    "radical": "血",
+    "name": "피혈",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 144,
+    "radical": "行",
+    "name": "다닐행",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 145,
+    "radical": "衣",
+    "name": "옷의",
+    "strokes": 6,
+    "variants": "衣, 衤",
+    "is_variant": false
+  },
+  {
+    "id": 146,
+    "radical": "襾",
+    "name": "덮을아",
+    "strokes": 6,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 147,
+    "radical": "見",
+    "name": "볼견",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 148,
+    "radical": "角",
+    "name": "뿔각",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 149,
+    "radical": "言",
+    "name": "말씀언",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 150,
+    "radical": "谷",
+    "name": "골곡",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 151,
+    "radical": "豆",
+    "name": "콩두",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 152,
+    "radical": "豕",
+    "name": "돼지시",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 153,
+    "radical": "豸",
+    "name": "발없는벌레치",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 154,
+    "radical": "貝",
+    "name": "조개패",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 155,
+    "radical": "赤",
+    "name": "붉을적",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 156,
+    "radical": "走",
+    "name": "달아날주",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 157,
+    "radical": "足",
+    "name": "발족",
+    "strokes": 7,
+    "variants": "⻊",
+    "is_variant": false
+  },
+  {
+    "id": 158,
+    "radical": "身",
+    "name": "몸신",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 159,
+    "radical": "車",
+    "name": "수레거",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 160,
+    "radical": "辛",
+    "name": "매울신",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 161,
+    "radical": "辰",
+    "name": "별진",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 162,
+    "radical": "辵",
+    "name": "책받침",
+    "strokes": 7,
+    "variants": "辶",
+    "is_variant": false
+  },
+  {
+    "id": 163,
+    "radical": "邑",
+    "name": "고을읍",
+    "strokes": 7,
+    "variants": "阝",
+    "is_variant": false
+  },
+  {
+    "id": 164,
+    "radical": "酉",
+    "name": "닭유",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 165,
+    "radical": "采",
+    "name": "분별할변",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 166,
+    "radical": "里",
+    "name": "마을리",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 167,
+    "radical": "金",
+    "name": "쇠금",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 168,
+    "radical": "長",
+    "name": "길장",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 169,
+    "radical": "門",
+    "name": "문문",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 170,
+    "radical": "阜",
+    "name": "언덕부",
+    "strokes": 8,
+    "variants": "阝",
+    "is_variant": false
+  },
+  {
+    "id": 171,
+    "radical": "隶",
+    "name": "미칠이",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 172,
+    "radical": "隹",
+    "name": "새추",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 173,
+    "radical": "雨",
+    "name": "비우",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 174,
+    "radical": "靑",
+    "name": "푸를청",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 175,
+    "radical": "非",
+    "name": "아닐비",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 176,
+    "radical": "面",
+    "name": "낯면",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 177,
+    "radical": "革",
+    "name": "가죽혁",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 178,
+    "radical": "韋",
+    "name": "다룸가죽위",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 179,
+    "radical": "韭",
+    "name": "부추구",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 180,
+    "radical": "音",
+    "name": "소리음",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 181,
+    "radical": "頁",
+    "name": "머리혈",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 182,
+    "radical": "風",
+    "name": "바람풍",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 183,
+    "radical": "飛",
+    "name": "날비",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 184,
+    "radical": "食",
+    "name": "밥식",
+    "strokes": 9,
+    "variants": "飠",
+    "is_variant": false
+  },
+  {
+    "id": 185,
+    "radical": "首",
+    "name": "머리수",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 186,
+    "radical": "香",
+    "name": "향기향",
+    "strokes": 9,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 187,
+    "radical": "馬",
+    "name": "말마",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 188,
+    "radical": "骨",
+    "name": "뼈골",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 189,
+    "radical": "高",
+    "name": "높을고",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 190,
+    "radical": "髟",
+    "name": "터럭발밑",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 191,
+    "radical": "鬥",
+    "name": "싸울투",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 192,
+    "radical": "鬯",
+    "name": "울창",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 193,
+    "radical": "鬲",
+    "name": "솥력",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 194,
+    "radical": "鬼",
+    "name": "귀신귀",
+    "strokes": 10,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 195,
+    "radical": "魚",
+    "name": "물고기어",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 196,
+    "radical": "鳥",
+    "name": "새조",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 197,
+    "radical": "鹵",
+    "name": "소금밭로",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 198,
+    "radical": "鹿",
+    "name": "사슴록",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 199,
+    "radical": "麥",
+    "name": "보리맥",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 200,
+    "radical": "麻",
+    "name": "삼마",
+    "strokes": 11,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 201,
+    "radical": "黃",
+    "name": "누를황",
+    "strokes": 12,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 202,
+    "radical": "黍",
+    "name": "기장서",
+    "strokes": 12,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 203,
+    "radical": "黑",
+    "name": "검을흑",
+    "strokes": 12,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 204,
+    "radical": "黹",
+    "name": "바느질할치",
+    "strokes": 12,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 205,
+    "radical": "黽",
+    "name": "맹꽁이맹",
+    "strokes": 13,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 206,
+    "radical": "鼎",
+    "name": "솥정",
+    "strokes": 13,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 207,
+    "radical": "鼓",
+    "name": "북고",
+    "strokes": 13,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 208,
+    "radical": "鼠",
+    "name": "쥐서",
+    "strokes": 13,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 209,
+    "radical": "鼻",
+    "name": "코비",
+    "strokes": 14,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 210,
+    "radical": "齊",
+    "name": "가지런할제",
+    "strokes": 14,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 211,
+    "radical": "齒",
+    "name": "이치",
+    "strokes": 15,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 212,
+    "radical": "龍",
+    "name": "용용",
+    "strokes": 16,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 213,
+    "radical": "龜",
+    "name": "거북귀",
+    "strokes": 16,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 214,
+    "radical": "龠",
+    "name": "피리약",
+    "strokes": 17,
+    "variants": "",
+    "is_variant": false
+  },
+  {
+    "id": 5,
+    "radical": "乚",
+    "name": "새을(乚)",
+    "strokes": 1,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 9,
+    "radical": "亻",
+    "name": "사람인(亻)",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 18,
+    "radical": "刂",
+    "name": "칼도(刂)",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 26,
+    "radical": "㔾",
+    "name": "병부절(㔾)",
+    "strokes": 2,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 42,
+    "radical": "⺌",
+    "name": "작을소(⺌)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 43,
+    "radical": "兀",
+    "name": "절름발이왕(兀)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 43,
+    "radical": "尣",
+    "name": "절름발이왕(尣)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 47,
+    "radical": "川",
+    "name": "개미허리(川)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 58,
+    "radical": "彑",
+    "name": "튼가로왈(彑)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 61,
+    "radical": "忄",
+    "name": "마음심(忄)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 61,
+    "radical": "㣺",
+    "name": "마음심(㣺)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 64,
+    "radical": "扌",
+    "name": "손수(扌)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 66,
+    "radical": "攵",
+    "name": "등글월문(攵)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 71,
+    "radical": "旡",
+    "name": "없을무(旡)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 78,
+    "radical": "歺",
+    "name": "죽을사(歺)",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 85,
+    "radical": "氵",
+    "name": "물수(氵)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 85,
+    "radical": "氺",
+    "name": "물수(氺)",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 86,
+    "radical": "灬",
+    "name": "불화(灬)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 87,
+    "radical": "爫",
+    "name": "손톱조(爫)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 93,
+    "radical": "牜",
+    "name": "소우(牜)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 94,
+    "radical": "犭",
+    "name": "개견(犭)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 96,
+    "radical": "王",
+    "name": "구슬옥(王)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 113,
+    "radical": "礻",
+    "name": "보일시(礻)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 122,
+    "radical": "㓁",
+    "name": "그물망(㓁)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 122,
+    "radical": "罒",
+    "name": "그물망(罒)",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 122,
+    "radical": "𦉰",
+    "name": "그물망(𦉰)",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 125,
+    "radical": "耂",
+    "name": "늙을로(耂)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 130,
+    "radical": "月",
+    "name": "고기육(月 - 육달월)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 130,
+    "radical": "⺼",
+    "name": "고기육(⺼)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 140,
+    "radical": "艹",
+    "name": "초두(艹)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 145,
+    "radical": "衤",
+    "name": "옷의(衣 - 옷의변)",
+    "strokes": 5,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 157,
+    "radical": "⻊",
+    "name": "발족(⻊)",
+    "strokes": 7,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 162,
+    "radical": "辶",
+    "name": "책받침(辶)",
+    "strokes": 4,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 163,
+    "radical": "阝",
+    "name": "고을읍(阝 - 우부방)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 170,
+    "radical": "阝",
+    "name": "언덕부(阝 - 좌부방)",
+    "strokes": 3,
+    "variants": "",
+    "is_variant": true
+  },
+  {
+    "id": 184,
+    "radical": "飠",
+    "name": "밥식(飠)",
+    "strokes": 8,
+    "variants": "",
+    "is_variant": true
+  }
+]
