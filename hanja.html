@@ -442,7 +442,7 @@
     .meaning-display {
       font-size: 16px;
       color: var(--amber);
-      text-align: center;
+      text-align: justify;
       min-height: 24px;
       margin-top: 10px;
       opacity: 0;
@@ -458,24 +458,28 @@
 
     .toast {
       position: absolute;
-      bottom: 100px;
+      bottom: 120px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: var(--accent);
-      color: white;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 14px;
+      transform: translateX(-50%) translateY(15px);
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--accent-green);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 13px;
       font-weight: 600;
-      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.5);
+      border: 1px solid rgba(52, 211, 153, 0.25);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 0 15px rgba(52, 211, 153, 0.1);
       opacity: 0;
       pointer-events: none;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 100;
+      letter-spacing: -0.3px;
     }
 
     .toast.show {
-      transform: translateX(-50%) translateY(15%);
+      transform: translateX(-50%) translateY(0);
       opacity: 1;
     }
 
@@ -700,6 +704,156 @@
         font-size: 26px;
         padding: 8px 4px;
       }
+
+      .detail-card {
+        padding: 16px 12px;
+        gap: 12px;
+      }
+
+      .detail-hanja {
+        font-size: 72px;
+      }
+
+      .detail-meaning-content {
+        font-size: 16px;
+        padding-top: 12px;
+      }
+
+      .detail-back-btn {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
+    /* ── 한자 상세 보기 패널 스타일 ── */
+    #panelDetail {
+      display: none;
+      width: 100%;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease forwards;
+      height: 100%;
+      min-height: 0;
+    }
+
+    #panelDetail.active {
+      display: flex;
+    }
+
+    .detail-container {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 10px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .detail-card {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.02);
+      flex-grow: 1;
+      overflow-y: auto;
+      min-height: 0;
+    }
+
+    .detail-hanja-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-hanja {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 80px;
+      color: var(--accent);
+      text-shadow: 0 4px 20px rgba(129, 140, 248, 0.4);
+      line-height: 1.1;
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .detail-stroke {
+      font-size: 13px;
+      color: var(--text-muted);
+      background: rgba(255, 255, 255, 0.05);
+      padding: 4px 12px;
+      border-radius: 20px;
+      border: 1px solid var(--glass-border);
+      text-align: center;
+    }
+
+    .detail-korean-word {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--text-main);
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .detail-meaning-content {
+      width: 100%;
+      font-size: 18px;
+      color: var(--amber);
+      text-align: justify;
+      line-height: 1.6;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 16px;
+      word-break: keep-all;
+    }
+
+    .detail-meaning-content b {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .detail-back-btn {
+      width: 100%;
+      max-width: 300px;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(129, 140, 248, 0.3);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 4px;
+      flex-shrink: 0;
+    }
+
+    .detail-back-btn:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .detail-back-btn:active {
+      transform: translateY(0);
     }
   </style>
 </head>
@@ -784,6 +938,21 @@
             <div id="remainingStrokesButtons" class="filter-buttons"></div>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- 4. 한자 상세 보기 패널 -->
+    <div id="panelDetail" class="search-panel">
+      <div class="detail-container">
+        <div class="detail-card">
+          <div class="detail-hanja-wrapper">
+            <div id="detailHanja" class="detail-hanja"></div>
+            <div id="detailStroke" class="detail-stroke"></div>
+          </div>
+          <div id="detailKorean" class="detail-korean-word"></div>
+          <div id="detailMeaning" class="detail-meaning-content"></div>
+        </div>
+        <button id="backToSearchBtn" class="detail-back-btn">⬅️ 다른 한자 선택</button>
       </div>
     </div>
 

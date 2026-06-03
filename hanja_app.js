@@ -12,6 +12,17 @@ const panelSearch = document.getElementById('panelSearch');
 const panelDraw = document.getElementById('panelDraw');
 const panelFilter = document.getElementById('panelFilter');
 
+// 상세 보기 패널 요소
+const panelDetail = document.getElementById('panelDetail');
+const detailHanja = document.getElementById('detailHanja');
+const detailStroke = document.getElementById('detailStroke');
+const detailKorean = document.getElementById('detailKorean');
+const detailMeaning = document.getElementById('detailMeaning');
+const backToSearchBtn = document.getElementById('backToSearchBtn');
+
+let prevStatusText = '';
+let currentTabMode = 'search';
+
 let toastTimeout;
 const hanjaMap = new Map();
 const strokeMap = new Map();
@@ -193,6 +204,70 @@ function getStrokeInfo(hanja) {
   }
 }
 
+// 상세 보기 패널 열기
+function showDetailView(itemObj, customWord) {
+  // 1. 상세 보기 패널 내용 채우기
+  detailHanja.textContent = itemObj.hanja;
+  detailStroke.textContent = getStrokeInfo(itemObj.hanja);
+  
+  const soundText = customWord || itemObj.korean || '';
+  if (soundText) {
+    detailKorean.textContent = `${soundText} (${itemObj.hanja})`;
+  } else {
+    detailKorean.textContent = `(${itemObj.hanja})`;
+  }
+  
+  if (itemObj.meaning) {
+    // HTML 렌더링 지원 및 </br> 태그를 표준 <br> 태그로 치환
+    detailMeaning.innerHTML = itemObj.meaning.replace(/<\/br>/g, '<br>');
+  } else {
+    detailMeaning.innerHTML = '뜻 정보 없음';
+  }
+  
+  // 이전 상태 텍스트 저장
+  prevStatusText = statusText.textContent;
+  
+  // 2. 다른 UI 요소들 숨기기
+  const tabsEl = document.querySelector('.search-tabs');
+  if (tabsEl) tabsEl.style.display = 'none';
+  if (panelSearch) panelSearch.classList.remove('active');
+  if (panelDraw) panelDraw.classList.remove('active');
+  if (panelFilter) panelFilter.classList.remove('active');
+  
+  const wrapperEl = document.querySelector('.result-wrapper');
+  if (wrapperEl) wrapperEl.style.display = 'none';
+  
+  statusText.classList.remove('show');
+  meaningDisplay.classList.remove('show');
+  
+  // 3. 상세 보기 패널 보여주기
+  panelDetail.classList.add('active');
+}
+
+// 상세 보기 패널 닫기 (이전 화면 복원)
+function hideDetailView() {
+  // 1. 상세 보기 패널 숨기기
+  panelDetail.classList.remove('active');
+  
+  // 2. 다른 UI 요소들 다시 보여주기
+  const tabsEl = document.querySelector('.search-tabs');
+  if (tabsEl) tabsEl.style.display = '';
+  const wrapperEl = document.querySelector('.result-wrapper');
+  if (wrapperEl) wrapperEl.style.display = '';
+  
+  // 원래 활성화되어 있던 탭 패널 다시 활성화
+  if (currentTabMode === 'search') {
+    if (panelSearch) panelSearch.classList.add('active');
+  } else if (currentTabMode === 'draw') {
+    if (panelDraw) panelDraw.classList.add('active');
+  } else if (currentTabMode === 'filter') {
+    if (panelFilter) panelFilter.classList.add('active');
+  }
+  
+  statusText.textContent = prevStatusText;
+  statusText.classList.add('show');
+}
+
 // 한자 리스트를 지정된 그리드 컨테이너에 렌더링
 function renderHanjaListToGrid(hanjas, container, customWord) {
   // 획수 오름차순 정렬
@@ -223,14 +298,15 @@ function renderHanjaListToGrid(hanjas, container, customWord) {
         await navigator.clipboard.writeText(`${copyWord}(${itemObj.hanja})`);
 
         if (itemObj.meaning) {
-          meaningDisplay.textContent = `${itemObj.meaning}`;
+          meaningDisplay.innerHTML = `${itemObj.meaning.replace(/<\/br>/g, '<br>')}`;
           meaningDisplay.classList.add('show');
         } else {
-          meaningDisplay.textContent = '뜻 정보 없음';
+          meaningDisplay.innerHTML = '뜻 정보 없음';
           meaningDisplay.classList.add('show');
         }
 
         showToast();
+        showDetailView(itemObj, customWord);
       } catch (err) {
         console.error('Failed to copy text: ', err);
         alert('클립보드 복사에 실패했습니다.');
@@ -742,6 +818,15 @@ function resetRadicalFilters() {
 
 // ── 탭 전환 로직 ──
 function switchTab(mode) {
+  currentTabMode = mode;
+
+  // 상세 보기 관련 UI 숨기기 및 원래대로 복구
+  if (panelDetail) panelDetail.classList.remove('active');
+  const tabsEl = document.querySelector('.search-tabs');
+  if (tabsEl) tabsEl.style.display = '';
+  const wrapperEl = document.querySelector('.result-wrapper');
+  if (wrapperEl) wrapperEl.style.display = '';
+
   tabSearchBtn.classList.remove('active');
   tabDrawBtn.classList.remove('active');
   tabFilterBtn.classList.remove('active');
@@ -773,6 +858,9 @@ function switchTab(mode) {
 tabSearchBtn.addEventListener('click', () => switchTab('search'));
 tabDrawBtn.addEventListener('click', () => switchTab('draw'));
 tabFilterBtn.addEventListener('click', () => switchTab('filter'));
+if (backToSearchBtn) {
+  backToSearchBtn.addEventListener('click', hideDetailView);
+}
 
 // 토스트 메시지 보이기
 function showToast() {
