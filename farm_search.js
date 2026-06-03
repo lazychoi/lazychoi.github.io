@@ -2,7 +2,7 @@ let terms = [];
 
 // CSV 파일을 읽어오는 함수
 function loadTermsFromCSV() {
-    fetch('farm_data.txt')
+    fetch('data/farm_data.txt')
         .then(response => response.text())
         .then(data => {
             const lines = data.split('\n');
