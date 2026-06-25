@@ -8,7 +8,7 @@
 - farm_styles.css
 - farm_search.js
 - references.html: 참고 도서 목록
-- farm_data.txt: 용어 노트 데이터
+- data/farm_data.txt: 용어 노트 데이터
 - /img: 용어 노트 데이터 이미지 파일
 - farm_add.html, farm_add.js, admin_server.py: 용어 입력 앱(Local)
 

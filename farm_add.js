@@ -12,7 +12,7 @@ const btnSubmit = document.getElementById('btnSubmit');
 const btnCancelEdit = document.getElementById('btnCancelEdit');
 const inputSearch = document.getElementById('inputSearch');
 
-// 2. Initialize: Fetch farm_data.txt from server on page load
+// 2. Initialize: Fetch data/farm_data.txt from server on page load
 window.addEventListener('DOMContentLoaded', () => {
     // Protocol check: warn if opened via file://
     if (window.location.protocol === 'file:') {
@@ -42,9 +42,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Load data from server
 function loadDataFromServer() {
-    fetch('farm_data.txt')
+    fetch('data/farm_data.txt')
         .then(response => {
-            if (!response.ok) throw new Error('서버에서 farm_data.txt 파일을 찾을 수 없습니다.');
+            if (!response.ok) throw new Error('서버에서 data/farm_data.txt 파일을 찾을 수 없습니다.');
             return response.text();
         })
         .then(text => {
@@ -98,7 +98,7 @@ function generateCSVText() {
     return csv;
 }
 
-// 5. Send the updated CSV content to our python backend server to save to farm_data.txt
+// 5. Send the updated CSV content to our python backend server to save to data/farm_data.txt
 function saveToServer() {
     const csvContent = generateCSVText();
     return fetch('/api/save', {
@@ -133,14 +133,14 @@ function saveToServer() {
     })
     .then(data => {
         if (data.success) {
-            console.log('farm_data.txt에 성공적으로 저장되었습니다.');
+            console.log('data/farm_data.txt에 성공적으로 저장되었습니다.');
         } else {
             throw new Error(data.error || '알 수 없는 오류');
         }
     })
     .catch(err => {
         console.error('Error saving to server:', err);
-        alert('로컬 farm_data.txt 저장 실패:\n' + err.message);
+        alert('로컬 data/farm_data.txt 저장 실패:\n' + err.message);
     });
 }
 

@@ -128,8 +128,8 @@ class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
             post_data = self.rfile.read(content_length).decode('utf-8')
             
             try:
-                # Save the POST data (which is the updated CSV content) to farm_data.txt
-                file_path = os.path.join(DIRECTORY, 'farm_data.txt')
+                # Save the POST data (which is the updated CSV content) to data/farm_data.txt
+                file_path = os.path.join(DIRECTORY, 'data', 'farm_data.txt')
                 with open(file_path, 'w', encoding='utf-8') as f:
                     f.write(post_data)
                 
