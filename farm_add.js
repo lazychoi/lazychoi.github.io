@@ -14,6 +14,7 @@ const inputSearch = document.getElementById('inputSearch');
 
 // 2. Initialize: Fetch data/farm_data.txt from server on page load
 window.addEventListener('DOMContentLoaded', () => {
+    console.log("[Diagnostics] farm_add.js v2 loaded successfully!");
     // Protocol check: warn if opened via file://
     if (window.location.protocol === 'file:') {
         alert('⚠️ 경고: 현재 브라우저가 로컬 파일(file://)로 직접 실행 중입니다.\n' +
@@ -59,6 +60,58 @@ function loadDataFromServer() {
         });
 }
 
+// Helper function to render Markdown and protect Math formulas from markdown compilation
+function renderMarkdownAndMath(text) {
+    console.log("[Diagnostics] renderMarkdownAndMath execution. text content: ", text);
+    console.log("[Diagnostics] marked global variable type: ", typeof marked);
+    if (!text) return '';
+
+    // 1. Temporarily extract math blocks to protect them from Markdown parsing
+    const mathBlocks = [];
+    let processed = text;
+
+    // Match $$ ... $$ (block math)
+    processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+        const placeholder = `%%BLOCKMATH_${mathBlocks.length}%%`;
+        mathBlocks.push({ placeholder, formula, isBlock: true });
+        return placeholder;
+    });
+
+    // Match $ ... $ (inline math)
+    processed = processed.replace(/\$([^\$]+?)\$/g, (match, formula) => {
+        const placeholder = `%%INLINEMATH_${mathBlocks.length}%%`;
+        mathBlocks.push({ placeholder, formula, isBlock: false });
+        return placeholder;
+    });
+
+    // 2. Process image tags [[filename]]
+    processed = processed.replace(
+        /\[\[(.*?)\]\]/g,
+        (match, filename) => `
+            <div class="image-container">
+                <img src="img/${filename}" alt="${filename}" class="term-image">
+            </div>
+        `
+    );
+
+    // 3. Render Markdown using marked.js if available
+    let html = '';
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+        html = marked.parse(processed);
+    } else {
+        // Fallback if marked is not loaded
+        html = processed.replace(/\n/g, '<br>');
+    }
+
+    // 4. Restore math blocks
+    mathBlocks.forEach(item => {
+        const mathHtml = item.isBlock ? `$$${item.formula}$$` : `$${item.formula}$`;
+        html = html.replace(item.placeholder, mathHtml);
+    });
+
+    return html;
+}
+
 // 3. Parsing CSV text safely (respecting internal '|' inside math formulas)
 function parseCSV(text) {
     const lines = text.split('\n');
@@ -78,11 +131,17 @@ function parseCSV(text) {
 
         const values = parts.map(v => v ? v.trim() : '');
         if (values.length >= 4) {
+            // Unescape newlines (\n -> actual newline, \\ -> \)
+            const rawMeaning = values[3] || '';
+            const unescapedMeaning = rawMeaning
+                .replace(/(?<!\\)\\n/g, '\n')
+                .replace(/\\\\/g, '\\');
+
             parsedTerms.push({
                 term: values[0] || '',
                 foreignTerm: values[1] || '',
                 easyTerm: values[2] || '',
-                meaning: values[3] || ''
+                meaning: unescapedMeaning
             });
         }
     });
@@ -93,7 +152,11 @@ function parseCSV(text) {
 function generateCSVText() {
     let csv = "표제어|외래어|쉬운용어|설명\n";
     terms.forEach(t => {
-        csv += `${t.term}|${t.foreignTerm}|${t.easyTerm}|${t.meaning}\n`;
+        // Escape newlines (\ -> \\, newline -> \n)
+        const escapedMeaning = (t.meaning || '')
+            .replace(/\\/g, '\\\\')
+            .replace(/\r?\n/g, '\\n');
+        csv += `${t.term}|${t.foreignTerm}|${t.easyTerm}|${escapedMeaning}\n`;
     });
     return csv;
 }
@@ -153,15 +216,7 @@ function updatePreview() {
 
     const previewCard = document.getElementById('previewCard');
 
-    // Process image tags [[filename]]
-    const processedMeaning = meaning.replace(
-        /\[\[(.*?)\]\]/g,
-        (match, filename) => `
-            <div class="image-container">
-                <img src="img/${filename}" alt="${filename}" class="term-image">
-            </div>
-        `
-    );
+    const processedMeaning = renderMarkdownAndMath(meaning);
 
     let html = '';
     if (foreign === '' && easy === '') {
@@ -388,8 +443,15 @@ function renderTable(filterText = '') {
             detailsHtml = `<span style="color: var(--text-muted);">-</span>`;
         }
 
-        // Clean meaning text for table preview (strip html tags, truncate)
-        let cleanMeaning = t.meaning.replace(/<[^>]*>/g, '');
+        // Clean meaning text for table preview (strip html and markdown syntax, then truncate)
+        let cleanMeaning = t.meaning
+            .replace(/<[^>]*>/g, '') // strip html
+            .replace(/#+\s+/g, '') // strip headers
+            .replace(/[\*_`~]/g, '') // strip emphasis/code markers
+            .replace(/\[\[(.*?)\]\]/g, '$1') // strip image tags
+            .replace(/\[(.*?)\]\((.*?)\)/g, '$1') // strip links
+            .replace(/\$\$([\s\S]*?)\$\$/g, '$1') // strip display math
+            .replace(/\$([^\$]+?)\$/g, '$1'); // strip inline math
         if (cleanMeaning.length > 60) {
             cleanMeaning = cleanMeaning.substring(0, 60) + '...';
         }

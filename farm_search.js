@@ -1,4 +1,57 @@
 let terms = [];
+console.log("[Diagnostics] farm_search.js v2 loaded successfully!");
+
+// Helper function to render Markdown and protect Math formulas from markdown compilation
+function renderMarkdownAndMath(text) {
+    console.log("[Diagnostics] renderMarkdownAndMath execution. text content: ", text);
+    console.log("[Diagnostics] marked global variable type: ", typeof marked);
+    if (!text) return '';
+
+    // 1. Temporarily extract math blocks to protect them from Markdown parsing
+    const mathBlocks = [];
+    let processed = text;
+
+    // Match $$ ... $$ (block math)
+    processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
+        const placeholder = `%%BLOCKMATH_${mathBlocks.length}%%`;
+        mathBlocks.push({ placeholder, formula, isBlock: true });
+        return placeholder;
+    });
+
+    // Match $ ... $ (inline math)
+    processed = processed.replace(/\$([^\$]+?)\$/g, (match, formula) => {
+        const placeholder = `%%INLINEMATH_${mathBlocks.length}%%`;
+        mathBlocks.push({ placeholder, formula, isBlock: false });
+        return placeholder;
+    });
+
+    // 2. Process image tags [[filename]]
+    processed = processed.replace(
+        /\[\[(.*?)\]\]/g,
+        (match, filename) => `
+            <div class="image-container">
+                <img src="img/${filename}" alt="${filename}" class="term-image">
+            </div>
+        `
+    );
+
+    // 3. Render Markdown using marked.js if available
+    let html = '';
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+        html = marked.parse(processed);
+    } else {
+        // Fallback if marked is not loaded
+        html = processed.replace(/\n/g, '<br>');
+    }
+
+    // 4. Restore math blocks
+    mathBlocks.forEach(item => {
+        const mathHtml = item.isBlock ? `$$${item.formula}$$` : `$${item.formula}$`;
+        html = html.replace(item.placeholder, mathHtml);
+    });
+
+    return html;
+}
 
 // CSV 파일을 읽어오는 함수
 function loadTermsFromCSV() {
@@ -22,11 +75,17 @@ function loadTermsFromCSV() {
 
                 const values = parts.map(value => value ? value.trim() : '');
                 if (values.length >= 4) {  // 최소 4개의 값이 있는지 확인
+                    // Unescape newlines (\n -> actual newline, \\ -> \)
+                    const rawMeaning = values[3] || '';
+                    const unescapedMeaning = rawMeaning
+                        .replace(/(?<!\\)\\n/g, '\n')
+                        .replace(/\\\\/g, '\\');
+
                     terms.push({
                         term: values[0] || '',
                         foreignTerm: values[1] || '',
                         easyTerm: values[2] || '',
-                        meaning: values[3] || ''
+                        meaning: unescapedMeaning
                     });
                 }
             });
@@ -66,15 +125,7 @@ function searchTerms() {
     filteredTerms.forEach(t => {
         const li = document.createElement('li');
         
-        // 이미지 태그가 포함된 의미 텍스트 처리
-        const processedMeaning = t.meaning.replace(
-            /\[\[(.*?)\]\]/g,
-            (match, filename) => `
-                <div class="image-container">
-                    <img src="img/${filename}" alt="${filename}" class="term-image">
-                </div>
-            `
-        );
+        const processedMeaning = renderMarkdownAndMath(t.meaning);
 
         if(t.foreignTerm == "" && t.easyTerm == ""){
             li.innerHTML = `
