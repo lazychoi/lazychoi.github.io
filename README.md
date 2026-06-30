@@ -11,6 +11,7 @@
 - data/farm_data.txt: 용어 노트 데이터
 - /img: 용어 노트 데이터 이미지 파일
 - farm_add.html, farm_add.js, admin_server.py: 용어 입력 앱(Local)
+- 용어 입력 앱 구동: admin_server.py
 
 ### 한글-한자 변환 앱
 
