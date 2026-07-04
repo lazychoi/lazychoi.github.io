@@ -61,10 +61,12 @@
 
     <!-- 4단계: 전체 용어 목록 및 관리 -->
     <div class="manager-section">
-      <h2>전체 용어 목록 및 관리</h2>
+      <h2>전체 용어 목록 및 관리 <span id="searchCount" class="search-count"></span></h2>
       
-      <div class="search-bar-container">
-        <input type="text" id="inputSearch" placeholder="표제어 또는 설명으로 검색하세요...">
+      <!-- 표제어(필수) 입력란과 동기화되어 검색되므로, 검색 박스는 화면에서 숨김 처리합니다. -->
+      <div class="search-bar-container" style="display: none;">
+        <input type="text" id="inputSearch" placeholder="표제어로 검색하세요...">
+        <button id="btnClearSearch" class="btn-clear-search" title="검색어 지우기" style="display: none;">&times;</button>
       </div>
 
       <div class="table-wrapper">

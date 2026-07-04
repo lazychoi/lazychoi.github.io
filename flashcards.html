@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>플래시카드 학습</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="flashcards.css?v=1">
+  <!-- KaTeX for rendering LaTeX math formulas -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+  <!-- marked.js for rendering markdown -->
+  <script src="marked.min.js"></script>
+</head>
+
+<body>
+  <!-- 네비게이션 바 -->
+  <nav class="nav">
+    <a href="index.html" class="nav-link">
+      <span class="nav-icon">🏠</span> 홈
+    </a>
+    <a href="farm.html" class="nav-link">
+      <span class="nav-icon">🌱</span> 용어 노트
+    </a>
+    <a href="flashcards.html" class="nav-link active">
+      <span class="nav-icon">🎴</span> 플래시카드
+    </a>
+    <a href="hanja.html" class="nav-link">
+      <span class="nav-icon">📗</span> 한글(한자)
+    </a>
+    <a href="rebalance.html" class="nav-link">
+      <span class="nav-icon">⚖️</span> 자산 리밸런싱
+    </a>
+  </nav>
+
+  <div class="flashcard-container">
+    
+    <!-- 1단계: 용어 선택 화면 -->
+    <div id="selectionView" class="glass-panel">
+      <div class="header-section">
+        <h1>🎴 플래시카드 학습</h1>
+        <p>최근에 입력하거나 수정된 용어 100개를 기반으로 학습용 카드를 생성합니다.</p>
+      </div>
+
+      <div class="selection-header">
+        <span class="selection-title">학습할 용어 선택</span>
+        <div class="selection-actions">
+          <button id="btnSelectAll" class="btn btn-secondary btn-mini">전체 선택</button>
+          <button id="btnSelectNone" class="btn btn-secondary btn-mini">전체 해제</button>
+        </div>
+      </div>
+
+      <div id="loadingMessage" style="text-align: center; padding: 20px; color: var(--text-muted);">
+        데이터를 로드하는 중입니다...
+      </div>
+
+      <div class="list-wrapper">
+        <table class="term-list-table">
+          <thead>
+            <tr>
+              <th style="width: 10%">선택</th>
+              <th style="width: 50%">표제어 (외래어)</th>
+              <th style="width: 40%">쉬운용어</th>
+            </tr>
+          </thead>
+          <tbody id="selectionTableBody">
+            <!-- JS dynamically inserts rows here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="start-action-container">
+        <button id="btnStartStudy" class="btn btn-primary" style="width: 100%; max-width: 400px; padding: 14px 20px; font-size: 16px; margin-top: 16px;">
+          ⚡ 학습 시작하기
+        </button>
+      </div>
+    </div>
+
+    <!-- 2단계: 플래시카드 학습 진행 화면 -->
+    <div id="studyView" class="glass-panel" style="display: none;">
+      <div class="study-header">
+        <span id="btnBackToList" class="back-link">
+          ⬅ 목록으로 돌아가기
+        </span>
+        <span id="progressText" class="study-progress-text">1 / 10</span>
+      </div>
+
+      <!-- 프로그레스바 -->
+      <div class="progress-bar-container">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+      </div>
+
+      <!-- 플래시카드 3D 컨테이너 -->
+      <div id="flashcard" class="card-perspective">
+        <div id="cardInner" class="card-inner">
+          
+          <!-- 앞면 -->
+          <div class="card-face card-front">
+            <div id="cardFrontTitle" class="card-front-title">English</div>
+            <!-- <div id="cardFrontHint" class="card-front-hint">힌트: 영어 (클릭하여 뒤집기)</div> -->
+          </div>
+          
+          <!-- 뒷면 -->
+          <div class="card-face card-back">
+            <div class="card-back-header">
+              <div id="cardBackTerm" class="card-back-term">표제어</div>
+              <div id="cardBackEasy" class="card-back-easy">쉬운용어</div>
+            </div>
+            <div id="cardBackMeaning" class="card-back-meaning">
+              설명이 이곳에 표시됩니다.
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 컨트롤러 -->
+      <div class="study-controls">
+        <div class="main-controls">
+          <button id="btnPrev" class="btn btn-secondary">◀ 이전</button>
+          <button id="btnFlip" class="btn btn-secondary">🔄 뒤집기</button>
+          <button id="btnNext" class="btn btn-secondary">다음 ▶</button>
+        </div>
+        
+        <!-- 알겠음 / 모르겠음 피드백 단축 버튼 -->
+        <div class="study-feedback-controls">
+          <button id="btnUnknown" class="btn btn-danger feedback-btn">
+            ❌ 틀림
+          </button>
+          <button id="btnKnown" class="btn btn-success feedback-btn">
+            ✔️ 맞춤
+          </button>
+        </div>
+      </div>
+
+      <div class="shortcut-tips">
+        단축키: <kbd>Space</kbd> 뒤집기 | <kbd>←</kbd> 이전 | <kbd>→</kbd> 다음 | <kbd>1</kbd> 틀림 | <kbd>2</kbd> 맞춤 | <kbd>Esc</kbd> 목록으로
+      </div>
+    </div>
+
+    <!-- 3단계: 학습 결과 통계 화면 -->
+    <div id="statsView" class="glass-panel" style="display: none;">
+      <div class="result-panel">
+        <h2>🎉 학습을 완료했습니다!</h2>
+        <p style="color: var(--text-muted);">학습 통계를 보여줍니다.</p>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-label">총 학습 카드</div>
+            <div id="statTotal" class="stat-value total">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">맞춤 (학습 완료)</div>
+            <div id="statKnown" class="stat-value known">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">틀림 (복습 필요)</div>
+            <div id="statUnknown" class="stat-value unknown">0</div>
+          </div>
+        </div>
+
+        <div class="result-actions">
+          <button id="btnRestart" class="btn btn-primary">🔄 다시 학습하기</button>
+          <button id="btnStudyFailed" class="btn btn-danger" style="display: none;">❌ 틀린 것만 복습</button>
+          <button id="btnBackFromStats" class="btn btn-secondary">목록으로 돌아가기</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="flashcards.js?v=1"></script>
+</body>
+
+</html>

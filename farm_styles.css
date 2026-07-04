@@ -477,3 +477,70 @@
   font-style: italic;
   margin: 0 0 8px 0;
 }
+
+/* ──────────────────────────────────────────────────────
+   Search & Edit Convenience Enhancements
+   ────────────────────────────────────────────────────── */
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.btn-clear-search {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+  z-index: 5;
+}
+
+.btn-clear-search:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+}
+
+.search-count {
+  font-size: 13px;
+  font-weight: normal;
+  color: var(--text-muted);
+  margin-left: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  padding: 2px 8px;
+  border-radius: 12px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.search-highlight {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fbbf24;
+  border-radius: 3px;
+  padding: 0 2px;
+  font-weight: bold;
+}
+
+.terms-table tr.editing-row {
+  background: rgba(129, 140, 248, 0.15) !important;
+  border-left: 4px solid var(--accent);
+}
+
+.terms-table tr.editing-row td {
+  border-bottom: 1px solid rgba(129, 140, 248, 0.4);
+}

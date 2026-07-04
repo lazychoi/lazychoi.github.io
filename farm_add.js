@@ -11,6 +11,8 @@ const inputMeaning = document.getElementById('inputMeaning');
 const btnSubmit = document.getElementById('btnSubmit');
 const btnCancelEdit = document.getElementById('btnCancelEdit');
 const inputSearch = document.getElementById('inputSearch');
+const searchCount = document.getElementById('searchCount');
+const btnClearSearch = document.getElementById('btnClearSearch');
 
 // 2. Initialize: Fetch data/farm_data.txt from server on page load
 window.addEventListener('DOMContentLoaded', () => {
@@ -26,15 +28,37 @@ window.addEventListener('DOMContentLoaded', () => {
     loadDataFromServer();
 
     // Form inputs event listeners for real-time live preview
-    inputTerm.addEventListener('input', updatePreview);
+    inputTerm.addEventListener('input', (e) => {
+        updatePreview();
+        const val = e.target.value;
+        inputSearch.value = val;
+        if (btnClearSearch) {
+            btnClearSearch.style.display = val ? 'flex' : 'none';
+        }
+        renderTable(val);
+    });
     inputForeign.addEventListener('input', updatePreview);
     inputEasy.addEventListener('input', updatePreview);
     inputMeaning.addEventListener('input', updatePreview);
 
     // Search bar event listener
     inputSearch.addEventListener('input', (e) => {
-        renderTable(e.target.value);
+        const val = e.target.value;
+        if (btnClearSearch) {
+            btnClearSearch.style.display = val ? 'flex' : 'none';
+        }
+        renderTable(val);
     });
+
+    // Clear search button event listener
+    if (btnClearSearch) {
+        btnClearSearch.addEventListener('click', () => {
+            inputSearch.value = '';
+            btnClearSearch.style.display = 'none';
+            renderTable('');
+            inputSearch.focus();
+        });
+    }
 
     // Button event listeners
     btnSubmit.addEventListener('click', handleFormSubmit);
@@ -318,8 +342,9 @@ async function handleFormSubmit() {
         // Add
         terms.push(newTermObj);
     } else {
-        // Editing existing term
-        terms[editingIndex] = newTermObj;
+        // Editing existing term: move it to the end of the array to make it the most recently modified
+        terms.splice(editingIndex, 1);
+        terms.push(newTermObj);
         editingIndex = -1;
         btnSubmit.innerHTML = '➕ 용어 추가하기';
         btnCancelEdit.style.display = 'none';
@@ -356,7 +381,12 @@ window.startEdit = function(index) {
     // Scroll form into view
     document.querySelector('.form-grid').scrollIntoView({ behavior: 'smooth', block: 'center' });
     
+    // Automatically sync search bar when editing starts
+    inputSearch.value = term.term;
+    if (btnClearSearch) btnClearSearch.style.display = 'flex';
+
     updatePreview();
+    renderTable(term.term);
 };
 
 // 9. Cancel Editing
@@ -370,7 +400,12 @@ function cancelEditing() {
     btnSubmit.innerHTML = '➕ 용어 추가하기';
     btnCancelEdit.style.display = 'none';
     
+    // Clear search
+    inputSearch.value = '';
+    if (btnClearSearch) btnClearSearch.style.display = 'none';
+
     updatePreview();
+    renderTable('');
 }
 
 // 10. Delete Term
@@ -401,44 +436,81 @@ window.deleteTerm = async function(index) {
     }
 };
 
-// 11. Render Table with display limit = 2
+// 11. Render Table with smart search and display limits
 function renderTable(filterText = '') {
     const tbody = document.getElementById('termsTableBody');
     tbody.innerHTML = '';
 
     const query = filterText.toLowerCase().trim();
+
+    // 1. If search input is blank, do not list terms
+    if (query === '') {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 35px;">
+                    🔍 검색어를 입력하시면 관련 용어가 표시됩니다.<br>
+                    <span style="font-size: 13px; opacity: 0.8; display: block; margin-top: 8px;">(현재 등록된 용어: <strong>${terms.length.toLocaleString()}</strong>개)</span>
+                </td>
+            </tr>
+        `;
+        if (searchCount) searchCount.textContent = '';
+        return;
+    }
+
+    // 2. Filter terms (only by term)
     const filtered = terms.filter(t => 
-        t.term.toLowerCase().includes(query) || 
-        t.meaning.toLowerCase().includes(query) ||
-        t.easyTerm.toLowerCase().includes(query) ||
-        t.foreignTerm.toLowerCase().includes(query)
+        t.term.toLowerCase().includes(query)
     );
+
+    // Update count badge
+    if (searchCount) {
+        searchCount.textContent = `검색 결과: ${filtered.length.toLocaleString()}건`;
+    }
 
     if (filtered.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
-                    검색 결과가 없습니다.
+                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    ❌ 검색 결과가 없습니다.
                 </td>
             </tr>
         `;
         return;
     }
 
-    const displayLimit = 2; // Show only the first 2 items
+    // Highlight utility function
+    function highlightText(text, q) {
+        if (!q || !text) return text;
+        const escapedQuery = q.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        const regex = new RegExp(`(${escapedQuery})`, 'gi');
+        return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    }
+
+    // Use a display limit of 100 to prevent browser lag while showing all relevant items
+    const displayLimit = 100;
     const itemsToDisplay = filtered.slice(0, displayLimit);
 
     itemsToDisplay.forEach((t) => {
         const globalIndex = terms.indexOf(t);
         const tr = document.createElement('tr');
         
+        // Highlight active editing row
+        if (globalIndex === editingIndex) {
+            tr.classList.add('editing-row');
+        }
+
+        // Highlight matched search terms
+        const highlightedTerm = highlightText(t.term, query);
+        const highlightedEasy = t.easyTerm ? highlightText(t.easyTerm, query) : '';
+        const highlightedForeign = t.foreignTerm ? highlightText(t.foreignTerm, query) : '';
+
         let detailsHtml = '';
         if (t.foreignTerm && t.easyTerm) {
-            detailsHtml = `<span style="font-weight: bold; color: var(--accent-green);">${t.easyTerm}</span><br><span style="font-size: 12px; color: var(--text-muted);">${t.foreignTerm}</span>`;
+            detailsHtml = `<span style="font-weight: bold; color: var(--accent-green);">${highlightedEasy}</span><br><span style="font-size: 12px; color: var(--text-muted);">${highlightedForeign}</span>`;
         } else if (t.easyTerm) {
-            detailsHtml = `<span style="font-weight: bold; color: var(--accent-green);">${t.easyTerm}</span>`;
+            detailsHtml = `<span style="font-weight: bold; color: var(--accent-green);">${highlightedEasy}</span>`;
         } else if (t.foreignTerm) {
-            detailsHtml = `<span style="font-size: 12px; color: var(--text-muted);">${t.foreignTerm}</span>`;
+            detailsHtml = `<span style="font-size: 12px; color: var(--text-muted);">${highlightedForeign}</span>`;
         } else {
             detailsHtml = `<span style="color: var(--text-muted);">-</span>`;
         }
@@ -452,17 +524,26 @@ function renderTable(filterText = '') {
             .replace(/\[(.*?)\]\((.*?)\)/g, '$1') // strip links
             .replace(/\$\$([\s\S]*?)\$\$/g, '$1') // strip display math
             .replace(/\$([^\$]+?)\$/g, '$1'); // strip inline math
+        
+        let isTruncated = false;
         if (cleanMeaning.length > 60) {
-            cleanMeaning = cleanMeaning.substring(0, 60) + '...';
+            cleanMeaning = cleanMeaning.substring(0, 60);
+            isTruncated = true;
         }
-        if (!cleanMeaning) {
-            cleanMeaning = '<span style="color: var(--text-muted); font-style: italic;">설명 없음</span>';
+
+        let highlightedMeaning = cleanMeaning ? highlightText(cleanMeaning, query) : '';
+        if (isTruncated) {
+            highlightedMeaning += '...';
+        }
+
+        if (!highlightedMeaning) {
+            highlightedMeaning = '<span style="color: var(--text-muted); font-style: italic;">설명 없음</span>';
         }
 
         tr.innerHTML = `
-            <td style="font-weight: bold; color: var(--text-main);">${t.term}</td>
+            <td style="font-weight: bold; color: var(--text-main);">${highlightedTerm} ${globalIndex === editingIndex ? '<span style="color: var(--accent); font-size: 12px; margin-left: 4px;">(수정 중)</span>' : ''}</td>
             <td>${detailsHtml}</td>
-            <td><div class="meaning-cell-text" title="${t.meaning.replace(/"/g, '&quot;')}">${cleanMeaning}</div></td>
+            <td><div class="meaning-cell-text" title="${t.meaning.replace(/"/g, '&quot;')}">${highlightedMeaning}</div></td>
             <td class="actions">
                 <button class="btn btn-secondary btn-mini" onclick="startEdit(${globalIndex})">✏️ 수정</button>
                 <button class="btn btn-danger btn-mini" onclick="deleteTerm(${globalIndex})">❌ 삭제</button>
@@ -474,8 +555,8 @@ function renderTable(filterText = '') {
     if (filtered.length > displayLimit) {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td colspan="4" style="text-align: center; color: var(--accent); font-weight: bold; background: rgba(129, 140, 248, 0.05); padding: 10px;">
-                ⚠ 총 ${filtered.length}개 항목 중 처음 ${displayLimit}개만 표시하고 있습니다. 특정 항목을 찾으려면 검색창을 이용해 주세요.
+            <td colspan="4" style="text-align: center; color: var(--accent); font-weight: bold; background: rgba(129, 140, 248, 0.05); padding: 12px;">
+                ⚠ 총 ${filtered.length}개 항목 중 처음 ${displayLimit}개만 표시하고 있습니다. 특정 항목을 찾으려면 검색창에 더 상세하게 입력해 주세요.
             </td>
         `;
         tbody.appendChild(tr);

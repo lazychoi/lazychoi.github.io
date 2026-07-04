@@ -1,0 +1,571 @@
+/* ══════════════════════════════════════════════════════
+   flashcards.css — 플래시카드 학습 앱 스타일
+   common.css의 변수와 기본 스타일을 활용
+   ══════════════════════════════════════════════════════ */
+
+.flashcard-container {
+  width: 100%;
+  max-width: 800px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* 헤더 및 기본 레이아웃 */
+.header-section {
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.header-section h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.header-section p {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+/* 글래스모피즘 박스 공통 */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 30px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* 1단계: 용어 선택 화면 */
+.selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.selection-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.selection-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* 공통 버튼 스타일 */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid transparent;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(129, 140, 248, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+  border-color: var(--glass-border);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.btn-success {
+  background: var(--accent-green);
+  color: #0f172a;
+}
+
+.btn-success:hover {
+  background: #059669;
+  color: #fff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(52, 211, 153, 0.3);
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-mini {
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
+/* 테이블 & 목록 영역 */
+.list-wrapper {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.term-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.term-list-table th,
+.term-list-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.term-list-table th {
+  background: rgba(255, 255, 255, 0.03);
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+}
+
+.term-list-table tr:last-child td {
+  border-bottom: none;
+}
+
+.term-list-table tbody tr {
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.term-list-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* 체크박스 커스텀 */
+.checkbox-cell {
+  width: 48px;
+  text-align: center;
+}
+
+.custom-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.term-cell {
+  font-weight: bold;
+  color: var(--text-main);
+}
+
+.info-cell {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.start-action-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* 2단계: 플래시카드 실행 화면 */
+.study-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.back-link {
+  color: var(--text-muted);
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--text-main);
+}
+
+.study-progress-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* 프로그레스바 */
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-green) 100%);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* 플래시카드 3D 컨테이너 */
+.card-perspective {
+  perspective: 1200px;
+  width: 100%;
+  height: 380px;
+  margin: 0 auto 24px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.card-perspective:hover .card-inner:not(.flipped) {
+  /* 호버 시 살짝 들리는 입체감 */
+  transform: translateY(-2px);
+}
+
+.card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* 카드 면 공통 */
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 24px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow-y: auto;
+}
+
+/* 1면 (앞면): 영어나 한자 위주 */
+.card-front {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
+  color: var(--text-main);
+}
+
+.card-front-title {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.4;
+  word-break: keep-all;
+}
+
+.card-front-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* 2면 (뒷면): 상세 내용 */
+.card-back {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+  color: var(--text-main);
+  transform: rotateY(180deg);
+  align-items: flex-start;
+  text-align: left;
+  justify-content: flex-start;
+}
+
+.card-back-header {
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.card-back-term {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.card-back-foreign {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.card-back-easy {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent-green);
+  margin-top: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.card-back-easy::before {
+  content: '쉬운용어:';
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+.card-back-meaning {
+  font-size: 15px;
+  color: #e2e8f0;
+  line-height: 1.7;
+  width: 100%;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* 컨트롤러 영역 */
+.study-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.main-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.study-feedback-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 8px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+.feedback-btn {
+  flex: 1;
+  max-width: 180px;
+}
+
+.shortcut-tips {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.shortcut-tips kbd {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 2px 6px;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--text-main);
+  box-shadow: 0 1px 0 rgba(0,0,0,0.5);
+  margin: 0 2px;
+}
+
+/* 결과 보고서 화면 */
+.result-panel {
+  text-align: center;
+  padding: 40px 30px;
+}
+
+.result-panel h2 {
+  font-size: 26px;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 24px 0 32px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 18px 10px;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.stat-value.total { color: var(--accent); }
+.stat-value.known { color: var(--accent-green); }
+.stat-value.unknown { color: #ef4444; }
+
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* 이미지 및 수식 렌더링용 스타일 */
+.card-back-meaning img {
+  max-width: 100%;
+  max-height: 180px;
+  border-radius: 8px;
+  margin: 12px 0;
+  display: block;
+}
+
+.card-back-meaning p {
+  margin-bottom: 12px;
+}
+
+.card-back-meaning p:last-child {
+  margin-bottom: 0;
+}
+
+/* ── 슬라이드 애니메이션 효과 ── */
+@keyframes slideOutLeft {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(-80px); opacity: 0; }
+}
+
+@keyframes slideOutRight {
+  0% { transform: translateX(0); opacity: 1; }
+  100% { transform: translateX(80px); opacity: 0; }
+}
+
+@keyframes slideInRight {
+  0% { transform: translateX(80px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+  0% { transform: translateX(-80px); opacity: 0; }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-out-left {
+  animation: slideOutLeft 0.22s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-out-right {
+  animation: slideOutRight 0.22s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.22s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 0.22s forwards cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 애니메이션 및 반응형 스타일 */
+@media (max-width: 600px) {
+  .flashcard-container {
+    padding: 10px;
+  }
+
+  .glass-panel {
+    padding: 20px 16px;
+  }
+
+  .card-perspective {
+    height: 340px;
+  }
+
+  .card-face {
+    padding: 24px;
+  }
+
+  .card-front-title {
+    font-size: 24px;
+  }
+
+  .card-back-term {
+    font-size: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .study-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .main-controls {
+    justify-content: space-between;
+  }
+
+  .study-feedback-controls {
+    padding: 10px;
+  }
+}
