@@ -185,7 +185,7 @@ function setupControlBarListeners() {
 }
 
 function togglePlay() {
-  if (!audioPlayer.src || audioPlayer.src === "") {
+  if (!audioName) {
     alert("음원 파일을 선택한 후 재생할 수 있습니다.");
     return;
   }
@@ -212,7 +212,7 @@ function toggleGlobalSectionRepeat() {
 function checkSectionLoop(curTime) {
   if (globalLoopEnabled && loopSectionIndex !== null && subtitles[loopSectionIndex]) {
     const section = subtitles[loopSectionIndex];
-    if (curTime >= section.end || curTime < section.start - 0.5) {
+    if (curTime >= section.end) {
       audioPlayer.currentTime = section.start;
       if (audioPlayer.paused) audioPlayer.play();
     }
