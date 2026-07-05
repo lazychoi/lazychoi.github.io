@@ -16,10 +16,13 @@ let globalLoopEnabled = false; // "R" toggle (Repeat Current Section)
 let loopSectionIndex = null;   // The locked section index for looping when globalLoopEnabled is ON
 let isDraggingTimeline = false;
 
+// SVG Icons for iOS Compatibility
+const PLAY_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
+const PAUSE_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`;
+
 // DOM Elements
 const audioPlayer = document.getElementById('audio-player');
 const playPauseBtn = document.getElementById('btn-play-pause');
-const playIcon = document.getElementById('play-icon');
 const prevSectionBtn = document.getElementById('btn-prev-section');
 const nextSectionBtn = document.getElementById('btn-next-section');
 const repeatToggleBtn = document.getElementById('btn-repeat-toggle');
@@ -52,10 +55,10 @@ window.addEventListener('DOMContentLoaded', () => {
 // ── Audio Player Core Listeners ──
 function setupAudioPlayerListeners() {
   audioPlayer.addEventListener('play', () => {
-    playIcon.textContent = "⏸";
+    playPauseBtn.innerHTML = PAUSE_SVG;
   });
   audioPlayer.addEventListener('pause', () => {
-    playIcon.textContent = "▶";
+    playPauseBtn.innerHTML = PLAY_SVG;
   });
 
   audioPlayer.addEventListener('loadedmetadata', () => {
@@ -269,10 +272,19 @@ function jumpToSection(idx) {
   if (idx < 0 || idx >= subtitles.length) return;
 
   const section = subtitles[idx];
-  audioPlayer.currentTime = section.start;
 
+  // On iOS Safari, play() must be triggered first (user interaction context)
+  // and setting currentTime should occur within play's promise resolution
+  // to prevent Safari from resetting the playhead to 0.
   if (audioPlayer.paused) {
-    audioPlayer.play();
+    audioPlayer.play().then(() => {
+      audioPlayer.currentTime = section.start;
+    }).catch((err) => {
+      console.warn("Playback failed:", err);
+      audioPlayer.currentTime = section.start;
+    });
+  } else {
+    audioPlayer.currentTime = section.start;
   }
 
   // If global loop repeat is active, lock the loop target to the new section
@@ -351,7 +363,7 @@ function parseSubtitleText(text) {
 
 // ── Import Actions & File Listeners ──
 function setupImportListeners() {
-  // Audio Upload (local in-memory object URL)
+  // Audio Upload (local in-memory object URL with explicit typing and source reloading for Safari)
   audioFileInput.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -359,8 +371,26 @@ function setupImportListeners() {
     audioName = file.name;
     loadedAudioNameSpan.textContent = audioName;
 
-    const objectURL = URL.createObjectURL(file);
-    audioPlayer.src = objectURL;
+    // Explicitly enforce MIME type in iOS Safari to enable proper seeking
+    let mimeType = file.type || "audio/mpeg";
+    if (file.name.endsWith('.mp3')) {
+      mimeType = "audio/mpeg";
+    } else if (file.name.endsWith('.m4a')) {
+      mimeType = "audio/mp4";
+    } else if (file.name.endsWith('.wav')) {
+      mimeType = "audio/wav";
+    }
+
+    const audioBlob = new Blob([file], { type: mimeType });
+    const objectURL = URL.createObjectURL(audioBlob);
+
+    // Use <source> element reloading trick for Safari compatibility
+    audioPlayer.innerHTML = "";
+    const source = document.createElement('source');
+    source.src = objectURL;
+    source.type = mimeType;
+    audioPlayer.appendChild(source);
+    audioPlayer.load();
   });
 
   // Subtitle Upload
