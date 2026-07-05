@@ -40,14 +40,14 @@
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
             음원 선택 (.mp3)
           </button>
-          <input type="file" id="audio-file" accept="audio/*">
+          <input type="file" id="audio-file" accept=".mp3,audio/mpeg,.m4a,audio/mp4,audio/x-m4a,.wav,audio/wav">
         </div>
         <div class="file-input-wrapper">
           <button class="btn">
             <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             대본 선택 (.txt)
           </button>
-          <input type="file" id="subtitle-file" accept=".txt">
+          <input type="file" id="subtitle-file" accept=".txt,text/plain">
         </div>
         <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
       </div>
