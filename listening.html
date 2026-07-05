@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>영어 듣기 연습기</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="listening.css">
+</head>
+
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-link">
+      <span class="nav-icon">🏠</span> 홈
+    </a>
+    <a href="farm.html" class="nav-link">
+      <span class="nav-icon">🌱</span> 용어 노트
+    </a>
+    <a href="flashcards.html" class="nav-link">
+      <span class="nav-icon">🎴</span> 플래시카드
+    </a>
+    <a href="hanja.html" class="nav-link">
+      <span class="nav-icon">📗</span> 한글(한자)
+    </a>
+    <a href="rebalance.html" class="nav-link">
+      <span class="nav-icon">⚖️</span> 자산 리밸런싱
+    </a>
+    <a href="listening.html" class="nav-link active">
+      <span class="nav-icon">🎧</span> 영어 듣기
+    </a>
+  </nav>
+
+  <div class="app-container">
+    <div class="panel main-panel">
+      <!-- File Selector Setup -->
+      <div class="setup-bar">
+        <div class="file-input-wrapper">
+          <button class="btn btn-primary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            음원 선택 (.mp3)
+          </button>
+          <input type="file" id="audio-file" accept="audio/*">
+        </div>
+        <div class="file-input-wrapper">
+          <button class="btn">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            대본 선택 (.txt)
+          </button>
+          <input type="file" id="subtitle-file" accept=".txt">
+        </div>
+        <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
+      </div>
+
+      <!-- Player Controls -->
+      <div class="player-container">
+        <div class="player-main-controls">
+          <div class="playback-controls">
+            <!-- Play/Pause -->
+            <button class="btn btn-primary" id="btn-play-pause" style="padding: 10px 20px; font-size: 16px;">
+              <span id="play-icon">▶ 재생</span>
+            </button>
+            <!-- Prev Section -->
+            <button class="btn" id="btn-prev-section" title="이전 구간 (←)">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+            </button>
+            <!-- Next Section -->
+            <button class="btn" id="btn-next-section" title="다음 구간 (→)">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            </button>
+            <!-- Repeat Current Toggle -->
+            <button class="btn" id="btn-repeat-toggle" title="한 구간 반복 재생 (R)">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17"></path></svg>
+              구간 반복: <span id="repeat-status">OFF</span>
+            </button>
+          </div>
+
+          <!-- Speed Controls -->
+          <div class="speed-controls">
+            <span style="font-size: 13px; color: var(--text-muted);">배속:</span>
+            <input type="range" class="speed-slider" id="speed-slider" min="0.5" max="2.0" step="0.05" value="1.0">
+            <span class="speed-badge" id="speed-display">1.00x</span>
+          </div>
+
+          <!-- Volume -->
+          <div class="volume-container">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+            <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.05" value="1">
+          </div>
+        </div>
+
+        <!-- Custom Timeline -->
+        <div class="timeline-container">
+          <div class="timeline-slider-wrapper" id="timeline-wrapper">
+            <div class="timeline-track-bg">
+              <div class="timeline-loop-zone" id="timeline-loop-zone"></div>
+              <div class="timeline-progress" id="timeline-progress"></div>
+            </div>
+            <div class="timeline-markers" id="timeline-markers"></div>
+            <div class="timeline-handle" id="timeline-handle" style="left: 0%;"></div>
+          </div>
+          <div class="timeline-time-display">
+            <span id="current-time-display">00:00.00</span>
+            <span id="total-time-display">00:00.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Subtitle Scroll Pane -->
+      <div class="transcript-pane" id="transcript-pane">
+        <div class="no-subtitle-prompt" id="empty-prompt-view">
+          <div class="icon">📂</div>
+          <h3>음원과 대본 파일을 선택해 주세요.</h3>
+          <p style="max-width: 450px; font-size: 14px;">
+            시작시간, 종료시간, 자막이 탭으로 구분된 텍스트(.txt) 파일과 오디오(.mp3) 파일을 각각 업로드해 학습을 진행하세요.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio-player" style="display: none;"></audio>
+
+  <script src="listening.js"></script>
+</body>
+
+</html>
