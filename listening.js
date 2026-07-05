@@ -23,10 +23,8 @@ const playIcon = document.getElementById('play-icon');
 const prevSectionBtn = document.getElementById('btn-prev-section');
 const nextSectionBtn = document.getElementById('btn-next-section');
 const repeatToggleBtn = document.getElementById('btn-repeat-toggle');
-const repeatStatusSpan = document.getElementById('repeat-status');
-const speedSlider = document.getElementById('speed-slider');
-const speedDisplay = document.getElementById('speed-display');
-const volumeSlider = document.getElementById('volume-slider');
+const speedSelect = document.getElementById('speed-select');
+
 const audioFileInput = document.getElementById('audio-file');
 const subFileInput = document.getElementById('subtitle-file');
 const loadedAudioNameSpan = document.getElementById('loaded-audio-name');
@@ -54,10 +52,10 @@ window.addEventListener('DOMContentLoaded', () => {
 // ── Audio Player Core Listeners ──
 function setupAudioPlayerListeners() {
   audioPlayer.addEventListener('play', () => {
-    playIcon.textContent = "⏸ 멈춤";
+    playIcon.textContent = "⏸";
   });
   audioPlayer.addEventListener('pause', () => {
-    playIcon.textContent = "▶ 재생";
+    playIcon.textContent = "▶";
   });
 
   audioPlayer.addEventListener('loadedmetadata', () => {
@@ -175,18 +173,12 @@ function setupControlBarListeners() {
 
   repeatToggleBtn.addEventListener('click', toggleGlobalSectionRepeat);
 
-  speedSlider.addEventListener('input', (e) => {
+  speedSelect.addEventListener('change', (e) => {
     const val = parseFloat(e.target.value);
-    speed = val;
-    speedDisplay.textContent = val.toFixed(2) + 'x';
-    audioPlayer.playbackRate = val;
+    setPlaybackSpeed(val);
   });
 
-  volumeSlider.addEventListener('input', (e) => {
-    const val = parseFloat(e.target.value);
-    audioPlayer.volume = val;
-    volume = val;
-  });
+
 }
 
 function togglePlay() {
@@ -204,11 +196,9 @@ function togglePlay() {
 function toggleGlobalSectionRepeat() {
   globalLoopEnabled = !globalLoopEnabled;
   if (globalLoopEnabled) {
-    repeatStatusSpan.textContent = "ON";
     repeatToggleBtn.classList.add('btn-active');
     loopSectionIndex = (activeIndex !== -1) ? activeIndex : 0;
   } else {
-    repeatStatusSpan.textContent = "OFF";
     repeatToggleBtn.classList.remove('btn-active');
     loopSectionIndex = null;
   }
@@ -471,12 +461,29 @@ function setupHotkeyListeners() {
   });
 }
 
+function setPlaybackSpeed(val) {
+  speed = val;
+  audioPlayer.playbackRate = speed;
+
+  // Sync with dropdown selection
+  let optionExists = false;
+  for (let i = 0; i < speedSelect.options.length; i++) {
+    if (parseFloat(speedSelect.options[i].value) === val) {
+      speedSelect.selectedIndex = i;
+      optionExists = true;
+      break;
+    }
+  }
+  if (!optionExists) {
+    const newOpt = new Option(val.toFixed(2) + 'x', val.toString());
+    speedSelect.add(newOpt);
+    speedSelect.value = val.toString();
+  }
+}
+
 function adjustSpeedValue(delta) {
   let newSpeed = speed + delta;
   newSpeed = Math.max(0.5, Math.min(2.0, newSpeed));
   newSpeed = Math.round(newSpeed * 20) / 20; // Round to nearest 0.05
-  speed = newSpeed;
-  speedSlider.value = newSpeed;
-  speedDisplay.textContent = newSpeed.toFixed(2) + 'x';
-  audioPlayer.playbackRate = newSpeed;
+  setPlaybackSpeed(newSpeed);
 }

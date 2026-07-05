@@ -860,24 +860,32 @@
 
 <body>
   <nav class="nav">
-    <a href="index.html" class="nav-link">
-      <span class="nav-icon">🏠</span> 홈
-    </a>
-    <a href="farm.html" class="nav-link">
-      <span class="nav-icon">🌱</span> 용어 노트
-    </a>
-    <a href="flashcards.html" class="nav-link">
-      <span class="nav-icon">🎴</span> 플래시카드
-    </a>
-    <a href="hanja.html" class="nav-link active">
-      <span class="nav-icon">📗</span> 한글(한자)
-    </a>
-    <a href="rebalance.html" class="nav-link">
-      <span class="nav-icon">⚖️</span> 자산 리밸런싱
-    </a>
-    <a href="listening.html" class="nav-link">
-      <span class="nav-icon">🎧</span> 영어 듣기
-    </a>
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">한글(한자) 변환기</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">🏠</span> 홈
+      </a>
+      <a href="farm.html" class="nav-link">
+        <span class="nav-icon">🌱</span> 용어 노트
+      </a>
+      <a href="flashcards.html" class="nav-link">
+        <span class="nav-icon">🗂️</span> 플래시카드
+      </a>
+      <a href="hanja.html" class="nav-link active">
+        <span class="nav-icon">📗</span> 한글(한자)
+      </a>
+      <a href="rebalance.html" class="nav-link">
+        <span class="nav-icon">⚖️</span> 자산 리밸런싱
+      </a>
+      <a href="listening.html" class="nav-link">
+        <span class="nav-icon">🎧</span> 영어 듣기
+      </a>
+    </div>
   </nav>
 
   <div class="container">
@@ -973,6 +981,11 @@
   </div>
 
   <script src="hanja_app.js"></script>
+  <script>
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    });
+  </script>
 </body>
 
 </html>

@@ -18,24 +18,32 @@
 <body>
   <!-- 네비게이션 바 -->
   <nav class="nav">
-    <a href="index.html" class="nav-link">
-      <span class="nav-icon">🏠</span> 홈
-    </a>
-    <a href="farm.html" class="nav-link">
-      <span class="nav-icon">🌱</span> 용어 노트
-    </a>
-    <a href="flashcards.html" class="nav-link active">
-      <span class="nav-icon">🎴</span> 플래시카드
-    </a>
-    <a href="hanja.html" class="nav-link">
-      <span class="nav-icon">📗</span> 한글(한자)
-    </a>
-    <a href="rebalance.html" class="nav-link">
-      <span class="nav-icon">⚖️</span> 자산 리밸런싱
-    </a>
-    <a href="listening.html" class="nav-link">
-      <span class="nav-icon">🎧</span> 영어 듣기
-    </a>
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">🗂️ 플래시카드</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">🏠</span> 홈
+      </a>
+      <a href="farm.html" class="nav-link">
+        <span class="nav-icon">🌱</span> 용어 노트
+      </a>
+      <a href="flashcards.html" class="nav-link active">
+        <span class="nav-icon">🗂️</span> 플래시카드
+      </a>
+      <a href="hanja.html" class="nav-link">
+        <span class="nav-icon">📗</span> 한글(한자)
+      </a>
+      <a href="rebalance.html" class="nav-link">
+        <span class="nav-icon">⚖️</span> 자산 리밸런싱
+      </a>
+      <a href="listening.html" class="nav-link">
+        <span class="nav-icon">🎧</span> 영어 듣기
+      </a>
+    </div>
   </nav>
 
   <div class="flashcard-container">
@@ -43,7 +51,7 @@
     <!-- 1단계: 용어 선택 화면 -->
     <div id="selectionView" class="glass-panel">
       <div class="header-section">
-        <h1>🎴 플래시카드 학습</h1>
+        <h1>🗂️ 플래시카드 학습</h1>
         <p>최근에 입력하거나 수정된 용어 100개를 기반으로 학습용 카드를 생성합니다.</p>
       </div>
 
@@ -175,6 +183,11 @@
   </div>
 
   <script src="flashcards.js?v=1"></script>
+  <script>
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    });
+  </script>
 </body>
 
 </html>

@@ -50,10 +50,20 @@ a {
   width: 100%;
   max-width: 900px;
   display: flex;
-  justify-content: center;
-  gap: 6px;
+  flex-direction: column;
   padding: 16px 20px 0;
   flex-shrink: 0;
+}
+
+.nav-header {
+  display: none; /* Hidden on desktop */
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
 }
 
 .nav-link {
@@ -85,6 +95,76 @@ a {
 
 .nav-link .nav-icon {
   font-size: 16px;
+}
+
+/* Mobile Hamburger Menu styles */
+@media (max-width: 768px) {
+  .nav {
+    padding: 0;
+    max-width: 100%;
+    border-bottom: 1px solid var(--glass-border);
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .nav-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    width: 100%;
+  }
+
+  .nav-logo {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+
+  .nav-toggle {
+    display: block;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+  }
+
+  .nav-toggle:hover {
+    color: var(--text-main);
+  }
+
+  .nav-menu {
+    display: none; /* Hidden on mobile by default */
+    flex-direction: column;
+    width: 100%;
+    padding: 8px 16px 16px;
+    gap: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .nav-menu.open {
+    display: flex;
+  }
+
+  .nav-link {
+    padding: 10px 16px;
+    font-size: 14px;
+    width: 100%;
+    border-radius: 8px;
+  }
 }
 
 /* ── Custom Scrollbar (global) ── */
