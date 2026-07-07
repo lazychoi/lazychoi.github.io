@@ -13,12 +13,14 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
   <!-- marked.js for rendering markdown -->
   <script src="marked.min.js"></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 
 <body>
   <nav class="nav">
     <div class="nav-header">
-      <a href="index.html" class="nav-logo">🌱 용어 노트</a>
+      <a href="index.html" class="nav-logo">🏠 도구상자</a>
       <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
@@ -46,13 +48,83 @@
   </nav>
 
   <div class="search-container">
-    <h1>용어 노트</h1>
-    <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()">
+    <div class="search-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+      <h1 style="margin: 0; font-size: 24px;">🌱 용어 노트</h1>
+      <div class="auth-status-container" style="display: flex; align-items: center; gap: 8px;">
+        <span id="authStatusText" style="font-size: 13px; color: var(--text-muted);"></span>
+        <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+        <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+      </div>
+    </div>
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; position: sticky; top: 10px; z-index: 100;">
+      <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()" style="flex: 1; margin: 0; position: static;">
+      <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">➕ 용어 추가</button>
+    </div>
     <div id="loadingMessage">데이터를 로드하는 중입니다...</div>
     <ul id="results"></ul>
   </div>
 
-  <script src="farm_search.js?v=2"></script>
+  <!-- 로그인 다이얼로그 모달 -->
+  <dialog id="loginDialog" class="auth-dialog">
+    <form id="loginForm">
+      <h3>🔒 관리자 로그인</h3>
+      <div class="form-group">
+        <label for="loginEmail">이메일 주소</label>
+        <input type="email" id="loginEmail" autocomplete="username" placeholder="admin@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">비밀번호</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitLogin" class="btn btn-primary">로그인</button>
+        <button type="button" id="btnCancelLogin" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 용어 추가/수정 다이얼로그 모달 -->
+  <dialog id="termFormDialog" class="auth-dialog" style="max-width: 500px;">
+    <form id="termForm">
+      <h3 id="termFormTitle">➕ 새 용어 추가</h3>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label for="inputTerm">표제어 (필수)</label>
+        <input type="text" id="inputTerm" placeholder="예: 1차광물" required>
+      </div>
+      <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div class="form-group">
+          <label for="inputForeign">외래어 (선택)</label>
+          <input type="text" id="inputForeign" placeholder="예: primary mineral">
+        </div>
+        <div class="form-group">
+          <label for="inputEasy">쉬운용어 (선택)</label>
+          <input type="text" id="inputEasy" placeholder="예: 첫째광물">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom: 12px;">
+        <label for="inputMeaning">설명 및 내용 (선택)</label>
+        <textarea id="inputMeaning" rows="5" placeholder="설명글을 입력하세요. 수식은 $...$ 또는 $$...$$로, 이미지는 [[파일명.jpg]] 형식으로 적어주세요." style="resize: vertical;"></textarea>
+      </div>
+      
+      <!-- 실시간 미리보기 -->
+      <div class="preview-container" style="margin-bottom: 16px; border: 1px dashed var(--glass-border); padding: 12px; border-radius: 8px;">
+        <div class="preview-title" style="font-size: 12px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">실시간 미리보기</div>
+        <ul style="margin-top: 0; display: block; list-style: none; padding: 0;">
+          <li id="previewCard" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 0;">
+            <span class="term" style="font-weight: bold;">표제어</span>
+            <div class="meaning" style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">설명이 여기에 표시됩니다.</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitTerm" class="btn btn-primary">➕ 추가하기</button>
+        <button type="button" id="btnCancelTerm" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="farm.js?v=3"></script>
   <script>
     document.getElementById('searchTerm').focus();
   </script>

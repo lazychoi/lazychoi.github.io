@@ -1,3 +1,8 @@
+// Supabase Client Initialization
+const supabaseUrl = 'https://tpwwwpcbinxdhxqvcvqc.supabase.co';
+const supabaseKey = 'sb_publishable_A1sd3hvbeQx9-gVoFXL0qA_G923SWm9';
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 // State Management
 let allTerms = [];        // All parsed terms from CSV
 let displayTerms = [];    // 100 most recent terms
@@ -15,8 +20,46 @@ let isAnimating = false;  // Prevent actions during slide animations
 window.addEventListener('DOMContentLoaded', () => {
     console.log("[Diagnostics] flashcards.js loaded successfully!");
     
-    // Load data from farm_data.txt
-    loadDataFromServer();
+    // Set default filter date (1 week ago)
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const dateInput = document.getElementById('filterStartDate');
+    if (dateInput) {
+        dateInput.value = oneWeekAgo.toISOString().split('T')[0];
+        // 클릭 시 곧바로 브라우저 달력 선택창 띄우기
+        dateInput.addEventListener('click', () => {
+            try {
+                dateInput.showPicker();
+            } catch (err) {
+                console.warn('Native picker not supported', err);
+            }
+        });
+    }
+
+    // Load data from Supabase
+    loadDataFromSupabase();
+
+    // Filter UI event listeners
+    const filterType = document.getElementById('filterType');
+    const recentFilterContainer = document.getElementById('recentFilterContainer');
+    const dateFilterContainer = document.getElementById('dateFilterContainer');
+    
+    if (filterType) {
+        filterType.addEventListener('change', () => {
+            if (filterType.value === 'recent') {
+                recentFilterContainer.style.display = 'flex';
+                dateFilterContainer.style.display = 'none';
+            } else {
+                recentFilterContainer.style.display = 'none';
+                dateFilterContainer.style.display = 'flex';
+            }
+        });
+    }
+
+    const btnReload = document.getElementById('btnReload');
+    if (btnReload) {
+        btnReload.addEventListener('click', loadDataFromSupabase);
+    }
 
     // Event Listeners for controls
     document.getElementById('btnSelectAll').addEventListener('click', selectAll);
@@ -40,68 +83,96 @@ window.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', handleKeyboardShortcuts);
 });
 
-// Load data from server
-function loadDataFromServer() {
+// Load data from Supabase DB with filter conditions (bypassing 1000 rows limit via pagination)
+async function loadDataFromSupabase() {
     const loadingMessage = document.getElementById('loadingMessage');
-    fetch('data/farm_data.txt')
-        .then(response => {
-            if (!response.ok) throw new Error('서버에서 data/farm_data.txt 파일을 찾을 수 없습니다.');
-            return response.text();
-        })
-        .then(text => {
-            allTerms = parseCSV(text);
-            // Get the 100 most recent terms (the last 100 entries in the file)
-            // and list them in reverse order (newest first)
-            displayTerms = allTerms.slice(-100).reverse();
+    if (loadingMessage) {
+        loadingMessage.style.display = 'block';
+        loadingMessage.textContent = '데이터를 로드하는 중입니다...';
+        loadingMessage.style.color = 'var(--text-muted)';
+    }
+    
+    const typeElement = document.getElementById('filterType');
+    const type = typeElement ? typeElement.value : 'recent';
+    
+    try {
+        let allData = [];
+        let page = 0;
+        const pageSize = 1000;
+        let keepFetching = true;
 
-            if (loadingMessage) {
-                loadingMessage.style.display = 'none';
+        if (type === 'recent') {
+            const limitInput = document.getElementById('recentLimit');
+            const targetLimit = limitInput ? (parseInt(limitInput.value) || 100) : 100;
+            
+            // 최신 N개 가져오기 루프
+            while (keepFetching && allData.length < targetLimit) {
+                const fetchCount = Math.min(pageSize, targetLimit - allData.length);
+                const { data, error } = await supabaseClient
+                    .from('terms')
+                    .select('*')
+                    .range(page * pageSize, page * pageSize + fetchCount - 1)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                allData = allData.concat(data);
+                
+                if (data.length < fetchCount) {
+                    keepFetching = false;
+                } else {
+                    page++;
+                }
             }
-
-            renderSelectionTable();
-        })
-        .catch(err => {
-            console.error('Error loading data:', err);
-            if (loadingMessage) {
-                loadingMessage.textContent = '데이터 로딩 중 오류가 발생했습니다: ' + err.message;
-                loadingMessage.style.color = '#ef4444';
+        } else {
+            const startDateInput = document.getElementById('filterStartDate');
+            const startDateStr = startDateInput ? startDateInput.value : '';
+            if (!startDateStr) {
+                alert('날짜를 선택해 주세요.');
+                if (loadingMessage) loadingMessage.style.display = 'none';
+                return;
             }
-        });
-}
+            const startDate = new Date(startDateStr + 'T00:00:00Z').toISOString();
+            
+            // 특정 날짜 이후 모든 데이터 가져오기 루프 (1000개 초과 데이터 대응)
+            while (keepFetching) {
+                const { data, error } = await supabaseClient
+                    .from('terms')
+                    .select('*')
+                    .gte('created_at', startDate)
+                    .range(page * pageSize, (page + 1) * pageSize - 1)
+                    .order('created_at', { ascending: false });
 
-// Parse CSV text securely (identical parsing logic to farm_search.js/farm_add.js)
-function parseCSV(text) {
-    const lines = text.split('\n');
-    const parsedTerms = [];
-    lines.forEach((line, index) => {
-        if (index === 0 || !line.trim()) return; // skip header or empty lines
-        
-        const parts = [];
-        let temp = line;
-        for (let i = 0; i < 3; i++) {
-            const idx = temp.indexOf('|');
-            if (idx === -1) break;
-            parts.push(temp.substring(0, idx));
-            temp = temp.substring(idx + 1);
+                if (error) throw error;
+                allData = allData.concat(data);
+
+                if (data.length < pageSize) {
+                    keepFetching = false;
+                } else {
+                    page++;
+                }
+            }
         }
-        parts.push(temp);
 
-        const values = parts.map(v => v ? v.trim() : '');
-        if (values.length >= 4) {
-            const rawMeaning = values[3] || '';
-            const unescapedMeaning = rawMeaning
-                .replace(/(?<!\\)\\n/g, '\n')
-                .replace(/\\\\/g, '\\');
+        displayTerms = allData.map(row => ({
+            id: row.id,
+            term: row.term || '',
+            foreignTerm: row.foreign_term || '',
+            easyTerm: row.easy_term || '',
+            meaning: row.meaning || ''
+        }));
 
-            parsedTerms.push({
-                term: values[0] || '',
-                foreignTerm: values[1] || '',
-                easyTerm: values[2] || '',
-                meaning: unescapedMeaning
-            });
+        if (loadingMessage) {
+            loadingMessage.style.display = 'none';
         }
-    });
-    return parsedTerms;
+
+        renderSelectionTable();
+    } catch (err) {
+        console.error('Error fetching cards from Supabase:', err);
+        if (loadingMessage) {
+            loadingMessage.textContent = '데이터 로딩 중 오류가 발생했습니다: ' + err.message;
+            loadingMessage.style.color = '#ef4444';
+        }
+    }
 }
 
 // 2. Render Selection Screen
@@ -527,11 +598,7 @@ function renderMarkdownAndMath(text) {
     // 2. Process image tags [[filename]]
     processed = processed.replace(
         /\[\[(.*?)\]\]/g,
-        (match, filename) => `
-            <div class="image-container" style="text-align: center; margin: 10px 0;">
-                <img src="img/${filename}" alt="${filename}" style="max-width: 90%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);">
-            </div>
-        `
+        (match, filename) => `<div class="image-container" style="text-align: center; margin: 10px 0;"><img src="img/${filename}" alt="${filename}" style="max-width: 90%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"></div>`
     );
 
     // 3. Render Markdown

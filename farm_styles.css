@@ -544,3 +544,119 @@
 .terms-table tr.editing-row td {
   border-bottom: 1px solid rgba(129, 140, 248, 0.4);
 }
+
+/* ──────────────────────────────────────────────────────
+   Admin Auth Styling
+   ────────────────────────────────────────────────────── */
+.admin-header {
+  width: 100%;
+  max-width: 850px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-logo a {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.auth-status-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+#authStatusText {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.auth-status-container .active-user {
+  color: var(--accent-green) !important;
+  font-weight: bold;
+}
+
+/* Native Dialog Styling */
+.auth-dialog {
+  border: 1px solid var(--glass-border);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  color: var(--text-main);
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  margin: auto;
+}
+
+.auth-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.auth-dialog h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.auth-dialog .form-group {
+  margin-bottom: 16px;
+}
+
+.auth-dialog .dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* Inert visual cues */
+[inert] {
+  opacity: 0.35 !important;
+  pointer-events: none !important;
+  user-select: none !important;
+  filter: grayscale(40%);
+  transition: opacity 0.3s ease;
+}
+
+/* ──────────────────────────────────────────────────────
+   Consolidated Card Actions & Dialog Form Grid
+   ────────────────────────────────────────────────────── */
+.term-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.term-card-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 600px) {
+  .term-card-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .term-card-actions {
+    justify-content: flex-end;
+  }
+}
