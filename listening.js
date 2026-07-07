@@ -310,6 +310,26 @@ function jumpToNextSection() {
   jumpToSection(target);
 }
 
+// MM:SS.SS 또는 HH:MM:SS.SS 형식의 자막 시간 문자열을 초(seconds)로 변환하는 함수
+function parseTimeToSeconds(timeStr) {
+  if (!timeStr) return 0;
+  const parts = timeStr.trim().split(':');
+  if (parts.length === 2) {
+    // MM:SS.SS
+    const mins = parseFloat(parts[0]) || 0;
+    const secs = parseFloat(parts[1]) || 0;
+    return (mins * 60) + secs;
+  } else if (parts.length === 3) {
+    // HH:MM:SS.SS
+    const hrs = parseFloat(parts[0]) || 0;
+    const mins = parseFloat(parts[1]) || 0;
+    const secs = parseFloat(parts[2]) || 0;
+    return (hrs * 3600) + (mins * 60) + secs;
+  }
+  const rawSec = parseFloat(timeStr);
+  return isNaN(rawSec) ? 0 : rawSec;
+}
+
 // ── Subtitle Parser ──
 function parseSubtitleText(text) {
   const lines = text.split(/\r?\n/);
@@ -332,8 +352,8 @@ function parseSubtitleText(text) {
     }
 
     if (parts.length >= 3) {
-      const start = parseFloat(parts[0]);
-      const end = parseFloat(parts[1]);
+      const start = parseTimeToSeconds(parts[0]);
+      const end = parseTimeToSeconds(parts[1]);
       const subtitleText = parts.slice(2).join('\t').trim();
 
       if (!isNaN(start) && !isNaN(end)) {
