@@ -253,7 +253,13 @@ function hideDetailView() {
   const tabsEl = document.querySelector('.search-tabs');
   if (tabsEl) tabsEl.style.display = '';
   const wrapperEl = document.querySelector('.result-wrapper');
-  if (wrapperEl) wrapperEl.style.display = '';
+  if (wrapperEl) {
+    if (currentTabMode === 'draw') {
+      wrapperEl.style.display = 'none';
+    } else {
+      wrapperEl.style.display = '';
+    }
+  }
   
   // 원래 활성화되어 있던 탭 패널 다시 활성화
   if (currentTabMode === 'search') {
@@ -295,7 +301,8 @@ function renderHanjaListToGrid(hanjas, container, customWord) {
     item.addEventListener('click', async () => {
       try {
         const copyWord = customWord || itemObj.korean || '';
-        await navigator.clipboard.writeText(`${copyWord}(${itemObj.hanja})`);
+        const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
+        await navigator.clipboard.writeText(copyText);
 
         if (itemObj.meaning) {
           meaningDisplay.innerHTML = `${itemObj.meaning.replace(/<\/br>/g, '<br>')}`;
@@ -305,7 +312,7 @@ function renderHanjaListToGrid(hanjas, container, customWord) {
           meaningDisplay.classList.add('show');
         }
 
-        showToast();
+        showToast(`${copyText} → 클립보드로 복사됨`);
         showDetailView(itemObj, customWord);
       } catch (err) {
         console.error('Failed to copy text: ', err);
@@ -400,7 +407,7 @@ function initCanvas() {
   ctx.lineWidth = 6;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
-  ctx.strokeStyle = '#818cf8';
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4f46e5';
 
   canvas.addEventListener('pointerdown', (e) => {
     isDrawing = true;
@@ -592,21 +599,44 @@ function renderCandidates(candidates) {
   });
 }
 
-function searchHanjaCharacter(char) {
+async function searchHanjaCharacter(char) {
   resultList.innerHTML = '';
   meaningDisplay.textContent = '';
   meaningDisplay.classList.remove('show');
 
   const matches = hanjaList.filter(item => item.hanja === char);
+  let itemObj;
 
   if (matches.length > 0) {
-    statusText.textContent = `한자 '${char}'의 정보입니다. 클릭하여 복사하세요.`;
-    renderHanjaList(matches, false);
+    if (matches.length === 1) {
+      itemObj = matches[0];
+    } else {
+      // 여러 개 있으면 합쳐서 노출
+      itemObj = {
+        hanja: char,
+        korean: matches.map(m => m.korean).filter(Boolean).filter((v, i, a) => a.indexOf(v) === i).join(', '),
+        meaning: matches.map((m, idx) => {
+          const sound = m.korean ? `[${m.korean}] ` : '';
+          return `${idx + 1}. ${sound}${m.meaning}`;
+        }).join('<br>')
+      };
+    }
   } else {
-    statusText.textContent = `사전에 없는 한자입니다. 클릭하여 복사하세요.`;
-    // 뜻 정보가 없는 한자도 복사할 수 있도록 렌더링
-    renderHanjaList([{ hanja: char, korean: '?', meaning: '사전 정보 없음' }], false);
+    itemObj = { hanja: char, korean: '?', meaning: '사전 정보 없음' };
   }
+
+  // 클립보드 복사
+  try {
+    const copyWord = itemObj.korean && itemObj.korean !== '?' ? itemObj.korean.split(',')[0].trim() : '';
+    const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
+    await navigator.clipboard.writeText(copyText);
+    showToast(`${copyText}가 클립보드로 복사되었습니다.`);
+  } catch (err) {
+    console.error('Failed to copy to clipboard in searchHanjaCharacter:', err);
+  }
+
+  // 상세 보기 바로 실행
+  showDetailView(itemObj);
 }
 
 // ── 3. 부수/획수 검색 구현 ──
@@ -825,7 +855,13 @@ function switchTab(mode) {
   const tabsEl = document.querySelector('.search-tabs');
   if (tabsEl) tabsEl.style.display = '';
   const wrapperEl = document.querySelector('.result-wrapper');
-  if (wrapperEl) wrapperEl.style.display = '';
+  if (wrapperEl) {
+    if (mode === 'draw') {
+      wrapperEl.style.display = 'none';
+    } else {
+      wrapperEl.style.display = '';
+    }
+  }
 
   tabSearchBtn.classList.remove('active');
   tabDrawBtn.classList.remove('active');
@@ -863,7 +899,13 @@ if (backToSearchBtn) {
 }
 
 // 토스트 메시지 보이기
-function showToast() {
+function showToast(message) {
+  if (message) {
+    toast.textContent = message;
+  } else {
+    toast.textContent = '클립보드에 복사되었습니다!';
+  }
+
   toast.classList.add('show');
 
   if (toastTimeout) {

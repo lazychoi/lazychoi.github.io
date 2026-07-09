@@ -30,7 +30,7 @@
   padding: 14px 20px;
   border-radius: 12px;
   border: 1px solid var(--glass-border);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.03);
   color: var(--text-main);
   font-size: 16px;
   outline: none;
@@ -46,7 +46,7 @@
 
 #searchTerm:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.2);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 #results {
@@ -55,8 +55,8 @@
   margin-top: 20px;
 }
 
-#results li {
-  background: rgba(255, 255, 255, 0.04);
+#results > li {
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
   padding: 16px;
@@ -64,27 +64,27 @@
   transition: all 0.2s ease;
 }
 
-#results li:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.18);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+#results > li:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-#results li .term {
+#results > li .term {
   font-size: 17px;
   font-weight: 700;
   color: var(--text-main);
   display: inline;
 }
 
-#results li .easyTerm {
+#results > li .easyTerm {
   font-size: 17px;
   font-weight: 700;
   color: var(--accent-green);
   display: inline;
 }
 
-#results li .meaning {
+#results > li .meaning {
   width: 100%;
   height: 100%;
   font-size: 15px;
@@ -174,7 +174,7 @@
     margin-bottom: 15px;
   }
 
-  #results li {
+  #results > li {
     padding: 12px;
   }
 }
@@ -200,7 +200,7 @@
 }
 
 .file-status-box {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 16px;
@@ -241,7 +241,8 @@
 
 .btn-primary {
   background: var(--accent);
-  border-color: rgba(129, 140, 248, 0.3);
+  border-color: rgba(37, 99, 235, 0.3);
+  color: #ffffff;
 }
 
 .btn-primary:hover {
@@ -249,12 +250,13 @@
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(0, 0, 0, 0.04);
   border-color: var(--glass-border);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
 .btn-success {
@@ -323,7 +325,7 @@
   padding: 10px 14px;
   border-radius: 8px;
   border: 1px solid var(--glass-border);
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
   color: var(--text-main);
   font-size: 15px;
   outline: none;
@@ -339,7 +341,7 @@
   border: 1px dashed var(--glass-border);
   border-radius: 14px;
   padding: 16px;
-  background: rgba(255, 255, 255, 0.01);
+  background: rgba(0, 0, 0, 0.01);
 }
 
 .preview-title {
@@ -374,7 +376,7 @@
   padding: 12px 16px;
   border-radius: 8px;
   border: 1px solid var(--glass-border);
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
   color: var(--text-main);
   font-size: 14px;
   outline: none;
@@ -385,7 +387,7 @@
   overflow-y: auto;
   border: 1px solid var(--glass-border);
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.15);
+  background: #ffffff;
 }
 
 .terms-table {
@@ -402,7 +404,7 @@
 }
 
 .terms-table th {
-  background: rgba(255, 255, 255, 0.03);
+  background: #f8f9fa;
   font-weight: 600;
   color: var(--text-muted);
   position: sticky;
@@ -411,7 +413,7 @@
 }
 
 .terms-table tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: #fdfdfd;
 }
 
 .terms-table td.actions {
@@ -435,6 +437,20 @@
 /* ──────────────────────────────────────────────────────
    Markdown Content Styling inside .meaning
    ────────────────────────────────────────────────────── */
+.meaning h3 {
+  color: #0000ff;
+  font-size: 1em;
+}
+.meaning strong,
+.meaning b {
+  color: #ff0000;
+}
+.meaning em,
+.meaning i {
+  color: #64c466;
+  font-style: normal;
+  font-weight: bold;
+}
 .meaning p {
   margin-bottom: 8px;
 }
@@ -451,14 +467,14 @@
 }
 .meaning code {
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 0.9em;
   color: var(--amber);
 }
 .meaning pre {
-  background: rgba(0, 0, 0, 0.25);
+  background: #f4f4f4;
   border: 1px solid var(--glass-border);
   padding: 12px;
   border-radius: 8px;
@@ -511,7 +527,7 @@
 }
 
 .btn-clear-search:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.05);
   color: var(--text-main);
 }
 
@@ -520,7 +536,7 @@
   font-weight: normal;
   color: var(--text-muted);
   margin-left: 10px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.04);
   border: 1px solid var(--glass-border);
   padding: 2px 8px;
   border-radius: 12px;
@@ -530,19 +546,19 @@
 
 .search-highlight {
   background: rgba(245, 158, 11, 0.25);
-  color: #fbbf24;
+  color: #d97706;
   border-radius: 3px;
   padding: 0 2px;
   font-weight: bold;
 }
 
 .terms-table tr.editing-row {
-  background: rgba(129, 140, 248, 0.15) !important;
+  background: rgba(37, 99, 235, 0.05) !important;
   border-left: 4px solid var(--accent);
 }
 
 .terms-table tr.editing-row td {
-  border-bottom: 1px solid rgba(129, 140, 248, 0.4);
+  border-bottom: 1px solid rgba(37, 99, 235, 0.2);
 }
 
 /* ──────────────────────────────────────────────────────
@@ -557,7 +573,7 @@
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 16px 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
   margin-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -590,23 +606,24 @@
 /* Native Dialog Styling */
 .auth-dialog {
   border: 1px solid var(--glass-border);
-  background: rgba(15, 23, 42, 0.95);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 30px;
   color: var(--text-main);
   max-width: 400px;
   width: 90%;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
   margin: auto;
 }
 
 .auth-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(4px);
 }
 
-.auth-dialog h3 {
+.auth-dialog > form > h3 {
   margin-top: 0;
   margin-bottom: 20px;
   font-size: 20px;
@@ -658,5 +675,55 @@
   }
   .term-card-actions {
     justify-content: flex-end;
+  }
+}
+
+/* ──────────────────────────────────────────────────────
+   Responsive Add/Edit Term Dialog (Side-by-side on Desktop)
+   ────────────────────────────────────────────────────── */
+.responsive-dialog {
+  max-width: 850px;
+  width: 95%;
+  transition: all 0.3s ease;
+}
+
+.term-form-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 20px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.term-form-inputs {
+  display: flex;
+  flex-direction: column;
+}
+
+.term-form-preview {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (max-width: 768px) {
+  .responsive-dialog {
+    max-width: 500px;
+    width: 90%;
+    padding: 20px;
+  }
+  
+  .term-form-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .preview-container {
+    height: auto !important;
+  }
+  
+  #previewCard {
+    height: auto !important;
+    min-height: 120px !important;
   }
 }

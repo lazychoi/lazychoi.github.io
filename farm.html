@@ -58,7 +58,7 @@
     </div>
     <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; position: sticky; top: 10px; z-index: 100;">
       <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()" style="flex: 1; margin: 0; position: static;">
-      <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">➕ 용어 추가</button>
+      <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">+ 용어 추가</button>
     </div>
     <div id="loadingMessage">데이터를 로드하는 중입니다...</div>
     <ul id="results"></ul>
@@ -84,37 +84,44 @@
   </dialog>
 
   <!-- 용어 추가/수정 다이얼로그 모달 -->
-  <dialog id="termFormDialog" class="auth-dialog" style="max-width: 500px;">
+  <dialog id="termFormDialog" class="auth-dialog responsive-dialog">
     <form id="termForm">
       <h3 id="termFormTitle">➕ 새 용어 추가</h3>
-      <div class="form-group" style="margin-bottom: 12px;">
-        <label for="inputTerm">표제어 (필수)</label>
-        <input type="text" id="inputTerm" placeholder="예: 1차광물" required>
-      </div>
-      <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-        <div class="form-group">
-          <label for="inputForeign">외래어 (선택)</label>
-          <input type="text" id="inputForeign" placeholder="예: primary mineral">
-        </div>
-        <div class="form-group">
-          <label for="inputEasy">쉬운용어 (선택)</label>
-          <input type="text" id="inputEasy" placeholder="예: 첫째광물">
-        </div>
-      </div>
-      <div class="form-group" style="margin-bottom: 12px;">
-        <label for="inputMeaning">설명 및 내용 (선택)</label>
-        <textarea id="inputMeaning" rows="5" placeholder="설명글을 입력하세요. 수식은 $...$ 또는 $$...$$로, 이미지는 [[파일명.jpg]] 형식으로 적어주세요." style="resize: vertical;"></textarea>
-      </div>
       
-      <!-- 실시간 미리보기 -->
-      <div class="preview-container" style="margin-bottom: 16px; border: 1px dashed var(--glass-border); padding: 12px; border-radius: 8px;">
-        <div class="preview-title" style="font-size: 12px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">실시간 미리보기</div>
-        <ul style="margin-top: 0; display: block; list-style: none; padding: 0;">
-          <li id="previewCard" style="background: rgba(255, 255, 255, 0.04); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 0;">
-            <span class="term" style="font-weight: bold;">표제어</span>
-            <div class="meaning" style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">설명이 여기에 표시됩니다.</div>
-          </li>
-        </ul>
+      <div class="term-form-content">
+        <div class="term-form-inputs">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="inputTerm">표제어 (필수)</label>
+            <input type="text" id="inputTerm" placeholder="예: 포장" required>
+          </div>
+          <div class="form-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="inputForeign">외래어 (선택)</label>
+              <input type="text" id="inputForeign" placeholder="예: 圃場, field">
+            </div>
+            <div class="form-group">
+              <label for="inputEasy">쉬운용어 (선택)</label>
+              <input type="text" id="inputEasy" placeholder="예: 재배지">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="inputMeaning">설명 및 내용 (선택)</label>
+            <textarea id="inputMeaning" rows="6" placeholder="설명글을 입력하세요. 수식은 $...$ 또는 $$...$$로, 이미지는 [[파일명.jpg]] 형식으로 적어주세요." style="resize: vertical;"></textarea>
+          </div>
+        </div>
+        
+        <div class="term-form-preview">
+          <!-- 실시간 미리보기 -->
+          <div class="preview-container" style="border: 1px dashed var(--glass-border); padding: 12px; border-radius: 8px; height: 100%; display: flex; flex-direction: column;">
+            <div class="preview-title" style="font-size: 12px; color: var(--accent); font-weight: bold; margin-bottom: 6px;">실시간 미리보기</div>
+            <ul style="margin-top: 0; display: block; list-style: none; padding: 0; flex-grow: 1;">
+              <li id="previewCard" style="background: rgba(0, 0, 0, 0.02); border: 1px solid var(--glass-border); border-radius: 8px; padding: 12px; margin-bottom: 0; height: 100%; min-height: 150px; overflow-y: auto;">
+                <span class="term" style="font-weight: bold;">표제어</span>
+                <div class="meaning" style="color: var(--text-muted); font-size: 14px; margin-top: 6px;">설명이 여기에 표시됩니다.</div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
 
       <div class="dialog-buttons">

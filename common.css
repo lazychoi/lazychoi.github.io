@@ -7,15 +7,15 @@
 
 /* ── Design Tokens ── */
 :root {
-  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-  --glass-bg: rgba(255, 255, 255, 0.05);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --accent: #818cf8;
-  --accent-hover: #6366f1;
-  --accent-green: #34d399;
-  --amber: #fbbf24;
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+  --glass-bg: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --text-main: #1e293b;
+  --text-muted: #64748b;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-green: #059669;
+  --amber: #d97706;
 }
 
 /* ── Reset ── */
@@ -83,18 +83,22 @@ a {
 
 .nav-link:hover {
   color: var(--text-main);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.03);
   border-color: var(--glass-border);
 }
 
 .nav-link.active {
   color: var(--accent);
-  background: rgba(129, 140, 248, 0.1);
-  border-color: rgba(129, 140, 248, 0.25);
+  background: rgba(37, 99, 235, 0.08);
+  border-color: rgba(37, 99, 235, 0.2);
 }
 
 .nav-link .nav-icon {
   font-size: 16px;
+}
+
+.btn-primary {
+  color: #ffffff !important;
 }
 
 /* Mobile Hamburger Menu styles */
@@ -103,7 +107,7 @@ a {
     padding: 0;
     max-width: 100%;
     border-bottom: 1px solid var(--glass-border);
-    background: rgba(15, 23, 42, 0.8);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     position: sticky;
@@ -152,7 +156,7 @@ a {
     width: 100%;
     padding: 8px 16px 16px;
     gap: 4px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
   }
 
   .nav-menu.open {
@@ -177,7 +181,7 @@ a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 10px;
 }
 
