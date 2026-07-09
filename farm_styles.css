@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════
-   farm_styles.css — 용어 노트 (다크 글래스모피즘)
+   farm_styles.css — 용어 노트
    common.css의 변수와 기본 스타일을 활용
    ══════════════════════════════════════════════════════ */
 
@@ -447,7 +447,7 @@
 }
 .meaning em,
 .meaning i {
-  color: #64c466;
+  color: #51a553;
   font-style: normal;
   font-weight: bold;
 }
