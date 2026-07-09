@@ -36,6 +36,11 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-start;
+}
+
+#authStatusText {
+  display: none !important;
 }
 
 a {
@@ -53,6 +58,7 @@ a {
   flex-direction: column;
   padding: 16px 20px 0;
   flex-shrink: 0;
+  position: relative;
 }
 
 .nav-header {
@@ -97,6 +103,17 @@ a {
   font-size: 16px;
 }
 
+.auth-status-container {
+  position: absolute;
+  right: 20px;
+  top: 16px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10;
+}
+
 .btn-primary {
   color: #ffffff !important;
 }
@@ -119,8 +136,9 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 20px;
+    padding: 10px 5px;
     width: 100%;
+    position: relative;
   }
 
   .nav-logo {
@@ -131,6 +149,10 @@ a {
     align-items: center;
     gap: 8px;
     text-decoration: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .nav-toggle {
@@ -139,15 +161,27 @@ a {
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px;
+    padding: 4px 4px 4px 0;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: color 0.2s ease;
+    margin-right: auto;
   }
 
   .nav-toggle:hover {
     color: var(--text-main);
+  }
+
+  .auth-status-container {
+    right: 15px;
+    top: 30px;
+    transform: translateY(-30%);
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 1001;
   }
 
   .nav-menu {
@@ -197,5 +231,70 @@ a {
   .nav-link {
     padding: 6px 12px;
     font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  #authStatusText {
+    display: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════
+   Unified App Content Layout System (Desktop)
+   ══════════════════════════════════════════════════════ */
+/* Direct card-based apps (Term Note, Hanja) */
+.search-container,
+.container {
+  width: 100% !important;
+  max-width: 860px !important;
+  margin-top: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* Wrapper-based apps (Flashcard, Listening, Rebalance, Dashboard) */
+.flashcard-container,
+.app-container,
+.container:has(.section-card),
+.page-container {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin-top: 20px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 768px) {
+  .search-container,
+  .flashcard-container,
+  .container,
+  .app-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 0 !important;
+  }
+
+  /* Make both wrapper cards and inner cards borderless, flat, and border-radius 0 on mobile */
+  .search-container,
+  .glass-panel,
+  .container,
+  .section-card,
+  .panel {
+    border-radius: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove wrapper padding only for apps that wrap inner cards, ensuring zero-gap from header */
+  .flashcard-container,
+  .app-container,
+  .container:has(.section-card) {
+    padding: 0 !important;
+  }
+
+  /* Height correction for English Listening container on mobile */
+  .app-container {
+    height: calc(100vh - 60px) !important;
   }
 }

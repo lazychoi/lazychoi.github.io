@@ -20,7 +20,7 @@
 <body>
   <nav class="nav">
     <div class="nav-header">
-      <a href="index.html" class="nav-logo">🏠 도구상자</a>
+      <a href="index.html" class="nav-logo">🌱 용어 노트</a>
       <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
@@ -45,17 +45,15 @@
         <span class="nav-icon">🎧</span> 영어 듣기
       </a>
     </div>
+    <div class="auth-status-container">
+      <span id="authStatusText" style="font-size: 13px; color: var(--text-muted);"></span>
+      <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+      <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+    </div>
   </nav>
 
   <div class="search-container">
-    <div class="search-header-container" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-      <h1 style="margin: 0; font-size: 24px;">🌱 용어 노트</h1>
-      <div class="auth-status-container" style="display: flex; align-items: center; gap: 8px;">
-        <span id="authStatusText" style="font-size: 13px; color: var(--text-muted);"></span>
-        <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
-        <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
-      </div>
-    </div>
+
     <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; position: sticky; top: 10px; z-index: 100;">
       <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()" style="flex: 1; margin: 0; position: static;">
       <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">+ 용어 추가</button>
