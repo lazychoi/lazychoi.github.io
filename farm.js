@@ -293,7 +293,8 @@ function searchTerms() {
 
     const filteredTerms = terms.filter(t => 
         t.term.toLowerCase().includes(query) || 
-        t.easyTerm.toLowerCase().includes(query)
+        t.easyTerm.toLowerCase().includes(query) ||
+        t.foreignTerm.toLowerCase().includes(query)
     );
 
     filteredTerms.forEach(t => {

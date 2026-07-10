@@ -10,87 +10,6 @@ import re
 PORT = 8000
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
-def fetch_stock_price(ticker_or_name):
-    ticker = ticker_or_name.strip()
-    if not ticker:
-        return None, None
-        
-    # Extract symbol from parentheses if present, e.g. "삼성전자 (005930)" -> "005930"
-    parenthesis_match = re.search(r'\(([^)]+)\)', ticker)
-    if parenthesis_match:
-        ticker = parenthesis_match.group(1).strip()
-        
-    is_direct_ticker = False
-    try:
-        ticker.encode('ascii')
-        is_direct_ticker = True
-    except UnicodeEncodeError:
-        is_direct_ticker = False
-        
-    if re.match(r'^\d{6}$', ticker):
-        is_direct_ticker = True
-        
-    def call_yahoo(symbol):
-        url = f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol}"
-        try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=5) as response:
-                data = json.loads(response.read().decode('utf-8'))
-                result = data.get('chart', {}).get('result', None)
-                if result and len(result) > 0:
-                    meta = result[0].get('meta', {})
-                    price = meta.get('regularMarketPrice', None)
-                    return price
-        except Exception as e:
-            pass
-        return None
-
-    if is_direct_ticker:
-        if re.match(r'^\d{6}$', ticker):
-            price = call_yahoo(f"{ticker}.KS")
-            if price is not None:
-                return price, f"{ticker}.KS"
-            price = call_yahoo(f"{ticker}.KQ")
-            if price is not None:
-                return price, f"{ticker}.KQ"
-        
-        price = call_yahoo(ticker)
-        if price is not None:
-            return price, ticker
-            
-    # Try searching Naver Search to resolve the name to a ticker/code
-    try:
-        q = urllib.parse.quote(ticker + ' 주식')
-        search_url = f'https://search.naver.com/search.naver?query={q}'
-        req = urllib.request.Request(search_url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=5) as r:
-            html = r.read().decode('utf-8', errors='ignore')
-            
-            # Domestic stock search
-            dom = re.search(r'finance\.naver\.com/item/[^\"]*code=(\d{6})', html)
-            if dom:
-                code = dom.group(1)
-                # Try KOSPI
-                price = call_yahoo(f"{code}.KS")
-                if price is not None:
-                    return price, f"{code}.KS"
-                # Try KOSDAQ
-                price = call_yahoo(f"{code}.KQ")
-                if price is not None:
-                    return price, f"{code}.KQ"
-            
-            # Global stock search (e.g. AAPL.O)
-            glob = re.search(r'worldstock/stock/([A-Za-z0-9\.]+)/', html)
-            if glob:
-                symbol = glob.group(1)
-                price = call_yahoo(symbol)
-                if price is not None:
-                    return price, symbol
-    except Exception as e:
-        pass
-        
-    return None, None
-
 class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=DIRECTORY, **kwargs)
@@ -102,31 +21,8 @@ class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_GET(self):
-        if self.path.startswith('/api/price'):
-            parsed_path = urllib.parse.urlparse(self.path)
-            query_params = urllib.parse.parse_qs(parsed_path.query)
-            ticker = query_params.get('ticker', [None])[0]
-            
-            if not ticker:
-                self.send_response(400)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "error": "Ticker/Name is required"}).encode('utf-8'))
-                return
-                
-            price, resolved_ticker = fetch_stock_price(ticker)
-            if price is not None:
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": True, "ticker": resolved_ticker, "price": price}).encode('utf-8'))
-            else:
-                self.send_response(404)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "error": "Price not found"}).encode('utf-8'))
-        else:
-            super().do_GET()
+        # 주가 API가 제거되었으므로 단순히 정적 파일 서비스만 수행
+        super().do_GET()
 
     def do_POST(self):
         if self.path == '/api/save':
@@ -150,6 +46,80 @@ class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
                 self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode('utf-8'))
+        elif self.path == '/api/save_hanja':
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length).decode('utf-8')
+            
+            try:
+                data = json.loads(post_data)
+                filename = data.get('file')
+                korean = data.get('korean')
+                hanja = data.get('hanja')
+                meaning = data.get('meaning', '')
+                
+                if not filename or not korean or not hanja:
+                    raise Exception("필수 매개변수(file, korean, hanja)가 누락되었습니다.")
+                
+                # 디렉터리 트래버스 방지를 위한 파일명 정규식 검증
+                if not re.match(r'^h\d{2}[a-z]+\.txt$', filename):
+                    raise Exception("올바르지 않은 파일 형식입니다.")
+                
+                file_path = os.path.join(DIRECTORY, 'data', filename)
+                if not os.path.exists(file_path):
+                    raise Exception(f"파일을 찾을 수 없습니다: {filename}")
+                
+                # 파일 인코딩 확인 (UTF-16LE BOM 검사)
+                with open(file_path, 'rb') as f:
+                    bom = f.read(2)
+                
+                is_utf16 = (bom == b'\xff\xfe')
+                
+                if is_utf16:
+                    with open(file_path, 'r', encoding='utf-16le', errors='ignore') as f:
+                        content = f.read()
+                        if content.startswith('\ufeff'):
+                            content = content[1:]
+                else:
+                    with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+                        content = f.read()
+                
+                lines = content.split('\n')
+                updated = False
+                new_lines = []
+                
+                for line in lines:
+                    if not line.strip():
+                        new_lines.append(line)
+                        continue
+                    parts = line.split('|')
+                    if len(parts) >= 2 and parts[0] == korean and parts[1] == hanja:
+                        new_lines.append(f"{korean}|{hanja}|{meaning}")
+                        updated = True
+                    else:
+                        new_lines.append(line)
+                
+                if not updated:
+                    raise Exception("해당 한자 데이터를 파일 내에서 찾을 수 없습니다.")
+                
+                # 파일 쓰기
+                if is_utf16:
+                    with open(file_path, 'w', encoding='utf-16le') as f:
+                        f.write('\ufeff')
+                        f.write('\n'.join(new_lines))
+                else:
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        f.write('\n'.join(new_lines))
+                        
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": True}).encode('utf-8'))
+                
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode('utf-8'))
         else:
             self.send_response(404)
             self.end_headers()
@@ -164,13 +134,13 @@ if __name__ == '__main__':
     with socketserver.TCPServer(("", PORT), AdminHTTPRequestHandler) as httpd:
         print("==================================================================")
         print(f"🌱 용어 관리자 서버가 성공적으로 실행되었습니다.")
-        print(f"👉 URL: http://localhost:{PORT}/farm_add.html")
+        print(f"👉 URL: http://localhost:{PORT}/index.html")
         print("👉 '용어 추가하기' 또는 '수정/삭제' 시 기기 파일에 즉시 저장됩니다.")
         print("👉 종료하려면 터미널에서 Ctrl+C를 누르세요.")
         print("==================================================================")
         
         # Automatically open the browser
-        webbrowser.open(f"http://localhost:{PORT}/farm_add.html")
+        webbrowser.open(f"http://localhost:{PORT}/index.html")
         
         try:
             httpd.serve_forever()

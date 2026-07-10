@@ -26,7 +26,8 @@ let currentTabMode = 'search';
 let toastTimeout;
 const hanjaMap = new Map();
 const strokeMap = new Map();
-const hanjaList = []; // 평탄화된 단일 한자 목록 { korean, hanja, meaning }
+const hanjaList = []; // 평탄화된 단일 한자 목록 { korean, hanja, meaning, file }
+let currentDetailItem = null; // 현재 상세 보기 중인 한자 아이템
 
 // 부수 데이터용 전역 변수
 const radicalsList = []; // 214개 부수 메타데이터
@@ -58,11 +59,11 @@ async function fetchAndParseFile(file) {
       if (!hanjaMap.has(korean)) {
         hanjaMap.set(korean, new Map());
       }
-      hanjaMap.get(korean).set(hanja, meaning);
+      hanjaMap.get(korean).set(hanja, { meaning, file });
 
       // 평탄화된 목록에 추가 (단일 한자만 대상)
       if (hanja.length === 1) {
-        hanjaList.push({ korean, hanja, meaning });
+        hanjaList.push({ korean, hanja, meaning, file });
       }
     }
   });
@@ -145,8 +146,8 @@ async function initApp() {
 
 function findHanja(word) {
   if (!hanjaMap.has(word)) return [];
-  return Array.from(hanjaMap.get(word).entries()).map(([hanja, meaning]) => {
-    return { hanja, meaning, korean: word };
+  return Array.from(hanjaMap.get(word).entries()).map(([hanja, obj]) => {
+    return { hanja, meaning: obj.meaning, file: obj.file, korean: word };
   });
 }
 
@@ -224,6 +225,23 @@ function showDetailView(itemObj, customWord) {
     detailMeaning.innerHTML = '뜻 정보 없음';
   }
   
+  // 현재 아이템 저장 (수정 시 참조)
+  currentDetailItem = { ...itemObj, korean: soundText };
+
+  // 로컬 여부에 따른 편집 버튼 및 폼 초기화
+  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const startEditBtn = document.getElementById('startEditBtn');
+  const editArea = document.getElementById('editArea');
+  if (startEditBtn) {
+    if (isLocal && itemObj.file) {
+      startEditBtn.style.display = 'block';
+    } else {
+      startEditBtn.style.display = 'none';
+    }
+  }
+  if (editArea) editArea.style.display = 'none';
+  detailMeaning.style.display = 'block';
+
   // 이전 상태 텍스트 저장
   prevStatusText = statusText.textContent;
   
@@ -246,6 +264,10 @@ function showDetailView(itemObj, customWord) {
 
 // 상세 보기 패널 닫기 (이전 화면 복원)
 function hideDetailView() {
+  currentDetailItem = null;
+  const editArea = document.getElementById('editArea');
+  if (editArea) editArea.style.display = 'none';
+
   // 1. 상세 보기 패널 숨기기
   panelDetail.classList.remove('active');
   
@@ -261,9 +283,12 @@ function hideDetailView() {
     }
   }
   
-  // 원래 활성화되어 있던 탭 패널 다시 활성화
+  // 원래 활성화되어 있던 탭 패널 다시 활성화 및 포커스 복원
   if (currentTabMode === 'search') {
     if (panelSearch) panelSearch.classList.add('active');
+    if (input) {
+      input.focus();
+    }
   } else if (currentTabMode === 'draw') {
     if (panelDraw) panelDraw.classList.add('active');
   } else if (currentTabMode === 'filter') {
@@ -630,7 +655,7 @@ async function searchHanjaCharacter(char) {
     const copyWord = itemObj.korean && itemObj.korean !== '?' ? itemObj.korean.split(',')[0].trim() : '';
     const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
     await navigator.clipboard.writeText(copyText);
-    showToast(`${copyText}가 클립보드로 복사되었습니다.`);
+    showToast(`${copyText} → 클립보드로 복사됨`);
   } catch (err) {
     console.error('Failed to copy to clipboard in searchHanjaCharacter:', err);
   }
@@ -896,6 +921,101 @@ tabDrawBtn.addEventListener('click', () => switchTab('draw'));
 tabFilterBtn.addEventListener('click', () => switchTab('filter'));
 if (backToSearchBtn) {
   backToSearchBtn.addEventListener('click', hideDetailView);
+}
+
+// 한자 뜻 편집 관련 이벤트 바인딩
+const startEditBtn = document.getElementById('startEditBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const saveEditBtn = document.getElementById('saveEditBtn');
+const editArea = document.getElementById('editArea');
+const editMeaningInput = document.getElementById('editMeaningInput');
+
+if (startEditBtn) {
+  startEditBtn.addEventListener('click', () => {
+    if (!currentDetailItem) return;
+    // </br> 및 <br> 태그를 줄바꿈(\n)으로 복원해서 편집 창에 채워 넣음
+    const rawMeaning = (currentDetailItem.meaning || '')
+      .replace(/<\/br>/gi, '\n')
+      .replace(/<br\s*\/?>/gi, '\n');
+    editMeaningInput.value = rawMeaning;
+    detailMeaning.style.display = 'none';
+    startEditBtn.style.display = 'none';
+    editArea.style.display = 'flex';
+    editMeaningInput.focus();
+  });
+}
+
+if (cancelEditBtn) {
+  cancelEditBtn.addEventListener('click', () => {
+    editArea.style.display = 'none';
+    detailMeaning.style.display = 'block';
+    startEditBtn.style.display = 'block';
+  });
+}
+
+if (saveEditBtn) {
+  saveEditBtn.addEventListener('click', async () => {
+    if (!currentDetailItem) return;
+    const rawInput = editMeaningInput.value.trim();
+    // 줄바꿈을 </br>로 치환하여 저장
+    const processedMeaning = rawInput.replace(/\n/g, '</br>');
+    
+    saveEditBtn.disabled = true;
+    saveEditBtn.textContent = '저장 중...';
+    
+    try {
+      const response = await fetch('/api/save_hanja', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          file: currentDetailItem.file,
+          korean: currentDetailItem.korean,
+          hanja: currentDetailItem.hanja,
+          meaning: processedMeaning
+        })
+      });
+      
+      const resData = await response.json();
+      if (!response.ok || !resData.success) {
+        throw new Error(resData.error || '저장에 실패했습니다.');
+      }
+      
+      // 메모리 데이터 동기화
+      currentDetailItem.meaning = processedMeaning;
+      
+      // hanjaMap 업데이트
+      if (hanjaMap.has(currentDetailItem.korean)) {
+        const innerMap = hanjaMap.get(currentDetailItem.korean);
+        if (innerMap.has(currentDetailItem.hanja)) {
+          innerMap.get(currentDetailItem.hanja).meaning = processedMeaning;
+        }
+      }
+      
+      // hanjaList 업데이트
+      const listIndex = hanjaList.findIndex(item => 
+        item.korean === currentDetailItem.korean && 
+        item.hanja === currentDetailItem.hanja
+      );
+      if (listIndex !== -1) {
+        hanjaList[listIndex].meaning = processedMeaning;
+      }
+      
+      // 뷰 갱신 및 상태 복구
+      detailMeaning.innerHTML = processedMeaning.replace(/<\/br>/g, '<br>');
+      editArea.style.display = 'none';
+      detailMeaning.style.display = 'block';
+      startEditBtn.style.display = 'block';
+      
+      showToast('뜻 설명이 성공적으로 저장되었습니다!');
+    } catch (err) {
+      alert('에러 발생: ' + err.message);
+    } finally {
+      saveEditBtn.disabled = false;
+      saveEditBtn.textContent = '저장';
+    }
+  });
 }
 
 // 토스트 메시지 보이기

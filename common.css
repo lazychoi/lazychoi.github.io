@@ -269,6 +269,7 @@ a {
   .search-container,
   .flashcard-container,
   .container,
+  .container:has(.section-card),
   .app-container {
     width: 100% !important;
     max-width: 100% !important;
