@@ -234,7 +234,7 @@ function showDetailView(itemObj, customWord) {
   const editArea = document.getElementById('editArea');
   if (startEditBtn) {
     if (isLocal && itemObj.file) {
-      startEditBtn.style.display = 'block';
+      startEditBtn.style.display = 'flex';
     } else {
       startEditBtn.style.display = 'none';
     }
@@ -246,6 +246,9 @@ function showDetailView(itemObj, customWord) {
   prevStatusText = statusText.textContent;
   
   // 2. 다른 UI 요소들 숨기기
+  const container = document.querySelector('.container');
+  if (container) container.classList.add('detail-mode');
+
   const tabsEl = document.querySelector('.search-tabs');
   if (tabsEl) tabsEl.style.display = 'none';
   if (panelSearch) panelSearch.classList.remove('active');
@@ -272,6 +275,9 @@ function hideDetailView() {
   panelDetail.classList.remove('active');
   
   // 2. 다른 UI 요소들 다시 보여주기
+  const container = document.querySelector('.container');
+  if (container) container.classList.remove('detail-mode');
+
   const tabsEl = document.querySelector('.search-tabs');
   if (tabsEl) tabsEl.style.display = '';
   const wrapperEl = document.querySelector('.result-wrapper');
@@ -359,6 +365,180 @@ function renderHanjaList(hanjas, isExact, customWord) {
 }
 
 // ── 1. 음/뜻 검색 이벤트 처리 ──
+// 찾으시는 한자가 없는 경우 보여줄 추가 버튼 생성 및 이벤트 바인딩
+function appendAddButton(word) {
+  const btnWrapper = document.createElement('div');
+  btnWrapper.style.display = 'flex';
+  btnWrapper.style.justifyContent = 'center';
+  btnWrapper.style.marginTop = '20px';
+  btnWrapper.style.marginBottom = '20px';
+  btnWrapper.style.width = '100%';
+  
+  const addLink = document.createElement('button');
+  addLink.className = 'control-btn';
+  addLink.style.width = 'auto';
+  addLink.style.padding = '10px 20px';
+  addLink.style.fontSize = '13px';
+  addLink.style.borderStyle = 'dashed';
+  addLink.style.borderColor = 'var(--accent)';
+  addLink.style.color = 'var(--accent)';
+  addLink.style.background = 'rgba(37, 99, 235, 0.03)';
+  addLink.style.margin = '0';
+  addLink.textContent = '➕ 찾으시는 한자가 없나요? 새 한자 추가';
+  
+  addLink.addEventListener('click', () => {
+    showAddForm(word);
+  });
+  
+  btnWrapper.appendChild(addLink);
+  resultList.appendChild(btnWrapper);
+}
+
+// 새 한자 등록 폼 렌더링
+function showAddForm(word) {
+  resultList.innerHTML = '';
+  statusText.textContent = '새 한자 추가 모드';
+  statusText.classList.add('show');
+  
+  const addCard = document.createElement('div');
+  addCard.className = 'add-hanja-card';
+  
+  const title = document.createElement('h3');
+  title.textContent = '✨ 새 한자 추가하기';
+  addCard.appendChild(title);
+  
+  const desc = document.createElement('p');
+  desc.className = 'add-desc';
+  desc.innerHTML = `단어/음 '<b>${word}</b>'에 대한 한자 정보를 새로 등록합니다.`;
+  addCard.appendChild(desc);
+  
+  // 추가할 한자 입력그룹
+  const charGroup = document.createElement('div');
+  charGroup.className = 'add-form-group';
+  const charLabel = document.createElement('label');
+  charLabel.textContent = '추가할 한자';
+  const charInput = document.createElement('input');
+  charInput.type = 'text';
+  charInput.id = 'addHanjaChar';
+  charInput.placeholder = '예: 韓';
+  charInput.maxLength = 10;
+  charGroup.appendChild(charLabel);
+  charGroup.appendChild(charInput);
+  addCard.appendChild(charGroup);
+  
+  // 한글 음 입력그룹
+  const korGroup = document.createElement('div');
+  korGroup.className = 'add-form-group';
+  const korLabel = document.createElement('label');
+  korLabel.textContent = '한글 음';
+  const korInput = document.createElement('input');
+  korInput.type = 'text';
+  korInput.id = 'addHanjaKorean';
+  korInput.value = word;
+  korInput.placeholder = '예: 한';
+  korGroup.appendChild(korLabel);
+  korGroup.appendChild(korInput);
+  addCard.appendChild(korGroup);
+  
+  // 뜻 설명 입력그룹
+  const meaningGroup = document.createElement('div');
+  meaningGroup.className = 'add-form-group';
+  const meaningLabel = document.createElement('label');
+  meaningLabel.textContent = '뜻 설명';
+  const meaningInput = document.createElement('textarea');
+  meaningInput.id = 'addHanjaMeaning';
+  meaningInput.placeholder = '예: 나라 이름 한\n여러 줄 입력이 가능합니다.';
+  meaningInput.rows = 3;
+  meaningGroup.appendChild(meaningLabel);
+  meaningGroup.appendChild(meaningInput);
+  addCard.appendChild(meaningGroup);
+  
+  // 버튼 그룹
+  const btnGroup = document.createElement('div');
+  btnGroup.style.display = 'flex';
+  btnGroup.style.gap = '10px';
+  btnGroup.style.width = '100%';
+  
+  // 취소 버튼
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'control-btn';
+  cancelBtn.style.flex = '1';
+  cancelBtn.style.margin = '0';
+  cancelBtn.textContent = '취소';
+  cancelBtn.addEventListener('click', () => {
+    // 이전 검색 결과 다시 노출
+    input.dispatchEvent(new Event('input'));
+  });
+  
+  // 등록 버튼
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'add-submit-btn';
+  submitBtn.style.flex = '2';
+  submitBtn.textContent = '💾 사전 등록하기';
+  submitBtn.addEventListener('click', async () => {
+    const addedHanja = charInput.value.trim();
+    const addedKorean = korInput.value.trim();
+    const addedMeaning = meaningInput.value.trim();
+    
+    if (!addedHanja || !addedKorean) {
+      alert('한자와 한글 음을 입력해 주세요.');
+      return;
+    }
+    
+    submitBtn.disabled = true;
+    submitBtn.textContent = '등록 중...';
+    
+    try {
+      const response = await fetch('/api/add_hanja', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          korean: addedKorean,
+          hanja: addedHanja,
+          meaning: addedMeaning
+        })
+      });
+      
+      const resData = await response.json();
+      if (!response.ok || !resData.success) {
+        throw new Error(resData.error || '등록에 실패했습니다.');
+      }
+      
+      // 메모리 데이터 동기화
+      const file = 'h15.txt';
+      if (!hanjaMap.has(addedKorean)) {
+        hanjaMap.set(addedKorean, new Map());
+      }
+      const processedMeaning = addedMeaning.replace(/\n/g, '</br>');
+      hanjaMap.get(addedKorean).set(addedHanja, { meaning: processedMeaning, file });
+      
+      if (addedHanja.length === 1) {
+        const exists = hanjaList.some(item => item.korean === addedKorean && item.hanja === addedHanja);
+        if (!exists) {
+          hanjaList.push({ korean: addedKorean, hanja: addedHanja, meaning: processedMeaning, file });
+        }
+      }
+      
+      showToast('새 한자가 사전에 등록되었습니다!');
+      
+      input.value = addedKorean;
+      input.dispatchEvent(new Event('input'));
+      
+    } catch (err) {
+      alert('에러 발생: ' + err.message);
+      submitBtn.disabled = false;
+      submitBtn.textContent = '💾 사전 등록하기';
+    }
+  });
+  
+  btnGroup.appendChild(cancelBtn);
+  btnGroup.appendChild(submitBtn);
+  addCard.appendChild(btnGroup);
+  resultList.appendChild(addCard);
+}
+
 input.addEventListener('input', () => {
   const word = input.value.trim();
 
@@ -379,7 +559,6 @@ input.addEventListener('input', () => {
     statusText.textContent = `검색 완료. 클릭하여 복사하세요.`;
     statusText.classList.add('show');
 
-    // 음/단어 검색 결과와 뜻/훈 검색 결과가 둘 다 있는 경우 분리 렌더링
     if (exactMatches.length > 0 && meaningMatches.length > 0) {
       const pSection = document.createElement('div');
       pSection.className = 'result-section';
@@ -411,9 +590,15 @@ input.addEventListener('input', () => {
     } else {
       renderHanjaList(meaningMatches, false);
     }
+    
+    // 일치 결과가 있는 경우에도 하단에 '추가' 버튼 노출!
+    appendAddButton(word);
   } else {
     statusText.textContent = '일치하는 한자가 없습니다.';
     statusText.classList.add('show');
+    
+    // 일치 결과가 없는 경우 폼을 바로 노출
+    showAddForm(word);
   }
 });
 
@@ -877,6 +1062,9 @@ function switchTab(mode) {
 
   // 상세 보기 관련 UI 숨기기 및 원래대로 복구
   if (panelDetail) panelDetail.classList.remove('active');
+  const container = document.querySelector('.container');
+  if (container) container.classList.remove('detail-mode');
+
   const tabsEl = document.querySelector('.search-tabs');
   if (tabsEl) tabsEl.style.display = '';
   const wrapperEl = document.querySelector('.result-wrapper');
@@ -949,7 +1137,7 @@ if (cancelEditBtn) {
   cancelEditBtn.addEventListener('click', () => {
     editArea.style.display = 'none';
     detailMeaning.style.display = 'block';
-    startEditBtn.style.display = 'block';
+    startEditBtn.style.display = 'flex';
   });
 }
 
@@ -1006,7 +1194,7 @@ if (saveEditBtn) {
       detailMeaning.innerHTML = processedMeaning.replace(/<\/br>/g, '<br>');
       editArea.style.display = 'none';
       detailMeaning.style.display = 'block';
-      startEditBtn.style.display = 'block';
+      startEditBtn.style.display = 'flex';
       
       showToast('뜻 설명이 성공적으로 저장되었습니다!');
     } catch (err) {

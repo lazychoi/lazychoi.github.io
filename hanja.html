@@ -719,9 +719,9 @@
         padding-top: 12px;
       }
 
-      .detail-back-btn {
-        padding: 12px;
-        font-size: 14px;
+      .detail-back-btn, .detail-edit-btn {
+        padding: 10px 8px;
+        font-size: 12px;
       }
     }
 
@@ -733,7 +733,8 @@
       align-items: center;
       justify-content: center;
       animation: fadeIn 0.3s ease forwards;
-      height: 100%;
+      flex-grow: 1;
+      height: 0;
       min-height: 0;
     }
 
@@ -824,25 +825,40 @@
       font-weight: 600;
     }
 
-    .detail-back-btn {
+    /* ── 상세 보기 하단 버튼 레이아웃 ── */
+    .detail-action-row {
+      display: flex;
+      gap: 12px;
       width: 100%;
-      max-width: 300px;
+      max-width: 500px;
+      justify-content: center;
+      align-items: center;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+
+    .detail-back-btn, .detail-edit-btn {
+      flex: 1;
+      max-width: 240px;
       padding: 14px;
       font-size: 15px;
       font-weight: 600;
       border-radius: 12px;
-      background: var(--accent);
-      color: white;
-      border: 1px solid var(--accent);
-      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
       cursor: pointer;
       transition: all 0.2s ease;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 4px;
       flex-shrink: 0;
+      box-sizing: border-box;
+    }
+
+    .detail-back-btn {
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
 
     .detail-back-btn:hover {
@@ -853,6 +869,140 @@
     }
 
     .detail-back-btn:active {
+      transform: translateY(0);
+    }
+
+    .detail-edit-btn {
+      background: rgba(0, 0, 0, 0.04);
+      color: var(--text-main);
+      border: 1px solid var(--glass-border);
+    }
+
+    .detail-edit-btn:hover {
+      background: rgba(0, 0, 0, 0.08);
+      border-color: var(--text-muted);
+      transform: translateY(-2px);
+    }
+
+    .detail-edit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ── 상세 보기 활성화 시 컨테이너 조절 ── */
+    .container.detail-mode {
+      padding-bottom: 0;
+    }
+
+    .container.detail-mode .status,
+    .container.detail-mode .meaning-display {
+      display: none;
+    }
+
+    /* ── 새 한자 추가 카드 스타일 ── */
+    .add-hanja-card {
+      width: 100%;
+      max-width: 450px;
+      margin: 15px auto;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.01);
+      animation: fadeIn 0.3s ease forwards;
+      box-sizing: border-box;
+    }
+
+    .add-hanja-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0;
+      letter-spacing: -0.3px;
+      text-align: center;
+    }
+
+    .add-desc {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin: 0;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .add-desc b {
+      color: var(--amber);
+      font-weight: 600;
+    }
+
+    .add-form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    .add-form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .add-form-group input,
+    .add-form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.03);
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      text-align: left;
+    }
+
+    .add-form-group input:focus,
+    .add-form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .add-form-group textarea {
+      resize: vertical;
+      line-height: 1.5;
+    }
+
+    .add-submit-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      background: var(--accent);
+      color: white;
+      border: 1px solid var(--accent);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .add-submit-btn:hover {
+      background: var(--accent-hover);
+      border-color: var(--accent-hover);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .add-submit-btn:active {
       transform: translateY(0);
     }
   </style>
@@ -973,10 +1123,11 @@
               <button id="saveEditBtn" class="control-btn" style="width: auto; padding: 8px 16px; font-size: 13px; margin: 0; background: var(--accent); color: white; border-color: var(--accent); flex: none;">저장</button>
             </div>
           </div>
-          <!-- 수정하기 버튼 (로컬 서버 모드에서 노출) -->
-          <button id="startEditBtn" class="control-btn" style="display: none; width: auto; font-size: 13px; margin-top: 12px; padding: 8px 16px; align-self: flex-end; flex: none;">✏️ 뜻 설명 수정</button>
         </div>
-        <button id="backToSearchBtn" class="detail-back-btn">⬅️ 다른 한자 선택</button>
+        <div class="detail-action-row">
+          <button id="backToSearchBtn" class="detail-back-btn">⬅️ 다른 한자 선택</button>
+          <button id="startEditBtn" class="detail-edit-btn" style="display: none;">✏️ 뜻 고침</button>
+        </div>
       </div>
     </div>
 
