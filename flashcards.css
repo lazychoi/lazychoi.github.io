@@ -472,20 +472,96 @@
 }
 
 /* 이미지 및 수식 렌더링용 스타일 */
-.card-back-meaning img {
-  max-width: 100%;
-  max-height: 180px;
-  border-radius: 8px;
-  margin: 12px 0;
+.meaning img {
   display: block;
+  width: 80%;
+  height: auto;
+  border-radius: 8px;
 }
 
-.card-back-meaning p {
-  margin-bottom: 12px;
+/* ── Image Containers ── */
+.image-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
 }
 
-.card-back-meaning p:last-child {
+.term-image {
+  width: 70%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.term-image:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+/* ──────────────────────────────────────────────────────
+   Markdown Content Styling inside .meaning
+   ────────────────────────────────────────────────────── */
+.meaning h3 {
+  color: #0000ff;
+  font-size: 1em;
+}
+.meaning h4 {
+  color: #000000;
+  font-size: 1em;
+}
+.meaning strong,
+.meaning b {
+  color: #ff0000;
+}
+.meaning em,
+.meaning i {
+  color: #51a553;
+  font-style: normal;
+  font-weight: bold;
+}
+.meaning p {
+  margin-bottom: 8px;
+}
+.meaning p:last-child {
   margin-bottom: 0;
+}
+.meaning ul,
+.meaning ol {
+  margin-bottom: 8px;
+  padding-left: 20px;
+}
+.meaning li {
+  margin-bottom: 4px;
+}
+.meaning code {
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  background: rgba(0, 0, 0, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+  color: var(--amber);
+}
+.meaning pre {
+  background: #f4f4f4;
+  border: 1px solid var(--glass-border);
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin-bottom: 8px;
+}
+.meaning pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+.meaning blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin: 0 0 8px 0;
 }
 
 /* ── 슬라이드 애니메이션 효과 ── */

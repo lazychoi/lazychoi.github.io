@@ -579,29 +579,30 @@ function studyFailedOnly() {
 function renderMarkdownAndMath(text) {
     if (!text) return '<span style="color: var(--text-muted); font-style: italic;">설명 없음</span>';
 
-    // 1. Extract block and inline math to protect from marked parsing
     const mathBlocks = [];
     let processed = text;
 
+    // Match $$ ... $$ (block math)
     processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
         const placeholder = `%%BLOCKMATH_${mathBlocks.length}%%`;
         mathBlocks.push({ placeholder, formula, isBlock: true });
         return placeholder;
     });
 
+    // Match $ ... $ (inline math)
     processed = processed.replace(/\$([^\$]+?)\$/g, (match, formula) => {
         const placeholder = `%%INLINEMATH_${mathBlocks.length}%%`;
         mathBlocks.push({ placeholder, formula, isBlock: false });
         return placeholder;
     });
 
-    // 2. Process image tags [[filename]]
+    // 2. Process image tags [[filename]] (Clean single-line to avoid markdown codeblock issue)
     processed = processed.replace(
         /\[\[(.*?)\]\]/g,
-        (match, filename) => `<div class="image-container" style="text-align: center; margin: 10px 0;"><img src="img/${filename}" alt="${filename}" style="max-width: 90%; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3);"></div>`
+        (match, filename) => `<div class="image-container"><img src="img/${filename}" alt="${filename}" class="term-image"></div>`
     );
 
-    // 3. Render Markdown
+    // 3. Render Markdown using marked.js if available
     let html = '';
     if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
         html = marked.parse(processed);
@@ -609,7 +610,7 @@ function renderMarkdownAndMath(text) {
         html = processed.replace(/\n/g, '<br>');
     }
 
-    // 4. Restore protected math blocks
+    // 4. Restore math blocks
     mathBlocks.forEach(item => {
         const mathHtml = item.isBlock ? `$$${item.formula}$$` : `$${item.formula}$`;
         html = html.replace(item.placeholder, mathHtml);
