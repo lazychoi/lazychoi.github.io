@@ -424,7 +424,6 @@ async function handleFormSubmit(e) {
 
     const eventData = {
         year: yearVal,
-        category: '',
         event: eventVal
     };
 
