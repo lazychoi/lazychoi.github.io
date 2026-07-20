@@ -388,6 +388,9 @@ function renderTimeline() {
         
         timelineItemsList.appendChild(itemDiv);
     });
+
+    // 위키백과 미리보기 툴팁 바인딩
+    initWikiPreview();
 }
 
 // ── [[텍스트]] 파싱 및 구글 검색/AI 모드 링크 치환 ──
@@ -440,7 +443,6 @@ async function handleFormSubmit(e) {
                 .select();
 
             if (error) throw error;
-            alert('사건이 성공적으로 수정되었습니다.');
         } else {
             // 2. 신규 데이터 추가
             const { data, error } = await supabaseClient
@@ -449,7 +451,6 @@ async function handleFormSubmit(e) {
                 .select();
 
             if (error) throw error;
-            alert('사건이 성공적으로 추가되었습니다.');
             
             // 신규 추가된 사건의 연도를 검색어 창에 넣어 앵커로 잡히도록 유도
             if (data && data.length > 0) {
@@ -496,7 +497,7 @@ window.deleteEvent = async function(id) {
             .eq('id', id);
 
         if (error) throw error;
-        alert('성공적으로 삭제되었습니다.');
+        //alert('성공적으로 삭제되었습니다.');
         
         // 전체 데이터 리로드 후 자동 화면 갱신
         await loadAllEvents();
@@ -505,3 +506,142 @@ window.deleteEvent = async function(id) {
         alert("삭제 중 오류가 발생했습니다: " + err.message);
     }
 };
+
+// ── Wikipedia Preview Tooltip Logic ──
+
+let wikiTimeout = null;
+let activeWikiRequest = null; // 중복 요청 방지용 AbortController
+
+function initWikiPreview() {
+    // 데스크탑 환경인지 체크 (마우스 포인터 정밀도가 fine 인 경우만 프리뷰 동작)
+    const isDesktop = window.matchMedia('(pointer: fine)').matches;
+    if (!isDesktop) return;
+
+    const eventLinks = document.querySelectorAll('.event-link');
+    const previewCard = document.getElementById('wiki-preview-card');
+    
+    if (!previewCard) return;
+
+    // 툴팁 자체의 mouseenter/mouseleave 이벤트 등록
+    previewCard.onmouseenter = () => {
+        clearTimeout(wikiTimeout);
+    };
+    
+    previewCard.onmouseleave = () => {
+        clearTimeout(wikiTimeout);
+        wikiTimeout = setTimeout(hideWikiPreview, 300);
+    };
+
+    // 브라우저 포커스가 해제될 때(탭 전환, 새 창 열림 등) 프리뷰를 즉시 숨김
+    window.addEventListener('blur', hideWikiPreview);
+
+    eventLinks.forEach(link => {
+        link.addEventListener('mouseenter', (e) => {
+            clearTimeout(wikiTimeout);
+            const keyword = e.target.textContent.trim();
+            showWikiPreview(e.target, keyword);
+        });
+
+        link.addEventListener('mouseleave', () => {
+            clearTimeout(wikiTimeout);
+            wikiTimeout = setTimeout(hideWikiPreview, 300);
+        });
+
+        // 링크 클릭 시 (새 창으로 이동할 때) 프리뷰 툴팁 즉시 제거
+        link.addEventListener('click', hideWikiPreview);
+    });
+}
+
+async function showWikiPreview(targetEl, keyword) {
+    const previewCard = document.getElementById('wiki-preview-card');
+    const loadingEl = previewCard.querySelector('.wiki-loading');
+    const contentEl = previewCard.querySelector('.wiki-content');
+    const titleEl = previewCard.querySelector('.wiki-title');
+    const thumbnailEl = previewCard.querySelector('.wiki-thumbnail');
+    const extractEl = previewCard.querySelector('.wiki-extract');
+
+    // 1. 툴팁 위치 계산 및 초기화
+    const rect = targetEl.getBoundingClientRect();
+    const tooltipWidth = 320;
+    
+    // 링크의 중앙 하단 배치
+    let left = rect.left + window.scrollX + (rect.width / 2) - (tooltipWidth / 2);
+    let top = rect.bottom + window.scrollY + 8;
+    
+    // 화면 좌우 밖으로 나가지 않도록 조정 (여백 10px)
+    left = Math.max(10, Math.min(left, window.innerWidth - tooltipWidth - 10));
+
+    previewCard.style.left = `${left}px`;
+    previewCard.style.top = `${top}px`;
+    
+    // 표시 및 로딩 모드
+    previewCard.style.display = 'block';
+    // 강제 리플로우를 일으켜 transition이 먹히도록 함
+    previewCard.offsetHeight; 
+    previewCard.classList.add('show');
+
+    loadingEl.style.display = 'flex';
+    contentEl.style.display = 'none';
+
+    // 2. 위키백과 API 호출
+    if (activeWikiRequest) {
+        activeWikiRequest.abort(); // 이전 진행중인 fetch 취소
+    }
+    activeWikiRequest = new AbortController();
+    const { signal } = activeWikiRequest;
+
+    try {
+        // 위키백과 요약 API 호출 (한국어 위키)
+        const response = await fetch(`https://ko.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(keyword)}`, { signal });
+        
+        if (!response.ok) {
+            throw new Error('Not found');
+        }
+
+        const data = await response.json();
+        
+        // 3. UI 렌더링
+        titleEl.textContent = data.title;
+        extractEl.textContent = data.extract;
+        
+        if (data.thumbnail && data.thumbnail.source) {
+            thumbnailEl.src = data.thumbnail.source;
+            thumbnailEl.style.display = 'block';
+        } else {
+            thumbnailEl.style.display = 'none';
+        }
+
+        loadingEl.style.display = 'none';
+        contentEl.style.display = 'block';
+        
+    } catch (err) {
+        if (err.name === 'AbortError') return; // 취소된 요청은 무시
+
+        // 위키피디아에 정보가 없는 경우 예외 처리
+        titleEl.textContent = keyword;
+        extractEl.textContent = `위키백과 요약 정보를 찾을 수 없습니다. 클릭하면 구글 검색 결과 페이지로 이동합니다.`;
+        thumbnailEl.style.display = 'none';
+        
+        loadingEl.style.display = 'none';
+        contentEl.style.display = 'block';
+    }
+}
+
+function hideWikiPreview() {
+    const previewCard = document.getElementById('wiki-preview-card');
+    if (!previewCard) return;
+
+    previewCard.classList.remove('show');
+    
+    // 페이드아웃 애니메이션 완료(200ms) 후 display: none 처리
+    setTimeout(() => {
+        if (!previewCard.classList.contains('show')) {
+            previewCard.style.display = 'none';
+        }
+    }, 200);
+    
+    if (activeWikiRequest) {
+        activeWikiRequest.abort();
+        activeWikiRequest = null;
+    }
+}

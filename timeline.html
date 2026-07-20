@@ -72,7 +72,7 @@
       <div class="empty-icon">🔍</div>
       <h3 style="font-weight: 700; color: var(--text-main); font-size: 17px;">타임라인 탐색을 시작하세요</h3>
       <p style="font-size: 14px; line-height: 1.5; margin: 0; max-width: 400px; word-break: keep-all;">
-        연도나 키워드를 입력하고 검색하면 매칭된 사건을 중심으로 이전/이후의 역사적 흐름이 한눈에 펼쳐집니다.
+        연도나 키워드로 검색하면 매칭된 사건을 중심으로 이전/이후의 역사적 흐름이 한눈에 펼쳐집니다.
       </p>
     </div>
 
@@ -141,6 +141,27 @@
       </div>
     </form>
   </dialog>
+
+  <!-- 위키피디아 프리뷰 툴팁 -->
+  <div id="wiki-preview-card" class="wiki-preview-card" style="display: none; opacity: 0;">
+    <div class="wiki-loading">
+      <div class="spinner"></div>
+      <span>위키백과 정보를 가져오는 중...</span>
+    </div>
+    <div class="wiki-content" style="display: none;">
+      <div class="wiki-header">
+        <h4 class="wiki-title"></h4>
+        <span class="wiki-badge">Wikipedia</span>
+      </div>
+      <div class="wiki-body">
+        <img class="wiki-thumbnail" src="" alt="thumbnail" style="display: none;">
+        <p class="wiki-extract"></p>
+      </div>
+      <div class="wiki-footer">
+        <span class="wiki-hint">클릭 시 구글 검색 페이지로 이동합니다.</span>
+      </div>
+    </div>
+  </div>
 
   <script>
     // 네비게이션 모바일 토글 버튼 처리
