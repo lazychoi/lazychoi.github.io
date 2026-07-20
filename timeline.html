@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>세계사 연표</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="timeline.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- timeline.js -->
+  <script defer src="timeline.js"></script>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">⏳ 세계사 연표</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">🏠</span> 홈
+      </a>
+      <a href="farm.html" class="nav-link">
+        <span class="nav-icon">🌱</span> 용어 노트
+      </a>
+      <a href="flashcards.html" class="nav-link">
+        <span class="nav-icon">🗂️</span> 플래시카드
+      </a>
+      <a href="hanja.html" class="nav-link">
+        <span class="nav-icon">📗</span> 한글(한자)
+      </a>
+      <a href="rebalance.html" class="nav-link">
+        <span class="nav-icon">⚖️</span> 자산 리밸런싱
+      </a>
+      <a href="listening.html" class="nav-link">
+        <span class="nav-icon">🎧</span> 영어 듣기
+      </a>
+      <a href="timeline.html" class="nav-link active">
+        <span class="nav-icon">⏳</span> 세계사 연표
+      </a>
+    </div>
+    <div class="auth-status-container">
+      <span id="authStatusText" style="font-size: 13px; color: var(--text-muted); margin-right: 8px;"></span>
+      <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+      <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+    </div>
+  </nav>
+
+  <div class="timeline-container">
+    <div class="timeline-header-card">
+      <h1 class="search-title">⏳ 세계사 연표</h1>
+      <p style="text-align: center; color: var(--text-muted); font-size: 14px; margin-top: -10px; margin-bottom: 5px;">
+        역사적 사건이나 연도를 검색하여 타임라인을 조회합니다.
+      </p>
+      
+      <div class="search-row">
+        <div class="search-input-wrapper">
+          <input type="text" id="searchTerm" placeholder="검색할 사건 또는 연도를 입력하세요 (예: 1945, 임진왜란)">
+        </div>
+        <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">+ 사건 추가</button>
+      </div>
+
+    </div>
+
+    <!-- 초기 안내 상태 / 검색 결과 없음 상태 -->
+    <div id="emptyState" class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3 style="font-weight: 700; color: var(--text-main); font-size: 17px;">타임라인 탐색을 시작하세요</h3>
+      <p style="font-size: 14px; line-height: 1.5; margin: 0; max-width: 400px; word-break: keep-all;">
+        연도나 키워드를 입력하고 검색하면 매칭된 사건을 중심으로 이전/이후의 역사적 흐름이 한눈에 펼쳐집니다.
+      </p>
+    </div>
+
+    <!-- 타임라인 표시 영역 (기본적으로 숨김, 검색 후 표시) -->
+    <div id="timelineWrapper" class="timeline-view-wrapper" style="display: none;">
+      <!-- 수직 연도선 -->
+      <div class="timeline-line"></div>
+
+      <!-- 이전 역사 로딩 버튼 -->
+      <div class="load-more-btn-container">
+        <button id="btnPrevHistory" class="btn-load-more">▲ 이전 역사 더 보기</button>
+      </div>
+
+      <!-- 동적 연표 카드들 배치 -->
+      <div id="timelineItemsList" class="timeline-items-list">
+        <!-- JS dynamic content -->
+      </div>
+
+      <!-- 이후 역사 로딩 버튼 -->
+      <div class="load-more-btn-container">
+        <button id="btnNextHistory" class="btn-load-more">▼ 이후 역사 더 보기</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- 로그인 다이얼로그 모달 -->
+  <dialog id="loginDialog" class="auth-dialog">
+    <form id="loginForm">
+      <h3>🔒 관리자 로그인</h3>
+      <div class="form-group">
+        <label for="loginEmail">이메일 주소</label>
+        <input type="email" id="loginEmail" autocomplete="username" placeholder="admin@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">비밀번호</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitLogin" class="btn btn-primary">로그인</button>
+        <button type="button" id="btnCancelLogin" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 사건 추가/수정 다이얼로그 모달 -->
+  <dialog id="timelineFormDialog" class="auth-dialog responsive-dialog">
+    <form id="timelineForm">
+      <h3 id="formTitle">➕ 새 사건 추가</h3>
+      
+      <div class="form-group">
+        <label for="inputYear">연도 (숫자, 필수)</label>
+        <input type="number" id="inputYear" placeholder="기원전은 음수, 기원후는 양수 입력 (예: -2333, 1945)" required>
+      </div>
+
+
+      <div class="form-group">
+        <label for="inputEvent">사건 내용 (필수)</label>
+        <textarea id="inputEvent" rows="4" placeholder="사건 내용을 입력하세요. [[키워드]] 형태로 입력하면 해당 키워드에 구글 검색 링크가 달립니다. (예: [[제2차 세계대전]] 발발)" required></textarea>
+      </div>
+
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitForm" class="btn btn-primary">➕ 추가하기</button>
+        <button type="button" id="btnCancelForm" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+    // 네비게이션 모바일 토글 버튼 처리
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>

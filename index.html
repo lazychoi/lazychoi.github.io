@@ -83,6 +83,10 @@
       background: var(--amber);
     }
 
+    .card.timeline::before {
+      background: #8b5cf6; /* Purple highlight for timeline */
+    }
+
     .card:hover {
       transform: translateY(-4px);
       border-color: rgba(0, 0, 0, 0.12);
@@ -158,6 +162,9 @@
       <a href="listening.html" class="nav-link">
         <span class="nav-icon">🎧</span> 영어 듣기
       </a>
+      <a href="timeline.html" class="nav-link">
+        <span class="nav-icon">⏳</span> 세계사 연표
+      </a>
     </div>
   </nav>
 
@@ -195,6 +202,12 @@
         <div class="icon">🎧</div>
         <h2 class="card-title">영어 듣기 연습</h2>
         <p class="card-desc">오디오 파일(.mp3)과 구간 대본(.txt)을 임포트하여 듣기 연습(구간 반복, 배속 조절)</p>
+      </a>
+
+      <a href="timeline.html" class="card timeline">
+        <div class="icon">⏳</div>
+        <h2 class="card-title">세계사 연표</h2>
+        <p class="card-desc">연도나 사건을 검색해 관련 타임라인을 조회하고 [[키워드]]로 인공지능/구글 역사 지식을 탐색하는 연표 도구</p>
       </a>
     </div>
   </div>
