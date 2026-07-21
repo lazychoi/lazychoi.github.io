@@ -15,6 +15,8 @@ let volume = 1.0;
 let globalLoopEnabled = false; // "R" toggle (Repeat Current Section)
 let loopSectionIndex = null;   // The locked section index for looping when globalLoopEnabled is ON
 let isDraggingTimeline = false;
+let loopCountRemaining = Infinity; // Remaining repeat count for current section
+
 
 // SVG Icons for iOS Compatibility
 const PLAY_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
@@ -31,6 +33,7 @@ const speedSelect = document.getElementById('speed-select');
 const audioFileInput = document.getElementById('audio-file');
 const subFileInput = document.getElementById('subtitle-file');
 const loadedAudioNameSpan = document.getElementById('loaded-audio-name');
+const repeatCountInput = document.getElementById('repeat-count-input');
 const transcriptPane = document.getElementById('transcript-pane');
 const emptyPromptView = document.getElementById('empty-prompt-view');
 
@@ -181,7 +184,49 @@ function setupControlBarListeners() {
     setPlaybackSpeed(val);
   });
 
+  // Repeat count input handlers
+  if (repeatCountInput) {
+    repeatCountInput.addEventListener('blur', () => {
+      const val = repeatCountInput.value.trim();
+      if (val === '' || val === '∞' || isNaN(parseInt(val, 10)) || parseInt(val, 10) <= 0) {
+        repeatCountInput.value = '∞';
+      }
+      resetLoopCount();
+    });
+    repeatCountInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        repeatCountInput.blur();
+      }
+    });
+  }
 
+  // Subtitle selection control buttons
+  const btnSelectAll = document.getElementById('btn-select-all');
+  const btnDeselectAll = document.getElementById('btn-deselect-all');
+  if (btnSelectAll) {
+    btnSelectAll.addEventListener('click', () => {
+      subtitles.forEach(s => s.checked = true);
+      renderSubtitles();
+    });
+  }
+  if (btnDeselectAll) {
+    btnDeselectAll.addEventListener('click', () => {
+      subtitles.forEach(s => s.checked = false);
+      renderSubtitles();
+    });
+  }
+}
+
+function getDesiredRepeatCount() {
+  if (!repeatCountInput) return Infinity;
+  const val = repeatCountInput.value.trim();
+  if (val === '∞' || val === '') return Infinity;
+  const num = parseInt(val, 10);
+  return isNaN(num) || num <= 0 ? Infinity : num;
+}
+
+function resetLoopCount() {
+  loopCountRemaining = getDesiredRepeatCount();
 }
 
 function togglePlay() {
@@ -201,6 +246,7 @@ function toggleGlobalSectionRepeat() {
   if (globalLoopEnabled) {
     repeatToggleBtn.classList.add('btn-active');
     loopSectionIndex = (activeIndex !== -1) ? activeIndex : 0;
+    resetLoopCount(); // Reset repeat count when enabling loop
   } else {
     repeatToggleBtn.classList.remove('btn-active');
     loopSectionIndex = null;
@@ -208,14 +254,101 @@ function toggleGlobalSectionRepeat() {
   updateTimelineLoopZone();
 }
 
+// ── 체크박스가 활성화된 구간들의 인덱스 목록 획득 ──
+function getCheckedIndices() {
+  const indices = [];
+  subtitles.forEach((s) => {
+    if (s.checked) {
+      indices.push(s.index);
+    }
+  });
+  return indices;
+}
+
 // ── Precision Section Repeating Logic ──
 function checkSectionLoop(curTime) {
-  if (globalLoopEnabled && loopSectionIndex !== null && subtitles[loopSectionIndex]) {
-    const section = subtitles[loopSectionIndex];
-    if (curTime >= section.end) {
-      audioPlayer.currentTime = section.start;
-      if (audioPlayer.paused) audioPlayer.play();
+  if (!globalLoopEnabled) return;
+
+  const checkedIndices = getCheckedIndices();
+
+  if (checkedIndices.length > 0) {
+    // ══════════════════════════════════════════════════════
+    // [모드 A] 선택 구간 묶음 반복 (Group Loop)
+    // ══════════════════════════════════════════════════════
+    if (loopSectionIndex !== null && subtitles[loopSectionIndex]) {
+      const section = subtitles[loopSectionIndex];
+
+      // 만약 현재 재생 중인 구간이 체크 해제되었다면 즉시 다음 체크된 구간으로 점프
+      if (section.checked === false) {
+        const nextIdx = checkedIndices.find(idx => idx > loopSectionIndex);
+        if (nextIdx !== undefined) {
+          jumpToSection(nextIdx, true); // 리셋 없이 이동 (isAuto: true)
+        } else {
+          handleLoopCycleEnd(checkedIndices);
+        }
+        return;
+      }
+
+      if (curTime >= section.end) {
+        const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
+        const isLastCheckedSection = (currentPosInChecked === checkedIndices.length - 1);
+
+        if (isLastCheckedSection) {
+          // 마지막 체크 구간 재생이 끝났으므로 1회 사이클 완료 처리
+          handleLoopCycleEnd(checkedIndices);
+        } else {
+          // 중간 구간 재생이 끝났으므로 다음 체크 구간으로 자동 점프
+          const nextIdx = checkedIndices[currentPosInChecked + 1];
+          jumpToSection(nextIdx, true); // 리셋 없이 이동 (isAuto: true)
+        }
+      }
     }
+  } else {
+    // ══════════════════════════════════════════════════════
+    // [모드 B] 개별 구간별 순차 반복 (Individual Sequential Loop)
+    // ══════════════════════════════════════════════════════
+    if (loopSectionIndex !== null && subtitles[loopSectionIndex]) {
+      const section = subtitles[loopSectionIndex];
+
+      if (curTime >= section.end) {
+        if (loopCountRemaining > 1) {
+          if (loopCountRemaining !== Infinity) {
+            loopCountRemaining--;
+          }
+          audioPlayer.currentTime = section.start;
+          if (audioPlayer.paused) audioPlayer.play();
+        } else {
+          // 지정된 반복 횟수를 채웠으므로, 다음 구간으로 자동 이동하면서 카운트 리셋
+          const nextIdx = loopSectionIndex + 1;
+          if (nextIdx < subtitles.length) {
+            jumpToSection(nextIdx, false); // 새 구간이므로 루프 카운트 리셋 (isAuto: false)
+          } else {
+            // 마지막 구간인 경우 루프 모드 해제
+            globalLoopEnabled = false;
+            repeatToggleBtn.classList.remove('btn-active');
+            loopSectionIndex = null;
+            updateTimelineLoopZone();
+          }
+        }
+      }
+    }
+  }
+}
+
+// ── 1회 사이클 완료(전체 묶음 반복 끝) 시의 처리 함수 ──
+function handleLoopCycleEnd(checkedIndices) {
+  if (loopCountRemaining > 1) {
+    if (loopCountRemaining !== Infinity) {
+      loopCountRemaining--;
+    }
+    const firstIdx = checkedIndices[0];
+    jumpToSection(firstIdx, true);
+  } else {
+    // 모든 반복 횟수를 완료했으므로 루프 해제
+    globalLoopEnabled = false;
+    repeatToggleBtn.classList.remove('btn-active');
+    loopSectionIndex = null;
+    updateTimelineLoopZone();
   }
 }
 
@@ -268,10 +401,15 @@ function syncSubtitleHighlight(curTime) {
 }
 
 // ── Jump to Section Index ──
-function jumpToSection(idx) {
+function jumpToSection(idx, isAuto = false) {
   if (idx < 0 || idx >= subtitles.length) return;
 
   const section = subtitles[idx];
+
+  // 사용자가 수동으로 구간을 변경한 경우에만 루프 반복 횟수 재설정
+  if (globalLoopEnabled && !isAuto && idx !== loopSectionIndex) {
+    resetLoopCount();
+  }
 
   // On iOS Safari, play() must be triggered first (user interaction context)
   // and setting currentTime should occur within play's promise resolution
@@ -361,7 +499,8 @@ function parseSubtitleText(text) {
           index: index++,
           start: start,
           end: end,
-          text: subtitleText
+          text: subtitleText,
+          checked: true
         });
       }
     }
@@ -446,15 +585,36 @@ function renderSubtitles() {
       card.classList.add('active');
     }
 
+    // 1. 체크박스 생성
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'sub-checkbox';
+    checkbox.checked = (s.checked !== undefined) ? s.checked : true;
+    checkbox.addEventListener('click', (e) => {
+      e.stopPropagation(); // 카드 클릭 이벤트로 전파 방지
+      s.checked = checkbox.checked;
+    });
+    card.appendChild(checkbox);
+
+    // 2. 세로 텍스트/시간 콘텐츠를 감싸는 wrapper 생성
+    const contentWrapper = document.createElement('div');
+    contentWrapper.className = "sub-card-content";
+    contentWrapper.style.display = "flex";
+    contentWrapper.style.flexDirection = "column";
+    contentWrapper.style.gap = "8px";
+    contentWrapper.style.flex = "1";
+
     const badge = document.createElement('span');
     badge.className = "time-badge";
     badge.textContent = `${formatTime(s.start)} - ${formatTime(s.end)}`;
-    card.appendChild(badge);
+    contentWrapper.appendChild(badge);
 
     const textContainer = document.createElement('div');
     textContainer.className = "sub-text-container";
     textContainer.textContent = s.text;
-    card.appendChild(textContainer);
+    contentWrapper.appendChild(textContainer);
+
+    card.appendChild(contentWrapper);
 
     // Card click defaults to seek to start and play
     card.addEventListener('click', () => {

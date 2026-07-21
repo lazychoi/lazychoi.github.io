@@ -114,8 +114,18 @@
             <button class="btn" id="btn-repeat-toggle" title="한 구간 반복 재생 (R)">
               loop
             </button>
+            <div class="repeat-count-wrapper">
+              <span class="repeat-label">반복</span>
+              <input type="text" id="repeat-count-input" value="∞" title="반복 횟수 (숫자 입력, 공백/기타 문자 입력 시 무한대)" placeholder="∞">
+            </div>
           </div>
         </div>
+      </div>
+
+      <!-- Subtitle Controls (Select All / Deselect All) -->
+      <div class="transcript-controls" style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: flex-end; width: 100%;">
+        <button class="btn" id="btn-select-all" style="padding: 6px 12px; font-size: 12px; height: 32px; border-radius: 6px;" title="모든 구간 선택">전체 선택</button>
+        <button class="btn" id="btn-deselect-all" style="padding: 6px 12px; font-size: 12px; height: 32px; border-radius: 6px;" title="모든 구간 해제">전체 해제</button>
       </div>
 
       <!-- Subtitle Scroll Pane -->
