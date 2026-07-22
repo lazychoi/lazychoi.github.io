@@ -1,4 +1,4 @@
-name: Supabase Terms Auto Backup
+name: Supabase Auto Backup
 
 on:
   schedule:
@@ -21,12 +21,12 @@ jobs:
           python-version: '3.10'
 
       - name: Run backup script
-        run: python backup_terms.py
+        run: python backup_supabase.py
 
       - name: Commit and push backup files
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/terms_backup.json
+          git add data/backup-terms.json data/backup-history.json
           # Only commit and push if there are changes
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: automatic terms backup" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: automatic database backup" && git push)

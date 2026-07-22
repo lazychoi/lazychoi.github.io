@@ -6,7 +6,11 @@ import json
 import urllib.request
 import urllib.error
 
-BACKUP_FILE_JSON = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data', 'terms_backup.json')
+# Table configurations: (supabase_table_name, local_json_filename)
+TABLES_TO_BACKUP = [
+    ('terms', 'backup-terms.json'),
+    ('history_timeline', 'backup-history.json')
+]
 
 def get_supabase_credentials():
     """Extracts Supabase credentials dynamically from farm.js in the same directory."""
@@ -30,9 +34,9 @@ def get_supabase_credentials():
     key = os.environ.get('SUPABASE_KEY')
     return url, key
 
-def fetch_terms(supabase_url, supabase_key):
-    """Fetches all terms from Supabase using pagination (1000 rows limit bypass)."""
-    print("[+] Fetching terms from Supabase...")
+def fetch_table_data(supabase_url, supabase_key, table_name):
+    """Fetches all rows from a Supabase table using pagination to bypass the 1000-row limit."""
+    print(f"[+] Fetching table '{table_name}' from Supabase...")
     all_data = []
     page = 0
     page_size = 1000
@@ -40,7 +44,7 @@ def fetch_terms(supabase_url, supabase_key):
     
     while keep_fetching:
         # Build PostgREST paginated URL ordered by id
-        url = f"{supabase_url}/rest/v1/terms?select=*&order=id.asc&limit={page_size}&offset={page * page_size}"
+        url = f"{supabase_url}/rest/v1/{table_name}?select=*&order=id.asc&limit={page_size}&offset={page * page_size}"
         req = urllib.request.Request(
             url,
             headers={
@@ -70,17 +74,19 @@ def fetch_terms(supabase_url, supabase_key):
             print(f"[-] Error fetching data: {e}")
             sys.exit(1)
             
-    print(f"[+] Successfully fetched {len(all_data)} terms in total.")
+    print(f"[+] Successfully fetched {len(all_data)} rows in total from '{table_name}'.")
     return all_data
 
-def backup_to_json(data):
-    """Saves the raw JSON data to a backup file."""
-    os.makedirs(os.path.dirname(BACKUP_FILE_JSON), exist_ok=True)
+def backup_to_json(data, filename):
+    """Saves the raw JSON data to a backup file in the 'data' directory."""
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    backup_file_path = os.path.join(current_dir, 'data', filename)
+    os.makedirs(os.path.dirname(backup_file_path), exist_ok=True)
     
-    with open(BACKUP_FILE_JSON, 'w', encoding='utf-8') as f:
+    with open(backup_file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
         
-    print(f"[+] Saved JSON backup to: {BACKUP_FILE_JSON}")
+    print(f"[+] Saved JSON backup to: {backup_file_path}")
 
 def main():
     url, key = get_supabase_credentials()
@@ -93,15 +99,16 @@ def main():
         
     print(f"[+] Using Supabase URL: {url}")
     
-    # 1. Fetch terms
-    data = fetch_terms(url, key)
-    
-    if not data:
-        print("[-] Warning: No data fetched. Backup aborted.")
-        return
+    for table_name, filename in TABLES_TO_BACKUP:
+        # 1. Fetch data
+        data = fetch_table_data(url, key, table_name)
         
-    # 2. Backup to JSON (inherently handles newlines and special characters)
-    backup_to_json(data)
+        if not data:
+            print(f"[-] Warning: No data fetched for '{table_name}'. Backup aborted.")
+            continue
+            
+        # 2. Backup to JSON
+        backup_to_json(data, filename)
     
     print("[+] All done!")
 
