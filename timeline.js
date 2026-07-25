@@ -178,6 +178,49 @@ async function handleLogout() {
     }
 }
 
+// 입력값을 연도 숫자로 파싱하는 함수 (예: "44", "BC 44", "44년", "BC 44년" 등)
+function parseQueryAsYear(query) {
+    // "년도" 또는 "년" 접미사 제거
+    let clean = query.replace(/(년도|년)$/, '').trim();
+    
+    let isBC = false;
+    let isAD = false;
+    
+    const bcPrefix = /^[bB][cC]\s*/;
+    const bcSuffix = /\s*[bB][cC]$/;
+    const adPrefix = /^[aA][dD]\s*/;
+    const adSuffix = /\s*[aA][dD]$/;
+    
+    if (bcPrefix.test(clean)) {
+        isBC = true;
+        clean = clean.replace(bcPrefix, '');
+    } else if (bcSuffix.test(clean)) {
+        isBC = true;
+        clean = clean.replace(bcSuffix, '');
+    } else if (adPrefix.test(clean)) {
+        isAD = true;
+        clean = clean.replace(adPrefix, '');
+    } else if (adSuffix.test(clean)) {
+        isAD = true;
+        clean = clean.replace(adSuffix, '');
+    }
+    
+    clean = clean.trim();
+    
+    // 정수 형태(부호 포함)인지 확인
+    if (/^-?\d+$/.test(clean)) {
+        let yearVal = parseInt(clean, 10);
+        if (isBC) {
+            yearVal = -Math.abs(yearVal);
+        } else if (isAD) {
+            yearVal = Math.abs(yearVal);
+        }
+        return yearVal;
+    }
+    
+    return null;
+}
+
 // ── 실시간 검색 및 타임라인 로드 ──
 function filterEventsRealtime() {
     const query = searchTerm.value.trim();
@@ -201,26 +244,34 @@ function filterEventsRealtime() {
     loadedEvents = [];
     anchorEvent = null;
 
-    // 1. 사건 내용 텍스트 매칭 검색
-    let matchedEvents = allEvents.filter(ev => 
-        ev.event.toLowerCase().includes(query.toLowerCase())
-    );
+    // 입력값을 연도로 파싱 시도 (숫자, BC/AD, 년/년도 접미사 등 처리)
+    const targetYear = parseQueryAsYear(query);
 
-    // 2. 매칭 결과가 없고 검색어가 숫자인 경우, 가장 가까운 연도의 사건을 매칭
-    if (matchedEvents.length === 0 && !isNaN(query)) {
-        const targetYear = parseInt(query, 10);
-        if (allEvents.length > 0) {
+    if (targetYear !== null) {
+        // [숫자/연도 검색] year 컬럼(연도)에서만 매칭 수행
+        // 1. 정확히 일치하는 연도 검색
+        const exactMatch = allEvents.find(ev => ev.year === targetYear);
+        if (exactMatch) {
+            anchorEvent = exactMatch;
+        } else if (allEvents.length > 0) {
+            // 2. 정확한 연도가 없으면 가장 가까운 연도의 사건을 매칭
             const closest = allEvents.reduce((prev, curr) => 
                 Math.abs(curr.year - targetYear) < Math.abs(prev.year - targetYear) ? curr : prev
             );
             anchorEvent = closest;
         }
-    } else if (matchedEvents.length > 0) {
-        // 첫 번째 검색 결과를 기준 사건(Anchor)으로 삼음
-        anchorEvent = matchedEvents[0];
+    } else {
+        // [문자/키워드 검색] event 컬럼(설명글)에서만 매칭 수행
+        const matchedEvents = allEvents.filter(ev => 
+            ev.event.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        if (matchedEvents.length > 0) {
+            anchorEvent = matchedEvents[0];
+        }
     }
 
-    // 3. 앵커 사건을 기준으로 타임라인 맨 위에 오도록 슬라이싱
+    // 앵커 사건을 기준으로 타임라인 맨 위에 오도록 슬라이싱
     if (anchorEvent) {
         const anchorIdx = allEvents.findIndex(ev => ev.id === anchorEvent.id);
         

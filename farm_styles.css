@@ -70,21 +70,24 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
-#results > li .term {
+#results > li .term,
+#previewCard .term {
   font-size: 17px;
   font-weight: 700;
   color: var(--text-main);
   display: inline;
 }
 
-#results > li .easyTerm {
+#results > li .easyTerm,
+#previewCard .easyTerm {
   font-size: 17px;
   font-weight: 700;
   color: var(--accent-green);
   display: inline;
 }
 
-#results > li .meaning {
+#results > li .meaning,
+#previewCard .meaning {
   width: 100%;
   height: 100%;
   font-size: 15px;
@@ -342,6 +345,32 @@
   border-radius: 14px;
   padding: 16px;
   background: rgba(0, 0, 0, 0.01);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.preview-container > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+#previewCard {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 0;
+  flex-grow: 1;
+  min-height: 150px;
+  overflow-y: auto;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
 .preview-title {
