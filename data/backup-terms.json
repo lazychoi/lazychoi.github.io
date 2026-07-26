@@ -57993,10 +57993,10 @@
   },
   {
     "id": 7267,
-    "term": "넙다리네갈래근",
-    "foreign_term": "Quadriceps femoris muscle",
-    "easy_term": null,
-    "meaning": null,
+    "term": "대퇴사두근, 넙다리네갈래근",
+    "foreign_term": "quadriceps femoris muscle",
+    "easy_term": "넙다리네갈래근",
+    "meaning": "/ˈkwɑː.drə.seps ˈfem.ɚ.ɪs/ \n\nquattuor(숫자 4) + caput(머리, 갈래) + femur (넓적다리뼈) → 넓적다리에 있는 네 개의 머리(갈래)를 가진 근육. *Quads*(쿼즈)라고도 부른다.\n\n大腿四頭筋 (큰 대, 넓적다리 퇴, 넉 사, 머리 두, 힘줄 근) → 넓적다리(大腿)에 있는 네 개의 머리(四頭)를 가진 근육(筋)\n\n### 4가지 근육(four heads)\n\n무릎뼈(Patella, 슬개골)와 넙다리네갈래근 힘줄(Quadriceps tendon)을 통해 하나로 모여 정강뼈(Tibia)에 부착된다.\n\n- *넙다리곧은근(Rectus femoris, 대퇴직근)*: 넙다리 중앙 표층에 위치한다. 4개 중 유일하게 엉덩관절(AIIS)에서 시작해 무릎까지 잇는 다관절 근육으로, 엉덩관절 굴곡과 무릎 신전을 모두 담당한다.\n- *가쪽넓은근(Vastus lateralis, 외측광근)*: 허벅지 바깥쪽에 위치한 가장 크고 힘이 강력한 근육이다.\n- *안쪽넓은근(Vastus medialis, 내측광근)*: 허벅지 안쪽 하단(무릎 위)에 물방울 모양(VMO)으로 위치하며, 무릎 관절의 마지막 신전과 무릎뼈 안정화에 핵심적인 역할을 한다.\n- *중간넓은근(Vastus intermedius, 중간광근)*: 넙다리곧은근 깊은 곳(속)에 숨겨져 있어 표면에서는 보이지 않는다.\n\n### 해부학적 기능 및 중요성\n\n- 무릎 신전 (Knee Extension): 4개의 근육이 힘을 합쳐 접힌 무릎관절을 일자로 펴는 강력한 주동근이다. 스쿼트, 계단 오르기, 점프, 걷기 등 체중을 지지하는 모든 하체 운동의 핵심이다.\n- 무릎뼈(슬개골) 안정화: 특히 안쪽넓은근(VMO)과 가쪽넓은근의 힘의 균형이 맞아야 무릎뼈가 탈구되거나 연골이 마모되는 슬개대퇴 통증 증후군(PFPS)을 예방할 수 있다.\n\n[[quadriceps_femoris.png]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -58153,10 +58153,10 @@
   },
   {
     "id": 7287,
-    "term": "넓적다리뒤근육",
-    "foreign_term": "Hamstring muscle",
-    "easy_term": null,
-    "meaning": null,
+    "term": "넓적다리뒤근육, 넙다리뒤근",
+    "foreign_term": "hamstring muscle",
+    "easy_term": "넓적다리뒤근육",
+    "meaning": "/ˈhæm.strɪŋ/\n\n돼지의 볼기/허벅지 살을 뜻하는 ham + 끈이나 힘줄을 뜻하는 string → 과거 도살장에서 돼지를 도살한 후 도가니 부위(허벅지 뒤쪽의 단단한 힘줄)에 고리를 걸어 천장에 매달았던 데서 유래\n\n### 3가지 구성 근육 (Three Muscles)\n\n- *넙다리두갈래근(Biceps femoris)*: 허벅지 뒤쪽 바깥쪽(가쪽)에 위치한다. 장두(Long head)와 단두(Short head) 두 갈래로 나뉘며, 종아리뼈머리에 부착된다.\n- *반힘줄모양근(Semitendinosus)*: 허벅지 뒤쪽 안쪽 표층에 위치한다. 하단부의 절반 이상이 길고 단단한 힘줄(Tendon) 형태를 띤다. (거위발 부위 부착)\n- *반막모양근(Semimembranosus)*: 반힘줄모양근 바로 아래(깊은 층)에 위치한다. 상단부가 넓은 막(Membrane) 형태로 시작한다.\n\n## 해부학적 기능\n\n- 무릎 굴곡 & 엉덩관절 신전: 무릎을 뒤로 구부리고(Knee flexion), 다리를 뒤로 차 올리는(Hip extension) 동작의 주동근이다.\n- 달리기 시 브레이크 및 추진력: 질주할 때 다리가 앞으로 과도하게 나가지 않도록 속도를 줄여주는 감속(Deceleration) 기능과, 지면을 차고 나가는 핵심 추진력을 제공한다.\n- 임상적 의미 (햄스트링 부상): 순간적인 전력 질주나 방향 전환, 키킹 동작에서 근육이 단열되거나 찢어지는 '*햄스트링 파열(Hamstring strain)*'이 자주 발생한다. 넙다리네갈래근과의 힘의 비율(H:Q ratio, 약 60:100 수준 유지)이 깨질 때 부상 위험이 급증한다.\n\n[[hamstring.jpeg]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
