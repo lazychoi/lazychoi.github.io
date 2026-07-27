@@ -103302,5 +103302,21 @@
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:48:06.570162+00:00"
+  },
+  {
+    "id": 12932,
+    "term": "고관절, 엉덩관절",
+    "foreign_term": "coxa",
+    "easy_term": "엉덩관절",
+    "meaning": "/ˈkɑːk.sə/ → pl. coxae /ˈkɑːk.siː/\n\n라틴어 coxa (엉덩이, 고관절, 볼기)\n\n股關節 (넓적다리 고, 빗장 관, 마디 절)\n\n해부학에서는 단독으로 쓰여 엉덩관절(Hip joint) 또는 골반뼈(Os coxae)를 의미하며, 다른 단어와 결합하여 관절의 변형이나 정렬 상태를 나타내는 형용사적 어근으로 매우 자주 쓰인다.",
+    "created_at": "2026-07-26T21:33:05.954235+00:00"
+  },
+  {
+    "id": 12933,
+    "term": "볼기뼈",
+    "foreign_term": "os coxae",
+    "easy_term": "",
+    "meaning": "/ɒs ˈkɒk.siː/\n\nos (뼈, 유골) → pl. ossa /ˈɒs.ə/\n\nOs (뼈) + coxae (골반/엉덩관절의) = 골반 부위의 뼈\n\n볼기뼈 = 엉덩뼈(ilium) + 두덩뼈(pubis) + 궁둥뼈(ischium)",
+    "created_at": "2026-07-26T21:36:59.93477+00:00"
   }
 ]
