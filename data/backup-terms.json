@@ -49267,16 +49267,16 @@
     "id": 6175,
     "term": "폐쇄구멍",
     "foreign_term": "Obturator foramen",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɑːb.tə.reɪ.t̬ɚ fəˈreɪ.mən/\n\n라틴어 obturare (막다, 가리다)에서 유래한 obturator (막는 것) + 라틴어 foramen (구멍) → 구멍 형태로 뚫려 있지만 실제 인체 내부에서는 폐쇄막(Obturator membrane)이라는 얇은 결합조직 막으로 대부분 '막혀' 있어서 붙은 이름이다.\n\n閉鎖孔 (닫을 폐, 사슬/막을 쇄, 구멍 공)\n\n[[pelvic_details.jpg]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
     "id": 6176,
     "term": "큰궁둥패임",
-    "foreign_term": "Greater sciatic notch",
-    "easy_term": null,
-    "meaning": null,
+    "foreign_term": "greater sciatic notch",
+    "easy_term": "",
+    "meaning": "/saɪˈæt̬.ɪk nɑːtʃ/\n\n그리스어 ischion (엉덩관절, 좌골)에서 유래한 라틴어 형용사 sciatic (좌골의, 궁둥이의) + 고대 프랑스어 noche (V자 모양으로 패인 홈)에서 유래한 notch\n\n坐骨切截 / 坐骨切除 (앉을 좌, 뼈 골, 끊을 절, 끊을 제/절) → '절제(切截/切痕)'는 뼈의 가장자리가 칼로 베어낸 것처럼 파여 있음을 뜻한다. 즉, 좌골 부위에 형성된 뼈 패임을 의미한다.\n\n골반 후방에는 궁둥뼈가시(Ischial spine)를 경계로 위아래 2개의 패임이 존재한다. 생체 내에서는 인대(Sacrotuberous & Sacrospinous ligaments)에 의해 구멍(Foramen) 형태로 바뀌어 중요한 통로 역할을 한다.\n\n[[pelvic_details.jpg]]\n[[pelvis_side.png]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -49411,24 +49411,24 @@
     "id": 6193,
     "term": "앞볼기근선",
     "foreign_term": "Anterior gluteal line",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɡluː.ti.əl laɪn/\n\n그리스어 gloutos (볼기, 엉덩이)에서 유래한 형용사 gluteal (엉덩이의, 둔부의) + 라틴어 linea (선, 줄)에서 온 line\n\n臀筋線 (엉덩이 둔, 힘줄 근, 줄 선)\n\n엉덩이 근육(둔근)들이 엉덩뼈 바깥쪽에 구획을 나누어 부착할 수 있도록 형성된 뼈 표면의 경계 선\n\n[[pelvis_side.png]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
     "id": 6194,
     "term": "뒤볼기근선",
     "foreign_term": "Posterior gluteal line",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɡluː.ti.əl laɪn/\n\n그리스어 gloutos (볼기, 엉덩이)에서 유래한 형용사 gluteal (엉덩이의, 둔부의) + 라틴어 linea (선, 줄)에서 온 line\n\n臀筋線 (엉덩이 둔, 힘줄 근, 줄 선)\n\n엉덩이 근육(둔근)들이 엉덩뼈 바깥쪽에 구획을 나누어 부착할 수 있도록 형성된 뼈 표면의 경계 선\n\n[[pelvis_side.png]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
     "id": 6195,
     "term": "아래볼기근선",
     "foreign_term": "Inferior gluteal line",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɡluː.ti.əl laɪn/\n\n그리스어 gloutos (볼기, 엉덩이)에서 유래한 형용사 gluteal (엉덩이의, 둔부의) + 라틴어 linea (선, 줄)에서 온 line\n\n臀筋線 (엉덩이 둔, 힘줄 근, 줄 선)\n\n엉덩이 근육(둔근)들이 엉덩뼈 바깥쪽에 구획을 나누어 부착할 수 있도록 형성된 뼈 표면의 경계 선\n\n[[pelvis_side.png]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -49492,7 +49492,7 @@
     "term": "궁둥뼈가시",
     "foreign_term": "ischial spine",
     "easy_term": "",
-    "meaning": "/ˈɪs.ki.əl/\n\n좌골 뒤쪽의 뾰족한 돌기로, 산부인과에서 태아의 머리가 골반을 얼마나 내려왔는지 측정하는 임상적 기준점(Station 0)이 된다.\n\n[[ischial_spine.jpeg]]",
+    "meaning": "/ˈɪs.ki.əl/\n\n좌골 뒤쪽의 뾰족한 돌기로, 산부인과에서 태아의 머리가 골반을 얼마나 내려왔는지 측정하는 임상적 기준점(Station 0)이 된다.\n\n[[ischial_spine.jpeg]]\n[[pelvic_details.jpg]]",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -103326,5 +103326,13 @@
     "easy_term": "궁둥뼈가지",
     "meaning": "/ˈɪs.ki.əl ˈreɪ.məs/\n\nischium(궁둥뼈)의 형용사형 ischial + 라틴어 ramus(가지, 분지, 뻗어나간 뼈 줄기)\n\n궁둥뼈결절(Ischial tuberosity)에서 앞으로 뻗어 나와 두덩뼈(Pubis) 아래쪽 가지와 만나는 얇은 아치형 뼈 기둥 부위\n\n[[hip_bone_diagram.jpg]]",
     "created_at": "2026-07-29T09:38:43.8182+00:00"
+  },
+  {
+    "id": 12935,
+    "term": "Trochanter, Tuberosity, Tubercle, Process 차이",
+    "foreign_term": "",
+    "easy_term": "",
+    "meaning": "1. Trochanter: 넙다리뼈(Femur)에만 존재하는 매우 거대한 대형 돌기 (예: Greater trochanter)\n2. Tuberosity (거친면): 대형 근육이 부착하는 크고 거친 돌기 (예: Ischial tuberosity)\n3. Tubercle (결절): 상대적으로 작은 둥근 돌기. 작은 힘줄이나 인대 부착 지점 (예: Pubic tubercle)\n4. Process (돌기): 뼈에서 뾰족하거나 길게 뻗어 나온 구조 전반을 통칭하는 일반 용어",
+    "created_at": "2026-08-01T09:31:34.898842+00:00"
   }
 ]
