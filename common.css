@@ -85,6 +85,7 @@ a {
   border: 1px solid transparent;
   transition: all 0.25s ease;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
@@ -302,9 +303,12 @@ a {
 
 /* 990px 이하의 좁은 화면에서 네비게이션과 로그인 버튼의 겹침 방지 */
 @media (max-width: 990px) {
+  .nav-menu {
+    gap: 4px;
+  }
   .nav-link {
-    padding: 6px 12px !important;
-    font-size: 13px !important;
+    padding: 6px 10px !important;
+    font-size: 12.5px !important;
   }
   .auth-status-container {
     right: 12px !important;

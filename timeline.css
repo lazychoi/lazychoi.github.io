@@ -36,6 +36,9 @@
   flex-direction: column;
   gap: 20px;
   transition: all 0.3s ease;
+  position: sticky;
+  top: 20px;
+  z-index: 100;
 }
 
 .timeline-header-card:hover {
@@ -486,6 +489,25 @@
 }
 
 /* ── Responsive Styling ── */
+@media (max-width: 768px) {
+  .timeline-header-card {
+    top: 55px; /* common.css의 모바일 sticky nav바 높이에 맞춤 */
+    padding: 16px 20px;
+    gap: 12px;
+    border-radius: 16px;
+  }
+  
+  .search-title {
+    font-size: 1.3rem;
+    margin-bottom: 0;
+  }
+  
+  .timeline-container {
+    gap: 16px;
+    padding-top: 10px;
+  }
+}
+
 @media (max-width: 680px) {
   .timeline-line {
     left: 20px;
