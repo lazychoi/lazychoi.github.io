@@ -42963,8 +42963,8 @@
     "id": 5387,
     "term": "관절면",
     "foreign_term": "Articular surface",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ɑːrˈtɪk.jə.lɚ ˈsɝː.fəs/\n\n라틴어 articulus (마디, 관절)에서 유래한 형용사 articular (관절의) + superficies (표면)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -45459,14 +45459,6 @@
     "id": 5699,
     "term": "턱관절오목",
     "foreign_term": "Mandibular fossa",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
-    "id": 5700,
-    "term": "관절면",
-    "foreign_term": "Articular surface",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:47:59.849955+00:00"
@@ -50056,14 +50048,6 @@
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
-    "id": 6274,
-    "term": "관절면",
-    "foreign_term": "Articular surface",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
     "id": 6275,
     "term": "앞면",
     "foreign_term": "Anterior surface",
@@ -51075,14 +51059,6 @@
     "id": 6401,
     "term": "윤활관절; 움직관절",
     "foreign_term": "Synovial joint; Diarthrosis",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
-    "id": 6402,
-    "term": "관절면",
-    "foreign_term": "Articular surface",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:47:59.849955+00:00"
@@ -56481,10 +56457,10 @@
   },
   {
     "id": 7078,
-    "term": "칸 사이근막활",
+    "term": "칸사이근막활",
     "foreign_term": "Iliopectineal arch",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -64283,14 +64259,6 @@
     "id": 8054,
     "term": "모뿔연골",
     "foreign_term": "Arytenoid cartilage",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:48:01.538674+00:00"
-  },
-  {
-    "id": 8055,
-    "term": "관절면",
-    "foreign_term": "Articular surface",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:48:01.538674+00:00"
