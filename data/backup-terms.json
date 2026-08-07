@@ -48635,8 +48635,8 @@
     "id": 6097,
     "term": "가쪽위관절융기",
     "foreign_term": "Lateral epicondyle",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈlæt.ər.əl ˌep.əˈkɑːn.daɪl/⁠ (영국식은 뒤쪽이 ⁠/ˌep.ɪˈkɒn.daɪl/⁠)\n\n라틴어 lateralis (바깥쪽의) + 그리스어 epi (위에) + kondylos (마디, 관절 융기) → 관절 융기(Condyle) 바로 위에 위치한 바깥쪽 돌기\n\n外側上顆 (바깥 외, 곁 측, 위 상, 넙적마디 과) → 관절 마디(顆)의 바깥쪽(外側) 위(上)에 솟아 있는 뼈 돌기",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -48731,8 +48731,8 @@
     "id": 6109,
     "term": "뼈사이모서리",
     "foreign_term": "Interosseous border",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˌɪn.t̬ɚˈɑː.si.əs ˈbɔːr.dɚ/⁠ (영국식은 ⁠/ˌɪn.tərˈɒs.i.əs ˈbɔː.dər/⁠)\n\n라틴어 inter- (사이에) + os (뼈)에서 유래한 interosseous (뼈 사이의) + border (경계, 테두리) → 두 뼈 사이에 형성되어 있는 날카로운 테두리 경계선\n\n間骨緣 (사이 간, 뼈 골, 가장자리 연)\n\n노뼈와 자뼈, 정강뼈와 종아리뼈처럼 서로 평행하게 위치한 두 뼈 사이에서 뼈사이막(Interosseous membrane)이 부착되는 날카로운 능선 구조",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -48875,14 +48875,6 @@
     "id": 6127,
     "term": "안쪽면",
     "foreign_term": "Medial surface",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
-    "id": 6128,
-    "term": "뼈사이모서리",
-    "foreign_term": "Interosseous border",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:47:59.849955+00:00"
@@ -49810,9 +49802,9 @@
   {
     "id": 6244,
     "term": "넙다리뼈머리오목",
-    "foreign_term": "Fovea for ligament of head",
-    "easy_term": null,
-    "meaning": null,
+    "foreign_term": "fovea capitis, Fovea for ligament of head",
+    "easy_term": "",
+    "meaning": "⁠/ˈfoʊ.vi.ə ˈkæp.ə.t̬ɪs/⁠\n\n라틴어 fovea (오목한 구덩이, 홈) + caput (머리)의 소유격인 capitis (머리의) → 머리(대퇴골두)에 있는 오목한 홈",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -49827,8 +49819,8 @@
     "id": 6246,
     "term": "큰돌기",
     "foreign_term": "Greater trochanter",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɡreɪ.t̬ɚ troʊˈkæn.t̬ɚ/\n\n라틴어 greater (더 큰) + 그리스어 trochanter (달리다, 구르다, 기계의 톱니바퀴) → 다리를 구르고 달리게 만드는 넙다리뼈의 상단 돌기 중 크기가 더 큰 쪽을 뜻한다.\n\n 大轉子 (큰 대, 구를 전, 아들/것 자) → 구르고(轉) 회전하는 작용을 하는 큰(大) 뼈 돌기(子)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -49882,9 +49874,9 @@
   {
     "id": 6253,
     "term": "넙다리뼈몸통",
-    "foreign_term": "Body of femur",
-    "easy_term": null,
-    "meaning": null,
+    "foreign_term": "Body of femur, Shaft of femur",
+    "easy_term": "",
+    "meaning": "",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -49960,14 +49952,6 @@
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
-    "id": 6263,
-    "term": "안쪽위관절융기",
-    "foreign_term": "Medial epicondyle",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
     "id": 6264,
     "term": "모음근결절",
     "foreign_term": "Adductor tubercle",
@@ -49979,14 +49963,6 @@
     "id": 6265,
     "term": "가쪽관절융기",
     "foreign_term": "Lateral condyle",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
-    "id": 6266,
-    "term": "가쪽위관절융기",
-    "foreign_term": "Lateral epicondyle",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:47:59.849955+00:00"
@@ -50200,14 +50176,6 @@
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
-    "id": 6294,
-    "term": "뼈사이모서리",
-    "foreign_term": "Interosseous border",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
     "id": 6295,
     "term": "안쪽복사",
     "foreign_term": "Medial malleolus",
@@ -50336,14 +50304,6 @@
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
-    "id": 6311,
-    "term": "뼈사이모서리",
-    "foreign_term": "Interosseous border",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
     "id": 6312,
     "term": "뒤모서리",
     "foreign_term": "Posterior border",
@@ -50355,8 +50315,8 @@
     "id": 6313,
     "term": "가쪽복사",
     "foreign_term": "Lateral malleolus",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "발음기호: ⁠/ˈlæt.ər.əl məˈliː.ə.ləs/⁠\n\n라틴어 lateralis (바깥쪽의) + malleolus (작은 망치) → 뼈의 모양이 작은 망치 머리를 닮았다 하여 붙은 이름이다.\n\n外踝 / 外側踝 (바깥 외, 곁 측, 복사뼈 과)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -51059,8 +51019,8 @@
     "id": 6401,
     "term": "윤활관절; 움직관절",
     "foreign_term": "Synovial joint; Diarthrosis",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/sɪˈnoʊ.vi.əl dʒɔɪnt/⁠ (영국식은 ⁠/saɪˈnəʊ.vi.əl dʒɔɪnt/⁠)\n\n라틴어 syn- (함께, 결합) + ovum (계란, 달걀)에서 유래한 synovia (달걀 흰자 같은 액체/윤활액) + joint (관절) → 관절 내부를 채우고 있는 활액(Synovial fluid)이 계란 흰자처럼 점성이 있고 투명하다 하여 붙은 이름이다.\n\n潤滑關節 / 滑膜關節 (윤택할 윤, 미끄러울 활 / 미끄러울 활, 막 막, 빗장 관, 마디 절) → 미끄럽고 윤택하게 해주는(潤滑) 액체 및 막(滑膜)을 가지고 있어 부드럽게 움직이는 관절(關節)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -57209,10 +57169,10 @@
   },
   {
     "id": 7172,
-    "term": "위팔두갈래근",
+    "term": "위팔두갈래근, 상완이두근",
     "foreign_term": "Biceps brachii muscle",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "위팔두갈래근",
+    "meaning": "/ˈbaɪ.seps bræˈki.aɪ/⁠ (영국식은 뒤쪽이 ⁠/bræˈki.iː/⁠)\n\n라틴어 bi (둘, 2) + caput (머리, 갈래)에서 유래한 biceps (두 개의 머리를 가진) + brachium (위팔, 팔)의 소유격인 brachii (위팔의) → 위팔에 있는 두 개의 머리(갈래)를 가진 근육. 일상적으로는 줄여서 'Biceps(바이셉스)'라고 부른다.\n\n上腕二頭筋 (위 상, 팔 팔뚝 완, 두 이, 머리 두, 힘줄 근)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
