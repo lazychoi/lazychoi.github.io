@@ -17139,8 +17139,8 @@
     "id": 2147,
     "term": "세포호흡",
     "foreign_term": "cellular respiration",
-    "easy_term": null,
-    "meaning": "유기 분자를 분해하여 ATP를 생산하는 산소호흡과 무산소호흡의 동화작용 경로.",
+    "easy_term": "",
+    "meaning": "유기 분자를 분해하여 ATP를 생산하는 산소호흡과 무산소호흡의 동화작용 경로.\n\n[[cellular_respiration.jpg]]",
     "created_at": "2026-07-07T13:57:39.929413+00:00"
   },
   {
@@ -103262,5 +103262,21 @@
     "easy_term": "",
     "meaning": "1. Trochanter: 넙다리뼈(Femur)에만 존재하는 매우 거대한 대형 돌기 (예: Greater trochanter)\n2. Tuberosity (거친면): 대형 근육이 부착하는 크고 거친 돌기 (예: Ischial tuberosity)\n3. Tubercle (결절): 상대적으로 작은 둥근 돌기. 작은 힘줄이나 인대 부착 지점 (예: Pubic tubercle)\n4. Process (돌기): 뼈에서 뾰족하거나 길게 뻗어 나온 구조 전반을 통칭하는 일반 용어",
     "created_at": "2026-08-01T09:31:34.898842+00:00"
+  },
+  {
+    "id": 12936,
+    "term": "근거 수준",
+    "foreign_term": "",
+    "easy_term": "",
+    "meaning": "[[evidence_level.jpg]]",
+    "created_at": "2026-08-12T09:36:46.737658+00:00"
+  },
+  {
+    "id": 12937,
+    "term": "쾨헬번호",
+    "foreign_term": "Köchel-verzeichnis, K, KV",
+    "easy_term": "",
+    "meaning": "모차르트도 피아노 소나타 C장조 K.19d에서 'K.19d'의 의미\n\n[[kochel.jpg]]\n\n- 클래식의 작품 제목은 보통 해당 곡의 장르, 장르별 번호, 조, 작품번호 순으로 표기\n- 작품번호는 'Op'로 나타내는데, 작품이란 뜻의 라틴어 'opus'를 줄인 표현\n- 1862년 루트비히 폰 쾨헬이라는 음악학자가 모차르트의 작품을 시간 순으로 정리한 후 번호를 붙임. 'K.19d'에서 K가 바로 쾨헬을 뜻함.\n- d는 나중에 다른 학자들이 붙인 작품번호. 쾨헬이 정리한 후에 새로 찾아낸 모차르트의 작품들이 있는데, 체계를 유지하기 위해 새 번호를 부여하지 않고 뒤에 알파벳을 하나씩 덧붙임. 이를테면 K.19보다 늦고 K.20보다 일찍 작곡된 작품을 K.19 뒤에 알파벳으로 붙임. K.19만 쾨헬이 직접 붙인 작품번호이고, K.19a, K.19b, K.19c, K.19d는 나중에 다른 학자들이 붙인 작품번호임.",
+    "created_at": "2026-08-12T11:47:48.528026+00:00"
   }
 ]
