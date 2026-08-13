@@ -321,10 +321,52 @@ a {
     padding-top: 48px !important; /* 상단 로그인바 영역 공간 확보 */
   }
   .auth-status-container {
-    position: absolute !important;
-    top: 12px !important;
     right: 20px !important;
     height: auto !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════
+   Search Input Clear Button (x 표시)
+   ══════════════════════════════════════════════════════ */
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-wrapper input {
+  width: 100%;
+  padding-right: 40px !important;
+}
+
+.btn-clear-search {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--text-muted);
+  border-radius: 50%;
+  font-size: 13px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  z-index: 5;
+  user-select: none;
+}
+
+.btn-clear-search:hover {
+  background: rgba(0, 0, 0, 0.25);
+  color: var(--text-main);
+}
+
+
 

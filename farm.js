@@ -9,6 +9,7 @@ let isLoggedIn = false; // 로그인 상태 여부
 
 // 1. DOM Elements
 const searchTerm = document.getElementById('searchTerm');
+const btnClearSearch = document.getElementById('btnClearSearch');
 const resultsList = document.getElementById('results');
 const loadingMessage = document.getElementById('loadingMessage');
 
@@ -112,17 +113,32 @@ window.addEventListener('DOMContentLoaded', () => {
         termFormDialog.close();
     });
 
+    termForm.addEventListener('submit', handleFormSubmit);
+
     // Form inputs event listeners for real-time live preview inside dialog
     inputTerm.addEventListener('input', updatePreview);
     inputForeign.addEventListener('input', updatePreview);
     inputEasy.addEventListener('input', updatePreview);
     inputMeaning.addEventListener('input', updatePreview);
 
-    termForm.addEventListener('submit', handleFormSubmit);
+    // Clear search button event
+    if (btnClearSearch) {
+        btnClearSearch.addEventListener('click', () => {
+            searchTerm.value = '';
+            searchTerm.focus();
+            searchTerms();
+        });
+    }
 
     // Initial load
     loadTermsFromSupabase();
 });
+
+function toggleClearButton() {
+    if (btnClearSearch) {
+        btnClearSearch.style.display = searchTerm.value.length > 0 ? 'flex' : 'none';
+    }
+}
 
 // Load data from Supabase (paginated, bypassing 1000 limit)
 async function loadTermsFromSupabase() {
@@ -210,6 +226,9 @@ function renderMarkdownAndMath(text) {
         html = html.replace(item.placeholder, mathHtml);
     });
 
+    // Wrap tables in responsive container for overflow handling
+    html = html.replace(/<table>/g, '<div class="table-responsive"><table>').replace(/<\/table>/g, '</table></div>');
+
     return html;
 }
 
@@ -281,6 +300,7 @@ function updatePreview() {
 
 // 용어를 검색하고 조건부 렌더링하는 함수
 function searchTerms() {
+    toggleClearButton();
     const query = searchTerm.value.toLowerCase().trim();
     resultsList.innerHTML = '';
 
@@ -445,6 +465,7 @@ async function handleFormSubmit(e) {
 
         termForm.reset();
         termFormDialog.close();
+        searchTerm.value = termVal;
         searchTerms();
     } catch (err) {
         console.error('Error saving term:', err);

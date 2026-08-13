@@ -564,6 +564,71 @@
   margin: 0 0 8px 0;
 }
 
+/* Markdown Table Styling */
+.meaning .table-responsive,
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 14px 0;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.meaning table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 0.92rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.meaning .table-responsive table {
+  margin: 0;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.meaning th,
+.meaning td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+  border-right: 1px solid var(--glass-border);
+  line-height: 1.5;
+}
+
+.meaning th:last-child,
+.meaning td:last-child {
+  border-right: none;
+}
+
+.meaning th {
+  background-color: rgba(37, 99, 235, 0.08);
+  font-weight: 700;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--glass-border);
+  white-space: nowrap;
+}
+
+.meaning tr:nth-child(even) td {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.meaning tr:last-child td {
+  border-bottom: none;
+}
+
+.meaning tr:hover td {
+  background-color: rgba(37, 99, 235, 0.04);
+}
+
 /* ── 슬라이드 애니메이션 효과 ── */
 @keyframes slideOutLeft {
   0% { transform: translateX(0); opacity: 1; }

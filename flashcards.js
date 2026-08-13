@@ -616,6 +616,9 @@ function renderMarkdownAndMath(text) {
         html = html.replace(item.placeholder, mathHtml);
     });
 
+    // Wrap tables in responsive container for overflow handling
+    html = html.replace(/<table>/g, '<div class="table-responsive"><table>').replace(/<\/table>/g, '</table></div>');
+
     return html;
 }
 

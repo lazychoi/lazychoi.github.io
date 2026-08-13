@@ -21,6 +21,7 @@ const PAGE_LIMIT = 8;
 
 // ── DOM Elements ──
 const searchTerm = document.getElementById('searchTerm');
+const btnClearSearch = document.getElementById('btnClearSearch');
 const emptyState = document.getElementById('emptyState');
 const timelineWrapper = document.getElementById('timelineWrapper');
 const timelineItemsList = document.getElementById('timelineItemsList');
@@ -76,6 +77,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // 2. 실시간 검색 이벤트 등록 (input 이벤트)
     searchTerm.addEventListener('input', filterEventsRealtime);
+
+    if (btnClearSearch) {
+        btnClearSearch.addEventListener('click', () => {
+            searchTerm.value = '';
+            searchTerm.focus();
+            filterEventsRealtime();
+        });
+    }
 
     // Enter 입력 시 기본 제출 동작 방지 및 실시간 검색 실행
     searchTerm.addEventListener('keypress', (e) => {
@@ -221,8 +230,15 @@ function parseQueryAsYear(query) {
     return null;
 }
 
+function toggleClearButton() {
+    if (btnClearSearch) {
+        btnClearSearch.style.display = searchTerm.value.length > 0 ? 'flex' : 'none';
+    }
+}
+
 // ── 실시간 검색 및 타임라인 로드 ──
 function filterEventsRealtime() {
+    toggleClearButton();
     const query = searchTerm.value.trim();
     
     if (!query) {

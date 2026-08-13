@@ -58,7 +58,12 @@
   <div class="search-container">
 
     <div style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; position: sticky; top: 10px; z-index: 100;">
-      <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()" style="flex: 1; margin: 0; position: static;">
+      <div class="search-input-wrapper">
+        <input type="text" id="searchTerm" placeholder="검색할 용어를 입력하세요" oninput="searchTerms()" style="width: 100%; margin: 0;">
+        <button type="button" id="btnClearSearch" class="btn-clear-search" aria-label="검색어 삭제" title="검색어 삭제" style="display: none;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"></line><line x1="10" y1="2" x2="2" y2="10"></line></svg>
+        </button>
+      </div>
       <button id="btnShowAddModal" class="btn btn-primary" style="display: none; white-space: nowrap; height: 48px; border-radius: 12px; font-size: 15px; padding: 0 16px;">+ 용어 추가</button>
     </div>
     <div id="loadingMessage">데이터를 로드하는 중입니다...</div>
