@@ -103358,5 +103358,21 @@
     "easy_term": "",
     "meaning": "음악이 장조·단조 음계에 바탕을 두는 성격. 오늘날 거의 대부분의 음악은 조성 음악이다. 서양 이외 지역의 전통 음악, 17세기 이전의 서양 음악, 현대의 무조음악에는 조성이 없다.",
     "created_at": "2026-08-13T12:58:33.806353+00:00"
+  },
+  {
+    "id": 12949,
+    "term": "surface, facet 비교",
+    "foreign_term": "",
+    "easy_term": "",
+    "meaning": "### Surface (면 / 가장 포괄적인 표현)\n- 특징: 뼈의 어느 방향, 어느 크기든 '겉 표면'이면 전부 Surface다.\n- 유형: 관절을 이루는 면(Articular surface)뿐만 아니라 근육이 붙는 넓은 면(Gluteal surface), 거친 면, 오목한 면 등 모든 뼈의 면을 통칭한다.\n\n### Facet (소면 / 보석처럼 작고 평평하게 깎인 관절면)\n- 특징: 마치 잘 세공된 다이아몬드의 작은 평평한 단면(Facet)처럼, 매우 작고 평평하게 다듬어진 관절 표면만을 콕 집어 부르는 용어다.\n- 기능: 척추의 관절돌기끼리 맞물리는 후관절(Facet joint / Zygapophysial joint)이나 척추체 옆에 갈비뼈 머리가 와서 살짝 얹히는 작은 자리(Costal facet)처럼 제한된 활주(미끄러짐) 운동을 하는 작은 평면 관절면에 쓰인다.\n\n### 포함 관계\n\n$$\\text{Surface (면 - 전체 집합)} \\supset \\text{Articular Surface (관절면)} \\supset \\text{Facet (작고 평평한 관절면)}$$\n\n모든 Facet은 관절을 이루는 표면이므로 Articular surface에 포함되지만, 크고 둥글거나 굴곡진 관절면(예: 대퇴골두나 관절절구)은 Facet이라고 부르지 않는다.",
+    "created_at": "2026-08-15T01:50:42.135974+00:00"
+  },
+  {
+    "id": 12950,
+    "term": "trochanter, tuberosity, tubercle, process, spine 비교",
+    "foreign_term": "",
+    "easy_term": "",
+    "meaning": "### 뼈 돌기 크기 순서 (해부학적 계층)\n\n해부학에서 뼈 돌기의 크기와 형태에 따른 명칭은 보통 다음과 같은 순서로 구분된다.\n$$\\text{Trochanter (대전자) } \\gt \\text{ Tuberosity (거친면) } \\gt \\text{ Tubercle (결절) } \\gt \\text{ Process (돌기)}$$\n\n- Trochanter (전자): 넙다리뼈(Femur)에만 존재하는 매우 거대한 대형 돌기 (예: Greater trochanter)\n- Tuberosity (거친면): 대형 근육이 부착하는 크고 거친 돌기\n- Tubercle (결절): 상대적으로 작은 둥근 돌기\n- Process (돌기): 뼈에서 뾰족하거나 길게 뻗어 나온 구조 전반을 통칭하는 일반 용어\n- Spine (가시): 끝이 뾰족한 가시 모양이거나 칼날처럼 얇게 솟아오른 능선(Ridge) 형태를 띤다.",
+    "created_at": "2026-08-15T03:47:48.660826+00:00"
   }
 ]
