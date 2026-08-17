@@ -108,6 +108,9 @@
     </div>
   </main>
 
+  <!-- 🌟 추천 검색용 글로벌 데이터리스트 🌟 -->
+  <datalist id="quickAddPersonDatalist"></datalist>
+
   <!-- 새 가계도 추가 모달 -->
   <div class="modal-backdrop" id="createDatasetModal">
     <div class="modal-card" style="max-width:420px;">
@@ -147,20 +150,20 @@
     </div>
   </div>
 
-  <!-- 스케치 스타일 다중 행 추가 모달 -->
+  <!-- 🌟 스케치 스타일 다중 행 추가 모달 (추천 검색 데이터리스트 연동) 🌟 -->
   <div class="modal-backdrop" id="quickAddModal">
     <div class="modal-card" style="max-width:460px; padding:24px;">
       <div class="modal-header" style="margin-bottom:14px;">
         <div>
           <h3 class="modal-title" id="quickAddTitle">인물 추가</h3>
-          <div class="modal-subtitle" id="quickAddSubtitle">이름과 성별을 입력하고 + 버튼으로 인물을 더 추가하세요.</div>
+          <div class="modal-subtitle" id="quickAddSubtitle">이름 입력 시 기존 인물이 추천 목록으로 검색됩니다.</div>
         </div>
         <button type="button" class="modal-close-btn" id="btnQuickAddClose" title="닫기">&times;</button>
       </div>
       
       <div id="quickAddRowsContainer" style="margin:16px 0; max-height:260px; overflow-y:auto; padding-right:4px;">
         <div class="quick-add-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
-          <input type="text" class="form-control quick-name-input" placeholder="이름" style="flex:2;" autocomplete="off" />
+          <input type="text" class="form-control quick-name-input" list="quickAddPersonDatalist" placeholder="이름 (추천 검색 가능)" style="flex:2;" autocomplete="off" />
           <select class="form-control quick-gender-select" style="flex:1.2;">
             <option value="male">남성 ▼</option>
             <option value="female">여성 ▼</option>
@@ -180,7 +183,7 @@
     </div>
   </div>
 
-  <!-- 🌟 ✨ 노드 텍스트/성별 수정 및 좌측 하단 🗑️ 삭제 버튼 모달 ✨ 🌟 -->
+  <!-- 노드 텍스트/성별 수정 및 좌측 하단 🗑️ 삭제 버튼 모달 -->
   <div class="modal-backdrop" id="quickEditModal">
     <div class="modal-card" style="max-width:380px;">
       <div class="modal-header">

@@ -1,5 +1,5 @@
 /**
- * genealogy.js — 기존 가계도 선택 시 안내 카드 표시 & 새 가계도 추가 시에만 1개 노드 표시 처리 버전
+ * genealogy.js — 일부일처 부부 표시 시 우측 배우자 화살표(▶) 숨김 정밀 보완 버전
  */
 
 const supabaseUrl = 'https://tpwwwpcbinxdhxqvcvqc.supabase.co';
@@ -83,6 +83,7 @@ class DynamicGenealogyApp {
     this.btnQuickAddSubmit = document.getElementById('btnQuickAddSubmit');
     this.btnQuickAddCancel = document.getElementById('btnQuickAddCancel');
     this.btnQuickAddClose = document.getElementById('btnQuickAddClose');
+    this.quickAddPersonDatalist = document.getElementById('quickAddPersonDatalist');
 
     // 인물 정보 수정 ✏️ 모달 & 🗑️ 삭제 버튼 요소
     this.quickEditModal = document.getElementById('quickEditModal');
@@ -105,7 +106,7 @@ class DynamicGenealogyApp {
     this.bindQuickEditModalEvents();
     this.initSupabaseAuth();
     await this.fetchDatasetsFromDB();
-    await this.loadDataset(this.currentDatasetKey, false); // 초기 실행시 안내 카드 표시
+    await this.loadDataset(this.currentDatasetKey, false);
   }
 
   initSupabaseAuth() {
@@ -202,7 +203,7 @@ class DynamicGenealogyApp {
     `;
   }
 
-  // 🌟 2. 선택된 dataset_id 노드 데이터 로드 (새 가계도 생성시에만 isUserCreatedNew = true) 🌟
+  // ── 2. 선택된 dataset_id 노드 데이터 로드 ──
   async loadDataset(datasetKey = 'greek', isUserCreatedNew = false) {
     this.currentDatasetKey = datasetKey;
     this.renderDatasetSelectOptions();
@@ -241,20 +242,80 @@ class DynamicGenealogyApp {
       console.error("Supabase connection exception:", err);
     }
 
+    await this.deduplicateExistingNodes();
     this.sanitizeRelationships();
+    this.updateQuickAddDatalist();
     this.resetGraphState();
 
-    // 🌟 사용자가 '새 가계도 추가...'로 방금 만들었을 때만 첫번째 노드 표시 🌟
-    // 기존 가계도 선택 시에는 그래프 상태를 리셋하여 중앙 안내 카드가 나오도록 처리!
     if (isUserCreatedNew && this.nodesMap.size > 0) {
       const firstNodeId = Array.from(this.nodesMap.keys())[0];
       this.setFocusPerson(firstNodeId);
     } else {
-      this.render(); // emptyPlaceholder 안내 카드가 중앙에 노출됨
+      this.render();
     }
   }
 
-  // 🌟 3. parent_ids 기반 자식 및 부부 공통 자식 추적 🌟
+  updateQuickAddDatalist() {
+    if (!this.quickAddPersonDatalist) return;
+    const allPersons = Array.from(this.nodesMap.values());
+    this.quickAddPersonDatalist.innerHTML = allPersons.map(p => `
+      <option value="${this.escapeHtml(p.name)}">${this.escapeHtml(p.name)}${p.title ? ` (${this.escapeHtml(p.title)})` : ''}</option>
+    `).join('');
+  }
+
+  async deduplicateExistingNodes() {
+    const nameToPrimaryIdMap = new Map();
+    const duplicateIdToPrimaryIdMap = new Map();
+
+    for (const [id, person] of this.nodesMap.entries()) {
+      const normName = (person.name || '').replace(/\s+/g, '').toLowerCase();
+      if (!normName || normName === '이름없음') continue;
+
+      if (nameToPrimaryIdMap.has(normName)) {
+        const primaryId = nameToPrimaryIdMap.get(normName);
+        duplicateIdToPrimaryIdMap.set(id, primaryId);
+
+        const primaryPerson = this.nodesMap.get(primaryId);
+        if (primaryPerson) {
+          person.parentIds.forEach(pId => {
+            if (!primaryPerson.parentIds.includes(pId)) primaryPerson.parentIds.push(pId);
+          });
+          person.spouseIds.forEach(sId => {
+            if (!primaryPerson.spouseIds.includes(sId)) primaryPerson.spouseIds.push(sId);
+          });
+        }
+      } else {
+        nameToPrimaryIdMap.set(normName, id);
+      }
+    }
+
+    if (duplicateIdToPrimaryIdMap.size > 0) {
+      for (const [dupId, primaryId] of duplicateIdToPrimaryIdMap.entries()) {
+        this.nodesMap.delete(dupId);
+
+        for (const [id, p] of this.nodesMap.entries()) {
+          let updated = false;
+          if (p.parentIds.includes(dupId)) {
+            p.parentIds = p.parentIds.map(x => x === dupId ? primaryId : x).filter((x, i, a) => a.indexOf(x) === i);
+            updated = true;
+          }
+          if (p.spouseIds.includes(dupId)) {
+            p.spouseIds = p.spouseIds.map(x => x === dupId ? primaryId : x).filter((x, i, a) => a.indexOf(x) === i);
+            updated = true;
+          }
+          if (updated) {
+            await this.savePersonToDB(id);
+          }
+        }
+
+        if (supabaseClient) {
+          await supabaseClient.from('genealogy_nodes').delete().eq('id', dupId);
+        }
+      }
+    }
+  }
+
+  // ── 3. parent_ids 기반 자식 및 부부 공통 자식 추적 ──
   getChildIds(personId) {
     const children = [];
     for (const [id, person] of this.nodesMap.entries()) {
@@ -279,8 +340,8 @@ class DynamicGenealogyApp {
     const validIds = new Set(this.nodesMap.keys());
 
     for (const [id, person] of this.nodesMap.entries()) {
-      person.parentIds = person.parentIds.filter(pId => validIds.has(pId));
-      person.spouseIds = person.spouseIds.filter(sId => validIds.has(sId));
+      person.parentIds = person.parentIds.filter(pId => validIds.has(pId) && pId !== id);
+      person.spouseIds = person.spouseIds.filter(sId => validIds.has(sId) && sId !== id);
     }
 
     for (const [id, person] of this.nodesMap.entries()) {
@@ -299,8 +360,17 @@ class DynamicGenealogyApp {
 
     if (this.nodesMap.has(term)) return term;
 
+    const normalizedInput = term.replace(/\s+/g, '').toLowerCase();
+
     for (const [id, person] of this.nodesMap.entries()) {
-      if (person.name === term || person.name.toLowerCase() === term.toLowerCase()) {
+      const normName = (person.name || '').replace(/\s+/g, '').toLowerCase();
+      const normEng = (person.nameEng || '').replace(/\s+/g, '').toLowerCase();
+
+      if (normName === normalizedInput || (normEng && normEng === normalizedInput)) {
+        if (defaultGender && person.gender !== defaultGender) {
+          person.gender = defaultGender;
+          this.savePersonToDB(id);
+        }
         return id;
       }
     }
@@ -624,9 +694,11 @@ class DynamicGenealogyApp {
     return { nodes: layoutNodes, couples: couplePairs };
   }
 
-  // ── 5. HTML 텍스트 노드 렌더링 ──
+  // 🌟 5. HTML 텍스트 노드 렌더링 (일부일처 배우자 우측화살표 ▶ 감춤 처리) 🌟
   renderNodes(layout) {
     this.nodesLayer.innerHTML = '';
+
+    const renderedNodeIds = new Set(layout.nodes.map(n => n.id));
 
     layout.nodes.forEach(node => {
       const el = document.createElement('div');
@@ -644,13 +716,10 @@ class DynamicGenealogyApp {
       });
       const siblingCount = siblings.size;
 
-      let spouseCount = 0;
-      if (node.isFocus) {
-        spouseCount = node.spouseIds.filter(id => this.nodesMap.has(id)).length;
-      } else {
-        const unrenderedSpouses = node.spouseIds.filter(spId => spId !== this.focusNodeId && this.nodesMap.has(spId));
-        spouseCount = unrenderedSpouses.length;
-      }
+      // 💡 현재 캔버스에 '아직 렌더링되지 않은 다른 배우자'가 있을 때만 spouseCount > 0 으로 계산! 💡
+      // 일부일처 부부(우라노스-가이아)가 이미 화면에 함께 노출되어 있다면 unrenderedSpouses.length = 0 이 되어 ▶ 버튼이 숨겨집니다.
+      const unrenderedSpouses = node.spouseIds.filter(spId => !renderedNodeIds.has(spId) && this.nodesMap.has(spId));
+      const spouseCount = unrenderedSpouses.length;
 
       const allNodeChildren = this.getChildIds(node.id);
       const trueSingleChildCount = allNodeChildren.filter(cId => {
@@ -695,7 +764,7 @@ class DynamicGenealogyApp {
             </button>
           ` : ''}
           ${spouseCount > 0 ? `
-            <button type="button" class="dir-node dir-right ${isRightOpen ? 'open' : ''}" id="dirRight_${node.id}" title="${node.name}의 배우자 (${spouseCount}명)">
+            <button type="button" class="dir-node dir-right ${isRightOpen ? 'open' : ''}" id="dirRight_${node.id}" title="${node.name}의 숨겨진 다른 배우자 (${spouseCount}명)">
               ▶
             </button>
           ` : ''}
@@ -915,7 +984,7 @@ class DynamicGenealogyApp {
     });
   }
 
-  // 🌟 새 가계도 생성 모달 이벤트 바인딩 (생성 시 isUserCreatedNew = true 로 호출) 🌟
+  // ── 새 가계도 생성 모달 이벤트 바인딩 ──
   bindCreateDatasetModalEvents() {
     if (this.btnCreateDatasetCancel) {
       this.btnCreateDatasetCancel.addEventListener('click', () => this.closeCreateDatasetModal());
@@ -969,8 +1038,6 @@ class DynamicGenealogyApp {
         }
 
         await this.fetchDatasetsFromDB();
-        
-        // 🌟 오직 '새 가계도 추가...'로 생성된 경우에만 isUserCreatedNew = true 를 전달하여 1개 노드 표시! 🌟
         await this.loadDataset(newDatasetId, true);
 
         this.closeCreateDatasetModal();
@@ -997,7 +1064,6 @@ class DynamicGenealogyApp {
     this.renderDatasetSelectOptions();
   }
 
-  // ── 빠른 추가 팝업 오픈 ──
   openQuickAddModal(type, targetData) {
     this.pendingQuickAddAction = { type, targetData };
     const focusPerson = typeof targetData === 'string' ? this.nodesMap.get(targetData) : null;
@@ -1030,6 +1096,7 @@ class DynamicGenealogyApp {
       defaultGender = 'male';
     }
 
+    this.updateQuickAddDatalist();
     this.quickAddRowsContainer.innerHTML = '';
     this.addQuickAddRow('', defaultGender);
 
@@ -1046,13 +1113,33 @@ class DynamicGenealogyApp {
     row.className = 'quick-add-row';
     row.style.cssText = 'display:flex; gap:10px; margin-bottom:10px; align-items:center;';
     row.innerHTML = `
-      <input type="text" class="form-control quick-name-input" value="${this.escapeHtml(name)}" placeholder="이름" style="flex:2;" autocomplete="off" />
+      <input type="text" class="form-control quick-name-input" list="quickAddPersonDatalist" value="${this.escapeHtml(name)}" placeholder="이름 입력 (기존 인물 추천)" style="flex:2;" autocomplete="off" />
       <select class="form-control quick-gender-select" style="flex:1.2;">
         <option value="male" ${gender === 'male' ? 'selected' : ''}>남성 ▼</option>
         <option value="female" ${gender === 'female' ? 'selected' : ''}>여성 ▼</option>
         <option value="genderless" ${gender === 'genderless' ? 'selected' : ''}>중성 ▼</option>
       </select>
     `;
+
+    const nameInput = row.querySelector('.quick-name-input');
+    const genderSelect = row.querySelector('.quick-gender-select');
+
+    if (nameInput && genderSelect) {
+      nameInput.addEventListener('input', () => {
+        const val = nameInput.value.trim();
+        if (!val) return;
+        const normVal = val.replace(/\s+/g, '').toLowerCase();
+
+        for (const p of this.nodesMap.values()) {
+          const normName = (p.name || '').replace(/\s+/g, '').toLowerCase();
+          if (normName === normVal) {
+            genderSelect.value = p.gender || 'male';
+            break;
+          }
+        }
+      });
+    }
+
     this.quickAddRowsContainer.appendChild(row);
   }
 
@@ -1119,7 +1206,6 @@ class DynamicGenealogyApp {
           const parentId = this.findOrCreatePersonByNameOrId(item.name, item.gender);
           const parentPerson = this.nodesMap.get(parentId);
           if (parentId && parentPerson) {
-            parentPerson.gender = item.gender;
             if (!focusPerson.parentIds.includes(parentId)) focusPerson.parentIds.push(parentId);
             await this.savePersonToDB(parentId);
           }
@@ -1136,7 +1222,6 @@ class DynamicGenealogyApp {
           const sibId = this.findOrCreatePersonByNameOrId(item.name, item.gender);
           const sibPerson = this.nodesMap.get(sibId);
           if (sibId && sibPerson) {
-            sibPerson.gender = item.gender;
             focusPerson.parentIds.forEach(pId => {
               if (!sibPerson.parentIds.includes(pId)) sibPerson.parentIds.push(pId);
               this.savePersonToDB(pId);
@@ -1156,7 +1241,6 @@ class DynamicGenealogyApp {
           const spouseId = this.findOrCreatePersonByNameOrId(item.name, item.gender);
           const spousePerson = this.nodesMap.get(spouseId);
           if (spouseId && spousePerson) {
-            spousePerson.gender = item.gender;
             if (!focusPerson.spouseIds.includes(spouseId)) focusPerson.spouseIds.push(spouseId);
             if (!spousePerson.spouseIds.includes(focusId)) spousePerson.spouseIds.push(focusId);
             await this.savePersonToDB(spouseId);
@@ -1174,7 +1258,6 @@ class DynamicGenealogyApp {
           const childId = this.findOrCreatePersonByNameOrId(item.name, item.gender);
           const childPerson = this.nodesMap.get(childId);
           if (childId && childPerson) {
-            childPerson.gender = item.gender;
             if (!childPerson.parentIds.includes(focusId)) childPerson.parentIds.push(focusId);
             await this.savePersonToDB(childId);
           }
@@ -1191,7 +1274,6 @@ class DynamicGenealogyApp {
         const childId = this.findOrCreatePersonByNameOrId(item.name, item.gender);
         const childPerson = this.nodesMap.get(childId);
         if (childId && childPerson) {
-          childPerson.gender = item.gender;
           if (!childPerson.parentIds.includes(p1Id)) childPerson.parentIds.push(p1Id);
           if (!childPerson.parentIds.includes(p2Id)) childPerson.parentIds.push(p2Id);
           await this.savePersonToDB(childId);
@@ -1521,7 +1603,6 @@ class DynamicGenealogyApp {
       this.centerOnFocusNode();
     });
 
-    // 드롭다운 변경 시: 기존 가계도를 선택하면 isUserCreatedNew = false 로 호출되어 안내 카드가 노출됨!
     this.datasetSelect.addEventListener('change', async (e) => {
       const val = e.target.value;
       if (val === '__CREATE_NEW_DATASET__') {
