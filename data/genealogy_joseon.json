@@ -1,0 +1,270 @@
+{
+  "title": "조선 왕조 주요 가계도",
+  "description": "조선 개국 태조 이성계부터 성종까지의 왕실 계보",
+  "nodes": [
+    {
+      "id": "taejo",
+      "name": "태조 (이성계)",
+      "nameEng": "Taejo",
+      "title": "조선 제1대 국왕 (재위 1392~1398)",
+      "gender": "male",
+      "info": "조선을 건국한 개국군주. 신의왕후 한씨와 신덕왕후 강씨를 두었음.",
+      "parentIds": [],
+      "spouseIds": ["sinui", "sindeok"],
+      "childIds": ["jeongjong", "taejong", "bangseok"]
+    },
+    {
+      "id": "sinui",
+      "name": "신의왕후 한씨",
+      "nameEng": "Queen Sinui",
+      "title": "태조의 비 (추존)",
+      "gender": "female",
+      "info": "태조의 첫째 왕비. 정종과 태종 이방원의 어머니.",
+      "parentIds": [],
+      "spouseIds": ["taejo"],
+      "childIds": ["jeongjong", "taejong"]
+    },
+    {
+      "id": "sindeok",
+      "name": "신덕왕후 강씨",
+      "nameEng": "Queen Sindeok",
+      "title": "태조의 비",
+      "gender": "female",
+      "info": "태조의 계비. 막내아들 이방석을 세자로 세웠으나 왕자의 난으로 비극을 맞음.",
+      "parentIds": [],
+      "spouseIds": ["taejo"],
+      "childIds": ["bangseok"]
+    },
+    {
+      "id": "jeongjong",
+      "name": "정종 (이방과)",
+      "nameEng": "Jeongjong",
+      "title": "조선 제2대 국왕 (재위 1398~1400)",
+      "gender": "male",
+      "info": "태조의 둘째 아들. 1차 왕자의 난 이후 즉위하여 한양에서 개경으로 수도를 옮김.",
+      "parentIds": ["taejo", "sinui"],
+      "spouseIds": ["jeongan"],
+      "childIds": []
+    },
+    {
+      "id": "jeongan",
+      "name": "정안왕후 김씨",
+      "nameEng": "Queen Jeongan",
+      "title": "정종의 비",
+      "gender": "female",
+      "info": "정종의 왕비.",
+      "parentIds": [],
+      "spouseIds": ["jeongjong"],
+      "childIds": []
+    },
+    {
+      "id": "bangseok",
+      "name": "의안대군 (이방석)",
+      "nameEng": "Prince Uian",
+      "title": "태조의 8남 (첫 세자)",
+      "gender": "male",
+      "info": "태조와 신덕왕후의 아들. 제1차 왕자의 난 때 이방원에 의해 사사됨.",
+      "parentIds": ["taejo", "sindeok"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "taejong",
+      "name": "태종 (이방원)",
+      "nameEng": "Taejong",
+      "title": "조선 제3대 국왕 (재위 1400~1418)",
+      "gender": "male",
+      "info": "태조의 5남. 왕권 강화와 왕조의 기틀을 확립함.",
+      "parentIds": ["taejo", "sinui"],
+      "spouseIds": ["wongyeong"],
+      "childIds": ["yangnyeong", "hyoryeong", "sejong"]
+    },
+    {
+      "id": "wongyeong",
+      "name": "원경왕후 민씨",
+      "nameEng": "Queen Wongyeong",
+      "title": "태종의 비",
+      "gender": "female",
+      "info": "태종을 왕위에 올리는 데 큰 역할을 함. 세종대왕의 어머니.",
+      "parentIds": [],
+      "spouseIds": ["taejong"],
+      "childIds": ["yangnyeong", "hyoryeong", "sejong"]
+    },
+    {
+      "id": "yangnyeong",
+      "name": "양녕대군 (이제)",
+      "nameEng": "Prince Yangnyeong",
+      "title": "태종의 장남 (폐세자)",
+      "gender": "male",
+      "info": "태종의 첫째 아들. 자유분방한 행동으로 세자에서 폐위됨.",
+      "parentIds": ["taejong", "wongyeong"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "hyoryeong",
+      "name": "효령대군 (이보)",
+      "nameEng": "Prince Hyoryeong",
+      "title": "태종의 차남",
+      "gender": "male",
+      "info": "태종의 둘째 아들. 불교를 숭상하고 독경과 학문에 매진함.",
+      "parentIds": ["taejong", "wongyeong"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "sejong",
+      "name": "세종대왕 (이도)",
+      "nameEng": "Sejong the Great",
+      "title": "조선 제4대 국왕 (재위 1418~1450)",
+      "gender": "male",
+      "info": "훈민정음 창제, 과학기술 발전 및 국가 기틀을 완비한 조선 최고의 성군.",
+      "parentIds": ["taejong", "wongyeong"],
+      "spouseIds": ["soheon"],
+      "childIds": ["munjong", "seojo", "anpyeong", "imyeong"]
+    },
+    {
+      "id": "soheon",
+      "name": "소헌왕후 심씨",
+      "nameEng": "Queen Soheon",
+      "title": "세종의 비",
+      "gender": "female",
+      "info": "세종의 왕비. 문종과 세조(수양대군)의 어머니.",
+      "parentIds": [],
+      "spouseIds": ["sejong"],
+      "childIds": ["munjong", "seojo", "anpyeong", "imyeong"]
+    },
+    {
+      "id": "munjong",
+      "name": "문종 (이향)",
+      "nameEng": "Munjong",
+      "title": "조선 제5대 국왕 (재위 1450~1452)",
+      "gender": "male",
+      "info": "세종의 장남. 학문이 깊고 자격루와 측우기 제작에 관여하였으나 짧은 재위 후 서거함.",
+      "parentIds": ["sejong", "soheon"],
+      "spouseIds": ["hyeondeok"],
+      "childIds": ["danjong"]
+    },
+    {
+      "id": "hyeondeok",
+      "name": "현덕왕후 권씨",
+      "nameEng": "Queen Hyeondeok",
+      "title": "문종의 비",
+      "gender": "female",
+      "info": "문종의 세자빈이자 단종의 어머니. 단종 출산 직후 사망함.",
+      "parentIds": [],
+      "spouseIds": ["munjong"],
+      "childIds": ["danjong"]
+    },
+    {
+      "id": "danjong",
+      "name": "단종 (이홍위)",
+      "nameEng": "Danjong",
+      "title": "조선 제6대 국왕 (재위 1452~1455)",
+      "gender": "male",
+      "info": "문종의 아들. 어린 나이에 즉위하였으나 수양대군(세조)에 의해 노산군으로 감봉되고 유배됨.",
+      "parentIds": ["munjong", "hyeondeok"],
+      "spouseIds": ["jeongsun"],
+      "childIds": []
+    },
+    {
+      "id": "jeongsun",
+      "name": "정순왕후 송씨",
+      "nameEng": "Queen Jeongsun",
+      "title": "단종의 비",
+      "gender": "female",
+      "info": "단종의 왕비. 단종 서거 후 평생 단종을 그리워함.",
+      "parentIds": [],
+      "spouseIds": ["danjong"],
+      "childIds": []
+    },
+    {
+      "id": "seojo",
+      "name": "세조 (이유 / 수양대군)",
+      "nameEng": "Sejo",
+      "title": "조선 제7대 국왕 (재위 1455~1468)",
+      "gender": "male",
+      "info": "세종의 차남. 계유정난을 일으키고 단종을 상왕으로 물러나게 한 뒤 즉위함.",
+      "parentIds": ["sejong", "soheon"],
+      "spouseIds": ["jeonghui"],
+      "childIds": ["deokjong", "yejong"]
+    },
+    {
+      "id": "jeonghui",
+      "name": "정희왕후 윤씨",
+      "nameEng": "Queen Jeonghui",
+      "title": "세조의 비",
+      "gender": "female",
+      "info": "세조의 왕비. 성종 연간 최초로 수렴청정을 실시함.",
+      "parentIds": [],
+      "spouseIds": ["seojo"],
+      "childIds": ["deokjong", "yejong"]
+    },
+    {
+      "id": "anpyeong",
+      "name": "안평대군 (이용)",
+      "nameEng": "Prince Anpyeong",
+      "title": "세종의 3남",
+      "gender": "male",
+      "info": "당대 최고 시·서·화 명필가. 계유정난 시 형 수양대군에 의해 강화도로 유배 후 사사됨.",
+      "parentIds": ["sejong", "soheon"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "imyeong",
+      "name": "임영대군 (이구)",
+      "nameEng": "Prince Imyeong",
+      "title": "세종의 4남",
+      "gender": "male",
+      "info": "군사·총통 무기 제작에 큰 공헌을 한 왕자.",
+      "parentIds": ["sejong", "soheon"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "deokjong",
+      "name": "덕종 (이장 / 의경세자)",
+      "nameEng": "Crown Prince Uigyeong",
+      "title": "세조의 장남 (추존)",
+      "gender": "male",
+      "info": "세조의 첫째 아들. 세자 시절 일찍 서거하였으나 아들 성종 즉위 후 덕종으로 추존됨.",
+      "parentIds": ["seojo", "jeonghui"],
+      "spouseIds": ["insoo"],
+      "childIds": ["seongjong"]
+    },
+    {
+      "id": "insoo",
+      "name": "소혜왕후 한씨 (인수대비)",
+      "nameEng": "Queen Sohye",
+      "title": "덕종의 비 (인수대비)",
+      "gender": "female",
+      "info": "성종의 어머니. 《내훈》을 지은 유학 식견이 뛰어난 대비.",
+      "parentIds": [],
+      "spouseIds": ["deokjong"],
+      "childIds": ["seongjong"]
+    },
+    {
+      "id": "yejong",
+      "name": "예종 (이황)",
+      "nameEng": "Yejong",
+      "title": "조선 제8대 국왕 (재위 1468~1469)",
+      "gender": "male",
+      "info": "세조의 둘째 아들. 세조의 뒤를 이어 즉위했으나 1년 만에 요절함.",
+      "parentIds": ["seojo", "jeonghui"],
+      "spouseIds": [],
+      "childIds": []
+    },
+    {
+      "id": "seongjong",
+      "name": "성종 (이혈)",
+      "nameEng": "Seongjong",
+      "title": "조선 제9대 국왕 (재위 1469~1494)",
+      "gender": "male",
+      "info": "덕종(의경세자)의 둘째 아들. 경국대전을 완성하고 조선 통치 체제를 확립함.",
+      "parentIds": ["deokjong", "insoo"],
+      "spouseIds": [],
+      "childIds": []
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>가계도 탐색기</title>
+  
+  <!-- Pretendard Modern Typography -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Common Application CSS & App Specific CSS -->
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="genealogy.css">
+</head>
+<body>
+  <!-- 사이트 공통 내비게이션 바 -->
+  <nav class="nav">
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">🌳 가계도</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">🏠</span> 홈
+      </a>
+      <a href="farm.html" class="nav-link">
+        <span class="nav-icon">🌱</span> 용어 노트
+      </a>
+      <a href="flashcards.html" class="nav-link">
+        <span class="nav-icon">🗂️</span> 플래시카드
+      </a>
+      <a href="hanja.html" class="nav-link">
+        <span class="nav-icon">📗</span> 한글(한자)
+      </a>
+      <a href="rebalance.html" class="nav-link">
+        <span class="nav-icon">⚖️</span> 자산 리밸런싱
+      </a>
+      <a href="listening.html" class="nav-link">
+        <span class="nav-icon">🎧</span> 영어 듣기
+      </a>
+      <a href="timeline.html" class="nav-link">
+        <span class="nav-icon">📜</span> 타임라인
+      </a>
+      <a href="genealogy.html" class="nav-link active">
+        <span class="nav-icon">🌳</span> 가계도
+      </a>
+    </div>
+  </nav>
+
+  <!-- 가계도 인터랙티브 뷰포트 -->
+  <main class="app-viewport" id="appViewport">
+    
+    <!-- 툴바 컨트롤 레이어 -->
+    <header class="genealogy-header">
+      <!-- 1. 확대/축소 및 데이터 편집 & Supabase 로그인 상태 컨트롤 막대 -->
+      <div class="toolbar-group">
+        <button type="button" class="icon-btn" id="btnZoomIn" title="확대 (+)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <button type="button" class="icon-btn" id="btnZoomOut" title="축소 (-)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        </button>
+        <button type="button" class="icon-btn" id="btnResetView" title="중심 위치 리셋">
+          🎯
+        </button>
+        
+        <!-- Supabase 로그인 및 편집 버튼 -->
+        <button type="button" class="btn-editor" id="btnToggleEditor">
+          ✏️ 데이터 편집
+        </button>
+        <button type="button" class="icon-btn" id="btnAuthToggle" title="Supabase 로그인" style="width:auto; padding:0 10px; font-size:12px;">
+          🔑 로그인
+        </button>
+      </div>
+
+      <!-- 2. 인물 검색창 및 데이터셋 선택 막대 -->
+      <div class="toolbar-group" style="flex:1;">
+        <div class="search-wrapper">
+          <div class="search-input-box">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="인물 이름을 검색하세요 (예: 제우스, 세종대왕)" autocomplete="off" />
+          </div>
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+
+        <select id="datasetSelect" class="select-custom"></select>
+      </div>
+    </header>
+
+    <!-- 초기 아무것도 없을 때 안내 카드 -->
+    <div class="empty-placeholder" id="emptyPlaceholder">
+      <div class="empty-card">
+        <div class="empty-icon">🌳</div>
+        <h2>가계도 인물 탐색기</h2>
+        <p>상단 검색창에 <strong>제우스, 세종대왕, 헤라</strong> 등 궁금한 인물의 이름을 검색하시면 가계도가 시원하게 펼쳐집니다.</p>
+      </div>
+    </div>
+
+    <!-- 캔버스 패닝/줌 스테이지 레이어 -->
+    <div class="canvas-stage" id="canvasStage">
+      <svg class="connections-layer" id="connectionsLayer"></svg>
+      <div class="nodes-layer" id="nodesLayer"></div>
+    </div>
+  </main>
+
+  <!-- 새 가계도 추가 모달 -->
+  <div class="modal-backdrop" id="createDatasetModal">
+    <div class="modal-card" style="max-width:420px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">✨ 새 가계도 만들기</h3>
+          <div class="modal-subtitle">새로운 가계도 이름과 첫 번째 인물을 입력하세요.</div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnCreateDatasetClose" title="닫기">&times;</button>
+      </div>
+      
+      <form id="createDatasetForm" style="margin-top:16px;">
+        <div class="form-group">
+          <label class="form-label">가계도 이름(필수)</label>
+          <input type="text" id="newDatasetTitle" class="form-control" placeholder="예: ⚔️ 고려 왕실 가계도, 🛡️ 신라 성골 가계도" required autocomplete="off" />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">인물 이름(필수)</label>
+          <input type="text" id="newDatasetFirstPersonName" class="form-control" placeholder="예: 왕건, 박혁거세, 카오스" required autocomplete="off" />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">성별 (노드 색상 연동)</label>
+          <select id="newDatasetFirstPersonGender" class="form-control">
+            <option value="male">🟦 남성 (Male)</option>
+            <option value="female">🟥 여성 (Female)</option>
+            <option value="genderless">🟪 중성 (Genderless - 태초의 신 등)</option>
+          </select>
+        </div>
+        
+        <div class="form-actions" style="margin-top:24px; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn btn-secondary" id="btnCreateDatasetCancel">취소</button>
+          <button type="submit" class="btn-modal-primary">생성</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 스케치 스타일 다중 행 추가 모달 -->
+  <div class="modal-backdrop" id="quickAddModal">
+    <div class="modal-card" style="max-width:460px; padding:24px;">
+      <div class="modal-header" style="margin-bottom:14px;">
+        <div>
+          <h3 class="modal-title" id="quickAddTitle">인물 추가</h3>
+          <div class="modal-subtitle" id="quickAddSubtitle">이름과 성별을 입력하고 + 버튼으로 인물을 더 추가하세요.</div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnQuickAddClose" title="닫기">&times;</button>
+      </div>
+      
+      <div id="quickAddRowsContainer" style="margin:16px 0; max-height:260px; overflow-y:auto; padding-right:4px;">
+        <div class="quick-add-row" style="display:flex; gap:10px; margin-bottom:10px; align-items:center;">
+          <input type="text" class="form-control quick-name-input" placeholder="이름" style="flex:2;" autocomplete="off" />
+          <select class="form-control quick-gender-select" style="flex:1.2;">
+            <option value="male">남성 ▼</option>
+            <option value="female">여성 ▼</option>
+            <option value="genderless">중성 ▼</option>
+          </select>
+        </div>
+      </div>
+
+      <button type="button" class="btn-row-add" id="btnAddQuickRow" title="인물 입력칸 한 줄 더 추가">
+        +
+      </button>
+      
+      <div class="form-actions" style="display:flex; justify-content:space-between; gap:12px; margin-top:20px;">
+        <button type="button" class="btn btn-secondary" id="btnQuickAddCancel" style="flex:1; padding:12px; font-size:15px; font-weight:600;">닫기</button>
+        <button type="button" class="btn-modal-primary" id="btnQuickAddSubmit" style="flex:1.4; padding:12px; font-size:15px; font-weight:700;">추가</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🌟 ✨ 노드 텍스트/성별 수정 및 좌측 하단 🗑️ 삭제 버튼 모달 ✨ 🌟 -->
+  <div class="modal-backdrop" id="quickEditModal">
+    <div class="modal-card" style="max-width:380px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">인물 정보 수정</h3>
+          <div class="modal-subtitle">이름, 칭호, 성별을 수정하여 DB에 반영합니다.</div>
+        </div>
+        <button type="button" class="modal-close-btn" id="btnQuickEditClose" title="닫기">&times;</button>
+      </div>
+      <form id="quickEditForm" style="margin-top:14px;">
+        <input type="hidden" id="quickEditId" />
+        <div class="form-group">
+          <label class="form-label">이름 (필수)</label>
+          <input type="text" id="quickEditName" class="form-control" required placeholder="예: 제우스" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">칭호 / 부연 설명 (선택)</label>
+          <input type="text" id="quickEditTitle" class="form-control" placeholder="예: 하늘의 신 (1대 주신)" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">성별 (노드 색상 연동)</label>
+          <select id="quickEditGender" class="form-control">
+            <option value="male">🟦 남성 (파란색 테두리)</option>
+            <option value="female">🟥 여성 (분홍색 테두리)</option>
+            <option value="genderless">🟪 중성 (보라색 테두리)</option>
+          </select>
+        </div>
+        <div class="form-actions" style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn btn-danger" id="btnQuickEditDelete" style="padding:9px 14px;">🗑️ 삭제</button>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="btn btn-secondary" id="btnQuickEditCancel">취소</button>
+            <button type="submit" class="btn-modal-primary">💾 저장하기</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Supabase 인증 (로그인) 모달 -->
+  <div class="modal-backdrop" id="authModal">
+    <div class="modal-card" style="max-width:380px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">Supabase 관리자 로그인</h2>
+          <div class="modal-subtitle">가계도 데이터 편집을 위한 인증</div>
+        </div>
+        <button type="button" class="modal-close-btn" title="닫기">&times;</button>
+      </div>
+      <form id="loginForm" style="margin-top:16px;">
+        <div class="form-group">
+          <label class="form-label">이메일</label>
+          <input type="email" id="loginEmail" class="form-control" required placeholder="admin@example.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">비밀번호</label>
+          <input type="password" id="loginPassword" class="form-control" required placeholder="비밀번호 입력" />
+        </div>
+        <div id="loginError" style="color:#ef4444; font-size:12px; margin-bottom:12px; display:none;"></div>
+        <div class="form-actions">
+          <button type="submit" class="btn-modal-primary" style="width:100%;">🔑 로그인하기</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 데이터 편집 모달 (가계도 주제 및 인물 목록 관리) -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">가계도 데이터 편집</h2>
+          <div class="modal-subtitle">Supabase DB 실시간 반영 및 데이터 관리</div>
+        </div>
+        <button type="button" class="modal-close-btn" title="닫기">&times;</button>
+      </div>
+      <div id="editModalBody"></div>
+    </div>
+  </div>
+
+  <!-- App Specific Script -->
+  <script src="genealogy.js"></script>
+  <script>
+    // 사이트 공통 햄버거 메뉴 토글 이벤트
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    });
+  </script>
+</body>
+</html>

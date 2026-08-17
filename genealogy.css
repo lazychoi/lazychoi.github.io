@@ -1,0 +1,652 @@
+/* genealogy.css — 가계도 툴바 및 검색창 가로 너비를 다른 앱과 동일한 800px 규격으로 맞춘 버전 */
+
+:root {
+  --bg-canvas: #f8fafc;
+  --node-male-bg: #ffffff;
+  --node-male-border: #3b82f6;
+  --node-female-bg: #ffffff;
+  --node-female-border: #ec4899;
+  --node-genderless-border: #8b5cf6; /* 🟪 중성: 신비로운 보라색 테두리 */
+  --node-focus-border: #f59e0b;
+  --line-color: #94a3b8;
+  --line-active-color: #2563eb;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --accent: #2563eb;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  background-color: var(--bg-canvas);
+  color: var(--text-main);
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* 메인 뷰포트 레이아웃 */
+.app-viewport {
+  position: relative;
+  width: 100vw;
+  flex: 1;
+  height: calc(100vh - 60px);
+  margin-top: 0;
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+}
+
+.app-viewport:active {
+  cursor: grabbing;
+}
+
+/* 🌟 상단 툴바 (다른 앱들과 100% 동일한 max-width: 800px 규격 적용) 🌟 */
+.genealogy-header {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 800px; /* 👈 다른 타임라인/용어노트 앱과 동일한 800px 너비로 맞춤 */
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 6px 10px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: none;
+  background: transparent;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: #f1f5f9;
+  color: var(--accent);
+}
+
+.btn-editor {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 12px;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-editor:hover {
+  background: #1e293b;
+}
+
+/* 🌟 인물 검색창 및 데이터셋 드롭다운 너비 축소 🌟 */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  max-width: 280px; /* 👈 검색창 입력 박스 크기를 단정하게 축소 */
+}
+
+.search-input-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 7px 12px;
+  transition: border-color 0.2s ease;
+}
+
+.search-input-box:focus-within {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.search-input-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 13px;
+  background: transparent;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  max-height: 280px;
+  overflow-y: auto;
+  display: none;
+  z-index: 110;
+}
+
+.search-dropdown.show {
+  display: block;
+}
+
+.search-item {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s ease;
+}
+
+.search-item:hover, .search-item.highlighted {
+  background: #eff6ff;
+}
+
+.search-item-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+.search-item-title {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.select-custom {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 7px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+/* 안내 카드 */
+.empty-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.empty-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  padding: 40px 32px;
+  border-radius: 24px;
+  text-align: center;
+  max-width: 420px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.empty-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.empty-card p {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* 캔버스 스테이지 & 레이어 */
+.canvas-stage {
+  position: absolute;
+  width: 5000px;
+  height: 5000px;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+}
+
+.connections-layer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.connection-line {
+  fill: none;
+  stroke: var(--line-color);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.connection-line.active {
+  stroke: var(--line-active-color);
+  stroke-width: 2.5;
+}
+
+.connection-line.spouse {
+  stroke: #ec4899;
+  stroke-dasharray: 4 4;
+}
+
+.nodes-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* 성별에 따른 노드 카드 디자인 */
+.text-node {
+  position: absolute;
+  width: 160px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 14px;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  pointer-events: auto;
+  border: 2.5px solid transparent;
+}
+
+/* 🟦 남성 노드 */
+.text-node.gender-male {
+  border-color: var(--node-male-border);
+  background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+}
+
+/* 🟥 여성 노드 */
+.text-node.gender-female {
+  border-color: var(--node-female-border);
+  background: linear-gradient(135deg, #ffffff 0%, #fdf2f8 100%);
+}
+
+/* 🟪 중성 노드 */
+.text-node.gender-genderless {
+  border-color: var(--node-genderless-border);
+  background: linear-gradient(135deg, #ffffff 0%, #f5f3ff 100%);
+}
+
+/* 🎯 포커스 인물 노드 강조 테두리 */
+.text-node.is-focus {
+  border-color: var(--node-focus-border) !important;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.25), 0 8px 16px -4px rgba(0, 0, 0, 0.12);
+}
+
+.text-node-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+  flex: 1;
+  overflow: hidden;
+}
+
+.text-node-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.text-node-title {
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 노드 카드 ✏️ 빠른 수정 버튼 스타일 */
+.btn-node-edit {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.btn-node-edit:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.btn-info-icon {
+  background: transparent;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 3px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-info-icon:hover {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* 4방향 노드 버튼 (보기 모드 & 편집 모드) */
+.dir-node {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #2563eb;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  z-index: 5;
+  transition: none !important;
+  transform: none;
+}
+
+.dir-node:hover {
+  transform: none !important;
+  opacity: 1 !important;
+}
+
+.dir-top {
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%) !important;
+}
+
+.dir-top:hover {
+  transform: translateX(-50%) !important;
+}
+
+.dir-bottom {
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%) !important;
+}
+
+.dir-bottom:hover {
+  transform: translateX(-50%) !important;
+}
+
+.dir-left {
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%) !important;
+}
+
+.dir-left:hover {
+  transform: translateY(-50%) !important;
+}
+
+.dir-right {
+  right: -20px;
+  top: 50%;
+  transform: translateY(-50%) !important;
+}
+
+.dir-right:hover {
+  transform: translateY(-50%) !important;
+}
+
+/* 편집 모드 ➕ 버튼 전용 녹색 강조 스타일링 */
+.dir-node.edit-plus {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.dir-node.edit-plus:hover {
+  background: #059669 !important;
+}
+
+/* 부부 커플 자식 버튼 (👶 / ➕) */
+.couple-node-btn {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ec4899;
+  color: #ffffff;
+  border: 2px solid #ffffff;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(236, 72, 153, 0.3);
+  z-index: 6;
+  transition: none !important;
+}
+
+.couple-node-btn:hover {
+  transform: none !important;
+}
+
+.couple-node-btn.edit-couple-plus {
+  background: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3), 0 3px 8px rgba(0, 0, 0, 0.2);
+  font-size: 12px !important;
+}
+
+.couple-node-btn.edit-couple-plus:hover {
+  background: #059669 !important;
+}
+
+/* 스케치 스타일 다중 행 추가 모달 전용 버튼 */
+.btn-row-add {
+  width: 100%;
+  padding: 10px;
+  background: #ffffff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-row-add:hover {
+  background: #f8fafc;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+/* 모달 디자인 (화면 정중앙 배치) */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-backdrop.active {
+  display: flex !important;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 540px;
+  padding: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.modal-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1.5px solid #cbd5e1;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-control:focus {
+  border-color: var(--accent);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.btn-modal-primary {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.detail-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+/* 모바일 모드 대응 툴바 순서 오버라이드 */
+@media (max-width: 768px) {
+  .genealogy-header {
+    top: 4px;
+    left: 8px;
+    right: 8px;
+    transform: none;
+    width: auto;
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+  
+  .toolbar-group {
+    justify-content: space-between;
+  }
+
+  .search-wrapper {
+    max-width: 100%;
+  }
+}
