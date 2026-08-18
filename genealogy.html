@@ -189,7 +189,7 @@
       <div class="modal-header">
         <div>
           <h3 class="modal-title">인물 정보 수정</h3>
-          <div class="modal-subtitle">이름, 칭호, 성별을 수정하여 DB에 반영합니다.</div>
+          <div class="modal-subtitle">이름, 부모, 칭호, 성별을 수정하여 DB에 반영합니다.</div>
         </div>
         <button type="button" class="modal-close-btn" id="btnQuickEditClose" title="닫기">&times;</button>
       </div>
@@ -198,6 +198,10 @@
         <div class="form-group">
           <label class="form-label">이름 (필수)</label>
           <input type="text" id="quickEditName" class="form-control" required placeholder="예: 제우스" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">부모 (선택, 쉼표 , 구분)</label>
+          <input type="text" id="quickEditParents" class="form-control" list="quickAddPersonDatalist" placeholder="예: 크로노스, 레아 (이름 검색 가능)" autocomplete="off" />
         </div>
         <div class="form-group">
           <label class="form-label">칭호 / 부연 설명 (선택)</label>

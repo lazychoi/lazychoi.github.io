@@ -9,7 +9,9 @@ import urllib.error
 # Table configurations: (supabase_table_name, local_json_filename)
 TABLES_TO_BACKUP = [
     ('terms', 'backup-terms.json'),
-    ('history_timeline', 'backup-history.json')
+    ('history_timeline', 'backup-history.json'),
+    ('genealogy_nodes', 'backup-genealogy_nodes.json'),
+    ('genealogy_datasets', 'backup-genealogy_datasets.json')
 ]
 
 def get_supabase_credentials():

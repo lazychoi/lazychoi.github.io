@@ -90,6 +90,7 @@ class DynamicGenealogyApp {
     this.quickEditForm = document.getElementById('quickEditForm');
     this.quickEditId = document.getElementById('quickEditId');
     this.quickEditName = document.getElementById('quickEditName');
+    this.quickEditParents = document.getElementById('quickEditParents');
     this.quickEditTitle = document.getElementById('quickEditTitle');
     this.quickEditGender = document.getElementById('quickEditGender');
     this.btnQuickEditDelete = document.getElementById('btnQuickEditDelete');
@@ -367,10 +368,6 @@ class DynamicGenealogyApp {
       const normEng = (person.nameEng || '').replace(/\s+/g, '').toLowerCase();
 
       if (normName === normalizedInput || (normEng && normEng === normalizedInput)) {
-        if (defaultGender && person.gender !== defaultGender) {
-          person.gender = defaultGender;
-          this.savePersonToDB(id);
-        }
         return id;
       }
     }
@@ -716,10 +713,8 @@ class DynamicGenealogyApp {
       });
       const siblingCount = siblings.size;
 
-      // 💡 현재 캔버스에 '아직 렌더링되지 않은 다른 배우자'가 있을 때만 spouseCount > 0 으로 계산! 💡
-      // 일부일처 부부(우라노스-가이아)가 이미 화면에 함께 노출되어 있다면 unrenderedSpouses.length = 0 이 되어 ▶ 버튼이 숨겨집니다.
-      const unrenderedSpouses = node.spouseIds.filter(spId => !renderedNodeIds.has(spId) && this.nodesMap.has(spId));
-      const spouseCount = unrenderedSpouses.length;
+      const validSpouses = node.spouseIds.filter(spId => this.nodesMap.has(spId));
+      const spouseCount = validSpouses.length;
 
       const allNodeChildren = this.getChildIds(node.id);
       const trueSingleChildCount = allNodeChildren.filter(cId => {
@@ -764,7 +759,7 @@ class DynamicGenealogyApp {
             </button>
           ` : ''}
           ${spouseCount > 0 ? `
-            <button type="button" class="dir-node dir-right ${isRightOpen ? 'open' : ''}" id="dirRight_${node.id}" title="${node.name}의 숨겨진 다른 배우자 (${spouseCount}명)">
+            <button type="button" class="dir-node dir-right ${isRightOpen ? 'open' : ''}" id="dirRight_${node.id}" title="${node.name}의 배우자 (${spouseCount}명)">
               ▶
             </button>
           ` : ''}
@@ -1294,10 +1289,20 @@ class DynamicGenealogyApp {
     const person = this.nodesMap.get(personId);
     if (!person) return;
 
+    this.updateQuickAddDatalist();
+
     if (this.quickEditId) this.quickEditId.value = person.id;
     if (this.quickEditName) this.quickEditName.value = person.name;
     if (this.quickEditTitle) this.quickEditTitle.value = person.title || '';
     if (this.quickEditGender) this.quickEditGender.value = person.gender || 'male';
+
+    if (this.quickEditParents) {
+      const parentNames = (person.parentIds || []).map(pId => {
+        const p = this.nodesMap.get(pId);
+        return p ? p.name : '';
+      }).filter(Boolean);
+      this.quickEditParents.value = parentNames.join(', ');
+    }
 
     this.quickEditModal.classList.add('active');
 
@@ -1378,6 +1383,17 @@ class DynamicGenealogyApp {
           person.title = this.quickEditTitle.value.trim();
           person.gender = this.quickEditGender.value;
 
+          if (this.quickEditParents) {
+            const rawVal = this.quickEditParents.value.trim();
+            const parentNames = rawVal ? rawVal.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+            const newParentIds = parentNames
+              .map(pName => this.findOrCreatePersonByNameOrId(pName, 'male'))
+              .filter(targetId => targetId && targetId !== pId);
+
+            person.parentIds = newParentIds;
+          }
+
+          this.sanitizeRelationships();
           await this.savePersonToDB(pId);
           this.closeQuickEditModal();
           this.render();
