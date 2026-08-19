@@ -123,16 +123,33 @@ class DynamicGenealogyApp {
   }
 
   updateAuthUI() {
+    const authStatusText = document.getElementById('authStatusText');
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+
+    const btnToggleEditor = document.getElementById('btnToggleEditor');
+    const btnImportCsv = document.getElementById('btnImportCsv');
+    const btnExportCsv = document.getElementById('btnExportCsv');
+
     if (this.currentUser) {
-      if (this.btnAuthToggle) {
-        this.btnAuthToggle.innerHTML = '🔒 로그아웃';
-        this.btnAuthToggle.title = `${this.currentUser.email} (로그인됨)`;
-      }
+      if (authStatusText) authStatusText.textContent = `${this.currentUser.email}`;
+      if (btnLogin) btnLogin.style.display = 'none';
+      if (btnLogout) btnLogout.style.display = 'inline-flex';
+
+      // 로그인 상태에서만 편집 관련 버튼들 노출
+      if (btnToggleEditor) btnToggleEditor.style.display = 'inline-flex';
+      if (btnImportCsv) btnImportCsv.style.display = 'inline-flex';
+      if (btnExportCsv) btnExportCsv.style.display = 'inline-flex';
     } else {
-      if (this.btnAuthToggle) {
-        this.btnAuthToggle.innerHTML = '🔑 로그인';
-        this.btnAuthToggle.title = 'Supabase 로그인';
-      }
+      if (authStatusText) authStatusText.textContent = '';
+      if (btnLogin) btnLogin.style.display = 'inline-flex';
+      if (btnLogout) btnLogout.style.display = 'none';
+
+      // 로그아웃 상태에서는 편집 관련 버튼들 모두 숨김
+      if (btnToggleEditor) btnToggleEditor.style.display = 'none';
+      if (btnImportCsv) btnImportCsv.style.display = 'none';
+      if (btnExportCsv) btnExportCsv.style.display = 'none';
+      this.isEditMode = false;
     }
 
     this.updateEditModeBtn();
@@ -1317,10 +1334,34 @@ class DynamicGenealogyApp {
       this.quickEditSpouses.value = spouseNames.join(', ');
     }
 
+    const isLoggedIn = !!this.currentUser;
+    const titleEl = document.getElementById('quickEditModalTitle');
+    const subtitleEl = document.getElementById('quickEditModalSubtitle');
+    const loggedInActions = document.getElementById('quickEditLoggedInActions');
+    const loggedOutActions = document.getElementById('quickEditLoggedOutActions');
+    const formInputs = [
+      this.quickEditName, this.quickEditNameEng, this.quickEditParents,
+      this.quickEditSpouses, this.quickEditTitle, this.quickEditGender, this.quickEditInfo
+    ];
+
+    if (titleEl) titleEl.textContent = '정보 수정';
+
+    if (isLoggedIn) {
+      if (subtitleEl) subtitleEl.textContent = '이름, 영문명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.';
+      if (loggedInActions) loggedInActions.style.display = 'flex';
+      if (loggedOutActions) loggedOutActions.style.display = 'none';
+      formInputs.forEach(input => { if (input) input.disabled = false; });
+    } else {
+      if (subtitleEl) subtitleEl.textContent = '인물 상세 정보입니다. (수정하려면 상단 로그인 필요)';
+      if (loggedInActions) loggedInActions.style.display = 'none';
+      if (loggedOutActions) loggedOutActions.style.display = 'flex';
+      formInputs.forEach(input => { if (input) input.disabled = true; });
+    }
+
     this.quickEditModal.classList.add('active');
 
     setTimeout(() => {
-      if (this.quickEditName) this.quickEditName.focus();
+      if (isLoggedIn && this.quickEditName) this.quickEditName.focus();
     }, 100);
   }
 
@@ -1338,9 +1379,14 @@ class DynamicGenealogyApp {
     if (this.btnQuickEditClose) {
       this.btnQuickEditClose.addEventListener('click', () => this.closeQuickEditModal());
     }
+    const btnQuickEditCloseOnly = document.getElementById('btnQuickEditCloseOnly');
+    if (btnQuickEditCloseOnly) {
+      btnQuickEditCloseOnly.addEventListener('click', () => this.closeQuickEditModal());
+    }
 
     if (this.btnQuickEditDelete) {
       this.btnQuickEditDelete.addEventListener('click', async () => {
+        if (!this.currentUser) return;
         const deleteId = this.quickEditId.value;
         const person = this.nodesMap.get(deleteId);
         if (!person) return;
@@ -1388,6 +1434,7 @@ class DynamicGenealogyApp {
     if (this.quickEditForm) {
       this.quickEditForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (!this.currentUser) return;
         const pId = this.quickEditId.value;
         const person = this.nodesMap.get(pId);
 
@@ -1716,16 +1763,53 @@ class DynamicGenealogyApp {
       });
     });
 
-    if (this.btnAuthToggle) {
-      this.btnAuthToggle.addEventListener('click', () => {
-        if (this.currentUser && supabaseClient) {
-          if (confirm("로그아웃 하시겠습니까?")) {
-            supabaseClient.auth.signOut();
+    const btnLogin = document.getElementById('btnLogin');
+    const btnLogout = document.getElementById('btnLogout');
+
+    if (btnLogin) {
+      btnLogin.addEventListener('click', () => {
+        if (this.loginError) this.loginError.style.display = 'none';
+        if (this.authModal) this.authModal.classList.add('active');
+      });
+    }
+
+    if (btnLogout) {
+      btnLogout.addEventListener('click', async () => {
+        if (confirm("로그아웃 하시겠습니까?")) {
+          if (supabaseClient) {
+            await supabaseClient.auth.signOut();
           }
-        } else {
-          this.loginError.style.display = 'none';
-          this.authModal.classList.add('active');
         }
+      });
+    }
+
+    const btnImportCsv = document.getElementById('btnImportCsv');
+    const csvFileInput = document.getElementById('csvFileInput');
+
+    if (btnImportCsv && csvFileInput) {
+      btnImportCsv.addEventListener('click', () => {
+        if (!this.currentUser) {
+          alert("🔒 CSV 데이터 가져오기는 Supabase 로그인 후 이용 가능합니다.");
+          if (this.loginError) this.loginError.style.display = 'none';
+          if (this.authModal) this.authModal.classList.add('active');
+          return;
+        }
+        csvFileInput.value = '';
+        csvFileInput.click();
+      });
+
+      csvFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          await this.handleCsvImport(file);
+        }
+      });
+    }
+
+    const btnExportCsv = document.getElementById('btnExportCsv');
+    if (btnExportCsv) {
+      btnExportCsv.addEventListener('click', async () => {
+        await this.handleCsvExport();
       });
     }
 
@@ -1761,6 +1845,405 @@ class DynamicGenealogyApp {
       this.updateEditModeBtn();
       this.render();
     });
+  }
+
+  // ── CSV 파이프(|) 구분자 데이터 Import 및 ID 변환 처리 ──
+  async handleCsvImport(file) {
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const lines = text.split(/\r?\n/).map(line => line.trim()).filter(line => line.length > 0);
+
+      if (lines.length === 0) {
+        alert("CSV 파일이 비어있습니다.");
+        return;
+      }
+
+      // 1. 헤더 컬럼 위치 파악 (dataset, name, name_eng, title, info, parents, spouse)
+      const firstLine = lines[0];
+      const cols = firstLine.split('|').map(c => c.trim().toLowerCase());
+
+      let colDataset = cols.indexOf('dataset') >= 0 ? cols.indexOf('dataset') : cols.indexOf('dataset_id');
+      let colName = cols.indexOf('name');
+      let colNameEng = cols.indexOf('name_eng');
+      let colTitle = cols.indexOf('title');
+      let colInfo = cols.indexOf('info');
+      let colParents = cols.indexOf('parents') >= 0 ? cols.indexOf('parents') : (cols.indexOf('parents_ids') >= 0 ? cols.indexOf('parents_ids') : cols.indexOf('parent_ids'));
+      let colSpouse = cols.indexOf('spouse') >= 0 ? cols.indexOf('spouse') : (cols.indexOf('spouse_ids') >= 0 ? cols.indexOf('spouse_ids') : cols.indexOf('spouse_id'));
+
+      let dataLines = lines;
+      if (colName !== -1) {
+        dataLines = lines.slice(1);
+      } else {
+        colDataset = 0;
+        colName = 1;
+        colNameEng = 2;
+        colTitle = 3;
+        colInfo = 4;
+        colParents = 5;
+        colSpouse = 6;
+      }
+
+      if (dataLines.length === 0) {
+        alert("가져올 인물 데이터 행이 존재하지 않습니다.");
+        return;
+      }
+
+      // 2. CSV dataset 컬럼의 Title 또는 ID를 DB의 dataset_id로 변환하는 헬퍼
+      const resolveDatasetId = (rawInput) => {
+        if (!rawInput) return this.currentDatasetKey || 'greek';
+
+        const clean = rawInput.trim();
+        const norm = clean.toLowerCase();
+
+        // 1) 기존 datasetsList에서 ID 또는 Title과 매칭
+        for (const ds of this.datasetsList) {
+          if (ds.id === clean || ds.id.toLowerCase() === norm) return ds.id;
+          if (ds.title === clean || (ds.title && ds.title.trim().toLowerCase() === norm)) return ds.id;
+        }
+
+        // 2) 고정 주요 명칭 호환
+        if (clean === '그리스·로마 신화' || clean === '그리스 로마 신화' || clean === '그리스 로마 신화 가계도') return 'greek';
+        if (clean === '조선 왕실' || clean === '조선 왕실 가계도') return 'joseon';
+
+        // 3) 새로운 가계도 주제일 경우 영문/숫자 slug 기반 dataset_id 생성
+        let newDsId = clean.replace(/[^a-zA-Z0-9_\-]/g, '_').toLowerCase();
+        if (!newDsId || newDsId.replace(/_/g, '').length === 0) {
+          newDsId = `ds_${Date.now()}`;
+        }
+
+        this.datasetsList.push({
+          id: newDsId,
+          title: clean
+        });
+
+        return newDsId;
+      };
+
+      // 3. CSV 행 파싱
+      const rows = [];
+      for (const line of dataLines) {
+        const parts = line.split('|').map(p => p.trim());
+        if (parts.length < 2) continue;
+
+        const rawDs = colDataset >= 0 ? parts[colDataset] : '';
+        const dsId = resolveDatasetId(rawDs);
+        const name = parts[colName] || '';
+        if (!name) continue;
+
+        const nameEng = colNameEng >= 0 && parts[colNameEng] ? parts[colNameEng] : '';
+        const title = colTitle >= 0 && parts[colTitle] ? parts[colTitle] : '';
+        const info = colInfo >= 0 && parts[colInfo] ? parts[colInfo] : '';
+        const parentsStr = colParents >= 0 && parts[colParents] ? parts[colParents] : '';
+        const spouseStr = colSpouse >= 0 && parts[colSpouse] ? parts[colSpouse] : '';
+
+        rows.push({
+          rawDs,
+          dsId,
+          name,
+          nameEng,
+          title,
+          info,
+          parentsStr,
+          spouseStr
+        });
+      }
+
+      if (rows.length === 0) {
+        alert("유효한 인물 행이 존재하지 않습니다.");
+        return;
+      }
+
+      // 4. dataset_id별 DB 기존 노드 매핑 및 데이터셋 업서트
+      const uniqueDatasetIds = [...new Set(rows.map(r => r.dsId))];
+      const datasetNameMap = new Map(); // datasetId -> Map(normalizedName -> id)
+
+      for (const dsId of uniqueDatasetIds) {
+        const nameMap = new Map();
+        datasetNameMap.set(dsId, nameMap);
+
+        const targetDsObj = this.datasetsList.find(d => d.id === dsId);
+        const targetTitle = targetDsObj ? targetDsObj.title : (rows.find(r => r.dsId === dsId)?.rawDs || dsId);
+
+        if (supabaseClient) {
+          try {
+            await supabaseClient.from('genealogy_datasets').upsert({
+              id: dsId,
+              title: targetTitle,
+              description: 'CSV Import로 생성된 가계도'
+            });
+          } catch (e) {
+            console.warn("Dataset upsert warning:", e);
+          }
+
+          try {
+            const { data: dbNodes } = await supabaseClient
+              .from('genealogy_nodes')
+              .select('*')
+              .eq('dataset_id', dsId);
+
+            if (dbNodes) {
+              for (const n of dbNodes) {
+                if (n.id) nameMap.set(n.id, n.id);
+                if (n.name) nameMap.set(n.name.trim().toLowerCase(), n.id);
+                if (n.name_eng) nameMap.set(n.name_eng.trim().toLowerCase(), n.id);
+              }
+            }
+          } catch (e) {
+            console.warn("Fetch existing nodes warning:", e);
+          }
+        }
+
+        if (dsId === this.currentDatasetKey) {
+          for (const [id, person] of this.nodesMap.entries()) {
+            nameMap.set(id, id);
+            if (person.name) nameMap.set(person.name.trim().toLowerCase(), id);
+            if (person.nameEng) nameMap.set(person.nameEng.trim().toLowerCase(), id);
+          }
+        }
+      }
+
+      // 이름 -> 고유 ID 변환 헬퍼 (중복 생성 방지)
+      let idCounter = 1;
+      const getOrCreateId = (dsId, rawName) => {
+        const trimmed = rawName.trim();
+        if (!trimmed) return null;
+
+        const norm = trimmed.toLowerCase();
+        const nameMap = datasetNameMap.get(dsId);
+
+        if (nameMap && nameMap.has(norm)) {
+          return nameMap.get(norm);
+        }
+
+        const newId = `${dsId}_csv_${Date.now()}_${idCounter++}_${Math.floor(Math.random() * 1000)}`;
+        if (nameMap) {
+          nameMap.set(norm, newId);
+        }
+        return newId;
+      };
+
+      // Pass 1: CSV 메인 인물 고유 ID 부여
+      for (const row of rows) {
+        row.id = getOrCreateId(row.dsId, row.name);
+      }
+
+      // Pass 2: 부모/배우자 이름들을 중복 없이 ID 배열로 변환 및 노드 생성
+      const nodeObjectsMap = new Map();
+
+      for (const row of rows) {
+        const parentNames = row.parentsStr ? row.parentsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+        const spouseNames = row.spouseStr ? row.spouseStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+        const parentIds = [...new Set(parentNames.map(pName => getOrCreateId(row.dsId, pName)).filter(pId => pId && pId !== row.id))];
+        const spouseIds = [...new Set(spouseNames.map(sName => getOrCreateId(row.dsId, sName)).filter(sId => sId && sId !== row.id))];
+
+        nodeObjectsMap.set(row.id, {
+          id: row.id,
+          dataset_id: row.dsId,
+          name: row.name,
+          name_eng: row.nameEng,
+          title: row.title,
+          gender: 'male',
+          info: row.info,
+          parent_ids: parentIds,
+          spouse_ids: spouseIds,
+          updated_at: new Date().toISOString()
+        });
+      }
+
+      // CSV 행으로 직접 명시되지는 않았으나 부모/배우자로 참조된 인물 더미 노드 보장
+      for (const dsId of uniqueDatasetIds) {
+        const nameMap = datasetNameMap.get(dsId);
+        if (!nameMap) continue;
+
+        for (const [normName, nodeId] of nameMap.entries()) {
+          if (!nodeObjectsMap.has(nodeId)) {
+            const existingInMemory = this.nodesMap.get(nodeId);
+            nodeObjectsMap.set(nodeId, {
+              id: nodeId,
+              dataset_id: dsId,
+              name: existingInMemory ? existingInMemory.name : normName,
+              name_eng: existingInMemory ? (existingInMemory.nameEng || '') : '',
+              title: existingInMemory ? (existingInMemory.title || '') : '',
+              gender: existingInMemory ? (existingInMemory.gender || 'male') : 'male',
+              info: existingInMemory ? (existingInMemory.info || '') : '',
+              parent_ids: existingInMemory ? (existingInMemory.parentIds || []) : [],
+              spouse_ids: existingInMemory ? (existingInMemory.spouseIds || []) : [],
+              updated_at: new Date().toISOString()
+            });
+          }
+        }
+      }
+
+      // Pass 3: 배우자 상호 양방향 관계 동기화
+      for (const [id, node] of nodeObjectsMap.entries()) {
+        for (const sId of node.spouse_ids) {
+          const spouseNode = nodeObjectsMap.get(sId);
+          if (spouseNode && !spouseNode.spouse_ids.includes(id)) {
+            spouseNode.spouse_ids.push(id);
+          }
+        }
+      }
+
+      // Supabase DB 일괄 Upsert
+      const allNodesToSave = Array.from(nodeObjectsMap.values());
+
+      if (supabaseClient) {
+        const chunkSize = 50;
+        for (let i = 0; i < allNodesToSave.length; i += chunkSize) {
+          const chunk = allNodesToSave.slice(i, i + chunkSize);
+          const { error } = await supabaseClient.from('genealogy_nodes').upsert(chunk);
+          if (error) {
+            console.error("CSV Import error:", error);
+            alert(`DB 저장 실패 (${error.message})`);
+            return;
+          }
+        }
+      }
+
+      // 데이터셋 및 화면 리로드
+      await this.fetchDatasetsFromDB();
+      const firstDs = uniqueDatasetIds[0] || this.currentDatasetKey;
+      await this.loadDataset(firstDs);
+
+      alert(`🎉 CSV 파일의 인물 데이터 ${rows.length}개가 성공적으로 Supabase DB에 저장되었습니다!`);
+    } catch (err) {
+      console.error("CSV file parse error:", err);
+      alert(`CSV 처리 중 오류가 발생했습니다: ${err.message}`);
+    }
+  }
+
+  // ── CSV 파이프(|) 구분자 데이터 Export 및 변환 처리 ──
+  async handleCsvExport() {
+    if (!this.currentUser) {
+      alert("🔒 CSV 데이터 내보내기는 Supabase 로그인 후 이용 가능합니다.");
+      return;
+    }
+
+    try {
+      const datasetId = this.currentDatasetKey;
+      const currentDs = this.datasetsList.find(d => d.id === datasetId);
+      const datasetTitle = currentDs ? currentDs.title : datasetId;
+
+      let rawNodes = [];
+
+      // Supabase 페이징 쿼리 (100개 단위로 반복 조회하여 행 수 제한 우회)
+      if (supabaseClient) {
+        let page = 0;
+        const pageSize = 100;
+        let keepFetching = true;
+
+        while (keepFetching) {
+          const { data, error } = await supabaseClient
+            .from('genealogy_nodes')
+            .select('*')
+            .eq('dataset_id', datasetId)
+            .order('id', { ascending: true })
+            .range(page * pageSize, (page + 1) * pageSize - 1);
+
+          if (error) {
+            console.error("Fetch nodes error for export:", error);
+            alert(`DB 데이터 조회 중 오류가 발생했습니다: ${error.message}`);
+            return;
+          }
+
+          if (!data || data.length === 0) {
+            keepFetching = false;
+          } else {
+            rawNodes = rawNodes.concat(data);
+            if (data.length < pageSize) {
+              keepFetching = false;
+            } else {
+              page++;
+            }
+          }
+        }
+      }
+
+      if (rawNodes.length === 0 && this.nodesMap.size > 0) {
+        rawNodes = Array.from(this.nodesMap.values()).map(n => ({
+          id: n.id,
+          dataset_id: datasetId,
+          name: n.name,
+          name_eng: n.nameEng || '',
+          title: n.title || '',
+          info: n.info || '',
+          parent_ids: n.parentIds || [],
+          spouse_ids: n.spouseIds || []
+        }));
+      }
+
+      if (rawNodes.length === 0) {
+        alert("내보낼 인물 데이터가 없습니다.");
+        return;
+      }
+
+      const idToNodeMap = new Map();
+      for (const n of rawNodes) {
+        idToNodeMap.set(n.id, n);
+      }
+      for (const [id, n] of this.nodesMap.entries()) {
+        if (!idToNodeMap.has(id)) {
+          idToNodeMap.set(id, n);
+        }
+      }
+
+      const convertIdsToNames = (ids) => {
+        if (!ids) return '';
+        let idArray = [];
+        if (Array.isArray(ids)) {
+          idArray = ids;
+        } else if (typeof ids === 'string') {
+          idArray = ids.replace(/[{}]/g, '').split(',').map(s => s.trim()).filter(Boolean);
+        }
+        return idArray
+          .map(id => {
+            const cleanId = String(id).trim();
+            const node = idToNodeMap.get(cleanId);
+            return node ? (node.name || cleanId) : cleanId;
+          })
+          .filter(Boolean)
+          .join(', ');
+      };
+
+      // 1. 헤더 컬럼명 변경 (dataset, name, name_eng, title, info, parents, spouse)
+      const header = ['dataset', 'name', 'name_eng', 'title', 'info', 'parents', 'spouse'].join('|');
+      const csvRows = [header];
+
+      // 2. dataset은 title로, parents/spouse는 name으로 변환하여 행 구성
+      for (const node of rawNodes) {
+        const dsVal = datasetTitle;
+        const nameVal = (node.name || '').trim();
+        const nameEngVal = (node.name_eng || node.nameEng || '').trim();
+        const titleVal = (node.title || '').trim();
+        const infoVal = (node.info || '').trim().replace(/[\r\n]+/g, ' ');
+        const parentsVal = convertIdsToNames(node.parent_ids || node.parentIds);
+        const spouseVal = convertIdsToNames(node.spouse_ids || node.spouseIds);
+
+        const rowStr = [dsVal, nameVal, nameEngVal, titleVal, infoVal, parentsVal, spouseVal].join('|');
+        csvRows.push(rowStr);
+      }
+
+      const csvContent = csvRows.join('\r\n');
+
+      // BOM(\uFEFF)을 추가하여 한글 엑셀/메모장 인코딩 깨짐 방지
+      const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `genealogy_${datasetId}_export.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      alert(`🎉 총 ${rawNodes.length}개 인물 데이터가 성공적으로 CSV 파일로 내보내졌습니다!`);
+    } catch (err) {
+      console.error("CSV export error:", err);
+      alert(`CSV 내보내기 중 오류가 발생했습니다: ${err.message}`);
+    }
   }
 
   updateSearchHighlight(items) {

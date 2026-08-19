@@ -50,6 +50,11 @@
         <span class="nav-icon">🌳</span> 가계도
       </a>
     </div>
+    <div class="auth-status-container">
+      <span id="authStatusText" style="font-size: 13px; color: var(--text-muted); margin-right: 8px;"></span>
+      <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+      <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+    </div>
   </nav>
 
   <!-- 가계도 인터랙티브 뷰포트 -->
@@ -57,7 +62,7 @@
     
     <!-- 툴바 컨트롤 레이어 -->
     <header class="genealogy-header">
-      <!-- 1. 확대/축소 및 데이터 편집 & Supabase 로그인 상태 컨트롤 막대 -->
+      <!-- 1. 확대/축소 및 데이터 편집 & CSV 가져오기 컨트롤 막대 -->
       <div class="toolbar-group">
         <button type="button" class="icon-btn" id="btnZoomIn" title="확대 (+)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
@@ -69,13 +74,17 @@
           🎯
         </button>
         
-        <!-- Supabase 로그인 및 편집 버튼 -->
-        <button type="button" class="btn-editor" id="btnToggleEditor">
+        <!-- 편집, CSV 가져오기 및 내보내기 버튼 (로그인 시 노출) -->
+        <button type="button" class="btn-editor" id="btnToggleEditor" style="display:none;">
           ✏️ 데이터 편집
         </button>
-        <button type="button" class="icon-btn" id="btnAuthToggle" title="Supabase 로그인" style="width:auto; padding:0 10px; font-size:12px;">
-          🔑 로그인
+        <button type="button" class="btn-editor" id="btnImportCsv" style="background:#059669; color:#ffffff; display:none;">
+          📥 CSV 가져오기
         </button>
+        <button type="button" class="btn-editor" id="btnExportCsv" style="background:#2563eb; color:#ffffff; display:none;">
+          📤 CSV 내보내기
+        </button>
+        <input type="file" id="csvFileInput" accept=".csv, .txt" style="display:none;" />
       </div>
 
       <!-- 2. 인물 검색창 및 데이터셋 선택 막대 -->
@@ -83,7 +92,7 @@
         <div class="search-wrapper">
           <div class="search-input-box">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="searchInput" placeholder="인물 이름을 검색하세요 (예: 제우스, 세종대왕)" autocomplete="off" />
+            <input type="text" id="searchInput" placeholder="이름 검색" autocomplete="off" />
           </div>
           <div class="search-dropdown" id="searchDropdown"></div>
         </div>
@@ -183,13 +192,13 @@
     </div>
   </div>
 
-  <!-- 노드 텍스트/성별 수정 및 좌측 하단 🗑️ 삭제 버튼 모달 -->
+  <!-- 노드 정보 수정/상세 모달 -->
   <div class="modal-backdrop" id="quickEditModal">
     <div class="modal-card" style="max-width:420px; max-height:90vh; overflow-y:auto;">
       <div class="modal-header">
         <div>
-          <h3 class="modal-title">인물 정보 수정</h3>
-          <div class="modal-subtitle">이름, 영문명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.</div>
+          <h3 class="modal-title" id="quickEditModalTitle">정보 수정</h3>
+          <div class="modal-subtitle" id="quickEditModalSubtitle">이름, 영문명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.</div>
         </div>
         <button type="button" class="modal-close-btn" id="btnQuickEditClose" title="닫기">&times;</button>
       </div>
@@ -227,12 +236,19 @@
           <label class="form-label">상세 정보 / 설명 (선택)</label>
           <textarea id="quickEditInfo" class="form-control" rows="3" placeholder="인물에 대한 상세 설명을 입력하세요..."></textarea>
         </div>
-        <div class="form-actions" style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
+
+        <!-- 로그인 상태 버튼 그룹 -->
+        <div class="form-actions" id="quickEditLoggedInActions" style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
           <button type="button" class="btn btn-danger" id="btnQuickEditDelete" style="padding:9px 14px;">🗑️ 삭제</button>
           <div style="display:flex; gap:8px;">
             <button type="button" class="btn btn-secondary" id="btnQuickEditCancel">취소</button>
-            <button type="submit" class="btn-modal-primary">💾 저장하기</button>
+            <button type="submit" class="btn-modal-primary" id="btnQuickEditSubmit">💾 저장하기</button>
           </div>
+        </div>
+
+        <!-- 로그아웃 상태 버튼 그룹 (닫기 전용) -->
+        <div class="form-actions" id="quickEditLoggedOutActions" style="margin-top:20px; display:none; justify-content:flex-end;">
+          <button type="button" class="btn btn-secondary" id="btnQuickEditCloseOnly" style="padding:9px 18px; font-weight:600;">닫기</button>
         </div>
       </form>
     </div>

@@ -53,11 +53,11 @@ body {
   left: 50%;
   transform: translateX(-50%);
   width: calc(100% - 32px);
-  max-width: 800px; /* 👈 다른 타임라인/용어노트 앱과 동일한 800px 너비로 맞춤 */
+  max-width: 960px;
   z-index: 100;
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+  flex-wrap: nowrap;
+  gap: 8px;
   align-items: center;
   justify-content: center;
   pointer-events: auto;
@@ -98,7 +98,7 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 7px 12px;
+  padding: 6px 10px;
   background: #0f172a;
   color: #ffffff;
   border: none;
@@ -107,18 +107,18 @@ body {
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .btn-editor:hover {
   background: #1e293b;
 }
 
-/* 🌟 인물 검색창 및 데이터셋 드롭다운 너비 축소 🌟 */
+/* 🌟 인물 검색창 및 데이터셋 드롭다운 🌟 */
 .search-wrapper {
   position: relative;
   flex: 1;
-  min-width: 200px;
-  max-width: 280px; /* 👈 검색창 입력 박스 크기를 단정하게 축소 */
+  min-width: 120px;
 }
 
 .search-input-box {
@@ -199,6 +199,8 @@ body {
   color: var(--text-main);
   outline: none;
   cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* 안내 카드 */
