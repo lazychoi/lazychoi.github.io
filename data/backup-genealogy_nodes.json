@@ -1,0 +1,1618 @@
+[
+  {
+    "id": "ds_1786976120070_1",
+    "dataset_id": "ds_1786976120070",
+    "name": "동명성왕",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:15:20.777727+00:00",
+    "updated_at": "2026-08-17T14:15:20.694+00:00"
+  },
+  {
+    "id": "greek_1786969645643_172",
+    "dataset_id": "greek",
+    "name": "다르다노스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786969645643_625"
+    ],
+    "spouse_ids": [
+      "greek_1786970018611_87"
+    ],
+    "created_at": "2026-08-17T12:33:39.564214+00:00",
+    "updated_at": "2026-08-17T12:57:37.439+00:00"
+  },
+  {
+    "id": "greek_1786969645643_565",
+    "dataset_id": "greek",
+    "name": "제우스",
+    "name_eng": "Zeus",
+    "title": "번개와 하늘의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974012116_301",
+      "greek_1786974022792_132"
+    ],
+    "spouse_ids": [
+      "greek_1786969645643_625",
+      "greek_1786974915947_619",
+      "greek_1786974916608_718",
+      "greek_1786974916796_771",
+      "greek_1786974916897_906",
+      "greek_1786974916944_90",
+      "greek_1786974916978_584",
+      "greek_1786974917022_919",
+      "greek_1786974917068_738",
+      "greek_1786974917117_481",
+      "greek_1786974917148_165",
+      "greek_1786979139972_857"
+    ],
+    "created_at": "2026-08-17T12:27:26.080661+00:00",
+    "updated_at": "2026-08-17T15:51:41.28+00:00"
+  },
+  {
+    "id": "greek_1786969645643_625",
+    "dataset_id": "greek",
+    "name": "엘렉트라",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T12:28:16.802409+00:00",
+    "updated_at": "2026-08-17T12:54:30.419+00:00"
+  },
+  {
+    "id": "greek_1786969811484_300",
+    "dataset_id": "greek",
+    "name": "칼리로에",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969811484_90"
+    ],
+    "created_at": "2026-08-17T12:39:27.576501+00:00",
+    "updated_at": "2026-08-17T13:12:09.452+00:00"
+  },
+  {
+    "id": "greek_1786969811484_472",
+    "dataset_id": "greek",
+    "name": "가니메데스",
+    "name_eng": "Canymedes",
+    "title": "트로이의 왕자",
+    "gender": "male",
+    "info": "제우스의 사랑을 받은 '필멸의 인간들 중 가장 아름다운 남자'로, 올림포스로 유괴되어 신들의 연회에서 술 따르는 일을 맡았다.",
+    "parent_ids": [
+      "greek_1786969811484_90",
+      "greek_1786969811484_300"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T12:30:12.078327+00:00",
+    "updated_at": "2026-08-17T12:30:11.484+00:00"
+  },
+  {
+    "id": "greek_1786969811484_90",
+    "dataset_id": "greek",
+    "name": "트로스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786970062936_805",
+      "greek_1786970282625_660"
+    ],
+    "spouse_ids": [
+      "greek_1786969811484_300"
+    ],
+    "created_at": "2026-08-17T12:39:08.841322+00:00",
+    "updated_at": "2026-08-17T13:12:09.414+00:00"
+  },
+  {
+    "id": "greek_1786970018611_87",
+    "dataset_id": "greek",
+    "name": "바테이아",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_172"
+    ],
+    "created_at": "2026-08-17T12:34:23.093188+00:00",
+    "updated_at": "2026-08-17T12:57:37.439+00:00"
+  },
+  {
+    "id": "greek_1786970062936_625",
+    "dataset_id": "greek",
+    "name": "일로스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969811484_90",
+      "greek_1786969811484_300",
+      "greek_1786969645643_172",
+      "greek_1786970018611_87"
+    ],
+    "spouse_ids": [
+      "greek_1786970458705_292"
+    ],
+    "created_at": "2026-08-17T12:40:59.183254+00:00",
+    "updated_at": "2026-08-17T12:57:11.668+00:00"
+  },
+  {
+    "id": "greek_1786970062936_805",
+    "dataset_id": "greek",
+    "name": "에리크토니오스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786970018611_87",
+      "greek_1786969645643_172"
+    ],
+    "spouse_ids": [
+      "greek_1786970282625_660"
+    ],
+    "created_at": "2026-08-17T12:38:03.233295+00:00",
+    "updated_at": "2026-08-17T12:57:26.721+00:00"
+  },
+  {
+    "id": "greek_1786970282625_660",
+    "dataset_id": "greek",
+    "name": "아스티오케",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786970062936_805"
+    ],
+    "created_at": "2026-08-17T12:38:11.356666+00:00",
+    "updated_at": "2026-08-17T12:38:11.257+00:00"
+  },
+  {
+    "id": "greek_1786970458705_292",
+    "dataset_id": "greek",
+    "name": "에우리디케",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786970062936_625"
+    ],
+    "created_at": "2026-08-17T12:41:05.639652+00:00",
+    "updated_at": "2026-08-17T12:41:05.452+00:00"
+  },
+  {
+    "id": "greek_1786971270418_57",
+    "dataset_id": "greek",
+    "name": "하르모니아",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T12:54:30.615203+00:00",
+    "updated_at": "2026-08-17T12:54:30.418+00:00"
+  },
+  {
+    "id": "greek_1786971457439_917",
+    "dataset_id": "greek",
+    "name": "자킨토스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_172",
+      "greek_1786970018611_87"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T12:57:37.565191+00:00",
+    "updated_at": "2026-08-17T12:57:37.439+00:00"
+  },
+  {
+    "id": "greek_1786972329329_370",
+    "dataset_id": "greek",
+    "name": "아사라코스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969811484_90",
+      "greek_1786969811484_300"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T13:12:09.406027+00:00",
+    "updated_at": "2026-08-17T13:12:09.33+00:00"
+  },
+  {
+    "id": "greek_1786974012116_301",
+    "dataset_id": "greek",
+    "name": "크로노스",
+    "name_eng": "",
+    "title": "시간과 농경의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786974022792_132"
+    ],
+    "created_at": "2026-08-17T13:40:13.1095+00:00",
+    "updated_at": "2026-08-17T15:06:19.824+00:00"
+  },
+  {
+    "id": "greek_1786974022792_132",
+    "dataset_id": "greek",
+    "name": "레아",
+    "name_eng": "",
+    "title": "대지와 풍요의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786974012116_301"
+    ],
+    "created_at": "2026-08-17T13:40:22.954499+00:00",
+    "updated_at": "2026-08-17T15:06:19.795+00:00"
+  },
+  {
+    "id": "greek_1786974915947_619",
+    "dataset_id": "greek",
+    "name": "메티스",
+    "name_eng": "Metis",
+    "title": "지혜의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:16.494551+00:00",
+    "updated_at": "2026-08-17T15:33:38.287+00:00"
+  },
+  {
+    "id": "greek_1786974916608_718",
+    "dataset_id": "greek",
+    "name": "테미스",
+    "name_eng": "Themis",
+    "title": "율법과 정의의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:16.702829+00:00",
+    "updated_at": "2026-08-17T15:42:01.306+00:00"
+  },
+  {
+    "id": "greek_1786974916796_771",
+    "dataset_id": "greek",
+    "name": "에우뤼노메",
+    "name_eng": "Eurynome",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T13:55:16.872173+00:00",
+    "updated_at": "2026-08-17T13:55:16.796+00:00"
+  },
+  {
+    "id": "greek_1786974916897_906",
+    "dataset_id": "greek",
+    "name": "므네모시네",
+    "name_eng": "Mnemosyne",
+    "title": "기억의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:16.969071+00:00",
+    "updated_at": "2026-08-17T13:55:16.897+00:00"
+  },
+  {
+    "id": "greek_1786974916944_90",
+    "dataset_id": "greek",
+    "name": "레토",
+    "name_eng": "Leto",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:17.0041+00:00",
+    "updated_at": "2026-08-17T15:29:01.046+00:00"
+  },
+  {
+    "id": "greek_1786974916978_584",
+    "dataset_id": "greek",
+    "name": "헤라",
+    "name_eng": "Hera",
+    "title": "결혼과 가정의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974022792_132",
+      "greek_1786974012116_301"
+    ],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:17.050109+00:00",
+    "updated_at": "2026-08-17T15:32:11.713+00:00"
+  },
+  {
+    "id": "greek_1786974917022_919",
+    "dataset_id": "greek",
+    "name": "마이아",
+    "name_eng": "Maia",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:17.095818+00:00",
+    "updated_at": "2026-08-17T15:50:58.831+00:00"
+  },
+  {
+    "id": "greek_1786974917068_738",
+    "dataset_id": "greek",
+    "name": "세멜레",
+    "name_eng": "Semele",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:17.126021+00:00",
+    "updated_at": "2026-08-17T13:56:40.959+00:00"
+  },
+  {
+    "id": "greek_1786974917117_481",
+    "dataset_id": "greek",
+    "name": "알크메네",
+    "name_eng": "Alcmene",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T13:55:17.176745+00:00",
+    "updated_at": "2026-08-17T13:55:17.118+00:00"
+  },
+  {
+    "id": "greek_1786974917148_165",
+    "dataset_id": "greek",
+    "name": "레다",
+    "name_eng": "Leda",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T13:55:17.206684+00:00",
+    "updated_at": "2026-08-17T13:55:17.148+00:00"
+  },
+  {
+    "id": "greek_1786975054149_36",
+    "dataset_id": "greek",
+    "name": "아르테미스",
+    "name_eng": "",
+    "title": "달, 사냥의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916944_90",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T13:57:34.602797+00:00",
+    "updated_at": "2026-08-17T15:31:03.973+00:00"
+  },
+  {
+    "id": "greek_1786975086562_261",
+    "dataset_id": "greek",
+    "name": "페르세포네",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786979139972_857"
+    ],
+    "spouse_ids": [
+      "greek_1786979139615_444"
+    ],
+    "created_at": "2026-08-17T13:58:06.758414+00:00",
+    "updated_at": "2026-08-19T02:42:14.816+00:00"
+  },
+  {
+    "id": "greek_1786978694814_656",
+    "dataset_id": "greek",
+    "name": "우라노스",
+    "name_eng": "",
+    "title": "하늘의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786978695331_889"
+    ],
+    "created_at": "2026-08-17T14:58:15.27294+00:00",
+    "updated_at": "2026-08-17T15:03:23.308+00:00"
+  },
+  {
+    "id": "greek_1786978695331_889",
+    "dataset_id": "greek",
+    "name": "가이아",
+    "name_eng": "",
+    "title": "대지의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "greek_1786978694814_656"
+    ],
+    "created_at": "2026-08-17T14:58:15.374443+00:00",
+    "updated_at": "2026-08-17T15:03:23.361+00:00"
+  },
+  {
+    "id": "greek_1786978804706_75",
+    "dataset_id": "greek",
+    "name": "오케아노스",
+    "name_eng": "",
+    "title": "대양의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786978919408_821"
+    ],
+    "created_at": "2026-08-17T15:00:04.825119+00:00",
+    "updated_at": "2026-08-19T02:35:59.725+00:00"
+  },
+  {
+    "id": "greek_1786978804851_761",
+    "dataset_id": "greek",
+    "name": "코이오스",
+    "name_eng": "",
+    "title": "지성의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:00:04.886099+00:00",
+    "updated_at": "2026-08-17T15:00:35.373+00:00"
+  },
+  {
+    "id": "greek_1786978804900_722",
+    "dataset_id": "greek",
+    "name": "크리오스",
+    "name_eng": "",
+    "title": "별자리의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:00:04.94881+00:00",
+    "updated_at": "2026-08-17T15:00:41.835+00:00"
+  },
+  {
+    "id": "greek_1786978804946_396",
+    "dataset_id": "greek",
+    "name": "히페리온",
+    "name_eng": "",
+    "title": "태양과 빛의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786978919566_443"
+    ],
+    "created_at": "2026-08-17T15:00:04.99256+00:00",
+    "updated_at": "2026-08-19T02:45:24.587+00:00"
+  },
+  {
+    "id": "greek_1786978805000_808",
+    "dataset_id": "greek",
+    "name": "이아페토스",
+    "name_eng": "",
+    "title": "죽음과 필멸의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:00:05.036506+00:00",
+    "updated_at": "2026-08-17T15:01:01.53+00:00"
+  },
+  {
+    "id": "greek_1786978919408_821",
+    "dataset_id": "greek",
+    "name": "테티스",
+    "name_eng": "",
+    "title": "바다의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786978804706_75"
+    ],
+    "created_at": "2026-08-17T15:01:59.504598+00:00",
+    "updated_at": "2026-08-19T02:35:59.796+00:00"
+  },
+  {
+    "id": "greek_1786978919523_64",
+    "dataset_id": "greek",
+    "name": "포이베",
+    "name_eng": "",
+    "title": "예언과 달의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:01:59.570603+00:00",
+    "updated_at": "2026-08-17T15:04:05.361+00:00"
+  },
+  {
+    "id": "greek_1786978919566_443",
+    "dataset_id": "greek",
+    "name": "테이아",
+    "name_eng": "",
+    "title": "시각과 광명의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978694814_656",
+      "greek_1786978695331_889"
+    ],
+    "spouse_ids": [
+      "greek_1786978804946_396"
+    ],
+    "created_at": "2026-08-17T15:01:59.601106+00:00",
+    "updated_at": "2026-08-19T02:45:24.702+00:00"
+  },
+  {
+    "id": "greek_1786979139615_444",
+    "dataset_id": "greek",
+    "name": "하데스",
+    "name_eng": "",
+    "title": "지하세계와 명계의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974022792_132",
+      "greek_1786974012116_301"
+    ],
+    "spouse_ids": [
+      "greek_1786975086562_261"
+    ],
+    "created_at": "2026-08-17T15:05:39.799425+00:00",
+    "updated_at": "2026-08-19T02:42:13.983+00:00"
+  },
+  {
+    "id": "greek_1786979139861_345",
+    "dataset_id": "greek",
+    "name": "포세이돈",
+    "name_eng": "",
+    "title": "바다와 지진의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974022792_132",
+      "greek_1786974012116_301"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:05:39.910989+00:00",
+    "updated_at": "2026-08-17T15:07:16.445+00:00"
+  },
+  {
+    "id": "greek_1786979139909_749",
+    "dataset_id": "greek",
+    "name": "헤스티아",
+    "name_eng": "",
+    "title": "화로와 가정의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974022792_132",
+      "greek_1786974012116_301"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:05:39.956508+00:00",
+    "updated_at": "2026-08-17T15:07:27.14+00:00"
+  },
+  {
+    "id": "greek_1786979139972_857",
+    "dataset_id": "greek",
+    "name": "테메테르",
+    "name_eng": "",
+    "title": "곡물과 농경의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974022792_132",
+      "greek_1786974012116_301"
+    ],
+    "spouse_ids": [
+      "greek_1786969645643_565"
+    ],
+    "created_at": "2026-08-17T15:05:40.01623+00:00",
+    "updated_at": "2026-08-17T15:47:44.803+00:00"
+  },
+  {
+    "id": "greek_1786980540766_189",
+    "dataset_id": "greek",
+    "name": "아폴론",
+    "name_eng": "",
+    "title": "태양, 예술, 예언의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786974916944_90"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:29:00.84203+00:00",
+    "updated_at": "2026-08-17T15:30:52.758+00:00"
+  },
+  {
+    "id": "greek_1786980731059_861",
+    "dataset_id": "greek",
+    "name": "아레스",
+    "name_eng": "",
+    "title": "전쟁의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916978_584",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:32:11.463812+00:00",
+    "updated_at": "2026-08-17T15:32:20.901+00:00"
+  },
+  {
+    "id": "greek_1786980731591_386",
+    "dataset_id": "greek",
+    "name": "헤파이토스",
+    "name_eng": "",
+    "title": "대장간, 불의 신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916978_584",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:32:11.624584+00:00",
+    "updated_at": "2026-08-17T15:32:29.407+00:00"
+  },
+  {
+    "id": "greek_1786980731633_307",
+    "dataset_id": "greek",
+    "name": "헤베",
+    "name_eng": "",
+    "title": "청춘의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916978_584",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:32:11.657325+00:00",
+    "updated_at": "2026-08-17T15:32:37.446+00:00"
+  },
+  {
+    "id": "greek_1786980731673_512",
+    "dataset_id": "greek",
+    "name": "에일레이티이아",
+    "name_eng": "",
+    "title": "출산의 여신",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916978_584",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:32:11.706567+00:00",
+    "updated_at": "2026-08-17T15:32:44.863+00:00"
+  },
+  {
+    "id": "greek_1786980818195_88",
+    "dataset_id": "greek",
+    "name": "아테나",
+    "name_eng": "",
+    "title": "전쟁, 지혜의 여신",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974915947_619",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:33:38.275096+00:00",
+    "updated_at": "2026-08-17T15:33:49.186+00:00"
+  },
+  {
+    "id": "greek_1786980895355_398",
+    "dataset_id": "greek",
+    "name": "에우노미아",
+    "name_eng": "Eunomia",
+    "title": "Horai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916608_718",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:34:56.038219+00:00",
+    "updated_at": "2026-08-17T15:42:38.439+00:00"
+  },
+  {
+    "id": "greek_1786980896253_205",
+    "dataset_id": "greek",
+    "name": "클로토",
+    "name_eng": "Clotho",
+    "title": "Moirai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974916608_718",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:34:56.282973+00:00",
+    "updated_at": "2026-08-17T15:43:18.787+00:00"
+  },
+  {
+    "id": "greek_1786981320607_574",
+    "dataset_id": "greek",
+    "name": "라케시스",
+    "name_eng": "Lachesis",
+    "title": "Moirai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786974916608_718"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:42:01.12815+00:00",
+    "updated_at": "2026-08-17T15:43:23.186+00:00"
+  },
+  {
+    "id": "greek_1786981321169_141",
+    "dataset_id": "greek",
+    "name": "아트로포스",
+    "name_eng": "Atropos",
+    "title": "Moirai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786974916608_718"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:42:01.195059+00:00",
+    "updated_at": "2026-08-17T15:43:27.171+00:00"
+  },
+  {
+    "id": "greek_1786981321206_408",
+    "dataset_id": "greek",
+    "name": "디케",
+    "name_eng": "Dike",
+    "title": "Horai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786974916608_718"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:42:01.227505+00:00",
+    "updated_at": "2026-08-17T15:42:47.299+00:00"
+  },
+  {
+    "id": "greek_1786981321238_454",
+    "dataset_id": "greek",
+    "name": "에이레네",
+    "name_eng": "Eirene",
+    "title": "Horai 중 한 명",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786969645643_565",
+      "greek_1786974916608_718"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:42:01.269553+00:00",
+    "updated_at": "2026-08-17T15:42:53.39+00:00"
+  },
+  {
+    "id": "greek_1786981858427_359",
+    "dataset_id": "greek",
+    "name": "헤르메스",
+    "name_eng": "Hermes",
+    "title": "전령",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "greek_1786974917022_919",
+      "greek_1786969645643_565"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T15:50:58.801378+00:00",
+    "updated_at": "2026-08-17T15:51:23.614+00:00"
+  },
+  {
+    "id": "greek_1787107523842_466",
+    "dataset_id": "greek",
+    "name": "헬리오스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-19T02:45:24.477837+00:00",
+    "updated_at": "2026-08-19T02:45:23.843+00:00"
+  },
+  {
+    "id": "greek_1787107524470_928",
+    "dataset_id": "greek",
+    "name": "셀레네",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "greek_1786978804946_396",
+      "greek_1786978919566_443"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-19T02:45:24.57754+00:00",
+    "updated_at": "2026-08-19T02:45:24.47+00:00"
+  },
+  {
+    "id": "greek_1787107524516_980",
+    "dataset_id": "greek",
+    "name": "에오스",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-19T02:45:24.614906+00:00",
+    "updated_at": "2026-08-19T02:45:24.516+00:00"
+  },
+  {
+    "id": "greek_1787107524553_365",
+    "dataset_id": "greek",
+    "name": "아스트라이오스",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-19T02:45:24.653476+00:00",
+    "updated_at": "2026-08-19T02:45:24.553+00:00"
+  },
+  {
+    "id": "jeseon_1",
+    "dataset_id": "joseon",
+    "name": "태조 이성계",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1786977546344_832",
+      "joseon_1786977546465_738"
+    ],
+    "created_at": "2026-08-17T14:22:37+00:00",
+    "updated_at": "2026-08-17T14:42:06.579+00:00"
+  },
+  {
+    "id": "joseon_1786977546344_832",
+    "dataset_id": "joseon",
+    "name": "신의왕후 한씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "jeseon_1"
+    ],
+    "created_at": "2026-08-17T14:39:06.472188+00:00",
+    "updated_at": "2026-08-17T14:41:09.452+00:00"
+  },
+  {
+    "id": "joseon_1786977546465_738",
+    "dataset_id": "joseon",
+    "name": "신덕왕후 강씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "jeseon_1"
+    ],
+    "created_at": "2026-08-17T14:39:06.513796+00:00",
+    "updated_at": "2026-08-17T14:42:06.621+00:00"
+  },
+  {
+    "id": "joseon_1786977668580_784",
+    "dataset_id": "joseon",
+    "name": "진안대군 이방우",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.064827+00:00",
+    "updated_at": "2026-08-17T14:41:08.58+00:00"
+  },
+  {
+    "id": "joseon_1786977669058_69",
+    "dataset_id": "joseon",
+    "name": "정종 이방과",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [
+      "joseon_1787013034426_936"
+    ],
+    "created_at": "2026-08-17T14:41:09.112489+00:00",
+    "updated_at": "2026-08-18T00:30:34.581+00:00"
+  },
+  {
+    "id": "joseon_1786977669110_687",
+    "dataset_id": "joseon",
+    "name": "익안대군 이방의",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.163127+00:00",
+    "updated_at": "2026-08-17T14:41:09.11+00:00"
+  },
+  {
+    "id": "joseon_1786977669149_56",
+    "dataset_id": "joseon",
+    "name": "회안대군 이방간",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.216768+00:00",
+    "updated_at": "2026-08-17T14:41:09.149+00:00"
+  },
+  {
+    "id": "joseon_1786977669257_207",
+    "dataset_id": "joseon",
+    "name": "태종 이방원",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [
+      "joseon_1787013061652_648"
+    ],
+    "created_at": "2026-08-17T14:41:09.307309+00:00",
+    "updated_at": "2026-08-18T00:33:44.644+00:00"
+  },
+  {
+    "id": "joseon_1786977669291_419",
+    "dataset_id": "joseon",
+    "name": "덕안대군 이방연",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.351351+00:00",
+    "updated_at": "2026-08-17T14:41:09.291+00:00"
+  },
+  {
+    "id": "joseon_1786977669337_232",
+    "dataset_id": "joseon",
+    "name": "경신공주",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.388506+00:00",
+    "updated_at": "2026-08-17T14:41:09.337+00:00"
+  },
+  {
+    "id": "joseon_1786977669384_728",
+    "dataset_id": "joseon",
+    "name": "경선공주",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546344_832"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:41:09.436181+00:00",
+    "updated_at": "2026-08-17T14:41:09.384+00:00"
+  },
+  {
+    "id": "joseon_1786977726372_804",
+    "dataset_id": "joseon",
+    "name": "무안대군 이방번",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546465_738"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:42:06.513779+00:00",
+    "updated_at": "2026-08-17T14:42:06.372+00:00"
+  },
+  {
+    "id": "joseon_1786977726504_822",
+    "dataset_id": "joseon",
+    "name": "의안대군 이방석",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546465_738"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:42:06.552496+00:00",
+    "updated_at": "2026-08-17T14:42:06.504+00:00"
+  },
+  {
+    "id": "joseon_1786977726535_892",
+    "dataset_id": "joseon",
+    "name": "경순공주",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [
+      "jeseon_1",
+      "joseon_1786977546465_738"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-17T14:42:06.582825+00:00",
+    "updated_at": "2026-08-17T14:42:06.535+00:00"
+  },
+  {
+    "id": "joseon_1787013034426_936",
+    "dataset_id": "joseon",
+    "name": "정안왕후",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1786977669058_69"
+    ],
+    "created_at": "2026-08-18T00:30:34.575851+00:00",
+    "updated_at": "2026-08-18T00:30:34.427+00:00"
+  },
+  {
+    "id": "joseon_1787013061652_648",
+    "dataset_id": "joseon",
+    "name": "원경왕후",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1786977669257_207"
+    ],
+    "created_at": "2026-08-18T00:31:01.775269+00:00",
+    "updated_at": "2026-08-18T00:33:44.692+00:00"
+  },
+  {
+    "id": "joseon_1787013224091_527",
+    "dataset_id": "joseon",
+    "name": "양녕대군 이제",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:33:44.496521+00:00",
+    "updated_at": "2026-08-18T00:33:44.092+00:00"
+  },
+  {
+    "id": "joseon_1787013224531_491",
+    "dataset_id": "joseon",
+    "name": "효령대군 이보",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1786977669257_207",
+      "joseon_1787013061652_648"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:33:44.578555+00:00",
+    "updated_at": "2026-08-18T00:33:44.531+00:00"
+  },
+  {
+    "id": "joseon_1787013224577_186",
+    "dataset_id": "joseon",
+    "name": "세종대왕 이도",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1786977669257_207",
+      "joseon_1787013061652_648"
+    ],
+    "spouse_ids": [
+      "joseon_1787013381109_215"
+    ],
+    "created_at": "2026-08-18T00:33:44.662347+00:00",
+    "updated_at": "2026-08-18T00:38:58.7+00:00"
+  },
+  {
+    "id": "joseon_1787013381109_215",
+    "dataset_id": "joseon",
+    "name": "소헌왕후 심씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787013224577_186"
+    ],
+    "created_at": "2026-08-18T00:36:22.069325+00:00",
+    "updated_at": "2026-08-18T00:38:58.729+00:00"
+  },
+  {
+    "id": "joseon_1787013537782_561",
+    "dataset_id": "joseon",
+    "name": "문종 이향",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013224577_186",
+      "joseon_1787013381109_215"
+    ],
+    "spouse_ids": [
+      "joseon_1787013604770_803"
+    ],
+    "created_at": "2026-08-18T00:38:58.374631+00:00",
+    "updated_at": "2026-08-18T00:40:39.155+00:00"
+  },
+  {
+    "id": "joseon_1787013538401_896",
+    "dataset_id": "joseon",
+    "name": "세조 이유",
+    "name_eng": "",
+    "title": "7대 국왕",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013224577_186",
+      "joseon_1787013381109_215"
+    ],
+    "spouse_ids": [
+      "joseon_1787013713931_107"
+    ],
+    "created_at": "2026-08-18T00:38:58.438666+00:00",
+    "updated_at": "2026-08-18T00:43:36.353+00:00"
+  },
+  {
+    "id": "joseon_1787013538444_255",
+    "dataset_id": "joseon",
+    "name": "안평대군 이용",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013224577_186",
+      "joseon_1787013381109_215"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.485258+00:00",
+    "updated_at": "2026-08-18T00:38:58.444+00:00"
+  },
+  {
+    "id": "joseon_1787013538490_717",
+    "dataset_id": "joseon",
+    "name": "임영대군 이구",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.52619+00:00",
+    "updated_at": "2026-08-18T00:38:58.49+00:00"
+  },
+  {
+    "id": "joseon_1787013538537_102",
+    "dataset_id": "joseon",
+    "name": "광평대군 이여",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.569936+00:00",
+    "updated_at": "2026-08-18T00:38:58.537+00:00"
+  },
+  {
+    "id": "joseon_1787013538567_230",
+    "dataset_id": "joseon",
+    "name": "금성대군 이유",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.624949+00:00",
+    "updated_at": "2026-08-18T00:38:58.567+00:00"
+  },
+  {
+    "id": "joseon_1787013538622_457",
+    "dataset_id": "joseon",
+    "name": "평원대군 이임",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013224577_186",
+      "joseon_1787013381109_215"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.669385+00:00",
+    "updated_at": "2026-08-18T00:38:58.622+00:00"
+  },
+  {
+    "id": "joseon_1787013538671_22",
+    "dataset_id": "joseon",
+    "name": "영응대군 이염",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013224577_186",
+      "joseon_1787013381109_215"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:38:58.702026+00:00",
+    "updated_at": "2026-08-18T00:38:58.671+00:00"
+  },
+  {
+    "id": "joseon_1787013604770_803",
+    "dataset_id": "joseon",
+    "name": "현덕왕후 권씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787013537782_561"
+    ],
+    "created_at": "2026-08-18T00:40:04.945816+00:00",
+    "updated_at": "2026-08-18T00:40:39.197+00:00"
+  },
+  {
+    "id": "joseon_1787013638969_547",
+    "dataset_id": "joseon",
+    "name": "단종 이홍위",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013537782_561",
+      "joseon_1787013604770_803"
+    ],
+    "spouse_ids": [
+      "joseon_1787013648071_328"
+    ],
+    "created_at": "2026-08-18T00:40:39.117327+00:00",
+    "updated_at": "2026-08-18T00:40:48.11+00:00"
+  },
+  {
+    "id": "joseon_1787013648071_328",
+    "dataset_id": "joseon",
+    "name": "정순왕후",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:40:48.112011+00:00",
+    "updated_at": "2026-08-18T00:40:48.071+00:00"
+  },
+  {
+    "id": "joseon_1787013713931_107",
+    "dataset_id": "joseon",
+    "name": "정희왕후 윤씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787013538401_896"
+    ],
+    "created_at": "2026-08-18T00:41:54.03775+00:00",
+    "updated_at": "2026-08-18T00:43:36.399+00:00"
+  },
+  {
+    "id": "joseon_1787013815608_666",
+    "dataset_id": "joseon",
+    "name": "의경세자 이장",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013538401_896",
+      "joseon_1787013713931_107"
+    ],
+    "spouse_ids": [
+      "joseon_1787013921819_792"
+    ],
+    "created_at": "2026-08-18T00:43:36.240419+00:00",
+    "updated_at": "2026-08-18T00:46:57.421+00:00"
+  },
+  {
+    "id": "joseon_1787013816303_143",
+    "dataset_id": "joseon",
+    "name": "예종 이황",
+    "name_eng": "",
+    "title": "8대 국왕",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013538401_896",
+      "joseon_1787013713931_107"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:43:36.343676+00:00",
+    "updated_at": "2026-08-18T00:44:51.548+00:00"
+  },
+  {
+    "id": "joseon_1787013921819_792",
+    "dataset_id": "joseon",
+    "name": "소혜왕후 한씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787013815608_666"
+    ],
+    "created_at": "2026-08-18T00:45:21.890824+00:00",
+    "updated_at": "2026-08-18T00:46:57.452+00:00"
+  },
+  {
+    "id": "joseon_1787014017298_761",
+    "dataset_id": "joseon",
+    "name": "성종 이혈",
+    "name_eng": "",
+    "title": "",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787013815608_666",
+      "joseon_1787013921819_792"
+    ],
+    "spouse_ids": [
+      "joseon_1787014044783_582",
+      "joseon_1787014079896_417",
+      "joseon_1787014240421_524"
+    ],
+    "created_at": "2026-08-18T00:46:57.396868+00:00",
+    "updated_at": "2026-08-18T00:51:03.089+00:00"
+  },
+  {
+    "id": "joseon_1787014044783_582",
+    "dataset_id": "joseon",
+    "name": "공혜왕후 한씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787014017298_761"
+    ],
+    "created_at": "2026-08-18T00:47:25.083859+00:00",
+    "updated_at": "2026-08-18T00:48:00.064+00:00"
+  },
+  {
+    "id": "joseon_1787014079896_417",
+    "dataset_id": "joseon",
+    "name": "폐비 윤씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787014017298_761"
+    ],
+    "created_at": "2026-08-18T00:47:59.991617+00:00",
+    "updated_at": "2026-08-18T00:49:47.729+00:00"
+  },
+  {
+    "id": "joseon_1787014158324_773",
+    "dataset_id": "joseon",
+    "name": "연산군 이융",
+    "name_eng": "",
+    "title": "10대 국왕",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787014079896_417",
+      "joseon_1787014017298_761"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:49:18.369057+00:00",
+    "updated_at": "2026-08-18T00:51:35.669+00:00"
+  },
+  {
+    "id": "joseon_1787014240421_524",
+    "dataset_id": "joseon",
+    "name": "정현왕후 윤씨",
+    "name_eng": "",
+    "title": "",
+    "gender": "female",
+    "info": "",
+    "parent_ids": [],
+    "spouse_ids": [
+      "joseon_1787014017298_761"
+    ],
+    "created_at": "2026-08-18T00:50:40.54444+00:00",
+    "updated_at": "2026-08-18T00:51:03.127+00:00"
+  },
+  {
+    "id": "joseon_1787014263044_275",
+    "dataset_id": "joseon",
+    "name": "중종 이역",
+    "name_eng": "",
+    "title": "11대 국왕",
+    "gender": "male",
+    "info": "",
+    "parent_ids": [
+      "joseon_1787014017298_761",
+      "joseon_1787014240421_524"
+    ],
+    "spouse_ids": [],
+    "created_at": "2026-08-18T00:51:03.071042+00:00",
+    "updated_at": "2026-08-18T00:51:10.791+00:00"
+  }
+]
