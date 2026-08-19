@@ -90,9 +90,12 @@ class DynamicGenealogyApp {
     this.quickEditForm = document.getElementById('quickEditForm');
     this.quickEditId = document.getElementById('quickEditId');
     this.quickEditName = document.getElementById('quickEditName');
+    this.quickEditNameEng = document.getElementById('quickEditNameEng');
     this.quickEditParents = document.getElementById('quickEditParents');
+    this.quickEditSpouses = document.getElementById('quickEditSpouses');
     this.quickEditTitle = document.getElementById('quickEditTitle');
     this.quickEditGender = document.getElementById('quickEditGender');
+    this.quickEditInfo = document.getElementById('quickEditInfo');
     this.btnQuickEditDelete = document.getElementById('btnQuickEditDelete');
     this.btnQuickEditCancel = document.getElementById('btnQuickEditCancel');
     this.btnQuickEditClose = document.getElementById('btnQuickEditClose');
@@ -153,8 +156,8 @@ class DynamicGenealogyApp {
     if (!supabaseClient) return;
 
     try {
-      await supabaseClient.from('genealogy_datasets').update({ title: '그리스 로마 신화' }).eq('dataset_id', 'greek');
-      await supabaseClient.from('genealogy_datasets').update({ title: '조선 왕실' }).eq('dataset_id', 'joseon');
+      await supabaseClient.from('genealogy_datasets').update({ title: '그리스 로마 신화' }).eq('id', 'greek');
+      await supabaseClient.from('genealogy_datasets').update({ title: '조선 왕실' }).eq('id', 'joseon');
 
       const { data, error } = await supabaseClient
         .from('genealogy_datasets')
@@ -163,7 +166,7 @@ class DynamicGenealogyApp {
 
       if (!error && data && data.length > 0) {
         this.datasetsList = data.map(ds => {
-          let cleanTitle = ds.title || ds.dataset_id;
+          let cleanTitle = ds.title || ds.id;
           cleanTitle = cleanTitle.replace(/^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\s]+/u, '').trim();
           if (cleanTitle === '그리스·로마 신화 가계도' || cleanTitle === '그리스·로마 신화' || cleanTitle === '그리스 로마 신화 가계도') {
             cleanTitle = '그리스 로마 신화';
@@ -174,15 +177,15 @@ class DynamicGenealogyApp {
         });
       } else {
         this.datasetsList = [
-          { dataset_id: 'greek', title: '그리스 로마 신화' },
-          { dataset_id: 'joseon', title: '조선 왕실' }
+          { id: 'greek', title: '그리스 로마 신화' },
+          { id: 'joseon', title: '조선 왕실' }
         ];
       }
     } catch (err) {
       console.warn("Dataset fetch exception:", err);
       this.datasetsList = [
-        { dataset_id: 'greek', title: '그리스 로마 신화' },
-        { dataset_id: 'joseon', title: '조선 왕실' }
+        { id: 'greek', title: '그리스 로마 신화' },
+        { id: 'joseon', title: '조선 왕실' }
       ];
     }
 
@@ -193,7 +196,7 @@ class DynamicGenealogyApp {
     if (!this.datasetSelect) return;
 
     const datasetOptionsHtml = this.datasetsList.map(ds => `
-      <option value="${ds.dataset_id}" ${ds.dataset_id === this.currentDatasetKey ? 'selected' : ''}>
+      <option value="${ds.id}" ${ds.id === this.currentDatasetKey ? 'selected' : ''}>
         ${this.escapeHtml(ds.title)}
       </option>
     `).join('');
@@ -1002,7 +1005,7 @@ class DynamicGenealogyApp {
 
         if (supabaseClient) {
           const { error: dsErr } = await supabaseClient.from('genealogy_datasets').upsert({
-            dataset_id: newDatasetId,
+            id: newDatasetId,
             title: title,
             description: '신규 생성 가계도'
           });
@@ -1292,9 +1295,11 @@ class DynamicGenealogyApp {
     this.updateQuickAddDatalist();
 
     if (this.quickEditId) this.quickEditId.value = person.id;
-    if (this.quickEditName) this.quickEditName.value = person.name;
+    if (this.quickEditName) this.quickEditName.value = person.name || '';
+    if (this.quickEditNameEng) this.quickEditNameEng.value = person.nameEng || '';
     if (this.quickEditTitle) this.quickEditTitle.value = person.title || '';
     if (this.quickEditGender) this.quickEditGender.value = person.gender || 'male';
+    if (this.quickEditInfo) this.quickEditInfo.value = person.info || '';
 
     if (this.quickEditParents) {
       const parentNames = (person.parentIds || []).map(pId => {
@@ -1302,6 +1307,14 @@ class DynamicGenealogyApp {
         return p ? p.name : '';
       }).filter(Boolean);
       this.quickEditParents.value = parentNames.join(', ');
+    }
+
+    if (this.quickEditSpouses) {
+      const spouseNames = (person.spouseIds || []).map(sId => {
+        const p = this.nodesMap.get(sId);
+        return p ? p.name : '';
+      }).filter(Boolean);
+      this.quickEditSpouses.value = spouseNames.join(', ');
     }
 
     this.quickEditModal.classList.add('active');
@@ -1380,8 +1393,10 @@ class DynamicGenealogyApp {
 
         if (person) {
           person.name = this.quickEditName.value.trim();
-          person.title = this.quickEditTitle.value.trim();
-          person.gender = this.quickEditGender.value;
+          if (this.quickEditNameEng) person.nameEng = this.quickEditNameEng.value.trim();
+          if (this.quickEditTitle) person.title = this.quickEditTitle.value.trim();
+          if (this.quickEditGender) person.gender = this.quickEditGender.value;
+          if (this.quickEditInfo) person.info = this.quickEditInfo.value.trim();
 
           if (this.quickEditParents) {
             const rawVal = this.quickEditParents.value.trim();
@@ -1391,6 +1406,16 @@ class DynamicGenealogyApp {
               .filter(targetId => targetId && targetId !== pId);
 
             person.parentIds = newParentIds;
+          }
+
+          if (this.quickEditSpouses) {
+            const rawVal = this.quickEditSpouses.value.trim();
+            const spouseNames = rawVal ? rawVal.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+            const newSpouseIds = spouseNames
+              .map(sName => this.findOrCreatePersonByNameOrId(sName, 'female'))
+              .filter(targetId => targetId && targetId !== pId);
+
+            person.spouseIds = newSpouseIds;
           }
 
           this.sanitizeRelationships();
@@ -1817,8 +1842,8 @@ class DynamicGenealogyApp {
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
           <select id="editorDatasetSelect" class="form-control" style="flex:1; min-width:200px;">
             ${this.datasetsList.map(ds => `
-              <option value="${ds.dataset_id}" ${ds.dataset_id === this.currentDatasetKey ? 'selected' : ''}>
-                ${this.escapeHtml(ds.title)} (${ds.dataset_id})
+              <option value="${ds.id}" ${ds.id === this.currentDatasetKey ? 'selected' : ''}>
+                ${this.escapeHtml(ds.title)} (${ds.id})
               </option>
             `).join('')}
           </select>
@@ -1855,12 +1880,12 @@ class DynamicGenealogyApp {
     });
 
     document.getElementById('btnEditDataset').addEventListener('click', async () => {
-      const currentDs = this.datasetsList.find(d => d.dataset_id === this.currentDatasetKey);
+      const currentDs = this.datasetsList.find(d => d.id === this.currentDatasetKey);
       const updatedTitle = prompt(`'${this.currentDatasetKey}' 주제의 새 이름을 입력하세요:`, currentDs ? currentDs.title : '')?.trim();
       if (!updatedTitle) return;
 
       if (supabaseClient) {
-        await supabaseClient.from('genealogy_datasets').update({ title: updatedTitle }).eq('dataset_id', this.currentDatasetKey);
+        await supabaseClient.from('genealogy_datasets').update({ title: updatedTitle }).eq('id', this.currentDatasetKey);
       }
 
       await this.fetchDatasetsFromDB();
@@ -1876,11 +1901,11 @@ class DynamicGenealogyApp {
       if (confirm(`정말로 '${this.currentDatasetKey}' 가계도 주제와 이에 속한 모든 인물 데이터를 삭제하시겠습니까?`)) {
         if (supabaseClient) {
           await supabaseClient.from('genealogy_nodes').delete().eq('dataset_id', this.currentDatasetKey);
-          await supabaseClient.from('genealogy_datasets').delete().eq('dataset_id', this.currentDatasetKey);
+          await supabaseClient.from('genealogy_datasets').delete().eq('id', this.currentDatasetKey);
         }
 
         await this.fetchDatasetsFromDB();
-        const nextDs = this.datasetsList[0]?.dataset_id || 'greek';
+        const nextDs = this.datasetsList[0]?.id || 'greek';
         await this.loadDataset(nextDs, false);
         this.openEditorModal();
       }
@@ -2028,6 +2053,16 @@ class DynamicGenealogyApp {
           <input type="text" id="formSpouses" class="form-control" list="personDatalist" value="${getNameListStr(person.spouseIds)}" placeholder="예: 정안왕후 (이름 검색 가능)" />
         </div>
 
+        <div class="form-group">
+          <label class="form-label">칭호 / 부연 설명 (선택)</label>
+          <input type="text" id="formTitle" class="form-control" value="${this.escapeHtml(person.title || '')}" placeholder="예: 번개와 하늘의 신" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">상세 정보 / 설명 (선택)</label>
+          <textarea id="formInfo" class="form-control" rows="3" placeholder="상세 설명을 입력하세요...">${this.escapeHtml(person.info || '')}</textarea>
+        </div>
+
         <div class="form-actions" style="margin-top:24px;">
           <button type="button" class="btn btn-secondary" id="btnCancelForm" style="background:#f1f5f9; color:#475569; padding:10px 18px; border-radius:12px; font-weight:600; border:1px solid #cbd5e1;">취소</button>
           <button type="submit" class="btn-modal-primary">💾 Supabase DB에 저장하기</button>
@@ -2064,15 +2099,13 @@ class DynamicGenealogyApp {
       const parentIds = parseNamesToIds(document.getElementById('formParents').value);
       const spouseIds = parseNamesToIds(document.getElementById('formSpouses').value);
 
-      const existingPerson = this.nodesMap.get(id) || {};
-
       const updated = {
         id,
         name,
         nameEng: document.getElementById('formNameEng').value.trim(),
-        title: existingPerson.title || "",
+        title: document.getElementById('formTitle').value.trim(),
         gender: selectedGender,
-        info: existingPerson.info || "",
+        info: document.getElementById('formInfo').value.trim(),
         parentIds,
         spouseIds
       };
