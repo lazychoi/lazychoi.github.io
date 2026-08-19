@@ -8,10 +8,10 @@ import urllib.error
 
 # Table configurations: (supabase_table_name, local_json_filename)
 TABLES_TO_BACKUP = [
-    ('terms', 'backup-terms.json'),
-    ('history_timeline', 'backup-history.json'),
-    ('genealogy_nodes', 'backup-genealogy_nodes.json'),
-    ('genealogy_datasets', 'backup-genealogy_datasets.json')
+    ('terms', 'backup-terms.json', 'id'),
+    ('history_timeline', 'backup-history.json', 'id'),
+    ('genealogy_nodes', 'backup-genealogy_nodes.json', 'id'),
+    ('genealogy_datasets', 'backup-genealogy_datasets.json', 'dataset_id') 
 ]
 
 def get_supabase_credentials():
@@ -36,7 +36,7 @@ def get_supabase_credentials():
     key = os.environ.get('SUPABASE_KEY')
     return url, key
 
-def fetch_table_data(supabase_url, supabase_key, table_name):
+def fetch_table_data(supabase_url, supabase_key, table_name, order_by="id"):
     """Fetches all rows from a Supabase table using pagination to bypass the 1000-row limit."""
     print(f"[+] Fetching table '{table_name}' from Supabase...")
     all_data = []
@@ -45,8 +45,8 @@ def fetch_table_data(supabase_url, supabase_key, table_name):
     keep_fetching = True
     
     while keep_fetching:
-        # Build PostgREST paginated URL ordered by id
-        url = f"{supabase_url}/rest/v1/{table_name}?select=*&order=id.asc&limit={page_size}&offset={page * page_size}"
+        # 지정한 order_by 컬럼으로 정렬
+        url = f"{supabase_url}/rest/v1/{table_name}?select=*&order={order_by}.asc&limit={page_size}&offset={page * page_size}"
         req = urllib.request.Request(
             url,
             headers={
