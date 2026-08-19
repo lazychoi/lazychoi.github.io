@@ -8,13 +8,13 @@
   {
     "id": "greek",
     "title": "그리스 로마 신화",
-    "description": null,
+    "description": "CSV Import로 생성된 가계도",
     "created_at": "2026-08-17T12:26:20.276997+00:00"
   },
   {
     "id": "joseon",
     "title": "조선 왕실",
-    "description": null,
+    "description": "CSV Import로 생성된 가계도",
     "created_at": "2026-08-17T12:26:20.276997+00:00"
   }
 ]
