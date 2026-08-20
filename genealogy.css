@@ -499,6 +499,35 @@ body {
   background: #059669 !important;
 }
 
+/* 서브 그룹 배지 버튼 (티탄 12신, 퀴클롭스 등) */
+.group-badge-btn {
+  position: absolute;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+  z-index: 7;
+  white-space: nowrap;
+}
+
+.group-badge-btn:hover {
+  background: #eff6ff;
+}
+
+.group-badge-btn.open {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
 /* 스케치 스타일 다중 행 추가 모달 전용 버튼 */
 .btn-row-add {
   width: 100%;

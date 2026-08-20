@@ -1,5 +1,5 @@
 /* ══════════════════════════════════════════════════════
-   listening.js — 영어 듣기 연습 앱 핵심 로직 (간소화 버전)
+   listening.js — 영어 듣기 연습 앱 핵심 로직
    ══════════════════════════════════════════════════════ */
 
 // Audio & Subtitle States
@@ -15,7 +15,17 @@ let volume = 1.0;
 let globalLoopEnabled = false; // "R" toggle (Repeat Current Section)
 let loopSectionIndex = null;   // The locked section index for looping when globalLoopEnabled is ON
 let isDraggingTimeline = false;
-let loopCountRemaining = Infinity; // Remaining repeat count for current section
+let loopCountRemaining = 10; // Default repeat count for current section (10 times)
+let loopDelayTimer = null;   // Timer for 1-second pause between loops
+let isLoopWaiting = false;    // Flag indicating 1-second silent pause is active
+
+function clearLoopWaitTimer() {
+  if (loopDelayTimer) {
+    clearTimeout(loopDelayTimer);
+    loopDelayTimer = null;
+  }
+  isLoopWaiting = false;
+}
 
 
 // SVG Icons for iOS Compatibility
@@ -41,7 +51,6 @@ const emptyPromptView = document.getElementById('empty-prompt-view');
 const timelineWrapper = document.getElementById('timeline-wrapper');
 const timelineProgress = document.getElementById('timeline-progress');
 const timelineLoopZone = document.getElementById('timeline-loop-zone');
-const timelineMarkers = document.getElementById('timeline-markers');
 const timelineHandle = document.getElementById('timeline-handle');
 const currentTimeDisplay = document.getElementById('current-time-display');
 const totalTimeDisplay = document.getElementById('total-time-display');
@@ -66,7 +75,6 @@ function setupAudioPlayerListeners() {
 
   audioPlayer.addEventListener('loadedmetadata', () => {
     totalTimeDisplay.textContent = formatTime(audioPlayer.duration);
-    renderTimelineMarkers();
     updateTimelineProgress();
   });
 
@@ -94,6 +102,7 @@ function setupTimelineListeners() {
 
   timelineWrapper.addEventListener('mousedown', (e) => {
     if (!audioPlayer.duration) return;
+    clearLoopWaitTimer();
     isDraggingTimeline = true;
     const seekTime = getTimelineSeekTime(e);
     audioPlayer.currentTime = seekTime;
@@ -129,20 +138,6 @@ function updateTimelineProgress() {
     timelineProgress.style.width = '0%';
     timelineHandle.style.left = '0%';
   }
-}
-
-function renderTimelineMarkers() {
-  timelineMarkers.innerHTML = "";
-  const dur = audioPlayer.duration;
-  if (!dur || subtitles.length === 0) return;
-
-  subtitles.forEach((s) => {
-    const pct = (s.start / dur) * 100;
-    const marker = document.createElement('div');
-    marker.className = "timeline-marker";
-    marker.style.left = pct + '%';
-    timelineMarkers.appendChild(marker);
-  });
 }
 
 function updateTimelineLoopZone() {
@@ -188,8 +183,10 @@ function setupControlBarListeners() {
   if (repeatCountInput) {
     repeatCountInput.addEventListener('blur', () => {
       const val = repeatCountInput.value.trim();
-      if (val === '' || val === '∞' || isNaN(parseInt(val, 10)) || parseInt(val, 10) <= 0) {
-        repeatCountInput.value = '∞';
+      if (val === '' || isNaN(parseInt(val, 10)) || parseInt(val, 10) <= 0) {
+        if (val !== '∞') {
+          repeatCountInput.value = '10';
+        }
       }
       resetLoopCount();
     });
@@ -218,11 +215,11 @@ function setupControlBarListeners() {
 }
 
 function getDesiredRepeatCount() {
-  if (!repeatCountInput) return Infinity;
+  if (!repeatCountInput) return 10;
   const val = repeatCountInput.value.trim();
-  if (val === '∞' || val === '') return Infinity;
+  if (val === '∞') return Infinity;
   const num = parseInt(val, 10);
-  return isNaN(num) || num <= 0 ? Infinity : num;
+  return isNaN(num) || num <= 0 ? 10 : num;
 }
 
 function resetLoopCount() {
@@ -230,6 +227,7 @@ function resetLoopCount() {
 }
 
 function togglePlay() {
+  clearLoopWaitTimer();
   if (!audioName) {
     alert("음원 파일을 선택한 후 재생할 수 있습니다.");
     return;
@@ -242,6 +240,7 @@ function togglePlay() {
 }
 
 function toggleGlobalSectionRepeat() {
+  clearLoopWaitTimer();
   globalLoopEnabled = !globalLoopEnabled;
   if (globalLoopEnabled) {
     repeatToggleBtn.classList.add('btn-active');
@@ -267,88 +266,81 @@ function getCheckedIndices() {
 
 // ── Precision Section Repeating Logic ──
 function checkSectionLoop(curTime) {
-  if (!globalLoopEnabled) return;
+  if (!globalLoopEnabled || isLoopWaiting) return;
+  if (loopSectionIndex === null || !subtitles[loopSectionIndex]) {
+    loopSectionIndex = (activeIndex !== -1) ? activeIndex : 0;
+    if (!subtitles[loopSectionIndex]) return;
+  }
 
+  const section = subtitles[loopSectionIndex];
   const checkedIndices = getCheckedIndices();
 
-  if (checkedIndices.length > 0) {
-    // ══════════════════════════════════════════════════════
-    // [모드 A] 선택 구간 묶음 반복 (Group Loop)
-    // ══════════════════════════════════════════════════════
-    if (loopSectionIndex !== null && subtitles[loopSectionIndex]) {
-      const section = subtitles[loopSectionIndex];
-
-      // 만약 현재 재생 중인 구간이 체크 해제되었다면 즉시 다음 체크된 구간으로 점프
-      if (section.checked === false) {
-        const nextIdx = checkedIndices.find(idx => idx > loopSectionIndex);
-        if (nextIdx !== undefined) {
-          jumpToSection(nextIdx, true); // 리셋 없이 이동 (isAuto: true)
-        } else {
-          handleLoopCycleEnd(checkedIndices);
-        }
-        return;
-      }
-
-      if (curTime >= section.end) {
-        const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
-        const isLastCheckedSection = (currentPosInChecked === checkedIndices.length - 1);
-
-        if (isLastCheckedSection) {
-          // 마지막 체크 구간 재생이 끝났으므로 1회 사이클 완료 처리
-          handleLoopCycleEnd(checkedIndices);
-        } else {
-          // 중간 구간 재생이 끝났으므로 다음 체크 구간으로 자동 점프
-          const nextIdx = checkedIndices[currentPosInChecked + 1];
-          jumpToSection(nextIdx, true); // 리셋 없이 이동 (isAuto: true)
-        }
-      }
-    }
-  } else {
-    // ══════════════════════════════════════════════════════
-    // [모드 B] 개별 구간별 순차 반복 (Individual Sequential Loop)
-    // ══════════════════════════════════════════════════════
-    if (loopSectionIndex !== null && subtitles[loopSectionIndex]) {
-      const section = subtitles[loopSectionIndex];
-
-      if (curTime >= section.end) {
-        if (loopCountRemaining > 1) {
-          if (loopCountRemaining !== Infinity) {
-            loopCountRemaining--;
-          }
-          audioPlayer.currentTime = section.start;
-          if (audioPlayer.paused) audioPlayer.play();
-        } else {
-          // 지정된 반복 횟수를 채웠으므로, 다음 구간으로 자동 이동하면서 카운트 리셋
-          const nextIdx = loopSectionIndex + 1;
-          if (nextIdx < subtitles.length) {
-            jumpToSection(nextIdx, false); // 새 구간이므로 루프 카운트 리셋 (isAuto: false)
-          } else {
-            // 마지막 구간인 경우 루프 모드 해제
-            globalLoopEnabled = false;
-            repeatToggleBtn.classList.remove('btn-active');
-            loopSectionIndex = null;
-            updateTimelineLoopZone();
-          }
-        }
-      }
-    }
+  // 만약 현재 재생 중인 구간이 체크 해제되었다면 다음 체크된 구간으로 이동
+  if (checkedIndices.length > 0 && !section.checked) {
+    const nextIdx = checkedIndices.find(idx => idx > loopSectionIndex) ?? checkedIndices[0];
+    jumpToSection(nextIdx, false);
+    return;
   }
-}
 
-// ── 1회 사이클 완료(전체 묶음 반복 끝) 시의 처리 함수 ──
-function handleLoopCycleEnd(checkedIndices) {
-  if (loopCountRemaining > 1) {
-    if (loopCountRemaining !== Infinity) {
-      loopCountRemaining--;
+  if (curTime >= section.end) {
+    isLoopWaiting = true;
+    audioPlayer.pause();
+
+    if (loopCountRemaining > 1) {
+      if (loopCountRemaining !== Infinity) {
+        loopCountRemaining--;
+      }
+      // 구간 시작 위치로 이동 후 1초간 무음 대기
+      audioPlayer.currentTime = section.start;
+      updateTimelineProgress();
+      syncSubtitleHighlight(section.start);
+
+      loopDelayTimer = setTimeout(() => {
+        if (globalLoopEnabled) {
+          audioPlayer.play().catch(err => console.warn("Playback error:", err));
+        }
+        isLoopWaiting = false;
+        loopDelayTimer = null;
+      }, 1000);
+    } else {
+      // 지정된 반복 횟수 완료: 1초 무음 대기 후 다음 구간으로 이동
+      let nextIdx = null;
+      if (checkedIndices.length > 0) {
+        const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
+        if (currentPosInChecked !== -1 && currentPosInChecked + 1 < checkedIndices.length) {
+          nextIdx = checkedIndices[currentPosInChecked + 1];
+        } else {
+          nextIdx = checkedIndices[0];
+        }
+      } else {
+        if (loopSectionIndex + 1 < subtitles.length) {
+          nextIdx = loopSectionIndex + 1;
+        } else {
+          nextIdx = 0;
+        }
+      }
+
+      if (nextIdx !== null && subtitles[nextIdx] !== undefined) {
+        loopSectionIndex = nextIdx;
+        resetLoopCount();
+        const nextSection = subtitles[nextIdx];
+        audioPlayer.currentTime = nextSection.start;
+        updateTimelineProgress();
+        updateTimelineLoopZone();
+        syncSubtitleHighlight(nextSection.start);
+
+        loopDelayTimer = setTimeout(() => {
+          if (globalLoopEnabled) {
+            audioPlayer.play().catch(err => console.warn("Playback error:", err));
+          }
+          isLoopWaiting = false;
+          loopDelayTimer = null;
+        }, 1000);
+      } else {
+        isLoopWaiting = false;
+        loopDelayTimer = null;
+      }
     }
-    const firstIdx = checkedIndices[0];
-    jumpToSection(firstIdx, true);
-  } else {
-    // 모든 반복 횟수를 완료했으므로 루프 해제
-    globalLoopEnabled = false;
-    repeatToggleBtn.classList.remove('btn-active');
-    loopSectionIndex = null;
-    updateTimelineLoopZone();
   }
 }
 
@@ -403,6 +395,9 @@ function syncSubtitleHighlight(curTime) {
 // ── Jump to Section Index ──
 function jumpToSection(idx, isAuto = false) {
   if (idx < 0 || idx >= subtitles.length) return;
+  if (!isAuto) {
+    clearLoopWaitTimer();
+  }
 
   const section = subtitles[idx];
 
@@ -562,7 +557,6 @@ function setupImportListeners() {
       const text = event.target.result;
       subtitles = parseSubtitleText(text);
       renderSubtitles();
-      renderTimelineMarkers();
     };
     reader.readAsText(file);
   });

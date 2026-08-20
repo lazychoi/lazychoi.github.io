@@ -30,6 +30,7 @@ class DynamicGenealogyApp {
     this.expandedRight = new Set();
     this.expandedBottom = new Set();
     this.expandedCouples = new Set();
+    this.expandedGroups = new Set();
 
     // Canvas Transform State (Pan & Zoom)
     this.panX = 0;
@@ -94,6 +95,7 @@ class DynamicGenealogyApp {
     this.quickEditParents = document.getElementById('quickEditParents');
     this.quickEditSpouses = document.getElementById('quickEditSpouses');
     this.quickEditTitle = document.getElementById('quickEditTitle');
+    this.quickEditGroup = document.getElementById('quickEditGroup');
     this.quickEditGender = document.getElementById('quickEditGender');
     this.quickEditInfo = document.getElementById('quickEditInfo');
     this.btnQuickEditDelete = document.getElementById('btnQuickEditDelete');
@@ -234,7 +236,7 @@ class DynamicGenealogyApp {
     try {
       const { data, error } = await supabaseClient
         .from('genealogy_nodes')
-        .select('id, dataset_id, name, name_eng, title, gender, info, parent_ids, spouse_ids')
+        .select('*')
         .eq('dataset_id', datasetKey);
 
       if (error) {
@@ -254,6 +256,7 @@ class DynamicGenealogyApp {
             title: node.title || "",
             gender: node.gender || "male",
             info: node.info || "",
+            groupName: node.group_name || node.groupName || "",
             parentIds: Array.isArray(node.parent_ids) ? [...node.parent_ids] : [],
             spouseIds: Array.isArray(node.spouse_ids) ? [...node.spouse_ids] : []
           });
@@ -454,6 +457,7 @@ class DynamicGenealogyApp {
     this.expandedRight.clear();
     this.expandedBottom.clear();
     this.expandedCouples.clear();
+    this.expandedGroups.clear();
     this.highlightedSearchIndex = -1;
   }
 
@@ -494,16 +498,97 @@ class DynamicGenealogyApp {
     this.renderConnections(layout);
   }
 
+  getNodeGroup(person) {
+    if (!person) return '';
+    if (person.groupName && person.groupName.trim().length > 0) {
+      return person.groupName.trim();
+    }
+
+    const titanNames = ['오케아노스', '테티스', '테튀스', '히페리온', '테이아', '코이오스', '포이베', '크리오스', '므네모시네', '이아페토스', '테미스', '크로노스', '레아', '디오네'];
+    const cyclopesNames = ['브론테스', '스테로페스', '아르게스', '아스테로페스'];
+    const hecatoncheiresNames = ['코토스', '브리아레오스', '귀게스', '지에스', '기에스', '에뤼토스', '그퀴게스'];
+    const gigantesNames = ['다마센', '게게네이스', '미마스', '안타이오스', '아르고스 파놉테스', '아토스', '에피알테스', '에우리메돈', '에우리토스', '그라티온', '티티오스', '쉬케우스', '올륌브로스', '뮐리노스', '호플로다모스', '팔라스 (거인)', '폴리보테스', '포르피리온', '펠로루스', '알퀴오네우스', '히폴뤼토스', '토아스', '오리온', '아그리오스'];
+    const protogenoiNames = ['카오스', '가이아', '타르타로스', '에로스', '에레보스', '뉠스', '우라노스', '우레아', '폰토스', '아난케', '크로노스(태초신)', '네소이'];
+    const monsterNames = ['피톤', '캄페', '티폰', '에키드나', '오피오타우로스'];
+    const pontoiNames = ['네레우스', '타우마스', '포르퀴스', '케토', '에우리비아', '프로테우스', '카륍디스', '알페이오스'];
+
+    if (titanNames.includes(person.name)) return '티탄 12신';
+    if (cyclopesNames.includes(person.name)) return '퀴클롭스';
+    if (hecatoncheiresNames.includes(person.name)) return '헤카톤케이레스';
+    if (gigantesNames.includes(person.name)) return '기가스 (거인족)';
+    if (protogenoiNames.includes(person.name)) return '태초신 (Protogenoi)';
+    if (monsterNames.includes(person.name)) return '태초의 괴수';
+    if (pontoiNames.includes(person.name)) return '바다의 신 (Pontoi)';
+
+    return '';
+  }
+
   recalculateDynamicPositions() {
     const layoutNodes = [];
     const nodePosMap = new Map();
+    const couplePairs = [];
+    const groupBadgeNodes = [];
 
     const focusNode = this.visibleNodes.get(this.focusNodeId);
-    if (!focusNode) return { nodes: [], couples: [] };
+    if (!focusNode) return { nodes: [], couples: [], groupBadges: [] };
 
     const centerX = focusNode.x;
     const centerY = focusNode.y;
 
+    // Helper to get active spouse for a person when a couple's children are expanded
+    const getActiveSpouseForNode = (nodeId) => {
+      for (const coupleKey of this.expandedCouples) {
+        const parts = coupleKey.split('__');
+        if (parts[0] === nodeId) return parts[1];
+        if (parts[1] === nodeId) return parts[0];
+      }
+      return null;
+    };
+
+    // Helper to place spouse(s) for a node vertically to the right (at nodeX, nodeY)
+    const placeSpousesForNode = (nodeId, nodeX, nodeY) => {
+      if (!this.expandedRight.has(nodeId)) return nodeY;
+      const person = this.nodesMap.get(nodeId);
+      if (!person) return nodeY;
+
+      let spouses = person.spouseIds.filter(spId => this.nodesMap.has(spId));
+      const activeSpouseId = getActiveSpouseForNode(nodeId);
+      if (activeSpouseId) {
+        spouses = spouses.filter(spId => spId === activeSpouseId);
+      }
+
+      if (spouses.length === 0) return nodeY;
+
+      const rightX = nodeX + 280;
+      const spouseRowHeight = 62;
+      const totalH = (spouses.length - 1) * spouseRowHeight;
+      const startY = nodeY - (totalH / 2);
+      let maxSpY = nodeY;
+
+      spouses.forEach((spId, idx) => {
+        const spY = startY + (idx * spouseRowHeight);
+        maxSpY = Math.max(maxSpY, spY);
+        nodePosMap.set(spId, {
+          id: spId,
+          x: rightX,
+          y: spY,
+          isSpouse: true
+        });
+
+        const coupleKey = [nodeId, spId].sort().join('__');
+        couplePairs.push({
+          key: coupleKey,
+          p1: nodeId,
+          p2: spId,
+          midX: (nodeX + rightX) / 2,
+          midY: spY
+        });
+      });
+
+      return maxSpY;
+    };
+
+    // 1. Focus Node Position
     nodePosMap.set(this.focusNodeId, {
       id: this.focusNodeId,
       x: centerX,
@@ -512,14 +597,54 @@ class DynamicGenealogyApp {
     });
 
     const focusPerson = this.nodesMap.get(this.focusNodeId);
-    const couplePairs = [];
 
+    // 2. Parents & Ancestors Placement (Upwards)
+    const placeAncestors = (childNodeId, childX, childY) => {
+      if (!this.expandedTop.has(childNodeId)) return;
+      const person = this.nodesMap.get(childNodeId);
+      if (!person) return;
+      const parents = person.parentIds.filter(pId => this.nodesMap.has(pId));
+      if (parents.length === 0) return;
+
+      const parentY = childY - 140;
+      const parentStepX = 220;
+      const totalW = (parents.length - 1) * parentStepX;
+      const startX = childX - (totalW / 2);
+
+      parents.forEach((pId, idx) => {
+        const pX = startX + (idx * parentStepX);
+        nodePosMap.set(pId, {
+          id: pId,
+          x: pX,
+          y: parentY,
+          isParent: true
+        });
+
+        placeAncestors(pId, pX, parentY);
+      });
+
+      if (parents.length >= 2) {
+        const p1 = parents[0];
+        const p2 = parents[1];
+        const p1Pos = nodePosMap.get(p1);
+        const p2Pos = nodePosMap.get(p2);
+        if (p1Pos && p2Pos) {
+          const coupleKey = [p1, p2].sort().join('__');
+          couplePairs.push({
+            key: coupleKey,
+            p1,
+            p2,
+            midX: (p1Pos.x + p2Pos.x) / 2,
+            midY: p1Pos.y
+          });
+        }
+      }
+    };
+
+    placeAncestors(this.focusNodeId, centerX, centerY);
+
+    // 3. Siblings of Focus Node (Left)
     let leftSiblingMaxX = centerX - 280;
-    let siblingTopY = centerY;
-    let siblingBottomY = centerY;
-    let spouseTopY = centerY;
-    let spouseBottomY = centerY;
-
     if (this.expandedLeft.has(this.focusNodeId)) {
       const siblings = new Set();
       focusPerson.parentIds.forEach(pId => {
@@ -533,13 +658,9 @@ class DynamicGenealogyApp {
       if (sibArray.length > 0) {
         const leftX = centerX - 280;
         leftSiblingMaxX = leftX + (this.nodeWidth / 2);
-
         const sibRowHeight = 55;
         const totalH = (sibArray.length - 1) * sibRowHeight;
         const startY = centerY - (totalH / 2);
-
-        siblingTopY = startY - (this.nodeHeight / 2);
-        siblingBottomY = startY + totalH + (this.nodeHeight / 2);
 
         sibArray.forEach((sId, idx) => {
           nodePosMap.set(sId, {
@@ -552,150 +673,191 @@ class DynamicGenealogyApp {
       }
     }
 
-    if (this.expandedRight.has(this.focusNodeId)) {
-      let spouses = focusPerson.spouseIds.filter(spId => this.nodesMap.has(spId));
+    // 4. Focus Node Spouses (Right, stacked vertically)
+    const maxFocusSpouseY = placeSpousesForNode(this.focusNodeId, centerX, centerY);
 
-      let activeSpouseId = null;
-      if (this.expandedCouples.size > 0) {
-        const activeCoupleKey = Array.from(this.expandedCouples)[0];
-        const parts = activeCoupleKey.split('__');
-        activeSpouseId = (parts[0] === this.focusNodeId) ? parts[1] : parts[0];
-      }
-
-      if (activeSpouseId) {
-        spouses = spouses.filter(spId => spId === activeSpouseId);
-      }
-
-      if (spouses.length > 0) {
-        const rightX = centerX + 280;
-        const spouseRowHeight = 62;
-        const totalH = (spouses.length - 1) * spouseRowHeight;
-        const startY = centerY - (totalH / 2);
-
-        spouseTopY = startY - (this.nodeHeight / 2);
-        spouseBottomY = startY + totalH + (this.nodeHeight / 2);
-
-        spouses.forEach((spId, idx) => {
-          const spY = startY + (idx * spouseRowHeight);
-          nodePosMap.set(spId, {
-            id: spId,
-            x: rightX,
-            y: spY,
-            isSpouse: true
-          });
-
-          const coupleKey = [this.focusNodeId, spId].sort().join('__');
-          couplePairs.push({
-            key: coupleKey,
-            p1: this.focusNodeId,
-            p2: spId,
-            midX: (centerX + rightX) / 2,
-            midY: (centerY + spY) / 2
-          });
+    // 5. Children & Multi-Generational Descendants Layout (Downwards)
+    const placeChildrenRecursive = (parentIds, anchorX, parentY) => {
+      let childIds = [];
+      if (parentIds.length === 2) {
+        childIds = this.getCommonChildren(parentIds[0], parentIds[1]);
+      } else if (parentIds.length === 1) {
+        const pId = parentIds[0];
+        const allChildren = this.getChildIds(pId);
+        childIds = allChildren.filter(cId => {
+          const childPerson = this.nodesMap.get(cId);
+          if (!childPerson) return false;
+          const validParents = childPerson.parentIds.filter(id => this.nodesMap.has(id));
+          return validParents.length <= 1;
         });
       }
-    }
 
-    if (this.expandedTop.has(this.focusNodeId)) {
-      const parents = focusPerson.parentIds.filter(pId => this.nodesMap.has(pId));
-      if (parents.length > 0) {
-        const minTopLimit = Math.min(siblingTopY, spouseTopY);
-        const parentY = Math.min(centerY - 140, minTopLimit - 60);
+      if (childIds.length === 0) return;
 
-        const parentStepX = 220;
-        const totalW = (parents.length - 1) * parentStepX;
-        const startX = centerX - (totalW / 2);
+      const coupleKey = parentIds.slice().sort().join('__');
 
-        parents.forEach((pId, idx) => {
-          nodePosMap.set(pId, {
-            id: pId,
-            x: startX + (idx * parentStepX),
-            y: parentY,
-            isParent: true
-          });
-        });
+      // Group children by groupName or auto-batching
+      const groupsMap = new Map();
+      childIds.forEach(cId => {
+        const cPerson = this.nodesMap.get(cId);
+        const gName = this.getNodeGroup(cPerson);
+        if (!groupsMap.has(gName)) groupsMap.set(gName, []);
+        groupsMap.get(gName).push(cId);
+      });
 
-        if (parents.length >= 2) {
-          const p1 = parents[0];
-          const p2 = parents[1];
-          const p1Pos = nodePosMap.get(p1);
-          const p2Pos = nodePosMap.get(p2);
-          if (p1Pos && p2Pos) {
-            const coupleKey = [p1, p2].sort().join('__');
-            couplePairs.push({
-              key: coupleKey,
-              p1,
-              p2,
-              midX: (p1Pos.x + p2Pos.x) / 2,
-              midY: p1Pos.y
-            });
-          }
+      // Handle unnamed children if total children > 6 -> auto batching into 6-item groups
+      if (groupsMap.has('') && childIds.length > 6 && groupsMap.size === 1) {
+        const unnamedList = groupsMap.get('');
+        groupsMap.delete('');
+        const batchSize = 6;
+        for (let i = 0; i < unnamedList.length; i += batchSize) {
+          const batchIndex = Math.floor(i / batchSize) + 1;
+          const batchName = `자식 그룹 ${batchIndex} (${i + 1}~${Math.min(i + batchSize, unnamedList.length)})`;
+          groupsMap.set(batchName, unnamedList.slice(i, i + batchSize));
         }
       }
-    }
 
-    const maxBottomLimit = Math.max(siblingBottomY, spouseBottomY);
-    const dynamicChildY = Math.max(centerY + 140, maxBottomLimit + 70);
+      const showGroupBadges = (groupsMap.size >= 2) || (childIds.length > 6 && !groupsMap.has(''));
 
-    let activeCoupleKey = null;
-    let coupleChildrenList = [];
-    if (this.expandedCouples.size > 0) {
-      activeCoupleKey = Array.from(this.expandedCouples)[0];
-      const activeCouple = couplePairs.find(c => c.key === activeCoupleKey);
-      if (activeCouple) {
-        coupleChildrenList = this.getCommonChildren(activeCouple.p1, activeCouple.p2);
-      }
-    }
+      if (!showGroupBadges) {
+        // Direct layout
+        const baseChildY = (parentY === centerY) ? Math.max(parentY + 140, maxFocusSpouseY + (this.nodeHeight / 2) + 70) : parentY + 140;
+        const childY = baseChildY;
 
-    let singleChildrenList = [];
-    if (this.expandedBottom.has(this.focusNodeId)) {
-      const allFocusChildren = this.getChildIds(this.focusNodeId);
-      singleChildrenList = allFocusChildren.filter(cId => {
-        const childPerson = this.nodesMap.get(cId);
-        if (!childPerson) return false;
-        const validParents = childPerson.parentIds.filter(pId => this.nodesMap.has(pId));
-        return validParents.length <= 1;
-      });
-    }
-
-    const allChildIds = [];
-    singleChildrenList.forEach(cId => {
-      if (!allChildIds.includes(cId)) allChildIds.push(cId);
-    });
-    coupleChildrenList.forEach(cId => {
-      if (!allChildIds.includes(cId)) allChildIds.push(cId);
-    });
-
-    if (allChildIds.length > 0) {
-      const childStepX = 220;
-      const totalW = (allChildIds.length - 1) * childStepX;
-
-      let centerAnchorX = centerX;
-      if (activeCoupleKey) {
-        const activeCouple = couplePairs.find(c => c.key === activeCoupleKey);
-        if (activeCouple) centerAnchorX = activeCouple.midX;
-      }
-
-      let startX = centerAnchorX - (totalW / 2);
-
-      const minAllowedChildLeftX = leftSiblingMaxX + 40 + (this.nodeWidth / 2);
-      if (startX < minAllowedChildLeftX) {
-        startX = minAllowedChildLeftX;
-      }
-
-      allChildIds.forEach((cId, idx) => {
-        const isCoupleChild = coupleChildrenList.includes(cId);
-        const isSingleChild = singleChildrenList.includes(cId);
-
-        nodePosMap.set(cId, {
-          id: cId,
-          x: startX + (idx * childStepX),
-          y: dynamicChildY,
-          isCoupleChild,
-          isSingleChild,
-          coupleKey: isCoupleChild ? activeCoupleKey : null
+        let totalRowWidth = 0;
+        childIds.forEach((cId, idx) => {
+          const isSpouseExpanded = this.expandedRight.has(cId);
+          if (idx < childIds.length - 1) {
+            totalRowWidth += isSpouseExpanded ? 500 : 220;
+          } else {
+            totalRowWidth += isSpouseExpanded ? 280 : 0;
+          }
         });
-      });
+
+        let startX = anchorX - (totalRowWidth / 2);
+        const minAllowedLeftX = leftSiblingMaxX + 40 + (this.nodeWidth / 2);
+        if (startX < minAllowedLeftX) startX = minAllowedLeftX;
+
+        let currentX = startX;
+        childIds.forEach((cId) => {
+          const itemX = currentX;
+          nodePosMap.set(cId, { id: cId, x: itemX, y: childY, isChild: true });
+          const isSpouseExpanded = this.expandedRight.has(cId);
+          if (isSpouseExpanded) {
+            placeSpousesForNode(cId, itemX, childY);
+            currentX += 500;
+          } else {
+            currentX += 220;
+          }
+        });
+
+        // Recurse for deeper generations
+        childIds.forEach(cId => {
+          const cPerson = this.nodesMap.get(cId);
+          if (cPerson) {
+            const spouses = cPerson.spouseIds.filter(spId => this.nodesMap.has(spId));
+            spouses.forEach(spId => {
+              const cCoupleKey = [cId, spId].sort().join('__');
+              if (this.expandedCouples.has(cCoupleKey)) {
+                const coupleObj = couplePairs.find(c => c.key === cCoupleKey);
+                if (coupleObj) placeChildrenRecursive([cId, spId], coupleObj.midX, coupleObj.midY);
+              }
+            });
+          }
+          if (this.expandedBottom.has(cId)) {
+            const cPos = nodePosMap.get(cId);
+            if (cPos) placeChildrenRecursive([cId], cPos.x, cPos.y);
+          }
+        });
+      } else {
+        // Group Badges Layout
+        const groupY = (parentY === centerY) ? Math.max(parentY + 140, maxFocusSpouseY + (this.nodeHeight / 2) + 70) : parentY + 140;
+
+        const groupList = Array.from(groupsMap.entries());
+        const groupStepX = 260;
+        const totalGroupW = (groupList.length - 1) * groupStepX;
+        let startGroupX = anchorX - (totalGroupW / 2);
+
+        groupList.forEach(([gName, gChildIds], gIdx) => {
+          const displayName = gName || '기타';
+          const gX = startGroupX + (gIdx * groupStepX);
+          const fullGroupKey = `${coupleKey}__GROUP__${displayName}`;
+
+          groupBadgeNodes.push({
+            key: fullGroupKey,
+            coupleKey,
+            name: displayName,
+            count: gChildIds.length,
+            x: gX,
+            y: groupY,
+            parentY,
+            parentX: anchorX
+          });
+
+          if (this.expandedGroups.has(fullGroupKey)) {
+            const childY = groupY + 140;
+
+            let totalRowWidth = 0;
+            gChildIds.forEach((cId, idx) => {
+              const isSpouseExpanded = this.expandedRight.has(cId);
+              if (idx < gChildIds.length - 1) {
+                totalRowWidth += isSpouseExpanded ? 500 : 220;
+              } else {
+                totalRowWidth += isSpouseExpanded ? 280 : 0;
+              }
+            });
+
+            let startX = gX - (totalRowWidth / 2);
+            let currentX = startX;
+
+            gChildIds.forEach((cId) => {
+              const itemX = currentX;
+              nodePosMap.set(cId, { id: cId, x: itemX, y: childY, isChild: true, parentGroupKey: fullGroupKey });
+              const isSpouseExpanded = this.expandedRight.has(cId);
+              if (isSpouseExpanded) {
+                placeSpousesForNode(cId, itemX, childY);
+                currentX += 500;
+              } else {
+                currentX += 220;
+              }
+            });
+
+            // Recurse for deeper generations
+            gChildIds.forEach(cId => {
+              const cPerson = this.nodesMap.get(cId);
+              if (cPerson) {
+                const spouses = cPerson.spouseIds.filter(spId => this.nodesMap.has(spId));
+                spouses.forEach(spId => {
+                  const cCoupleKey = [cId, spId].sort().join('__');
+                  if (this.expandedCouples.has(cCoupleKey)) {
+                    const coupleObj = couplePairs.find(c => c.key === cCoupleKey);
+                    if (coupleObj) placeChildrenRecursive([cId, spId], coupleObj.midX, coupleObj.midY);
+                  }
+                });
+              }
+              if (this.expandedBottom.has(cId)) {
+                const cPos = nodePosMap.get(cId);
+                if (cPos) placeChildrenRecursive([cId], cPos.x, cPos.y);
+              }
+            });
+          }
+        });
+      }
+    };
+
+    // Trigger children placement for focus couples & focus bottom children
+    focusPerson.spouseIds.forEach(spId => {
+      const coupleKey = [this.focusNodeId, spId].sort().join('__');
+      if (this.expandedCouples.has(coupleKey)) {
+        const coupleObj = couplePairs.find(c => c.key === coupleKey);
+        if (coupleObj) {
+          placeChildrenRecursive([this.focusNodeId, spId], coupleObj.midX, coupleObj.midY);
+        }
+      }
+    });
+
+    if (this.expandedBottom.has(this.focusNodeId)) {
+      placeChildrenRecursive([this.focusNodeId], centerX, centerY);
     }
 
     nodePosMap.forEach(pos => {
@@ -708,7 +870,7 @@ class DynamicGenealogyApp {
       }
     });
 
-    return { nodes: layoutNodes, couples: couplePairs };
+    return { nodes: layoutNodes, couples: couplePairs, groupBadges: groupBadgeNodes };
   }
 
   // 🌟 5. HTML 텍스트 노드 렌더링 (일부일처 배우자 우측화살표 ▶ 감춤 처리) 🌟
@@ -860,15 +1022,9 @@ class DynamicGenealogyApp {
           this.preventDrag(btnTop);
           btnTop.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (node.id === this.focusNodeId) {
-              if (this.expandedTop.has(node.id)) this.expandedTop.delete(node.id);
-              else this.expandedTop.add(node.id);
-              this.render();
-            } else {
-              this.setFocusPerson(node.id);
-              this.expandedTop.add(node.id);
-              this.render();
-            }
+            if (this.expandedTop.has(node.id)) this.expandedTop.delete(node.id);
+            else this.expandedTop.add(node.id);
+            this.render();
           });
         }
 
@@ -877,15 +1033,9 @@ class DynamicGenealogyApp {
           this.preventDrag(btnLeft);
           btnLeft.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (node.id === this.focusNodeId) {
-              if (this.expandedLeft.has(node.id)) this.expandedLeft.delete(node.id);
-              else this.expandedLeft.add(node.id);
-              this.render();
-            } else {
-              this.setFocusPerson(node.id);
-              this.expandedLeft.add(node.id);
-              this.render();
-            }
+            if (this.expandedLeft.has(node.id)) this.expandedLeft.delete(node.id);
+            else this.expandedLeft.add(node.id);
+            this.render();
           });
         }
 
@@ -894,19 +1044,12 @@ class DynamicGenealogyApp {
           this.preventDrag(btnRight);
           btnRight.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (node.id === this.focusNodeId) {
-              if (this.expandedRight.has(node.id)) {
-                this.expandedRight.delete(node.id);
-                this.expandedCouples.clear();
-              } else {
-                this.expandedRight.add(node.id);
-              }
-              this.render();
+            if (this.expandedRight.has(node.id)) {
+              this.expandedRight.delete(node.id);
             } else {
-              this.setFocusPerson(node.id);
               this.expandedRight.add(node.id);
-              this.render();
             }
+            this.render();
           });
         }
 
@@ -915,15 +1058,9 @@ class DynamicGenealogyApp {
           this.preventDrag(btnBottom);
           btnBottom.addEventListener('click', (e) => {
             e.stopPropagation();
-            if (node.id === this.focusNodeId) {
-              if (this.expandedBottom.has(node.id)) this.expandedBottom.delete(node.id);
-              else this.expandedBottom.add(node.id);
-              this.render();
-            } else {
-              this.setFocusPerson(node.id);
-              this.expandedBottom.add(node.id);
-              this.render();
-            }
+            if (this.expandedBottom.has(node.id)) this.expandedBottom.delete(node.id);
+            else this.expandedBottom.add(node.id);
+            this.render();
           });
         }
       }
@@ -985,7 +1122,13 @@ class DynamicGenealogyApp {
             if (this.expandedCouples.has(couple.key)) {
               this.expandedCouples.delete(couple.key);
             } else {
-              this.expandedCouples.clear();
+              // 동일 인물의 다른 부부 자식 보기가 열려있는 경우 해제하여 해당 자식의 어머니만 표시
+              for (const existingKey of Array.from(this.expandedCouples)) {
+                const parts = existingKey.split('__');
+                if (parts.includes(couple.p1) || parts.includes(couple.p2)) {
+                  this.expandedCouples.delete(existingKey);
+                }
+              }
               this.expandedCouples.add(couple.key);
             }
             this.render();
@@ -997,6 +1140,38 @@ class DynamicGenealogyApp {
         this.nodesLayer.appendChild(coupleBtn);
       }
     });
+
+    if (layout.groupBadges) {
+      layout.groupBadges.forEach(badge => {
+        const isOpen = this.expandedGroups.has(badge.key);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `group-badge-btn ${isOpen ? 'open' : ''}`;
+        btn.style.left = `${badge.x - 70}px`;
+        btn.style.top = `${badge.y - 18}px`;
+        btn.title = `${badge.name} (${badge.count}명) 펼치기/접기`;
+
+        let icon = '🏛️';
+        if (badge.name.includes('퀴클롭스')) icon = '👁️';
+        else if (badge.name.includes('헤카톤케이레스')) icon = '✋';
+        else if (badge.name.includes('그룹')) icon = '👶';
+
+        btn.innerHTML = `${icon} ${this.escapeHtml(badge.name)} (${badge.count}명) ${isOpen ? '▼' : '▶'}`;
+
+        this.preventDrag(btn);
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (this.expandedGroups.has(badge.key)) {
+            this.expandedGroups.delete(badge.key);
+          } else {
+            this.expandedGroups.add(badge.key);
+          }
+          this.render();
+        });
+
+        this.nodesLayer.appendChild(btn);
+      });
+    }
   }
 
   // ── 새 가계도 생성 모달 이벤트 바인딩 ──
@@ -1315,6 +1490,7 @@ class DynamicGenealogyApp {
     if (this.quickEditName) this.quickEditName.value = person.name || '';
     if (this.quickEditNameEng) this.quickEditNameEng.value = person.nameEng || '';
     if (this.quickEditTitle) this.quickEditTitle.value = person.title || '';
+    if (this.quickEditGroup) this.quickEditGroup.value = person.groupName || '';
     if (this.quickEditGender) this.quickEditGender.value = person.gender || 'male';
     if (this.quickEditInfo) this.quickEditInfo.value = person.info || '';
 
@@ -1442,6 +1618,7 @@ class DynamicGenealogyApp {
           person.name = this.quickEditName.value.trim();
           if (this.quickEditNameEng) person.nameEng = this.quickEditNameEng.value.trim();
           if (this.quickEditTitle) person.title = this.quickEditTitle.value.trim();
+          if (this.quickEditGroup) person.groupName = this.quickEditGroup.value.trim();
           if (this.quickEditGender) person.gender = this.quickEditGender.value;
           if (this.quickEditInfo) person.info = this.quickEditInfo.value.trim();
 
@@ -1487,6 +1664,7 @@ class DynamicGenealogyApp {
 
     let svgHtml = '';
 
+    // 1. Couple Spouse Lines (Horizontal/Orthogonal lines connecting p1 and p2)
     layout.couples.forEach(couple => {
       const n1 = nodePosMap.get(couple.p1);
       const n2 = nodePosMap.get(couple.p2);
@@ -1497,75 +1675,149 @@ class DynamicGenealogyApp {
         const x2 = n2.x - (this.nodeWidth / 2);
         const y2 = n2.y;
 
-        svgHtml += `<path class="connection-line spouse" d="M ${x1} ${y1} L ${x2} ${y2}" />`;
+        if (y1 === y2) {
+          svgHtml += `<path class="connection-line spouse" d="M ${x1} ${y1} L ${x2} ${y2}" />`;
+        } else {
+          const midX = (x1 + x2) / 2;
+          svgHtml += `<path class="connection-line spouse" d="M ${x1} ${y1} H ${midX} V ${y2} H ${x2}" />`;
+        }
       }
     });
 
-    const focusNode = nodePosMap.get(this.focusNodeId);
-    if (focusNode && (this.expandedTop.has(this.focusNodeId) || this.isEditMode)) {
-      const parents = focusNode.parentIds.filter(pId => nodePosMap.has(pId));
-      if (parents.length > 0) {
-        let parentStartX = focusNode.x;
-        let parentStartY = focusNode.y - (this.nodeHeight / 2) - 60;
+    // 2. Parent-to-Child Lines for all Couples
+    layout.couples.forEach(couple => {
+      if (this.expandedCouples.has(couple.key) || this.isEditMode) {
+        const p1 = nodePosMap.get(couple.p1);
+        const p2 = nodePosMap.get(couple.p2);
+        if (p1 && p2) {
+          const commonChildren = this.getCommonChildren(couple.p1, couple.p2);
+          commonChildren.forEach(cId => {
+            const childNode = nodePosMap.get(cId);
+            if (childNode && !childNode.parentGroupKey) {
+              const childTopY = childNode.y - (this.nodeHeight / 2);
+              const midY = (couple.midY + childTopY) / 2;
+              svgHtml += `<path class="connection-line active" d="M ${couple.midX} ${couple.midY} V ${midY} H ${childNode.x} V ${childTopY}" />`;
+            }
+          });
+        }
+      }
+    });
 
-        if (parents.length >= 2) {
-          const p1 = nodePosMap.get(parents[0]);
-          const p2 = nodePosMap.get(parents[1]);
-          if (p1 && p2) {
-            const p1X = p1.x + (this.nodeWidth / 2);
-            const p2X = p2.x - (this.nodeWidth / 2);
-            svgHtml += `<path class="connection-line spouse" d="M ${p1X} ${p1.y} L ${p2X} ${p2.y}" />`;
-            parentStartX = (p1.x + p2.x) / 2;
-            parentStartY = p1.y;
-          }
+    // 2.5 Group Badges T-Bar SVG Lines
+    if (layout.groupBadges && layout.groupBadges.length > 0) {
+      const parentGroupsMap = new Map();
+      layout.groupBadges.forEach(badge => {
+        const pKey = `${badge.parentX}__${badge.parentY}`;
+        if (!parentGroupsMap.has(pKey)) parentGroupsMap.set(pKey, []);
+        parentGroupsMap.get(pKey).push(badge);
+      });
+
+      parentGroupsMap.forEach((badges) => {
+        const parentX = badges[0].parentX;
+        const parentY = badges[0].parentY;
+        const parentBottomY = parentY + (this.nodeHeight / 2);
+        const badgeTopY = badges[0].y - 18;
+        const midY = (parentBottomY + badgeTopY) / 2;
+
+        if (badges.length === 1) {
+          svgHtml += `<path class="connection-line active" d="M ${parentX} ${parentBottomY} V ${badgeTopY}" />`;
         } else {
-          const p1 = nodePosMap.get(parents[0]);
-          if (p1) {
-            parentStartX = p1.x;
-            parentStartY = p1.y + (this.nodeHeight / 2);
-          }
+          const badgeXs = badges.map(b => b.x);
+          const minX = Math.min(...badgeXs);
+          const maxX = Math.max(...badgeXs);
+
+          let pathD = `M ${parentX} ${parentBottomY} V ${midY} M ${minX} ${midY} H ${maxX}`;
+          badges.forEach(b => {
+            pathD += ` M ${b.x} ${midY} V ${badgeTopY}`;
+          });
+          svgHtml += `<path class="connection-line active" d="${pathD}" />`;
         }
 
-        const focusTopY = focusNode.y - (this.nodeHeight / 2);
-        const midY = (parentStartY + focusTopY) / 2;
-        svgHtml += `<path class="connection-line active" d="M ${parentStartX} ${parentStartY} V ${midY} H ${focusNode.x} V ${focusTopY}" />`;
-      }
+        badges.forEach(badge => {
+          if (this.expandedGroups.has(badge.key)) {
+            const badgeBottomY = badge.y + 18;
+            const groupChildren = layout.nodes.filter(n => n.parentGroupKey === badge.key);
+
+            if (groupChildren.length > 0) {
+              const childTopY = groupChildren[0].y - (this.nodeHeight / 2);
+              const cMidY = (badgeBottomY + childTopY) / 2;
+              const childXs = groupChildren.map(c => c.x);
+              const minChildX = Math.min(...childXs);
+              const maxChildX = Math.max(...childXs);
+
+              let pathD = `M ${badge.x} ${badgeBottomY} V ${cMidY} M ${minChildX} ${cMidY} H ${maxChildX}`;
+              groupChildren.forEach(c => {
+                pathD += ` M ${c.x} ${cMidY} V ${childTopY}`;
+              });
+              svgHtml += `<path class="connection-line active" d="${pathD}" />`;
+            }
+          }
+        });
+      });
     }
 
-    if (focusNode && (this.expandedLeft.has(this.focusNodeId) || this.isEditMode)) {
-      layout.nodes.forEach(n => {
-        if (n.isSibling) {
+    // 3. Parent-to-Child & Ancestor Lines for Nodes
+    layout.nodes.forEach(n => {
+      if (this.expandedBottom.has(n.id) || this.isEditMode) {
+        const focusBottomY = n.y + (this.nodeHeight / 2);
+        const allChildren = this.getChildIds(n.id);
+        const singleChildren = allChildren.filter(cId => {
+          const childPerson = this.nodesMap.get(cId);
+          if (!childPerson) return false;
+          const validParents = childPerson.parentIds.filter(id => this.nodesMap.has(id));
+          return validParents.length <= 1;
+        });
+
+        singleChildren.forEach(cId => {
+          const childNode = nodePosMap.get(cId);
+          if (childNode && !childNode.parentGroupKey) {
+            const childTopY = childNode.y - (this.nodeHeight / 2);
+            const midY = (focusBottomY + childTopY) / 2;
+            svgHtml += `<path class="connection-line active" d="M ${n.x} ${focusBottomY} V ${midY} H ${childNode.x} V ${childTopY}" />`;
+          }
+        });
+      }
+
+      // Ancestor connections
+      if (this.expandedTop.has(n.id)) {
+        const parents = n.parentIds.filter(pId => nodePosMap.has(pId));
+        if (parents.length > 0) {
+          let parentStartX = n.x;
+          let parentStartY = n.y - (this.nodeHeight / 2) - 60;
+
+          if (parents.length >= 2) {
+            const p1 = nodePosMap.get(parents[0]);
+            const p2 = nodePosMap.get(parents[1]);
+            if (p1 && p2) {
+              parentStartX = (p1.x + p2.x) / 2;
+              parentStartY = p1.y;
+            }
+          } else {
+            const p1 = nodePosMap.get(parents[0]);
+            if (p1) {
+              parentStartX = p1.x;
+              parentStartY = p1.y + (this.nodeHeight / 2);
+            }
+          }
+
+          const childTopY = n.y - (this.nodeHeight / 2);
+          const midY = (parentStartY + childTopY) / 2;
+          svgHtml += `<path class="connection-line active" d="M ${parentStartX} ${parentStartY} V ${midY} H ${n.x} V ${childTopY}" />`;
+        }
+      }
+
+      // Sibling connections
+      if (n.isSibling) {
+        const focusNode = nodePosMap.get(this.focusNodeId);
+        if (focusNode) {
           const sX = n.x + (this.nodeWidth / 2);
           const sY = n.y;
           const focusLeftX = focusNode.x - (this.nodeWidth / 2);
           const midX = (sX + focusLeftX) / 2;
           svgHtml += `<path class="connection-line" d="M ${focusLeftX} ${focusNode.y} H ${midX} V ${sY} H ${sX}" />`;
         }
-      });
-    }
-
-    layout.couples.forEach(couple => {
-      if (this.expandedCouples.has(couple.key) || this.isEditMode) {
-        layout.nodes.forEach(n => {
-          if (n.isCoupleChild) {
-            const childTopY = n.y - (this.nodeHeight / 2);
-            const midY = (couple.midY + childTopY) / 2;
-            svgHtml += `<path class="connection-line active" d="M ${couple.midX} ${couple.midY} V ${midY} H ${n.x} V ${childTopY}" />`;
-          }
-        });
       }
     });
-
-    if (focusNode && (this.expandedBottom.has(this.focusNodeId) || this.isEditMode)) {
-      const focusBottomY = focusNode.y + (this.nodeHeight / 2);
-      layout.nodes.forEach(n => {
-        if (n.isSingleChild && !n.isCoupleChild) {
-          const childTopY = n.y - (this.nodeHeight / 2);
-          const midY = (focusBottomY + childTopY) / 2;
-          svgHtml += `<path class="connection-line active" d="M ${focusNode.x} ${focusBottomY} V ${midY} H ${n.x} V ${childTopY}" />`;
-        }
-      });
-    }
 
     this.svgLayer.innerHTML = svgHtml;
   }
@@ -1860,13 +2112,14 @@ class DynamicGenealogyApp {
         return;
       }
 
-      // 1. 헤더 컬럼 위치 파악 (dataset, name, name_eng, title, info, parents, spouse)
+      // 1. 헤더 컬럼 위치 파악 (dataset, name, name_eng, gender, title, info, parents, spouse)
       const firstLine = lines[0];
       const cols = firstLine.split('|').map(c => c.trim().toLowerCase());
 
       let colDataset = cols.indexOf('dataset') >= 0 ? cols.indexOf('dataset') : cols.indexOf('dataset_id');
       let colName = cols.indexOf('name');
       let colNameEng = cols.indexOf('name_eng');
+      let colGender = cols.indexOf('gender');
       let colTitle = cols.indexOf('title');
       let colInfo = cols.indexOf('info');
       let colParents = cols.indexOf('parents') >= 0 ? cols.indexOf('parents') : (cols.indexOf('parents_ids') >= 0 ? cols.indexOf('parents_ids') : cols.indexOf('parent_ids'));
@@ -1879,10 +2132,11 @@ class DynamicGenealogyApp {
         colDataset = 0;
         colName = 1;
         colNameEng = 2;
-        colTitle = 3;
-        colInfo = 4;
-        colParents = 5;
-        colSpouse = 6;
+        colGender = 3;
+        colTitle = 4;
+        colInfo = 5;
+        colParents = 6;
+        colSpouse = 7;
       }
 
       if (dataLines.length === 0) {
@@ -1933,6 +2187,15 @@ class DynamicGenealogyApp {
         if (!name) continue;
 
         const nameEng = colNameEng >= 0 && parts[colNameEng] ? parts[colNameEng] : '';
+        const genderRaw = colGender >= 0 && parts[colGender] ? parts[colGender] : '';
+        let gender = 'male';
+        if (genderRaw) {
+          const g = genderRaw.trim().toLowerCase();
+          if (g === 'female' || g === 'f' || g === '여' || g === '여성') gender = 'female';
+          else if (g === 'genderless' || g === '중' || g === '중성') gender = 'genderless';
+          else if (g === 'male' || g === 'm' || g === '남' || g === '남성') gender = 'male';
+          else gender = g;
+        }
         const title = colTitle >= 0 && parts[colTitle] ? parts[colTitle] : '';
         const info = colInfo >= 0 && parts[colInfo] ? parts[colInfo] : '';
         const parentsStr = colParents >= 0 && parts[colParents] ? parts[colParents] : '';
@@ -1943,6 +2206,7 @@ class DynamicGenealogyApp {
           dsId,
           name,
           nameEng,
+          gender,
           title,
           info,
           parentsStr,
@@ -2044,8 +2308,8 @@ class DynamicGenealogyApp {
           dataset_id: row.dsId,
           name: row.name,
           name_eng: row.nameEng,
+          gender: row.gender || 'male',
           title: row.title,
-          gender: 'male',
           info: row.info,
           parent_ids: parentIds,
           spouse_ids: spouseIds,
@@ -2066,8 +2330,8 @@ class DynamicGenealogyApp {
               dataset_id: dsId,
               name: existingInMemory ? existingInMemory.name : normName,
               name_eng: existingInMemory ? (existingInMemory.nameEng || '') : '',
-              title: existingInMemory ? (existingInMemory.title || '') : '',
               gender: existingInMemory ? (existingInMemory.gender || 'male') : 'male',
+              title: existingInMemory ? (existingInMemory.title || '') : '',
               info: existingInMemory ? (existingInMemory.info || '') : '',
               parent_ids: existingInMemory ? (existingInMemory.parentIds || []) : [],
               spouse_ids: existingInMemory ? (existingInMemory.spouseIds || []) : [],
@@ -2168,6 +2432,7 @@ class DynamicGenealogyApp {
           dataset_id: datasetId,
           name: n.name,
           name_eng: n.nameEng || '',
+          gender: n.gender || 'male',
           title: n.title || '',
           info: n.info || '',
           parent_ids: n.parentIds || [],
@@ -2208,8 +2473,8 @@ class DynamicGenealogyApp {
           .join(', ');
       };
 
-      // 1. 헤더 컬럼명 변경 (dataset, name, name_eng, title, info, parents, spouse)
-      const header = ['dataset', 'name', 'name_eng', 'title', 'info', 'parents', 'spouse'].join('|');
+      // 1. 헤더 컬럼명 변경 (dataset, name, name_eng, gender, title, info, parents, spouse)
+      const header = ['dataset', 'name', 'name_eng', 'gender', 'title', 'info', 'parents', 'spouse'].join('|');
       const csvRows = [header];
 
       // 2. dataset은 title로, parents/spouse는 name으로 변환하여 행 구성
@@ -2217,12 +2482,13 @@ class DynamicGenealogyApp {
         const dsVal = datasetTitle;
         const nameVal = (node.name || '').trim();
         const nameEngVal = (node.name_eng || node.nameEng || '').trim();
+        const genderVal = (node.gender || 'male').trim();
         const titleVal = (node.title || '').trim();
         const infoVal = (node.info || '').trim().replace(/[\r\n]+/g, ' ');
         const parentsVal = convertIdsToNames(node.parent_ids || node.parentIds);
         const spouseVal = convertIdsToNames(node.spouse_ids || node.spouseIds);
 
-        const rowStr = [dsVal, nameVal, nameEngVal, titleVal, infoVal, parentsVal, spouseVal].join('|');
+        const rowStr = [dsVal, nameVal, nameEngVal, genderVal, titleVal, infoVal, parentsVal, spouseVal].join('|');
         csvRows.push(rowStr);
       }
 
