@@ -53281,10 +53281,10 @@
   },
   {
     "id": 6687,
-    "term": "안쪽반달",
+    "term": "안쪽반달연골, 내측반월상연골",
     "foreign_term": "Medial meniscus",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈmiː.di.əl məˈnɪs.kəs/\n\n라틴어 medialis (안쪽의, 중간의) + 그리스어 meniskos (초승달, 반달 모양의 물건) → 무릎 안쪽에 위치한 초승달(반달) 모양의 연골판'을 의미. (복수형은 medial menisci /məˈnɪs.kaɪ/)\n\n內側半月狀軟骨 / 內側半月板 (안 내, 곁 측, 반 반, 달 월, 형상 상, 부드러울 연, 뼈 골 / 판 판)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -53347,16 +53347,16 @@
     "id": 6695,
     "term": "빗오금인대",
     "foreign_term": "Oblique popliteal ligament",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/əˈbliːk ˌpɑːp.lɪˈtiː.əl ˈlɪɡ.ə.mənt/ (영국식은 /əˈbliːk pɒpˈlɪt.i.əl ˈlɪɡ.ə.mənt/)\n\n라틴어 obliquus (비스듬한, 사선의)에서 유래한 oblique + poples (오금, 무릎 뒤쪽)에서 유래한 popliteal + ligament (인대) → 무릎 뒤쪽(오금)을 '비스듬한 사선 방향'으로 가로지르는 인대\n\n斜膝窩靭帶 (비낄 사, 무릎 슬, 웅덩이/오금 와, 질길 인, 띠 대)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
     "id": 6696,
     "term": "활꼴오금인대",
     "foreign_term": "Arcuate popliteal ligament",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/ˈɑːr.kju.eɪt ˌpɑːp.lɪˈtiː.əl ˈlɪɡ.ə.mənt/ (영국식은 /ˈɑː.kju.ət pɒpˈlɪt.i.əl ˈlɪɡ.ə.mənt/)\n\n라틴어 arcuatus (활 모양의, 아치형의)에서 유래한 arcuate + poples (오금, 무릎 뒤쪽)에서 유래한 형용사 popliteal (오금의) + ligament (인대)\n\n弓狀膝窩靭帶 (활 궁, 형상 상, 무릎 슬, 웅덩이/오금 와, 질길 인, 띠 대)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -53371,16 +53371,16 @@
     "id": 6698,
     "term": "안쪽무릎지지띠",
     "foreign_term": "Medial patellar retinaculum",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/pəˈtel.ɚ ˌret.ənˈæk.jə.ləm/ (영국식은 /pəˈtel.ər ˌret.ɪˈnæk.jʊ.ləm/)\n\n라틴어 patella (접시, 무릎뼈)에서 유래한 형용사 patellar (무릎뼈의) + 라틴어 retinaculum (고삐, 끈, 붙잡아 두는 띠) → 말을 제어하는 '고삐'처럼 무릎뼈가 좌우로 흔들리거나 빠지지 않도록 단단히 붙잡아두는 섬유성 띠를 의미 (복수형은 patellar retinacula)\n\n膝蓋支持帶 (무릎 슬, 덮을 개, 지탱할 지, 가질 지, 띠 대)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
     "id": 6699,
     "term": "가쪽무릎지지띠",
     "foreign_term": "Lateral patellar retinaculum",
-    "easy_term": null,
-    "meaning": null,
+    "easy_term": "",
+    "meaning": "/pəˈtel.ɚ ˌret.ənˈæk.jə.ləm/ (영국식은 /pəˈtel.ər ˌret.ɪˈnæk.jʊ.ləm/)\n\n라틴어 patella (접시, 무릎뼈)에서 유래한 형용사 patellar (무릎뼈의) + 라틴어 retinaculum (고삐, 끈, 붙잡아 두는 띠) → 말을 제어하는 '고삐'처럼 무릎뼈가 좌우로 흔들리거나 빠지지 않도록 단단히 붙잡아두는 섬유성 띠를 의미 (복수형은 patellar retinacula)\n\n膝蓋支持帶 (무릎 슬, 덮을 개, 지탱할 지, 가질 지, 띠 대)",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -103374,5 +103374,13 @@
     "easy_term": "",
     "meaning": "### 뼈 돌기 크기 순서 (해부학적 계층)\n\n해부학에서 뼈 돌기의 크기와 형태에 따른 명칭은 보통 다음과 같은 순서로 구분된다.\n$$\\text{Trochanter (대전자) } \\gt \\text{ Tuberosity (거친면) } \\gt \\text{ Tubercle (결절) } \\gt \\text{ Process (돌기)}$$\n\n- Trochanter (전자): 넙다리뼈(Femur)에만 존재하는 매우 거대한 대형 돌기 (예: Greater trochanter)\n- Tuberosity (거친면): 대형 근육이 부착하는 크고 거친 돌기\n- Tubercle (결절): 상대적으로 작은 둥근 돌기\n- Process (돌기): 뼈에서 뾰족하거나 길게 뻗어 나온 구조 전반을 통칭하는 일반 용어\n- Spine (가시): 끝이 뾰족한 가시 모양이거나 칼날처럼 얇게 솟아오른 능선(Ridge) 형태를 띤다.",
     "created_at": "2026-08-15T03:47:48.660826+00:00"
+  },
+  {
+    "id": 12951,
+    "term": "네오클라우드",
+    "foreign_term": "Neocloud",
+    "easy_term": "",
+    "meaning": "아마존·마이크로소프트 같은 종합 클라우드와 달리, AI 연산에 쓰는 GPU 인프라 대여에 특화한 신흥 클라우드 업체를 말한다. 미국 코어위브, 유럽 네비우스가 대표적으로, 폭증하는 AI 수요를 타고 빠르게 성장하고 있다.",
+    "created_at": "2026-08-20T02:37:33.096305+00:00"
   }
 ]
