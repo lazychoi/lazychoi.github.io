@@ -1857,12 +1857,22 @@ class DynamicGenealogyApp {
 
   // ── 10. 이벤트 바인딩 ──
   bindEvents() {
+    // 🌟 iOS Safari 브라우저 페이지 전체 핀치 줌 방지 (gesturestart, gesturechange)
+    const preventNativeGesture = (e) => {
+      e.preventDefault();
+    };
+    document.addEventListener('gesturestart', preventNativeGesture, { passive: false });
+    document.addEventListener('gesturechange', preventNativeGesture, { passive: false });
+
     this.viewport.addEventListener('pointerdown', (e) => {
       if (
         e.target.closest('.genealogy-header') ||
         e.target.closest('.modal-backdrop') ||
         e.target.closest('.empty-placeholder') ||
+        e.target.closest('.nav') ||
         e.target.closest('button') ||
+        e.target.closest('input') ||
+        e.target.closest('select') ||
         e.target.closest('.text-node') ||
         e.target.closest('.couple-node-btn')
       ) {
@@ -1900,18 +1910,34 @@ class DynamicGenealogyApp {
       this.zoomAt(zoomFactor, e.clientX, e.clientY);
     }, { passive: false });
 
+    // 🌟 모바일 터치 & 핀치 줌 제어 (가계도 캔버스 영역만 확대/축소) 🌟
+    const isUIElement = (target) => {
+      return (
+        target.closest('.genealogy-header') ||
+        target.closest('.modal-backdrop') ||
+        target.closest('.nav') ||
+        target.closest('input') ||
+        target.closest('select') ||
+        target.closest('button')
+      );
+    };
+
     this.viewport.addEventListener('touchstart', (e) => {
       if (e.touches.length === 2) {
+        if (!isUIElement(e.target)) {
+          e.preventDefault();
+        }
         this.initialPinchDistance = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
         );
         this.initialZoom = this.zoom;
       }
-    });
+    }, { passive: false });
 
     this.viewport.addEventListener('touchmove', (e) => {
       if (e.touches.length === 2 && this.initialPinchDistance) {
+        e.preventDefault();
         const currentDist = Math.hypot(
           e.touches[0].clientX - e.touches[1].clientX,
           e.touches[0].clientY - e.touches[1].clientY
@@ -1921,12 +1947,17 @@ class DynamicGenealogyApp {
         const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
         const targetZoom = Math.min(Math.max(0.3, this.initialZoom * factor), 2.5);
         this.zoomAt(targetZoom / this.zoom, centerX, centerY);
+      } else if (e.touches.length === 1 && !isUIElement(e.target)) {
+        // 단일 손가락 터치 시 캔버스 영역에서는 브라우저 기본 바운스 스크롤 방지
+        e.preventDefault();
       }
-    });
+    }, { passive: false });
 
-    this.viewport.addEventListener('touchend', () => {
+    const stopTouchPinch = () => {
       this.initialPinchDistance = null;
-    });
+    };
+    this.viewport.addEventListener('touchend', stopTouchPinch);
+    this.viewport.addEventListener('touchcancel', stopTouchPinch);
 
     this.btnZoomIn.addEventListener('click', () => {
       const rect = this.viewport.getBoundingClientRect();
