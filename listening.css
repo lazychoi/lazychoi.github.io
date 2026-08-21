@@ -440,6 +440,7 @@
   font-weight: 500;
   word-break: break-word;
   color: var(--text-main);
+  white-space: pre-line;
 }
 
 .active .sub-text-container {

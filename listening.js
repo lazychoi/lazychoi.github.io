@@ -528,10 +528,11 @@ function jumpToNextSection() {
   jumpToSection(target);
 }
 
-// MM:SS.SS 또는 HH:MM:SS.SS 형식의 자막 시간 문자열을 초(seconds)로 변환하는 함수
+// MM:SS.SS 또는 HH:MM:SS.SS (또는 SRT/VTT의 HH:MM:SS,mmm) 형식의 자막 시간 문자열을 초(seconds)로 변환하는 함수
 function parseTimeToSeconds(timeStr) {
   if (!timeStr) return 0;
-  const parts = timeStr.trim().split(':');
+  const cleanStr = timeStr.trim().replace(',', '.');
+  const parts = cleanStr.split(':');
   if (parts.length === 2) {
     // MM:SS.SS
     const mins = parseFloat(parts[0]) || 0;
@@ -544,12 +545,90 @@ function parseTimeToSeconds(timeStr) {
     const secs = parseFloat(parts[2]) || 0;
     return (hrs * 3600) + (mins * 60) + secs;
   }
-  const rawSec = parseFloat(timeStr);
+  const rawSec = parseFloat(cleanStr);
   return isNaN(rawSec) ? 0 : rawSec;
+}
+
+// ── SRT / VTT Subtitle Parser ──
+function parseSrtText(text) {
+  const cleanText = text.replace(/^\uFEFF/, '');
+  const lines = cleanText.split(/\r?\n/);
+  const parsed = [];
+  let index = 0;
+
+  let currentStart = null;
+  let currentEnd = null;
+  let currentTextLines = [];
+
+  function flushCurrent() {
+    if (currentStart !== null && currentEnd !== null) {
+      const subtitleText = currentTextLines.join('\n').replace(/<[^>]*>/g, '').trim();
+      if (subtitleText) {
+        parsed.push({
+          index: index++,
+          start: currentStart,
+          end: currentEnd,
+          text: subtitleText,
+          checked: false
+        });
+      }
+    }
+    currentStart = null;
+    currentEnd = null;
+    currentTextLines = [];
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+
+    if (line.includes('-->')) {
+      flushCurrent();
+      const timeParts = line.split('-->');
+      const startStr = timeParts[0].trim();
+      const endStr = timeParts[1].trim().split(/\s+/)[0];
+
+      currentStart = parseTimeToSeconds(startStr);
+      currentEnd = parseTimeToSeconds(endStr);
+    } else if (currentStart !== null) {
+      if (line === '') {
+        flushCurrent();
+      } else {
+        if (/^\d+$/.test(line)) {
+          let lookaheadIdx = i + 1;
+          while (lookaheadIdx < lines.length && lines[lookaheadIdx].trim() === '') {
+            lookaheadIdx++;
+          }
+          if (lookaheadIdx < lines.length && lines[lookaheadIdx].includes('-->')) {
+            flushCurrent();
+            continue;
+          }
+        }
+        currentTextLines.push(line);
+      }
+    }
+  }
+  flushCurrent();
+
+  // Timing Normalization Step: Ensure no zero-duration cards
+  for (let i = 0; i < parsed.length; i++) {
+    if (parsed[i].end <= parsed[i].start) {
+      if (i + 1 < parsed.length && parsed[i + 1].start > parsed[i].start) {
+        parsed[i].end = parsed[i + 1].start;
+      } else {
+        parsed[i].end = parsed[i].start + 2.0;
+      }
+    }
+  }
+
+  return parsed;
 }
 
 // ── Subtitle Parser ──
 function parseSubtitleText(text) {
+  if (text.includes('-->')) {
+    return parseSrtText(text);
+  }
+
   const lines = text.split(/\r?\n/);
   const parsed = [];
   let index = 0;
