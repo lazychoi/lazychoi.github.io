@@ -296,6 +296,23 @@
   font-family: monospace;
 }
 
+/* ── Transcript Controls & Hint ── */
+.transcript-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.transcript-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 /* ── Transcript Pane ── */
 .transcript-pane {
   flex: 1;
@@ -363,6 +380,31 @@
   cursor: pointer;
   accent-color: var(--accent);
   flex-shrink: 0;
+}
+
+.btn-ai-search {
+  background: rgba(37, 99, 235, 0.08);
+  color: var(--accent);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  align-self: center;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.btn-ai-search:hover {
+  background: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent-hover);
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
 }
 
 .sub-card:hover {

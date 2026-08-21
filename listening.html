@@ -78,7 +78,10 @@
             </select>
           </div>
         </div>
-        <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
+          <button class="btn" id="btn-clear-storage" style="padding: 4px 10px; font-size: 12px; display: none;" title="저장된 학습 데이터 초기화">초기화</button>
+        </div>
       </div>
 
       <!-- Player Controls -->
@@ -124,9 +127,11 @@
         </div>
       </div>
 
-      <!-- Subtitle Controls (Select All / Deselect All) -->
-      <div class="transcript-controls" style="display: flex; gap: 8px; margin-bottom: 12px; justify-content: flex-end; width: 100%;">
-        <button class="btn" id="btn-select-all" style="padding: 6px 12px; font-size: 12px; height: 32px; border-radius: 6px;" title="모든 구간 선택">전체 선택</button>
+      <!-- Subtitle Controls & Hint -->
+      <div class="transcript-controls">
+        <span class="transcript-hint">
+          💡 선택된 구간은 한 구간으로 묶여 반복됨
+        </span>
         <button class="btn" id="btn-deselect-all" style="padding: 6px 12px; font-size: 12px; height: 32px; border-radius: 6px;" title="모든 구간 해제">전체 해제</button>
       </div>
 

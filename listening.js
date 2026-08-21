@@ -32,6 +32,75 @@ function clearLoopWaitTimer() {
 const PLAY_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
 const PAUSE_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`;
 
+// ── IndexedDB Storage for Audio File Persistence ──
+const DB_NAME = 'ListeningAppDB';
+const DB_VERSION = 1;
+const STORE_NAME = 'audioStore';
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME);
+      }
+    };
+    request.onsuccess = (e) => resolve(e.target.result);
+    request.onerror = (e) => reject(e.target.error);
+  });
+}
+
+async function saveAudioToDB(blob, name) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).put({ blob, name }, 'lastAudio');
+  } catch (err) {
+    console.warn('Failed to save audio to IndexedDB:', err);
+  }
+}
+
+async function getAudioFromDB() {
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, 'readonly');
+      const req = tx.objectStore(STORE_NAME).get('lastAudio');
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    console.warn('Failed to retrieve audio from IndexedDB:', err);
+    return null;
+  }
+}
+
+async function clearAudioFromDB() {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    tx.objectStore(STORE_NAME).delete('lastAudio');
+  } catch (err) {
+    console.warn('Failed to clear audio from IndexedDB:', err);
+  }
+}
+
+let lastSavedTime = 0;
+function saveCurrentPlaybackTime() {
+  if (audioPlayer && audioPlayer.currentTime > 0) {
+    if (Math.abs(audioPlayer.currentTime - lastSavedTime) >= 0.5) {
+      lastSavedTime = audioPlayer.currentTime;
+      localStorage.setItem('listening_last_time', audioPlayer.currentTime.toString());
+    }
+  }
+}
+
+function saveCheckedState() {
+  const checkedIndices = getCheckedIndices();
+  localStorage.setItem('listening_checked_indices', JSON.stringify(checkedIndices));
+}
+
 // DOM Elements
 const audioPlayer = document.getElementById('audio-player');
 const playPauseBtn = document.getElementById('btn-play-pause');
@@ -43,6 +112,7 @@ const speedSelect = document.getElementById('speed-select');
 const audioFileInput = document.getElementById('audio-file');
 const subFileInput = document.getElementById('subtitle-file');
 const loadedAudioNameSpan = document.getElementById('loaded-audio-name');
+const btnClearStorage = document.getElementById('btn-clear-storage');
 const repeatCountInput = document.getElementById('repeat-count-input');
 const transcriptPane = document.getElementById('transcript-pane');
 const emptyPromptView = document.getElementById('empty-prompt-view');
@@ -56,12 +126,13 @@ const currentTimeDisplay = document.getElementById('current-time-display');
 const totalTimeDisplay = document.getElementById('total-time-display');
 
 // ── Initialize App ──
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   setupAudioPlayerListeners();
   setupControlBarListeners();
   setupImportListeners();
   setupHotkeyListeners();
   setupTimelineListeners();
+  await restoreSavedState();
 });
 
 // ── Audio Player Core Listeners ──
@@ -71,6 +142,10 @@ function setupAudioPlayerListeners() {
   });
   audioPlayer.addEventListener('pause', () => {
     playPauseBtn.innerHTML = PLAY_SVG;
+    saveCurrentPlaybackTime();
+  });
+  audioPlayer.addEventListener('timeupdate', () => {
+    saveCurrentPlaybackTime();
   });
 
   audioPlayer.addEventListener('loadedmetadata', () => {
@@ -85,6 +160,7 @@ function setupAudioPlayerListeners() {
       updateTimelineProgress();
       syncSubtitleHighlight(curTime);
       checkSectionLoop(curTime);
+      saveCurrentPlaybackTime();
     }
     requestAnimationFrame(updateLoop);
   }
@@ -198,17 +274,11 @@ function setupControlBarListeners() {
   }
 
   // Subtitle selection control buttons
-  const btnSelectAll = document.getElementById('btn-select-all');
   const btnDeselectAll = document.getElementById('btn-deselect-all');
-  if (btnSelectAll) {
-    btnSelectAll.addEventListener('click', () => {
-      subtitles.forEach(s => s.checked = true);
-      renderSubtitles();
-    });
-  }
   if (btnDeselectAll) {
     btnDeselectAll.addEventListener('click', () => {
       subtitles.forEach(s => s.checked = false);
+      saveCheckedState();
       renderSubtitles();
     });
   }
@@ -275,13 +345,47 @@ function checkSectionLoop(curTime) {
   const section = subtitles[loopSectionIndex];
   const checkedIndices = getCheckedIndices();
 
-  // 만약 현재 재생 중인 구간이 체크 해제되었다면 다음 체크된 구간으로 이동
-  if (checkedIndices.length > 0 && !section.checked) {
-    const nextIdx = checkedIndices.find(idx => idx > loopSectionIndex) ?? checkedIndices[0];
-    jumpToSection(nextIdx, false);
+  // Case 1: 체크박스가 1개 이상 선택된 경우 -> 선택된 구간들을 전체적으로 순서대로 반복 재생 (b -> d -> b -> d)
+  if (checkedIndices.length > 0) {
+    // 만약 현재 재생 중인 구간이 체크 해제된 상태라면 다음 체크된 구간으로 이동
+    if (!section.checked) {
+      const nextIdx = checkedIndices.find(idx => idx > loopSectionIndex) ?? checkedIndices[0];
+      jumpToSection(nextIdx, false);
+      return;
+    }
+
+    if (curTime >= section.end) {
+      isLoopWaiting = true;
+      audioPlayer.pause();
+
+      // 다음 체크된 구간 찾기 (마지막 구간이면 첫 번째 체크 구간으로 순환)
+      const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
+      let nextIdx;
+      if (currentPosInChecked !== -1 && currentPosInChecked + 1 < checkedIndices.length) {
+        nextIdx = checkedIndices[currentPosInChecked + 1];
+      } else {
+        nextIdx = checkedIndices[0];
+      }
+
+      loopSectionIndex = nextIdx;
+      const nextSection = subtitles[nextIdx];
+      audioPlayer.currentTime = nextSection.start;
+      updateTimelineProgress();
+      updateTimelineLoopZone();
+      syncSubtitleHighlight(nextSection.start);
+
+      loopDelayTimer = setTimeout(() => {
+        if (globalLoopEnabled) {
+          audioPlayer.play().catch(err => console.warn("Playback error:", err));
+        }
+        isLoopWaiting = false;
+        loopDelayTimer = null;
+      }, 1000);
+    }
     return;
   }
 
+  // Case 2: 체크박스가 선택되지 않은 경우 -> 기존처럼 각 구간을 지정 횟수(loopCountRemaining)만큼 반복 후 다음 구간으로 이동
   if (curTime >= section.end) {
     isLoopWaiting = true;
     audioPlayer.pause();
@@ -304,42 +408,23 @@ function checkSectionLoop(curTime) {
       }, 1000);
     } else {
       // 지정된 반복 횟수 완료: 1초 무음 대기 후 다음 구간으로 이동
-      let nextIdx = null;
-      if (checkedIndices.length > 0) {
-        const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
-        if (currentPosInChecked !== -1 && currentPosInChecked + 1 < checkedIndices.length) {
-          nextIdx = checkedIndices[currentPosInChecked + 1];
-        } else {
-          nextIdx = checkedIndices[0];
-        }
-      } else {
-        if (loopSectionIndex + 1 < subtitles.length) {
-          nextIdx = loopSectionIndex + 1;
-        } else {
-          nextIdx = 0;
-        }
-      }
+      let nextIdx = (loopSectionIndex + 1 < subtitles.length) ? loopSectionIndex + 1 : 0;
 
-      if (nextIdx !== null && subtitles[nextIdx] !== undefined) {
-        loopSectionIndex = nextIdx;
-        resetLoopCount();
-        const nextSection = subtitles[nextIdx];
-        audioPlayer.currentTime = nextSection.start;
-        updateTimelineProgress();
-        updateTimelineLoopZone();
-        syncSubtitleHighlight(nextSection.start);
+      loopSectionIndex = nextIdx;
+      resetLoopCount();
+      const nextSection = subtitles[nextIdx];
+      audioPlayer.currentTime = nextSection.start;
+      updateTimelineProgress();
+      updateTimelineLoopZone();
+      syncSubtitleHighlight(nextSection.start);
 
-        loopDelayTimer = setTimeout(() => {
-          if (globalLoopEnabled) {
-            audioPlayer.play().catch(err => console.warn("Playback error:", err));
-          }
-          isLoopWaiting = false;
-          loopDelayTimer = null;
-        }, 1000);
-      } else {
+      loopDelayTimer = setTimeout(() => {
+        if (globalLoopEnabled) {
+          audioPlayer.play().catch(err => console.warn("Playback error:", err));
+        }
         isLoopWaiting = false;
         loopDelayTimer = null;
-      }
+      }, 1000);
     }
   }
 }
@@ -495,7 +580,7 @@ function parseSubtitleText(text) {
           start: start,
           end: end,
           text: subtitleText,
-          checked: true
+          checked: false
         });
       }
     }
@@ -518,12 +603,13 @@ function parseSubtitleText(text) {
 // ── Import Actions & File Listeners ──
 function setupImportListeners() {
   // Audio Upload (local in-memory object URL with explicit typing and source reloading for Safari)
-  audioFileInput.addEventListener('change', (e) => {
+  audioFileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     audioName = file.name;
     loadedAudioNameSpan.textContent = audioName;
+    if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
     // Explicitly enforce MIME type in iOS Safari to enable proper seeking
     let mimeType = file.type || "audio/mpeg";
@@ -537,6 +623,11 @@ function setupImportListeners() {
 
     const audioBlob = new Blob([file], { type: mimeType });
     const objectURL = URL.createObjectURL(audioBlob);
+
+    // Save audio blob to IndexedDB & metadata to localStorage
+    await saveAudioToDB(audioBlob, file.name);
+    localStorage.setItem('listening_audio_name', file.name);
+    localStorage.setItem('listening_last_time', '0');
 
     // Use <source> element reloading trick for Safari compatibility
     audioPlayer.innerHTML = "";
@@ -556,10 +647,63 @@ function setupImportListeners() {
     reader.onload = (event) => {
       const text = event.target.result;
       subtitles = parseSubtitleText(text);
+      
+      // Save subtitle text to localStorage
+      localStorage.setItem('listening_subtitle_text', text);
+      localStorage.setItem('listening_subtitle_name', file.name);
+      localStorage.removeItem('listening_checked_indices');
+      if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
+
       renderSubtitles();
     };
     reader.readAsText(file);
   });
+
+  // Storage Clear / Reset Button
+  if (btnClearStorage) {
+    btnClearStorage.addEventListener('click', async () => {
+      if (confirm('저장된 음원과 대본 학습 데이터를 모두 초기화하시겠습니까?')) {
+        await clearAudioFromDB();
+        localStorage.removeItem('listening_subtitle_text');
+        localStorage.removeItem('listening_subtitle_name');
+        localStorage.removeItem('listening_audio_name');
+        localStorage.removeItem('listening_last_time');
+        localStorage.removeItem('listening_checked_indices');
+        localStorage.removeItem('listening_playback_speed');
+
+        audioPlayer.pause();
+        audioPlayer.src = "";
+        audioPlayer.innerHTML = "";
+        audioName = "";
+        subtitles = [];
+        loadedAudioNameSpan.textContent = "로드된 음원 없음";
+        btnClearStorage.style.display = 'none';
+        renderSubtitles();
+      }
+    });
+  }
+}
+
+// ── AI Prompt Construction ──
+function buildAISearchPrompt(index) {
+  const current = subtitles[index];
+  if (!current) return "";
+
+  const prev = (index > 0) ? subtitles[index - 1].text : "";
+  const next = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
+
+  let prompt = "";
+  if (prev || next) {
+    prompt += `[앞뒤 문맥]\n`;
+    if (prev) prompt += `이전 문장: "${prev}"\n`;
+    if (next) prompt += `다음 문장: "${next}"\n`;
+    prompt += `\n`;
+  }
+
+  prompt += `[대상 문장]\n"${current.text}"\n\n`;
+  prompt += `위 문맥을 참고하여 [대상 문장]에 대해 아래 3가지를 설명해줘:\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명`;
+
+  return prompt;
 }
 
 // ── Subtitle Card Rendering ──
@@ -583,10 +727,11 @@ function renderSubtitles() {
     const checkbox = document.createElement('input');
     checkbox.type = 'checkbox';
     checkbox.className = 'sub-checkbox';
-    checkbox.checked = (s.checked !== undefined) ? s.checked : true;
+    checkbox.checked = (s.checked !== undefined) ? s.checked : false;
     checkbox.addEventListener('click', (e) => {
       e.stopPropagation(); // 카드 클릭 이벤트로 전파 방지
       s.checked = checkbox.checked;
+      saveCheckedState();
     });
     card.appendChild(checkbox);
 
@@ -609,6 +754,21 @@ function renderSubtitles() {
     contentWrapper.appendChild(textContainer);
 
     card.appendChild(contentWrapper);
+
+    // 3. AI 검색 버튼 생성
+    const aiBtn = document.createElement('button');
+    aiBtn.className = 'btn-ai-search';
+    aiBtn.title = 'Google AI 분석 (번역, 단어, 문법)';
+    aiBtn.innerHTML = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> AI`;
+    aiBtn.addEventListener('click', (e) => {
+      e.stopPropagation(); // 카드 클릭 시 구간 재생 방지
+      const promptText = buildAISearchPrompt(s.index);
+      if (promptText) {
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}`;
+        window.open(searchUrl, '_blank');
+      }
+    });
+    card.appendChild(aiBtn);
 
     // Card click defaults to seek to start and play
     card.addEventListener('click', () => {
@@ -668,6 +828,7 @@ function setupHotkeyListeners() {
 function setPlaybackSpeed(val) {
   speed = val;
   audioPlayer.playbackRate = speed;
+  localStorage.setItem('listening_playback_speed', val.toString());
 
   // Sync with dropdown selection
   let optionExists = false;
@@ -690,4 +851,69 @@ function adjustSpeedValue(delta) {
   newSpeed = Math.max(0.5, Math.min(2.0, newSpeed));
   newSpeed = Math.round(newSpeed * 20) / 20; // Round to nearest 0.05
   setPlaybackSpeed(newSpeed);
+}
+
+// ── Restore Saved Learning State ──
+async function restoreSavedState() {
+  // 1. Restore Subtitles from LocalStorage
+  const savedSubText = localStorage.getItem('listening_subtitle_text');
+  if (savedSubText) {
+    subtitles = parseSubtitleText(savedSubText);
+
+    // Restore checkbox states if saved
+    const savedChecked = localStorage.getItem('listening_checked_indices');
+    if (savedChecked) {
+      try {
+        const checkedIndices = JSON.parse(savedChecked);
+        if (Array.isArray(checkedIndices)) {
+          const checkedSet = new Set(checkedIndices);
+          subtitles.forEach(s => s.checked = checkedSet.has(s.index));
+        }
+      } catch (e) {}
+    }
+
+    renderSubtitles();
+  }
+
+  // 2. Restore Audio File from IndexedDB
+  const savedAudio = await getAudioFromDB();
+  if (savedAudio && savedAudio.blob) {
+    audioName = savedAudio.name || "저장된 음원";
+    loadedAudioNameSpan.textContent = audioName;
+    if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
+
+    const mimeType = savedAudio.blob.type || "audio/mpeg";
+    const objectURL = URL.createObjectURL(savedAudio.blob);
+
+    audioPlayer.innerHTML = "";
+    const source = document.createElement('source');
+    source.src = objectURL;
+    source.type = mimeType;
+    audioPlayer.appendChild(source);
+    audioPlayer.load();
+
+    // 3. Restore Playback Position
+    const restoreTime = () => {
+      const savedTime = parseFloat(localStorage.getItem('listening_last_time'));
+      if (!isNaN(savedTime) && savedTime > 0 && savedTime < (audioPlayer.duration || Infinity)) {
+        audioPlayer.currentTime = savedTime;
+        updateTimelineProgress();
+        syncSubtitleHighlight(savedTime);
+      }
+    };
+
+    if (audioPlayer.readyState >= 1) {
+      restoreTime();
+    } else {
+      audioPlayer.addEventListener('loadedmetadata', restoreTime, { once: true });
+    }
+  } else if (savedSubText) {
+    if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
+  }
+
+  // 4. Restore Playback Speed
+  const savedSpeed = parseFloat(localStorage.getItem('listening_playback_speed'));
+  if (!isNaN(savedSpeed) && savedSpeed > 0) {
+    setPlaybackSpeed(savedSpeed);
+  }
 }
