@@ -169,35 +169,64 @@ function setupAudioPlayerListeners() {
 
 // ── Timeline Dragging & Seeking ──
 function setupTimelineListeners() {
-  function getTimelineSeekTime(e) {
+  function getTimelineSeekTime(clientX) {
     const rect = timelineWrapper.getBoundingClientRect();
-    let pct = (e.clientX - rect.left) / rect.width;
+    let pct = (clientX - rect.left) / rect.width;
     pct = Math.max(0, Math.min(1, pct));
     return pct * (audioPlayer.duration || 0);
   }
 
-  timelineWrapper.addEventListener('mousedown', (e) => {
+  function handleStart(clientX) {
     if (!audioPlayer.duration) return;
     clearLoopWaitTimer();
     isDraggingTimeline = true;
-    const seekTime = getTimelineSeekTime(e);
+    const seekTime = getTimelineSeekTime(clientX);
     audioPlayer.currentTime = seekTime;
     updateTimelineProgress();
+  }
+
+  function handleMove(clientX) {
+    if (!isDraggingTimeline) return;
+    const t = getTimelineSeekTime(clientX);
+    audioPlayer.currentTime = t;
+    updateTimelineProgress();
+  }
+
+  function handleEnd() {
+    isDraggingTimeline = false;
+  }
+
+  timelineWrapper.addEventListener('mousedown', (e) => {
+    handleStart(e.clientX);
 
     function onMouseMove(moveEvent) {
-      const t = getTimelineSeekTime(moveEvent);
-      audioPlayer.currentTime = t;
-      updateTimelineProgress();
+      handleMove(moveEvent.clientX);
     }
 
     function onMouseUp() {
-      isDraggingTimeline = false;
+      handleEnd();
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseup', onMouseUp);
     }
 
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
+  });
+
+  timelineWrapper.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches.length > 0) {
+      handleStart(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  timelineWrapper.addEventListener('touchmove', (e) => {
+    if (isDraggingTimeline && e.touches && e.touches.length > 0) {
+      handleMove(e.touches[0].clientX);
+    }
+  }, { passive: true });
+
+  timelineWrapper.addEventListener('touchend', () => {
+    handleEnd();
   });
 }
 
@@ -298,12 +327,17 @@ function resetLoopCount() {
 
 function togglePlay() {
   clearLoopWaitTimer();
-  if (!audioName) {
+  if (!audioName || !audioPlayer.src) {
     alert("음원 파일을 선택한 후 재생할 수 있습니다.");
     return;
   }
   if (audioPlayer.paused) {
-    audioPlayer.play();
+    const playPromise = audioPlayer.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn("Playback error:", err);
+      });
+    }
   } else {
     audioPlayer.pause();
   }
@@ -491,18 +525,14 @@ function jumpToSection(idx, isAuto = false) {
     resetLoopCount();
   }
 
-  // On iOS Safari, play() must be triggered first (user interaction context)
-  // and setting currentTime should occur within play's promise resolution
-  // to prevent Safari from resetting the playhead to 0.
+  audioPlayer.currentTime = section.start;
   if (audioPlayer.paused) {
-    audioPlayer.play().then(() => {
-      audioPlayer.currentTime = section.start;
-    }).catch((err) => {
-      console.warn("Playback failed:", err);
-      audioPlayer.currentTime = section.start;
-    });
-  } else {
-    audioPlayer.currentTime = section.start;
+    const playPromise = audioPlayer.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn("Playback failed:", err);
+      });
+    }
   }
 
   // If global loop repeat is active, lock the loop target to the new section
@@ -708,7 +738,8 @@ function setupImportListeners() {
     localStorage.setItem('listening_audio_name', file.name);
     localStorage.setItem('listening_last_time', '0');
 
-    // Use <source> element reloading trick for Safari compatibility
+    // Directly assign src to audioPlayer for iOS Safari compatibility
+    audioPlayer.src = objectURL;
     audioPlayer.innerHTML = "";
     const source = document.createElement('source');
     source.src = objectURL;
@@ -964,6 +995,8 @@ async function restoreSavedState() {
     const mimeType = savedAudio.blob.type || "audio/mpeg";
     const objectURL = URL.createObjectURL(savedAudio.blob);
 
+    // Directly assign src to audioPlayer for iOS Safari compatibility
+    audioPlayer.src = objectURL;
     audioPlayer.innerHTML = "";
     const source = document.createElement('source');
     source.src = objectURL;
