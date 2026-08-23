@@ -19,6 +19,7 @@ let loopCountRemaining = 5; // Default repeat count for current section (5 times
 let loopDelayTimer = null;   // Timer for 1-second pause between loops
 let isLoopWaiting = false;    // Flag indicating 1-second silent pause is active
 let isSubtitleHidden = false; // Flag indicating if subtitles are currently hidden
+let sortMode = 'sequential';  // Sort mode: 'sequential' (시간순) | 'hardest' (어려운 순)
 
 function clearLoopWaitTimer() {
   if (loopDelayTimer) {
@@ -149,6 +150,7 @@ const loadedAudioNameSpan = document.getElementById('loaded-audio-name');
 const btnClearStorage = document.getElementById('btn-clear-storage');
 const btnExportData = document.getElementById('btn-export-data');
 const repeatCountSelect = document.getElementById('repeat-count-select');
+const toggleSortBtn = document.getElementById('btn-toggle-sort');
 const toggleSubtitlesBtn = document.getElementById('btn-toggle-subtitles');
 const transcriptPane = document.getElementById('transcript-pane');
 const emptyPromptView = document.getElementById('empty-prompt-view');
@@ -344,6 +346,11 @@ function setupControlBarListeners() {
     });
   }
 
+  // Sort mode toggle button
+  if (toggleSortBtn) {
+    toggleSortBtn.addEventListener('click', toggleSortMode);
+  }
+
   // Subtitle visibility toggle button
   if (toggleSubtitlesBtn) {
     toggleSubtitlesBtn.addEventListener('click', toggleSubtitlesVisibility);
@@ -352,6 +359,44 @@ function setupControlBarListeners() {
   // Data export button
   if (btnExportData) {
     btnExportData.addEventListener('click', exportDataAsTxt);
+  }
+}
+
+function getDisplayedSubtitles() {
+  if (!subtitles || subtitles.length === 0) return [];
+  if (sortMode === 'sequential') {
+    return subtitles;
+  } else {
+    // Mode 'hardest': filter out repeated_number === 0, sort descending by repeated_number, then ascending by start
+    return subtitles
+      .filter(s => (s.repeated_number || 0) > 0)
+      .slice()
+      .sort((a, b) => {
+        const countA = a.repeated_number || 0;
+        const countB = b.repeated_number || 0;
+        if (countB !== countA) {
+          return countB - countA;
+        }
+        return a.start - b.start;
+      });
+  }
+}
+
+function toggleSortMode() {
+  sortMode = (sortMode === 'sequential') ? 'hardest' : 'sequential';
+  updateSortUI();
+  localStorage.setItem('listening_sort_mode', sortMode);
+  renderSubtitles();
+}
+
+function updateSortUI() {
+  if (!toggleSortBtn) return;
+  if (sortMode === 'hardest') {
+    toggleSortBtn.classList.add('btn-active');
+    toggleSortBtn.textContent = '어려운 것부터 듣기';
+  } else {
+    toggleSortBtn.classList.remove('btn-active');
+    toggleSortBtn.textContent = '순서대로 듣기';
   }
 }
 
@@ -484,7 +529,24 @@ function getCheckedIndices() {
 
 // ── Precision Section Repeating Logic ──
 function checkSectionLoop(curTime) {
-  if (!globalLoopEnabled || isLoopWaiting) return;
+  if (isLoopWaiting) return;
+
+  // Case 0: '어려운 것부터 듣기' 모드 + Loop 버튼 OFF ➔ 해당 구간 1회 재생 후 멈춤
+  if (sortMode === 'hardest' && !globalLoopEnabled) {
+    if (activeIndex !== -1 && subtitles[activeIndex]) {
+      const section = subtitles[activeIndex];
+      if (curTime >= section.end) {
+        audioPlayer.pause();
+        audioPlayer.currentTime = section.start;
+        updateTimelineProgress();
+        syncSubtitleHighlight(section.start);
+      }
+    }
+    return;
+  }
+
+  if (!globalLoopEnabled) return;
+
   if (loopSectionIndex === null || !subtitles[loopSectionIndex]) {
     loopSectionIndex = (activeIndex !== -1) ? activeIndex : 0;
     if (!subtitles[loopSectionIndex]) return;
@@ -566,11 +628,14 @@ function checkSectionLoop(curTime) {
       }, 1000);
     } else {
       // 지정된 반복 횟수 완료: 1초 무음 대기 후 다음 구간으로 이동
-      let nextIdx = (loopSectionIndex + 1 < subtitles.length) ? loopSectionIndex + 1 : 0;
+      const displayedList = getDisplayedSubtitles();
+      const currentPosInDisplayed = displayedList.findIndex(s => s.index === loopSectionIndex);
+      let nextPos = (currentPosInDisplayed !== -1 && currentPosInDisplayed + 1 < displayedList.length) ? currentPosInDisplayed + 1 : 0;
+      const nextSection = displayedList[nextPos] || subtitles[0];
+      const nextIdx = nextSection ? nextSection.index : 0;
 
       loopSectionIndex = nextIdx;
       resetLoopCount();
-      const nextSection = subtitles[nextIdx];
       audioPlayer.currentTime = nextSection.start;
       updateTimelineProgress();
       updateTimelineLoopZone();
@@ -626,7 +691,8 @@ function syncSubtitleHighlight(curTime, forceRealTimeSync = false) {
     }
 
     const cards = transcriptPane.querySelectorAll('.sub-card');
-    cards.forEach((card, idx) => {
+    cards.forEach((card) => {
+      const idx = parseInt(card.dataset.index, 10);
       if (idx === activeIndex) {
         card.classList.add('active');
         if (isIndexChanged || forceRealTimeSync) {
@@ -681,17 +747,31 @@ function jumpToSection(idx, isAuto = false) {
 }
 
 function jumpToPreviousSection() {
-  if (subtitles.length === 0) return;
-  let target = activeIndex - 1;
-  if (target < 0) target = 0;
-  jumpToSection(target);
+  const displayedList = getDisplayedSubtitles();
+  if (displayedList.length === 0) return;
+
+  const currentPosInDisplayed = displayedList.findIndex(s => s.index === activeIndex);
+  let targetIndex;
+  if (currentPosInDisplayed > 0) {
+    targetIndex = displayedList[currentPosInDisplayed - 1].index;
+  } else {
+    targetIndex = displayedList[0].index;
+  }
+  jumpToSection(targetIndex);
 }
 
 function jumpToNextSection() {
-  if (subtitles.length === 0) return;
-  let target = activeIndex + 1;
-  if (target >= subtitles.length) target = subtitles.length - 1;
-  jumpToSection(target);
+  const displayedList = getDisplayedSubtitles();
+  if (displayedList.length === 0) return;
+
+  const currentPosInDisplayed = displayedList.findIndex(s => s.index === activeIndex);
+  let targetIndex;
+  if (currentPosInDisplayed !== -1 && currentPosInDisplayed + 1 < displayedList.length) {
+    targetIndex = displayedList[currentPosInDisplayed + 1].index;
+  } else {
+    targetIndex = displayedList[displayedList.length - 1].index;
+  }
+  jumpToSection(targetIndex);
 }
 
 // MM:SS.SS 또는 HH:MM:SS.SS (또는 SRT/VTT의 HH:MM:SS,mmm) 형식의 자막 시간 문자열을 초(seconds)로 변환하는 함수
@@ -1006,9 +1086,13 @@ function setupImportListeners() {
         localStorage.removeItem('listening_playback_speed');
         localStorage.removeItem('listening_repeat_count');
         localStorage.removeItem('listening_subtitle_hidden');
+        localStorage.removeItem('listening_sort_mode');
 
         isSubtitleHidden = false;
         updateSubtitleVisibilityUI();
+
+        sortMode = 'sequential';
+        updateSortUI();
 
         docAuthor = "저자";
         docBookTitle = "<책명>";
@@ -1068,14 +1152,30 @@ function renderSubtitles() {
   transcriptPane.innerHTML = "";
   activeIndex = -1;
 
-  if (subtitles.length === 0) {
-    transcriptPane.appendChild(emptyPromptView);
+  const displayedList = getDisplayedSubtitles();
+
+  if (displayedList.length === 0) {
+    if (subtitles.length > 0 && sortMode === 'hardest') {
+      const emptySortMsg = document.createElement('div');
+      emptySortMsg.className = "no-subtitle-prompt";
+      emptySortMsg.innerHTML = `
+        <div class="icon">📊</div>
+        <h3>반복 학습한 구간이 없습니다.</h3>
+        <p style="max-width: 450px; font-size: 14px;">
+          구간 반복 듣기를 진행하면 반복 횟수가 1회 이상인 어려운 구간들이 이곳에 모아서 표시됩니다.
+        </p>
+      `;
+      transcriptPane.appendChild(emptySortMsg);
+    } else {
+      transcriptPane.appendChild(emptyPromptView);
+    }
     return;
   }
 
-  subtitles.forEach((s) => {
+  displayedList.forEach((s) => {
     const card = document.createElement('div');
     card.className = "sub-card";
+    card.dataset.index = s.index;
     if (s.index === activeIndex) {
       card.classList.add('active');
     }
@@ -1100,10 +1200,30 @@ function renderSubtitles() {
     contentWrapper.style.gap = "8px";
     contentWrapper.style.flex = "1";
 
+    const badgeWrapper = document.createElement('div');
+    badgeWrapper.style.display = "flex";
+    badgeWrapper.style.gap = "6px";
+    badgeWrapper.style.alignItems = "center";
+
     const badge = document.createElement('span');
     badge.className = "time-badge";
     badge.textContent = `${formatTime(s.start)} - ${formatTime(s.end)}`;
-    contentWrapper.appendChild(badge);
+    badgeWrapper.appendChild(badge);
+
+    if ((s.repeated_number || 0) > 0) {
+      const countBadge = document.createElement('span');
+      countBadge.className = "count-badge";
+      countBadge.style.fontSize = "11px";
+      countBadge.style.fontWeight = "600";
+      countBadge.style.padding = "2px 8px";
+      countBadge.style.borderRadius = "10px";
+      countBadge.style.background = "rgba(37, 99, 235, 0.1)";
+      countBadge.style.color = "var(--accent)";
+      countBadge.textContent = `${s.repeated_number}회 반복됨`;
+      badgeWrapper.appendChild(countBadge);
+    }
+
+    contentWrapper.appendChild(badgeWrapper);
 
     const textContainer = document.createElement('div');
     textContainer.className = "sub-text-container";
@@ -1300,4 +1420,13 @@ async function restoreSavedState() {
     isSubtitleHidden = false;
   }
   updateSubtitleVisibilityUI();
+
+  // 7. Restore Sort Mode State
+  const savedSortMode = localStorage.getItem('listening_sort_mode');
+  if (savedSortMode === 'hardest') {
+    sortMode = 'hardest';
+  } else {
+    sortMode = 'sequential';
+  }
+  updateSortUI();
 }
