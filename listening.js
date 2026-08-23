@@ -723,7 +723,7 @@ function syncSubtitleHighlight(curTime, forceRealTimeSync = false) {
       if (idx === activeIndex) {
         card.classList.add('active');
         if (isIndexChanged || forceRealTimeSync) {
-          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       } else {
         card.classList.remove('active');
@@ -1231,6 +1231,12 @@ function renderSubtitles() {
     badgeWrapper.style.display = "flex";
     badgeWrapper.style.gap = "6px";
     badgeWrapper.style.alignItems = "center";
+
+    // Section Number Badge (#1, #2, ...)
+    const numBadge = document.createElement('span');
+    numBadge.className = "section-number";
+    numBadge.textContent = `#${s.index + 1}`;
+    badgeWrapper.appendChild(numBadge);
 
     const badge = document.createElement('span');
     badge.className = "time-badge";

@@ -324,6 +324,18 @@
   display: none !important;
 }
 
+.section-number {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent);
+  background: rgba(37, 99, 235, 0.08);
+  border: 1px solid rgba(37, 99, 235, 0.2);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-family: monospace;
+  white-space: nowrap;
+}
+
 /* ── Transcript Pane ── */
 .transcript-pane {
   flex: 1;
@@ -332,6 +344,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  scroll-padding-top: 4px;
 
   /* Custom Scrollbar */
   --scrollbar-thumb: rgba(0, 0, 0, 0.15);
@@ -508,17 +521,21 @@
   .app-container {
     padding: 0;
     height: calc(100dvh - 60px);
+    overflow: hidden;
   }
 
   .main-panel {
-    padding: 14px 12px;
-    gap: 14px;
+    padding: 12px 10px;
+    gap: 10px;
     border-radius: 0;
+    height: 100%;
+    overflow: hidden;
   }
 
   .setup-bar {
-    padding-bottom: 12px;
+    padding-bottom: 10px;
     gap: 10px;
+    flex-shrink: 0;
   }
 
   .import-buttons-group {
@@ -532,8 +549,9 @@
   }
 
   .player-container {
-    padding: 12px 10px;
+    padding: 10px 8px;
     gap: 10px;
+    flex-shrink: 0;
   }
 
   .playback-controls {
@@ -560,6 +578,8 @@
 
   .transcript-controls {
     gap: 6px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
   }
 
   .transcript-controls .btn {
