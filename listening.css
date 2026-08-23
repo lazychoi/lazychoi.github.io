@@ -518,10 +518,25 @@
 
 /* ── Mobile Touch & Layout Optimizations ── */
 @media (max-width: 600px) {
+  html, body {
+    overflow: hidden;
+    height: 100%;
+    height: 100dvh;
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
+  .nav {
+    touch-action: none;
+    overscroll-behavior: none;
+  }
+
   .app-container {
     padding: 0;
     height: calc(100dvh - 60px);
     overflow: hidden;
+    touch-action: none;
+    overscroll-behavior: none;
   }
 
   .main-panel {
@@ -536,6 +551,8 @@
     padding-bottom: 10px;
     gap: 10px;
     flex-shrink: 0;
+    touch-action: none;
+    overscroll-behavior: none;
   }
 
   .import-buttons-group {
@@ -552,6 +569,8 @@
     padding: 10px 8px;
     gap: 10px;
     flex-shrink: 0;
+    touch-action: none;
+    overscroll-behavior: none;
   }
 
   .playback-controls {
@@ -580,12 +599,22 @@
     gap: 6px;
     margin-bottom: 8px;
     flex-shrink: 0;
+    touch-action: none;
+    overscroll-behavior: none;
   }
 
   .transcript-controls .btn {
     padding: 6px 4px;
     font-size: 11.5px;
     height: 34px;
+  }
+
+  .transcript-pane {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    overscroll-behavior: contain;
   }
 
   .sub-card {

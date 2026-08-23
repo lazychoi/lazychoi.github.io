@@ -485,6 +485,7 @@ function toggleSubtitlesVisibility() {
   isSubtitleHidden = !isSubtitleHidden;
   updateSubtitleVisibilityUI();
   localStorage.setItem('listening_subtitle_hidden', isSubtitleHidden ? 'true' : 'false');
+  syncSubtitleHighlight(audioPlayer.currentTime, true);
 }
 
 function updateSubtitleVisibilityUI() {
@@ -520,10 +521,13 @@ function togglePlay() {
   if (audioPlayer.paused) {
     const playPromise = audioPlayer.play();
     if (playPromise !== undefined) {
-      playPromise.catch((err) => {
+      playPromise.then(() => {
+        syncSubtitleHighlight(audioPlayer.currentTime, true);
+      }).catch((err) => {
         console.warn("Playback error:", err);
       });
     }
+    syncSubtitleHighlight(audioPlayer.currentTime, true);
   } else {
     audioPlayer.pause();
   }
@@ -1155,21 +1159,24 @@ function buildAISearchPrompt(index) {
   const prevText = (index > 0) ? subtitles[index - 1].text : "";
   const nextText = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
 
-  let author = docAuthor || "저자";
-  let bookTitle = docBookTitle || "<책명>";
-  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+  let author = docAuthor || "";
+  let bookTitle = docBookTitle || "";
+  if (bookTitle && !bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
 
-  let prompt = `다음은 ${author}의 ${bookTitle}에서 가져온 문장이야.\n\n`;
+  let prompt = `아래 [대상 문장]에 대해 1, 2, 3 항목별로 구체적으로 설명해줘.\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명\n\n`;
 
-  if (prevText) {
-    prompt += `${formatSentenceWithQuotes(prevText)}\n`;
+  prompt += `[대상 문장]\n${formatSentenceWithQuotes(current.text)}\n\n`;
+
+  if (prevText || nextText) {
+    prompt += `[앞뒤 문맥]\n`;
+    if (prevText) prompt += `이전: ${formatSentenceWithQuotes(prevText)}\n`;
+    if (nextText) prompt += `다음: ${formatSentenceWithQuotes(nextText)}\n`;
+    prompt += `\n`;
   }
-  prompt += `<target sentence>${formatSentenceWithQuotes(current.text)}</target sentence>\n`;
-  if (nextText) {
-    prompt += `${formatSentenceWithQuotes(nextText)}\n`;
-  }
 
-  prompt += `\n문맥을 참고하여 <target sentence>에 대해 아래 3가지를 설명해줘:\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명`;
+  if (author || bookTitle) {
+    prompt += `[출처: ${author} ${bookTitle}]`.trim();
+  }
 
   return prompt;
 }
@@ -1252,7 +1259,7 @@ function renderSubtitles() {
       countBadge.style.borderRadius = "10px";
       countBadge.style.background = "rgba(37, 99, 235, 0.1)";
       countBadge.style.color = "var(--accent)";
-      countBadge.textContent = `${s.repeated_number}회 반복됨`;
+      countBadge.textContent = `${s.repeated_number}회 반복`;
       badgeWrapper.appendChild(countBadge);
     }
 
