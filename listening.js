@@ -15,9 +15,10 @@ let volume = 1.0;
 let globalLoopEnabled = false; // "R" toggle (Repeat Current Section)
 let loopSectionIndex = null;   // The locked section index for looping when globalLoopEnabled is ON
 let isDraggingTimeline = false;
-let loopCountRemaining = 10; // Default repeat count for current section (10 times)
+let loopCountRemaining = 5; // Default repeat count for current section (5 times)
 let loopDelayTimer = null;   // Timer for 1-second pause between loops
 let isLoopWaiting = false;    // Flag indicating 1-second silent pause is active
+let isSubtitleHidden = false; // Flag indicating if subtitles are currently hidden
 
 function clearLoopWaitTimer() {
   if (loopDelayTimer) {
@@ -101,6 +102,39 @@ function saveCheckedState() {
   localStorage.setItem('listening_checked_indices', JSON.stringify(checkedIndices));
 }
 
+// Metadata States (저자, <책명>)
+let docAuthor = "저자";
+let docBookTitle = "<책명>";
+
+function getCurrentDateString() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function saveSubtitleStateToStorage() {
+  if (!subtitles || subtitles.length === 0) return;
+
+  let author = docAuthor || "저자";
+  let bookTitle = docBookTitle || "<책명>";
+  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+
+  let exportText = `${author}, ${bookTitle}\n`;
+  subtitles.forEach((s) => {
+    const inTime = formatTime(s.start);
+    const outTime = formatTime(s.end);
+    const text = (s.text || "").replace(/\r?\n/g, ' ');
+    const count = s.repeated_number || 0;
+    const date = s.last_updated || "";
+    exportText += `${inTime}|${outTime}|${text}|${count}|${date}\n`;
+  });
+
+  localStorage.setItem('listening_subtitle_text', exportText);
+  saveCheckedState();
+}
+
 // DOM Elements
 const audioPlayer = document.getElementById('audio-player');
 const playPauseBtn = document.getElementById('btn-play-pause');
@@ -113,7 +147,9 @@ const audioFileInput = document.getElementById('audio-file');
 const subFileInput = document.getElementById('subtitle-file');
 const loadedAudioNameSpan = document.getElementById('loaded-audio-name');
 const btnClearStorage = document.getElementById('btn-clear-storage');
-const repeatCountInput = document.getElementById('repeat-count-input');
+const btnExportData = document.getElementById('btn-export-data');
+const repeatCountSelect = document.getElementById('repeat-count-select');
+const toggleSubtitlesBtn = document.getElementById('btn-toggle-subtitles');
 const transcriptPane = document.getElementById('transcript-pane');
 const emptyPromptView = document.getElementById('empty-prompt-view');
 
@@ -183,6 +219,7 @@ function setupTimelineListeners() {
     const seekTime = getTimelineSeekTime(clientX);
     audioPlayer.currentTime = seekTime;
     updateTimelineProgress();
+    syncSubtitleHighlight(seekTime, true);
   }
 
   function handleMove(clientX) {
@@ -190,10 +227,15 @@ function setupTimelineListeners() {
     const t = getTimelineSeekTime(clientX);
     audioPlayer.currentTime = t;
     updateTimelineProgress();
+    syncSubtitleHighlight(t, true);
   }
 
   function handleEnd() {
+    if (!isDraggingTimeline) return;
     isDraggingTimeline = false;
+    if (audioPlayer.duration) {
+      syncSubtitleHighlight(audioPlayer.currentTime, true);
+    }
   }
 
   timelineWrapper.addEventListener('mousedown', (e) => {
@@ -284,21 +326,11 @@ function setupControlBarListeners() {
     setPlaybackSpeed(val);
   });
 
-  // Repeat count input handlers
-  if (repeatCountInput) {
-    repeatCountInput.addEventListener('blur', () => {
-      const val = repeatCountInput.value.trim();
-      if (val === '' || isNaN(parseInt(val, 10)) || parseInt(val, 10) <= 0) {
-        if (val !== '∞') {
-          repeatCountInput.value = '10';
-        }
-      }
+  // Repeat count dropdown handler
+  if (repeatCountSelect) {
+    repeatCountSelect.addEventListener('change', () => {
       resetLoopCount();
-    });
-    repeatCountInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        repeatCountInput.blur();
-      }
+      localStorage.setItem('listening_repeat_count', repeatCountSelect.value);
     });
   }
 
@@ -311,18 +343,100 @@ function setupControlBarListeners() {
       renderSubtitles();
     });
   }
+
+  // Subtitle visibility toggle button
+  if (toggleSubtitlesBtn) {
+    toggleSubtitlesBtn.addEventListener('click', toggleSubtitlesVisibility);
+  }
+
+  // Data export button
+  if (btnExportData) {
+    btnExportData.addEventListener('click', exportDataAsTxt);
+  }
+}
+
+function exportDataAsTxt() {
+  if (!subtitles || subtitles.length === 0) {
+    alert("내보낼 자막 데이터가 없습니다.");
+    return;
+  }
+
+  let author = docAuthor || "저자";
+  let bookTitle = docBookTitle || "<책명>";
+  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+
+  let exportText = `${author}, ${bookTitle}\n`;
+
+  subtitles.forEach((s) => {
+    const inTime = formatTime(s.start);
+    const outTime = formatTime(s.end);
+    const text = (s.text || "").replace(/\r?\n/g, ' ');
+    const count = s.repeated_number || 0;
+    const date = s.last_updated || "";
+    exportText += `${inTime}|${outTime}|${text}|${count}|${date}\n`;
+  });
+
+  const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+
+  let fileName = "listening_subtitle.txt";
+  const rawAudioName = audioName || localStorage.getItem('listening_audio_name');
+  if (rawAudioName) {
+    const audioBaseName = rawAudioName.replace(/\.[^/.]+$/, "");
+    fileName = `${audioBaseName}_subtitle.txt`;
+  } else if (localStorage.getItem('listening_subtitle_name')) {
+    const subBaseName = localStorage.getItem('listening_subtitle_name').replace(/\.[^/.]+$/, "");
+    fileName = `${subBaseName}_subtitle.txt`;
+  }
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 function getDesiredRepeatCount() {
-  if (!repeatCountInput) return 10;
-  const val = repeatCountInput.value.trim();
-  if (val === '∞') return Infinity;
+  if (!repeatCountSelect) return 5;
+  const val = repeatCountSelect.value.trim();
+  if (val === '무한대' || val === '∞' || val === 'infinity') return Infinity;
   const num = parseInt(val, 10);
-  return isNaN(num) || num <= 0 ? 10 : num;
+  return isNaN(num) || num <= 0 ? 5 : num;
 }
 
 function resetLoopCount() {
   loopCountRemaining = getDesiredRepeatCount();
+}
+
+function toggleSubtitlesVisibility() {
+  isSubtitleHidden = !isSubtitleHidden;
+  updateSubtitleVisibilityUI();
+  localStorage.setItem('listening_subtitle_hidden', isSubtitleHidden ? 'true' : 'false');
+}
+
+function updateSubtitleVisibilityUI() {
+  if (isSubtitleHidden) {
+    transcriptPane.classList.add('subtitles-hidden');
+    if (toggleSubtitlesBtn) {
+      toggleSubtitlesBtn.classList.add('btn-active');
+      toggleSubtitlesBtn.setAttribute('aria-pressed', 'true');
+      toggleSubtitlesBtn.innerHTML = `
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908A9.974 9.974 0 0112 5c4.478 0 8.268 2.943 9.542 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21M3 3l18 18"></path></svg>
+        <span>자막 보이기</span>
+      `;
+    }
+  } else {
+    transcriptPane.classList.remove('subtitles-hidden');
+    if (toggleSubtitlesBtn) {
+      toggleSubtitlesBtn.classList.remove('btn-active');
+      toggleSubtitlesBtn.setAttribute('aria-pressed', 'false');
+      toggleSubtitlesBtn.innerHTML = `
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+        <span>자막 가리기</span>
+      `;
+    }
+  }
 }
 
 function togglePlay() {
@@ -392,6 +506,11 @@ function checkSectionLoop(curTime) {
       isLoopWaiting = true;
       audioPlayer.pause();
 
+      // 반복듣기 시 repeated_number +1 및 last_updated 갱신
+      section.repeated_number = (section.repeated_number || 0) + 1;
+      section.last_updated = getCurrentDateString();
+      saveSubtitleStateToStorage();
+
       // 다음 체크된 구간 찾기 (마지막 구간이면 첫 번째 체크 구간으로 순환)
       const currentPosInChecked = checkedIndices.indexOf(loopSectionIndex);
       let nextIdx;
@@ -423,6 +542,11 @@ function checkSectionLoop(curTime) {
   if (curTime >= section.end) {
     isLoopWaiting = true;
     audioPlayer.pause();
+
+    // 반복듣기 시 repeated_number +1 및 last_updated 갱신
+    section.repeated_number = (section.repeated_number || 0) + 1;
+    section.last_updated = getCurrentDateString();
+    saveSubtitleStateToStorage();
 
     if (loopCountRemaining > 1) {
       if (loopCountRemaining !== Infinity) {
@@ -464,13 +588,13 @@ function checkSectionLoop(curTime) {
 }
 
 // ── Sync Active Subtitle & Auto-Scroll ──
-function syncSubtitleHighlight(curTime) {
+function syncSubtitleHighlight(curTime, forceRealTimeSync = false) {
   if (subtitles.length === 0) return;
 
   let foundIndex = -1;
 
-  // If looping is active, lock the highlighted subtitle to the looped one
-  if (globalLoopEnabled && loopSectionIndex !== null) {
+  // If forceRealTimeSync is false and looping is active, lock the highlighted subtitle to the looped one
+  if (!forceRealTimeSync && globalLoopEnabled && loopSectionIndex !== null) {
     foundIndex = loopSectionIndex;
   } else {
     for (let i = 0; i < subtitles.length; i++) {
@@ -492,20 +616,32 @@ function syncSubtitleHighlight(curTime) {
     }
   }
 
-  if (foundIndex !== -1 && foundIndex !== activeIndex) {
+  if (foundIndex !== -1 && (foundIndex !== activeIndex || forceRealTimeSync)) {
+    const isIndexChanged = (foundIndex !== activeIndex);
     activeIndex = foundIndex;
+
+    if (isIndexChanged && subtitles[activeIndex]) {
+      subtitles[activeIndex].last_updated = getCurrentDateString();
+      saveSubtitleStateToStorage();
+    }
 
     const cards = transcriptPane.querySelectorAll('.sub-card');
     cards.forEach((card, idx) => {
       if (idx === activeIndex) {
         card.classList.add('active');
-        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (isIndexChanged || forceRealTimeSync) {
+          card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
       } else {
         card.classList.remove('active');
       }
     });
 
     if (globalLoopEnabled) {
+      if (forceRealTimeSync) {
+        loopSectionIndex = activeIndex;
+        resetLoopCount();
+      }
       updateTimelineLoopZone();
     }
   }
@@ -599,6 +735,8 @@ function parseSrtText(text) {
           start: currentStart,
           end: currentEnd,
           text: subtitleText,
+          repeated_number: 0,
+          last_updated: "",
           checked: false
         });
       }
@@ -653,13 +791,7 @@ function parseSrtText(text) {
   return parsed;
 }
 
-// ── Subtitle Parser ──
-function parseSubtitleText(text) {
-  if (text.includes('-->')) {
-    return parseSrtText(text);
-  }
-
-  const lines = text.split(/\r?\n/);
+function parsePipeDelimitedText(lines) {
   const parsed = [];
   let index = 0;
 
@@ -667,12 +799,57 @@ function parseSubtitleText(text) {
     line = line.trim();
     if (!line) continue;
 
-    // Check if header line and skip
+    if (line.toLowerCase().startsWith('in|') || line.toLowerCase().startsWith('start|')) {
+      continue;
+    }
+
+    const parts = line.split('|');
+    if (parts.length >= 3) {
+      const start = parseTimeToSeconds(parts[0]);
+      const end = parseTimeToSeconds(parts[1]);
+      const subtitleText = parts[2].trim();
+      const count = (parts.length >= 4) ? (parseInt(parts[3].trim(), 10) || 0) : 0;
+      const date = (parts.length >= 5) ? parts[4].trim() : "";
+
+      if (!isNaN(start) && !isNaN(end) && subtitleText) {
+        parsed.push({
+          index: index++,
+          start: start,
+          end: end,
+          text: subtitleText,
+          repeated_number: count,
+          last_updated: date,
+          checked: false
+        });
+      }
+    }
+  }
+
+  for (let i = 0; i < parsed.length; i++) {
+    if (parsed[i].end <= parsed[i].start) {
+      if (i + 1 < parsed.length && parsed[i + 1].start > parsed[i].start) {
+        parsed[i].end = parsed[i + 1].start;
+      } else {
+        parsed[i].end = parsed[i].start + 2.0;
+      }
+    }
+  }
+
+  return parsed;
+}
+
+function parseTabDelimitedText(lines) {
+  const parsed = [];
+  let index = 0;
+
+  for (let line of lines) {
+    line = line.trim();
+    if (!line) continue;
+
     if (line.includes("시작시간") || line.includes("자막") || line.includes("Start") || line.includes("Subtitle") || line.includes("종료시간")) {
       continue;
     }
 
-    // Support both Tabs or Multiple Spaces (useful for raw copy-paste fallbacks)
     let parts = line.split('\t');
     if (parts.length < 3) {
       parts = line.split(/\s{2,}/);
@@ -689,24 +866,70 @@ function parseSubtitleText(text) {
           start: start,
           end: end,
           text: subtitleText,
+          repeated_number: 0,
+          last_updated: "",
           checked: false
         });
       }
     }
   }
 
-  // Timing Normalization Step: Ensure no zero-duration cards
   for (let i = 0; i < parsed.length; i++) {
     if (parsed[i].end <= parsed[i].start) {
       if (i + 1 < parsed.length && parsed[i + 1].start > parsed[i].start) {
         parsed[i].end = parsed[i + 1].start;
       } else {
-        parsed[i].end = parsed[i].start + 2.0; // default 2 seconds
+        parsed[i].end = parsed[i].start + 2.0;
       }
     }
   }
 
   return parsed;
+}
+
+// ── Subtitle Parser ──
+function parseSubtitleText(text) {
+  if (!text) return [];
+  const cleanText = text.replace(/^\uFEFF/, '').trim();
+  const lines = cleanText.split(/\r?\n/);
+
+  if (lines.length === 0) return [];
+
+  let startIndex = 0;
+  const line1 = lines[0].trim();
+
+  // Line 1 metadata check ("저자, <책명>")
+  const isLine1Metadata = (line1.includes(',') || line1.includes('<')) &&
+                          !line1.includes('-->') &&
+                          !line1.includes('|') &&
+                          !/^\d+$/.test(line1);
+
+  if (isLine1Metadata) {
+    const firstComma = line1.indexOf(',');
+    if (firstComma !== -1) {
+      docAuthor = line1.substring(0, firstComma).trim() || "저자";
+      docBookTitle = line1.substring(firstComma + 1).trim() || "<책명>";
+    } else {
+      docAuthor = "저자";
+      docBookTitle = line1 || "<책명>";
+    }
+    startIndex = 1;
+  } else {
+    docAuthor = "저자";
+    docBookTitle = "<책명>";
+    startIndex = 0;
+  }
+
+  const remainingLines = lines.slice(startIndex);
+  const remainingText = remainingLines.join('\n');
+
+  if (remainingText.includes('|')) {
+    return parsePipeDelimitedText(remainingLines);
+  } else if (remainingText.includes('-->')) {
+    return parseSrtText(remainingText);
+  } else {
+    return parseTabDelimitedText(remainingLines);
+  }
 }
 
 // ── Import Actions & File Listeners ──
@@ -757,12 +980,13 @@ function setupImportListeners() {
     reader.onload = (event) => {
       const text = event.target.result;
       subtitles = parseSubtitleText(text);
-      
-      // Save subtitle text to localStorage
-      localStorage.setItem('listening_subtitle_text', text);
+
       localStorage.setItem('listening_subtitle_name', file.name);
       localStorage.removeItem('listening_checked_indices');
+      saveSubtitleStateToStorage();
+
       if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
+      if (btnExportData) btnExportData.style.display = 'inline-block';
 
       renderSubtitles();
     };
@@ -780,6 +1004,14 @@ function setupImportListeners() {
         localStorage.removeItem('listening_last_time');
         localStorage.removeItem('listening_checked_indices');
         localStorage.removeItem('listening_playback_speed');
+        localStorage.removeItem('listening_repeat_count');
+        localStorage.removeItem('listening_subtitle_hidden');
+
+        isSubtitleHidden = false;
+        updateSubtitleVisibilityUI();
+
+        docAuthor = "저자";
+        docBookTitle = "<책명>";
 
         audioPlayer.pause();
         audioPlayer.src = "";
@@ -788,10 +1020,20 @@ function setupImportListeners() {
         subtitles = [];
         loadedAudioNameSpan.textContent = "로드된 음원 없음";
         btnClearStorage.style.display = 'none';
+        if (btnExportData) btnExportData.style.display = 'none';
         renderSubtitles();
       }
     });
   }
+}
+
+function formatSentenceWithQuotes(text) {
+  if (!text) return "";
+  const trimmed = text.trim();
+  if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
+    return trimmed;
+  }
+  return `"${trimmed}"`;
 }
 
 // ── AI Prompt Construction ──
@@ -799,19 +1041,24 @@ function buildAISearchPrompt(index) {
   const current = subtitles[index];
   if (!current) return "";
 
-  const prev = (index > 0) ? subtitles[index - 1].text : "";
-  const next = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
+  const prevText = (index > 0) ? subtitles[index - 1].text : "";
+  const nextText = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
 
-  let prompt = "";
-  if (prev || next) {
-    prompt += `[앞뒤 문맥]\n`;
-    if (prev) prompt += `이전 문장: "${prev}"\n`;
-    if (next) prompt += `다음 문장: "${next}"\n`;
-    prompt += `\n`;
+  let author = docAuthor || "저자";
+  let bookTitle = docBookTitle || "<책명>";
+  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+
+  let prompt = `다음은 ${author}의 ${bookTitle}에서 가져온 문장이야.\n\n`;
+
+  if (prevText) {
+    prompt += `${formatSentenceWithQuotes(prevText)}\n`;
+  }
+  prompt += `<target sentence>${formatSentenceWithQuotes(current.text)}</target sentence>\n`;
+  if (nextText) {
+    prompt += `${formatSentenceWithQuotes(nextText)}\n`;
   }
 
-  prompt += `[대상 문장]\n"${current.text}"\n\n`;
-  prompt += `위 문맥을 참고하여 [대상 문장]에 대해 아래 3가지를 설명해줘:\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명`;
+  prompt += `\n문맥을 참고하여 <target sentence>에 대해 아래 3가지를 설명해줘:\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명`;
 
   return prompt;
 }
@@ -874,7 +1121,7 @@ function renderSubtitles() {
       e.stopPropagation(); // 카드 클릭 시 구간 재생 방지
       const promptText = buildAISearchPrompt(s.index);
       if (promptText) {
-        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}`;
+        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}&udm=50`;
         window.open(searchUrl, '_blank');
       }
     });
@@ -895,9 +1142,9 @@ function renderSubtitles() {
 // ── Keyboard Hotkeys ──
 function setupHotkeyListeners() {
   window.addEventListener('keydown', (e) => {
-    // Avoid hotkeys triggering when user is focusing an input (e.g. file pickers)
+    // Avoid hotkeys triggering when user is focusing an input or select element
     const tag = e.target.tagName.toLowerCase();
-    if (tag === 'input') return;
+    if (tag === 'input' || tag === 'select') return;
 
     switch (e.code) {
       case 'Space':
@@ -915,6 +1162,10 @@ function setupHotkeyListeners() {
       case 'KeyR':
         e.preventDefault();
         toggleGlobalSectionRepeat();
+        break;
+      case 'KeyS':
+        e.preventDefault();
+        toggleSubtitlesVisibility();
         break;
       case 'KeyL':
         e.preventDefault();
@@ -982,6 +1233,7 @@ async function restoreSavedState() {
       } catch (e) {}
     }
 
+    if (btnExportData) btnExportData.style.display = 'inline-block';
     renderSubtitles();
   }
 
@@ -1028,4 +1280,24 @@ async function restoreSavedState() {
   if (!isNaN(savedSpeed) && savedSpeed > 0) {
     setPlaybackSpeed(savedSpeed);
   }
+
+  // 5. Restore Repeat Count Preference
+  const savedRepeatCount = localStorage.getItem('listening_repeat_count');
+  if (savedRepeatCount && repeatCountSelect) {
+    if (savedRepeatCount === '무한대') {
+      repeatCountSelect.value = '∞';
+    } else {
+      repeatCountSelect.value = savedRepeatCount;
+    }
+    resetLoopCount();
+  }
+
+  // 6. Restore Subtitle Visibility State
+  const savedSubtitleHidden = localStorage.getItem('listening_subtitle_hidden');
+  if (savedSubtitleHidden === 'true') {
+    isSubtitleHidden = true;
+  } else {
+    isSubtitleHidden = false;
+  }
+  updateSubtitleVisibilityUI();
 }
