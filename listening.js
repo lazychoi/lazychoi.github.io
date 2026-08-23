@@ -360,6 +360,31 @@ function setupControlBarListeners() {
   if (btnExportData) {
     btnExportData.addEventListener('click', exportDataAsTxt);
   }
+
+  // Guide Modal listeners
+  const btnGuide = document.getElementById('btn-guide');
+  const guideModal = document.getElementById('guide-modal');
+  const guideModalClose = document.getElementById('guide-modal-close');
+
+  if (btnGuide && guideModal) {
+    btnGuide.addEventListener('click', () => {
+      guideModal.style.display = 'flex';
+    });
+  }
+
+  if (guideModalClose && guideModal) {
+    guideModalClose.addEventListener('click', () => {
+      guideModal.style.display = 'none';
+    });
+  }
+
+  if (guideModal) {
+    guideModal.addEventListener('click', (e) => {
+      if (e.target === guideModal) {
+        guideModal.style.display = 'none';
+      }
+    });
+  }
 }
 
 function getDisplayedSubtitles() {
@@ -393,10 +418,12 @@ function updateSortUI() {
   if (!toggleSortBtn) return;
   if (sortMode === 'hardest') {
     toggleSortBtn.classList.add('btn-active');
-    toggleSortBtn.textContent = '어려운 것부터 듣기';
+    toggleSortBtn.setAttribute('aria-pressed', 'true');
+    toggleSortBtn.textContent = '순서대로 듣기';
   } else {
     toggleSortBtn.classList.remove('btn-active');
-    toggleSortBtn.textContent = '순서대로 듣기';
+    toggleSortBtn.setAttribute('aria-pressed', 'false');
+    toggleSortBtn.textContent = '어려운 것부터 듣기';
   }
 }
 
@@ -1301,6 +1328,12 @@ function setupHotkeyListeners() {
       case 'ArrowDown':
         e.preventDefault();
         adjustSpeedValue(-0.05);
+        break;
+      case 'Escape':
+        const gModal = document.getElementById('guide-modal');
+        if (gModal && gModal.style.display !== 'none') {
+          gModal.style.display = 'none';
+        }
         break;
     }
   });

@@ -81,6 +81,7 @@
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
           <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
           <div style="display: flex; gap: 6px; align-items: center;">
+            <button class="btn" id="btn-guide" style="padding: 4px 10px; font-size: 12px;" title="영어 듣기 앱 사용 설명서">설명서</button>
             <button class="btn" id="btn-export-data" style="padding: 4px 10px; font-size: 12px; display: none;" title="학습 데이터 TXT 파일로 내보내기">데이터 내보내기</button>
             <button class="btn" id="btn-clear-storage" style="padding: 4px 10px; font-size: 12px; display: none;" title="저장된 학습 데이터 초기화">초기화</button>
           </div>
@@ -139,7 +140,7 @@
       <!-- Subtitle Controls -->
       <div class="transcript-controls">
         <button class="btn" id="btn-deselect-all" title="모든 구간 선택 해제">전체 해제</button>
-        <button class="btn" id="btn-toggle-sort" title="정렬 모드 변경 (순서대로 / 어려운 것부터)">순서대로 듣기</button>
+        <button class="btn" id="btn-toggle-sort" title="정렬 모드 변경 (순서대로 / 어려운 것부터)">어려운 것부터 듣기</button>
         <button class="btn" id="btn-toggle-subtitles" title="자막 보이기/가리기 토글">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
           <span id="subtitle-toggle-text">자막 가리기</span>
@@ -155,6 +156,86 @@
             SRT 자막 파일(.srt) 또는 시작/종료시간과 자막이 탭으로 구분된 텍스트(.txt) 파일과 오디오(.mp3) 파일을 각각 업로드해 학습을 진행하세요.
           </p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Guide Modal -->
+  <div class="modal-backdrop" id="guide-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📖 영어 듣기 학습 사용 설명서</h3>
+        <button class="modal-close" id="guide-modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="guide-section">
+          <h4>1. 📂 파일 선택 & 배속</h4>
+          <ul>
+            <li><b>음원 선택:</b> MP3, M4A 음원 파일 선택 (브라우저 IndexedDB에 자동 저장되어 재방문 시 자동 로드)</li>
+            <li><b>대본 선택:</b> SRT 자막 파일 또는 파이프(|)/탭 구분 TXT 파일 업로드(LocalStorage에 저장)<br>자막 파일 첫 행에 저자, &lt;책이름&gt; 넣으면 AI 검색에 유용</li>
+            <li><b>배속 조절:</b> 0.50x ~ 2.00x 범위에서 원하는 재생 속도 조절</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>2. ⏯️ 재생 및 타임라인 탐색</h4>
+          <ul>
+            <li><b>재생/멈춤:</b> 오디오 재생 및 일시정지 (단축키: Space)</li>
+            <li><b>구간 이동:</b> 이전(←) 및 다음(→) 구간으로 바로 이동</li>
+            <li><b>타임라인 탐색:</b> 재생 버튼 상단의 진행 막대를 클릭/드래그하여 원하는 위치의 자막으로 이동 및 자동 스크롤</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>3. 🔄 구간 반복 학습 (R 버튼)</h4>
+          <ul>
+            <li><b>R 버튼:</b> 구간 반복 재생 모드 활성화 (단축키: R)</li>
+            <li><b>반복 횟수 (3, 5, 7, 10, ∞):</b> 설정한 횟수만큼 구간을 반복 후 1초간 무음 대기한 뒤 다음 구간으로 이동</li>
+            <li><b>선택 구간 순환:</b> 자막 좌측 체크박스를 선택하면, 체크된 구간들만 순서대로 순환 반복 재생(a,b,c,a,b,c,a,b,c,...)</li>
+            <li><b>반복 횟수 기록:</b> loop 버튼이 활성화되면 반복 횟수가 기록됨 </li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>4. 📊 정렬 모드 (어려운 것부터 / 순서대로)</h4>
+          <ul>
+            <li><b>순서대로 듣기:</b> 원본 대본의 시간 순서대로 전체 자막 표시</li>
+            <li><b>어려운 것부터 듣기:</b> 반복 학습 횟수(repeated_number)가 많은 자막부터 내림차순으로 정렬하며, 0회 학습 구간은 숨김 처리</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>5. 👁️ 자막 가리기 & 🤖 AI 분석</h4>
+          <ul>
+            <li><b>자막 가리기/보이기:</b> 딕테이션 및 듣기 집중 훈련을 위해 자막 텍스트 토글 (단축키: S)</li>
+            <li><b>AI 분석:</b> 자막 카드 우측 <span class="badge-mini">AI</span> 버튼 클릭 시 저자/책명 및 전후 문맥 정보를 포함하여 Google AI Mode에서 번역, 단어/숙어, 주요 문법을 분석</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>6. 💾 데이터 관리</h4>
+          <ul>
+            <li><b>데이터 내보내기:</b><code>mp3파일명_subtitle.txt</code> 파이프(|) 구분 파일로 다운로드<br>구간 시작|구간 끝|텍스트|반복횟수|최근 반복학습 날짜<br>00:27.82|00:32.99|Hello, world.|5|2026-08-23</li>
+            <li><b>초기화:</b> 브라우저에 저장된 음원, 자막 데이터 및 학습 상태 완전 초기화</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>⌨️ 단축키 안내</h4>
+          <table class="guide-table">
+            <thead>
+              <tr><th>단축키</th><th>기능 설명</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>Space</code></td><td>재생 / 일시정지 토글</td></tr>
+              <tr><td><code>← / →</code></td><td>이전 / 다음 자막 구간 이동</td></tr>
+              <tr><td><code>R</code></td><td>구간 반복 재생 모드 토글</td></tr>
+              <tr><td><code>S</code></td><td>자막 보이기 / 가리기 토글</td></tr>
+              <tr><td><code>L</code></td><td>현재 자막 구간의 시작 위치로 리셋</td></tr>
+              <tr><td><code>↑ / ↓</code></td><td>재생 속도 미세 조절 (±0.05x)</td></tr>
+            </tbody>
+          </table>
+        </section>
       </div>
     </div>
   </div>
