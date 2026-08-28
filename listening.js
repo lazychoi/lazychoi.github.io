@@ -1259,7 +1259,7 @@ function renderSubtitles() {
       countBadge.style.borderRadius = "10px";
       countBadge.style.background = "rgba(37, 99, 235, 0.1)";
       countBadge.style.color = "var(--accent)";
-      countBadge.textContent = `${s.repeated_number}회 반복`;
+      countBadge.textContent = `${s.repeated_number}회`;
       badgeWrapper.appendChild(countBadge);
     }
 
