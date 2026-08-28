@@ -104,8 +104,40 @@ function saveCheckedState() {
 }
 
 // Metadata States (저자, <책명>)
-let docAuthor = "저자";
-let docBookTitle = "<책명>";
+let docAuthor = "";
+let docBookTitle = "";
+
+function isPlaceholderText(str) {
+  if (!str) return true;
+  const s = str.trim();
+  return s === "저자" || s === "책명" || s === "<책명>" || s === "책이름" || s === "<책이름>" || s === "저자, <책명>" || s === "저자, <책이름>";
+}
+
+function cleanAuthor(author) {
+  if (!author || isPlaceholderText(author)) return "";
+  const a = author.trim();
+  return isPlaceholderText(a) ? "" : a;
+}
+
+function cleanBookTitle(title) {
+  if (!title || isPlaceholderText(title)) return "";
+  let t = title.trim();
+  if (t.startsWith('<') && t.endsWith('>')) {
+    t = t.slice(1, -1).trim();
+  }
+  return isPlaceholderText(t) ? "" : t;
+}
+
+function updateMetadataUI() {
+  const authorInput = document.getElementById('meta-author-input');
+  const titleInput = document.getElementById('meta-title-input');
+  if (authorInput && authorInput !== document.activeElement) {
+    authorInput.value = docAuthor;
+  }
+  if (titleInput && titleInput !== document.activeElement) {
+    titleInput.value = docBookTitle;
+  }
+}
 
 function getCurrentDateString() {
   const d = new Date();
@@ -118,11 +150,14 @@ function getCurrentDateString() {
 function saveSubtitleStateToStorage() {
   if (!subtitles || subtitles.length === 0) return;
 
-  let author = docAuthor || "저자";
-  let bookTitle = docBookTitle || "<책명>";
-  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+  const author = cleanAuthor(docAuthor);
+  const rawTitle = cleanBookTitle(docBookTitle);
+  const bookTitle = rawTitle ? (rawTitle.startsWith('<') ? rawTitle : `<${rawTitle}>`) : "";
 
-  let exportText = `${author}, ${bookTitle}\n`;
+  let headerAuthor = author || "저자";
+  let headerTitle = bookTitle || "<책명>";
+
+  let exportText = `${headerAuthor}, ${headerTitle}\n`;
   subtitles.forEach((s) => {
     const inTime = formatTime(s.start);
     const outTime = formatTime(s.end);
@@ -133,6 +168,13 @@ function saveSubtitleStateToStorage() {
   });
 
   localStorage.setItem('listening_subtitle_text', exportText);
+
+  if (author) localStorage.setItem('listening_doc_author', author);
+  else localStorage.removeItem('listening_doc_author');
+
+  if (rawTitle) localStorage.setItem('listening_doc_title', rawTitle);
+  else localStorage.removeItem('listening_doc_title');
+
   saveCheckedState();
 }
 
@@ -433,9 +475,9 @@ function exportDataAsTxt() {
     return;
   }
 
-  let author = docAuthor || "저자";
-  let bookTitle = docBookTitle || "<책명>";
-  if (!bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+  const author = cleanAuthor(docAuthor) || "저자";
+  const rawTitle = cleanBookTitle(docBookTitle);
+  const bookTitle = rawTitle ? (rawTitle.startsWith('<') ? rawTitle : `<${rawTitle}>`) : "<책명>";
 
   let exportText = `${author}, ${bookTitle}\n`;
 
@@ -998,6 +1040,72 @@ function parseTabDelimitedText(lines) {
   return parsed;
 }
 
+function checkIsLine1Metadata(line1) {
+  if (!line1) return false;
+  const trimmed = line1.trim();
+
+  // If pure digits (SRT sequence number)
+  if (/^\d+$/.test(trimmed)) return false;
+
+  // If contains SRT arrow
+  if (trimmed.includes('-->')) return false;
+
+  // If starts with timestamp pattern (e.g. 00:00, 0:00, 00.00, in|, start|, 시작시간)
+  if (/^\d{1,2}[:\.]\d{2}/.test(trimmed)) return false;
+  if (/^(in|out|start|end|시작시간|자막|종료시간)/i.test(trimmed)) return false;
+
+  // If line contains pipe with timestamp e.g. "00:01|00:03"
+  if (/\|\s*\d{1,2}[:\.]\d{2}/.test(trimmed)) return false;
+
+  return true;
+}
+
+function parseMetadataLine(line1) {
+  let raw = line1.trim().replace(/\|+$/, '').trim();
+
+  let author = "";
+  let bookTitle = "";
+
+  if (isPlaceholderText(raw)) {
+    return { author: "", bookTitle: "" };
+  }
+
+  // Case 1: Angle brackets pattern: Author <BookTitle> or Author, <BookTitle>
+  const angleMatch = raw.match(/^(.*?)\s*<([^>]+)>\s*$/);
+  if (angleMatch) {
+    let rawAuthor = angleMatch[1].trim().replace(/[,|\-:\t]+$/, '').trim();
+    let rawTitle = angleMatch[2].trim();
+    author = cleanAuthor(rawAuthor);
+    bookTitle = cleanBookTitle(rawTitle);
+    return { author, bookTitle };
+  }
+
+  // Case 2: Delimiters (comma, pipe, tab, ' - ', colon)
+  let parts = null;
+  if (raw.includes(',')) {
+    parts = raw.split(',');
+  } else if (raw.includes('|')) {
+    parts = raw.split('|');
+  } else if (raw.includes('\t')) {
+    parts = raw.split('\t');
+  } else if (raw.includes(' - ')) {
+    parts = raw.split(' - ');
+  } else if (raw.includes(':')) {
+    parts = raw.split(':');
+  }
+
+  if (parts && parts.length >= 2) {
+    author = cleanAuthor(parts[0]);
+    let t = parts.slice(1).join(' ').trim();
+    bookTitle = cleanBookTitle(t);
+    return { author, bookTitle };
+  }
+
+  // Single value without delimiter
+  bookTitle = cleanBookTitle(raw);
+  return { author, bookTitle };
+}
+
 // ── Subtitle Parser ──
 function parseSubtitleText(text) {
   if (!text) return [];
@@ -1009,27 +1117,20 @@ function parseSubtitleText(text) {
   let startIndex = 0;
   const line1 = lines[0].trim();
 
-  // Line 1 metadata check ("저자, <책명>")
-  const isLine1Metadata = (line1.includes(',') || line1.includes('<')) &&
-                          !line1.includes('-->') &&
-                          !line1.includes('|') &&
-                          !/^\d+$/.test(line1);
+  const isLine1Metadata = checkIsLine1Metadata(line1);
 
   if (isLine1Metadata) {
-    const firstComma = line1.indexOf(',');
-    if (firstComma !== -1) {
-      docAuthor = line1.substring(0, firstComma).trim() || "저자";
-      docBookTitle = line1.substring(firstComma + 1).trim() || "<책명>";
-    } else {
-      docAuthor = "저자";
-      docBookTitle = line1 || "<책명>";
-    }
+    const meta = parseMetadataLine(line1);
+    docAuthor = meta.author;
+    docBookTitle = meta.bookTitle;
     startIndex = 1;
   } else {
-    docAuthor = "저자";
-    docBookTitle = "<책명>";
+    docAuthor = localStorage.getItem('listening_doc_author') || "";
+    docBookTitle = localStorage.getItem('listening_doc_title') || "";
     startIndex = 0;
   }
+
+  updateMetadataUI();
 
   const remainingLines = lines.slice(startIndex);
   const remainingText = remainingLines.join('\n');
@@ -1045,13 +1146,71 @@ function parseSubtitleText(text) {
 
 // ── Import Actions & File Listeners ──
 function setupImportListeners() {
+  const authorInput = document.getElementById('meta-author-input');
+  const titleInput = document.getElementById('meta-title-input');
+  const searchInput = document.getElementById('sub-search-input');
+  const btnSearchPrev = document.getElementById('btn-search-prev');
+  const btnSearchNext = document.getElementById('btn-search-next');
+
+  if (authorInput) {
+    authorInput.addEventListener('input', (e) => {
+      docAuthor = e.target.value.trim();
+      if (docAuthor) localStorage.setItem('listening_doc_author', docAuthor);
+      else localStorage.removeItem('listening_doc_author');
+      saveSubtitleStateToStorage();
+    });
+  }
+
+  if (titleInput) {
+    titleInput.addEventListener('input', (e) => {
+      docBookTitle = e.target.value.trim();
+      if (docBookTitle) localStorage.setItem('listening_doc_title', docBookTitle);
+      else localStorage.removeItem('listening_doc_title');
+      saveSubtitleStateToStorage();
+    });
+  }
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      currentSearchMatchIdx = 0;
+      performSearch(e.target.value);
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        if (e.shiftKey) {
+          navigateSearch('prev');
+        } else {
+          navigateSearch('next');
+        }
+      } else if (e.key === 'Escape') {
+        searchInput.value = '';
+        performSearch('');
+        searchInput.blur();
+      }
+    });
+  }
+
+  if (btnSearchPrev) {
+    btnSearchPrev.addEventListener('click', () => {
+      navigateSearch('prev');
+    });
+  }
+
+  if (btnSearchNext) {
+    btnSearchNext.addEventListener('click', () => {
+      navigateSearch('next');
+    });
+  }
+
   // Audio Upload (local in-memory object URL with explicit typing and source reloading for Safari)
   audioFileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     audioName = file.name;
-    loadedAudioNameSpan.textContent = audioName;
+    if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
     if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
     // Explicitly enforce MIME type in iOS Safari to enable proper seeking
@@ -1099,7 +1258,11 @@ function setupImportListeners() {
       if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
       if (btnExportData) btnExportData.style.display = 'inline-block';
 
-      renderSubtitles();
+      if (searchInput && searchInput.value.trim()) {
+        performSearch(searchInput.value);
+      } else {
+        renderSubtitles();
+      }
     };
     reader.readAsText(file);
   });
@@ -1118,6 +1281,8 @@ function setupImportListeners() {
         localStorage.removeItem('listening_repeat_count');
         localStorage.removeItem('listening_subtitle_hidden');
         localStorage.removeItem('listening_sort_mode');
+        localStorage.removeItem('listening_doc_author');
+        localStorage.removeItem('listening_doc_title');
 
         isSubtitleHidden = false;
         updateSubtitleVisibilityUI();
@@ -1125,15 +1290,19 @@ function setupImportListeners() {
         sortMode = 'sequential';
         updateSortUI();
 
-        docAuthor = "저자";
-        docBookTitle = "<책명>";
+        docAuthor = "";
+        docBookTitle = "";
+        updateMetadataUI();
+
+        if (searchInput) searchInput.value = "";
+        performSearch("");
 
         audioPlayer.pause();
         audioPlayer.src = "";
         audioPlayer.innerHTML = "";
         audioName = "";
         subtitles = [];
-        loadedAudioNameSpan.textContent = "로드된 음원 없음";
+        if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = "로드된 음원 없음";
         btnClearStorage.style.display = 'none';
         if (btnExportData) btnExportData.style.display = 'none';
         renderSubtitles();
@@ -1159,9 +1328,9 @@ function buildAISearchPrompt(index) {
   const prevText = (index > 0) ? subtitles[index - 1].text : "";
   const nextText = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
 
-  let author = docAuthor || "";
-  let bookTitle = docBookTitle || "";
-  if (bookTitle && !bookTitle.startsWith('<')) bookTitle = `<${bookTitle}>`;
+  const author = cleanAuthor(docAuthor);
+  const rawTitle = cleanBookTitle(docBookTitle);
+  const bookTitle = rawTitle ? (rawTitle.startsWith('<') ? rawTitle : `<${rawTitle}>`) : "";
 
   let prompt = `아래 [대상 문장]에 대해 1, 2, 3 항목별로 구체적으로 설명해줘.\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명\n\n`;
 
@@ -1174,11 +1343,106 @@ function buildAISearchPrompt(index) {
     prompt += `\n`;
   }
 
-  if (author || bookTitle) {
+  if (author && bookTitle) {
     prompt += `[출처: ${author} ${bookTitle}]`.trim();
+  } else if (bookTitle) {
+    prompt += `[출처: ${bookTitle}]`.trim();
+  } else if (author) {
+    prompt += `[출처: ${author}]`.trim();
   }
 
   return prompt;
+}
+
+// ── Subtitle Search Logic ──
+let searchQuery = "";
+let searchMatches = [];
+let currentSearchMatchIdx = -1;
+
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function performSearch(query) {
+  searchQuery = (query || "").trim().toLowerCase();
+  const counterSpan = document.getElementById('search-counter');
+  const btnPrev = document.getElementById('btn-search-prev');
+  const btnNext = document.getElementById('btn-search-next');
+
+  if (!searchQuery || !subtitles || subtitles.length === 0) {
+    searchMatches = [];
+    currentSearchMatchIdx = -1;
+    if (counterSpan) {
+      counterSpan.style.display = 'none';
+      counterSpan.textContent = '';
+    }
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    renderSubtitles();
+    return;
+  }
+
+  const displayed = getDisplayedSubtitles();
+  searchMatches = displayed.filter(s => (s.text || "").toLowerCase().includes(searchQuery));
+
+  if (searchMatches.length === 0) {
+    currentSearchMatchIdx = -1;
+    if (counterSpan) {
+      counterSpan.style.display = 'inline-block';
+      counterSpan.textContent = '0/0';
+    }
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    renderSubtitles();
+    return;
+  }
+
+  if (currentSearchMatchIdx < 0 || currentSearchMatchIdx >= searchMatches.length) {
+    currentSearchMatchIdx = 0;
+  }
+
+  updateSearchUIAndJump(true);
+}
+
+function navigateSearch(direction) {
+  if (!searchMatches || searchMatches.length === 0) return;
+
+  if (direction === 'next') {
+    currentSearchMatchIdx = (currentSearchMatchIdx + 1) % searchMatches.length;
+  } else if (direction === 'prev') {
+    currentSearchMatchIdx = (currentSearchMatchIdx - 1 + searchMatches.length) % searchMatches.length;
+  }
+
+  updateSearchUIAndJump(true);
+}
+
+function updateSearchUIAndJump(doJump = true) {
+  const counterSpan = document.getElementById('search-counter');
+  const btnPrev = document.getElementById('btn-search-prev');
+  const btnNext = document.getElementById('btn-search-next');
+
+  if (!searchMatches || searchMatches.length === 0) {
+    if (counterSpan) {
+      counterSpan.style.display = 'none';
+    }
+    if (btnPrev) btnPrev.disabled = true;
+    if (btnNext) btnNext.disabled = true;
+    return;
+  }
+
+  if (counterSpan) {
+    counterSpan.style.display = 'inline-block';
+    counterSpan.textContent = `${currentSearchMatchIdx + 1}/${searchMatches.length}`;
+  }
+  if (btnPrev) btnPrev.disabled = false;
+  if (btnNext) btnNext.disabled = false;
+
+  renderSubtitles();
+
+  if (doJump && currentSearchMatchIdx >= 0 && currentSearchMatchIdx < searchMatches.length) {
+    const targetSection = searchMatches[currentSearchMatchIdx];
+    jumpToSection(targetSection.index);
+  }
 }
 
 // ── Subtitle Card Rendering ──
@@ -1267,7 +1531,27 @@ function renderSubtitles() {
 
     const textContainer = document.createElement('div');
     textContainer.className = "sub-text-container";
-    textContainer.textContent = s.text;
+
+    if (searchQuery && (s.text || "").toLowerCase().includes(searchQuery)) {
+      const regex = new RegExp(`(${escapeRegExp(searchQuery)})`, 'gi');
+      const parts = (s.text || "").split(regex);
+      textContainer.innerHTML = "";
+      parts.forEach(part => {
+        if (part.toLowerCase() === searchQuery) {
+          const mark = document.createElement('mark');
+          mark.className = 'search-highlight';
+          mark.textContent = part;
+          if (searchMatches[currentSearchMatchIdx] && searchMatches[currentSearchMatchIdx].index === s.index) {
+            mark.classList.add('active-search-match');
+          }
+          textContainer.appendChild(mark);
+        } else {
+          textContainer.appendChild(document.createTextNode(part));
+        }
+      });
+    } else {
+      textContainer.textContent = s.text;
+    }
     contentWrapper.appendChild(textContainer);
 
     card.appendChild(contentWrapper);
@@ -1382,6 +1666,12 @@ function adjustSpeedValue(delta) {
 
 // ── Restore Saved Learning State ──
 async function restoreSavedState() {
+  const savedAuthor = localStorage.getItem('listening_doc_author');
+  const savedTitle = localStorage.getItem('listening_doc_title');
+  if (savedAuthor) docAuthor = savedAuthor;
+  if (savedTitle) docBookTitle = savedTitle;
+  updateMetadataUI();
+
   // 1. Restore Subtitles from LocalStorage
   const savedSubText = localStorage.getItem('listening_subtitle_text');
   if (savedSubText) {
@@ -1407,7 +1697,7 @@ async function restoreSavedState() {
   const savedAudio = await getAudioFromDB();
   if (savedAudio && savedAudio.blob) {
     audioName = savedAudio.name || "저장된 음원";
-    loadedAudioNameSpan.textContent = audioName;
+    if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
     if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
     const mimeType = savedAudio.blob.type || "audio/mpeg";

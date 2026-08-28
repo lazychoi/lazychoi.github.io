@@ -65,6 +65,7 @@
             </button>
             <input type="file" id="subtitle-file" accept=".srt,.vtt,.txt,text/plain,text/srt,text/vtt,text/*,*/*">
           </div>
+          <button class="btn" id="btn-guide" title="영어 듣기 앱 사용 설명서">설명서</button>
           <div class="select-wrapper">
             <select id="speed-select" title="배속 조절" style="width: 100%;">
               <option value="0.5">0.50x</option>
@@ -78,12 +79,32 @@
             </select>
           </div>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-          <span style="font-size: 13px; color: var(--text-muted);" id="loaded-audio-name">로드된 음원 없음</span>
-          <div style="display: flex; gap: 6px; align-items: center;">
-            <button class="btn" id="btn-guide" style="padding: 4px 10px; font-size: 12px;" title="영어 듣기 앱 사용 설명서">설명서</button>
-            <button class="btn" id="btn-export-data" style="padding: 4px 10px; font-size: 12px; display: none;" title="학습 데이터 TXT 파일로 내보내기">데이터 내보내기</button>
-            <button class="btn" id="btn-clear-storage" style="padding: 4px 10px; font-size: 12px; display: none;" title="저장된 학습 데이터 초기화">초기화</button>
+        <div class="metadata-inputs-group">
+          <div class="input-wrapper">
+            <label for="meta-author-input">저자:</label>
+            <input type="text" id="meta-author-input" placeholder="저자 이름 (예: 스티븐 핑커)" title="저자 이름">
+          </div>
+          <div class="input-wrapper">
+            <label for="meta-title-input">책명:</label>
+            <input type="text" id="meta-title-input" placeholder="책 제목 (예: 우리 본성의 선한 천사)" title="책 제목">
+          </div>
+        </div>
+        <div class="action-search-bar">
+          <div class="action-buttons-group">
+            <button class="btn" id="btn-clear-storage" style="display: none;" title="저장된 학습 데이터 초기화">초기화</button>
+            <button class="btn" id="btn-export-data" style="display: none;" title="학습 데이터 TXT 파일로 내보내기">데이터 내보내기</button>
+          </div>
+          <div class="search-box-group">
+            <div class="search-input-wrapper">
+              <input type="text" id="sub-search-input" placeholder="대본 검색..." title="자막 문장 검색">
+              <span id="search-counter" class="search-counter" style="display: none;">0/0</span>
+            </div>
+            <button class="btn btn-icon" id="btn-search-prev" title="이전 검색 구간 (↑)" disabled>
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 15l7-7 7 7"></path></svg>
+            </button>
+            <button class="btn btn-icon" id="btn-search-next" title="다음 검색 구간 (↓)" disabled>
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"></path></svg>
+            </button>
           </div>
         </div>
       </div>
