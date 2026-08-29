@@ -688,19 +688,35 @@
     padding-bottom: 8px;
     gap: 8px;
     flex-shrink: 0;
-    touch-action: none;
-    overscroll-behavior: none;
+  }
+
+  /* Prevent iOS Safari auto-zoom when focusing text inputs */
+  .metadata-inputs-group input,
+  .search-input-wrapper input,
+  .import-buttons-group select,
+  #repeat-count-select {
+    font-size: 16px !important;
   }
 
   .import-buttons-group {
-    gap: 4px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .import-buttons-group .file-input-wrapper,
+  .import-buttons-group .select-wrapper,
+  .import-buttons-group #btn-guide {
+    width: 100%;
   }
 
   .import-buttons-group .btn,
   .import-buttons-group select {
-    padding: 6px 4px;
-    font-size: 11.5px;
-    height: 34px;
+    padding: 6px 8px;
+    font-size: 12.5px;
+    height: 36px;
+    box-sizing: border-box;
   }
 
   .metadata-inputs-group {
@@ -708,34 +724,57 @@
   }
 
   .metadata-inputs-group label {
-    font-size: 11.5px;
+    font-size: 12px;
   }
 
   .metadata-inputs-group input {
     padding: 4px 8px;
+    font-size: 16px !important;
+    height: 34px;
+    box-sizing: border-box;
+  }
+
+  .action-search-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .action-buttons-group {
+    display: flex;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .action-buttons-group .btn {
+    flex: 1;
+    justify-content: center;
+    padding: 5px 8px;
     font-size: 12px;
     height: 32px;
   }
 
-  .action-search-bar {
-    gap: 6px;
-  }
-
-  .action-buttons-group .btn {
-    padding: 5px 8px;
-    font-size: 11.5px;
-    height: 30px;
-  }
-
   .search-box-group {
-    flex-wrap: nowrap;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     gap: 4px;
+    width: 100%;
+    flex-wrap: nowrap;
+  }
+
+  .search-input-wrapper {
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
   }
 
   .search-input-wrapper input {
-    padding: 4px 34px 4px 8px;
-    font-size: 12px;
-    height: 30px;
+    padding: 4px 36px 4px 8px;
+    font-size: 16px !important;
+    height: 32px;
+    box-sizing: border-box;
   }
 
   .search-counter {
@@ -745,10 +784,11 @@
   }
 
   .btn-icon {
-    padding: 4px 6px;
-    font-size: 11px;
-    height: 30px;
-    min-width: 28px;
+    padding: 4px 8px;
+    font-size: 12px;
+    height: 32px;
+    min-width: 30px;
+    flex-shrink: 0;
   }
 
   .player-container {
