@@ -122,15 +122,16 @@ a {
 /* Mobile Hamburger Menu styles */
 @media (max-width: 768px) {
   .nav {
-    padding: 0;
+    padding: max(4px, env(safe-area-inset-top)) 0 0 0;
     max-width: 100%;
     border-bottom: 1px solid var(--glass-border);
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    position: sticky;
+    position: relative;
     top: 0;
     z-index: 1000;
+    flex-shrink: 0;
   }
 
   .nav-header {

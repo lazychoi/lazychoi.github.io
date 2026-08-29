@@ -659,34 +659,39 @@
     overflow: hidden;
     height: 100%;
     height: 100dvh;
+    margin: 0;
+    padding: 0;
     touch-action: none;
     overscroll-behavior: none;
   }
 
   .nav {
+    flex-shrink: 0;
     touch-action: none;
     overscroll-behavior: none;
   }
 
   .app-container {
     padding: 0;
-    height: calc(100dvh - 60px);
+    flex: 1;
+    min-height: 0;
+    height: auto;
     overflow: hidden;
     touch-action: none;
     overscroll-behavior: none;
   }
 
   .main-panel {
-    padding: 12px 10px;
-    gap: 10px;
+    padding: 10px 8px;
+    gap: 8px;
     border-radius: 0;
     height: 100%;
     overflow: hidden;
   }
 
   .setup-bar {
-    padding-bottom: 8px;
-    gap: 8px;
+    padding-bottom: 6px;
+    gap: 6px;
     flex-shrink: 0;
   }
 
@@ -698,20 +703,22 @@
     font-size: 16px !important;
   }
 
+  /* Force 1 single horizontal row for import buttons across all mobile browsers */
   .import-buttons-group {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    width: 100%;
-    flex-wrap: nowrap;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 3px !important;
+    width: 100% !important;
+    flex-wrap: nowrap !important;
   }
 
   .import-buttons-group .file-input-wrapper,
   .import-buttons-group .select-wrapper,
   .import-buttons-group #btn-guide {
-    flex: 1;
-    min-width: 0;
+    flex: 1 1 0% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
   }
 
   .import-buttons-group svg {
