@@ -43969,10 +43969,10 @@
   },
   {
     "id": 5513,
-    "term": "(이마봉합)",
-    "foreign_term": "(Frontal suture; Metopic suture)",
-    "easy_term": null,
-    "meaning": null,
+    "term": "이마봉합",
+    "foreign_term": "Frontal suture; Metopic suture",
+    "easy_term": "",
+    "meaning": "",
     "created_at": "2026-07-25T00:47:59.849955+00:00"
   },
   {
@@ -51403,14 +51403,6 @@
     "id": 6451,
     "term": "비늘봉합",
     "foreign_term": "Squamous suture; Squamosal suture",
-    "easy_term": null,
-    "meaning": null,
-    "created_at": "2026-07-25T00:47:59.849955+00:00"
-  },
-  {
-    "id": 6452,
-    "term": "(이마봉합)",
-    "foreign_term": "(Frontal suture; Metopic suture)",
     "easy_term": null,
     "meaning": null,
     "created_at": "2026-07-25T00:47:59.849955+00:00"
