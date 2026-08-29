@@ -763,13 +763,30 @@ function syncSubtitleHighlight(curTime, forceRealTimeSync = false) {
       saveSubtitleStateToStorage();
     }
 
+function scrollPaneToCard(card) {
+  if (!card || !transcriptPane) return;
+  const paneRect = transcriptPane.getBoundingClientRect();
+  const cardRect = card.getBoundingClientRect();
+  const relativeTop = cardRect.top - paneRect.top;
+  const targetScrollTop = transcriptPane.scrollTop + relativeTop - 12;
+
+  transcriptPane.scrollTo({
+    top: Math.max(0, targetScrollTop),
+    behavior: 'smooth'
+  });
+
+  if (window.scrollY !== 0 || window.scrollX !== 0) {
+    window.scrollTo(0, 0);
+  }
+}
+
     const cards = transcriptPane.querySelectorAll('.sub-card');
     cards.forEach((card) => {
       const idx = parseInt(card.dataset.index, 10);
       if (idx === activeIndex) {
         card.classList.add('active');
         if (isIndexChanged || forceRealTimeSync) {
-          card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          scrollPaneToCard(card);
         }
       } else {
         card.classList.remove('active');
