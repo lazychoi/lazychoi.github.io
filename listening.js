@@ -1345,9 +1345,14 @@ function buildAISearchPrompt(index) {
   const prevText = (index > 0) ? subtitles[index - 1].text : "";
   const nextText = (index < subtitles.length - 1) ? subtitles[index + 1].text : "";
 
-  const author = cleanAuthor(docAuthor);
-  const rawTitle = cleanBookTitle(docBookTitle);
-  const bookTitle = rawTitle ? (rawTitle.startsWith('<') ? rawTitle : `<${rawTitle}>`) : "";
+  const cleanA = cleanAuthor(docAuthor);
+  const cleanT = cleanBookTitle(docBookTitle);
+
+  const author = cleanA || "저자";
+  let bookTitle = cleanT || "책명";
+  if (!bookTitle.startsWith('<')) {
+    bookTitle = `<${bookTitle}>`;
+  }
 
   let prompt = `아래 [대상 문장]에 대해 1, 2, 3 항목별로 구체적으로 설명해줘.\n1. 한국어 번역\n2. 주요 단어 및 숙어 설명\n3. 주요 문법 설명\n\n`;
 
@@ -1360,13 +1365,7 @@ function buildAISearchPrompt(index) {
     prompt += `\n`;
   }
 
-  if (author && bookTitle) {
-    prompt += `[출처: ${author} ${bookTitle}]`.trim();
-  } else if (bookTitle) {
-    prompt += `[출처: ${bookTitle}]`.trim();
-  } else if (author) {
-    prompt += `[출처: ${author}]`.trim();
-  }
+  prompt += `[출처: ${author}, ${bookTitle}]`;
 
   return prompt;
 }
