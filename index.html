@@ -91,6 +91,10 @@
       background: #10b981; /* Emerald highlight for genealogy */
     }
 
+    .card.reader::before {
+      background: #3b82f6; /* Blue highlight for reader */
+    }
+
     .card:hover {
       transform: translateY(-4px);
       border-color: rgba(0, 0, 0, 0.12);
@@ -166,6 +170,9 @@
       <a href="listening.html" class="nav-link">
         <span class="nav-icon">🎧</span> 영어 듣기
       </a>
+      <a href="reader.html" class="nav-link">
+        <span class="nav-icon">📖</span> 영문 리더기
+      </a>
       <a href="timeline.html" class="nav-link">
         <span class="nav-icon">⏳</span> 세계사 연표
       </a>
@@ -209,6 +216,12 @@
         <div class="icon">🎧</div>
         <h2 class="card-title">영어 듣기 연습</h2>
         <p class="card-desc">오디오 파일(.mp3)과 구간 대본(.txt)을 임포트하여 듣기 연습(구간 반복, 배속 조절)</p>
+      </a>
+
+      <a href="reader.html" class="card reader">
+        <div class="icon">📖</div>
+        <h2 class="card-title">영문 리더기</h2>
+        <p class="card-desc">영문 TXT 및 EPUB 도서 리더, 형광펜 하이라이트 및 문맥 기반 AI 구문 분석</p>
       </a>
 
       <a href="timeline.html" class="card timeline">
