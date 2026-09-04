@@ -1232,15 +1232,6 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
         style.id = 'reader-injected-hl-style';
         const isDark = state.settings.theme === 'dark';
         style.textContent = `
-          html, body {
-            overflow: hidden !important;
-            overscroll-behavior: none !important;
-            overscroll-behavior-y: none !important;
-            touch-action: pan-x !important;
-            height: 100% !important;
-            max-height: 100% !important;
-            -webkit-touch-callout: default;
-          }
           .epubjs-hl {
             cursor: pointer !important;
             pointer-events: auto !important;

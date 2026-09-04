@@ -1188,70 +1188,44 @@ body.theme-dark .toolbar-btn:hover {
 
 /* ── 반응형 스타일 ── */
 @media (max-width: 768px) {
-  html, body {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-    position: fixed;
-    overscroll-behavior: none;
-    overscroll-behavior-y: none;
-    -webkit-overflow-scrolling: auto;
-  }
-
-  .nav {
-    flex-shrink: 0;
-    padding: 6px 12px 0;
-  }
-
   .reader-app {
-    flex: 1;
-    height: calc(100% - 50px);
-    min-height: 0;
-    padding: 6px 10px 10px;
-    gap: 8px;
-    overflow: hidden;
-    box-sizing: border-box;
+    padding: 4px 8px 80px;
+    gap: 10px;
+    min-height: auto;
   }
 
   .reader-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 500;
     padding: 8px 12px;
     gap: 8px;
-    flex-shrink: 0;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
 
   .reader-workspace {
-    flex: 1;
     min-height: 0;
-    height: 100%;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .reader-main {
-    flex: 1;
     min-height: 0;
-    height: 100%;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .epub-viewer-container {
-    flex: 1;
+    position: relative;
     min-height: 0;
-    height: 100%;
-    overflow: hidden;
-    touch-action: pan-x;
   }
 
   #epub-area {
-    flex: 1;
-    min-height: 0;
-    height: 100%;
-    overflow: hidden;
-    touch-action: pan-x;
-  }
-
-  #epub-area iframe {
-    touch-action: pan-x;
-    overscroll-behavior: none;
+    width: 100%;
+    min-height: 480px;
+    height: calc(100vh - 200px);
+    height: calc(100dvh - 200px);
   }
   .topbar-actions {
     width: 100%;
