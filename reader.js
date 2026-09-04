@@ -257,6 +257,61 @@ let justClickedHighlight = false;
 let lastIframeClick = null;
 let navButtonsTimer = null;
 
+// ── IndexedDB 도서 지속성(Persistence) 관리 ──
+const READER_DB_NAME = 'EnglishReaderDB';
+const READER_DB_VERSION = 1;
+const READER_STORE_NAME = 'active_book';
+
+function openReaderDB() {
+  return new Promise((resolve) => {
+    if (!window.indexedDB) {
+      resolve(null);
+      return;
+    }
+    const req = indexedDB.open(READER_DB_NAME, READER_DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(READER_STORE_NAME)) {
+        db.createObjectStore(READER_STORE_NAME, { keyPath: 'id' });
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => {
+      console.warn('IndexedDB open error:', req.error);
+      resolve(null);
+    };
+  });
+}
+
+async function saveActiveBookToStorage(bookRecord) {
+  try {
+    const db = await openReaderDB();
+    if (!db) return;
+    const tx = db.transaction(READER_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_STORE_NAME);
+    store.put({ id: 'current_reading_book', ...bookRecord, timestamp: Date.now() });
+  } catch (err) {
+    console.warn('Failed to save book to IndexedDB:', err);
+  }
+}
+
+async function loadActiveBookFromStorage() {
+  try {
+    const db = await openReaderDB();
+    if (!db) return null;
+    return new Promise((resolve) => {
+      const tx = db.transaction(READER_STORE_NAME, 'readonly');
+      const store = tx.objectStore(READER_STORE_NAME);
+      const req = store.get('current_reading_book');
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    console.warn('Failed to load book from IndexedDB:', err);
+    return null;
+  }
+}
+
 // 좌/우 페이지 넘김 버튼 일시 표시 후 자동 페이드아웃
 function showNavButtonsTemporarily(duration = 2500) {
   if (!elements.btnEpubPrev || !elements.btnEpubNext) return;
@@ -988,7 +1043,7 @@ async function downloadZipAsEpub(zip, bookTitle) {
 }
 
 // ── TXT Book Viewer ──
-function openTxtBook(title, author, content, bookId) {
+function openTxtBook(title, author, content, bookId, skipSaveToDb = false) {
   // Reset EPUB if any
   cleanupEpub();
 
@@ -1012,6 +1067,16 @@ function openTxtBook(title, author, content, bookId) {
   elements.currentChapterTitle.textContent = state.currentBook.title;
 
   renderTxtContent();
+
+  if (!skipSaveToDb) {
+    saveActiveBookToStorage({
+      type: 'txt',
+      title: state.currentBook.title,
+      author: state.currentBook.author,
+      content,
+      bookId: state.currentBook.id
+    });
+  }
 }
 
 function renderTxtContent() {
@@ -1047,12 +1112,14 @@ function renderTxtContent() {
   // Restore saved scroll position if any
   const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
   if (savedPos) {
-    setTimeout(() => {
+    const applySavedScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
         elements.txtViewer.scrollTop = (parseFloat(savedPos) / 100) * scrollHeight;
       }
-    }, 60);
+    };
+    setTimeout(applySavedScroll, 60);
+    setTimeout(applySavedScroll, 250);
   }
 
   // Bind click on marks
@@ -1121,7 +1188,7 @@ function cleanupEpub() {
   elements.epubArea.innerHTML = '';
 }
 
-function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
+function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false) {
   cleanupEpub();
 
   state.currentBook = {
@@ -1142,6 +1209,16 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
   elements.btnToggleToc.style.display = 'inline-flex';
   elements.readerBottomBar.style.display = 'flex';
 
+  if (!skipSaveToDb) {
+    saveActiveBookToStorage({
+      type: 'epub',
+      title: state.currentBook.title,
+      author: state.currentBook.author,
+      content: arrayBuffer,
+      bookId: state.currentBook.id
+    });
+  }
+
   try {
     const book = ePub(arrayBuffer);
     state.epub.book = book;
@@ -1157,9 +1234,25 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
 
     // Load Metadata
     book.loaded.metadata.then(meta => {
-      if (meta.title) state.currentBook.title = meta.title;
-      if (meta.creator) state.currentBook.author = meta.creator;
+      let metaChanged = false;
+      if (meta.title && state.currentBook.title !== meta.title) {
+        state.currentBook.title = meta.title;
+        metaChanged = true;
+      }
+      if (meta.creator && state.currentBook.author !== meta.creator) {
+        state.currentBook.author = meta.creator;
+        metaChanged = true;
+      }
       updateMetadataUI();
+      if (metaChanged) {
+        saveActiveBookToStorage({
+          type: 'epub',
+          title: state.currentBook.title,
+          author: state.currentBook.author,
+          content: arrayBuffer,
+          bookId: state.currentBook.id
+        });
+      }
     });
 
     // Load TOC
@@ -1210,6 +1303,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
 
     // Rendition Relocated event (Page changes)
     rendition.on("relocated", (location) => {
+      if (location && location.start && location.start.cfi && state.currentBook) {
+        localStorage.setItem(`reader_pos_${state.currentBook.id}`, location.start.cfi);
+      }
       updateEpubProgress(location);
       showNavButtonsTemporarily(1800);
       setTimeout(() => {
@@ -1981,6 +2077,13 @@ function saveMetaEdits() {
   state.currentBook.author = elements.inputEditAuthor.value.trim();
   updateMetadataUI();
   closeMetaModal();
+  saveActiveBookToStorage({
+    type: state.currentBook.type,
+    title: state.currentBook.title,
+    author: state.currentBook.author,
+    content: state.currentBook.content,
+    bookId: state.currentBook.id
+  });
   showToast('도서 정보가 업데이트되었습니다.');
 }
 
@@ -2272,10 +2375,59 @@ function setupEventListeners() {
       });
     });
   }
+
+  // 탭 전환 / 다른 앱 전환 시 현재 위치(CFI 또는 스크롤) 즉시 보존
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && state.currentBook) {
+      saveCurrentReadingPosition();
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    if (state.currentBook) {
+      saveCurrentReadingPosition();
+    }
+  });
+}
+
+function saveCurrentReadingPosition() {
+  if (!state.currentBook) return;
+  if (state.currentBook.type === 'epub' && state.epub.rendition) {
+    try {
+      const loc = state.epub.rendition.currentLocation();
+      if (loc && loc.start && loc.start.cfi) {
+        localStorage.setItem(`reader_pos_${state.currentBook.id}`, loc.start.cfi);
+      }
+    } catch (e) {}
+  } else if (state.currentBook.type === 'txt' && elements.txtViewer) {
+    const scrollTop = elements.txtViewer.scrollTop;
+    const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+    if (scrollHeight > 0) {
+      const pct = Math.min(100, Math.max(0, Math.round((scrollTop / scrollHeight) * 100)));
+      localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+    }
+  }
+}
+
+// ── 기존에 읽던 도서 복원 ──
+async function restoreActiveBook() {
+  try {
+    const record = await loadActiveBookFromStorage();
+    if (!record || !record.content) return;
+
+    if (record.type === 'epub') {
+      openEpubBook(record.title, record.author, record.content, record.bookId, true);
+    } else if (record.type === 'txt') {
+      openTxtBook(record.title, record.author, record.content, record.bookId, true);
+    }
+  } catch (err) {
+    console.warn('Failed to restore active book from IndexedDB:', err);
+  }
 }
 
 // ── Initialization ──
-window.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', async () => {
   loadSettings();
   setupEventListeners();
+  await restoreActiveBook();
 });
