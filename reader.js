@@ -312,6 +312,24 @@ async function loadActiveBookFromStorage() {
   }
 }
 
+// 하이라이트 관련 요소 클릭 여부 판별 (EPUB.js SVG 어노테이션 및 내보낸 <mark> 태그 모두 인식)
+function isHighlightTarget(target) {
+  if (!target) return false;
+  const tag = (target.tagName || '').toLowerCase();
+  if (tag === 'rect' || tag === 'mark') return true;
+  if (typeof target.closest === 'function') {
+    if (target.closest('.epubjs-hl') || target.closest('.reader-highlight') || target.closest('mark') || target.closest('.reader-note-badge')) {
+      return true;
+    }
+  }
+  if (target.classList) {
+    if (target.classList.contains('epubjs-hl') || target.classList.contains('reader-highlight') || target.classList.contains('reader-note-badge')) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // 좌/우 페이지 넘김 버튼 일시 표시 후 자동 페이드아웃
 function showNavButtonsTemporarily(duration = 2500) {
   if (!elements.btnEpubPrev || !elements.btnEpubNext) return;
@@ -854,6 +872,26 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4; }
     zip.file("OEBPS/highlights_appendix.xhtml", appendixHtml);
   }
 
+  // 5-1. nav.xhtml (EPUB 3 Navigation Document 필수 등록)
+  const navXhtml = `<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
+<head>
+  <title>목차</title>
+  <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body>
+  <nav epub:type="toc" id="toc">
+    <h1>목차</h1>
+    <ol>
+      <li><a href="book.xhtml">${escapeHtml(state.currentBook.title || 'Book')}</a></li>
+      ${hasHighlights ? '<li><a href="highlights_appendix.xhtml">형광펜 및 독서 메모</a></li>' : ''}
+    </ol>
+  </nav>
+</body>
+</html>`;
+  zip.file("OEBPS/nav.xhtml", navXhtml);
+
   // 6. content.opf
   const bookId = `urn:uuid:${generateUUID()}`;
   const opfContent = `<?xml version="1.0" encoding="UTF-8"?>
@@ -868,6 +906,7 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4; }
   <manifest>
     <item id="css" href="styles.css" media-type="text/css"/>
     <item id="book" href="book.xhtml" media-type="application/xhtml+xml"/>
+    <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
     ${hasHighlights ? '<item id="highlights-appendix" href="highlights_appendix.xhtml" media-type="application/xhtml+xml"/>' : ''}
     <item id="toc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
   </manifest>
@@ -938,6 +977,7 @@ function injectHighlightInDoc(doc, hl) {
 
     const mark = doc.createElementNS('http://www.w3.org/1999/xhtml', 'mark');
     mark.setAttribute('class', `reader-highlight hl-${hl.color || 'yellow'}`);
+    mark.setAttribute('data-hl-id', hl.id);
     mark.setAttribute('style', `background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;`);
     mark.textContent = match;
 
@@ -1209,6 +1249,12 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   elements.btnToggleToc.style.display = 'inline-flex';
   elements.readerBottomBar.style.display = 'flex';
 
+  // Force layout reflow so epubArea has definite width and height
+  void elements.epubViewer.offsetWidth;
+  void elements.epubViewer.offsetHeight;
+  void elements.epubArea.offsetWidth;
+  void elements.epubArea.offsetHeight;
+
   if (!skipSaveToDb) {
     saveActiveBookToStorage({
       type: 'epub',
@@ -1231,6 +1277,14 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       allowScriptedContent: true
     });
     state.epub.rendition = rendition;
+
+    const ensureRenditionLayout = () => {
+      if (state.epub.rendition) {
+        try {
+          state.epub.rendition.resize();
+        } catch (e) {}
+      }
+    };
 
     // Load Metadata
     book.loaded.metadata.then(meta => {
@@ -1260,15 +1314,8 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       state.epub.toc = nav.toc || [];
     });
 
-    // Render initial page or restore saved location
-    const savedCfi = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
-    rendition.display(savedCfi || undefined).then(() => {
-      applyEpubThemes();
-      restoreEpubHighlights();
-    });
-
     // Check if EPUB archive has embedded reader_highlights.json
-    if (state.highlights.length === 0 && typeof JSZip !== 'undefined') {
+    if (typeof JSZip !== 'undefined') {
       JSZip.loadAsync(arrayBuffer).then(zip => {
         const hlFile = zip.file('META-INF/reader_highlights.json');
         if (hlFile) {
@@ -1285,7 +1332,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                 }
                 setTimeout(() => {
                   restoreEpubHighlights();
-                }, 300);
+                }, 100);
               }
             } catch (e) {}
           });
@@ -1293,12 +1340,36 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }).catch(() => {});
     }
 
+    // Render initial page or restore saved location when book is ready
+    book.ready.then(() => {
+      ensureRenditionLayout();
+      const savedCfi = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+      return rendition.display(savedCfi || undefined);
+    }).then(() => {
+      applyEpubThemes();
+      restoreEpubHighlights();
+      ensureRenditionLayout();
+      requestAnimationFrame(ensureRenditionLayout);
+      setTimeout(ensureRenditionLayout, 100);
+      setTimeout(ensureRenditionLayout, 300);
+      setTimeout(ensureRenditionLayout, 600);
+    }).catch(err => {
+      console.warn('Initial rendition display error, retrying default display:', err);
+      if (state.epub.rendition) {
+        state.epub.rendition.display().then(() => {
+          ensureRenditionLayout();
+        });
+      }
+    });
+
     // Generate locations for progress slider
     book.ready.then(() => {
       return book.locations.generate(1000);
     }).then(() => {
       state.epub.locationsReady = true;
       updateEpubProgress();
+    }).catch(err => {
+      console.warn('Location generation failed:', err);
     });
 
     // Rendition Relocated event (Page changes)
@@ -1308,6 +1379,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }
       updateEpubProgress(location);
       showNavButtonsTemporarily(1800);
+      ensureRenditionLayout();
       setTimeout(() => {
         restoreEpubHighlights();
       }, 100);
@@ -1315,6 +1387,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
 
     // Rendition Rendered event
     rendition.on("rendered", () => {
+      ensureRenditionLayout();
       setTimeout(() => {
         restoreEpubHighlights();
       }, 100);
@@ -1342,6 +1415,24 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
           .epubjs-hl.hl-purple { fill: #c084fc !important; }
           .epubjs-hl.hl-blue   { fill: #38bdf8 !important; }
           .epubjs-hl.hl-pink   { fill: #f472b6 !important; }
+
+          /* 내보내기된 EPUB 내 <mark> 형광펜 태그 상호작용 지원 */
+          mark.reader-highlight,
+          .reader-highlight {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+            user-select: text !important;
+            -webkit-user-select: text !important;
+            transition: filter 0.15s ease !important;
+          }
+          mark.reader-highlight:hover,
+          .reader-highlight:hover {
+            filter: brightness(0.9) !important;
+          }
+          .reader-note-badge {
+            cursor: pointer !important;
+            pointer-events: auto !important;
+          }
         `;
         doc.head.appendChild(style);
       }
@@ -1350,6 +1441,11 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
         // 스와이프 제스처 및 터치 시 네비게이션 버튼 표시
         attachSwipeGesture(doc, () => (contents.window ? contents.window.getSelection() : null));
         doc.addEventListener("click", () => { showNavButtonsTemporarily(); });
+
+        // EPUB 내 이미 삽입된 <mark> 형광펜 요소들에 클릭/탭 이벤트 바인딩
+        bindAllMarksInEpub();
+        setTimeout(bindAllMarksInEpub, 200);
+        setTimeout(bindAllMarksInEpub, 600);
 
         const recordPointer = (e) => {
           const clientX = getEventCoord(e, 'clientX');
@@ -1361,12 +1457,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
             rect: e.target && typeof e.target.getBoundingClientRect === 'function' ? e.target.getBoundingClientRect() : null
           };
 
-          // Check if click is on an existing highlight
-          const isHl = e.target && (
-            (typeof e.target.closest === 'function' && e.target.closest('.epubjs-hl')) ||
-            (e.target.classList && e.target.classList.contains('epubjs-hl')) ||
-            (e.target.tagName || '').toLowerCase() === 'rect'
-          );
+          const isHl = isHighlightTarget(e.target);
           if (!isHl && !justClickedHighlight) {
             closeAllToolbars();
           }
@@ -1388,11 +1479,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
     // Click outside in epub iframe (Do not close if text is currently selected or highlight was just clicked)
     rendition.on("click", (e) => {
       if (justSelectedInEpub || justClickedHighlight) return;
-      const isHl = e && e.target && (
-        (typeof e.target.closest === 'function' && e.target.closest('.epubjs-hl')) ||
-        (e.target.classList && e.target.classList.contains('epubjs-hl')) ||
-        (e.target.tagName || '').toLowerCase() === 'rect'
-      );
+      const isHl = isHighlightTarget(e && e.target);
       if (isHl) return;
 
       const iframe = elements.epubArea.querySelector('iframe');
@@ -1411,7 +1498,84 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   }
 }
 
+// EPUB 내 삽입된 <mark> 태그들에 상호작용 바인딩
+let lastMarkTapTime = 0;
+function bindAllMarksInEpub() {
+  const iframe = elements.epubArea.querySelector('iframe');
+  if (!iframe) return;
+  const doc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+  if (!doc) return;
+
+  const marks = doc.querySelectorAll('mark.reader-highlight, .reader-highlight, mark');
+  marks.forEach(mark => {
+    if (mark.dataset.boundClick === 'true') return;
+    mark.dataset.boundClick = 'true';
+
+    const onMarkClick = (e) => {
+      const now = Date.now();
+      if (e.type === 'click' && now - lastMarkTapTime < 500) {
+        e.stopPropagation();
+        e.preventDefault();
+        return;
+      }
+      if (e.type === 'touchend') {
+        lastMarkTapTime = now;
+      }
+
+      e.stopPropagation();
+      e.preventDefault();
+      justClickedHighlight = true;
+      setTimeout(() => { justClickedHighlight = false; }, 400);
+
+      const hlId = mark.dataset.hlId;
+      const markText = mark.textContent.replace(/💬.*$/, '').trim();
+
+      // 1. ID로 매칭
+      let hl = hlId ? state.highlights.find(h => h.id === hlId) : null;
+
+      // 2. 텍스트로 매칭
+      if (!hl && markText) {
+        hl = state.highlights.find(h => h.text && (h.text.includes(markText) || markText.includes(h.text)));
+      }
+
+      // 3. 매칭되는 하이라이트가 없으면 동적 생성 및 등록
+      if (!hl && markText) {
+        let detectedColor = 'yellow';
+        for (const c of ['yellow', 'green', 'purple', 'blue', 'pink']) {
+          if (mark.classList.contains('hl-' + c)) {
+            detectedColor = c;
+            break;
+          }
+        }
+        const badge = mark.querySelector('.reader-note-badge');
+        const noteText = badge ? badge.textContent.replace(/^💬\s*/, '').trim() : (mark.getAttribute('title') ? mark.getAttribute('title').replace(/^메모:\s*/, '').trim() : '');
+
+        hl = {
+          id: hlId || `hl_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+          text: markText,
+          color: detectedColor,
+          note: noteText || '',
+          createdAt: new Date().toISOString()
+        };
+        mark.dataset.hlId = hl.id;
+        state.highlights.push(hl);
+        sortHighlights();
+        saveHighlights();
+        updateHighlightBadge();
+      }
+
+      if (hl) {
+        openHighlightToolbarFromEpub(hl, e, mark);
+      }
+    };
+
+    mark.addEventListener('click', onMarkClick);
+    mark.addEventListener('touchend', onMarkClick, { passive: false });
+  });
+}
+
 function restoreEpubHighlights() {
+  bindAllMarksInEpub();
   if (!state.epub.rendition || !state.currentBook || state.currentBook.type !== 'epub') return;
   if (!state.highlights || state.highlights.length === 0) return;
 
@@ -1767,10 +1931,10 @@ function openHighlightToolbar(hl, elem) {
   showHighlightToolbar(rect);
 }
 
-function openHighlightToolbarFromEpub(hl, e) {
+function openHighlightToolbarFromEpub(hl, e, markTarget = null) {
   state.activeHighlight = hl;
   justClickedHighlight = true;
-  setTimeout(() => { justClickedHighlight = false; }, 300);
+  setTimeout(() => { justClickedHighlight = false; }, 400);
 
   const iframe = elements.epubArea.querySelector('iframe');
   if (!iframe) return;
@@ -1790,7 +1954,22 @@ function openHighlightToolbarFromEpub(hl, e) {
     return false;
   };
 
-  // 1. Primary: Try to resolve exact live DOM Range via ePub.CFI directly in the rendered iframe document
+  // 0. If markTarget is passed directly
+  if (markTarget && typeof markTarget.getBoundingClientRect === 'function') {
+    const mRect = markTarget.getBoundingClientRect();
+    if (tryShowWithRect(mRect)) return;
+  }
+
+  // 1. Try to find mark element in iframe by hl.id
+  if (iframeDoc && hl && hl.id) {
+    const markEl = iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`);
+    if (markEl && typeof markEl.getBoundingClientRect === 'function') {
+      const mRect = markEl.getBoundingClientRect();
+      if (tryShowWithRect(mRect)) return;
+    }
+  }
+
+  // 2. Try to resolve exact live DOM Range via ePub.CFI directly in the rendered iframe document
   if (iframeDoc && hl.cfiRange && typeof ePub !== 'undefined' && ePub.CFI) {
     try {
       const cfi = new ePub.CFI(hl.cfiRange);
@@ -1806,10 +1985,10 @@ function openHighlightToolbarFromEpub(hl, e) {
     }
   }
 
-  // 2. Try target element from event (or its parent group)
-  const target = (e && e.target) ? e.target : (lastIframeClick ? lastIframeClick.target : null);
+  // 3. Try target element from event (or its parent group)
+  const target = markTarget || (e && e.target ? e.target : (lastIframeClick ? lastIframeClick.target : null));
   if (target) {
-    const hlGroup = (typeof target.closest === 'function') ? target.closest('.epubjs-hl') : null;
+    const hlGroup = (typeof target.closest === 'function') ? (target.closest('.epubjs-hl') || target.closest('mark.reader-highlight') || target.closest('.reader-highlight')) : null;
     const targetEl = hlGroup || target;
     if (typeof targetEl.getBoundingClientRect === 'function') {
       const tRect = targetEl.getBoundingClientRect();
@@ -1817,13 +1996,13 @@ function openHighlightToolbarFromEpub(hl, e) {
     }
   }
 
-  // 3. Try to find highlight element in iframe DOM intersecting with click position
+  // 4. Try to find highlight element in iframe DOM intersecting with click position
   const clientX = getEventCoord(e, 'clientX') ?? (lastIframeClick ? lastIframeClick.clientX : undefined);
   const clientY = getEventCoord(e, 'clientY') ?? (lastIframeClick ? lastIframeClick.clientY : undefined);
 
   if (iframeDoc && clientX !== undefined && clientY !== undefined) {
     try {
-      const hlElements = iframeDoc.querySelectorAll('.epubjs-hl rect, .epubjs-hl');
+      const hlElements = iframeDoc.querySelectorAll('.epubjs-hl rect, .epubjs-hl, mark.reader-highlight, .reader-highlight');
       for (const el of hlElements) {
         const rect = el.getBoundingClientRect();
         if (clientX >= rect.left - 10 && clientX <= rect.right + 10 &&
@@ -1834,7 +2013,7 @@ function openHighlightToolbarFromEpub(hl, e) {
     } catch (err) {}
   }
 
-  // 4. Fallback to event coordinates (supporting mouse and mobile touch)
+  // 5. Fallback to event coordinates (supporting mouse and mobile touch)
   if (clientX !== undefined && clientY !== undefined && clientX > 0 && clientY > 0) {
     showHighlightToolbar({
       top: iframeRect.top + clientY,
@@ -1845,7 +2024,7 @@ function openHighlightToolbarFromEpub(hl, e) {
     return;
   }
 
-  // 5. Final fallback: center of reading area
+  // 6. Final fallback: center of reading area
   showHighlightToolbar({
     top: iframeRect.top + (iframeRect.height / 3),
     left: iframeRect.left + (iframeRect.width / 2),
@@ -1872,15 +2051,36 @@ function removeHighlight(hlId) {
 
   const hl = state.highlights[idx];
   state.highlights.splice(idx, 1);
+  sortHighlights();
   saveHighlights();
+  updateHighlightBadge();
 
   if (state.currentBook.type === 'txt') {
     renderTxtContent();
-  } else if (state.currentBook.type === 'epub' && state.epub.rendition && hl.cfiRange) {
-    try {
-      state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
-    } catch (e) {
-      console.warn(e);
+  } else if (state.currentBook.type === 'epub') {
+    if (state.epub.rendition && hl.cfiRange) {
+      try {
+        state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+    // Also remove from EPUB iframe DOM if it was a <mark> element
+    const iframe = elements.epubArea.querySelector('iframe');
+    const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+    if (iframeDoc) {
+      const marks = iframeDoc.querySelectorAll(`mark[data-hl-id="${hlId}"], [data-hl-id="${hlId}"]`);
+      marks.forEach(mark => {
+        const badge = mark.querySelector('.reader-note-badge');
+        if (badge) badge.remove();
+        const parent = mark.parentNode;
+        if (parent) {
+          while (mark.firstChild) {
+            parent.insertBefore(mark.firstChild, mark);
+          }
+          parent.removeChild(mark);
+        }
+      });
     }
   }
 
@@ -2014,8 +2214,21 @@ function renderHighlightDrawer() {
           mark.style.outline = '2px solid var(--accent)';
           setTimeout(() => { mark.style.outline = 'none'; }, 1500);
         }
-      } else if (state.currentBook.type === 'epub' && state.epub.rendition && hl.cfiRange) {
-        state.epub.rendition.display(hl.cfiRange);
+      } else if (state.currentBook.type === 'epub') {
+        if (state.epub.rendition && hl.cfiRange) {
+          state.epub.rendition.display(hl.cfiRange);
+        } else {
+          const iframe = elements.epubArea.querySelector('iframe');
+          const doc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+          if (doc) {
+            const mark = doc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`);
+            if (mark) {
+              mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              mark.style.outline = '2px solid var(--accent)';
+              setTimeout(() => { mark.style.outline = 'none'; }, 1500);
+            }
+          }
+        }
       }
       closeDrawer();
     });
@@ -2033,6 +2246,32 @@ function renderHighlightDrawer() {
       if (newNote !== null) {
         hl.note = newNote.trim();
         saveHighlights();
+
+        if (state.currentBook?.type === 'txt') {
+          renderTxtContent();
+        } else if (state.currentBook?.type === 'epub') {
+          const iframe = elements.epubArea.querySelector('iframe');
+          const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+          if (iframeDoc) {
+            const mark = iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`);
+            if (mark) {
+              mark.title = hl.note ? `메모: ${hl.note}` : '';
+              let badge = mark.querySelector('.reader-note-badge');
+              if (hl.note) {
+                if (!badge) {
+                  badge = iframeDoc.createElement('span');
+                  badge.className = 'reader-note-badge';
+                  badge.style.cssText = 'font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; cursor: pointer;';
+                  mark.appendChild(badge);
+                }
+                badge.textContent = ` 💬 ${hl.note}`;
+              } else if (badge) {
+                badge.remove();
+              }
+            }
+          }
+        }
+
         renderHighlightDrawer();
       }
     });
@@ -2309,7 +2548,36 @@ function setupEventListeners() {
       if (note !== null) {
         state.activeHighlight.note = note.trim();
         saveHighlights();
+
+        if (state.currentBook?.type === 'txt') {
+          renderTxtContent();
+        } else if (state.currentBook?.type === 'epub') {
+          const iframe = elements.epubArea.querySelector('iframe');
+          const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+          if (iframeDoc) {
+            const mark = iframeDoc.querySelector(`mark[data-hl-id="${state.activeHighlight.id}"], [data-hl-id="${state.activeHighlight.id}"]`);
+            if (mark) {
+              mark.title = state.activeHighlight.note ? `메모: ${state.activeHighlight.note}` : '';
+              let badge = mark.querySelector('.reader-note-badge');
+              if (state.activeHighlight.note) {
+                if (!badge) {
+                  badge = iframeDoc.createElement('span');
+                  badge.className = 'reader-note-badge';
+                  badge.style.cssText = 'font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; cursor: pointer;';
+                  mark.appendChild(badge);
+                }
+                badge.textContent = ` 💬 ${state.activeHighlight.note}`;
+              } else if (badge) {
+                badge.remove();
+              }
+            }
+          }
+        }
+
         showToast('메모가 저장되었습니다.');
+        if (elements.readerDrawer.classList.contains('open')) {
+          renderHighlightDrawer();
+        }
       }
       closeAllToolbars();
     }
@@ -2375,6 +2643,15 @@ function setupEventListeners() {
       });
     });
   }
+
+  // 윈도우 리사이즈 시 EPUB 뷰어 영역 재계산
+  window.addEventListener('resize', () => {
+    if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
+      try {
+        state.epub.rendition.resize();
+      } catch (e) {}
+    }
+  });
 
   // 탭 전환 / 다른 앱 전환 시 현재 위치(CFI 또는 스크롤) 즉시 보존
   document.addEventListener('visibilitychange', () => {

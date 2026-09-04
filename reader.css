@@ -339,6 +339,14 @@ body.theme-dark .btn-reader:hover {
   width: 100%;
   min-height: 600px;
   height: calc(100vh - 240px);
+  position: relative;
+}
+
+#epub-area .epub-view,
+#epub-area iframe {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
 }
 
 .epub-nav-arrow {
@@ -1306,6 +1314,14 @@ body.theme-dark .toolbar-btn:hover {
     width: 100% !important;
     height: 100% !important;
     overflow: hidden !important;
+    position: relative !important;
+  }
+
+  #epub-area .epub-view,
+  #epub-area iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
   }
 
   .reader-bottom-bar {
