@@ -251,6 +251,120 @@ const elements = {
   fontFamilySelect: document.getElementById('font-family-select'),
 };
 
+// 모듈 수준 전역 제어 변수
+let justSelectedInEpub = false;
+let justClickedHighlight = false;
+let lastIframeClick = null;
+let navButtonsTimer = null;
+
+// 좌/우 페이지 넘김 버튼 일시 표시 후 자동 페이드아웃
+function showNavButtonsTemporarily(duration = 2500) {
+  if (!elements.btnEpubPrev || !elements.btnEpubNext) return;
+  elements.btnEpubPrev.classList.add('visible');
+  elements.btnEpubNext.classList.add('visible');
+
+  if (navButtonsTimer) {
+    clearTimeout(navButtonsTimer);
+  }
+  navButtonsTimer = setTimeout(() => {
+    if (elements.btnEpubPrev) elements.btnEpubPrev.classList.remove('visible');
+    if (elements.btnEpubNext) elements.btnEpubNext.classList.remove('visible');
+    navButtonsTimer = null;
+  }, duration);
+}
+
+// 모바일 터치 스와이프 제스처 핸들러 (좌우 넘김)
+function attachSwipeGesture(targetElement, getIframeSelection = null) {
+  if (!targetElement) return;
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  let touchStartTime = 0;
+  let isSwiping = false;
+
+  targetElement.addEventListener('touchstart', (e) => {
+    showNavButtonsTemporarily();
+
+    if (!e.touches || e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+    touchStartTime = Date.now();
+    isSwiping = true;
+  }, { passive: true });
+
+  targetElement.addEventListener('touchmove', (e) => {
+    // 수평 스와이프 감지용 추적
+  }, { passive: true });
+
+  targetElement.addEventListener('touchend', (e) => {
+    if (!isSwiping || !e.changedTouches || e.changedTouches.length === 0) return;
+    isSwiping = false;
+
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const dx = touchEndX - touchStartX;
+    const dy = touchEndY - touchStartY;
+    const dt = Date.now() - touchStartTime;
+
+    // 1. 제스처 시간 임계값: 800ms 이내 빠른 스와이프
+    if (dt > 800) return;
+
+    // 2. 가로 이동 최소 거리: 45px 이상
+    if (Math.abs(dx) < 45) return;
+
+    // 3. 방향 판별: 가로 이동이 세로 스크롤보다 우세해야 함
+    if (Math.abs(dx) < Math.abs(dy) * 1.3) return;
+
+    // 4. 텍스트 드래그 선택 중인 경우 페이지 넘김 방지
+    const winSel = window.getSelection();
+    if (winSel && winSel.toString().trim().length > 0) return;
+    if (getIframeSelection) {
+      const ifSel = getIframeSelection();
+      if (ifSel && ifSel.toString().trim().length > 0) return;
+    }
+    if (justSelectedInEpub || justClickedHighlight) return;
+
+    // 5. 페이지 넘김 동작 수행
+    if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
+      if (dx < 0) {
+        state.epub.rendition.next();
+      } else {
+        state.epub.rendition.prev();
+      }
+    } else if (state.currentBook && state.currentBook.type === 'txt' && elements.txtViewer) {
+      const scrollStep = elements.txtViewer.clientHeight * 0.8;
+      if (dx < 0) {
+        elements.txtViewer.scrollBy({ top: scrollStep, behavior: 'smooth' });
+      } else {
+        elements.txtViewer.scrollBy({ top: -scrollStep, behavior: 'smooth' });
+      }
+    }
+  }, { passive: true });
+}
+
+// 설정 팝오버 위치 보정 (모바일에서 화면 밖 잘림 방지)
+function positionSettingsPopover() {
+  if (!elements.settingsPopover || !elements.settingsPopover.classList.contains('open')) return;
+  if (window.innerWidth <= 768) {
+    const btnRect = elements.btnToggleSettings.getBoundingClientRect();
+    elements.settingsPopover.style.position = 'fixed';
+    elements.settingsPopover.style.top = `${btnRect.bottom + 8}px`;
+    elements.settingsPopover.style.left = '12px';
+    elements.settingsPopover.style.right = '12px';
+    elements.settingsPopover.style.width = 'auto';
+    elements.settingsPopover.style.maxWidth = '340px';
+    elements.settingsPopover.style.margin = '0 auto';
+  } else {
+    elements.settingsPopover.style.position = '';
+    elements.settingsPopover.style.top = '';
+    elements.settingsPopover.style.left = '';
+    elements.settingsPopover.style.right = '';
+    elements.settingsPopover.style.width = '';
+    elements.settingsPopover.style.maxWidth = '';
+    elements.settingsPopover.style.margin = '';
+  }
+}
+
 // ── Settings Management ──
 function loadSettings() {
   const saved = localStorage.getItem('reader_settings');
@@ -1097,6 +1211,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
     // Rendition Relocated event (Page changes)
     rendition.on("relocated", (location) => {
       updateEpubProgress(location);
+      showNavButtonsTemporarily(1800);
       setTimeout(() => {
         restoreEpubHighlights();
       }, 100);
@@ -1108,10 +1223,6 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
         restoreEpubHighlights();
       }, 100);
     });
-
-    let justSelectedInEpub = false;
-    let justClickedHighlight = false;
-    let lastIframeClick = null;
 
     // Register content hook for EPUB document styling & interaction
     rendition.hooks.content.register((contents) => {
@@ -1140,6 +1251,10 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
       }
 
       if (doc) {
+        // 스와이프 제스처 및 터치 시 네비게이션 버튼 표시
+        attachSwipeGesture(doc, () => (contents.window ? contents.window.getSelection() : null));
+        doc.addEventListener("click", () => { showNavButtonsTemporarily(); });
+
         const recordPointer = (e) => {
           const clientX = getEventCoord(e, 'clientX');
           const clientY = getEventCoord(e, 'clientY');
@@ -1387,14 +1502,22 @@ function showFloatingToolbar(rect) {
   const x = rect.left + (rect.width / 2);
   let y = rect.top + window.scrollY;
 
-  if (y - tbHeight - 15 < window.scrollY + 60) {
-    tb.style.transform = 'translate(-50%, 0) translateY(10px)';
-    y = rect.top + (rect.height || 20) + window.scrollY;
+  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+  // 모바일 환경에서는 브라우저 기본 상황 팝업(복사/찾아보기)이 선택 글자 위에 나타나므로, 앱 팝업을 글자 아래에 배치
+  const placeBelow = isMobile || (y - tbHeight - 15 < window.scrollY + 60);
+
+  if (placeBelow) {
+    tb.classList.add('flipped');
+    tb.style.transform = 'translate(-50%, 0)';
+    y = rect.top + (rect.height || 22) + window.scrollY + 8;
   } else {
-    tb.style.transform = 'translate(-50%, -100%) translateY(-10px)';
+    tb.classList.remove('flipped');
+    tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
+    y = rect.top + window.scrollY - 8;
   }
 
-  tb.style.left = `${Math.max(tbWidth / 2 + 10, Math.min(window.innerWidth - tbWidth / 2 - 10, x))}px`;
+  const clampedX = Math.max(tbWidth / 2 + 10, Math.min(window.innerWidth - tbWidth / 2 - 10, x));
+  tb.style.left = `${clampedX}px`;
   tb.style.top = `${y}px`;
 }
 
@@ -1500,14 +1623,17 @@ function showHighlightToolbar(rect) {
   const x = rect.left + (rect.width / 2);
   let y = rect.top + window.scrollY;
 
-  // If too close to the top of window/topbar, flip below text
-  if (y - tbHeight - 12 < window.scrollY + 70) {
+  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+  const placeBelow = isMobile || (y - tbHeight - 12 < window.scrollY + 70);
+
+  if (placeBelow) {
     tb.classList.add('flipped');
-    tb.style.transform = 'translate(-50%, 0) translateY(8px)';
-    y = rect.top + (rect.height || 22) + window.scrollY;
+    tb.style.transform = 'translate(-50%, 0)';
+    y = rect.top + (rect.height || 22) + window.scrollY + 8;
   } else {
     tb.classList.remove('flipped');
     tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
+    y = rect.top + window.scrollY - 8;
   }
 
   const clampedX = Math.max(tbWidth / 2 + 12, Math.min(window.innerWidth - tbWidth / 2 - 12, x));
@@ -1880,6 +2006,15 @@ function setupEventListeners() {
   elements.btnToggleSettings.addEventListener('click', (e) => {
     e.stopPropagation();
     elements.settingsPopover.classList.toggle('open');
+    if (elements.settingsPopover.classList.contains('open')) {
+      positionSettingsPopover();
+    }
+  });
+
+  window.addEventListener('resize', () => {
+    if (elements.settingsPopover && elements.settingsPopover.classList.contains('open')) {
+      positionSettingsPopover();
+    }
   });
 
   document.addEventListener('click', (e) => {
@@ -1943,10 +2078,44 @@ function setupEventListeners() {
   // EPUB Nav arrows
   elements.btnEpubPrev.addEventListener('click', () => {
     if (state.epub.rendition) state.epub.rendition.prev();
+    showNavButtonsTemporarily(2000);
   });
   elements.btnEpubNext.addEventListener('click', () => {
     if (state.epub.rendition) state.epub.rendition.next();
+    showNavButtonsTemporarily(2000);
   });
+
+  // 뷰어 영역 스와이프 제스처 및 터치 시 화살표 일시 표시
+  if (elements.epubViewer) {
+    attachSwipeGesture(elements.epubViewer);
+    elements.epubViewer.addEventListener('click', () => { showNavButtonsTemporarily(); });
+    elements.epubViewer.addEventListener('mousemove', () => { showNavButtonsTemporarily(); });
+  }
+  if (elements.txtViewer) {
+    attachSwipeGesture(elements.txtViewer);
+  }
+
+  // 데스크톱 마우스 호버 시 화살표 유지 처리
+  if (elements.btnEpubPrev) {
+    elements.btnEpubPrev.addEventListener('mouseenter', () => {
+      if (navButtonsTimer) clearTimeout(navButtonsTimer);
+      elements.btnEpubPrev.classList.add('visible');
+      elements.btnEpubNext.classList.add('visible');
+    });
+    elements.btnEpubPrev.addEventListener('mouseleave', () => {
+      showNavButtonsTemporarily(1500);
+    });
+  }
+  if (elements.btnEpubNext) {
+    elements.btnEpubNext.addEventListener('mouseenter', () => {
+      if (navButtonsTimer) clearTimeout(navButtonsTimer);
+      elements.btnEpubPrev.classList.add('visible');
+      elements.btnEpubNext.classList.add('visible');
+    });
+    elements.btnEpubNext.addEventListener('mouseleave', () => {
+      showNavButtonsTemporarily(1500);
+    });
+  }
 
   // Progress Slider input
   elements.progressSlider.addEventListener('input', (e) => {
