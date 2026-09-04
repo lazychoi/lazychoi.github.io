@@ -4,6 +4,93 @@
  * ══════════════════════════════════════════════════════
  */
 
+// ── Range.setStart / setEnd DOM Guard & ePub.CFI toRange Guard for ePub.js ──
+// Prevents "Uncaught IndexSizeError: Failed to execute 'setStart'/'setEnd' on 'Range': There is no child at offset X"
+function patchRangeForEpub(win) {
+  if (!win || !win.Range || win.Range.prototype._patchedForEpub) return;
+  const proto = win.Range.prototype;
+  const origSetStart = proto.setStart;
+  const origSetEnd = proto.setEnd;
+
+  proto.setStart = function(node, offset) {
+    if (!node) return;
+    try {
+      const max = (node.nodeType === 3 || node.nodeType === 4 || node.nodeType === 8)
+        ? (typeof node.length === 'number' ? node.length : (node.nodeValue ? node.nodeValue.length : 0))
+        : (node.childNodes ? node.childNodes.length : 0);
+      const safeOffset = Math.max(0, Math.min(typeof offset === 'number' && !isNaN(offset) ? offset : 0, max));
+      return origSetStart.call(this, node, safeOffset);
+    } catch (err) {
+      try {
+        return origSetStart.call(this, node, 0);
+      } catch (e) {}
+    }
+  };
+
+  proto.setEnd = function(node, offset) {
+    if (!node) return;
+    try {
+      const max = (node.nodeType === 3 || node.nodeType === 4 || node.nodeType === 8)
+        ? (typeof node.length === 'number' ? node.length : (node.nodeValue ? node.nodeValue.length : 0))
+        : (node.childNodes ? node.childNodes.length : 0);
+      const safeOffset = Math.max(0, Math.min(typeof offset === 'number' && !isNaN(offset) ? offset : 0, max));
+      return origSetEnd.call(this, node, safeOffset);
+    } catch (err) {
+      try {
+        return origSetEnd.call(this, node, 0);
+      } catch (e) {}
+    }
+  };
+
+  try {
+    win.addEventListener('error', (e) => {
+      if (e && e.message && (e.message.includes("setStart") || e.message.includes("setEnd")) && e.message.includes("Range")) {
+        console.warn('Suppressed iframe Range boundary error:', e.message);
+        e.preventDefault();
+      }
+    });
+  } catch (e) {}
+
+  proto._patchedForEpub = true;
+}
+
+patchRangeForEpub(window);
+
+function patchEpubCfi() {
+  if (typeof ePub !== 'undefined' && ePub.CFI && ePub.CFI.prototype && !ePub.CFI.prototype._patchedForSafeRange) {
+    const origToRange = ePub.CFI.prototype.toRange;
+    ePub.CFI.prototype.toRange = function(_doc, ignoreClass) {
+      const doc = _doc || (typeof document !== 'undefined' ? document : null);
+      if (doc) {
+        const win = doc.defaultView || (doc.ownerDocument && doc.ownerDocument.defaultView);
+        if (win) {
+          patchRangeForEpub(win);
+        }
+      }
+      try {
+        return origToRange.call(this, _doc, ignoreClass);
+      } catch (err) {
+        console.warn('ePub.CFI.toRange safely handled boundary error:', err);
+        try {
+          return doc ? doc.createRange() : null;
+        } catch (e) {
+          return null;
+        }
+      }
+    };
+    ePub.CFI.prototype._patchedForSafeRange = true;
+  }
+}
+
+patchEpubCfi();
+
+window.addEventListener('error', (e) => {
+  if (e && e.message && (e.message.includes("setStart") || e.message.includes("setEnd")) && e.message.includes("Range")) {
+    console.warn('Suppressed unhandled Range boundary error:', e.message);
+    e.preventDefault();
+  }
+});
+
 // ── State Management ──
 const state = {
   currentBook: null, // { type: 'txt'|'epub', title: '', author: '', rawContent: any, id: '' }
@@ -177,6 +264,8 @@ const elements = {
   displayTitle: document.getElementById('title-text'),
   displayAuthor: document.getElementById('display-book-author'),
   btnEditMeta: document.getElementById('btn-edit-meta'),
+  btnResetDb: document.getElementById('btn-reset-db'),
+  btnResetDbMobile: document.getElementById('btn-reset-db-mobile'),
   bookFileInput: document.getElementById('book-file-input'),
   emptyFileInput: document.getElementById('empty-file-input'),
   btnExportBook: document.getElementById('btn-export-book'),
@@ -310,6 +399,71 @@ async function loadActiveBookFromStorage() {
     console.warn('Failed to load book from IndexedDB:', err);
     return null;
   }
+}
+
+async function clearAllReaderIndexedDB() {
+  try {
+    const db = await openReaderDB();
+    if (!db) return;
+    const storeNames = Array.from(db.objectStoreNames);
+    if (storeNames.length > 0) {
+      const tx = db.transaction(storeNames, 'readwrite');
+      storeNames.forEach(name => {
+        tx.objectStore(name).clear();
+      });
+      await new Promise((resolve) => {
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      });
+    }
+    db.close();
+  } catch (err) {
+    console.warn('Failed to clear IndexedDB stores:', err);
+  }
+}
+
+async function resetReaderApp() {
+  if (!confirm('영문 리더기에 저장된 도서 데이터(IndexedDB)를 모두 삭제하고 초기화하시겠습니까?')) {
+    return;
+  }
+
+  // 1. IndexedDB 데이터 모두 삭제
+  await clearAllReaderIndexedDB();
+
+  // 2. 현재 열려 있는 도서 상태 정리
+  cleanupEpub();
+  if (elements.txtContent) {
+    elements.txtContent.innerHTML = '';
+  }
+  if (state.currentBook) {
+    try {
+      localStorage.removeItem(`reader_pos_${state.currentBook.id}`);
+    } catch (e) {}
+  }
+  state.currentBook = null;
+  state.highlights = [];
+  state.toc = [];
+
+  // 3. UI 초기화
+  closeAllToolbars();
+  if (typeof closeDrawer === 'function') {
+    closeDrawer();
+  }
+  if (elements.txtViewer) elements.txtViewer.style.display = 'none';
+  if (elements.epubViewer) elements.epubViewer.style.display = 'none';
+  if (elements.emptyState) elements.emptyState.style.display = 'flex';
+  if (elements.btnToggleToc) elements.btnToggleToc.style.display = 'none';
+  if (elements.readerBottomBar) elements.readerBottomBar.style.display = 'none';
+
+  updateMetadataUI();
+  if (elements.currentChapterTitle) elements.currentChapterTitle.textContent = '';
+  if (elements.progressSlider) elements.progressSlider.value = 0;
+  if (elements.progressPercent) elements.progressPercent.textContent = '0%';
+  if (elements.bookFileInput) elements.bookFileInput.value = '';
+  if (elements.emptyFileInput) elements.emptyFileInput.value = '';
+
+  updateHighlightBadge();
+  showToast('저장된 도서 데이터(IndexedDB)가 초기화되었습니다.');
 }
 
 // 하이라이트 관련 요소 클릭 여부 판별 (EPUB.js SVG 어노테이션 및 내보낸 <mark> 태그 모두 인식)
@@ -519,7 +673,8 @@ function applyEpubThemes() {
       'font-family': `${state.settings.fontFamily === 'serif' ? 'Georgia, serif' : '-apple-system, sans-serif'} !important`,
       'font-size': `${state.settings.fontSize}px !important`,
       'line-height': `${currentLh} !important`,
-      'padding': '20px 40px !important',
+      'padding': `${window.innerWidth <= 768 ? '12px 18px' : '20px 40px'} !important`,
+      'box-sizing': 'border-box !important',
     },
     'p': {
       'margin-bottom': '1.4em !important',
@@ -1266,6 +1421,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   }
 
   try {
+    patchEpubCfi();
     const book = ePub(arrayBuffer);
     state.epub.book = book;
 
@@ -1277,6 +1433,15 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       allowScriptedContent: true
     });
     state.epub.rendition = rendition;
+
+    // View render hook: patch Range DOM prototype immediately when any view is created
+    rendition.hooks.render.register((view) => {
+      if (view) {
+        if (view.window) patchRangeForEpub(view.window);
+        if (view.document && view.document.defaultView) patchRangeForEpub(view.document.defaultView);
+        if (view.iframe && view.iframe.contentWindow) patchRangeForEpub(view.iframe.contentWindow);
+      }
+    });
 
     const ensureRenditionLayout = () => {
       if (state.epub.rendition) {
@@ -1323,7 +1488,11 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
             try {
               const data = JSON.parse(jsonText);
               if (Array.isArray(data.highlights) && data.highlights.length > 0) {
-                state.highlights = data.highlights;
+                // Mark loaded highlights as embedded marks since they are already in XHTML
+                state.highlights = data.highlights.map(h => ({
+                  ...h,
+                  isEmbeddedMark: true
+                }));
                 sortHighlights();
                 saveHighlights();
                 updateHighlightBadge();
@@ -1342,23 +1511,15 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
 
     // Render initial page or restore saved location when book is ready
     book.ready.then(() => {
-      ensureRenditionLayout();
       const savedCfi = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
       return rendition.display(savedCfi || undefined);
     }).then(() => {
       applyEpubThemes();
       restoreEpubHighlights();
-      ensureRenditionLayout();
-      requestAnimationFrame(ensureRenditionLayout);
-      setTimeout(ensureRenditionLayout, 100);
-      setTimeout(ensureRenditionLayout, 300);
-      setTimeout(ensureRenditionLayout, 600);
     }).catch(err => {
       console.warn('Initial rendition display error, retrying default display:', err);
       if (state.epub.rendition) {
-        state.epub.rendition.display().then(() => {
-          ensureRenditionLayout();
-        });
+        state.epub.rendition.display();
       }
     });
 
@@ -1379,23 +1540,33 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }
       updateEpubProgress(location);
       showNavButtonsTemporarily(1800);
-      ensureRenditionLayout();
       setTimeout(() => {
         restoreEpubHighlights();
-      }, 100);
+      }, 50);
     });
 
     // Rendition Rendered event
-    rendition.on("rendered", () => {
-      ensureRenditionLayout();
+    rendition.on("rendered", (section, view) => {
+      if (view && view.window) {
+        patchRangeForEpub(view.window);
+      }
+      if (view && view.document && view.document.defaultView) {
+        patchRangeForEpub(view.document.defaultView);
+      }
       setTimeout(() => {
         restoreEpubHighlights();
-      }, 100);
+      }, 50);
     });
 
     // Register content hook for EPUB document styling & interaction
     rendition.hooks.content.register((contents) => {
+      if (contents.window) {
+        patchRangeForEpub(contents.window);
+      }
       const doc = contents.document;
+      if (doc && doc.defaultView) {
+        patchRangeForEpub(doc.defaultView);
+      }
       if (doc && doc.head && !doc.getElementById('reader-injected-hl-style')) {
         const style = doc.createElement('style');
         style.id = 'reader-injected-hl-style';
@@ -1579,10 +1750,24 @@ function restoreEpubHighlights() {
   if (!state.epub.rendition || !state.currentBook || state.currentBook.type !== 'epub') return;
   if (!state.highlights || state.highlights.length === 0) return;
 
+  const iframe = elements.epubArea.querySelector('iframe');
+  if (iframe && iframe.contentWindow) {
+    patchRangeForEpub(iframe.contentWindow);
+  }
+  const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+
   const isDark = state.settings.theme === 'dark';
 
   state.highlights.forEach(hl => {
     if (hl.cfiRange) {
+      // If this highlight is already rendered as an interactive <mark> in the loaded document or exported file, skip SVG annotation
+      if (hl.isEmbeddedMark) {
+        return;
+      }
+      if (iframeDoc && hl.id && iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`)) {
+        return;
+      }
+
       const colorName = hl.color || 'yellow';
       const colorHex = getHighlightColorHex(colorName);
 
@@ -2345,6 +2530,13 @@ function setupEventListeners() {
     e.target.value = '';
   });
 
+  // Storage Reset buttons (Desktop & Mobile)
+  [elements.btnResetDb, elements.btnResetDbMobile].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', resetReaderApp);
+    }
+  });
+
   // Sample Book & Export buttons
   if (elements.btnExportBook) {
     elements.btnExportBook.addEventListener('click', exportBookWithHighlights);
@@ -2443,11 +2635,15 @@ function setupEventListeners() {
 
   // EPUB Nav arrows
   elements.btnEpubPrev.addEventListener('click', () => {
-    if (state.epub.rendition) state.epub.rendition.prev();
+    if (state.epub.rendition) {
+      state.epub.rendition.prev().catch(err => console.warn('Prev navigation:', err));
+    }
     showNavButtonsTemporarily(2000);
   });
   elements.btnEpubNext.addEventListener('click', () => {
-    if (state.epub.rendition) state.epub.rendition.next();
+    if (state.epub.rendition) {
+      state.epub.rendition.next().catch(err => console.warn('Next navigation:', err));
+    }
     showNavButtonsTemporarily(2000);
   });
 
@@ -2503,9 +2699,9 @@ function setupEventListeners() {
 
     if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
       if (e.key === 'ArrowLeft') {
-        state.epub.rendition.prev();
+        state.epub.rendition.prev().catch(err => console.warn('Key prev:', err));
       } else if (e.key === 'ArrowRight') {
-        state.epub.rendition.next();
+        state.epub.rendition.next().catch(err => console.warn('Key next:', err));
       }
     }
   });

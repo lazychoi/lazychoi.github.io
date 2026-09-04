@@ -65,17 +65,45 @@
         <div class="book-info-texts">
           <div class="book-title-display" id="display-book-title" title="클릭하여 도서명/저자 편집">
             <span id="title-text">도서를 선택해주세요</span>
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
           </div>
           <div class="book-author-display" id="display-book-author">저자 미지정</div>
         </div>
+        <!-- 모바일 화면: 도서명 오른쪽 끝 초기화 버튼 -->
+        <button type="button" class="btn-reader btn-reset-db btn-reset-mobile" id="btn-reset-db-mobile"
+          title="저장된 도서 데이터 초기화">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+            </path>
+          </svg>
+          초기화
+        </button>
       </div>
 
       <div class="topbar-actions">
+        <!-- 데스크톱 화면: 열기 버튼 왼쪽 초기화 버튼 -->
+        <button type="button" class="btn-reader btn-reset-db btn-reset-desktop" id="btn-reset-db"
+          title="저장된 도서 데이터 초기화">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+            </path>
+          </svg>
+          초기화
+        </button>
+
         <!-- 파일 열기 버튼 -->
         <div class="file-input-btn-wrap">
           <button class="btn-reader primary">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path></svg>
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path
+                d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z">
+              </path>
+            </svg>
             열기
           </button>
           <input type="file" id="book-file-input" accept=".txt,.epub,text/plain,application/epub+zip">
@@ -83,26 +111,38 @@
 
         <!-- EPUB 내보내기 버튼 -->
         <button class="btn-reader" id="btn-export-book" title="형광펜 및 메모가 포함된 EPUB 파일로 내보내기">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
           내보내기
         </button>
 
         <!-- 목차 토글 버튼 -->
         <button class="btn-reader" id="btn-toggle-toc" title="목차 보기" style="display:none;">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h7"></path>
+          </svg>
           목차
         </button>
 
         <!-- 하이라이트 서랍 토글 버튼 -->
         <button class="btn-reader" id="btn-toggle-highlights" title="하이라이트 목록">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+            </path>
+          </svg>
           형광펜<span id="highlight-counter" style="display:none;">0</span>
         </button>
 
         <!-- 설정 버튼 -->
         <div class="settings-btn-wrap">
           <button class="btn-reader" id="btn-toggle-settings" title="글꼴 및 테마 설정">
-            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+              </path>
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+            </svg>
             설정
           </button>
 
@@ -158,18 +198,27 @@
           <div class="empty-state-icon">📖</div>
           <h2 class="empty-state-title">영문 텍스트 또는 EPUB 파일을 열어보세요</h2>
           <p class="empty-state-desc">
-            컴퓨터에 있는 <strong>.txt</strong> 파일이나 <strong>.epub</strong> 전자책을 불러와 편안하게 읽을 수 있습니다.
+            <strong>.txt</strong> 파일이나 <strong>.epub</strong> 전자책을 불러와 편안하게 읽을 수 있습니다.
             궁금한 문장이나 단어를 마우스로 드래그하여 <strong>형광펜</strong>으로 표시하고,
             <strong>AI</strong>에게 앞뒤 문맥을 포함한 심층 해설(번역, 단어/숙어, 문법)을 물어보세요!
           </p>
           <div class="empty-state-buttons">
             <label class="btn-reader primary" style="cursor: pointer;">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z"></path></svg>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z">
+                </path>
+              </svg>
               내 파일 열기 (.txt / .epub)
-              <input type="file" id="empty-file-input" accept=".txt,.epub,text/plain,application/epub+zip" style="display:none;">
+              <input type="file" id="empty-file-input" accept=".txt,.epub,text/plain,application/epub+zip"
+                style="display:none;">
             </label>
             <button class="btn-reader" id="btn-empty-sample">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                </path>
+              </svg>
               샘플 도서 열기 (The Happy Prince)
             </button>
           </div>
@@ -183,17 +232,22 @@
         <!-- EPUB 뷰어 컨테이너 -->
         <div class="epub-viewer-container" id="epub-viewer">
           <button class="epub-nav-arrow epub-nav-prev" id="btn-epub-prev" title="이전 페이지 (←)">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M15 19l-7-7 7-7"></path>
+            </svg>
           </button>
           <div id="epub-area"></div>
           <button class="epub-nav-arrow epub-nav-next" id="btn-epub-next" title="다음 페이지 (→)">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path d="M9 5l7 7-7 7"></path>
+            </svg>
           </button>
         </div>
 
         <!-- 하단 진행 상태 바 -->
         <footer class="reader-bottom-bar" id="reader-bottom-bar" style="display:none;">
-          <div id="current-chapter-title" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+          <div id="current-chapter-title"
+            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
             Chapter 1
           </div>
           <div class="progress-slider-box">
@@ -217,11 +271,17 @@
       <div class="color-dot pink" data-color="pink" title="분홍색 형광펜"></div>
     </div>
     <button type="button" class="toolbar-btn ai-btn" id="btn-toolbar-ai">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
       AI 분석
     </button>
     <button type="button" class="toolbar-btn" id="btn-toolbar-copy">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path
+          d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+        </path>
+      </svg>
       복사
     </button>
   </div>
@@ -229,15 +289,25 @@
   <!-- 기존 하이라이트 클릭 시 팝오버 툴바 -->
   <div class="selection-toolbar" id="highlight-toolbar">
     <button type="button" class="toolbar-btn ai-btn" id="btn-hl-ai">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
       AI 분석
     </button>
     <button type="button" class="toolbar-btn" id="btn-hl-note">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path
+          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+        </path>
+      </svg>
       메모
     </button>
     <button type="button" class="toolbar-btn danger" id="btn-hl-remove">
-      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path
+          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+        </path>
+      </svg>
       삭제
     </button>
   </div>
@@ -251,7 +321,9 @@
         <span id="drawer-title-text">형광펜 목록</span>
       </h3>
       <button type="button" class="btn-drawer-close" id="btn-drawer-close">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
       </button>
     </div>
     <div class="drawer-body" id="drawer-body">
@@ -264,11 +336,17 @@
     <div class="ai-modal" role="dialog" aria-labelledby="ai-modal-title">
       <div class="ai-modal-header">
         <h3 class="ai-modal-title" id="ai-modal-title">
-          <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+          <svg width="20" height="20" fill="none" stroke="#2563eb" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+            </path>
+          </svg>
           AI 문맥 분석 및 질의
         </h3>
         <button type="button" class="btn-drawer-close" id="btn-close-ai-modal">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </button>
       </div>
 
@@ -305,7 +383,11 @@
 
       <div class="ai-modal-footer">
         <button type="button" class="btn-ai-launch copy" id="btn-copy-prompt">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path
+              d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+            </path>
+          </svg>
           프롬프트 복사
         </button>
 
@@ -316,8 +398,11 @@
           <button type="button" class="btn-ai-launch chatgpt" id="btn-launch-chatgpt" title="ChatGPT 열기">
             🤖 ChatGPT
           </button>
-          <button type="button" class="btn-ai-launch google" id="btn-launch-google" title="Google AI Search (영어 듣기앱 방식)">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+          <button type="button" class="btn-ai-launch google" id="btn-launch-google"
+            title="Google AI Search (영어 듣기앱 방식)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
             Google AI 질문
           </button>
         </div>
