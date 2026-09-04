@@ -1232,6 +1232,15 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId) {
         style.id = 'reader-injected-hl-style';
         const isDark = state.settings.theme === 'dark';
         style.textContent = `
+          html, body {
+            overflow: hidden !important;
+            overscroll-behavior: none !important;
+            overscroll-behavior-y: none !important;
+            touch-action: pan-x !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            -webkit-touch-callout: default;
+          }
           .epubjs-hl {
             cursor: pointer !important;
             pointer-events: auto !important;
@@ -1503,13 +1512,37 @@ function showFloatingToolbar(rect) {
   let y = rect.top + window.scrollY;
 
   const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
-  // 모바일 환경에서는 브라우저 기본 상황 팝업(복사/찾아보기)이 선택 글자 위에 나타나므로, 앱 팝업을 글자 아래에 배치
-  const placeBelow = isMobile || (y - tbHeight - 15 < window.scrollY + 60);
+  let placeBelow = false;
+  let extraOffset = 0;
+
+  if (isMobile) {
+    // 모바일 OS(iOS Safari / Chrome) 자체 상황 팝업(복사/찾아보기 등) 위치를 동적으로 회피:
+    // - 화면 상단~중간 살짝 위(약 44% 지점 이하): 모바일 OS 팝업이 글자 '아래'에 나타나므로, 앱 팝업은 글자 '위'에 배치
+    // - 화면 중간 아래(약 44% 초과): 모바일 OS 팝업이 글자 '위'에 나타나므로, 앱 팝업은 글자 '아래'에 배치
+    // - 단, 글자가 최상단(top < 120px)에 위치해 상단 여백이 좁은 경우: OS 팝업(약 44px) 아래쪽으로 추가 오프셋 배치
+    const viewportY = rect.top;
+    const isUpperHalf = viewportY <= window.innerHeight * 0.44;
+
+    if (isUpperHalf) {
+      if (viewportY < 120) {
+        placeBelow = true;
+        extraOffset = 54; // OS 팝업 높이(약 44px) + 여백(10px)을 피해 아래에 배치
+      } else {
+        placeBelow = false;
+      }
+    } else {
+      placeBelow = true;
+      extraOffset = 0;
+    }
+  } else {
+    // 데스크톱: 상단 여백이 좁으면 하단 배치, 충분하면 상단 배치
+    placeBelow = (y - tbHeight - 15 < window.scrollY + 60);
+  }
 
   if (placeBelow) {
     tb.classList.add('flipped');
     tb.style.transform = 'translate(-50%, 0)';
-    y = rect.top + (rect.height || 22) + window.scrollY + 8;
+    y = rect.top + (rect.height || 22) + window.scrollY + 8 + extraOffset;
   } else {
     tb.classList.remove('flipped');
     tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';

@@ -25,6 +25,11 @@
   --hl-pink-border: #f472b6;
 }
 
+html, body {
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+}
+
 /* ── 테마별 스타일 ── */
 body.theme-light {
   --reader-bg: #f8fafc;
@@ -1183,11 +1188,70 @@ body.theme-dark .toolbar-btn:hover {
 
 /* ── 반응형 스타일 ── */
 @media (max-width: 768px) {
-  .reader-app {
-    padding: 8px 10px 20px;
+  html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: auto;
   }
+
+  .nav {
+    flex-shrink: 0;
+    padding: 6px 12px 0;
+  }
+
+  .reader-app {
+    flex: 1;
+    height: calc(100% - 50px);
+    min-height: 0;
+    padding: 6px 10px 10px;
+    gap: 8px;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
   .reader-topbar {
-    padding: 10px 12px;
+    padding: 8px 12px;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .reader-workspace {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .reader-main {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .epub-viewer-container {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    touch-action: pan-x;
+  }
+
+  #epub-area {
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+    touch-action: pan-x;
+  }
+
+  #epub-area iframe {
+    touch-action: pan-x;
+    overscroll-behavior: none;
   }
   .topbar-actions {
     width: 100%;
