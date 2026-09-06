@@ -119,8 +119,8 @@ a {
   color: #ffffff !important;
 }
 
-/* Mobile Hamburger Menu styles */
-@media (max-width: 768px) {
+/* Mobile & Tablet Hamburger Menu styles (iPhone & iPad / Tablets <= 1024px) */
+@media (max-width: 1024px) {
   .nav {
     padding: max(4px, env(safe-area-inset-top)) 0 0 0;
     max-width: 100%;
@@ -138,9 +138,10 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 5px;
+    padding: 10px 16px;
     width: 100%;
     position: relative;
+    box-sizing: border-box;
   }
 
   .nav-logo {
@@ -155,30 +156,32 @@ a {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    white-space: nowrap;
   }
 
   .nav-toggle {
-    display: block;
+    display: flex;
     background: transparent;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    padding: 4px 4px 4px 0;
-    display: flex;
+    padding: 4px;
+    border-radius: 8px;
     align-items: center;
     justify-content: center;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, background 0.2s ease;
     margin-right: auto;
   }
 
   .nav-toggle:hover {
     color: var(--text-main);
+    background: rgba(0, 0, 0, 0.04);
   }
 
   .auth-status-container {
     right: 15px;
-    top: 30px;
-    transform: translateY(-30%);
+    top: 50%;
+    transform: translateY(-50%);
     height: 32px;
     display: flex;
     align-items: center;
@@ -187,12 +190,14 @@ a {
   }
 
   .nav-menu {
-    display: none; /* Hidden on mobile by default */
+    display: none; /* Hidden on mobile/tablet by default */
     flex-direction: column;
     width: 100%;
+    box-sizing: border-box;
     padding: 8px 16px 16px;
     gap: 4px;
     border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.95);
   }
 
   .nav-menu.open {
@@ -204,6 +209,36 @@ a {
     font-size: 14px;
     width: 100%;
     border-radius: 8px;
+    box-sizing: border-box;
+  }
+}
+
+/* Tablet Grid Enhancement for Hamburger Menu (601px ~ 1024px) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .nav-header {
+    padding: 10px 24px;
+  }
+
+  .nav-menu.open {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 8px;
+    padding: 12px 24px 16px;
+  }
+
+  .nav-link {
+    padding: 10px 14px;
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+  }
+
+  .nav-link:hover {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .nav-link.active {
+    background: rgba(37, 99, 235, 0.08);
+    border-color: rgba(37, 99, 235, 0.2);
   }
 }
 
@@ -224,17 +259,6 @@ a {
 /* ══════════════════════════════════════════════════════
    Mobile Responsiveness (common)
    ══════════════════════════════════════════════════════ */
-@media (max-width: 600px) {
-  .nav {
-    padding: 10px 10px 0;
-    gap: 4px;
-  }
-
-  .nav-link {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-}
 
 @media (max-width: 480px) {
   #authStatusText {
@@ -302,22 +326,8 @@ a {
   }
 }
 
-/* 990px 이하의 좁은 화면에서 네비게이션과 로그인 버튼의 겹침 방지 */
-@media (max-width: 990px) {
-  .nav-menu {
-    gap: 4px;
-  }
-  .nav-link {
-    padding: 6px 10px !important;
-    font-size: 12.5px !important;
-  }
-  .auth-status-container {
-    right: 12px !important;
-  }
-}
-
-/* 데스크톱 네비게이션 로그인 영역 겹침 방지 (769px 이상에서만 적용) */
-@media (min-width: 769px) {
+/* 데스크톱 네비게이션 로그인 영역 겹침 방지 (1025px 이상 대화면에서만 적용) */
+@media (min-width: 1025px) {
   .nav {
     padding-top: 48px !important; /* 상단 로그인바 영역 공간 확보 */
   }

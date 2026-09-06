@@ -57,6 +57,31 @@ body.theme-dark {
 body.theme-dark .nav {
   color: #f1f5f9;
 }
+@media (max-width: 1024px) {
+  body.theme-dark .nav {
+    background: rgba(15, 23, 42, 0.85);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+  }
+  body.theme-dark .nav-logo {
+    color: #f1f5f9;
+  }
+  body.theme-dark .nav-toggle {
+    color: #94a3b8;
+  }
+  body.theme-dark .nav-toggle:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  body.theme-dark .nav-menu {
+    background: rgba(15, 23, 42, 0.95);
+    border-top-color: rgba(255, 255, 255, 0.08);
+  }
+  body.theme-dark .nav-link {
+    color: #cbd5e1;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+}
 body.theme-dark .nav-link {
   color: #94a3b8;
 }
