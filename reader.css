@@ -2031,15 +2031,19 @@ body.drawer-open {
   transform: translateX(-50%) translateY(20px);
   background: #1e293b;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border-radius: 30px;
   font-size: 14px;
   font-weight: 600;
+  line-height: 1.5;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   z-index: 5000;
   opacity: 0;
   pointer-events: none;
   transition: all 0.25s ease;
+  max-width: min(92vw, 560px);
+  text-align: center;
+  word-break: keep-all;
 }
 
 .reader-toast.show {

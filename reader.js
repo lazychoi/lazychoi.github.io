@@ -244,7 +244,7 @@ function extractContextFromText(fullParagraph, selectedText) {
 
 // ── Notification Toast ──
 let toastTimer = null;
-function showToast(msg) {
+function showToast(msg, duration = 2200) {
   const toast = document.getElementById('reader-toast');
   if (!toast) return;
   toast.textContent = msg;
@@ -252,7 +252,7 @@ function showToast(msg) {
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => {
     toast.classList.remove('show');
-  }, 2200);
+  }, duration);
 }
 
 // ── DOM Elements ──
@@ -2714,7 +2714,13 @@ function renderHighlightDrawer() {
             elements.settingsPopover.classList.add('open');
             positionSettingsPopover();
           } else {
-            showToast('❌ 생성 실패: ' + err.message);
+            const isQuota = /429|quota|rate limit|too many|RESOURCE_EXHAUSTED/i.test(err.message) || err.status === 429;
+            if (isQuota) {
+              const retryInfo = parseQuotaRetryTime(err);
+              showToast(retryInfo.fullMessage, 8000);
+            } else {
+              showToast('❌ 생성 실패: ' + err.message);
+            }
           }
         }
       });
@@ -2907,6 +2913,140 @@ async function resolveGeminiModel(apiKey, forceRefresh = false) {
   return cachedGeminiModel;
 }
 
+// ── Gemini API 쿼터 초과 시 재시도 대기 시간 분석 및 안내 메시지 생성 함수 ──
+function parseQuotaRetryTime(err) {
+  let waitSeconds = null;
+  let isDailyReset = false;
+  const msg = (err && (err.message || String(err))) || '';
+
+  // 1. HTTP 응답 헤더 Retry-After 확인
+  if (err && err.retryAfterHeader) {
+    const sec = parseFloat(err.retryAfterHeader);
+    if (!isNaN(sec) && sec > 0) {
+      waitSeconds = sec;
+    } else {
+      const headerDate = new Date(err.retryAfterHeader);
+      if (!isNaN(headerDate.getTime())) {
+        waitSeconds = Math.max(0, (headerDate.getTime() - Date.now()) / 1000);
+      }
+    }
+  }
+
+  // 2. Google RPC 에러 상세 정보(RetryInfo) 확인
+  if (waitSeconds === null && err && err.errorDetails && Array.isArray(err.errorDetails)) {
+    const retryInfo = err.errorDetails.find(d => d && d['@type'] && d['@type'].includes('RetryInfo'));
+    if (retryInfo && retryInfo.retryDelay) {
+      const match = String(retryInfo.retryDelay).match(/([\d.]+)s?/i);
+      if (match) {
+        waitSeconds = parseFloat(match[1]);
+      }
+    }
+  }
+
+  // 3. 오류 메시지 텍스트 파싱
+  if (waitSeconds === null) {
+    // 3a. "retry in X.Xs" 또는 "retry in Xs"
+    const matchSec = msg.match(/retry in ([\d.]+)\s*s(?:ec(?:ond)?s?)?/i);
+    if (matchSec) {
+      waitSeconds = parseFloat(matchSec[1]);
+    }
+  }
+
+  if (waitSeconds === null) {
+    // 3b. "retry in Xm" 또는 "retry in X min"
+    const matchMin = msg.match(/retry in ([\d.]+)\s*m(?:in(?:ute)?s?)?/i);
+    if (matchMin) {
+      waitSeconds = parseFloat(matchMin[1]) * 60;
+    }
+  }
+
+  if (waitSeconds === null) {
+    // 3c. "retry in Xh" 또는 "retry in X hours"
+    const matchHour = msg.match(/retry in ([\d.]+)\s*h(?:our)?s?/i);
+    if (matchHour) {
+      waitSeconds = parseFloat(matchHour[1]) * 3600;
+    }
+  }
+
+  if (waitSeconds === null) {
+    // 3d. "retry after <timestamp/date>"
+    const matchAfter = msg.match(/retry after\s+([^\s,;\(\)]+)/i);
+    if (matchAfter) {
+      const dateStr = matchAfter[1].replace(/\.+$/, '');
+      const date = new Date(dateStr);
+      if (!isNaN(date.getTime())) {
+        const diff = (date.getTime() - Date.now()) / 1000;
+        if (diff > 0) {
+          waitSeconds = diff;
+        }
+      }
+    }
+  }
+
+  // 4. 분 단위 한도(RPM) 감지 시 기본 1분 대기
+  if (waitSeconds === null && /minute|RPM/i.test(msg)) {
+    waitSeconds = 60;
+  }
+
+  // 5. 대기 시간이 명시되지 않은 일일 쿼터 초과의 경우:
+  // Google Gemini API 일일 쿼터는 태평양 표준시 자정(00:00 PT)에 리셋되므로 다음 자정까지 남은 시간 계산
+  if (waitSeconds === null) {
+    try {
+      const now = new Date();
+      const ptString = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+      const ptDate = new Date(ptString);
+      const nextMidnightPT = new Date(ptDate);
+      nextMidnightPT.setHours(24, 0, 0, 0);
+      const diffMs = nextMidnightPT.getTime() - ptDate.getTime();
+      waitSeconds = Math.max(60, Math.round(diffMs / 1000));
+      isDailyReset = true;
+    } catch (e) {
+      waitSeconds = 86400;
+      isDailyReset = true;
+    }
+  }
+
+  const totalHours = waitSeconds / 3600;
+  const hoursCeil = Math.ceil(totalHours);
+  let h = Math.floor(totalHours);
+  let m = Math.round((waitSeconds % 3600) / 60);
+  if (m === 60) {
+    h += 1;
+    m = 0;
+  }
+
+  let timeText = '';
+  if (totalHours >= 1) {
+    if (m > 0 && h > 0) {
+      timeText = `약 ${h}시간 ${m}분 후(약 ${hoursCeil}시간 후)`;
+    } else {
+      timeText = `약 ${hoursCeil}시간 후`;
+    }
+  } else if (m > 0) {
+    timeText = `약 1시간 이내(약 ${m}분 후)`;
+  } else {
+    timeText = `약 1시간 이내(약 1분 후)`;
+  }
+
+  let resetTimeStr = '';
+  try {
+    const resetDate = new Date(Date.now() + waitSeconds * 1000);
+    resetTimeStr = resetDate.toLocaleTimeString('ko-KR', { hour: 'numeric', minute: '2-digit' });
+  } catch (e) {}
+
+  const extraResetText = resetTimeStr && (isDailyReset || totalHours >= 2) ? ` (${resetTimeStr}경 초기화)` : '';
+  const fullMessage = `⚠️ Gemini API 쿼터가 초과되었습니다. 앞으로 ${timeText}${extraResetText}에 다시 시도해주세요.`;
+
+  return {
+    waitSeconds,
+    totalHours,
+    hoursCeil,
+    timeText,
+    resetTimeStr,
+    fullMessage
+  };
+}
+
 async function fetchGeminiVocabData(targetText, targetSentence) {
   const apiKey = getGeminiApiKey();
   if (!apiKey) {
@@ -2930,7 +3070,7 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
 }`;
 
   async function executeRequest(mName) {
-    // 일시적인 5xx/429 오류에 대비해 1회 자동 재시도
+    // 일시적인 5xx 서버 오류에 대비해 1회 자동 재시도 (429 쿼터 초과는 즉시 반환하여 상위에서 처리)
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${apiKey}`, {
@@ -2947,7 +3087,7 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
             }
           })
         });
-        if ((res.status >= 500 || res.status === 429) && attempt === 0) {
+        if (res.status >= 500 && attempt === 0) {
           console.warn(`Transient server error (${res.status}), retrying in 1s...`);
           await new Promise(r => setTimeout(r, 1000));
           continue;
@@ -2967,8 +3107,8 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
 
   // 오류 시 추천 모델 파싱 또는 재탐색 후 1회 자동 재시도
   if (!response.ok) {
-    const errBody = await response.json().catch(() => ({}));
-    const errMsg = errBody.error?.message || `HTTP ${response.status}`;
+    let errBody = await response.json().catch(() => ({}));
+    let errMsg = errBody.error?.message || `HTTP ${response.status}`;
 
     const suggestedModel = extractRecommendedModelFromError(errMsg);
     if (suggestedModel && suggestedModel !== modelName) {
@@ -2977,15 +3117,27 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
       cachedGeminiModel = modelName;
       localStorage.setItem('gemini_model', modelName);
       response = await executeRequest(modelName);
+      if (!response.ok) {
+        errBody = await response.json().catch(() => ({}));
+        errMsg = errBody.error?.message || `HTTP ${response.status}`;
+      }
     } else if (response.status === 404 || response.status === 400) {
       console.warn(`Model ${modelName} failed (${response.status}), resolving fresh model...`);
       modelName = await resolveGeminiModel(apiKey, true);
       response = await executeRequest(modelName);
+      if (!response.ok) {
+        errBody = await response.json().catch(() => ({}));
+        errMsg = errBody.error?.message || `HTTP ${response.status}`;
+      }
     }
 
     if (!response.ok) {
-      const finalErr = await response.json().catch(() => ({}));
-      throw new Error(finalErr.error?.message || errMsg);
+      const customErr = new Error(errMsg);
+      customErr.status = response.status;
+      customErr.errorBody = errBody;
+      customErr.errorDetails = errBody.error?.details;
+      customErr.retryAfterHeader = response.headers ? response.headers.get('retry-after') : null;
+      throw customErr;
     }
   }
 
@@ -3094,6 +3246,11 @@ async function autoFetchVocabForHighlight(hl) {
     }
   } catch (err) {
     console.warn('Auto vocab analysis skipped/failed:', err);
+    const isQuota = /429|quota|rate limit|too many|RESOURCE_EXHAUSTED/i.test(err.message) || err.status === 429;
+    if (isQuota) {
+      const retryInfo = parseQuotaRetryTime(err);
+      showToast(retryInfo.fullMessage, 8000);
+    }
   }
 }
 
@@ -3161,6 +3318,7 @@ async function batchGenerateVocab() {
   let successCount = 0;
   let idx = 0;
   let retryCountForCurrent = 0;
+  let stoppedByQuota = false;
   const total = missing.length;
 
   showToast(`⚡ 총 ${total}개의 Q&A 스마트 생성을 시작합니다...`);
@@ -3191,28 +3349,15 @@ async function batchGenerateVocab() {
       } catch (err) {
         console.warn(`Error on item "${hl.text}":`, err.message);
 
-        // 429 Too Many Requests (분당 속도 한도 초과) 감지
-        const is429 = /429|quota|rate limit|too many/i.test(err.message);
-        if (is429) {
-          // 구글 응답 메시지에서 대기 초수 파싱 (기본값: 55초)
-          const match = err.message.match(/retry in ([\d.]+)s/i);
-          let waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : 55;
-
-          // 실시간 카운트다운 타이머
-          while (waitSeconds > 0) {
-            showToast(`⏳ 구글 무료 분당속도(RPM) 한도 대기: ${waitSeconds}초 후 자동 재개... (${successCount}/${total} 완료)`);
-            if (elements.btnBatchVocab) {
-              elements.btnBatchVocab.textContent = `⏳ ${waitSeconds}초 대기...`;
-            }
-            await new Promise(r => setTimeout(r, 1000));
-            waitSeconds--;
-          }
-
-          if (elements.btnBatchVocab) {
-            elements.btnBatchVocab.textContent = '⏳ 생성 중...';
-          }
-          // idx를 증가시키지 않고 동일 단어 재시도
-          continue;
+        // API 쿼터 초과(429, Quota, Rate Limit 등) 감지 시 재시도하지 않고 몇 시간 후 재시도 가능한지 안내 후 즉시 중단
+        const isQuota = /429|quota|rate limit|too many|RESOURCE_EXHAUSTED/i.test(err.message) || err.status === 429;
+        if (isQuota) {
+          const retryInfo = parseQuotaRetryTime(err);
+          stoppedByQuota = true;
+          const progressText = successCount > 0 ? ` (${successCount}/${total}개 완료 후 중단)` : '';
+          showToast(`${retryInfo.fullMessage}${progressText}`, 8000);
+          console.warn('API 쿼터 초과로 일괄 생성을 중단합니다:', retryInfo);
+          break; // 반복 재시도 루프 없이 즉시 중단
         }
 
         // 503(서버 과부하) 감지 시 모델 전환 또는 잠시 대기 후 재시도
@@ -3241,7 +3386,9 @@ async function batchGenerateVocab() {
       elements.btnBatchVocab.disabled = false;
       elements.btnBatchVocab.textContent = '⚡ Q&A 일괄생성';
     }
-    showToast(`🎉 총 ${successCount}/${total}개의 Q&A 생성을 완료했습니다!`);
+    if (!stoppedByQuota) {
+      showToast(`🎉 총 ${successCount}/${total}개의 Q&A 생성을 완료했습니다!`);
+    }
     renderHighlightDrawer();
     updateQuizBadge();
   }
