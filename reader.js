@@ -338,6 +338,58 @@ const elements = {
   btnLhIncrease: document.getElementById('btn-lh-increase'),
   lhIndicator: document.getElementById('lh-indicator'),
   fontFamilySelect: document.getElementById('font-family-select'),
+
+  // Quiz & Vocab Elements
+  btnOpenQuiz: document.getElementById('btn-open-quiz'),
+  quizCounter: document.getElementById('quiz-counter'),
+  drawerActionsBar: document.getElementById('drawer-actions-bar'),
+  btnBatchVocab: document.getElementById('btn-batch-vocab'),
+  btnExportVocab: document.getElementById('btn-export-vocab'),
+
+  // Vocab Edit Modal Elements
+  vocabEditModalBackdrop: document.getElementById('vocab-edit-modal-backdrop'),
+  btnCloseVocabEdit: document.getElementById('btn-close-vocab-edit'),
+  btnCancelVocabEdit: document.getElementById('btn-cancel-vocab-edit'),
+  btnSaveVocabEdit: document.getElementById('btn-save-vocab-edit'),
+  vocabEditPreviewTarget: document.getElementById('vocab-edit-preview-target'),
+  vocabEditPreviewSentence: document.getElementById('vocab-edit-preview-sentence'),
+  inputEditMeaning: document.getElementById('input-edit-meaning'),
+  inputEditTrans: document.getElementById('input-edit-trans'),
+
+  // Gemini API Settings
+  inputGeminiApiKey: document.getElementById('input-gemini-api-key'),
+  btnToggleApiMask: document.getElementById('btn-toggle-api-mask'),
+  btnSaveApiKey: document.getElementById('btn-save-api-key'),
+  btnTestApiKey: document.getElementById('btn-test-api-key'),
+  apiStatusBadge: document.getElementById('api-status-badge'),
+  btnOpenApiGuide: document.getElementById('btn-open-api-guide'),
+  apiGuideModalBackdrop: document.getElementById('api-guide-modal-backdrop'),
+  btnCloseApiGuide: document.getElementById('btn-close-api-guide'),
+  btnGuideConfirm: document.getElementById('btn-guide-confirm'),
+
+  // Quiz Modal Elements
+  quizModalBackdrop: document.getElementById('quiz-modal-backdrop'),
+  btnCloseQuizModal: document.getElementById('btn-close-quiz-modal'),
+  quizCriteriaDesc: document.getElementById('quiz-criteria-desc'),
+  quizProgressText: document.getElementById('quiz-progress-text'),
+  quizCardStats: document.getElementById('quiz-card-stats'),
+  quizFlashcard: document.getElementById('quiz-flashcard'),
+  quizQuestionSentence: document.getElementById('quiz-question-sentence'),
+  quizAnswerSection: document.getElementById('quiz-answer-section'),
+  quizAnswerMeaning: document.getElementById('quiz-target-meaning'),
+  quizAnswerTrans: document.getElementById('quiz-sentence-trans'),
+  quizActionsUnrevealed: document.getElementById('quiz-actions-unrevealed'),
+  quizActionsRevealed: document.getElementById('quiz-actions-revealed'),
+  btnQuizReveal: document.getElementById('btn-quiz-reveal'),
+  btnQuizWrong: document.getElementById('btn-quiz-wrong'),
+  btnQuizCorrect: document.getElementById('btn-quiz-correct'),
+  quizEmptyState: document.getElementById('quiz-empty-state'),
+  quizActiveView: document.getElementById('quiz-active-view'),
+  quizResultView: document.getElementById('quiz-result-view'),
+  btnQuizRetryWrong: document.getElementById('btn-quiz-retry-wrong'),
+  btnQuizRestart: document.getElementById('btn-quiz-restart'),
+  btnQuizFinish: document.getElementById('btn-quiz-finish'),
+  btnQuizGoBatch: document.getElementById('btn-quiz-go-batch'),
 };
 
 // 모듈 수준 전역 제어 변수
@@ -378,7 +430,15 @@ async function saveActiveBookToStorage(bookRecord) {
     if (!db) return;
     const tx = db.transaction(READER_STORE_NAME, 'readwrite');
     const store = tx.objectStore(READER_STORE_NAME);
-    store.put({ id: 'current_reading_book', ...bookRecord, timestamp: Date.now() });
+    const highlightsToStore = (Array.isArray(state.highlights) && state.highlights.length > 0)
+      ? state.highlights
+      : (bookRecord.highlights || []);
+    store.put({
+      id: 'current_reading_book',
+      ...bookRecord,
+      highlights: highlightsToStore,
+      timestamp: Date.now()
+    });
   } catch (err) {
     console.warn('Failed to save book to IndexedDB:', err);
   }
@@ -602,7 +662,25 @@ function loadSettings() {
       console.error(e);
     }
   }
+  if (!state.settings.geminiApiKey) {
+    state.settings.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
+  }
+  if (elements.inputGeminiApiKey) {
+    elements.inputGeminiApiKey.value = state.settings.geminiApiKey;
+  }
+  updateApiStatusBadge(!!state.settings.geminiApiKey);
   applySettings();
+}
+
+function updateApiStatusBadge(hasKey) {
+  if (!elements.apiStatusBadge) return;
+  if (hasKey) {
+    elements.apiStatusBadge.textContent = '✅ 등록됨';
+    elements.apiStatusBadge.className = 'api-status-badge configured';
+  } else {
+    elements.apiStatusBadge.textContent = '⚠️ 미등록';
+    elements.apiStatusBadge.className = 'api-status-badge unconfigured';
+  }
 }
 
 function saveSettings() {
@@ -751,46 +829,99 @@ function getBookStorageKey(bookId) {
   return `reader_highlights_${bookId}`;
 }
 
-function loadHighlights(bookId) {
+function loadHighlights(bookId, fallbackList = null) {
   if (!bookId) return [];
-  const raw = localStorage.getItem(getBookStorageKey(bookId));
+  let raw = null;
+  try {
+    raw = localStorage.getItem(getBookStorageKey(bookId));
+  } catch (e) {
+    console.warn(e);
+  }
+
+  let list = null;
   if (raw) {
     try {
-      const list = JSON.parse(raw);
-      if (Array.isArray(list)) {
-        // Clean and deduplicate existing records
-        const uniqueList = [];
-        const seen = new Set();
-        list.forEach(item => {
-          if (!item || !item.text) return;
-          const key = item.cfiRange ? item.cfiRange : `${item.pIdx}_${item.text.trim()}_${(item.targetSentence || '').trim()}`;
-          if (!seen.has(key)) {
-            seen.add(key);
-            uniqueList.push(item);
-          }
-        });
-        uniqueList.sort(compareHighlights);
-        if (uniqueList.length !== list.length) {
-          localStorage.setItem(getBookStorageKey(bookId), JSON.stringify(uniqueList));
-        }
-        return uniqueList;
-      }
+      list = JSON.parse(raw);
     } catch (e) {
       console.error(e);
     }
   }
+
+  // Fallback to IndexedDB backup if localStorage is empty
+  if (!list || !Array.isArray(list) || list.length === 0) {
+    if (Array.isArray(fallbackList) && fallbackList.length > 0) {
+      list = fallbackList;
+    }
+  }
+
+  if (Array.isArray(list)) {
+    // Clean and deduplicate existing records
+    const uniqueList = [];
+    const seen = new Set();
+    list.forEach(item => {
+      if (!item || !item.text) return;
+      const key = item.id || (item.cfiRange ? item.cfiRange : `${item.pIdx}_${item.text.trim()}_${(item.targetSentence || '').trim()}`);
+      if (!seen.has(key)) {
+        seen.add(key);
+        // 단어장 및 퀴즈 필드 보정 (마이그레이션)
+        item.targetMeaning = item.targetMeaning || '';
+        item.sentenceTranslation = item.sentenceTranslation || '';
+        item.studyCount = Number(item.studyCount) || 0;
+        item.wrongCount = Number(item.wrongCount) || 0;
+        item.lastStudiedAt = item.lastStudiedAt || null;
+        uniqueList.push(item);
+      }
+    });
+    uniqueList.sort(compareHighlights);
+    try {
+      localStorage.setItem(getBookStorageKey(bookId), JSON.stringify(uniqueList));
+    } catch (e) {}
+    return uniqueList;
+  }
   return [];
+}
+
+async function saveActiveBookHighlightsToDB() {
+  try {
+    const db = await openReaderDB();
+    if (!db || !state.currentBook) return;
+    const tx = db.transaction(READER_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_STORE_NAME);
+    const req = store.get('current_reading_book');
+    req.onsuccess = () => {
+      const record = req.result;
+      if (record && record.bookId === state.currentBook.id) {
+        record.highlights = state.highlights;
+        store.put(record);
+      }
+    };
+  } catch (err) {
+    console.warn('Failed to save highlights to IndexedDB:', err);
+  }
 }
 
 function saveHighlights() {
   if (!state.currentBook) return;
-  localStorage.setItem(getBookStorageKey(state.currentBook.id), JSON.stringify(state.highlights));
+  try {
+    localStorage.setItem(getBookStorageKey(state.currentBook.id), JSON.stringify(state.highlights));
+  } catch (e) {
+    console.warn('localStorage setItem failed (quota exceeded?):', e);
+  }
+  // 실시간 이중 저장 (IndexedDB 영구 백업)
+  saveActiveBookHighlightsToDB();
   updateHighlightBadge();
 }
 
 function updateHighlightBadge() {
   if (elements.highlightCounter) {
-    elements.highlightCounter.textContent = state.highlights.length;
+    elements.highlightCounter.style.display = 'none';
+  }
+  updateQuizBadge();
+}
+
+function updateQuizBadge() {
+  if (elements.quizCounter) {
+    elements.quizCounter.style.display = 'none';
   }
 }
 
@@ -1238,7 +1369,7 @@ async function downloadZipAsEpub(zip, bookTitle) {
 }
 
 // ── TXT Book Viewer ──
-function openTxtBook(title, author, content, bookId, skipSaveToDb = false) {
+function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null) {
   // Reset EPUB if any
   cleanupEpub();
 
@@ -1250,7 +1381,7 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false) {
     id: bookId || `txt_${Date.now()}`
   };
 
-  state.highlights = loadHighlights(state.currentBook.id);
+  state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
   updateMetadataUI();
   updateHighlightBadge();
 
@@ -1383,7 +1514,7 @@ function cleanupEpub() {
   elements.epubArea.innerHTML = '';
 }
 
-function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false) {
+function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null) {
   cleanupEpub();
 
   state.currentBook = {
@@ -1394,7 +1525,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
     id: bookId || `epub_${Date.now()}`
   };
 
-  state.highlights = loadHighlights(state.currentBook.id);
+  state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
   updateMetadataUI();
   updateHighlightBadge();
 
@@ -1488,22 +1619,70 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
             try {
               const data = JSON.parse(jsonText);
               if (Array.isArray(data.highlights) && data.highlights.length > 0) {
-                // Mark loaded highlights as embedded marks since they are already in XHTML
-                state.highlights = data.highlights.map(h => ({
-                  ...h,
-                  isEmbeddedMark: true
-                }));
+                // 기존 state.highlights의 Q&A 뜻/해석/학습통계가 지워지지 않도록 지능형 병합(Merge) 수행
+                const currentList = Array.isArray(state.highlights) ? [...state.highlights] : [];
+                const currentMap = new Map();
+                currentList.forEach(h => {
+                  if (h.id) currentMap.set(h.id, h);
+                  if (h.cfiRange) currentMap.set(h.cfiRange, h);
+                  const textKey = `${h.pIdx}_${(h.text || '').trim()}`;
+                  currentMap.set(textKey, h);
+                });
+
+                let hasChanges = false;
+                data.highlights.forEach(embH => {
+                  const match = (embH.id && currentMap.get(embH.id)) ||
+                                (embH.cfiRange && currentMap.get(embH.cfiRange)) ||
+                                currentMap.get(`${embH.pIdx}_${(embH.text || '').trim()}`);
+                  if (match) {
+                    match.isEmbeddedMark = true;
+                    // 기존 뜻/해석이 없을 때만 임베디드 파일의 값 채택 (기존 생성된 Q&A 보호)
+                    if (!match.targetMeaning && embH.targetMeaning) {
+                      match.targetMeaning = embH.targetMeaning;
+                      hasChanges = true;
+                    }
+                    if (!match.sentenceTranslation && embH.sentenceTranslation) {
+                      match.sentenceTranslation = embH.sentenceTranslation;
+                      hasChanges = true;
+                    }
+                    if (!match.note && embH.note) {
+                      match.note = embH.note;
+                      hasChanges = true;
+                    }
+                  } else {
+                    // 신규 형광펜 항목 추가
+                    const newH = {
+                      ...embH,
+                      isEmbeddedMark: true,
+                      targetMeaning: embH.targetMeaning || '',
+                      sentenceTranslation: embH.sentenceTranslation || '',
+                      studyCount: Number(embH.studyCount) || 0,
+                      wrongCount: Number(embH.wrongCount) || 0,
+                      lastStudiedAt: embH.lastStudiedAt || null
+                    };
+                    currentList.push(newH);
+                    if (newH.id) currentMap.set(newH.id, newH);
+                    if (newH.cfiRange) currentMap.set(newH.cfiRange, newH);
+                    hasChanges = true;
+                  }
+                });
+
+                state.highlights = currentList;
                 sortHighlights();
-                saveHighlights();
+                if (hasChanges) {
+                  saveHighlights();
+                }
                 updateHighlightBadge();
-                if (elements.readerDrawer.classList.contains('open')) {
+                if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
                   renderHighlightDrawer();
                 }
                 setTimeout(() => {
                   restoreEpubHighlights();
                 }, 100);
               }
-            } catch (e) {}
+            } catch (e) {
+              console.warn('Error merging embedded reader_highlights.json:', e);
+            }
           });
         }
       }).catch(() => {});
@@ -1726,6 +1905,11 @@ function bindAllMarksInEpub() {
           text: markText,
           color: detectedColor,
           note: noteText || '',
+          targetMeaning: '',
+          sentenceTranslation: '',
+          studyCount: 0,
+          wrongCount: 0,
+          lastStudiedAt: null,
           createdAt: new Date().toISOString()
         };
         mark.dataset.hlId = hl.id;
@@ -2028,7 +2212,12 @@ function applyHighlight(colorName) {
       prevSentence: state.activeSelection.prevSentence,
       nextSentence: state.activeSelection.nextSentence,
       createdAt: new Date().toISOString(),
-      note: ''
+      note: '',
+      targetMeaning: '',
+      sentenceTranslation: '',
+      studyCount: 0,
+      wrongCount: 0,
+      lastStudiedAt: null
     };
 
     if (state.currentBook.type === 'txt') {
@@ -2039,6 +2228,7 @@ function applyHighlight(colorName) {
     }
 
     state.highlights.push(targetHighlight);
+    autoFetchVocabForHighlight(targetHighlight);
   }
 
   sortHighlights();
@@ -2303,6 +2493,63 @@ function triggerGoogleAISearch(contextData) {
   }
 }
 
+// ── Vocab Edit Modal (단어장 Q&A 및 메모 수정 모달) ──
+let currentEditingHighlight = null;
+
+function openVocabEditModal(hl) {
+  if (!hl) return;
+  currentEditingHighlight = hl;
+
+  if (elements.vocabEditPreviewTarget) {
+    elements.vocabEditPreviewTarget.textContent = hl.text || '';
+  }
+  if (elements.vocabEditPreviewSentence) {
+    elements.vocabEditPreviewSentence.textContent = hl.targetSentence || hl.text || '';
+  }
+  if (elements.inputEditMeaning) {
+    elements.inputEditMeaning.value = hl.targetMeaning || '';
+  }
+  if (elements.inputEditTrans) {
+    elements.inputEditTrans.value = hl.sentenceTranslation || '';
+  }
+
+  if (elements.vocabEditModalBackdrop) {
+    elements.vocabEditModalBackdrop.classList.add('open');
+  }
+
+  setTimeout(() => {
+    if (elements.inputEditMeaning) {
+      elements.inputEditMeaning.focus();
+    }
+  }, 60);
+}
+
+function closeVocabEditModal() {
+  currentEditingHighlight = null;
+  if (elements.vocabEditModalBackdrop) {
+    elements.vocabEditModalBackdrop.classList.remove('open');
+  }
+}
+
+function saveVocabEdit() {
+  if (!currentEditingHighlight) {
+    closeVocabEditModal();
+    return;
+  }
+
+  const newMeaning = elements.inputEditMeaning ? elements.inputEditMeaning.value.trim() : '';
+  const newTrans = elements.inputEditTrans ? elements.inputEditTrans.value.trim() : '';
+
+  currentEditingHighlight.targetMeaning = newMeaning;
+  currentEditingHighlight.sentenceTranslation = newTrans;
+
+  saveHighlights();
+  renderHighlightDrawer();
+  updateQuizBadge();
+  closeVocabEditModal();
+  showToast('단어장 정보가 수정 및 저장되었습니다.');
+}
+
 // ── Drawer (TOC & Highlights) ──
 function openDrawer(mode) {
   closeAllToolbars();
@@ -2312,6 +2559,9 @@ function openDrawer(mode) {
   document.body.classList.add('drawer-open');
 
   if (mode === 'toc') {
+    if (elements.drawerActionsBar) {
+      elements.drawerActionsBar.style.display = 'none';
+    }
     elements.drawerIcon.textContent = '📑';
     elements.drawerTitle.textContent = '목차 (Table of Contents)';
     renderTocDrawer();
@@ -2329,6 +2579,9 @@ function closeDrawer() {
 }
 
 function renderTocDrawer() {
+  if (elements.drawerActionsBar) {
+    elements.drawerActionsBar.style.display = 'none';
+  }
   elements.drawerBody.innerHTML = '';
   if (!state.epub.toc || state.epub.toc.length === 0) {
     elements.drawerBody.innerHTML = '<p style="color:var(--text-muted); padding:20px; text-align:center;">목차 정보가 없습니다.</p>';
@@ -2356,6 +2609,10 @@ function renderHighlightDrawer() {
   elements.drawerBody.innerHTML = '';
   sortHighlights();
 
+  if (elements.drawerActionsBar) {
+    elements.drawerActionsBar.style.display = (state.highlights && state.highlights.length > 0) ? 'flex' : 'none';
+  }
+
   if (!state.highlights || state.highlights.length === 0) {
     elements.drawerBody.innerHTML = `
       <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
@@ -2374,6 +2631,7 @@ function renderHighlightDrawer() {
 
     const colorHex = getHighlightColorHex(hl.color || 'yellow');
     const dateStr = hl.createdAt ? new Date(hl.createdAt).toLocaleDateString() : '';
+    const questionHtml = hl.targetSentence ? formatQuestionHtml(hl.targetSentence, hl.text) : escapeHtml(hl.text);
 
     card.innerHTML = `
       <div class="highlight-card-header">
@@ -2381,12 +2639,25 @@ function renderHighlightDrawer() {
           <span class="hl-badge-color" style="background-color: ${colorHex};"></span>
           <span>${dateStr}</span>
         </span>
+        <span class="hl-stat-badge">학습 ${hl.studyCount || 0}회 · 오답 ${hl.wrongCount || 0}회</span>
       </div>
-      <div class="highlight-card-text">${escapeHtml(hl.text)}</div>
+      <div class="highlight-card-text">${questionHtml}</div>
+      ${hl.targetMeaning ? `
+        <div class="highlight-vocab-box">
+          <div class="vocab-meaning-line"><strong>💡 뜻:</strong> ${escapeHtml(hl.targetMeaning)}</div>
+          ${hl.sentenceTranslation ? `<div class="vocab-trans-line"><strong>📖 해석:</strong> ${escapeHtml(hl.sentenceTranslation)}</div>` : ''}
+        </div>
+      ` : `
+        <div class="highlight-vocab-unready">
+          <span style="font-size:12px; color:var(--text-muted);">Q&A 미생성</span>
+          <button type="button" class="btn-card-action btn-card-gen-vocab" title="AI Q&A 생성">⚡ Q&A 생성</button>
+        </div>
+      `}
       ${hl.note ? `<div class="highlight-card-note">💬 ${escapeHtml(hl.note)}</div>` : ''}
       <div class="highlight-card-actions">
-        <button type="button" class="btn-card-action btn-card-ai" title="AI 문맥 분석">🤖 AI 질문</button>
-        <button type="button" class="btn-card-action btn-card-note" title="메모">${hl.note ? '메모 수정' : '메모 추가'}</button>
+        ${hl.targetMeaning ? `<button type="button" class="btn-card-action btn-card-gen-vocab" title="AI Q&A 다시 생성">🔄 Q&A</button>` : ''}
+        <button type="button" class="btn-card-action btn-card-edit-vocab" title="뜻/해석 수정">✏️ 편집</button>
+        <button type="button" class="btn-card-action btn-card-ai" title="AI 문맥 검색">🤖 검색</button>
         <button type="button" class="btn-card-action danger btn-card-del" title="삭제">삭제</button>
       </div>
     `;
@@ -2421,47 +2692,47 @@ function renderHighlightDrawer() {
       closeDrawer();
     });
 
+    // AI Q&A Generate/Regenerate button
+    const genVocabBtn = card.querySelector('.btn-card-gen-vocab');
+    if (genVocabBtn) {
+      genVocabBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        try {
+          showToast(`🤖 '${hl.text}' 문맥 분석 중...`);
+          const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+          if (res && res.targetMeaning) {
+            hl.targetMeaning = res.targetMeaning;
+            hl.sentenceTranslation = res.sentenceTranslation;
+            saveHighlights();
+            renderHighlightDrawer();
+            showToast(`✨ Q&A 생성 완료: ${res.targetMeaning}`);
+          }
+        } catch (err) {
+          if (err.message === 'API_KEY_MISSING') {
+            showToast('⚠️ Gemini API 키가 설정되지 않았습니다.');
+            closeDrawer();
+            elements.settingsPopover.classList.add('open');
+            positionSettingsPopover();
+          } else {
+            showToast('❌ 생성 실패: ' + err.message);
+          }
+        }
+      });
+    }
+
+    // Edit Vocab button
+    const editVocabBtn = card.querySelector('.btn-card-edit-vocab');
+    if (editVocabBtn) {
+      editVocabBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openVocabEditModal(hl);
+      });
+    }
+
     // AI Button in card
     card.querySelector('.btn-card-ai').addEventListener('click', (e) => {
       e.stopPropagation();
       triggerGoogleAISearch(hl);
-    });
-
-    // Note button in card
-    card.querySelector('.btn-card-note').addEventListener('click', (e) => {
-      e.stopPropagation();
-      const newNote = prompt('메모를 입력하세요:', hl.note || '');
-      if (newNote !== null) {
-        hl.note = newNote.trim();
-        saveHighlights();
-
-        if (state.currentBook?.type === 'txt') {
-          renderTxtContent();
-        } else if (state.currentBook?.type === 'epub') {
-          const iframe = elements.epubArea.querySelector('iframe');
-          const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
-          if (iframeDoc) {
-            const mark = iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`);
-            if (mark) {
-              mark.title = hl.note ? `메모: ${hl.note}` : '';
-              let badge = mark.querySelector('.reader-note-badge');
-              if (hl.note) {
-                if (!badge) {
-                  badge = iframeDoc.createElement('span');
-                  badge.className = 'reader-note-badge';
-                  badge.style.cssText = 'font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; cursor: pointer;';
-                  mark.appendChild(badge);
-                }
-                badge.textContent = ` 💬 ${hl.note}`;
-              } else if (badge) {
-                badge.remove();
-              }
-            }
-          }
-        }
-
-        renderHighlightDrawer();
-      }
     });
 
     // Delete button in card
@@ -2512,6 +2783,648 @@ function saveMetaEdits() {
     bookId: state.currentBook.id
   });
   showToast('도서 정보가 업데이트되었습니다.');
+}
+
+// ── Gemini API & Vocab / Quiz Subsystem ──
+
+function escapeRegex(str) {
+  return (str || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function formatQuestionHtml(sentence, target) {
+  if (!sentence) return `<mark class="vocab-q-target">${escapeHtml(target || '')}</mark>`;
+  if (!target) return escapeHtml(sentence);
+  const escTarget = escapeRegex(target.trim());
+  return escapeHtml(sentence).replace(new RegExp(`(${escTarget})`, 'gi'), '<mark class="vocab-q-target">$1</mark>');
+}
+
+let storedModel = localStorage.getItem('gemini_model');
+if (storedModel === 'gemini-2.5-flash' || storedModel === 'gemini-3.8-flash' || !storedModel) {
+  storedModel = 'gemini-2.0-flash';
+  localStorage.setItem('gemini_model', storedModel);
+}
+let cachedGeminiModel = storedModel;
+
+function getGeminiApiKey() {
+  let key = (state.settings && state.settings.geminiApiKey) ? state.settings.geminiApiKey.trim() : '';
+  if (!key) {
+    key = (localStorage.getItem('gemini_api_key') || '').trim();
+  }
+  if (!key && elements.inputGeminiApiKey) {
+    key = (elements.inputGeminiApiKey.value || '').trim();
+  }
+
+  // 어떤 경로로든 키가 확인되면 state, localStorage, input, 뱃지에 모두 동기화 보장
+  if (key) {
+    if (!state.settings) state.settings = {};
+    if (state.settings.geminiApiKey !== key) {
+      state.settings.geminiApiKey = key;
+      saveSettings();
+    }
+    if (localStorage.getItem('gemini_api_key') !== key) {
+      localStorage.setItem('gemini_api_key', key);
+    }
+    if (elements.inputGeminiApiKey && elements.inputGeminiApiKey.value !== key) {
+      elements.inputGeminiApiKey.value = key;
+    }
+    updateApiStatusBadge(true);
+  }
+  return key;
+}
+
+function extractGeminiVersion(name) {
+  const m = (name || '').match(/gemini-(\d+(?:\.\d+)?)/i);
+  return m ? parseFloat(m[1]) : 0;
+}
+
+function extractRecommendedModelFromError(errMsg) {
+  if (!errMsg) return null;
+  const match = errMsg.match(/use\s+models\/(gemini-[\w.-]+)/i) || errMsg.match(/models\/(gemini-[\w.-]+)/i);
+  return match ? match[1] : null;
+}
+
+async function resolveGeminiModel(apiKey, forceRefresh = false) {
+  if (!apiKey) throw new Error('API 키가 없습니다.');
+
+  if (!forceRefresh && cachedGeminiModel && cachedGeminiModel !== 'gemini-2.5-flash' && cachedGeminiModel !== 'gemini-3.8-flash') {
+    return cachedGeminiModel;
+  }
+
+  // Google AI Studio 모델 목록 조회로 활성화된 모델 탐색
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`, {
+      method: 'GET',
+      headers: {
+        'x-goog-api-key': apiKey
+      }
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.models && Array.isArray(data.models)) {
+        // generateContent 지원 모델 중 비활성화/과부하 모델 제외
+        const supported = data.models
+          .filter(m => (m.supportedGenerationMethods || []).includes('generateContent'))
+          .map(m => m.name.replace(/^models\//, ''))
+          .filter(name => name !== 'gemini-2.5-flash');
+
+        // 1. 안정적인 고한도(15 RPM) 모델 우선 매핑 (과부하 503 및 5 RPM 방지)
+        const preferredStable = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-3.6-flash'];
+        for (const pref of preferredStable) {
+          if (supported.includes(pref)) {
+            cachedGeminiModel = pref;
+            localStorage.setItem('gemini_model', cachedGeminiModel);
+            return cachedGeminiModel;
+          }
+        }
+
+        // 2. 그 외 flash 모델 중 최신순
+        const flashModels = supported.filter(name => name.includes('flash'));
+        flashModels.sort((a, b) => extractGeminiVersion(b) - extractGeminiVersion(a));
+
+        if (flashModels.length > 0) {
+          cachedGeminiModel = flashModels[0];
+          localStorage.setItem('gemini_model', cachedGeminiModel);
+          return cachedGeminiModel;
+        }
+
+        // 3. 전체 지원 모델 중 최신순
+        supported.sort((a, b) => extractGeminiVersion(b) - extractGeminiVersion(a));
+        if (supported.length > 0) {
+          cachedGeminiModel = supported[0];
+          localStorage.setItem('gemini_model', cachedGeminiModel);
+          return cachedGeminiModel;
+        }
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to fetch Gemini models list, using fallback:', e);
+  }
+
+  // 기본 fallback: 15 RPM 안정 모델 gemini-2.0-flash
+  cachedGeminiModel = 'gemini-2.0-flash';
+  localStorage.setItem('gemini_model', cachedGeminiModel);
+  return cachedGeminiModel;
+}
+
+async function fetchGeminiVocabData(targetText, targetSentence) {
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    throw new Error('API_KEY_MISSING');
+  }
+
+  let modelName = cachedGeminiModel || localStorage.getItem('gemini_model');
+  if (!modelName || modelName === 'gemini-2.5-flash') {
+    modelName = await resolveGeminiModel(apiKey);
+  }
+
+  const prompt = `You are an expert bilingual English-Korean lexicographer and translator.
+Target phrase: "${targetText}"
+Sentence context: "${targetSentence}"
+
+Analyze the target phrase in the exact context of the provided sentence.
+Return ONLY a valid JSON object matching this schema without markdown fences:
+{
+  "targetMeaning": "concise contextual Korean meaning of the target phrase (e.g. 마지막 일)",
+  "sentenceTranslation": "fluent, natural Korean translation of the whole sentence"
+}`;
+
+  async function executeRequest(mName) {
+    // 일시적인 5xx/429 오류에 대비해 1회 자동 재시도
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${mName}:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json",
+              temperature: 0.2
+            }
+          })
+        });
+        if ((res.status >= 500 || res.status === 429) && attempt === 0) {
+          console.warn(`Transient server error (${res.status}), retrying in 1s...`);
+          await new Promise(r => setTimeout(r, 1000));
+          continue;
+        }
+        return res;
+      } catch (e) {
+        if (attempt === 0) {
+          await new Promise(r => setTimeout(r, 1000));
+          continue;
+        }
+        throw e;
+      }
+    }
+  }
+
+  let response = await executeRequest(modelName);
+
+  // 오류 시 추천 모델 파싱 또는 재탐색 후 1회 자동 재시도
+  if (!response.ok) {
+    const errBody = await response.json().catch(() => ({}));
+    const errMsg = errBody.error?.message || `HTTP ${response.status}`;
+
+    const suggestedModel = extractRecommendedModelFromError(errMsg);
+    if (suggestedModel && suggestedModel !== modelName) {
+      console.warn(`Retrying with Google suggested model: ${suggestedModel}`);
+      modelName = suggestedModel;
+      cachedGeminiModel = modelName;
+      localStorage.setItem('gemini_model', modelName);
+      response = await executeRequest(modelName);
+    } else if (response.status === 404 || response.status === 400) {
+      console.warn(`Model ${modelName} failed (${response.status}), resolving fresh model...`);
+      modelName = await resolveGeminiModel(apiKey, true);
+      response = await executeRequest(modelName);
+    }
+
+    if (!response.ok) {
+      const finalErr = await response.json().catch(() => ({}));
+      throw new Error(finalErr.error?.message || errMsg);
+    }
+  }
+
+  const data = await response.json();
+  const textPart = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!textPart) throw new Error('AI 응답 데이터가 비어 있습니다.');
+
+  const parsed = JSON.parse(textPart);
+  return {
+    targetMeaning: (parsed.targetMeaning || '').trim(),
+    sentenceTranslation: (parsed.sentenceTranslation || '').trim()
+  };
+}
+
+async function testGeminiApiKey(apiKey) {
+  if (!apiKey) throw new Error('API 키를 입력해주세요.');
+
+  // 1. 지원 가능한 최신 모델 자동 확인
+  let modelName = await resolveGeminiModel(apiKey, true);
+
+  async function tryPing(m) {
+    const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const res = await fetch(testUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': apiKey
+          },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'Ping test. Reply with {"status":"ok"}' }] }],
+            generationConfig: { responseMimeType: "application/json" }
+          })
+        });
+        if ((res.status >= 500 || res.status === 429) && attempt === 0) {
+          console.warn(`Temporary ping error ${res.status}, retrying...`);
+          await new Promise(r => setTimeout(r, 800));
+          continue;
+        }
+        return res;
+      } catch (err) {
+        if (attempt === 0) {
+          await new Promise(r => setTimeout(r, 800));
+          continue;
+        }
+        throw err;
+      }
+    }
+  }
+
+  // 2. Ping 테스트 수행
+  let response = await tryPing(modelName);
+
+  if (!response.ok) {
+    const errData = await response.json().catch(() => ({}));
+    const errMsg = errData.error?.message || `연결 오류 (HTTP ${response.status})`;
+
+    // Google 오류 메시지에 최신 추천 모델이 포함된 경우 (예: "use models/gemini-3.6-flash") 자동 전환 후 재시도
+    const suggestedModel = extractRecommendedModelFromError(errMsg);
+    if (suggestedModel && suggestedModel !== modelName) {
+      console.warn(`Retrying test with Google recommended model: ${suggestedModel}`);
+      modelName = suggestedModel;
+      cachedGeminiModel = modelName;
+      localStorage.setItem('gemini_model', modelName);
+      response = await tryPing(modelName);
+      if (response.ok) {
+        return { ok: true, model: modelName };
+      }
+    }
+
+    // fallback 모델 순차 시도
+    const fallbacks = ['gemini-3.6-flash', 'gemini-2.0-flash', 'gemini-1.5-flash'];
+    for (const fb of fallbacks) {
+      if (fb !== modelName) {
+        const retryRes = await tryPing(fb);
+        if (retryRes.ok) {
+          cachedGeminiModel = fb;
+          localStorage.setItem('gemini_model', fb);
+          return { ok: true, model: fb };
+        }
+      }
+    }
+
+    throw new Error(errMsg);
+  }
+
+  return { ok: true, model: modelName };
+}
+
+async function autoFetchVocabForHighlight(hl) {
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) return;
+  try {
+    showToast(`🤖 '${hl.text}' 문맥 분석 중...`);
+    const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+    if (res && res.targetMeaning) {
+      hl.targetMeaning = res.targetMeaning;
+      hl.sentenceTranslation = res.sentenceTranslation;
+      saveHighlights();
+      updateQuizBadge();
+      if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+        renderHighlightDrawer();
+      }
+      showToast(`✨ '${hl.text}': ${res.targetMeaning}`);
+    }
+  } catch (err) {
+    console.warn('Auto vocab analysis skipped/failed:', err);
+  }
+}
+
+function exportVocabToCsv() {
+  if (!state.highlights || state.highlights.length === 0) {
+    showToast('내보낼 형광펜/단어가 없습니다.');
+    return;
+  }
+  const bookTitle = state.currentBook ? state.currentBook.title : '도서';
+  let csv = '\uFEFF'; // UTF-8 BOM for Excel / Anki
+  csv += '구문,문맥 질문(전체 문장),구문 뜻,전체 문장 해석,공부횟수,오답횟수,도서명,등록일\n';
+
+  state.highlights.forEach(hl => {
+    const target = `"${(hl.text || '').replace(/"/g, '""')}"`;
+    const qSentence = `"${(hl.targetSentence || hl.text || '').replace(/"/g, '""')}"`;
+    const meaning = `"${(hl.targetMeaning || '').replace(/"/g, '""')}"`;
+    const trans = `"${(hl.sentenceTranslation || '').replace(/"/g, '""')}"`;
+    const study = hl.studyCount || 0;
+    const wrong = hl.wrongCount || 0;
+    const bTitle = `"${bookTitle.replace(/"/g, '""')}"`;
+    const date = hl.createdAt ? hl.createdAt.slice(0, 10) : '';
+    csv += `${target},${qSentence},${meaning},${trans},${study},${wrong},${bTitle},${date}\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${bookTitle}_단어장_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('단어장이 CSV 파일로 다운로드되었습니다.');
+}
+
+let isBatchGenerating = false;
+
+async function batchGenerateVocab() {
+  if (isBatchGenerating) {
+    showToast('이미 Q&A 생성이 진행 중입니다.');
+    return;
+  }
+
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    showToast('⚠️ Gemini API 키가 필요합니다. [설정]에서 등록해주세요.');
+    elements.settingsPopover.classList.add('open');
+    positionSettingsPopover();
+    return;
+  }
+
+  const missing = state.highlights.filter(h => !h.targetMeaning);
+  if (missing.length === 0) {
+    showToast('모든 형광펜의 Q&A가 이미 완성되어 있습니다.');
+    return;
+  }
+
+  isBatchGenerating = true;
+  if (elements.btnBatchVocab) {
+    elements.btnBatchVocab.disabled = true;
+    elements.btnBatchVocab.textContent = '⏳ 생성 중...';
+  }
+
+  let successCount = 0;
+  let idx = 0;
+  let retryCountForCurrent = 0;
+  const total = missing.length;
+
+  showToast(`⚡ 총 ${total}개의 Q&A 스마트 생성을 시작합니다...`);
+
+  try {
+    while (idx < total) {
+      const hl = missing[idx];
+      const shortText = (hl.text || '').slice(0, 15);
+      showToast(`Q&A 생성 중... (${idx + 1}/${total}) '${shortText}'`);
+
+      try {
+        const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+        if (res && res.targetMeaning) {
+          hl.targetMeaning = res.targetMeaning;
+          hl.sentenceTranslation = res.sentenceTranslation;
+          successCount++;
+          saveHighlights();
+          renderHighlightDrawer();
+          updateQuizBadge();
+        }
+        idx++;
+        retryCountForCurrent = 0;
+
+        // 무료 요금제 15 RPM 한도를 안전하게 준수하기 위한 3.5초 딜레이
+        if (idx < total) {
+          await new Promise(r => setTimeout(r, 3500));
+        }
+      } catch (err) {
+        console.warn(`Error on item "${hl.text}":`, err.message);
+
+        // 429 Too Many Requests (분당 속도 한도 초과) 감지
+        const is429 = /429|quota|rate limit|too many/i.test(err.message);
+        if (is429) {
+          // 구글 응답 메시지에서 대기 초수 파싱 (기본값: 55초)
+          const match = err.message.match(/retry in ([\d.]+)s/i);
+          let waitSeconds = match ? Math.ceil(parseFloat(match[1])) + 2 : 55;
+
+          // 실시간 카운트다운 타이머
+          while (waitSeconds > 0) {
+            showToast(`⏳ 구글 무료 분당속도(RPM) 한도 대기: ${waitSeconds}초 후 자동 재개... (${successCount}/${total} 완료)`);
+            if (elements.btnBatchVocab) {
+              elements.btnBatchVocab.textContent = `⏳ ${waitSeconds}초 대기...`;
+            }
+            await new Promise(r => setTimeout(r, 1000));
+            waitSeconds--;
+          }
+
+          if (elements.btnBatchVocab) {
+            elements.btnBatchVocab.textContent = '⏳ 생성 중...';
+          }
+          // idx를 증가시키지 않고 동일 단어 재시도
+          continue;
+        }
+
+        // 503(서버 과부하) 감지 시 모델 전환 또는 잠시 대기 후 재시도
+        const is503 = /503|high demand|unavailable/i.test(err.message);
+        if (is503 && retryCountForCurrent < 2) {
+          retryCountForCurrent++;
+          showToast(`⏳ 구글 서버 과부하 감지: 3초 후 재시도합니다... (${retryCountForCurrent}/2)`);
+          await new Promise(r => setTimeout(r, 3000));
+          continue;
+        }
+
+        // 기타 일반 오류이거나 2회 이상 연속 실패 시 해당 단어만 건너뛰고 계속 진행
+        retryCountForCurrent++;
+        if (retryCountForCurrent >= 2) {
+          console.warn(`Skipping item "${hl.text}" after 2 failures:`, err.message);
+          idx++;
+          retryCountForCurrent = 0;
+        } else {
+          await new Promise(r => setTimeout(r, 2000));
+        }
+      }
+    }
+  } finally {
+    isBatchGenerating = false;
+    if (elements.btnBatchVocab) {
+      elements.btnBatchVocab.disabled = false;
+      elements.btnBatchVocab.textContent = '⚡ Q&A 일괄생성';
+    }
+    showToast(`🎉 총 ${successCount}/${total}개의 Q&A 생성을 완료했습니다!`);
+    renderHighlightDrawer();
+    updateQuizBadge();
+  }
+}
+
+// ── 퀴즈 시스템 (Quiz System) ──
+let currentQuizList = [];
+let currentQuizIndex = 0;
+let quizStats = { correct: 0, wrong: 0, wrongItems: [] };
+let currentCriteria = 'all';
+
+function openQuizModal() {
+  closeAllToolbars();
+  if (elements.quizModalBackdrop) {
+    elements.quizModalBackdrop.classList.add('open');
+    document.body.classList.add('drawer-open');
+  }
+  initQuizSession(currentCriteria);
+}
+
+function closeQuizModal() {
+  if (elements.quizModalBackdrop) {
+    elements.quizModalBackdrop.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+  }
+}
+
+function initQuizSession(criteria) {
+  currentCriteria = criteria || 'all';
+  document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.criteria === currentCriteria);
+  });
+
+  const pool = (state.highlights || []).filter(h => h.targetMeaning || h.text);
+  if (pool.length === 0) {
+    if (elements.quizActiveView) elements.quizActiveView.style.display = 'none';
+    if (elements.quizResultView) elements.quizResultView.style.display = 'none';
+    if (elements.quizEmptyState) elements.quizEmptyState.style.display = 'block';
+    return;
+  }
+
+  if (elements.quizEmptyState) elements.quizEmptyState.style.display = 'none';
+  if (elements.quizResultView) elements.quizResultView.style.display = 'none';
+  if (elements.quizActiveView) elements.quizActiveView.style.display = 'block';
+
+  let list = [...pool];
+  const totalCount = pool.length;
+  const wrongCount = pool.filter(h => (h.wrongCount || 0) > 0).length;
+
+  if (currentCriteria === 'wrong-desc') {
+    // 취약 단어 우선 (전체 단어를 출제하되 오답 많은 순)
+    list.sort((a, b) => (b.wrongCount || 0) - (a.wrongCount || 0));
+  } else if (currentCriteria === 'study-asc') {
+    // 신규 단어 우선 (전체 단어를 출제하되 공부 적은 순)
+    list.sort((a, b) => (a.studyCount || 0) - (b.studyCount || 0));
+  } else if (currentCriteria === 'wrong-only') {
+    // 틀린 단어만 복습 (오답 1회 이상인 단어만 필터링)
+    list = list.filter(h => (h.wrongCount || 0) > 0);
+    if (list.length === 0) {
+      showToast('오답 기록이 없습니다! 전체 단어로 출제합니다.');
+      currentCriteria = 'all';
+      document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.criteria === 'all');
+      });
+      list = [...pool].sort(() => Math.random() - 0.5);
+    } else {
+      list.sort((a, b) => (b.wrongCount || 0) - (a.wrongCount || 0));
+    }
+  } else {
+    // 전체 무작위
+    list.sort(() => Math.random() - 0.5);
+  }
+
+  // 출제 기준 상세 설명 문구 실시간 갱신
+  const descEl = elements.quizCriteriaDesc || document.getElementById('quiz-criteria-desc');
+  if (descEl) {
+    if (currentCriteria === 'wrong-desc') {
+      descEl.textContent = `🔥 [취약 단어 우선 (전체)]: 등록된 모든 단어(${totalCount}개)를 출제하되, 오답 횟수가 많은 취약 단어부터 먼저 학습합니다.`;
+    } else if (currentCriteria === 'study-asc') {
+      descEl.textContent = `🆕 [신규 단어 우선 (전체)]: 등록된 모든 단어(${totalCount}개)를 출제하되, 공부 횟수가 적은 낯선 단어부터 먼저 학습합니다.`;
+    } else if (currentCriteria === 'wrong-only') {
+      descEl.textContent = `❌ [틀린 단어만 복습]: 1회 이상 틀렸던 오답 단어(${wrongCount}개)만 골라서 집중 복습합니다. (정답 단어 제외)`;
+    } else {
+      descEl.textContent = `🎲 [전체 (무작위)]: 등록된 모든 단어(${totalCount}개)를 무작위 순서로 골고루 출제합니다.`;
+    }
+  }
+
+  currentQuizList = list;
+  currentQuizIndex = 0;
+  quizStats = { correct: 0, wrong: 0, wrongItems: [] };
+  renderCurrentQuizCard();
+}
+
+function renderCurrentQuizCard() {
+  if (currentQuizIndex >= currentQuizList.length) {
+    showQuizResult();
+    return;
+  }
+
+  const hl = currentQuizList[currentQuizIndex];
+  if (elements.quizProgressText) {
+    elements.quizProgressText.textContent = `${currentQuizIndex + 1} / ${currentQuizList.length}`;
+  }
+  if (elements.quizCardStats) {
+    elements.quizCardStats.textContent = `학습: ${hl.studyCount || 0}회 | 오답: ${hl.wrongCount || 0}회`;
+  }
+
+  // 문장 내 구문 빨간색 강조 표시
+  const sentence = hl.targetSentence || hl.text || '';
+  const target = hl.text || '';
+  const questionHtml = formatQuestionHtml(sentence, target);
+
+  if (elements.quizQuestionSentence) {
+    elements.quizQuestionSentence.innerHTML = questionHtml;
+  }
+
+  if (elements.quizAnswerMeaning) {
+    elements.quizAnswerMeaning.innerHTML = `<strong>💡 뜻:</strong> ${escapeHtml(hl.targetMeaning || "(뜻 미등록 - 형광펜 목록의 'Q&A 일괄생성' 버튼을 먼저 눌러주세요.)")}`;
+  }
+  if (elements.quizAnswerTrans) {
+    elements.quizAnswerTrans.innerHTML = hl.sentenceTranslation
+      ? `<strong>📖 문장 해석:</strong> ${escapeHtml(hl.sentenceTranslation)}`
+      : '';
+  }
+
+  // 정답 가리기 및 버튼 상태 초기화
+  if (elements.quizAnswerSection) elements.quizAnswerSection.style.display = 'none';
+  if (elements.quizActionsUnrevealed) elements.quizActionsUnrevealed.style.display = 'flex';
+  if (elements.quizActionsRevealed) elements.quizActionsRevealed.style.display = 'none';
+}
+
+function revealQuizAnswer() {
+  if (elements.quizAnswerSection) elements.quizAnswerSection.style.display = 'block';
+  if (elements.quizActionsUnrevealed) elements.quizActionsUnrevealed.style.display = 'none';
+  if (elements.quizActionsRevealed) elements.quizActionsRevealed.style.display = 'flex';
+}
+
+function recordQuizAnswer(isCorrect) {
+  const hl = currentQuizList[currentQuizIndex];
+  if (hl) {
+    hl.studyCount = (hl.studyCount || 0) + 1;
+    hl.lastStudiedAt = new Date().toISOString();
+    if (isCorrect) {
+      quizStats.correct++;
+    } else {
+      hl.wrongCount = (hl.wrongCount || 0) + 1;
+      quizStats.wrong++;
+      quizStats.wrongItems.push(hl);
+    }
+    saveHighlights();
+  }
+
+  currentQuizIndex++;
+  renderCurrentQuizCard();
+}
+
+function showQuizResult() {
+  if (elements.quizActiveView) elements.quizActiveView.style.display = 'none';
+  if (elements.quizResultView) elements.quizResultView.style.display = 'block';
+
+  const totalCount = document.getElementById('result-total-count');
+  const correctCount = document.getElementById('result-correct-count');
+  const wrongCount = document.getElementById('result-wrong-count');
+
+  if (totalCount) totalCount.textContent = currentQuizList.length;
+  if (correctCount) correctCount.textContent = quizStats.correct;
+  if (wrongCount) wrongCount.textContent = quizStats.wrong;
+
+  if (elements.btnQuizRetryWrong) {
+    elements.btnQuizRetryWrong.style.display = quizStats.wrongItems.length > 0 ? 'inline-block' : 'none';
+  }
+}
+
+function openApiGuideModal() {
+  if (elements.apiGuideModalBackdrop) {
+    elements.apiGuideModalBackdrop.classList.add('open');
+  }
+}
+
+function closeApiGuideModal() {
+  if (elements.apiGuideModalBackdrop) {
+    elements.apiGuideModalBackdrop.classList.remove('open');
+  }
 }
 
 // ── Setup Event Listeners ──
@@ -2843,6 +3756,190 @@ function setupEventListeners() {
     });
   }
 
+  // ── Gemini API Key Settings Listeners ──
+  if (elements.inputGeminiApiKey) {
+    elements.inputGeminiApiKey.addEventListener('input', () => {
+      const val = elements.inputGeminiApiKey.value.trim();
+      state.settings.geminiApiKey = val;
+      localStorage.setItem('gemini_api_key', val);
+      saveSettings();
+      updateApiStatusBadge(!!val);
+    });
+  }
+
+  if (elements.btnSaveApiKey) {
+    elements.btnSaveApiKey.addEventListener('click', () => {
+      const val = elements.inputGeminiApiKey ? elements.inputGeminiApiKey.value.trim() : '';
+      state.settings.geminiApiKey = val;
+      localStorage.setItem('gemini_api_key', val);
+      saveSettings();
+      updateApiStatusBadge(!!val);
+      showToast(val ? '✅ Gemini API 키가 저장되었습니다.' : 'API 키가 삭제되었습니다.');
+    });
+  }
+
+  if (elements.btnTestApiKey) {
+    elements.btnTestApiKey.addEventListener('click', async () => {
+      const val = elements.inputGeminiApiKey ? elements.inputGeminiApiKey.value.trim() : '';
+      if (!val) {
+        showToast('테스트할 API 키를 입력해주세요.');
+        return;
+      }
+      try {
+        showToast('Gemini API 연결 테스트 중...');
+        elements.btnTestApiKey.disabled = true;
+        const testResult = await testGeminiApiKey(val);
+        // 테스트 통과 시 자동으로 즉시 저장
+        state.settings.geminiApiKey = val;
+        localStorage.setItem('gemini_api_key', val);
+        saveSettings();
+        updateApiStatusBadge(true);
+        showToast(`✅ 연결 성공 및 키 저장 완료! (${testResult.model} 모델)`);
+      } catch (err) {
+        showToast('❌ 연결 실패: ' + err.message);
+      } finally {
+        elements.btnTestApiKey.disabled = false;
+      }
+    });
+  }
+
+  if (elements.btnToggleApiMask) {
+    elements.btnToggleApiMask.addEventListener('click', () => {
+      if (!elements.inputGeminiApiKey) return;
+      const isPass = elements.inputGeminiApiKey.type === 'password';
+      elements.inputGeminiApiKey.type = isPass ? 'text' : 'password';
+      elements.btnToggleApiMask.textContent = isPass ? '🙈' : '👁️';
+    });
+  }
+
+  if (elements.btnOpenApiGuide) {
+    elements.btnOpenApiGuide.addEventListener('click', openApiGuideModal);
+  }
+  if (elements.btnCloseApiGuide) {
+    elements.btnCloseApiGuide.addEventListener('click', closeApiGuideModal);
+  }
+  if (elements.btnGuideConfirm) {
+    elements.btnGuideConfirm.addEventListener('click', closeApiGuideModal);
+  }
+  if (elements.apiGuideModalBackdrop) {
+    elements.apiGuideModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === elements.apiGuideModalBackdrop) closeApiGuideModal();
+    });
+  }
+
+  // ── Vocab Drawer Actions ──
+  if (elements.btnExportVocab) {
+    elements.btnExportVocab.addEventListener('click', exportVocabToCsv);
+  }
+  if (elements.btnBatchVocab) {
+    elements.btnBatchVocab.addEventListener('click', batchGenerateVocab);
+  }
+
+  // ── Quiz Modal Listeners ──
+  if (elements.btnOpenQuiz) {
+    elements.btnOpenQuiz.addEventListener('click', openQuizModal);
+  }
+  if (elements.btnCloseQuizModal) {
+    elements.btnCloseQuizModal.addEventListener('click', closeQuizModal);
+  }
+  if (elements.quizModalBackdrop) {
+    elements.quizModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === elements.quizModalBackdrop) closeQuizModal();
+    });
+  }
+
+  document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      initQuizSession(e.currentTarget.dataset.criteria);
+    });
+  });
+
+  if (elements.btnQuizReveal) {
+    elements.btnQuizReveal.addEventListener('click', revealQuizAnswer);
+  }
+  if (elements.quizFlashcard) {
+    elements.quizFlashcard.addEventListener('click', () => {
+      if (elements.quizActionsUnrevealed && elements.quizActionsUnrevealed.style.display !== 'none') {
+        revealQuizAnswer();
+      }
+    });
+  }
+  if (elements.btnQuizWrong) {
+    elements.btnQuizWrong.addEventListener('click', () => recordQuizAnswer(false));
+  }
+  if (elements.btnQuizCorrect) {
+    elements.btnQuizCorrect.addEventListener('click', () => recordQuizAnswer(true));
+  }
+  if (elements.btnQuizRetryWrong) {
+    elements.btnQuizRetryWrong.addEventListener('click', () => initQuizSession('wrong-only'));
+  }
+  if (elements.btnQuizRestart) {
+    elements.btnQuizRestart.addEventListener('click', () => initQuizSession(currentCriteria));
+  }
+  if (elements.btnQuizFinish) {
+    elements.btnQuizFinish.addEventListener('click', closeQuizModal);
+  }
+  if (elements.btnQuizGoBatch) {
+    elements.btnQuizGoBatch.addEventListener('click', () => {
+      closeQuizModal();
+      openDrawer('highlights');
+      batchGenerateVocab();
+    });
+  }
+
+  // Vocab Edit Modal Listeners
+  if (elements.btnCloseVocabEdit) {
+    elements.btnCloseVocabEdit.addEventListener('click', closeVocabEditModal);
+  }
+  if (elements.btnCancelVocabEdit) {
+    elements.btnCancelVocabEdit.addEventListener('click', closeVocabEditModal);
+  }
+  if (elements.btnSaveVocabEdit) {
+    elements.btnSaveVocabEdit.addEventListener('click', saveVocabEdit);
+  }
+  if (elements.vocabEditModalBackdrop) {
+    elements.vocabEditModalBackdrop.addEventListener('click', (e) => {
+      if (e.target === elements.vocabEditModalBackdrop) {
+        closeVocabEditModal();
+      }
+    });
+  }
+
+  // Keyboard Shortcuts (Quiz & Vocab Modal)
+  document.addEventListener('keydown', (e) => {
+    // Vocab Edit Modal shortcuts
+    if (elements.vocabEditModalBackdrop && elements.vocabEditModalBackdrop.classList.contains('open')) {
+      if (e.key === 'Escape') {
+        closeVocabEditModal();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        saveVocabEdit();
+        return;
+      }
+    }
+
+    if (!elements.quizModalBackdrop || !elements.quizModalBackdrop.classList.contains('open')) return;
+    if (e.key === 'Escape') {
+      closeQuizModal();
+    } else if (e.key === ' ' || e.code === 'Space') {
+      if (elements.quizActionsUnrevealed && elements.quizActionsUnrevealed.style.display !== 'none') {
+        e.preventDefault();
+        revealQuizAnswer();
+      }
+    } else if (e.key === '1' || e.key === 'w' || e.key === 'W') {
+      if (elements.quizActionsRevealed && elements.quizActionsRevealed.style.display !== 'none') {
+        e.preventDefault();
+        recordQuizAnswer(false);
+      }
+    } else if (e.key === '2' || e.key === 'c' || e.key === 'C') {
+      if (elements.quizActionsRevealed && elements.quizActionsRevealed.style.display !== 'none') {
+        e.preventDefault();
+        recordQuizAnswer(true);
+      }
+    }
+  });
+
   // 윈도우 리사이즈 시 EPUB 뷰어 영역 재계산
   window.addEventListener('resize', () => {
     if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
@@ -2892,9 +3989,9 @@ async function restoreActiveBook() {
     if (!record || !record.content) return;
 
     if (record.type === 'epub') {
-      openEpubBook(record.title, record.author, record.content, record.bookId, true);
+      openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights);
     } else if (record.type === 'txt') {
-      openTxtBook(record.title, record.author, record.content, record.bookId, true);
+      openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights);
     }
   } catch (err) {
     console.warn('Failed to restore active book from IndexedDB:', err);

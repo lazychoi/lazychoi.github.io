@@ -994,6 +994,644 @@ body.drawer-open {
   font-size: 14px;
 }
 
+/* ── 설정 팝오버 확장 (AI 설정 & 도서 관리) ── */
+.setting-divider {
+  height: 1px;
+  background: var(--reader-border);
+  margin: 4px 0;
+}
+
+.setting-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.api-status-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.api-status-badge.configured {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.api-status-badge.unconfigured {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.api-key-input-wrap {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.api-key-input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-bg);
+  color: var(--reader-text);
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.api-key-input:focus {
+  border-color: var(--accent);
+}
+
+.btn-api-key-toggle {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-bg);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.api-key-btn-row,
+.book-manage-btn-row {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-setting-action {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-bg);
+  color: var(--reader-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-setting-action:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.btn-setting-action.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.btn-setting-action.primary:hover {
+  opacity: 0.9;
+}
+
+.btn-setting-action.danger {
+  color: #dc2626;
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.btn-setting-action.danger:hover {
+  background: #fee2e2;
+}
+
+.btn-api-guide-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: left;
+  padding: 4px 0 0 0;
+  text-decoration: underline;
+  display: inline-block;
+}
+
+/* ── 하이라이트 서랍 액션 바 & Q&A 단어 카드 ── */
+.drawer-actions-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--reader-bg);
+  border-bottom: 1px solid var(--reader-border);
+}
+
+.btn-drawer-action {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+  color: var(--reader-text);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-drawer-action:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.btn-drawer-action.primary {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
+.btn-drawer-action.primary:hover {
+  opacity: 0.9;
+}
+
+.hl-stat-badge {
+  font-size: 11px;
+  color: var(--text-muted);
+  background: var(--reader-bg);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.highlight-vocab-box {
+  margin-top: 8px;
+  padding: 10px;
+  background: var(--reader-bg);
+  border-radius: 8px;
+  border-left: 3px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vocab-meaning-line {
+  font-size: 13px;
+  color: var(--reader-text);
+}
+
+.vocab-trans-line {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.highlight-vocab-unready {
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: var(--reader-bg);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── 퀴즈 및 단어장 빨간색 구문 강조 ── */
+.vocab-q-target {
+  color: #ef4444 !important;
+  background: rgba(239, 68, 68, 0.12) !important;
+  font-weight: 700 !important;
+  padding: 1px 4px !important;
+  border-radius: 4px !important;
+  text-decoration: underline !important;
+  text-underline-offset: 3px !important;
+}
+
+/* ── 퀴즈 모달 ── */
+.quiz-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100%;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 3000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.quiz-modal-backdrop.open {
+  display: flex;
+}
+
+.quiz-modal {
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  background: var(--reader-card-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quiz-modal-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--reader-border);
+}
+
+.quiz-modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--reader-text);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.quiz-criteria-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: var(--reader-bg);
+  border-bottom: 1px solid var(--reader-border);
+  overflow-x: auto;
+}
+
+.quiz-criteria-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.quiz-criteria-options {
+  display: flex;
+  gap: 6px;
+}
+
+.quiz-criteria-btn {
+  padding: 5px 10px;
+  border-radius: 14px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
+  color: var(--reader-text);
+  font-size: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+
+.quiz-criteria-btn.active {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.quiz-criteria-desc {
+  padding: 8px 18px;
+  font-size: 12px;
+  color: var(--accent);
+  background: var(--reader-bg);
+  border-bottom: 1px solid var(--reader-border);
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.quiz-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.quiz-meta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.quiz-progress-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.quiz-card-stats {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: var(--reader-bg);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.quiz-flashcard {
+  border: 1px solid var(--reader-border);
+  border-radius: 16px;
+  background: var(--reader-bg);
+  padding: 20px;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.quiz-flashcard:hover {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.quiz-section-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.quiz-section-badge.answer-badge {
+  color: var(--accent);
+}
+
+.quiz-sentence-box {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--reader-text);
+  font-family: inherit;
+}
+
+.quiz-hint-instruction {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  text-align: center;
+}
+
+.quiz-card-section.answer {
+  border-top: 1px dashed var(--reader-border);
+  padding-top: 14px;
+}
+
+.quiz-target-meaning {
+  font-size: 18px;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 8px;
+}
+
+.quiz-sentence-trans {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--reader-text);
+}
+
+.quiz-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.btn-quiz-action {
+  flex: 1;
+  padding: 13px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-quiz-action.reveal {
+  background: var(--accent);
+  color: white;
+}
+
+.btn-quiz-action.reveal:hover {
+  opacity: 0.9;
+}
+
+.btn-quiz-action.wrong {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-quiz-action.wrong:hover {
+  background: #fecaca;
+}
+
+.btn-quiz-action.correct {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.btn-quiz-action.correct:hover {
+  background: #bbf7d0;
+}
+
+.quiz-result-view {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.quiz-result-trophy {
+  font-size: 48px;
+  margin-bottom: 8px;
+}
+
+.quiz-result-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.quiz-result-stats-box {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.result-stat-item {
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: var(--reader-bg);
+  border: 1px solid var(--reader-border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result-stat-item .stat-label {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.result-stat-item .stat-num {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.result-stat-item.success .stat-num {
+  color: #10b981;
+}
+
+.result-stat-item.failure .stat-num {
+  color: #ef4444;
+}
+
+.quiz-result-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ── 무료 Gemini API 가이드 모달 ── */
+.api-guide-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100%;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 3500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+.api-guide-modal-backdrop.open {
+  display: flex;
+}
+
+.api-guide-card {
+  width: 100%;
+  max-width: 540px;
+  max-height: 90vh;
+  background: var(--reader-card-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.api-guide-header {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--reader-border);
+}
+
+.api-guide-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--reader-text);
+  margin: 0;
+}
+
+.api-guide-body {
+  padding: 20px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.api-guide-badge-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  background: var(--reader-bg);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.guide-badge-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.guide-badge-item .badge-icon {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+.guide-badge-item strong {
+  display: block;
+  font-size: 13px;
+  color: var(--reader-text);
+}
+
+.guide-badge-item p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.api-steps-list {
+  padding-left: 18px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.api-steps-list li strong {
+  color: var(--reader-text);
+}
+
+.api-steps-list li p {
+  margin: 2px 0 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.api-steps-list code {
+  background: var(--reader-bg);
+  padding: 2px 4px;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+.api-guide-footer {
+  padding: 14px 20px;
+  border-top: 1px solid var(--reader-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
 /* ── AI 분석 모달 ── */
 .ai-modal-backdrop {
   position: fixed;
@@ -1249,6 +1887,140 @@ body.drawer-open {
   background: var(--reader-bg);
   color: var(--reader-text);
   font-size: 14px;
+}
+
+/* ── 단어장 Q&A 및 메모 편집 모달 ── */
+.vocab-edit-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100%;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 3500;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.vocab-edit-modal-backdrop.open {
+  display: flex;
+}
+
+.vocab-edit-modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: 90vh;
+  background: var(--reader-card-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  animation: modalScaleUp 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.vocab-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--reader-border);
+}
+
+.vocab-edit-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--reader-text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.vocab-edit-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  max-height: calc(90vh - 130px);
+}
+
+.vocab-edit-preview {
+  background: var(--reader-bg);
+  border: 1px solid var(--reader-border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+.vocab-preview-target {
+  font-weight: 700;
+  font-size: 15px;
+  color: #ef4444;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.vocab-preview-sentence {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.vocab-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.vocab-input-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--reader-text);
+}
+
+.vocab-input-group input,
+.vocab-input-group textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-bg);
+  color: var(--reader-text);
+  font-size: 14px;
+  line-height: 1.5;
+  font-family: inherit;
+  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.vocab-input-group input:focus,
+.vocab-input-group textarea:focus {
+  border-color: var(--accent);
+}
+
+.vocab-input-group textarea {
+  resize: vertical;
+  min-height: 75px;
+}
+
+.vocab-edit-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid var(--reader-border);
+  background: var(--reader-card-bg);
 }
 
 /* ── 토스트 알림 ── */

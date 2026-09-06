@@ -72,30 +72,9 @@
           </div>
           <div class="book-author-display" id="display-book-author">저자 미지정</div>
         </div>
-        <!-- 모바일 화면: 도서명 오른쪽 끝 초기화 버튼 -->
-        <button type="button" class="btn-reader btn-reset-db btn-reset-mobile" id="btn-reset-db-mobile"
-          title="저장된 도서 데이터 초기화">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-            </path>
-          </svg>
-          초기화
-        </button>
       </div>
 
       <div class="topbar-actions">
-        <!-- 데스크톱 화면: 열기 버튼 왼쪽 초기화 버튼 -->
-        <button type="button" class="btn-reader btn-reset-db btn-reset-desktop" id="btn-reset-db"
-          title="저장된 도서 데이터 초기화">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
-            </path>
-          </svg>
-          초기화
-        </button>
-
         <!-- 파일 열기 버튼 -->
         <div class="file-input-btn-wrap">
           <button class="btn-reader primary">
@@ -108,14 +87,6 @@
           </button>
           <input type="file" id="book-file-input" accept=".txt,.epub,text/plain,application/epub+zip">
         </div>
-
-        <!-- EPUB 내보내기 버튼 -->
-        <button class="btn-reader" id="btn-export-book" title="형광펜 및 메모가 포함된 EPUB 파일로 내보내기">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-          </svg>
-          내보내기
-        </button>
 
         <!-- 목차 토글 버튼 -->
         <button class="btn-reader" id="btn-toggle-toc" title="목차 보기" style="display:none;">
@@ -131,7 +102,15 @@
             <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
             </path>
           </svg>
-          형광펜<span id="highlight-counter" style="display:none;">0</span>
+          형광펜
+        </button>
+
+        <!-- 단어장 퀴즈 버튼 -->
+        <button class="btn-reader" id="btn-open-quiz" title="단어장 퀴즈 풀기">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+          </svg>
+          퀴즈
         </button>
 
         <!-- 설정 버튼 -->
@@ -182,6 +161,48 @@
                 <option value="serif">명조 (Serif - 클래식 소설체)</option>
                 <option value="monospace">고정폭 (Monospace)</option>
               </select>
+            </div>
+
+            <div class="setting-divider"></div>
+
+            <!-- AI 설정 (Google Gemini API) -->
+            <div class="setting-group">
+              <div class="setting-label-row">
+                <span class="setting-label">🤖 AI 설정 (Gemini API)</span>
+                <span class="api-status-badge unconfigured" id="api-status-badge">미등록</span>
+              </div>
+              <div class="api-key-input-wrap">
+                <input type="password" id="input-gemini-api-key" class="api-key-input" placeholder="Google AI Studio 키 (AIzaSy...)">
+                <button type="button" class="btn-api-key-toggle" id="btn-toggle-api-mask" title="키 표시/숨김">👁️</button>
+              </div>
+              <div class="api-key-btn-row">
+                <button type="button" class="btn-setting-action primary" id="btn-save-api-key">저장</button>
+                <button type="button" class="btn-setting-action" id="btn-test-api-key">연결 테스트</button>
+              </div>
+              <button type="button" class="btn-api-guide-link" id="btn-open-api-guide">
+                🔑 무료 API 키 발급 방법 (1분 안내)
+              </button>
+            </div>
+
+            <div class="setting-divider"></div>
+
+            <!-- 도서 데이터 관리 (내보내기 & 초기화) -->
+            <div class="setting-group">
+              <span class="setting-label">📁 도서 데이터 관리</span>
+              <div class="book-manage-btn-row">
+                <button type="button" class="btn-setting-action" id="btn-export-book" title="형광펜 및 메모가 포함된 EPUB 파일로 내보내기">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                  </svg>
+                  EPUB 내보내기
+                </button>
+                <button type="button" class="btn-setting-action danger" id="btn-reset-db" title="저장된 도서 데이터 초기화">
+                  <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                  </svg>
+                  초기화
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -326,6 +347,14 @@
         </svg>
       </button>
     </div>
+    <div class="drawer-actions-bar" id="drawer-actions-bar" style="display: none;">
+      <button type="button" class="btn-drawer-action" id="btn-batch-vocab" title="단어장 Q&A 일괄 생성">
+        ⚡ Q&A 일괄생성
+      </button>
+      <button type="button" class="btn-drawer-action primary" id="btn-export-vocab" title="Excel/Anki 호환 CSV로 내보내기">
+        📥 단어장 내보내기
+      </button>
+    </div>
     <div class="drawer-body" id="drawer-body">
       <!-- 동적 렌더링 -->
     </div>
@@ -425,6 +454,225 @@
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
         <button type="button" class="btn-reader" id="btn-cancel-meta">취소</button>
         <button type="button" class="btn-reader primary" id="btn-save-meta">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 단어장 Q&A 편집 모달 -->
+  <div class="vocab-edit-modal-backdrop" id="vocab-edit-modal-backdrop">
+    <div class="vocab-edit-modal" role="dialog" aria-labelledby="vocab-edit-title">
+      <div class="vocab-edit-header">
+        <h3 class="vocab-edit-title" id="vocab-edit-title">
+          <span>✏️</span> 단어장 Q&A 편집
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-vocab-edit">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="vocab-edit-body">
+        <div class="vocab-edit-preview">
+          <div class="vocab-preview-target" id="vocab-edit-preview-target"></div>
+          <div class="vocab-preview-sentence" id="vocab-edit-preview-sentence"></div>
+        </div>
+        <div class="vocab-input-group">
+          <label for="input-edit-meaning">💡 구문의 문맥 뜻</label>
+          <input type="text" id="input-edit-meaning" placeholder="예: 마지막 일, 절망적인 것">
+        </div>
+        <div class="vocab-input-group">
+          <label for="input-edit-trans">📖 전체 문장 한글 해석</label>
+          <textarea id="input-edit-trans" rows="3" placeholder="예: 내가 마지막으로 기억하는 것은 요한센이 절망적으로 나를 향해 손을 뻗는 모습이었다."></textarea>
+        </div>
+      </div>
+      <div class="vocab-edit-footer">
+        <button type="button" class="btn-reader" id="btn-cancel-vocab-edit">취소</button>
+        <button type="button" class="btn-reader primary" id="btn-save-vocab-edit">저장 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 퀴즈 모달 (Quiz Modal) -->
+  <div class="quiz-modal-backdrop" id="quiz-modal-backdrop">
+    <div class="quiz-modal" role="dialog" aria-labelledby="quiz-modal-title">
+      <div class="quiz-modal-header">
+        <h3 class="quiz-modal-title" id="quiz-modal-title">
+          <span>🎯</span> 문맥 Q&A 단어장 퀴즈
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-quiz-modal">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- 출제 기준 필터 바 -->
+      <div class="quiz-criteria-bar">
+        <span class="quiz-criteria-label">출제 기준:</span>
+        <div class="quiz-criteria-options">
+          <button type="button" class="quiz-criteria-btn active" data-criteria="all">🎲 전체 (무작위)</button>
+          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-desc">🔥 취약 단어 우선 (전체)</button>
+          <button type="button" class="quiz-criteria-btn" data-criteria="study-asc">🆕 신규 단어 우선 (전체)</button>
+          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-only">❌ 틀린 단어만 복습</button>
+        </div>
+      </div>
+      <!-- 출제 기준 상세 안내 -->
+      <div class="quiz-criteria-desc" id="quiz-criteria-desc">
+        🎲 [전체 (무작위)]: 등록된 모든 단어를 무작위 순서로 골고루 출제합니다.
+      </div>
+
+      <div class="quiz-modal-body">
+        <!-- 빈 상태 (퀴즈 데이터 없음) -->
+        <div class="quiz-empty-state" id="quiz-empty-state" style="display:none;">
+          <div style="font-size:36px; margin-bottom:12px;">📭</div>
+          <h4>학습할 Q&A 단어가 없습니다.</h4>
+          <p>텍스트를 드래그하여 형광펜을 칠하고 [Q&A 생성]을 진행해주세요.</p>
+          <button type="button" class="btn-reader primary" id="btn-quiz-go-batch" style="margin-top:12px;">
+            ⚡ 형광펜에서 Q&A 생성하기
+          </button>
+        </div>
+
+        <!-- 퀴즈 진행 뷰 -->
+        <div class="quiz-active-view" id="quiz-active-view">
+          <div class="quiz-meta-header">
+            <span class="quiz-progress-text" id="quiz-progress-text">1 / 10</span>
+            <span class="quiz-card-stats" id="quiz-card-stats">공부: 0회 | 오답: 0회</span>
+          </div>
+
+          <!-- 질문/답변 플래시카드 -->
+          <div class="quiz-flashcard" id="quiz-flashcard">
+            <!-- 질문 영역 (앞면) -->
+            <div class="quiz-card-section question">
+              <div class="quiz-section-badge">질문 (Question)</div>
+              <div class="quiz-sentence-box" id="quiz-question-sentence"></div>
+              <div class="quiz-hint-instruction" id="quiz-hint-instruction">
+                👆 카드를 터치하거나 [정답 확인]을 누르면 뜻과 번역이 나타납니다.
+              </div>
+            </div>
+
+            <!-- 답변 영역 (뒷면/토글) -->
+            <div class="quiz-card-section answer" id="quiz-answer-section" style="display:none;">
+              <div class="quiz-section-badge answer-badge">정답 (Answer)</div>
+              <div class="quiz-answer-content">
+                <div class="quiz-target-meaning" id="quiz-target-meaning"></div>
+                <div class="quiz-sentence-trans" id="quiz-sentence-trans"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 제어/평가 액션 -->
+          <div class="quiz-actions" id="quiz-actions-unrevealed">
+            <button type="button" class="btn-quiz-action reveal" id="btn-quiz-reveal">
+              👀 정답 및 해석 확인 (Space)
+            </button>
+          </div>
+
+          <div class="quiz-actions" id="quiz-actions-revealed" style="display:none;">
+            <button type="button" class="btn-quiz-action wrong" id="btn-quiz-wrong" title="오답 기록">
+              ❌ 몰라요 (오답)
+            </button>
+            <button type="button" class="btn-quiz-action correct" id="btn-quiz-correct" title="정답 기록">
+              ⭕ 알아요 (정답)
+            </button>
+          </div>
+        </div>
+
+        <!-- 퀴즈 결과 요약 뷰 -->
+        <div class="quiz-result-view" id="quiz-result-view" style="display:none;">
+          <div class="quiz-result-trophy">🎉</div>
+          <h3 class="quiz-result-title">퀴즈 완료!</h3>
+          <div class="quiz-result-stats-box">
+            <div class="result-stat-item">
+              <span class="stat-label">총 학습 카드</span>
+              <span class="stat-num" id="result-total-count">0</span>
+            </div>
+            <div class="result-stat-item success">
+              <span class="stat-label">알아요 (정답)</span>
+              <span class="stat-num" id="result-correct-count">0</span>
+            </div>
+            <div class="result-stat-item failure">
+              <span class="stat-label">몰라요 (오답)</span>
+              <span class="stat-num" id="result-wrong-count">0</span>
+            </div>
+          </div>
+          <div class="quiz-result-actions">
+            <button type="button" class="btn-reader" id="btn-quiz-retry-wrong" style="display:none;">
+              ❌ 오답만 다시 풀기
+            </button>
+            <button type="button" class="btn-reader primary" id="btn-quiz-restart">
+              🔄 처음부터 다시 풀기
+            </button>
+            <button type="button" class="btn-reader" id="btn-quiz-finish">
+              완료
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 무료 Gemini API 키 발급 가이드 모달 -->
+  <div class="api-guide-modal-backdrop" id="api-guide-modal-backdrop">
+    <div class="api-guide-card" role="dialog" aria-labelledby="api-guide-title">
+      <div class="api-guide-header">
+        <h3 class="api-guide-title" id="api-guide-title">
+          🔑 무료 Gemini API 키 발급 안내 (1분 소요)
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-api-guide">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="api-guide-body">
+        <div class="api-guide-badge-box">
+          <div class="guide-badge-item">
+            <span class="badge-icon">🎁</span>
+            <div>
+              <strong>1일 1,500회 완전 무료</strong>
+              <p>개인 독서용으로는 평생 무료로 넉넉하게 사용 가능합니다.</p>
+            </div>
+          </div>
+          <div class="guide-badge-item">
+            <span class="badge-icon">💳</span>
+            <div>
+              <strong>신용카드 등록 불필요</strong>
+              <p>구글 계정 로그인만으로 즉시 발급됩니다.</p>
+            </div>
+          </div>
+          <div class="guide-badge-item">
+            <span class="badge-icon">🔒</span>
+            <div>
+              <strong>안전한 로컬 보관</strong>
+              <p>외부 서버가 아닌 사용자의 브라우저에만 저장됩니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <ol class="api-steps-list">
+          <li>
+            <strong>1. Google AI Studio 접속</strong>
+            <p>아래 [Google AI Studio 열기] 버튼을 눌러 공식 키 발급 페이지로 이동합니다.</p>
+          </li>
+          <li>
+            <strong>2. 구글 계정 로그인 후 [Get API key] 클릭</strong>
+            <p>화면 상단 또는 사이드 메뉴의 'Get API key' 메뉴를 누릅니다.</p>
+          </li>
+          <li>
+            <strong>3. [Create API key] 버튼 클릭</strong>
+            <p>프로젝트 선택 창이 뜨면 기본 프로젝트를 선택하고 생성합니다.</p>
+          </li>
+          <li>
+            <strong>4. 생성된 키(<code>AIzaSy...</code>) 복사 및 저장</strong>
+            <p>발급된 영문/숫자 키를 복사하여 리더기 [설정] > [AI 설정]에 붙여넣고 [저장]을 누르면 끝!</p>
+          </li>
+        </ol>
+      </div>
+      <div class="api-guide-footer">
+        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" class="btn-reader primary" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+          <span>🌐 Google AI Studio 열기 (새 탭)</span>
+        </a>
+        <button type="button" class="btn-reader" id="btn-guide-confirm">확인 완료</button>
       </div>
     </div>
   </div>
