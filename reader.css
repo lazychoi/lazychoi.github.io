@@ -1118,6 +1118,107 @@ body.drawer-open {
   display: inline-block;
 }
 
+/* ── 하이라이트 서랍 검색 바 ── */
+.drawer-search-bar {
+  padding: 10px 16px;
+  background: var(--reader-bg);
+  border-bottom: 1px solid var(--reader-border);
+  flex-shrink: 0;
+}
+
+.drawer-search-bar .search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.drawer-search-bar .search-icon {
+  position: absolute;
+  left: 10px;
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.drawer-search-bar input {
+  width: 100%;
+  padding: 8px 34px 8px 34px !important;
+  font-size: 13px;
+  border: 1px solid var(--reader-border);
+  border-radius: 8px;
+  background: var(--reader-card-bg);
+  color: var(--reader-text);
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.drawer-search-bar input:focus {
+  border-color: var(--accent, #2563eb);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.drawer-search-bar input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.85;
+}
+
+.drawer-search-bar .btn-clear-search {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: rgba(0, 0, 0, 0.12);
+  color: var(--text-muted);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+  z-index: 5;
+}
+
+.drawer-search-bar .btn-clear-search:hover {
+  background: rgba(0, 0, 0, 0.22);
+  color: var(--text-main);
+}
+
+body.theme-dark .drawer-search-bar .btn-clear-search {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--reader-text);
+}
+
+body.theme-dark .drawer-search-bar .btn-clear-search:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* 검색어 일치 텍스트 하이라이트 */
+mark.search-match-highlight {
+  background: #fef08a;
+  color: #854d0e;
+  padding: 1px 3px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+body.theme-sepia mark.search-match-highlight {
+  background: #fed7aa;
+  color: #7c2d12;
+}
+
+body.theme-dark mark.search-match-highlight {
+  background: rgba(234, 179, 8, 0.35);
+  color: #fef08a;
+}
+
 /* ── 하이라이트 서랍 액션 바 & Q&A 단어 카드 ── */
 .drawer-actions-bar {
   display: flex;

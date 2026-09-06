@@ -347,6 +347,21 @@
         </svg>
       </button>
     </div>
+    <!-- 형광펜 실시간 검색 바 -->
+    <div class="drawer-search-bar" id="drawer-search-bar" style="display: none;">
+      <div class="search-input-wrapper">
+        <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input type="text" id="input-highlight-search" placeholder="단어, 뜻, 예문, 메모 검색..." autocomplete="off" spellcheck="false">
+        <button type="button" id="btn-clear-highlight-search" class="btn-clear-search" aria-label="검색어 지우기" title="검색어 지우기" style="display: none;">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="2" y1="2" x2="10" y2="10"></line>
+            <line x1="10" y1="2" x2="2" y2="10"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div class="drawer-actions-bar" id="drawer-actions-bar" style="display: none;">
       <button type="button" class="btn-drawer-action" id="btn-batch-vocab" title="단어장 Q&A 일괄 생성">
         ⚡ Q&A 일괄생성
@@ -508,7 +523,7 @@
 
       <!-- 출제 기준 필터 바 -->
       <div class="quiz-criteria-bar">
-        <span class="quiz-criteria-label">출제 기준:</span>
+        <!-- <span class="quiz-criteria-label">출제 기준:</span> -->
         <div class="quiz-criteria-options">
           <button type="button" class="quiz-criteria-btn active" data-criteria="all">🎲 전체 (무작위)</button>
           <button type="button" class="quiz-criteria-btn" data-criteria="wrong-desc">🔥 취약 단어 우선 (전체)</button>

@@ -95,6 +95,7 @@ window.addEventListener('error', (e) => {
 const state = {
   currentBook: null, // { type: 'txt'|'epub', title: '', author: '', rawContent: any, id: '' }
   highlights: [],    // Array of highlight objects
+  highlightSearchQuery: '', // Current search query in highlights drawer
   settings: {
     theme: 'light',
     fontSize: 18,
@@ -306,6 +307,9 @@ const elements = {
   drawerIcon: document.getElementById('drawer-icon'),
   drawerBody: document.getElementById('drawer-body'),
   btnDrawerClose: document.getElementById('btn-drawer-close'),
+  drawerSearchBar: document.getElementById('drawer-search-bar'),
+  inputHighlightSearch: document.getElementById('input-highlight-search'),
+  btnClearHighlightSearch: document.getElementById('btn-clear-highlight-search'),
 
   // AI Modal
   aiModalBackdrop: document.getElementById('ai-modal-backdrop'),
@@ -503,6 +507,9 @@ async function resetReaderApp() {
   state.currentBook = null;
   state.highlights = [];
   state.toc = [];
+  state.highlightSearchQuery = '';
+  if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+  if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
 
   // 3. UI 초기화
   closeAllToolbars();
@@ -1382,6 +1389,9 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   };
 
   state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
+  state.highlightSearchQuery = '';
+  if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+  if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
   updateMetadataUI();
   updateHighlightBadge();
 
@@ -1453,7 +1463,8 @@ function renderTxtContent() {
 }
 
 function escapeHtml(str) {
-  return str
+  if (!str && str !== 0) return '';
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
@@ -1526,6 +1537,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   };
 
   state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
+  state.highlightSearchQuery = '';
+  if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+  if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
   updateMetadataUI();
   updateHighlightBadge();
 
@@ -2562,12 +2576,14 @@ function openDrawer(mode) {
     if (elements.drawerActionsBar) {
       elements.drawerActionsBar.style.display = 'none';
     }
+    if (elements.drawerSearchBar) {
+      elements.drawerSearchBar.style.display = 'none';
+    }
     elements.drawerIcon.textContent = '📑';
     elements.drawerTitle.textContent = '목차 (Table of Contents)';
     renderTocDrawer();
   } else {
     elements.drawerIcon.textContent = '🖍️';
-    elements.drawerTitle.textContent = `형광펜 목록 (${state.highlights.length}개)`;
     renderHighlightDrawer();
   }
 }
@@ -2581,6 +2597,9 @@ function closeDrawer() {
 function renderTocDrawer() {
   if (elements.drawerActionsBar) {
     elements.drawerActionsBar.style.display = 'none';
+  }
+  if (elements.drawerSearchBar) {
+    elements.drawerSearchBar.style.display = 'none';
   }
   elements.drawerBody.innerHTML = '';
   if (!state.epub.toc || state.epub.toc.length === 0) {
@@ -2609,11 +2628,20 @@ function renderHighlightDrawer() {
   elements.drawerBody.innerHTML = '';
   sortHighlights();
 
+  const totalCount = (state.highlights && state.highlights.length) || 0;
+
   if (elements.drawerActionsBar) {
-    elements.drawerActionsBar.style.display = (state.highlights && state.highlights.length > 0) ? 'flex' : 'none';
+    elements.drawerActionsBar.style.display = totalCount > 0 ? 'flex' : 'none';
+  }
+  if (elements.drawerSearchBar) {
+    elements.drawerSearchBar.style.display = totalCount > 0 ? 'block' : 'none';
   }
 
-  if (!state.highlights || state.highlights.length === 0) {
+  if (totalCount === 0) {
+    elements.drawerTitle.textContent = '형광펜 목록 (0개)';
+    state.highlightSearchQuery = '';
+    if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+    if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
     elements.drawerBody.innerHTML = `
       <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
         <div style="font-size:32px; margin-bottom:12px;">🖍️</div>
@@ -2624,14 +2652,78 @@ function renderHighlightDrawer() {
     return;
   }
 
+  // Filter highlights
+  const rawQuery = (state.highlightSearchQuery || '').trim();
+  const terms = rawQuery ? rawQuery.toLowerCase().split(/\s+/).filter(Boolean) : [];
+
+  let displayedHighlights = state.highlights;
+  if (terms.length > 0) {
+    displayedHighlights = state.highlights.filter(hl => {
+      const text = (hl.text || '').toLowerCase();
+      const meaning = (hl.targetMeaning || '').toLowerCase();
+      const trans = (hl.sentenceTranslation || '').toLowerCase();
+      const sentence = (hl.targetSentence || '').toLowerCase();
+      const note = (hl.note || '').toLowerCase();
+
+      return terms.every(term => 
+        text.includes(term) ||
+        meaning.includes(term) ||
+        trans.includes(term) ||
+        sentence.includes(term) ||
+        note.includes(term)
+      );
+    });
+  }
+
+  // Update title with filtered count
+  if (rawQuery) {
+    elements.drawerTitle.textContent = `형광펜 목록 (${displayedHighlights.length}/${totalCount}개)`;
+  } else {
+    elements.drawerTitle.textContent = `형광펜 목록 (${totalCount}개)`;
+  }
+
+  // Update clear button
+  if (elements.btnClearHighlightSearch) {
+    elements.btnClearHighlightSearch.style.display = rawQuery ? 'flex' : 'none';
+  }
+
+  if (displayedHighlights.length === 0) {
+    elements.drawerBody.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+        <div style="font-size:32px; margin-bottom:12px;">🔍</div>
+        <p><strong>'${escapeHtml(rawQuery)}'</strong>에 대한 검색 결과가 없습니다.</p>
+        <p style="font-size:13px; margin-top:6px; color:var(--text-muted);">다른 단어나 뜻으로 검색해보세요.</p>
+        <button type="button" class="btn-drawer-action" id="btn-reset-highlight-search" style="margin: 14px auto 0; max-width: 140px;">검색어 초기화</button>
+      </div>
+    `;
+    const resetBtn = elements.drawerBody.querySelector('#btn-reset-highlight-search');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        state.highlightSearchQuery = '';
+        if (elements.inputHighlightSearch) {
+          elements.inputHighlightSearch.value = '';
+          elements.inputHighlightSearch.focus();
+        }
+        renderHighlightDrawer();
+      });
+    }
+    return;
+  }
+
   // Render cards
-  state.highlights.forEach(hl => {
+  displayedHighlights.forEach(hl => {
     const card = document.createElement('div');
     card.className = 'highlight-card';
 
     const colorHex = getHighlightColorHex(hl.color || 'yellow');
     const dateStr = hl.createdAt ? new Date(hl.createdAt).toLocaleDateString() : '';
-    const questionHtml = hl.targetSentence ? formatQuestionHtml(hl.targetSentence, hl.text) : escapeHtml(hl.text);
+    const questionHtml = hl.targetSentence 
+      ? formatQuestionHtml(hl.targetSentence, hl.text, terms) 
+      : (terms.length > 0 ? highlightSearchTerm(hl.text, terms) : escapeHtml(hl.text));
+
+    const meaningHtml = terms.length > 0 ? highlightSearchTerm(hl.targetMeaning, terms) : escapeHtml(hl.targetMeaning);
+    const transHtml = terms.length > 0 ? highlightSearchTerm(hl.sentenceTranslation, terms) : escapeHtml(hl.sentenceTranslation);
+    const noteHtml = terms.length > 0 ? highlightSearchTerm(hl.note, terms) : escapeHtml(hl.note);
 
     card.innerHTML = `
       <div class="highlight-card-header">
@@ -2644,8 +2736,8 @@ function renderHighlightDrawer() {
       <div class="highlight-card-text">${questionHtml}</div>
       ${hl.targetMeaning ? `
         <div class="highlight-vocab-box">
-          <div class="vocab-meaning-line"><strong>💡 뜻:</strong> ${escapeHtml(hl.targetMeaning)}</div>
-          ${hl.sentenceTranslation ? `<div class="vocab-trans-line"><strong>📖 해석:</strong> ${escapeHtml(hl.sentenceTranslation)}</div>` : ''}
+          <div class="vocab-meaning-line"><strong>💡 뜻:</strong> ${meaningHtml}</div>
+          ${hl.sentenceTranslation ? `<div class="vocab-trans-line"><strong>📖 해석:</strong> ${transHtml}</div>` : ''}
         </div>
       ` : `
         <div class="highlight-vocab-unready">
@@ -2653,7 +2745,7 @@ function renderHighlightDrawer() {
           <button type="button" class="btn-card-action btn-card-gen-vocab" title="AI Q&A 생성">⚡ Q&A 생성</button>
         </div>
       `}
-      ${hl.note ? `<div class="highlight-card-note">💬 ${escapeHtml(hl.note)}</div>` : ''}
+      ${hl.note ? `<div class="highlight-card-note">💬 ${noteHtml}</div>` : ''}
       <div class="highlight-card-actions">
         ${hl.targetMeaning ? `<button type="button" class="btn-card-action btn-card-gen-vocab" title="AI Q&A 다시 생성">🔄 Q&A</button>` : ''}
         <button type="button" class="btn-card-action btn-card-edit-vocab" title="뜻/해석 수정">✏️ 편집</button>
@@ -2797,11 +2889,30 @@ function escapeRegex(str) {
   return (str || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-function formatQuestionHtml(sentence, target) {
+function highlightSearchTerm(text, terms = []) {
+  if (!text && text !== 0) return '';
+  const escaped = escapeHtml(text);
+  if (!terms || terms.length === 0) return escaped;
+  const pattern = terms.map(t => escapeRegex(escapeHtml(t))).filter(Boolean).join('|');
+  if (!pattern) return escaped;
+  return escaped.replace(new RegExp(`(${pattern})`, 'gi'), '<mark class="search-match-highlight">$1</mark>');
+}
+
+function formatQuestionHtml(sentence, target, searchTerms = []) {
   if (!sentence) return `<mark class="vocab-q-target">${escapeHtml(target || '')}</mark>`;
-  if (!target) return escapeHtml(sentence);
+  if (!target) return highlightSearchTerm(sentence, searchTerms);
+
   const escTarget = escapeRegex(target.trim());
-  return escapeHtml(sentence).replace(new RegExp(`(${escTarget})`, 'gi'), '<mark class="vocab-q-target">$1</mark>');
+  if (!escTarget) return escapeHtml(sentence);
+
+  const parts = sentence.split(new RegExp(`(${escTarget})`, 'i'));
+  return parts.map(part => {
+    if (part.toLowerCase() === target.trim().toLowerCase()) {
+      return `<mark class="vocab-q-target">${escapeHtml(part)}</mark>`;
+    } else {
+      return highlightSearchTerm(part, searchTerms);
+    }
+  }).join('');
 }
 
 let storedModel = localStorage.getItem('gemini_model');
@@ -3622,6 +3733,37 @@ function setupEventListeners() {
   elements.btnToggleHighlights.addEventListener('click', () => openDrawer('highlights'));
   elements.btnDrawerClose.addEventListener('click', closeDrawer);
   elements.drawerBackdrop.addEventListener('click', closeDrawer);
+
+  // Highlighter drawer search
+  if (elements.inputHighlightSearch) {
+    elements.inputHighlightSearch.addEventListener('input', (e) => {
+      state.highlightSearchQuery = e.target.value;
+      renderHighlightDrawer();
+    });
+
+    elements.inputHighlightSearch.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        if (elements.inputHighlightSearch.value) {
+          elements.inputHighlightSearch.value = '';
+          state.highlightSearchQuery = '';
+          renderHighlightDrawer();
+        } else {
+          closeDrawer();
+        }
+      }
+    });
+  }
+
+  if (elements.btnClearHighlightSearch) {
+    elements.btnClearHighlightSearch.addEventListener('click', () => {
+      state.highlightSearchQuery = '';
+      if (elements.inputHighlightSearch) {
+        elements.inputHighlightSearch.value = '';
+        elements.inputHighlightSearch.focus();
+      }
+      renderHighlightDrawer();
+    });
+  }
 
   // Settings popover
   elements.btnToggleSettings.addEventListener('click', (e) => {
