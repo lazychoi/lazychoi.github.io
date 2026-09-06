@@ -2306,8 +2306,10 @@ function triggerGoogleAISearch(contextData) {
 // ── Drawer (TOC & Highlights) ──
 function openDrawer(mode) {
   closeAllToolbars();
+  if (elements.readerDrawer) elements.readerDrawer.scrollTop = 0;
   elements.readerDrawer.classList.add('open');
   elements.drawerBackdrop.classList.add('open');
+  document.body.classList.add('drawer-open');
 
   if (mode === 'toc') {
     elements.drawerIcon.textContent = '📑';
@@ -2323,6 +2325,7 @@ function openDrawer(mode) {
 function closeDrawer() {
   elements.readerDrawer.classList.remove('open');
   elements.drawerBackdrop.classList.remove('open');
+  document.body.classList.remove('drawer-open');
 }
 
 function renderTocDrawer() {
