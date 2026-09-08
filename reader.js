@@ -297,8 +297,9 @@ const elements = {
   btnToolbarCopy: document.getElementById('btn-toolbar-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
   btnHlAi: document.getElementById('btn-hl-ai'),
-  btnHlNote: document.getElementById('btn-hl-note'),
+  btnHlEdit: document.getElementById('btn-hl-edit'),
   btnHlRemove: document.getElementById('btn-hl-remove'),
+  hlToolbarMeaning: document.getElementById('hl-toolbar-meaning'),
 
   // Drawer
   readerDrawer: document.getElementById('reader-drawer'),
@@ -428,6 +429,26 @@ function openReaderDB() {
   });
 }
 
+async function updateActiveBookLastPosition(pos) {
+  if (!state.currentBook || pos === undefined || pos === null) return;
+  try {
+    const db = await openReaderDB();
+    if (!db) return;
+    const tx = db.transaction(READER_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_STORE_NAME);
+    const req = store.get('current_reading_book');
+    req.onsuccess = () => {
+      const record = req.result;
+      if (record) {
+        record.lastPosition = pos;
+        store.put(record);
+      }
+    };
+  } catch (e) {
+    console.warn('Error updating last position in IndexedDB:', e);
+  }
+}
+
 async function saveActiveBookToStorage(bookRecord) {
   try {
     const db = await openReaderDB();
@@ -437,9 +458,15 @@ async function saveActiveBookToStorage(bookRecord) {
     const highlightsToStore = (Array.isArray(state.highlights) && state.highlights.length > 0)
       ? state.highlights
       : (bookRecord.highlights || []);
+
+    const lastPos = (bookRecord && bookRecord.lastPosition !== undefined && bookRecord.lastPosition !== null)
+      ? bookRecord.lastPosition
+      : (state.currentBook ? localStorage.getItem(`reader_pos_${state.currentBook.id}`) : null);
+
     store.put({
       id: 'current_reading_book',
       ...bookRecord,
+      lastPosition: lastPos,
       highlights: highlightsToStore,
       timestamp: Date.now()
     });
@@ -1342,7 +1369,9 @@ async function downloadZipAsEpub(zip, bookTitle) {
 }
 
 // ── TXT Book Viewer ──
-function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null) {
+let isRestoringTxtScroll = false;
+
+function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null) {
   // Reset EPUB if any
   cleanupEpub();
 
@@ -1368,7 +1397,7 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   elements.readerBottomBar.style.display = 'flex';
   elements.currentChapterTitle.textContent = state.currentBook.title;
 
-  renderTxtContent();
+  renderTxtContent(fallbackPosition);
 
   if (!skipSaveToDb) {
     saveActiveBookToStorage({
@@ -1376,12 +1405,13 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
       title: state.currentBook.title,
       author: state.currentBook.author,
       content,
-      bookId: state.currentBook.id
+      bookId: state.currentBook.id,
+      lastPosition: fallbackPosition
     });
   }
 }
 
-function renderTxtContent() {
+function renderTxtContent(fallbackPosition = null) {
   elements.txtContent.innerHTML = '';
 
   const paragraphs = state.currentBook.content.split(/\n\s*\n/);
@@ -1399,6 +1429,7 @@ function renderTxtContent() {
 
   // TXT Scroll progress tracking
   elements.txtViewer.onscroll = () => {
+    if (isRestoringTxtScroll) return;
     const scrollTop = elements.txtViewer.scrollTop;
     const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
     if (scrollHeight > 0) {
@@ -1407,21 +1438,36 @@ function renderTxtContent() {
       elements.progressPercent.textContent = `${pct}%`;
       if (state.currentBook) {
         localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+        localStorage.setItem('reader_last_book_id', state.currentBook.id);
+        updateActiveBookLastPosition(pct);
       }
     }
   };
 
   // Restore saved scroll position if any
-  const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
-  if (savedPos) {
+  const savedPos = (fallbackPosition !== undefined && fallbackPosition !== null && fallbackPosition !== '')
+    ? fallbackPosition
+    : localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+
+  if (savedPos !== null && savedPos !== undefined && savedPos !== '') {
+    isRestoringTxtScroll = true;
     const applySavedScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
         elements.txtViewer.scrollTop = (parseFloat(savedPos) / 100) * scrollHeight;
+        const pct = Math.round(parseFloat(savedPos));
+        elements.progressSlider.value = pct;
+        elements.progressPercent.textContent = `${pct}%`;
       }
     };
-    setTimeout(applySavedScroll, 60);
-    setTimeout(applySavedScroll, 250);
+    setTimeout(applySavedScroll, 50);
+    setTimeout(applySavedScroll, 180);
+    setTimeout(() => {
+      applySavedScroll();
+      isRestoringTxtScroll = false;
+    }, 400);
+  } else {
+    isRestoringTxtScroll = false;
   }
 
   // Bind click on marks
@@ -1549,7 +1595,7 @@ function cleanupEpub() {
   elements.epubArea.innerHTML = '';
 }
 
-function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null) {
+function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null) {
   cleanupEpub();
 
   state.currentBook = {
@@ -1585,7 +1631,8 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       title: state.currentBook.title,
       author: state.currentBook.author,
       content: arrayBuffer,
-      bookId: state.currentBook.id
+      bookId: state.currentBook.id,
+      lastPosition: fallbackPosition
     });
   }
 
@@ -1732,10 +1779,30 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }).catch(() => {});
     }
 
+    let initialLocationRestored = false;
+
     // Render initial page or restore saved location when book is ready
-    book.ready.then(() => {
-      const savedCfi = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
-      return rendition.display(savedCfi || undefined);
+    book.ready.then(async () => {
+      const savedCfi = fallbackPosition || localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+      if (savedCfi && typeof savedCfi === 'string' && savedCfi.startsWith('epubcfi(')) {
+        try {
+          await rendition.display(savedCfi);
+          initialLocationRestored = true;
+          return;
+        } catch (e) {
+          console.warn('Initial rendition display with savedCfi failed, trying startCfi:', e);
+          const startCfi = getStartCfi(savedCfi);
+          if (startCfi && startCfi !== savedCfi) {
+            try {
+              await rendition.display(startCfi);
+              initialLocationRestored = true;
+              return;
+            } catch (e2) {}
+          }
+        }
+      }
+      await rendition.display();
+      initialLocationRestored = true;
     }).then(() => {
       applyEpubThemes();
       restoreEpubHighlights();
@@ -1744,6 +1811,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       if (state.epub.rendition) {
         state.epub.rendition.display();
       }
+      initialLocationRestored = true;
     });
 
     // Generate locations for progress slider
@@ -1758,8 +1826,10 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
 
     // Rendition Relocated event (Page changes)
     rendition.on("relocated", (location) => {
-      if (location && location.start && location.start.cfi && state.currentBook) {
+      if (initialLocationRestored && location && location.start && location.start.cfi && state.currentBook) {
         localStorage.setItem(`reader_pos_${state.currentBook.id}`, location.start.cfi);
+        localStorage.setItem('reader_last_book_id', state.currentBook.id);
+        updateActiveBookLastPosition(location.start.cfi);
       }
       updateEpubProgress(location);
       showNavButtonsTemporarily(1800);
@@ -2323,10 +2393,25 @@ function applyHighlight(colorName) {
 function showHighlightToolbar(rect) {
   closeAllToolbars();
   const tb = elements.highlightToolbar;
+
+  // Render bottom meaning if present
+  if (elements.hlToolbarMeaning) {
+    const meaning = (state.activeHighlight && state.activeHighlight.targetMeaning)
+      ? state.activeHighlight.targetMeaning.trim()
+      : '';
+    if (meaning) {
+      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text">${escapeHtml(meaning)}</span>`;
+      elements.hlToolbarMeaning.style.display = 'flex';
+    } else {
+      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text" style="color:var(--text-muted); font-size:12px;">등록된 뜻 없음 (편집 버튼에서 추가)</span>`;
+      elements.hlToolbarMeaning.style.display = 'flex';
+    }
+  }
+
   tb.style.display = 'flex';
 
-  const tbWidth = tb.offsetWidth || 220;
-  const tbHeight = tb.offsetHeight || 44;
+  const tbWidth = tb.offsetWidth || 240;
+  const tbHeight = tb.offsetHeight || 50;
   const x = rect.left + (rect.width / 2);
   let y = rect.top + window.scrollY;
 
@@ -2659,72 +2744,51 @@ function renderTocDrawer() {
 }
 
 // ── Precision Navigation to Highlight in EPUB ──
-async function jumpToHighlightInEpub(hl) {
-  if (!state.epub.rendition || !hl) return;
+function findHighlightTargetInDoc(doc, hl) {
+  if (!doc) return null;
 
-  const startCfi = getStartCfi(hl.cfiRange);
-
-  // 1. Navigate to chapter/page via Point CFI
-  if (startCfi) {
-    try {
-      await state.epub.rendition.display(startCfi);
-    } catch (err) {
-      console.warn('Navigation with startCfi failed, retrying with cfiRange:', err);
-      try {
-        await state.epub.rendition.display(hl.cfiRange);
-      } catch (e2) {}
-    }
-  }
-
-  // 2. Wait for iframe rendering and annotations layout
-  await new Promise(resolve => setTimeout(resolve, 150));
-
-  const iframe = elements.epubArea.querySelector('iframe');
-  if (!iframe) return;
-  const win = iframe.contentWindow;
-  const doc = iframe.contentDocument || (win ? win.document : null);
-  if (!doc || !win) return;
-
-  let targetRect = null;
-  let targetElement = null;
-
-  // 3-1. Check DOM anchor/mark element if present
+  // 1. Check DOM anchor/mark element if present (e.g. legacy EPUB or ID anchor)
   if (hl.id) {
-    targetElement = doc.querySelector(`[data-hl-id="${hl.id}"], mark[data-hl-id="${hl.id}"], [id="${hl.id}"]`);
-    if (targetElement) {
-      targetRect = targetElement.getBoundingClientRect();
+    const el = doc.querySelector(`[data-hl-id="${hl.id}"], mark[data-hl-id="${hl.id}"], [id="${hl.id}"]`);
+    if (el) {
+      const rect = el.getBoundingClientRect();
+      if (rect && (rect.width > 0 || rect.height > 0)) {
+        return { element: el, rect };
+      }
     }
   }
 
-  // 3-2. Resolve exact live DOM Range via ePub.CFI
-  if (!targetRect && hl.cfiRange && typeof ePub !== 'undefined' && ePub.CFI) {
+  // 2. Resolve exact live DOM Range via ePub.CFI
+  if (hl.cfiRange && typeof ePub !== 'undefined' && ePub.CFI) {
     try {
       const cfi = new ePub.CFI(hl.cfiRange);
       if (typeof cfi.toRange === 'function') {
         const domRange = cfi.toRange(doc);
         if (domRange && typeof domRange.getBoundingClientRect === 'function') {
           const r = domRange.getBoundingClientRect();
-          if (r && (r.width > 0 || r.height > 0 || r.top !== 0)) {
-            targetRect = r;
+          if (r && (r.width > 0 || r.height > 0)) {
+            return { element: null, rect: r, range: domRange };
           }
         }
       }
     } catch (err) {
-      console.warn('CFI toRange in jumpToHighlightInEpub:', err);
+      console.warn('CFI toRange in findHighlightTargetInDoc:', err);
     }
   }
 
-  // 3-3. Check SVG annotation element rendered by epub.js
-  if (!targetRect && hl.id) {
+  // 3. Check SVG annotation element rendered by epub.js
+  if (hl.id) {
     const svgEl = doc.querySelector(`g[data-id="${hl.id}"], .hl-${hl.color || 'yellow'}[data-id="${hl.id}"]`);
     if (svgEl) {
-      targetRect = svgEl.getBoundingClientRect();
-      targetElement = svgEl;
+      const rect = svgEl.getBoundingClientRect();
+      if (rect && (rect.width > 0 || rect.height > 0)) {
+        return { element: svgEl, rect };
+      }
     }
   }
 
-  // 3-4. Context-aware text search fallback (Smart Anchoring)
-  if (!targetRect && hl.text) {
+  // 4. Context-aware text search fallback (Smart Anchoring)
+  if (hl.text) {
     try {
       const walker = doc.createTreeWalker(doc.body || doc.documentElement, NodeFilter.SHOW_TEXT);
       let node;
@@ -2742,34 +2806,112 @@ async function jumpToHighlightInEpub(hl) {
           r.setStart(node, idx);
           r.setEnd(node, idx + hl.text.length);
           const rRect = r.getBoundingClientRect();
-          if (rRect && (rRect.width > 0 || rRect.height > 0 || rRect.top !== 0)) {
-            targetRect = rRect;
-            break;
+          if (rRect && (rRect.width > 0 || rRect.height > 0)) {
+            return { element: null, rect: rRect, range: r };
           }
         }
       }
     } catch (err) {
-      console.warn('Fallback text search in jumpToHighlightInEpub:', err);
+      console.warn('Fallback text search in findHighlightTargetInDoc:', err);
     }
   }
 
-  // 4. Smoothly center viewport on the target highlight
-  if (targetElement && typeof targetElement.scrollIntoView === 'function') {
-    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  } else if (targetRect) {
-    const scrollY = win.scrollY || win.pageYOffset || 0;
-    const targetY = scrollY + targetRect.top - (win.innerHeight / 2) + (targetRect.height / 2);
-    win.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+  return null;
+}
+
+async function jumpToHighlightInEpub(hl) {
+  if (!state.epub.rendition || !hl) return;
+
+  const startCfi = getStartCfi(hl.cfiRange);
+  const targetCfi = startCfi || hl.cfiRange;
+
+  // 1. Initial navigation to chapter/page via Point CFI
+  if (targetCfi) {
+    try {
+      await state.epub.rendition.display(targetCfi);
+    } catch (err) {
+      console.warn('Navigation with targetCfi failed, retrying with cfiRange:', err);
+      try {
+        await state.epub.rendition.display(hl.cfiRange);
+      } catch (e2) {}
+    }
   }
 
-  // 5. Visual pulse glow overlay so user instantly spots the highlighted word
+  // 2. Poll until iframe DOM, fonts, and column layout are fully ready (up to 1200ms)
+  let found = null;
+  let targetRect = null;
+  let targetElement = null;
+  let activeWin = null;
+  let activeDoc = null;
+
+  const maxWait = 1200;
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < maxWait) {
+    const iframe = elements.epubArea.querySelector('iframe');
+    if (iframe && iframe.contentWindow) {
+      activeWin = iframe.contentWindow;
+      activeDoc = iframe.contentDocument || (activeWin ? activeWin.document : null);
+      if (activeDoc && activeDoc.body && activeDoc.readyState !== 'loading') {
+        found = findHighlightTargetInDoc(activeDoc, hl);
+        if (found && found.rect && (found.rect.width > 0 || found.rect.height > 0)) {
+          targetRect = found.rect;
+          targetElement = found.element;
+          break;
+        }
+      }
+    }
+    await new Promise(r => setTimeout(r, 60));
+  }
+
+  if (!activeDoc || !activeWin) return;
+
+  // 3. In paginated mode: verify if target is on the currently visible page
+  // When switching chapters, epub.js initial render may land on column 0 while the target is on column N.
+  // Now that the chapter layout is 100% computed, re-displaying targetCfi accurately turns to that column.
+  const isPaginated = !state.epub.rendition.settings || state.epub.rendition.settings.flow === 'paginated';
+  if (isPaginated && targetRect) {
+    const isOffscreen = (targetRect.left < 0 || targetRect.left >= activeWin.innerWidth);
+    if (isOffscreen && targetCfi) {
+      try {
+        await state.epub.rendition.display(targetCfi);
+        await new Promise(r => setTimeout(r, 80));
+        const reFound = findHighlightTargetInDoc(activeDoc, hl);
+        if (reFound && reFound.rect && (reFound.rect.width > 0 || reFound.rect.height > 0)) {
+          targetRect = reFound.rect;
+          targetElement = reFound.element || targetElement;
+        }
+      } catch (e) {
+        console.warn('Re-display to page column failed:', e);
+      }
+    }
+  }
+
+  // 4. Ensure highlights are visually rendered
+  restoreEpubHighlights();
+
+  // 5. Centering scroll for scrolled flow (paginated mode handles paging via column display)
+  if (!isPaginated) {
+    if (targetElement && typeof targetElement.scrollIntoView === 'function') {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else if (targetRect) {
+      const scrollY = activeWin.scrollY || activeWin.pageYOffset || 0;
+      const targetY = scrollY + targetRect.top - (activeWin.innerHeight / 2) + (targetRect.height / 2);
+      activeWin.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+    }
+  }
+
+  // 6. Visual pulse glow overlay so user instantly spots the highlighted word
   if (targetRect) {
-    showJumpPulseOverlay(doc, win, targetRect);
+    showJumpPulseOverlay(activeDoc, activeWin, targetRect);
   }
 }
 
 function showJumpPulseOverlay(doc, win, rect) {
   try {
+    const existing = doc.querySelectorAll('.reader-jump-pulse-overlay');
+    existing.forEach(el => el.remove());
+
     const scrollX = win.scrollX || win.pageXOffset || 0;
     const scrollY = win.scrollY || win.pageYOffset || 0;
 
@@ -4107,46 +4249,15 @@ function setupEventListeners() {
     }
   });
 
-  elements.btnHlNote.addEventListener('click', () => {
-    if (state.activeHighlight) {
-      const note = prompt('메모를 입력하세요:', state.activeHighlight.note || '');
-      if (note !== null) {
-        state.activeHighlight.note = note.trim();
-        saveHighlights();
-
-        if (state.currentBook?.type === 'txt') {
-          renderTxtContent();
-        } else if (state.currentBook?.type === 'epub') {
-          const iframe = elements.epubArea.querySelector('iframe');
-          const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
-          if (iframeDoc) {
-            const mark = iframeDoc.querySelector(`mark[data-hl-id="${state.activeHighlight.id}"], [data-hl-id="${state.activeHighlight.id}"]`);
-            if (mark) {
-              mark.title = state.activeHighlight.note ? `메모: ${state.activeHighlight.note}` : '';
-              let badge = mark.querySelector('.reader-note-badge');
-              if (state.activeHighlight.note) {
-                if (!badge) {
-                  badge = iframeDoc.createElement('span');
-                  badge.className = 'reader-note-badge';
-                  badge.style.cssText = 'font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; cursor: pointer;';
-                  mark.appendChild(badge);
-                }
-                badge.textContent = ` 💬 ${state.activeHighlight.note}`;
-              } else if (badge) {
-                badge.remove();
-              }
-            }
-          }
-        }
-
-        showToast('메모가 저장되었습니다.');
-        if (elements.readerDrawer.classList.contains('open')) {
-          renderHighlightDrawer();
-        }
+  if (elements.btnHlEdit) {
+    elements.btnHlEdit.addEventListener('click', () => {
+      if (state.activeHighlight) {
+        const hl = state.activeHighlight;
+        closeAllToolbars();
+        openVocabEditModal(hl);
       }
-      closeAllToolbars();
-    }
-  });
+    });
+  }
 
   elements.btnHlRemove.addEventListener('click', () => {
     if (state.activeHighlight) {
@@ -4402,7 +4513,7 @@ function setupEventListeners() {
     }
   });
 
-  // 탭 전환 / 다른 앱 전환 시 현재 위치(CFI 또는 스크롤) 즉시 보존
+  // 탭 전환 / 다른 앱 전환 / 페이지 종료 시 현재 위치(CFI 또는 스크롤) 즉시 보존
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden' && state.currentBook) {
       saveCurrentReadingPosition();
@@ -4410,6 +4521,12 @@ function setupEventListeners() {
   });
 
   window.addEventListener('pagehide', () => {
+    if (state.currentBook) {
+      saveCurrentReadingPosition();
+    }
+  });
+
+  window.addEventListener('beforeunload', () => {
     if (state.currentBook) {
       saveCurrentReadingPosition();
     }
@@ -4422,7 +4539,10 @@ function saveCurrentReadingPosition() {
     try {
       const loc = state.epub.rendition.currentLocation();
       if (loc && loc.start && loc.start.cfi) {
-        localStorage.setItem(`reader_pos_${state.currentBook.id}`, loc.start.cfi);
+        const cfi = loc.start.cfi;
+        localStorage.setItem(`reader_pos_${state.currentBook.id}`, cfi);
+        localStorage.setItem('reader_last_book_id', state.currentBook.id);
+        updateActiveBookLastPosition(cfi);
       }
     } catch (e) {}
   } else if (state.currentBook.type === 'txt' && elements.txtViewer) {
@@ -4431,6 +4551,8 @@ function saveCurrentReadingPosition() {
     if (scrollHeight > 0) {
       const pct = Math.min(100, Math.max(0, Math.round((scrollTop / scrollHeight) * 100)));
       localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+      localStorage.setItem('reader_last_book_id', state.currentBook.id);
+      updateActiveBookLastPosition(pct);
     }
   }
 }
@@ -4441,10 +4563,14 @@ async function restoreActiveBook() {
     const record = await loadActiveBookFromStorage();
     if (!record || !record.content) return;
 
+    const savedPos = (record.lastPosition !== undefined && record.lastPosition !== null && record.lastPosition !== '')
+      ? record.lastPosition
+      : localStorage.getItem(`reader_pos_${record.bookId}`);
+
     if (record.type === 'epub') {
-      openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights);
+      openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos);
     } else if (record.type === 'txt') {
-      openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights);
+      openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos);
     }
   } catch (err) {
     console.warn('Failed to restore active book from IndexedDB:', err);

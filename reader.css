@@ -666,6 +666,60 @@ body.theme-dark .toolbar-btn:hover {
   background: rgba(239, 68, 68, 0.1);
 }
 
+/* ── 하이라이트 팝오버 툴바 ('편집' 및 하단 뜻 표시) ── */
+#highlight-toolbar {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 8px 10px;
+  gap: 8px;
+  max-width: 320px;
+  min-width: 220px;
+  box-sizing: border-box;
+}
+
+.highlight-toolbar-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.highlight-toolbar-meaning {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--reader-bg, rgba(0, 0, 0, 0.04));
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--reader-text, #1e293b);
+  border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
+  word-break: break-word;
+  white-space: normal;
+  max-height: 110px;
+  overflow-y: auto;
+}
+
+body.theme-dark .highlight-toolbar-meaning {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f1f5f9;
+}
+
+.highlight-toolbar-meaning .hl-meaning-icon {
+  flex-shrink: 0;
+  font-size: 13px;
+}
+
+.highlight-toolbar-meaning .hl-meaning-text {
+  flex: 1;
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
 /* ── 사이드패널 (목차 & 하이라이트 목록) ── */
 .reader-drawer {
   position: fixed;
