@@ -826,6 +826,20 @@ function compareEpubCfi(cfiA, cfiB) {
   return cfiA.localeCompare(cfiB, undefined, { numeric: true });
 }
 
+function getStartCfi(cfiRange) {
+  if (!cfiRange || typeof cfiRange !== 'string') return null;
+  const match = cfiRange.match(/^epubcfi\((.+)\)$/);
+  if (!match) return cfiRange;
+  const inner = match[1];
+  const parts = inner.split(',');
+  if (parts.length >= 2) {
+    const parent = parts[0];
+    const start = parts[1];
+    return `epubcfi(${parent}${start})`;
+  }
+  return cfiRange;
+}
+
 function sortHighlights() {
   if (Array.isArray(state.highlights)) {
     state.highlights.sort(compareHighlights);
@@ -1095,7 +1109,7 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4; }
     const trimmed = pText.trim();
     if (!trimmed) return;
     const pHtml = applyHighlightsToParagraph(trimmed, pIdx);
-    bookBodyHtml += `<p>${pHtml}</p>\n`;
+    bookBodyHtml += `<p id="p-${pIdx}">${pHtml}</p>\n`;
   });
 
   const bookXhtml = `<?xml version="1.0" encoding="utf-8"?>
@@ -2644,6 +2658,148 @@ function renderTocDrawer() {
   elements.drawerBody.appendChild(ul);
 }
 
+// ── Precision Navigation to Highlight in EPUB ──
+async function jumpToHighlightInEpub(hl) {
+  if (!state.epub.rendition || !hl) return;
+
+  const startCfi = getStartCfi(hl.cfiRange);
+
+  // 1. Navigate to chapter/page via Point CFI
+  if (startCfi) {
+    try {
+      await state.epub.rendition.display(startCfi);
+    } catch (err) {
+      console.warn('Navigation with startCfi failed, retrying with cfiRange:', err);
+      try {
+        await state.epub.rendition.display(hl.cfiRange);
+      } catch (e2) {}
+    }
+  }
+
+  // 2. Wait for iframe rendering and annotations layout
+  await new Promise(resolve => setTimeout(resolve, 150));
+
+  const iframe = elements.epubArea.querySelector('iframe');
+  if (!iframe) return;
+  const win = iframe.contentWindow;
+  const doc = iframe.contentDocument || (win ? win.document : null);
+  if (!doc || !win) return;
+
+  let targetRect = null;
+  let targetElement = null;
+
+  // 3-1. Check DOM anchor/mark element if present
+  if (hl.id) {
+    targetElement = doc.querySelector(`[data-hl-id="${hl.id}"], mark[data-hl-id="${hl.id}"], [id="${hl.id}"]`);
+    if (targetElement) {
+      targetRect = targetElement.getBoundingClientRect();
+    }
+  }
+
+  // 3-2. Resolve exact live DOM Range via ePub.CFI
+  if (!targetRect && hl.cfiRange && typeof ePub !== 'undefined' && ePub.CFI) {
+    try {
+      const cfi = new ePub.CFI(hl.cfiRange);
+      if (typeof cfi.toRange === 'function') {
+        const domRange = cfi.toRange(doc);
+        if (domRange && typeof domRange.getBoundingClientRect === 'function') {
+          const r = domRange.getBoundingClientRect();
+          if (r && (r.width > 0 || r.height > 0 || r.top !== 0)) {
+            targetRect = r;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('CFI toRange in jumpToHighlightInEpub:', err);
+    }
+  }
+
+  // 3-3. Check SVG annotation element rendered by epub.js
+  if (!targetRect && hl.id) {
+    const svgEl = doc.querySelector(`g[data-id="${hl.id}"], .hl-${hl.color || 'yellow'}[data-id="${hl.id}"]`);
+    if (svgEl) {
+      targetRect = svgEl.getBoundingClientRect();
+      targetElement = svgEl;
+    }
+  }
+
+  // 3-4. Context-aware text search fallback (Smart Anchoring)
+  if (!targetRect && hl.text) {
+    try {
+      const walker = doc.createTreeWalker(doc.body || doc.documentElement, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const val = node.nodeValue;
+        if (val && val.includes(hl.text)) {
+          if (hl.targetSentence) {
+            const pText = (node.parentElement ? node.parentElement.textContent : '') || '';
+            if (!val.includes(hl.targetSentence) && !pText.includes(hl.targetSentence)) {
+              continue;
+            }
+          }
+          const idx = val.indexOf(hl.text);
+          const r = doc.createRange();
+          r.setStart(node, idx);
+          r.setEnd(node, idx + hl.text.length);
+          const rRect = r.getBoundingClientRect();
+          if (rRect && (rRect.width > 0 || rRect.height > 0 || rRect.top !== 0)) {
+            targetRect = rRect;
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Fallback text search in jumpToHighlightInEpub:', err);
+    }
+  }
+
+  // 4. Smoothly center viewport on the target highlight
+  if (targetElement && typeof targetElement.scrollIntoView === 'function') {
+    targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } else if (targetRect) {
+    const scrollY = win.scrollY || win.pageYOffset || 0;
+    const targetY = scrollY + targetRect.top - (win.innerHeight / 2) + (targetRect.height / 2);
+    win.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+  }
+
+  // 5. Visual pulse glow overlay so user instantly spots the highlighted word
+  if (targetRect) {
+    showJumpPulseOverlay(doc, win, targetRect);
+  }
+}
+
+function showJumpPulseOverlay(doc, win, rect) {
+  try {
+    const scrollX = win.scrollX || win.pageXOffset || 0;
+    const scrollY = win.scrollY || win.pageYOffset || 0;
+
+    const overlay = doc.createElement('div');
+    overlay.className = 'reader-jump-pulse-overlay';
+    overlay.style.position = 'absolute';
+    overlay.style.left = `${scrollX + rect.left - 4}px`;
+    overlay.style.top = `${scrollY + rect.top - 2}px`;
+    overlay.style.width = `${Math.max(rect.width + 8, 20)}px`;
+    overlay.style.height = `${Math.max(rect.height + 4, 16)}px`;
+    overlay.style.borderRadius = '4px';
+    overlay.style.outline = '3px solid #2563eb';
+    overlay.style.backgroundColor = 'rgba(37, 99, 235, 0.2)';
+    overlay.style.boxShadow = '0 0 16px rgba(37, 99, 235, 0.5)';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.zIndex = '99999';
+    overlay.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+
+    (doc.body || doc.documentElement).appendChild(overlay);
+
+    setTimeout(() => {
+      overlay.style.opacity = '0';
+      overlay.style.transform = 'scale(1.05)';
+      setTimeout(() => {
+        if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+      }, 600);
+    }, 1800);
+  } catch (err) {}
+}
+
 function renderHighlightDrawer() {
   elements.drawerBody.innerHTML = '';
   sortHighlights();
@@ -2782,24 +2938,12 @@ function renderHighlightDrawer() {
         const mark = elements.txtContent.querySelector(`[data-hl-id="${hl.id}"]`);
         if (mark) {
           mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          mark.style.outline = '2px solid var(--accent)';
-          setTimeout(() => { mark.style.outline = 'none'; }, 1500);
+          mark.style.outline = '3px solid var(--accent)';
+          mark.style.borderRadius = '3px';
+          setTimeout(() => { mark.style.outline = 'none'; }, 1800);
         }
       } else if (state.currentBook.type === 'epub') {
-        if (state.epub.rendition && hl.cfiRange) {
-          state.epub.rendition.display(hl.cfiRange);
-        } else {
-          const iframe = elements.epubArea.querySelector('iframe');
-          const doc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
-          if (doc) {
-            const mark = doc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`);
-            if (mark) {
-              mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              mark.style.outline = '2px solid var(--accent)';
-              setTimeout(() => { mark.style.outline = 'none'; }, 1500);
-            }
-          }
-        }
+        jumpToHighlightInEpub(hl);
       }
       closeDrawer();
     });
