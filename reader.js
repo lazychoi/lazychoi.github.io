@@ -1016,56 +1016,8 @@ async function exportExistingEpubWithHighlights() {
   } catch (e) {}
   const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
 
-  // 3. Inject highlight marks into XHTML/HTML chapter files
-  const xhtmlFileNames = Object.keys(zip.files).filter(name => {
-    const lower = name.toLowerCase();
-    return (lower.endsWith('.xhtml') || lower.endsWith('.html') || lower.endsWith('.htm')) &&
-           !lower.includes('toc') && !lower.includes('nav');
-  });
-
-  const parser = new DOMParser();
-  const serializer = new XMLSerializer();
-
-  for (const fileName of xhtmlFileNames) {
-    const file = zip.file(fileName);
-    if (!file) continue;
-
-    const content = await file.async('text');
-    const relevantHls = state.highlights.filter(hl => hl.text && content.includes(hl.text));
-    if (relevantHls.length === 0) continue;
-
-    try {
-      const doc = parser.parseFromString(content, 'application/xhtml+xml');
-      if (!doc.querySelector('parsererror')) {
-        let modified = false;
-        for (const hl of relevantHls) {
-          if (injectHighlightInDoc(doc, hl)) {
-            modified = true;
-          }
-        }
-        if (modified) {
-          if (doc.head && !doc.getElementById('exported-hl-style')) {
-            const style = doc.createElementNS('http://www.w3.org/1999/xhtml', 'style');
-            style.id = 'exported-hl-style';
-            style.textContent = `
-              mark.reader-highlight { padding: 1px 2px; border-radius: 2px; color: inherit; }
-              mark.reader-highlight.hl-yellow { background-color: #fde047; }
-              mark.reader-highlight.hl-green  { background-color: #86efac; }
-              mark.reader-highlight.hl-purple { background-color: #d8b4fe; }
-              mark.reader-highlight.hl-blue   { background-color: #7dd3fc; }
-              mark.reader-highlight.hl-pink   { background-color: #f9a8d4; }
-              .reader-note-badge { font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; }
-            `;
-            doc.head.appendChild(style);
-          }
-          const newContent = serializer.serializeToString(doc);
-          zip.file(fileName, newContent);
-        }
-      }
-    } catch (err) {
-      console.warn('XHTML highlight injection error:', fileName, err);
-    }
-  }
+  // 3. Preserve original XHTML/HTML chapter files without DOM mutation
+  // This ensures EPUB CFI coordinates and book DOM integrity remain 100% exact.
 
   // 4. Create and append "Highlights & Notes" Appendix chapter
   const appendixFileName = `${opfDir}highlights_appendix.xhtml`;
@@ -1473,21 +1425,79 @@ function escapeHtml(str) {
 }
 
 function applyHighlightsToParagraph(paragraphText, pIdx) {
-  const pHighlights = state.highlights.filter(h => h.pIdx === pIdx);
+  const pHighlights = state.highlights.filter(h => h.pIdx === pIdx && h.text);
   if (pHighlights.length === 0) {
     return escapeHtml(paragraphText);
   }
 
-  // Sort by offset to preserve paragraph order
-  const sorted = [...pHighlights].sort((a, b) => (a.offset ?? 0) - (b.offset ?? 0));
-  let html = escapeHtml(paragraphText);
-  sorted.forEach(hl => {
-    const escapedText = escapeHtml(hl.text);
-    const markHtml = `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${hl.id}">${escapedText}</mark>`;
-    html = html.replace(escapedText, markHtml);
-  });
+  // Find precise start & end in raw paragraphText for each highlight
+  const validatedHls = [];
+  for (const hl of pHighlights) {
+    let start = -1;
+    const textLen = hl.text.length;
+    if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= paragraphText.length) {
+      if (paragraphText.substring(hl.offset, hl.offset + textLen) === hl.text) {
+        start = hl.offset;
+      }
+    }
+    // Fallback: search closest or first occurrence if offset not matched
+    if (start === -1) {
+      if (hl.targetSentence) {
+        const targetSearch = paragraphText.indexOf(hl.targetSentence);
+        if (targetSearch !== -1) {
+          const subIdx = paragraphText.indexOf(hl.text, targetSearch);
+          if (subIdx !== -1 && subIdx <= targetSearch + hl.targetSentence.length) {
+            start = subIdx;
+          }
+        }
+      }
+    }
+    if (start === -1) {
+      start = paragraphText.indexOf(hl.text);
+    }
 
-  return html;
+    if (start !== -1) {
+      validatedHls.push({
+        ...hl,
+        _start: start,
+        _end: start + textLen
+      });
+    }
+  }
+
+  if (validatedHls.length === 0) {
+    return escapeHtml(paragraphText);
+  }
+
+  // Sort descending by start to filter out overlapping ranges
+  validatedHls.sort((a, b) => b._start - a._start);
+  const nonOverlapping = [];
+  let lastStart = Infinity;
+  for (const item of validatedHls) {
+    if (item._end <= lastStart) {
+      nonOverlapping.push(item);
+      lastStart = item._start;
+    }
+  }
+
+  // Build final HTML safely using forward construction
+  nonOverlapping.sort((a, b) => a._start - b._start);
+  let resultHtml = '';
+  let curIdx = 0;
+
+  for (const hl of nonOverlapping) {
+    if (hl._start > curIdx) {
+      resultHtml += escapeHtml(paragraphText.substring(curIdx, hl._start));
+    }
+    const rawMatch = paragraphText.substring(hl._start, hl._end);
+    resultHtml += `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${escapeHtml(hl.id)}">${escapeHtml(rawMatch)}</mark>`;
+    curIdx = hl._end;
+  }
+  if (curIdx < paragraphText.length) {
+    resultHtml += escapeHtml(paragraphText.substring(curIdx));
+  }
+
+  return resultHtml;
 }
 
 function bindHighlightClickEvents() {
@@ -1649,7 +1659,6 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                                 (embH.cfiRange && currentMap.get(embH.cfiRange)) ||
                                 currentMap.get(`${embH.pIdx}_${(embH.text || '').trim()}`);
                   if (match) {
-                    match.isEmbeddedMark = true;
                     // 기존 뜻/해석이 없을 때만 임베디드 파일의 값 채택 (기존 생성된 Q&A 보호)
                     if (!match.targetMeaning && embH.targetMeaning) {
                       match.targetMeaning = embH.targetMeaning;
@@ -1663,11 +1672,18 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                       match.note = embH.note;
                       hasChanges = true;
                     }
+                    if (!match.cfiRange && embH.cfiRange) {
+                      match.cfiRange = embH.cfiRange;
+                      hasChanges = true;
+                    }
+                    if (!match.targetSentence && embH.targetSentence) {
+                      match.targetSentence = embH.targetSentence;
+                      hasChanges = true;
+                    }
                   } else {
                     // 신규 형광펜 항목 추가
                     const newH = {
                       ...embH,
-                      isEmbeddedMark: true,
                       targetMeaning: embH.targetMeaning || '',
                       sentenceTranslation: embH.sentenceTranslation || '',
                       studyCount: Number(embH.studyCount) || 0,
@@ -1894,15 +1910,22 @@ function bindAllMarksInEpub() {
       const hlId = mark.dataset.hlId;
       const markText = mark.textContent.replace(/💬.*$/, '').trim();
 
-      // 1. ID로 매칭
+      // 1. 정확한 ID로 매칭
       let hl = hlId ? state.highlights.find(h => h.id === hlId) : null;
 
-      // 2. 텍스트로 매칭
+      // 2. 정확한 텍스트 및 문맥으로 정밀 매칭
       if (!hl && markText) {
-        hl = state.highlights.find(h => h.text && (h.text.includes(markText) || markText.includes(h.text)));
+        // 2-1. 텍스트 완전 일치 항목 우선 탐색
+        hl = state.highlights.find(h => h.text === markText);
+        
+        // 2-2. 부모 문맥이 일치하는 경우 탐색
+        if (!hl) {
+          const parentText = (mark.parentElement ? mark.parentElement.textContent : '').trim();
+          hl = state.highlights.find(h => h.text === markText && h.targetSentence && parentText.includes(h.targetSentence));
+        }
       }
 
-      // 3. 매칭되는 하이라이트가 없으면 동적 생성 및 등록
+      // 3. 매칭되는 하이라이트가 없을 때만 신규 생성 및 등록
       if (!hl && markText) {
         let detectedColor = 'yellow';
         for (const c of ['yellow', 'green', 'purple', 'blue', 'pink']) {
@@ -1958,10 +1981,7 @@ function restoreEpubHighlights() {
 
   state.highlights.forEach(hl => {
     if (hl.cfiRange) {
-      // If this highlight is already rendered as an interactive <mark> in the loaded document or exported file, skip SVG annotation
-      if (hl.isEmbeddedMark) {
-        return;
-      }
+      // If this highlight is already present as an actual <mark> in the DOM (e.g. legacy exported EPUB), skip duplicate SVG annotation
       if (iframeDoc && hl.id && iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`)) {
         return;
       }
@@ -1969,7 +1989,7 @@ function restoreEpubHighlights() {
       const colorName = hl.color || 'yellow';
       const colorHex = getHighlightColorHex(colorName);
 
-      // Remove existing first to avoid duplicates
+      // Remove existing first to avoid duplicate annotation overlays
       try {
         state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
       } catch (err) {}
@@ -1990,7 +2010,7 @@ function restoreEpubHighlights() {
           }
         );
       } catch (e) {
-        console.warn('Annotation restore error:', e);
+        console.warn('Annotation restore error for CFI:', hl.cfiRange, e);
       }
     }
   });
