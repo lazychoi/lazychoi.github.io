@@ -100,7 +100,7 @@ const state = {
     theme: 'light',
     fontSize: 18,
     lineHeight: 1.8,
-    fontFamily: 'sans-serif',
+    fontFamily: 'serif',
   },
   epub: {
     book: null,
@@ -696,6 +696,12 @@ function loadSettings() {
       console.error(e);
     }
   }
+  // 기본 폰트를 명조(serif)로 전환 (기존 기본값 sans-serif로 저장되어 있던 브라우저도 serif로 1회 마이그레이션)
+  if (!localStorage.getItem('reader_font_serif_migrated')) {
+    state.settings.fontFamily = 'serif';
+    localStorage.setItem('reader_font_serif_migrated', 'true');
+    saveSettings();
+  }
   if (!state.settings.geminiApiKey) {
     state.settings.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
   }
@@ -778,11 +784,15 @@ function applyEpubThemes() {
   const currentLh = state.settings.lineHeight || 1.8;
   const isDark = currentTheme === 'dark';
 
+  const epubFontFamily = state.settings.fontFamily === 'serif'
+    ? "'Noto Serif KR', Georgia, serif"
+    : (state.settings.fontFamily === 'monospace' ? 'ui-monospace, Consolas, monospace' : '-apple-system, sans-serif');
+
   state.epub.rendition.themes.default({
     'body': {
       'background': `${bgColors[currentTheme]} !important`,
       'color': `${textColors[currentTheme]} !important`,
-      'font-family': `${state.settings.fontFamily === 'serif' ? 'Georgia, serif' : '-apple-system, sans-serif'} !important`,
+      'font-family': `${epubFontFamily} !important`,
       'font-size': `${state.settings.fontSize}px !important`,
       'line-height': `${currentLh} !important`,
       'padding': `${window.innerWidth <= 768 ? '12px 18px' : '20px 40px'} !important`,
@@ -3923,12 +3933,39 @@ function renderCurrentQuizCard() {
   }
 
   if (elements.quizAnswerMeaning) {
-    elements.quizAnswerMeaning.innerHTML = `<strong>💡 뜻:</strong> ${escapeHtml(hl.targetMeaning || "(뜻 미등록 - 형광펜 목록의 'Q&A 일괄생성' 버튼을 먼저 눌러주세요.)")}`;
+    const hasMeaning = !!(hl.targetMeaning && hl.targetMeaning.trim());
+    const meaningText = hasMeaning ? hl.targetMeaning.trim() : "(뜻 미등록 - 형광펜 목록의 'Q&A 일괄생성'이나 단어 편집에서 등록해주세요)";
+    elements.quizAnswerMeaning.innerHTML = `<strong>💡 뜻:</strong> <span class="${hasMeaning ? '' : 'quiz-unregistered-text'}">${escapeHtml(meaningText)}</span>`;
   }
+
   if (elements.quizAnswerTrans) {
-    elements.quizAnswerTrans.innerHTML = hl.sentenceTranslation
-      ? `<strong>📖 문장 해석:</strong> ${escapeHtml(hl.sentenceTranslation)}`
-      : '';
+    const hasTrans = !!(hl.sentenceTranslation && hl.sentenceTranslation.trim());
+    const transText = hasTrans ? hl.sentenceTranslation.trim() : "(해석 미등록 - 형광펜 목록의 'Q&A 일괄생성'이나 단어 편집에서 등록해주세요)";
+    elements.quizAnswerTrans.innerHTML = `<strong>📖 해석:</strong> <span class="${hasTrans ? '' : 'quiz-unregistered-text'}">${escapeHtml(transText)}</span>`;
+
+    // 뜻이나 해석이 누락되어 있고 Gemini API 키가 있는 경우, 원클릭 AI 즉시 보충 버튼 제공
+    const hasApiKey = !!getGeminiApiKey();
+    const isMissingData = !hl.targetMeaning || !hl.targetMeaning.trim() || !hl.sentenceTranslation || !hl.sentenceTranslation.trim();
+    if (isMissingData && hasApiKey) {
+      const inlineGenBtn = document.createElement('button');
+      inlineGenBtn.type = 'button';
+      inlineGenBtn.className = 'btn-quiz-inline-gen';
+      inlineGenBtn.innerHTML = '⚡ AI 뜻/해석 생성';
+      inlineGenBtn.onclick = async (ev) => {
+        ev.stopPropagation();
+        inlineGenBtn.disabled = true;
+        inlineGenBtn.textContent = '⏳ AI 분석 중...';
+        try {
+          await autoFetchVocabForHighlight(hl);
+          renderCurrentQuizCard();
+          revealQuizAnswer();
+        } catch (err) {
+          inlineGenBtn.disabled = false;
+          inlineGenBtn.textContent = '⚡ 재시도';
+        }
+      };
+      elements.quizAnswerTrans.appendChild(inlineGenBtn);
+    }
   }
 
   // 정답 가리기 및 버튼 상태 초기화
