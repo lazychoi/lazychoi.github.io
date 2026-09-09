@@ -13,57 +13,107 @@
   --color-repeat-timer: #8b5cf6;
 }
 
+/* ── Lock HTML/Body to prevent pull-down rubber banding on page ── */
+html, body {
+  overflow: hidden;
+  height: 100%;
+  height: 100dvh;
+  margin: 0;
+  padding: 0;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
+.nav {
+  flex-shrink: 0;
+  touch-action: none;
+  overscroll-behavior: none;
+}
+
 /* ── App Container Layout ── */
 .app-container {
   width: 100%;
   max-width: 680px;
   margin: 0 auto;
-  padding: 10px 14px calc(env(safe-area-inset-bottom, 0px) + 40px);
+  padding: 8px 12px calc(env(safe-area-inset-bottom, 0px) + 8px);
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: calc(100vh - 60px);
+  height: calc(100dvh - 56px);
+  overflow: hidden;
   box-sizing: border-box;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
-/* ── Top Control Panel (Directly under menu, contains all settings and stages) ── */
+/* ── Top Control Panel (Permanently pinned under nav, non-scrollable) ── */
 .top-control-panel {
   background: var(--glass-bg);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
+  border-radius: 16px;
+  padding: 10px 10px;
+  margin-bottom: 8px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
+  touch-action: none;
+  overscroll-behavior: none;
+  user-select: none;
 }
 
-/* Row 1: File actions and utility controls */
+/* Row 1: File actions and utility controls (Strict Single Row) */
 .top-action-row {
   display: flex;
+  flex-direction: row;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 5px;
+  width: 100%;
+  flex-wrap: nowrap;
 }
 
-.file-btns {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-file {
-  position: relative;
-  overflow: hidden;
+.top-action-row > * {
+  flex: 1 1 0%;
+  min-width: 0;
+  height: 38px;
+  box-sizing: border-box;
+  padding: 0 3px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  justify-content: center;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: -0.3px;
+  border-radius: 9px;
+  border: 1.5px solid #94a3b8;
+  background: white;
+  color: #0f172a;
   cursor: pointer;
+  touch-action: manipulation;
+  transition: all 0.2s ease;
 }
 
-.btn-file input[type="file"] {
+.top-action-row .btn-file {
+  position: relative;
+  overflow: hidden;
+  gap: 3px;
+}
+
+.top-action-row .btn-file svg {
+  flex-shrink: 0;
+  width: 13px;
+  height: 13px;
+}
+
+.top-action-row .btn-file input[type="file"] {
   position: absolute;
   top: 0;
   left: 0;
@@ -73,97 +123,57 @@
   cursor: pointer;
 }
 
-.utility-btns {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.speed-control {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.control-label {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
-.select-sm {
-  padding: 5px 6px;
-  font-size: 11.5px;
-  font-weight: 600;
-  border-radius: 8px;
-  border: 1px solid var(--glass-border);
-  background: white;
-  color: var(--text-main);
+.top-action-row select.select-sm {
+  text-align: center;
+  text-align-last: center;
   outline: none;
-  cursor: pointer;
+  padding: 0 2px;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
-/* Repeat Toggle Button */
-.btn-repeat-toggle {
-  background: white;
-  color: var(--text-muted);
-  border: 1px solid var(--glass-border);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
-  transition: all 0.2s ease;
+.top-action-row .btn-repeat-toggle {
+  color: #334155;
 }
 
-.btn-repeat-toggle.active {
-  background: #10b981;
+.top-action-row .btn-repeat-toggle.active {
+  background: #059669;
   color: white;
-  border-color: #059669;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+  border-color: #047857;
+  box-shadow: 0 2px 8px rgba(5, 150, 105, 0.35);
+  font-weight: 800;
 }
 
-.btn-sm {
-  padding: 6px 10px;
-  font-size: 12px;
-  border-radius: 8px;
-  border: 1px solid var(--glass-border);
-  background: white;
-  color: var(--text-main);
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-  touch-action: manipulation;
+.top-action-row .btn-danger-ghost {
+  color: #b91c1c;
+  border-color: rgba(220, 38, 38, 0.35);
+  background: #fef2f2;
 }
 
-.btn-sm:active {
+.top-action-row > *:active {
   transform: scale(0.96);
 }
 
+.btn {
+  font-family: inherit;
+}
+
 .btn-icon {
-  padding: 6px;
-  width: 32px;
-  height: 32px;
+  padding: 7px;
+  width: 36px;
+  height: 36px;
 }
 
-.btn-danger-ghost {
-  color: #dc2626;
-  border-color: rgba(220, 38, 38, 0.2);
-  background: rgba(220, 38, 38, 0.04);
-}
-
-/* ── Row 2: Step-by-Step Learning Stage Buttons ── */
+/* ── Row 2: Step-by-Step Learning Stage Buttons (Vibrant High-Contrast Design) ── */
 .learning-stages-wrapper {
   width: 100%;
-  padding-top: 4px;
+  padding-top: 6px;
 }
 
 .stages-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -171,66 +181,171 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 8px 4px;
+  gap: 6px;
+  padding: 10px 4px;
   background: white;
-  border: 1.5px solid rgba(0, 0, 0, 0.07);
-  border-radius: 11px;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
   touch-action: manipulation;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .stage-num {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.06);
-  color: var(--text-muted);
-  font-size: 10px;
+  font-size: 11.5px;
   font-weight: 800;
   flex-shrink: 0;
 }
 
 .stage-name {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
   white-space: nowrap;
 }
 
-/* Active Stage Highlight */
-.stage-btn.active {
-  background: #1e293b;
-  border-color: #1e293b;
-  box-shadow: 0 3px 10px rgba(30, 41, 59, 0.2);
+/* Stage 1: 섀도잉 (Blue) */
+.stage-btn.stage-1 {
+  border: 1.5px solid #bfdbfe;
+  color: #1d4ed8;
 }
-
-.stage-btn.active .stage-num {
-  background: rgba(255, 255, 255, 0.25);
+.stage-btn.stage-1 .stage-num {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+.stage-btn.stage-1.active {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+.stage-btn.stage-1.active .stage-num {
+  background: white;
+  color: #2563eb;
+}
+.stage-btn.stage-1.active .stage-name {
   color: white;
 }
 
-.stage-btn.active .stage-name {
+/* Stage 2: 듣고 말하기 (Purple) */
+.stage-btn.stage-2 {
+  border: 1.5px solid #ddd6fe;
+  color: #6d28d9;
+}
+.stage-btn.stage-2 .stage-num {
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+.stage-btn.stage-2.active {
+  background: #7c3aed;
+  border-color: #6d28d9;
   color: white;
-  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.35);
+}
+.stage-btn.stage-2.active .stage-num {
+  background: white;
+  color: #7c3aed;
+}
+.stage-btn.stage-2.active .stage-name {
+  color: white;
 }
 
-/* Special Role A & B Stage styling */
-.stage-btn.stage-role-a.active {
-  background: var(--color-speaker-a);
-  border-color: var(--color-speaker-a);
-  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
+/* Stage 3: 직전 구간부터 (Teal) */
+.stage-btn.stage-3 {
+  border: 1.5px solid #99f6e4;
+  color: #0f766e;
+}
+.stage-btn.stage-3 .stage-num {
+  background: #f0fdfa;
+  color: #0f766e;
+}
+.stage-btn.stage-3.active {
+  background: #0d9488;
+  border-color: #0f766e;
+  color: white;
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+.stage-btn.stage-3.active .stage-num {
+  background: white;
+  color: #0d9488;
+}
+.stage-btn.stage-3.active .stage-name {
+  color: white;
 }
 
-.stage-btn.stage-role-b.active {
-  background: var(--color-speaker-b);
-  border-color: var(--color-speaker-b);
-  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25);
+/* Stage 4: 처음~현재 (Amber) */
+.stage-btn.stage-4 {
+  border: 1.5px solid #fde68a;
+  color: #b45309;
+}
+.stage-btn.stage-4 .stage-num {
+  background: #fffbeb;
+  color: #b45309;
+}
+.stage-btn.stage-4.active {
+  background: #d97706;
+  border-color: #b45309;
+  color: white;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.35);
+}
+.stage-btn.stage-4.active .stage-num {
+  background: white;
+  color: #d97706;
+}
+.stage-btn.stage-4.active .stage-name {
+  color: white;
+}
+
+/* Stage 5: B 말하기 (Emerald Green) */
+.stage-btn.stage-5 {
+  border: 1.5px solid #a7f3d0;
+  color: #047857;
+}
+.stage-btn.stage-5 .stage-num {
+  background: #ecfdf5;
+  color: #047857;
+}
+.stage-btn.stage-5.active {
+  background: #059669;
+  border-color: #047857;
+  color: white;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.35);
+}
+.stage-btn.stage-5.active .stage-num {
+  background: white;
+  color: #059669;
+}
+.stage-btn.stage-5.active .stage-name {
+  color: white;
+}
+
+/* Stage 6: A 말하기 (Royal Blue / Indigo) */
+.stage-btn.stage-6 {
+  border: 1.5px solid #c7d2fe;
+  color: #4338ca;
+}
+.stage-btn.stage-6 .stage-num {
+  background: #eef2ff;
+  color: #4338ca;
+}
+.stage-btn.stage-6.active {
+  background: #4f46e5;
+  border-color: #4338ca;
+  color: white;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+}
+.stage-btn.stage-6.active .stage-num {
+  background: white;
+  color: #4f46e5;
+}
+.stage-btn.stage-6.active .stage-name {
+  color: white;
 }
 
 /* ── Row 3: Status Strip ── */
@@ -239,11 +354,12 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.03);
-  border-radius: 9px;
-  font-size: 11.5px;
-  color: var(--text-muted);
+  padding: 7px 12px;
+  background: #f1f5f9;
+  border-radius: 10px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #475569;
 }
 
 .status-left {
@@ -297,6 +413,9 @@
   margin-bottom: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   animation: pulseCountdown 0.8s infinite ease-in-out;
+  flex-shrink: 0;
+  touch-action: none;
+  overscroll-behavior: none;
 }
 
 @keyframes pulseCountdown {
@@ -308,11 +427,19 @@
   font-size: 16px;
 }
 
-/* ── Dialogue Message Feed ── */
+/* ── Dialogue Message Feed (Independently scrollable container) ── */
 .dialogue-feed {
   width: 100%;
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  padding-right: 2px;
+  scrollbar-width: thin;
 }
 
 /* Empty State */
@@ -454,20 +581,20 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  margin-bottom: 6px;
-  font-size: 11px;
+  margin-bottom: 8px;
+  font-size: 12.5px;
 }
 
 .speaker-badge-btn {
   border: none;
-  border-radius: 6px;
-  padding: 2px 7px;
-  font-size: 11px;
-  font-weight: 700;
+  border-radius: 7px;
+  padding: 3px 9px;
+  font-size: 13px;
+  font-weight: 800;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   transition: all 0.2s;
   user-select: none;
 }
@@ -486,17 +613,18 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: var(--text-muted);
-  font-size: 11px;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
-/* Body Text Inside Bubble */
+/* Body Text Inside Bubble (Large, clear, and comfortable) */
 .bubble-text {
-  font-size: 1.05rem;
-  font-weight: 500;
-  line-height: 1.45;
-  color: var(--text-main);
+  font-size: 1.18rem;
+  font-weight: 600;
+  line-height: 1.55;
+  color: #0f172a;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
@@ -715,38 +843,72 @@
   .app-container {
     padding-left: 8px;
     padding-right: 8px;
+    padding-top: 6px;
   }
 
   .top-control-panel {
-    padding: 10px 10px;
-    border-radius: 16px;
+    padding: 8px 8px;
+    border-radius: 14px;
+    gap: 7px;
+    margin-bottom: 6px;
+  }
+
+  .top-action-row {
+    gap: 4px;
+  }
+
+  .top-action-row > * {
+    height: 36px;
+    font-size: 12.5px;
+    padding: 0 2px;
   }
 
   .bubble-content {
     max-width: 92%;
-    padding: 10px 12px;
+    padding: 12px 14px;
   }
 
   .bubble-text {
-    font-size: 0.98rem;
+    font-size: 1.14rem;
   }
 
   .stages-grid {
-    gap: 4px;
+    gap: 5px;
   }
 
   .stage-btn {
-    padding: 7px 2px;
-    gap: 3px;
+    padding: 8px 2px;
+    gap: 4px;
   }
 
   .stage-name {
-    font-size: 10.5px;
+    font-size: 12px;
   }
 
   .stage-num {
-    width: 14px;
-    height: 14px;
-    font-size: 9px;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 390px) {
+  .top-action-row {
+    gap: 3px;
+  }
+
+  .top-action-row > * {
+    font-size: 11.5px;
+    height: 34px;
+    padding: 0 1px;
+    letter-spacing: -0.5px;
+  }
+
+  .top-action-row .btn-file svg {
+    display: none; /* Hide icons on extremely narrow screens so text has ample room */
+  }
+
+  .stage-name {
+    font-size: 11px;
   }
 }

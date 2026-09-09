@@ -180,10 +180,35 @@ window.addEventListener('DOMContentLoaded', async () => {
   setupEventListeners();
   setupAudioListeners();
   setupMediaSession();
+  setSpeedSelectValue(1.00); // Ensure 1.00x is default
   await initDB();
   await restoreSavedState();
   startRAFPrecisionLoop();
 });
+
+// ── Speed Helper ──
+function setSpeedSelectValue(speed) {
+  const speedVal = parseFloat(speed) || 1.00;
+  playbackSpeed = speedVal;
+  audioPlayer.playbackRate = speedVal;
+
+  let matched = false;
+  for (let i = 0; i < speedSelect.options.length; i++) {
+    if (Math.abs(parseFloat(speedSelect.options[i].value) - speedVal) < 0.01) {
+      speedSelect.selectedIndex = i;
+      matched = true;
+      break;
+    }
+  }
+  if (!matched) {
+    for (let i = 0; i < speedSelect.options.length; i++) {
+      if (Math.abs(parseFloat(speedSelect.options[i].value) - 1.00) < 0.01) {
+        speedSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+}
 
 // ── IndexedDB Storage ──
 function initDB() {
@@ -277,8 +302,7 @@ async function restoreSavedState() {
         activeIndex = (state.activeIndex >= 0 && state.activeIndex < subtitles.length) ? state.activeIndex : 0;
 
         // Apply UI values
-        speedSelect.value = playbackSpeed.toString();
-        audioPlayer.playbackRate = playbackSpeed;
+        setSpeedSelectValue(playbackSpeed || 1.00);
         updateRepeatButtonUI();
         updateModeSelectorUI(currentMode);
 
@@ -1047,16 +1071,17 @@ function setupEventListeners() {
   });
 
   // Guide Modal
-  btnGuide.addEventListener('click', () => { guideModal.style.display = 'flex'; });
-  guideModalClose.addEventListener('click', () => { guideModal.style.display = 'none'; });
-  guideModal.addEventListener('click', (e) => {
-    if (e.target === guideModal) guideModal.style.display = 'none';
-  });
+  if (btnGuide) btnGuide.addEventListener('click', () => { guideModal.style.display = 'flex'; });
+  if (guideModalClose) guideModalClose.addEventListener('click', () => { guideModal.style.display = 'none'; });
+  if (guideModal) {
+    guideModal.addEventListener('click', (e) => {
+      if (e.target === guideModal) guideModal.style.display = 'none';
+    });
+  }
 
   // Speed Select
   speedSelect.addEventListener('change', (e) => {
-    playbackSpeed = parseFloat(e.target.value);
-    audioPlayer.playbackRate = playbackSpeed;
+    setSpeedSelectValue(e.target.value);
     saveStateToStorage();
   });
 
@@ -1103,6 +1128,14 @@ function setupEventListeners() {
       jumpToSegment(activeIndex, true);
     }
   });
+
+  // Prevent iOS pull-to-refresh & rubber-band bouncing when dragging on header/menu area
+  document.addEventListener('touchmove', (e) => {
+    if (e.target.closest('.dialogue-feed') || e.target.closest('.modal-body')) {
+      return; // Allow natural scrolling inside the dialogue feed and modal dialogs
+    }
+    e.preventDefault();
+  }, { passive: false });
 }
 
 // ── Sample Dialogue Fallback Loader ──

@@ -67,71 +67,55 @@
   <main class="app-container">
     <!-- Top Setup & Stages Control Panel (Placed directly under nav) -->
     <header class="top-control-panel">
-      <!-- Row 1: File Actions & Utility Settings -->
+      <!-- Row 1: File Actions & Utility Settings (Single Row) -->
       <div class="top-action-row">
-        <div class="file-btns">
-          <label class="btn btn-sm btn-file" title="오디오 파일 선택 (.mp3, .m4a, .wav)">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-            <span>음원</span>
-            <input type="file" id="audio-file-input" accept="audio/*,.mp3,.m4a,.wav">
-          </label>
-          <label class="btn btn-sm btn-file" title="SRT 자막 파일 선택 (.srt)">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-            <span>SRT 자막</span>
-            <input type="file" id="srt-file-input" accept=".srt,.vtt,.txt">
-          </label>
-        </div>
-
-        <div class="utility-btns">
-          <!-- Playback Speed -->
-          <div class="speed-control">
-            <label for="speed-select" class="control-label">배속</label>
-            <select id="speed-select" class="select-sm">
-              <option value="0.75">0.75x</option>
-              <option value="0.85">0.85x</option>
-              <option value="1.0" selected>1.00x</option>
-              <option value="1.15">1.15x</option>
-              <option value="1.25">1.25x</option>
-            </select>
-          </div>
-
-          <!-- Repeat Toggle Button (Without icon) -->
-          <button class="btn btn-sm btn-repeat-toggle" id="btn-repeat-toggle" title="반복 켜기/끄기">
-            <span id="repeat-toggle-label">반복 꺼짐</span>
-          </button>
-
-          <!-- Guide & Reset -->
-          <button class="btn btn-sm btn-icon" id="btn-guide" title="사용 설명서">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-          </button>
-          <button class="btn btn-sm btn-danger-ghost" id="btn-reset" title="데이터 초기화">초기화</button>
-        </div>
+        <label class="btn btn-file" title="오디오 파일 선택 (.mp3, .m4a, .wav)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+          <span>음원</span>
+          <input type="file" id="audio-file-input" accept=".mp3,.m4a,.wav,audio/mpeg,audio/mp4,audio/x-m4a,audio/wav">
+        </label>
+        <label class="btn btn-file" title="SRT 자막 파일 선택 (.srt, .txt)">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+          <span>SRT 자막</span>
+          <input type="file" id="srt-file-input" accept=".srt,.txt,text/plain,text/srt,application/x-subrip,text/*">
+        </label>
+        <select id="speed-select" class="select-sm" title="재생 배속">
+          <option value="0.75">0.75x</option>
+          <option value="0.85">0.85x</option>
+          <option value="1.00" selected>1.00x</option>
+          <option value="1.15">1.15x</option>
+          <option value="1.25">1.25x</option>
+        </select>
+        <button class="btn btn-repeat-toggle" id="btn-repeat-toggle" title="반복 켜기/끄기">
+          <span id="repeat-toggle-label">반복 꺼짐</span>
+        </button>
+        <button class="btn btn-danger-ghost" id="btn-reset" title="데이터 초기화">초기화</button>
       </div>
 
       <!-- Row 2: Step-by-Step Memorization Stage Buttons (B 말하기 is 5, A 말하기 is 6) -->
       <div class="learning-stages-wrapper">
         <div class="stages-grid" id="mode-selector">
-          <button class="stage-btn active" data-mode="shadowing" title="원어민 음성을 실시간으로 따라 말하기">
+          <button class="stage-btn stage-1 active" data-mode="shadowing" title="원어민 음성을 실시간으로 따라 말하기">
             <span class="stage-num">1</span>
             <span class="stage-name">섀도잉</span>
           </button>
-          <button class="stage-btn" data-mode="listen-speak" title="문장 청취 후 문장 시간만큼 따라 말하기">
+          <button class="stage-btn stage-2" data-mode="listen-speak" title="문장 청취 후 문장 시간만큼 따라 말하기">
             <span class="stage-num">2</span>
             <span class="stage-name">듣고 말하기</span>
           </button>
-          <button class="stage-btn" data-mode="from-prev" title="직전 구간부터 현재 구간까지 연결하여 듣기">
+          <button class="stage-btn stage-3" data-mode="from-prev" title="직전 구간부터 현재 구간까지 연결하여 듣기">
             <span class="stage-num">3</span>
             <span class="stage-name">직전 구간부터</span>
           </button>
-          <button class="stage-btn" data-mode="from-start" title="1번 문장부터 현재 구간까지 누적해서 듣기">
+          <button class="stage-btn stage-4" data-mode="from-start" title="1번 문장부터 현재 구간까지 누적해서 듣기">
             <span class="stage-num">4</span>
             <span class="stage-name">처음~현재</span>
           </button>
-          <button class="stage-btn stage-role-b" data-mode="role-b" title="전체 대화에서 B 대사는 묵음으로 내가 말하고 A는 청취">
+          <button class="stage-btn stage-5 stage-role-b" data-mode="role-b" title="전체 대화에서 B 대사는 묵음으로 내가 말하고 A는 청취">
             <span class="stage-num">5</span>
             <span class="stage-name">B 말하기</span>
           </button>
-          <button class="stage-btn stage-role-a" data-mode="role-a" title="전체 대화에서 A 대사는 묵음으로 내가 말하고 B는 청취">
+          <button class="stage-btn stage-6 stage-role-a" data-mode="role-a" title="전체 대화에서 A 대사는 묵음으로 내가 말하고 B는 청취">
             <span class="stage-num">6</span>
             <span class="stage-name">A 말하기</span>
           </button>
