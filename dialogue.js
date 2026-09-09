@@ -330,6 +330,12 @@ async function restoreSavedState() {
 function parseSRT(text) {
   if (!text) return [];
   const cleanText = text.replace(/^\uFEFF/, '').trim();
+
+  // If text is pipe-delimited (like listening.html .txt export), parse with pipe parser
+  if (!cleanText.includes('-->') && cleanText.includes('|')) {
+    return parsePipeDelimitedSubtitles(cleanText);
+  }
+
   const rawBlocks = cleanText.split(/\r?\n\r?\n/);
   const parsed = [];
   let index = 0;
@@ -388,6 +394,52 @@ function parseSRT(text) {
       text: cleanSentence || fullText
     });
 
+    index++;
+  }
+
+  return parsed;
+}
+
+// Support pipe-delimited text exports from listening app or transcript files
+function parsePipeDelimitedSubtitles(cleanText) {
+  const lines = cleanText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+  const parsed = [];
+  let index = 0;
+
+  for (let line of lines) {
+    // Skip metadata headers if present (e.g. Author, Title)
+    if (!line.includes('|')) continue;
+    const parts = line.split('|');
+    if (parts.length < 3) continue;
+
+    const startSec = parseTimeToSeconds(parts[0].trim());
+    const endSec = parseTimeToSeconds(parts[1].trim());
+    if (startSec === null || endSec === null || endSec <= startSec) continue;
+
+    const fullText = parts[2].trim();
+    if (!fullText) continue;
+
+    let speaker = (index % 2 === 0) ? 'A' : 'B';
+    let cleanSentence = fullText;
+
+    const speakerRegex = /^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i;
+    const match = fullText.match(speakerRegex);
+    if (match) {
+      const explicitRole = (match[1] || match[2] || match[3] || match[4] || match[5] || '').toUpperCase();
+      if (explicitRole.includes('A') || explicitRole.includes('1')) speaker = 'A';
+      else if (explicitRole.includes('B') || explicitRole.includes('2')) speaker = 'B';
+      cleanSentence = match[6].trim();
+    }
+
+    parsed.push({
+      id: `diag-${index}`,
+      index: index,
+      start: startSec,
+      end: endSec,
+      duration: Math.max(0.1, endSec - startSec),
+      speaker: speaker,
+      text: cleanSentence || fullText
+    });
     index++;
   }
 
@@ -1021,10 +1073,28 @@ function setupEventListeners() {
     }
   });
 
-  // SRT File Picker
+  // iOS Safari Compatibility:
+  // iOS does not have a system UTI for .srt. If accept attribute is present without a matching UTI,
+  // iOS Files app grays out .srt files. Removing accept on iOS guarantees .srt and .txt files are selectable.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (isIOS) {
+    srtFileInput.removeAttribute('accept');
+  }
+
+  const ensureIOSAcceptRemoved = () => {
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)) {
+      srtFileInput.removeAttribute('accept');
+    }
+  };
+  srtFileInput.addEventListener('pointerdown', ensureIOSAcceptRemoved);
+  srtFileInput.addEventListener('click', ensureIOSAcceptRemoved);
+
+  // SRT / TXT Subtitle File Picker
   srtFileInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const text = event.target.result;
@@ -1038,7 +1108,7 @@ function setupEventListeners() {
         renderDialogueList();
         updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
       } else {
-        alert('유효한 SRT 자막 형식을 찾을 수 없습니다.');
+        alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
       }
     };
     reader.readAsText(file);
