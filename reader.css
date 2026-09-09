@@ -1608,6 +1608,44 @@ body.theme-dark mark.search-match-highlight {
   opacity: 0.9;
 }
 
+/* ── 발음기호 (IPA) 배지 ── */
+.hl-phonetic-badge,
+.quiz-phonetic-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #4f46e5;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.28);
+  padding: 1px 7px;
+  border-radius: 6px;
+  margin-right: 6px;
+  vertical-align: middle;
+  letter-spacing: 0.02em;
+}
+
+.quiz-phonetic-badge {
+  font-size: 14px;
+  padding: 2px 8px;
+  color: #4338ca;
+  background: rgba(99, 102, 241, 0.12);
+  border-color: rgba(99, 102, 241, 0.32);
+}
+
+body.theme-dark .hl-phonetic-badge {
+  color: #a5b4fc;
+  background: rgba(99, 102, 241, 0.2);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+body.theme-dark .quiz-phonetic-badge {
+  color: #c7d2fe;
+  background: rgba(99, 102, 241, 0.25);
+  border-color: rgba(99, 102, 241, 0.45);
+}
+
 .quiz-actions {
   display: flex;
   gap: 12px;

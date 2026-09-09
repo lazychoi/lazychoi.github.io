@@ -358,6 +358,7 @@ const elements = {
   btnSaveVocabEdit: document.getElementById('btn-save-vocab-edit'),
   vocabEditPreviewTarget: document.getElementById('vocab-edit-preview-target'),
   vocabEditPreviewSentence: document.getElementById('vocab-edit-preview-sentence'),
+  inputEditPhonetic: document.getElementById('input-edit-phonetic'),
   inputEditMeaning: document.getElementById('input-edit-meaning'),
   inputEditTrans: document.getElementById('input-edit-trans'),
 
@@ -923,6 +924,7 @@ function loadHighlights(bookId, fallbackList = null) {
         seen.add(key);
         // 단어장 및 퀴즈 필드 보정 (마이그레이션)
         item.targetMeaning = item.targetMeaning || '';
+        item.phonetic = item.phonetic || '';
         item.sentenceTranslation = item.sentenceTranslation || '';
         item.studyCount = Number(item.studyCount) || 0;
         item.wrongCount = Number(item.wrongCount) || 0;
@@ -1735,6 +1737,10 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                       match.targetMeaning = embH.targetMeaning;
                       hasChanges = true;
                     }
+                    if (!match.phonetic && embH.phonetic) {
+                      match.phonetic = embH.phonetic;
+                      hasChanges = true;
+                    }
                     if (!match.sentenceTranslation && embH.sentenceTranslation) {
                       match.sentenceTranslation = embH.sentenceTranslation;
                       hasChanges = true;
@@ -1756,6 +1762,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                     const newH = {
                       ...embH,
                       targetMeaning: embH.targetMeaning || '',
+                      phonetic: embH.phonetic || '',
                       sentenceTranslation: embH.sentenceTranslation || '',
                       studyCount: Number(embH.studyCount) || 0,
                       wrongCount: Number(embH.wrongCount) || 0,
@@ -2037,6 +2044,7 @@ function bindAllMarksInEpub() {
           color: detectedColor,
           note: noteText || '',
           targetMeaning: '',
+          phonetic: '',
           sentenceTranslation: '',
           studyCount: 0,
           wrongCount: 0,
@@ -2342,6 +2350,7 @@ function applyHighlight(colorName) {
       createdAt: new Date().toISOString(),
       note: '',
       targetMeaning: '',
+      phonetic: '',
       sentenceTranslation: '',
       studyCount: 0,
       wrongCount: 0,
@@ -2409,8 +2418,12 @@ function showHighlightToolbar(rect) {
     const meaning = (state.activeHighlight && state.activeHighlight.targetMeaning)
       ? state.activeHighlight.targetMeaning.trim()
       : '';
+    const phonetic = (state.activeHighlight && state.activeHighlight.phonetic)
+      ? state.activeHighlight.phonetic.trim()
+      : '';
+    const phoneticBadge = phonetic ? `<span class="hl-phonetic-badge">${escapeHtml(phonetic)}</span>` : '';
     if (meaning) {
-      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text">${escapeHtml(meaning)}</span>`;
+      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text">${phoneticBadge}${escapeHtml(meaning)}</span>`;
       elements.hlToolbarMeaning.style.display = 'flex';
     } else {
       elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text" style="color:var(--text-muted); font-size:12px;">등록된 뜻 없음 (편집 버튼에서 추가)</span>`;
@@ -2649,6 +2662,9 @@ function openVocabEditModal(hl) {
   if (elements.vocabEditPreviewSentence) {
     elements.vocabEditPreviewSentence.textContent = hl.targetSentence || hl.text || '';
   }
+  if (elements.inputEditPhonetic) {
+    elements.inputEditPhonetic.value = hl.phonetic || '';
+  }
   if (elements.inputEditMeaning) {
     elements.inputEditMeaning.value = hl.targetMeaning || '';
   }
@@ -2680,9 +2696,11 @@ function saveVocabEdit() {
     return;
   }
 
+  const newPhonetic = elements.inputEditPhonetic ? elements.inputEditPhonetic.value.trim() : '';
   const newMeaning = elements.inputEditMeaning ? elements.inputEditMeaning.value.trim() : '';
   const newTrans = elements.inputEditTrans ? elements.inputEditTrans.value.trim() : '';
 
+  currentEditingHighlight.phonetic = newPhonetic;
   currentEditingHighlight.targetMeaning = newMeaning;
   currentEditingHighlight.sentenceTranslation = newTrans;
 
@@ -3053,6 +3071,10 @@ function renderHighlightDrawer() {
     const transHtml = terms.length > 0 ? highlightSearchTerm(hl.sentenceTranslation, terms) : escapeHtml(hl.sentenceTranslation);
     const noteHtml = terms.length > 0 ? highlightSearchTerm(hl.note, terms) : escapeHtml(hl.note);
 
+    const phoneticBadge = (hl.phonetic && hl.phonetic.trim())
+      ? `<span class="hl-phonetic-badge">${escapeHtml(hl.phonetic.trim())}</span>`
+      : '';
+
     card.innerHTML = `
       <div class="highlight-card-header">
         <span style="display:flex; align-items:center; gap:6px;">
@@ -3064,7 +3086,7 @@ function renderHighlightDrawer() {
       <div class="highlight-card-text">${questionHtml}</div>
       ${hl.targetMeaning ? `
         <div class="highlight-vocab-box">
-          <div class="vocab-meaning-line"><strong>💡 뜻:</strong> ${meaningHtml}</div>
+          <div class="vocab-meaning-line"><strong>💡 뜻:</strong> ${phoneticBadge}${meaningHtml}</div>
           ${hl.sentenceTranslation ? `<div class="vocab-trans-line"><strong>📖 해석:</strong> ${transHtml}</div>` : ''}
         </div>
       ` : `
@@ -3110,6 +3132,7 @@ function renderHighlightDrawer() {
           const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
           if (res && res.targetMeaning) {
             hl.targetMeaning = res.targetMeaning;
+            hl.phonetic = res.phonetic || '';
             hl.sentenceTranslation = res.sentenceTranslation;
             saveHighlights();
             renderHighlightDrawer();
@@ -3485,15 +3508,32 @@ async function fetchGeminiVocabData(targetText, targetSentence) {
     modelName = await resolveGeminiModel(apiKey);
   }
 
-  const prompt = `You are an expert bilingual English-Korean lexicographer and translator.
+  const prompt = `You are an expert bilingual English-Korean lexicographer and language tutor.
 Target phrase: "${targetText}"
 Sentence context: "${targetSentence}"
 
-Analyze the target phrase in the exact context of the provided sentence.
+Analyze the target phrase in the exact context of the provided sentence following these strict rules:
+
+1. [Meaning (targetMeaning)]:
+   - Prioritize the accurate, primary literal meaning (직역) so the learner understands the word's fundamental definition.
+   - Do NOT produce vague or overly interpretive paraphrases on their own.
+   - However, if the literal meaning alone is awkward, unnatural, or insufficient to capture the nuanced contextual meaning, provide the literal meaning first, followed by the contextual meaning in parentheses using the format: "직역 (문맥: 의역)".
+     * Example (literal is sufficient): "금박을 입힌"
+     * Example (needs contextual nuance): "달을 달라고 울다 (문맥: 불가능한 것을 조르다)"
+     * Example (metaphorical): "수면을 스치다 (문맥: 구애하다)"
+
+2. [Pronunciation (phonetic)]:
+   - If the target word is difficult, advanced (CEFR B2+), uncommon, or phonetically tricky/irregular, provide its International Phonetic Alphabet (IPA) transcription enclosed in slashes (e.g. "/ˈɡɪldɪd/", "/ˌpɪnəˈfɔːr/").
+   - If it is a common/elementary word (e.g. "happy", "crying", "river") or a multi-word phrase composed of basic words, return an empty string ("").
+
+3. [Sentence Translation (sentenceTranslation)]:
+   - Provide a fluent, natural Korean translation of the entire sentence that faithfully reflects the context.
+
 Return ONLY a valid JSON object matching this schema without markdown fences:
 {
-  "targetMeaning": "concise contextual Korean meaning of the target phrase (e.g. 마지막 일)",
-  "sentenceTranslation": "fluent, natural Korean translation of the whole sentence"
+  "phonetic": "IPA transcription for difficult/advanced words, or empty string",
+  "targetMeaning": "Korean literal meaning first. If awkward, format as: 직역 (문맥: 의역)",
+  "sentenceTranslation": "fluent Korean translation of the whole sentence"
 }`;
 
   async function executeRequest(mName) {
@@ -3575,6 +3615,7 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
   const parsed = JSON.parse(textPart);
   return {
     targetMeaning: (parsed.targetMeaning || '').trim(),
+    phonetic: (parsed.phonetic || '').trim(),
     sentenceTranslation: (parsed.sentenceTranslation || '').trim()
   };
 }
@@ -3663,13 +3704,15 @@ async function autoFetchVocabForHighlight(hl) {
     const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
     if (res && res.targetMeaning) {
       hl.targetMeaning = res.targetMeaning;
+      hl.phonetic = res.phonetic || '';
       hl.sentenceTranslation = res.sentenceTranslation;
       saveHighlights();
       updateQuizBadge();
       if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
         renderHighlightDrawer();
       }
-      showToast(`✨ '${hl.text}': ${res.targetMeaning}`);
+      const pText = hl.phonetic ? ` ${hl.phonetic}` : '';
+      showToast(`✨ '${hl.text}'${pText}: ${res.targetMeaning}`);
     }
   } catch (err) {
     console.warn('Auto vocab analysis skipped/failed:', err);
@@ -3688,10 +3731,11 @@ function exportVocabToCsv() {
   }
   const bookTitle = state.currentBook ? state.currentBook.title : '도서';
   let csv = '\uFEFF'; // UTF-8 BOM for Excel / Anki
-  csv += '구문,문맥 질문(전체 문장),구문 뜻,전체 문장 해석,공부횟수,오답횟수,도서명,등록일\n';
+  csv += '구문,발음기호,문맥 질문(전체 문장),구문 뜻,전체 문장 해석,공부횟수,오답횟수,도서명,등록일\n';
 
   state.highlights.forEach(hl => {
     const target = `"${(hl.text || '').replace(/"/g, '""')}"`;
+    const phonetic = `"${(hl.phonetic || '').replace(/"/g, '""')}"`;
     const qSentence = `"${(hl.targetSentence || hl.text || '').replace(/"/g, '""')}"`;
     const meaning = `"${(hl.targetMeaning || '').replace(/"/g, '""')}"`;
     const trans = `"${(hl.sentenceTranslation || '').replace(/"/g, '""')}"`;
@@ -3699,7 +3743,7 @@ function exportVocabToCsv() {
     const wrong = hl.wrongCount || 0;
     const bTitle = `"${bookTitle.replace(/"/g, '""')}"`;
     const date = hl.createdAt ? hl.createdAt.slice(0, 10) : '';
-    csv += `${target},${qSentence},${meaning},${trans},${study},${wrong},${bTitle},${date}\n`;
+    csv += `${target},${phonetic},${qSentence},${meaning},${trans},${study},${wrong},${bTitle},${date}\n`;
   });
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -3760,6 +3804,7 @@ async function batchGenerateVocab() {
         const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
         if (res && res.targetMeaning) {
           hl.targetMeaning = res.targetMeaning;
+          hl.phonetic = res.phonetic || '';
           hl.sentenceTranslation = res.sentenceTranslation;
           successCount++;
           saveHighlights();
@@ -3935,7 +3980,10 @@ function renderCurrentQuizCard() {
   if (elements.quizAnswerMeaning) {
     const hasMeaning = !!(hl.targetMeaning && hl.targetMeaning.trim());
     const meaningText = hasMeaning ? hl.targetMeaning.trim() : "(뜻 미등록 - 형광펜 목록의 'Q&A 일괄생성'이나 단어 편집에서 등록해주세요)";
-    elements.quizAnswerMeaning.innerHTML = `<strong>💡 뜻:</strong> <span class="${hasMeaning ? '' : 'quiz-unregistered-text'}">${escapeHtml(meaningText)}</span>`;
+    const phoneticBadge = (hl.phonetic && hl.phonetic.trim())
+      ? `<span class="quiz-phonetic-badge">${escapeHtml(hl.phonetic.trim())}</span>`
+      : '';
+    elements.quizAnswerMeaning.innerHTML = `<strong>💡 뜻:</strong> ${phoneticBadge}<span class="${hasMeaning ? '' : 'quiz-unregistered-text'}">${escapeHtml(meaningText)}</span>`;
   }
 
   if (elements.quizAnswerTrans) {
