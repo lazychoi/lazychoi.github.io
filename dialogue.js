@@ -59,38 +59,38 @@ const btnRoleToggle = document.getElementById('btn-role-toggle');
 const roleStageName = document.getElementById('role-stage-name');
 const btnLangToggle = document.getElementById('btn-lang-toggle');
 
-// ── Built-in Realistic Everyday Dialogue Sample (Bilingual: English | Korean) ──
+// ── Built-in Realistic Everyday Dialogue Sample (Bilingual: Korean | English) ──
 const SAMPLE_DIALOGUE_SRT = `1
 00:00:00,500 --> 00:00:03,800
-A: Hi Sarah, good to see you! How has your week been?|안녕 사라, 만나서 반가워! 이번 주 어땠어?
+A: 안녕 사라, 만나서 반가워! 이번 주 어땠어?|Hi Sarah, good to see you! How has your week been?
 
 2
 00:00:04,200 --> 00:00:08,100
-B: Hey John! It's been pretty busy, but everything is going well.|안녕 존! 꽤 바빴지만, 다 잘 되어가고 있어.
+B: 안녕 존! 꽤 바빴지만, 다 잘 되어가고 있어.|Hey John! It's been pretty busy, but everything is going well.
 
 3
 00:00:08,500 --> 00:00:12,300
-A: Are you still working on that marketing presentation for Friday?|금요일 마케팅 발표 준비는 아직 하고 있어?
+A: 금요일 마케팅 발표 준비는 아직 하고 있어?|Are you still working on that marketing presentation for Friday?
 
 4
 00:00:12,700 --> 00:00:16,900
-B: Yes, I just finished the final draft this morning. What about you?|응, 오늘 아침에 최종 초안을 막 마쳤어. 너는 어때?
+B: 응, 오늘 아침에 최종 초안을 막 마쳤어. 너는 어때?|Yes, I just finished the final draft this morning. What about you?
 
 5
 00:00:17,400 --> 00:00:21,200
-A: I'm almost done with the quarterly budget report.|분기 예산 보고서 거의 다 끝나가.
+A: 분기 예산 보고서 거의 다 끝나가.|I'm almost done with the quarterly budget report.
 
 6
 00:00:21,700 --> 00:00:25,500
-B: That sounds like a lot of work. Do you want to grab coffee later?|일이 정말 많았겠네. 나중에 커피 한잔할래?
+B: 일이 정말 많았겠네. 나중에 커피 한잔할래?|That sounds like a lot of work. Do you want to grab coffee later?
 
 7
 00:00:26,000 --> 00:00:29,600
-A: That would be great! How about meeting around two o'clock?|좋지! 두 시쯤에 만나는 거 어때?
+A: 좋지! 두 시쯤에 만나는 거 어때?|That would be great! How about meeting around two o'clock?
 
 8
 00:00:30,100 --> 00:00:33,800
-B: Two o'clock works perfectly for me. See you at the cafe!|두 시 딱 좋아. 카페에서 보자!`;
+B: 두 시 딱 좋아. 카페에서 보자!|Two o'clock works perfectly for me. See you at the cafe!`;
 
 // ── Web Audio Context for Sound Effects & Cues ──
 let audioCtx = null;
@@ -412,17 +412,22 @@ function parseSRT(text) {
       }
     }
 
-    // Split English and Korean by '|'
-    let enText = cleanSentence;
+    // Split Korean and English by '|' (Format: '한글|영어')
     let koText = cleanSentence;
+    let enText = cleanSentence;
     if (cleanSentence.includes('|')) {
       const pIdx = cleanSentence.indexOf('|');
-      enText = cleanSentence.substring(0, pIdx).trim();
-      koText = cleanSentence.substring(pIdx + 1).trim();
+      koText = cleanSentence.substring(0, pIdx).trim();
+      enText = cleanSentence.substring(pIdx + 1).trim();
 
       const koSpeakerMatch = koText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
       if (koSpeakerMatch) {
         koText = (koSpeakerMatch[6] || '').trim();
+      }
+
+      const enSpeakerMatch = enText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
+      if (enSpeakerMatch) {
+        enText = (enSpeakerMatch[6] || '').trim();
       }
     }
 
@@ -475,16 +480,21 @@ function parsePipeDelimitedSubtitles(cleanText) {
       cleanSentence = match[6].trim();
     }
 
-    let enText = cleanSentence;
     let koText = cleanSentence;
+    let enText = cleanSentence;
     if (cleanSentence.includes('|')) {
       const pIdx = cleanSentence.indexOf('|');
-      enText = cleanSentence.substring(0, pIdx).trim();
-      koText = cleanSentence.substring(pIdx + 1).trim();
+      koText = cleanSentence.substring(0, pIdx).trim();
+      enText = cleanSentence.substring(pIdx + 1).trim();
 
       const koSpeakerMatch = koText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
       if (koSpeakerMatch) {
         koText = (koSpeakerMatch[6] || '').trim();
+      }
+
+      const enSpeakerMatch = enText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
+      if (enSpeakerMatch) {
+        enText = (enSpeakerMatch[6] || '').trim();
       }
     }
 
@@ -1180,7 +1190,6 @@ function setupEventListeners() {
       const srtBase = getBaseFileName(srtName);
       if (audioBase.toLowerCase() !== srtBase.toLowerCase()) {
         alert('음원 파일과 자막 파일이 다릅니다.');
-        updateStatusBanner(`⚠️ 음원 파일과 자막 파일이 다릅니다. (음원: ${file.name}, 자막: ${srtName})`);
       }
     }
 
@@ -1191,9 +1200,7 @@ function setupEventListeners() {
 
     await saveAudioToDB(file, file.name);
     saveStateToStorage();
-    if (!fileStatusText.textContent.includes('⚠️')) {
-      updateStatusBanner(`음원: ${file.name}`);
-    }
+    updateStatusBanner(`음원: ${file.name}`);
     if (subtitles.length > 0) {
       jumpToSegment(0, false);
     }
@@ -1227,7 +1234,6 @@ function setupEventListeners() {
       const audioBase = getBaseFileName(audioName);
       if (srtBase.toLowerCase() !== audioBase.toLowerCase()) {
         alert('음원 파일과 자막 파일이 다릅니다.');
-        updateStatusBanner(`⚠️ 음원 파일과 자막 파일이 다릅니다. (자막: ${file.name}, 음원: ${audioName})`);
       }
     }
 
@@ -1242,9 +1248,7 @@ function setupEventListeners() {
         targetIndex = Math.min(1, subtitles.length - 1);
         saveStateToStorage();
         renderDialogueList();
-        if (!fileStatusText.textContent.includes('⚠️')) {
-          updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
-        }
+        updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
       } else {
         alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
       }
