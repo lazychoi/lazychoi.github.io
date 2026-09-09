@@ -302,7 +302,7 @@ html, body {
   color: white;
 }
 
-/* Stage 5: B 말하기 (Emerald Green) */
+/* Stage 5: A/B 말하기 토글 버튼 (B: Emerald Green, A: Indigo) */
 .stage-btn.stage-5 {
   border: 1.5px solid #a7f3d0;
   color: #047857;
@@ -325,27 +325,47 @@ html, body {
   color: white;
 }
 
-/* Stage 6: A 말하기 (Royal Blue / Indigo) */
-.stage-btn.stage-6 {
-  border: 1.5px solid #c7d2fe;
+/* Stage 5: A 역할로 전환되었을 때의 스타일 */
+.stage-btn.stage-5.is-role-a {
+  border-color: #c7d2fe;
   color: #4338ca;
 }
-.stage-btn.stage-6 .stage-num {
+.stage-btn.stage-5.is-role-a .stage-num {
   background: #eef2ff;
   color: #4338ca;
 }
-.stage-btn.stage-6.active {
+.stage-btn.stage-5.is-role-a.active {
   background: #4f46e5;
   border-color: #4338ca;
   color: white;
   box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
 }
-.stage-btn.stage-6.active .stage-num {
+.stage-btn.stage-5.is-role-a.active .stage-num {
   background: white;
   color: #4f46e5;
 }
-.stage-btn.stage-6.active .stage-name {
+.stage-btn.stage-5.is-role-a.active .stage-name {
   color: white;
+}
+
+/* Stage 6: 한글/영어 자막 토글 버튼 (아이콘 없음, 텍스트 전용) */
+.stage-btn.stage-lang-toggle {
+  border: 1.5px solid #bfdbfe;
+  color: #1d4ed8;
+  background: white;
+  transition: all 0.2s ease;
+}
+.stage-btn.stage-lang-toggle .stage-name {
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.stage-btn.stage-lang-toggle:hover {
+  border-color: #93c5fd;
+  background: #f8fafc;
+}
+.stage-btn.stage-lang-toggle:active {
+  transform: scale(0.96);
 }
 
 /* ── Row 3: Status Strip ── */

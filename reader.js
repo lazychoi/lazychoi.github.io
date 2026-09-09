@@ -1,6 +1,6 @@
 /**
  * ══════════════════════════════════════════════════════
- * reader.js — 영문 Text & EPUB 리더기 + 형광펜 + AI 질문
+ * reader.js — 영어 읽기 (Text & EPUB) + 형광펜 + AI 질문
  * ══════════════════════════════════════════════════════
  */
 
@@ -515,7 +515,7 @@ async function clearAllReaderIndexedDB() {
 }
 
 async function resetReaderApp() {
-  if (!confirm('영문 리더기에 저장된 도서 데이터(IndexedDB)를 모두 삭제하고 초기화하시겠습니까?')) {
+  if (!confirm('영어 읽기에 저장된 도서 데이터(IndexedDB)를 모두 삭제하고 초기화하시겠습니까?')) {
     return;
   }
 
@@ -4078,13 +4078,6 @@ function closeApiGuideModal() {
 
 // ── Setup Event Listeners ──
 function setupEventListeners() {
-  // Mobile nav toggle
-  if (elements.navToggle && elements.navMenu) {
-    elements.navToggle.addEventListener('click', () => {
-      elements.navMenu.classList.toggle('open');
-    });
-  }
-
   // File Input Listeners
   elements.bookFileInput.addEventListener('change', (e) => {
     handleFileSelection(e.target.files[0]);

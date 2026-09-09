@@ -17,6 +17,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <script src="pwa.js" defer></script>
+  <script src="nav.js" defer></script>
 
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="timeline.css">
@@ -34,35 +35,7 @@
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="index.html" class="nav-link">
-        <span class="nav-icon">🏠</span> 홈
-      </a>
-      <a href="farm.html" class="nav-link">
-        <span class="nav-icon">🌱</span> 용어 노트
-      </a>
-      <a href="flashcards.html" class="nav-link">
-        <span class="nav-icon">🗂️</span> 플래시카드
-      </a>
-      <a href="hanja.html" class="nav-link">
-        <span class="nav-icon">📗</span> 한글(한자)
-      </a>
-      <a href="rebalance.html" class="nav-link">
-        <span class="nav-icon">⚖️</span> 자산 리밸런싱
-      </a>
-      <a href="listening.html" class="nav-link">
-        <span class="nav-icon">🎧</span> 영어 듣기
-      </a>
-      <a href="reader.html" class="nav-link">
-        <span class="nav-icon">📖</span> 영문 리더기
-      </a>
-      <a href="timeline.html" class="nav-link active">
-        <span class="nav-icon">⏳</span> 세계사 연표
-      </a>
-      <a href="genealogy.html" class="nav-link">
-        <span class="nav-icon">🌳</span> 가계도
-      </a>
-    </div>
+    <div class="nav-menu" id="nav-menu"></div>
     <div class="auth-status-container">
       <span id="authStatusText" style="font-size: 13px; color: var(--text-muted); margin-right: 8px;"></span>
       <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
@@ -185,12 +158,6 @@
     </div>
   </div>
 
-  <script>
-    // 네비게이션 모바일 토글 버튼 처리
-    document.getElementById('nav-toggle').addEventListener('click', function() {
-      document.getElementById('nav-menu').classList.toggle('open');
-    });
-  </script>
 </body>
 
 </html>

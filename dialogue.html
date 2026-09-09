@@ -17,6 +17,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <script src="pwa.js" defer></script>
+  <script src="nav.js" defer></script>
 
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="dialogue.css">
@@ -30,38 +31,7 @@
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="index.html" class="nav-link">
-        <span class="nav-icon">🏠</span> 홈
-      </a>
-      <a href="farm.html" class="nav-link">
-        <span class="nav-icon">🌱</span> 용어 노트
-      </a>
-      <a href="flashcards.html" class="nav-link">
-        <span class="nav-icon">🗂️</span> 플래시카드
-      </a>
-      <a href="hanja.html" class="nav-link">
-        <span class="nav-icon">📗</span> 한글(한자)
-      </a>
-      <a href="rebalance.html" class="nav-link">
-        <span class="nav-icon">⚖️</span> 자산 리밸런싱
-      </a>
-      <a href="listening.html" class="nav-link">
-        <span class="nav-icon">🎧</span> 영어 듣기
-      </a>
-      <a href="dialogue.html" class="nav-link active">
-        <span class="nav-icon">💬</span> 영어 암기
-      </a>
-      <a href="reader.html" class="nav-link">
-        <span class="nav-icon">📖</span> 영문 리더기
-      </a>
-      <a href="timeline.html" class="nav-link">
-        <span class="nav-icon">⏳</span> 세계사 연표
-      </a>
-      <a href="genealogy.html" class="nav-link">
-        <span class="nav-icon">🌳</span> 가계도
-      </a>
-    </div>
+    <div class="nav-menu" id="nav-menu"></div>
   </nav>
 
   <main class="app-container">
@@ -92,7 +62,7 @@
         <button class="btn btn-danger-ghost" id="btn-reset" title="데이터 초기화">초기화</button>
       </div>
 
-      <!-- Row 2: Step-by-Step Memorization Stage Buttons (B 말하기 is 5, A 말하기 is 6) -->
+      <!-- Row 2: Step-by-Step Memorization Stage Buttons (5: A/B 말하기 토글, 6: 한글/영어 토글) -->
       <div class="learning-stages-wrapper">
         <div class="stages-grid" id="mode-selector">
           <button class="stage-btn stage-1 active" data-mode="shadowing" title="원어민 음성을 실시간으로 따라 말하기">
@@ -111,13 +81,12 @@
             <span class="stage-num">4</span>
             <span class="stage-name">처음~현재</span>
           </button>
-          <button class="stage-btn stage-5 stage-role-b" data-mode="role-b" title="전체 대화에서 B 대사는 묵음으로 내가 말하고 A는 청취">
+          <button class="stage-btn stage-5 stage-role-toggle" id="btn-role-toggle" data-mode="role-toggle" title="A/B 말하기 (터치 시 B ↔ A 역할 전환)">
             <span class="stage-num">5</span>
-            <span class="stage-name">B 말하기</span>
+            <span class="stage-name" id="role-stage-name">A 말하기로</span>
           </button>
-          <button class="stage-btn stage-6 stage-role-a" data-mode="role-a" title="전체 대화에서 A 대사는 묵음으로 내가 말하고 B는 청취">
-            <span class="stage-num">6</span>
-            <span class="stage-name">A 말하기</span>
+          <button class="stage-btn stage-6 stage-lang-toggle" id="btn-lang-toggle" data-lang="ko" title="한글 / 영어 자막 전환">
+            <span class="stage-name" id="lang-toggle-name">영어로</span>
           </button>
         </div>
       </div>
@@ -153,7 +122,8 @@
           <div class="feature-tag">2️⃣ <b>듣고 말하기</b>: 문장 청취 후 문장 시간만큼 따라 말하기</div>
           <div class="feature-tag">3️⃣ <b>직전 구간부터</b>: 앞 문장과 이어서 2개 구간 복습</div>
           <div class="feature-tag">4️⃣ <b>처음~현재</b>: 1번 문장부터 현재까지 누적 암기</div>
-          <div class="feature-tag">5️⃣6️⃣ <b>B/A 말하기</b>: 전체 대화에서 내 역할 묵음 처리 & 실전 대화</div>
+          <div class="feature-tag">5️⃣ <b>B/A 말하기</b>: 대화에서 내 역할 묵음 처리 & 실전 대화 (A ↔ B 토글)</div>
+          <div class="feature-tag">🌐 <b>한글/영어 자막</b>: 한글 자막과 영어 자막 토글 전환</div>
         </div>
         <button class="btn btn-primary btn-lg" id="btn-empty-sample">샘플 대화로 바로 체험하기</button>
       </div>
@@ -194,8 +164,8 @@
             <li><b>2. 듣고 말하기:</b> 문장을 1회 들은 뒤 문장 길이만큼 오디오가 대기하며 따라 말합니다. 반복 ON이면 현재 구간 무한 반복, OFF면 다음 구간으로 자동 진행됩니다.</li>
             <li><b>3. 직전 구간부터:</b> 직전 문장과 현재 문장을 연결하여 청취합니다. (반복 ON: 무한 반복, OFF: 1회 재생 후 정지)</li>
             <li><b>4. 처음~현재:</b> 1번 문장부터 현재 문장까지 누적하여 암기합니다. (반복 ON: 무한 반복, OFF: 1회 재생 후 정지)</li>
-            <li><b>5. A 말하기:</b> 대화 전체를 처음부터 끝까지 재생하며, B는 청취하고 A 차례일 때 <b>대사 시간만큼 오디오가 자동 묵음</b> 처리되어 내가 직접 A 역할을 말합니다. (시작 시 '준비, 시작!' 신호음 제공)</li>
-            <li><b>6. B 말하기:</b> 대화 전체를 처음부터 끝까지 재생하며, A는 청취하고 B 차례일 때 <b>오디오가 자동 묵음</b> 처리되어 B 역할을 연습합니다.</li>
+            <li><b>5. B/A 말하기:</b> 대화 전체를 재생하며, 상대방 대사는 청취하고 내 역할 차례일 때 <b>대사 시간만큼 오디오가 자동 묵음</b> 처리되어 내가 직접 역할을 말합니다. (버튼 터치 시 B 말하기 ↔ A 말하기 토글, 시작 시 '준비, 시작!' 신호음 제공)</li>
+            <li><b>🌐 한글/영어 자막:</b> 기본값은 한글 자막이 나타나며, 영어 버튼을 누르면 영어 자막이 나타납니다. (터치 시 한글 ↔ 영어 토글)</li>
           </ul>
         </section>
 
@@ -212,11 +182,6 @@
   <audio id="dialogue-audio" preload="auto" playsinline style="display: none;"></audio>
 
   <script src="dialogue.js"></script>
-  <script>
-    document.getElementById('nav-toggle').addEventListener('click', function() {
-      document.getElementById('nav-menu').classList.toggle('open');
-    });
-  </script>
 </body>
 
 </html>

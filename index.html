@@ -17,6 +17,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <script src="pwa.js" defer></script>
+  <script src="nav.js" defer></script>
 
   <link rel="stylesheet" href="common.css">
   <style>
@@ -168,38 +169,7 @@
         <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
       </button>
     </div>
-    <div class="nav-menu" id="nav-menu">
-      <a href="index.html" class="nav-link active">
-        <span class="nav-icon">🏠</span> 홈
-      </a>
-      <a href="farm.html" class="nav-link">
-        <span class="nav-icon">🌱</span> 용어 노트
-      </a>
-      <a href="flashcards.html" class="nav-link">
-        <span class="nav-icon">🗂️</span> 플래시카드
-      </a>
-      <a href="hanja.html" class="nav-link">
-        <span class="nav-icon">📗</span> 한글(한자)
-      </a>
-      <a href="rebalance.html" class="nav-link">
-        <span class="nav-icon">⚖️</span> 자산 리밸런싱
-      </a>
-      <a href="listening.html" class="nav-link">
-        <span class="nav-icon">🎧</span> 영어 듣기
-      </a>
-      <a href="dialogue.html" class="nav-link">
-        <span class="nav-icon">💬</span> 영어 암기
-      </a>
-      <a href="reader.html" class="nav-link">
-        <span class="nav-icon">📖</span> 영문 리더기
-      </a>
-      <a href="timeline.html" class="nav-link">
-        <span class="nav-icon">⏳</span> 세계사 연표
-      </a>
-      <a href="genealogy.html" class="nav-link">
-        <span class="nav-icon">🌳</span> 가계도
-      </a>
-    </div>
+    <div class="nav-menu" id="nav-menu"></div>
   </nav>
 
   <div class="page-container">
@@ -234,7 +204,7 @@
 
       <a href="listening.html" class="card">
         <div class="icon">🎧</div>
-        <h2 class="card-title">영어 듣기 연습</h2>
+        <h2 class="card-title">영어 듣기</h2>
         <p class="card-desc">오디오 파일(.mp3)과 구간 대본(.txt)을 임포트하여 듣기 연습(구간 반복, 배속 조절)</p>
       </a>
 
@@ -246,7 +216,7 @@
 
       <a href="reader.html" class="card reader">
         <div class="icon">📖</div>
-        <h2 class="card-title">영문 리더기</h2>
+        <h2 class="card-title">영어 읽기</h2>
         <p class="card-desc">영문 TXT 및 EPUB 도서 리더, 형광펜 하이라이트 및 문맥 기반 AI 구문 분석</p>
       </a>
 
@@ -302,11 +272,6 @@
     </div>
   </div>
 
-  <script>
-    document.getElementById('nav-toggle').addEventListener('click', function() {
-      document.getElementById('nav-menu').classList.toggle('open');
-    });
-  </script>
 </body>
 
 </html>

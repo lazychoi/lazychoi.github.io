@@ -4,7 +4,7 @@
    ══════════════════════════════════════════════════════ */
 
 // ── Application State ──
-let subtitles = [];              // Array of { id, index, start, end, duration, speaker: 'A'|'B', text }
+let subtitles = [];              // Array of { id, index, start, end, duration, speaker: 'A'|'B', text, enText, koText }
 let activeIndex = -1;            // Currently active / playing segment index
 let targetIndex = 0;             // Target segment for 'from-prev' and 'from-start' modes
 let audioBlob = null;
@@ -13,6 +13,8 @@ let srtName = "";
 
 // Learning Modes: 'shadowing' | 'listen-speak' | 'from-prev' | 'from-start' | 'role-a' | 'role-b'
 let currentMode = 'shadowing';
+let activeRole = 'B';            // Active role for stage 5 ('B' | 'A')
+let currentSubtitleLang = 'ko';  // Current subtitle language ('ko' | 'en') - Default: 'ko'
 let isRepeatEnabled = false;     // Repeat toggle state (false: 1회/연속, true: 무한 반복)
 let playbackSpeed = 1.0;
 
@@ -53,39 +55,42 @@ const speedSelect = document.getElementById('speed-select');
 const btnRepeatToggle = document.getElementById('btn-repeat-toggle');
 const repeatToggleLabel = document.getElementById('repeat-toggle-label');
 const modeSelector = document.getElementById('mode-selector');
+const btnRoleToggle = document.getElementById('btn-role-toggle');
+const roleStageName = document.getElementById('role-stage-name');
+const btnLangToggle = document.getElementById('btn-lang-toggle');
 
-// ── Built-in Realistic Everyday Dialogue Sample ──
+// ── Built-in Realistic Everyday Dialogue Sample (Bilingual: English | Korean) ──
 const SAMPLE_DIALOGUE_SRT = `1
 00:00:00,500 --> 00:00:03,800
-A: Hi Sarah, good to see you! How has your week been?
+A: Hi Sarah, good to see you! How has your week been?|안녕 사라, 만나서 반가워! 이번 주 어땠어?
 
 2
 00:00:04,200 --> 00:00:08,100
-B: Hey John! It's been pretty busy, but everything is going well.
+B: Hey John! It's been pretty busy, but everything is going well.|안녕 존! 꽤 바빴지만, 다 잘 되어가고 있어.
 
 3
 00:00:08,500 --> 00:00:12,300
-A: Are you still working on that marketing presentation for Friday?
+A: Are you still working on that marketing presentation for Friday?|금요일 마케팅 발표 준비는 아직 하고 있어?
 
 4
 00:00:12,700 --> 00:00:16,900
-B: Yes, I just finished the final draft this morning. What about you?
+B: Yes, I just finished the final draft this morning. What about you?|응, 오늘 아침에 최종 초안을 막 마쳤어. 너는 어때?
 
 5
 00:00:17,400 --> 00:00:21,200
-A: I'm almost done with the quarterly budget report.
+A: I'm almost done with the quarterly budget report.|분기 예산 보고서 거의 다 끝나가.
 
 6
 00:00:21,700 --> 00:00:25,500
-B: That sounds like a lot of work. Do you want to grab coffee later?
+B: That sounds like a lot of work. Do you want to grab coffee later?|일이 정말 많았겠네. 나중에 커피 한잔할래?
 
 7
 00:00:26,000 --> 00:00:29,600
-A: That would be great! How about meeting around two o'clock?
+A: That would be great! How about meeting around two o'clock?|좋지! 두 시쯤에 만나는 거 어때?
 
 8
 00:00:30,100 --> 00:00:33,800
-B: Two o'clock works perfectly for me. See you at the cafe!`;
+B: Two o'clock works perfectly for me. See you at the cafe!|두 시 딱 좋아. 카페에서 보자!`;
 
 // ── Web Audio Context for Sound Effects & Cues ──
 let audioCtx = null;
@@ -181,6 +186,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   setupAudioListeners();
   setupMediaSession();
   setSpeedSelectValue(1.00); // Ensure 1.00x is default
+  updateLangButtonUI();
+  updateRoleButtonUI();
   await initDB();
   await restoreSavedState();
   startRAFPrecisionLoop();
@@ -269,12 +276,29 @@ async function clearAudioFromDB() {
   }
 }
 
+// ── Filename Comparison Helpers ──
+function getBaseFileName(fileName) {
+  if (!fileName) return '';
+  const clean = fileName.trim().split(/[/\\]/).pop();
+  const lastDotIndex = clean.lastIndexOf('.');
+  if (lastDotIndex > 0) {
+    return clean.substring(0, lastDotIndex).trim();
+  }
+  return clean.trim();
+}
+
+function isSampleFile(name) {
+  return !name || name.includes('샘플') || name === '대화 자막';
+}
+
 function saveStateToStorage() {
   const state = {
     subtitles,
     audioName,
     srtName,
     currentMode,
+    activeRole,
+    currentSubtitleLang,
     isRepeatEnabled,
     playbackSpeed,
     activeIndex,
@@ -296,6 +320,8 @@ async function restoreSavedState() {
         subtitles = state.subtitles;
         srtName = state.srtName || "대화 자막";
         currentMode = state.currentMode || 'shadowing';
+        activeRole = state.activeRole || ((currentMode === 'role-a') ? 'A' : 'B');
+        currentSubtitleLang = state.currentSubtitleLang || 'ko';
         isRepeatEnabled = !!state.isRepeatEnabled;
         playbackSpeed = state.playbackSpeed || 1.0;
         targetIndex = state.targetIndex || 0;
@@ -304,6 +330,8 @@ async function restoreSavedState() {
         // Apply UI values
         setSpeedSelectValue(playbackSpeed || 1.00);
         updateRepeatButtonUI();
+        updateRoleButtonUI();
+        updateLangButtonUI();
         updateModeSelectorUI(currentMode);
 
         renderDialogueList();
@@ -384,6 +412,20 @@ function parseSRT(text) {
       }
     }
 
+    // Split English and Korean by '|'
+    let enText = cleanSentence;
+    let koText = cleanSentence;
+    if (cleanSentence.includes('|')) {
+      const pIdx = cleanSentence.indexOf('|');
+      enText = cleanSentence.substring(0, pIdx).trim();
+      koText = cleanSentence.substring(pIdx + 1).trim();
+
+      const koSpeakerMatch = koText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
+      if (koSpeakerMatch) {
+        koText = (koSpeakerMatch[6] || '').trim();
+      }
+    }
+
     parsed.push({
       id: `diag-${index}`,
       index: index,
@@ -391,7 +433,9 @@ function parseSRT(text) {
       end: endSec,
       duration: Math.max(0.1, endSec - startSec),
       speaker: speaker,
-      text: cleanSentence || fullText
+      text: cleanSentence || fullText,
+      enText: enText || cleanSentence || fullText,
+      koText: koText || cleanSentence || fullText
     });
 
     index++;
@@ -416,7 +460,7 @@ function parsePipeDelimitedSubtitles(cleanText) {
     const endSec = parseTimeToSeconds(parts[1].trim());
     if (startSec === null || endSec === null || endSec <= startSec) continue;
 
-    const fullText = parts[2].trim();
+    const fullText = parts.slice(2).join('|').trim();
     if (!fullText) continue;
 
     let speaker = (index % 2 === 0) ? 'A' : 'B';
@@ -431,6 +475,19 @@ function parsePipeDelimitedSubtitles(cleanText) {
       cleanSentence = match[6].trim();
     }
 
+    let enText = cleanSentence;
+    let koText = cleanSentence;
+    if (cleanSentence.includes('|')) {
+      const pIdx = cleanSentence.indexOf('|');
+      enText = cleanSentence.substring(0, pIdx).trim();
+      koText = cleanSentence.substring(pIdx + 1).trim();
+
+      const koSpeakerMatch = koText.match(/^(?:\[(A|B)\]|\((A|B)\)|(A|B)\s*:|(Speaker\s*1|Person\s*1)\s*:|(Speaker\s*2|Person\s*2)\s*:)\s*(.*)$/i);
+      if (koSpeakerMatch) {
+        koText = (koSpeakerMatch[6] || '').trim();
+      }
+    }
+
     parsed.push({
       id: `diag-${index}`,
       index: index,
@@ -438,7 +495,9 @@ function parsePipeDelimitedSubtitles(cleanText) {
       end: endSec,
       duration: Math.max(0.1, endSec - startSec),
       speaker: speaker,
-      text: cleanSentence || fullText
+      text: cleanSentence || fullText,
+      enText: enText || cleanSentence || fullText,
+      koText: koText || cleanSentence || fullText
     });
     index++;
   }
@@ -895,6 +954,8 @@ function renderDialogueList() {
 
     const speakerColorClass = seg.speaker === 'A' ? 'badge-speaker-a' : 'badge-speaker-b';
 
+    const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
+
     card.innerHTML = `
       <div class="bubble-content" data-index="${idx}">
         <div class="bubble-header">
@@ -906,7 +967,7 @@ function renderDialogueList() {
           </div>
         </div>
         <div class="bubble-text" id="text-${idx}">
-          ${escapeHTML(seg.text)}
+          ${escapeHTML(displayText)}
         </div>
         <div class="bubble-status-footer" id="footer-${idx}" style="display: none;">
           <div class="status-badge-live" id="badge-${idx}"></div>
@@ -1043,7 +1104,59 @@ function updateRepeatButtonUI() {
 function updateModeSelectorUI(mode) {
   const buttons = modeSelector.querySelectorAll('.stage-btn');
   buttons.forEach(b => {
-    b.classList.toggle('active', b.dataset.mode === mode);
+    if (b.id === 'btn-lang-toggle') return;
+
+    if (b.id === 'btn-role-toggle') {
+      const isRoleMode = (mode === 'role-a' || mode === 'role-b');
+      b.classList.toggle('active', isRoleMode);
+      updateRoleButtonUI();
+    } else {
+      b.classList.toggle('active', b.dataset.mode === mode);
+    }
+  });
+}
+
+function updateRoleButtonUI() {
+  if (!btnRoleToggle || !roleStageName) return;
+  // B 말하기 상태(기본값)일 때는 'A 말하기로', A 말하기 상태일 때는 'B 말하기로' 표시
+  const targetRole = (activeRole === 'B') ? 'A' : 'B';
+  roleStageName.textContent = `${targetRole} 말하기로`;
+  btnRoleToggle.classList.toggle('is-role-a', activeRole === 'A');
+  btnRoleToggle.title = `A/B 말하기 (현재 ${activeRole} 역할 진행 중, 터치 시 ${targetRole} 말하기로 전환)`;
+}
+
+// ── Subtitle Language Switcher ──
+function setSubtitleLanguage(lang) {
+  if (lang !== 'ko' && lang !== 'en') return;
+  currentSubtitleLang = lang;
+  updateLangButtonUI();
+  updateDialogueBubbleTexts();
+  saveStateToStorage();
+}
+
+function toggleSubtitleLanguage() {
+  setSubtitleLanguage(currentSubtitleLang === 'ko' ? 'en' : 'ko');
+}
+
+function updateLangButtonUI() {
+  const langToggleName = document.getElementById('lang-toggle-name');
+  if (langToggleName) {
+    // 한글 상태(기본값)일 때는 '영어로', 영문 상태일 때는 '한글로' 표시
+    langToggleName.textContent = (currentSubtitleLang === 'ko') ? '영어로' : '한글로';
+  }
+  if (btnLangToggle) {
+    btnLangToggle.dataset.lang = currentSubtitleLang;
+    btnLangToggle.title = `자막 언어 전환 (터치 시 ${currentSubtitleLang === 'ko' ? '영어 자막으로' : '한글 자막으로'} 전환)`;
+  }
+}
+
+function updateDialogueBubbleTexts() {
+  subtitles.forEach((seg, idx) => {
+    const textElem = document.getElementById(`text-${idx}`);
+    if (textElem) {
+      const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
+      textElem.textContent = displayText;
+    }
   });
 }
 
@@ -1060,6 +1173,17 @@ function setupEventListeners() {
   audioFileInput.addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    // Check filename match with existing SRT file
+    if (srtName && !isSampleFile(srtName) && subtitles.length > 0) {
+      const audioBase = getBaseFileName(file.name);
+      const srtBase = getBaseFileName(srtName);
+      if (audioBase.toLowerCase() !== srtBase.toLowerCase()) {
+        alert('음원 파일과 자막 파일이 다릅니다.');
+        updateStatusBanner(`⚠️ 음원 파일과 자막 파일이 다릅니다. (음원: ${file.name}, 자막: ${srtName})`);
+      }
+    }
+
     audioBlob = file;
     audioName = file.name;
     const url = URL.createObjectURL(file);
@@ -1067,7 +1191,9 @@ function setupEventListeners() {
 
     await saveAudioToDB(file, file.name);
     saveStateToStorage();
-    updateStatusBanner(`음원: ${file.name}`);
+    if (!fileStatusText.textContent.includes('⚠️')) {
+      updateStatusBanner(`음원: ${file.name}`);
+    }
     if (subtitles.length > 0) {
       jumpToSegment(0, false);
     }
@@ -1095,6 +1221,16 @@ function setupEventListeners() {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    // Check filename match with existing Audio file
+    if (audioName && !isSampleFile(audioName)) {
+      const srtBase = getBaseFileName(file.name);
+      const audioBase = getBaseFileName(audioName);
+      if (srtBase.toLowerCase() !== audioBase.toLowerCase()) {
+        alert('음원 파일과 자막 파일이 다릅니다.');
+        updateStatusBanner(`⚠️ 음원 파일과 자막 파일이 다릅니다. (자막: ${file.name}, 음원: ${audioName})`);
+      }
+    }
+
     const reader = new FileReader();
     reader.onload = (event) => {
       const text = event.target.result;
@@ -1106,7 +1242,9 @@ function setupEventListeners() {
         targetIndex = Math.min(1, subtitles.length - 1);
         saveStateToStorage();
         renderDialogueList();
-        updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
+        if (!fileStatusText.textContent.includes('⚠️')) {
+          updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
+        }
       } else {
         alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
       }
@@ -1134,6 +1272,11 @@ function setupEventListeners() {
       audioBlob = null;
       audioName = '';
       srtName = '';
+      currentSubtitleLang = 'ko';
+      activeRole = 'B';
+      updateRoleButtonUI();
+      updateLangButtonUI();
+      updateModeSelectorUI('shadowing');
       statusDot.classList.remove('active');
       fileStatusText.textContent = '음원과 SRT 자막을 불러와 학습을 시작하세요';
       renderDialogueList();
@@ -1155,12 +1298,44 @@ function setupEventListeners() {
     saveStateToStorage();
   });
 
-  // Mode Selector (6 Stage Buttons)
+  // Mode Selector (5 Stages + Language Toggle)
   modeSelector.addEventListener('click', (e) => {
+    // 1. Language Toggle button clicked ('영어로' / '한글로')
+    const langBtn = e.target.closest('#btn-lang-toggle');
+    if (langBtn) {
+      toggleSubtitleLanguage();
+      return;
+    }
+
     const btn = e.target.closest('.stage-btn');
     if (!btn) return;
+
+    // 2. Role Toggle button clicked (Stage 5)
+    if (btn.id === 'btn-role-toggle') {
+      cancelRepeatWait();
+      cancelCueCountdown();
+
+      // 버튼에 표시된 대상('A 말하기로' or 'B 말하기로')으로 역할 전환 및 시작
+      activeRole = (activeRole === 'B') ? 'A' : 'B';
+      currentMode = (activeRole === 'B') ? 'role-b' : 'role-a';
+      updateModeSelectorUI(currentMode);
+      saveStateToStorage();
+
+      // Start role-play playback with countdown cue if applicable
+      const roleSpeaker = activeRole;
+      if (subtitles.length > 0 && subtitles[0].speaker === roleSpeaker) {
+        startStartingCueCountdown(() => {
+          jumpToSegment(0, true);
+        });
+      } else {
+        jumpToSegment(0, true);
+      }
+      return;
+    }
+
+    // 3. Other stage buttons (1, 2, 3, 4)
     const mode = btn.dataset.mode;
-    if (mode === currentMode) return;
+    if (!mode || mode === currentMode) return;
 
     cancelRepeatWait();
     cancelCueCountdown();
@@ -1168,26 +1343,7 @@ function setupEventListeners() {
     updateModeSelectorUI(mode);
     saveStateToStorage();
 
-    // Specific mode initiation
-    if (currentMode === 'role-a') {
-      // If A is the first speaker, start countdown cue
-      if (subtitles.length > 0 && subtitles[0].speaker === 'A') {
-        startStartingCueCountdown(() => {
-          jumpToSegment(0, true);
-        });
-      } else {
-        jumpToSegment(0, true);
-      }
-    } else if (currentMode === 'role-b') {
-      // If B is the first speaker, start countdown cue
-      if (subtitles.length > 0 && subtitles[0].speaker === 'B') {
-        startStartingCueCountdown(() => {
-          jumpToSegment(0, true);
-        });
-      } else {
-        jumpToSegment(0, true);
-      }
-    } else if (currentMode === 'from-prev') {
+    if (currentMode === 'from-prev') {
       const startIdx = Math.max(0, targetIndex - 1);
       jumpToSegment(startIdx, true);
     } else if (currentMode === 'from-start') {
@@ -1228,6 +1384,8 @@ function loadSampleDialogue() {
   }
 
   saveStateToStorage();
+  updateLangButtonUI();
+  updateRoleButtonUI();
   renderDialogueList();
   updateStatusBanner(`샘플 대화 로드됨: ${srtName}`);
   jumpToSegment(0, false);

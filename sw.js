@@ -2,7 +2,7 @@
    sw.js — PWA Service Worker (Network-First Strategy)
    ══════════════════════════════════════════════════════ */
 
-const CACHE_NAME = 'toolbox-pwa-v1';
+const CACHE_NAME = 'toolbox-pwa-v2';
 
 // Pre-cached assets for offline foundation
 const PRECACHE_ASSETS = [
@@ -11,6 +11,7 @@ const PRECACHE_ASSETS = [
   './common.css',
   './manifest.json',
   './pwa.js',
+  './nav.js',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-maskable.png',
