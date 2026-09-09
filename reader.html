@@ -272,6 +272,7 @@
   <div class="selection-toolbar" id="selection-toolbar">
     <div class="toolbar-colors">
       <div class="color-dot yellow" data-color="yellow" title="노란색 형광펜"></div>
+      <div class="color-dot orange" data-color="orange" title="주황색 형광펜"></div>
       <div class="color-dot green" data-color="green" title="연두색 형광펜"></div>
       <div class="color-dot purple" data-color="purple" title="보라색 형광펜"></div>
       <div class="color-dot blue" data-color="blue" title="하늘색 형광펜"></div>
@@ -295,6 +296,14 @@
 
   <!-- 기존 하이라이트 클릭 시 팝오버 툴바 -->
   <div class="selection-toolbar" id="highlight-toolbar">
+    <div class="highlight-toolbar-colors">
+      <div class="color-dot yellow" data-color="yellow" title="노란색으로 변경"></div>
+      <div class="color-dot orange" data-color="orange" title="주황색으로 변경"></div>
+      <div class="color-dot green" data-color="green" title="연두색으로 변경"></div>
+      <div class="color-dot purple" data-color="purple" title="보라색으로 변경"></div>
+      <div class="color-dot blue" data-color="blue" title="하늘색으로 변경"></div>
+      <div class="color-dot pink" data-color="pink" title="분홍색으로 변경"></div>
+    </div>
     <div class="highlight-toolbar-buttons">
       <button type="button" class="toolbar-btn ai-btn" id="btn-hl-ai" title="AI 문맥 검색">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -479,6 +488,17 @@
         <div class="vocab-edit-preview">
           <div class="vocab-preview-target" id="vocab-edit-preview-target"></div>
           <div class="vocab-preview-sentence" id="vocab-edit-preview-sentence"></div>
+        </div>
+        <div class="vocab-input-group">
+          <label>🖍️ 형광펜 색상</label>
+          <div class="vocab-color-options" id="vocab-edit-colors">
+            <button type="button" class="color-dot-btn yellow" data-color="yellow" title="노란색"></button>
+            <button type="button" class="color-dot-btn orange" data-color="orange" title="주황색"></button>
+            <button type="button" class="color-dot-btn green" data-color="green" title="연두색"></button>
+            <button type="button" class="color-dot-btn purple" data-color="purple" title="보라색"></button>
+            <button type="button" class="color-dot-btn blue" data-color="blue" title="하늘색"></button>
+            <button type="button" class="color-dot-btn pink" data-color="pink" title="분홍색"></button>
+          </div>
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-phonetic">🔊 발음기호 (IPA)</label>

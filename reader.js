@@ -814,6 +814,7 @@ function applyEpubThemes() {
       'pointer-events': 'auto !important'
     },
     '.epubjs-hl.hl-yellow': { 'fill': '#facc15 !important' },
+    '.epubjs-hl.hl-orange': { 'fill': '#fb923c !important' },
     '.epubjs-hl.hl-green':  { 'fill': '#4ade80 !important' },
     '.epubjs-hl.hl-purple': { 'fill': '#c084fc !important' },
     '.epubjs-hl.hl-blue':   { 'fill': '#38bdf8 !important' },
@@ -1130,6 +1131,7 @@ h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
 p { margin-bottom: 1.4em; }
 mark.reader-highlight { padding: 1px 2px; border-radius: 2px; color: inherit; }
 mark.reader-highlight.hl-yellow { background-color: #fde047; }
+mark.reader-highlight.hl-orange { background-color: #fdba74; }
 mark.reader-highlight.hl-green  { background-color: #86efac; }
 mark.reader-highlight.hl-purple { background-color: #d8b4fe; }
 mark.reader-highlight.hl-blue   { background-color: #7dd3fc; }
@@ -2119,8 +2121,10 @@ function restoreEpubHighlights() {
 }
 
 function getHighlightColorHex(colorName) {
+  if (colorName && colorName.startsWith('#')) return colorName;
   const colors = {
     yellow: '#facc15',
+    orange: '#fb923c',
     green: '#4ade80',
     purple: '#c084fc',
     blue: '#38bdf8',
@@ -2409,9 +2413,86 @@ function applyHighlight(colorName) {
   showToast('형광펜이 추가되었습니다.');
 }
 
+function changeHighlightColor(hlId, newColor, showToastMsg = true) {
+  const hl = state.highlights.find(h => h.id === hlId);
+  if (!hl) return;
+  if (hl.color === newColor) return;
+
+  hl.color = newColor;
+  saveHighlights();
+
+  // 1. Update in TXT viewer
+  if (state.currentBook && state.currentBook.type === 'txt') {
+    const marks = elements.txtContent.querySelectorAll(`mark[data-hl-id="${hlId}"]`);
+    marks.forEach(m => {
+      m.className = `reader-highlight hl-${newColor}`;
+    });
+  }
+
+  // 2. Update in EPUB viewer
+  if (state.currentBook && state.currentBook.type === 'epub') {
+    const isDark = state.settings.theme === 'dark';
+    if (state.epub.rendition && hl.cfiRange) {
+      try {
+        state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
+      } catch (err) {}
+
+      try {
+        state.epub.rendition.annotations.add(
+          "highlight",
+          hl.cfiRange,
+          { id: hl.id },
+          (e) => {
+            openHighlightToolbarFromEpub(hl, e);
+          },
+          `hl-${newColor}`,
+          {
+            "fill": getHighlightColorHex(newColor),
+            "fill-opacity": isDark ? "0.4" : "0.35",
+            "mix-blend-mode": isDark ? "screen" : "multiply"
+          }
+        );
+      } catch (err) {
+        console.warn('Annotation color update error:', err);
+      }
+    }
+
+    // Also update direct <mark> in iframe if any
+    const iframe = elements.epubArea.querySelector('iframe');
+    const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+    if (iframeDoc) {
+      const marks = iframeDoc.querySelectorAll(`mark[data-hl-id="${hlId}"], [data-hl-id="${hlId}"]`);
+      marks.forEach(m => {
+        m.className = `reader-highlight hl-${newColor}`;
+        m.style.backgroundColor = getHighlightColorHex(newColor);
+      });
+    }
+  }
+
+  // 3. Update highlight toolbar active dot
+  document.querySelectorAll('#highlight-toolbar .color-dot').forEach(dot => {
+    dot.classList.toggle('active', dot.dataset.color === newColor);
+  });
+
+  // 4. Update drawer if open
+  if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+    renderHighlightDrawer();
+  }
+
+  if (showToastMsg) {
+    showToast('형광펜 색상이 변경되었습니다.');
+  }
+}
+
 function showHighlightToolbar(rect) {
   closeAllToolbars();
   const tb = elements.highlightToolbar;
+
+  // Update active color dot in #highlight-toolbar
+  const currentColor = (state.activeHighlight && state.activeHighlight.color) || 'yellow';
+  document.querySelectorAll('#highlight-toolbar .color-dot').forEach(dot => {
+    dot.classList.toggle('active', dot.dataset.color === currentColor);
+  });
 
   // Render bottom meaning if present
   if (elements.hlToolbarMeaning) {
@@ -2651,10 +2732,12 @@ function triggerGoogleAISearch(contextData) {
 
 // ── Vocab Edit Modal (단어장 Q&A 및 메모 수정 모달) ──
 let currentEditingHighlight = null;
+let currentEditingColor = 'yellow';
 
 function openVocabEditModal(hl) {
   if (!hl) return;
   currentEditingHighlight = hl;
+  currentEditingColor = hl.color || 'yellow';
 
   if (elements.vocabEditPreviewTarget) {
     elements.vocabEditPreviewTarget.textContent = hl.text || '';
@@ -2671,6 +2754,11 @@ function openVocabEditModal(hl) {
   if (elements.inputEditTrans) {
     elements.inputEditTrans.value = hl.sentenceTranslation || '';
   }
+
+  // Update active color button in modal
+  document.querySelectorAll('#vocab-edit-colors .color-dot-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.color === currentEditingColor);
+  });
 
   if (elements.vocabEditModalBackdrop) {
     elements.vocabEditModalBackdrop.classList.add('open');
@@ -2704,11 +2792,17 @@ function saveVocabEdit() {
   currentEditingHighlight.targetMeaning = newMeaning;
   currentEditingHighlight.sentenceTranslation = newTrans;
 
-  saveHighlights();
-  renderHighlightDrawer();
+  const colorChanged = currentEditingHighlight.color !== currentEditingColor;
+  if (colorChanged) {
+    changeHighlightColor(currentEditingHighlight.id, currentEditingColor, false);
+  } else {
+    saveHighlights();
+    renderHighlightDrawer();
+  }
+
   updateQuizBadge();
   closeVocabEditModal();
-  showToast('단어장 정보가 수정 및 저장되었습니다.');
+  showToast(colorChanged ? '단어장 정보 및 형광펜 색상이 저장되었습니다.' : '단어장 정보가 수정 및 저장되었습니다.');
 }
 
 // ── Drawer (TOC & Highlights) ──
@@ -3078,7 +3172,7 @@ function renderHighlightDrawer() {
     card.innerHTML = `
       <div class="highlight-card-header">
         <span style="display:flex; align-items:center; gap:6px;">
-          <span class="hl-badge-color" style="background-color: ${colorHex};"></span>
+          <span class="hl-badge-color" style="background-color: ${colorHex};" title="형광펜 색상 변경"></span>
           <span>${dateStr}</span>
         </span>
         <span class="hl-stat-badge">학습 ${hl.studyCount || 0}회 · 오답 ${hl.wrongCount || 0}회</span>
@@ -3104,9 +3198,54 @@ function renderHighlightDrawer() {
       </div>
     `;
 
+    // Interactive color change via badge click
+    const badgeColor = card.querySelector('.hl-badge-color');
+    if (badgeColor) {
+      badgeColor.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const existingPopover = card.querySelector('.card-color-picker-popover');
+        if (existingPopover) {
+          existingPopover.remove();
+          return;
+        }
+
+        // Remove popovers in other cards
+        document.querySelectorAll('.card-color-picker-popover').forEach(p => p.remove());
+
+        const popover = document.createElement('div');
+        popover.className = 'card-color-picker-popover';
+        const colors = ['yellow', 'orange', 'green', 'purple', 'blue', 'pink'];
+        const currentHlColor = hl.color || 'yellow';
+
+        colors.forEach(c => {
+          const dot = document.createElement('div');
+          dot.className = `color-dot ${c}${c === currentHlColor ? ' active' : ''}`;
+          dot.title = `${c}으로 변경`;
+          dot.addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            changeHighlightColor(hl.id, c);
+            popover.remove();
+          });
+          popover.appendChild(dot);
+        });
+
+        card.appendChild(popover);
+
+        const closeHandler = (ev) => {
+          if (!popover.contains(ev.target) && ev.target !== badgeColor) {
+            popover.remove();
+            document.removeEventListener('click', closeHandler);
+          }
+        };
+        setTimeout(() => {
+          document.addEventListener('click', closeHandler);
+        }, 20);
+      });
+    }
+
     // Click card to jump to location
     card.addEventListener('click', (e) => {
-      if (e.target.closest('.btn-card-action')) return;
+      if (e.target.closest('.btn-card-action') || e.target.closest('.card-color-picker-popover') || e.target.closest('.hl-badge-color')) return;
 
       if (state.currentBook.type === 'txt') {
         const mark = elements.txtContent.querySelector(`[data-hl-id="${hl.id}"]`);
@@ -4320,6 +4459,16 @@ function setupEventListeners() {
     }
   });
 
+  // Highlight Popover Toolbar Color Dots
+  document.querySelectorAll('#highlight-toolbar .color-dot').forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (state.activeHighlight) {
+        changeHighlightColor(state.activeHighlight.id, dot.dataset.color);
+      }
+    });
+  });
+
   // Highlight Popover Toolbar Buttons
   elements.btnHlAi.addEventListener('click', () => {
     if (state.activeHighlight) {
@@ -4546,6 +4695,17 @@ function setupEventListeners() {
       }
     });
   }
+
+  // Vocab Edit Modal Color Buttons
+  document.querySelectorAll('#vocab-edit-colors .color-dot-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentEditingColor = btn.dataset.color;
+      document.querySelectorAll('#vocab-edit-colors .color-dot-btn').forEach(b => {
+        b.classList.toggle('active', b === btn);
+      });
+    });
+  });
 
   // Keyboard Shortcuts (Quiz & Vocab Modal)
   document.addEventListener('keydown', (e) => {
