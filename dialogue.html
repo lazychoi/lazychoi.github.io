@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>영어 암기</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="영어 암기">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <script src="pwa.js" defer></script>
+
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="dialogue.css">
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">💬 영어 암기</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu">
+      <a href="index.html" class="nav-link">
+        <span class="nav-icon">🏠</span> 홈
+      </a>
+      <a href="farm.html" class="nav-link">
+        <span class="nav-icon">🌱</span> 용어 노트
+      </a>
+      <a href="flashcards.html" class="nav-link">
+        <span class="nav-icon">🗂️</span> 플래시카드
+      </a>
+      <a href="hanja.html" class="nav-link">
+        <span class="nav-icon">📗</span> 한글(한자)
+      </a>
+      <a href="rebalance.html" class="nav-link">
+        <span class="nav-icon">⚖️</span> 자산 리밸런싱
+      </a>
+      <a href="listening.html" class="nav-link">
+        <span class="nav-icon">🎧</span> 영어 듣기
+      </a>
+      <a href="dialogue.html" class="nav-link active">
+        <span class="nav-icon">💬</span> 영어 암기
+      </a>
+      <a href="reader.html" class="nav-link">
+        <span class="nav-icon">📖</span> 영문 리더기
+      </a>
+      <a href="timeline.html" class="nav-link">
+        <span class="nav-icon">⏳</span> 세계사 연표
+      </a>
+      <a href="genealogy.html" class="nav-link">
+        <span class="nav-icon">🌳</span> 가계도
+      </a>
+    </div>
+  </nav>
+
+  <main class="app-container">
+    <!-- Top Setup & Stages Control Panel (Placed directly under nav) -->
+    <header class="top-control-panel">
+      <!-- Row 1: File Actions & Utility Settings -->
+      <div class="top-action-row">
+        <div class="file-btns">
+          <label class="btn btn-sm btn-file" title="오디오 파일 선택 (.mp3, .m4a, .wav)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span>음원</span>
+            <input type="file" id="audio-file-input" accept="audio/*,.mp3,.m4a,.wav">
+          </label>
+          <label class="btn btn-sm btn-file" title="SRT 자막 파일 선택 (.srt)">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <span>SRT 자막</span>
+            <input type="file" id="srt-file-input" accept=".srt,.vtt,.txt">
+          </label>
+        </div>
+
+        <div class="utility-btns">
+          <!-- Playback Speed -->
+          <div class="speed-control">
+            <label for="speed-select" class="control-label">배속</label>
+            <select id="speed-select" class="select-sm">
+              <option value="0.75">0.75x</option>
+              <option value="0.85">0.85x</option>
+              <option value="1.0" selected>1.00x</option>
+              <option value="1.15">1.15x</option>
+              <option value="1.25">1.25x</option>
+            </select>
+          </div>
+
+          <!-- Repeat Toggle Button (Without icon) -->
+          <button class="btn btn-sm btn-repeat-toggle" id="btn-repeat-toggle" title="반복 켜기/끄기">
+            <span id="repeat-toggle-label">반복 꺼짐</span>
+          </button>
+
+          <!-- Guide & Reset -->
+          <button class="btn btn-sm btn-icon" id="btn-guide" title="사용 설명서">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          </button>
+          <button class="btn btn-sm btn-danger-ghost" id="btn-reset" title="데이터 초기화">초기화</button>
+        </div>
+      </div>
+
+      <!-- Row 2: Step-by-Step Memorization Stage Buttons (B 말하기 is 5, A 말하기 is 6) -->
+      <div class="learning-stages-wrapper">
+        <div class="stages-grid" id="mode-selector">
+          <button class="stage-btn active" data-mode="shadowing" title="원어민 음성을 실시간으로 따라 말하기">
+            <span class="stage-num">1</span>
+            <span class="stage-name">섀도잉</span>
+          </button>
+          <button class="stage-btn" data-mode="listen-speak" title="문장 청취 후 문장 시간만큼 따라 말하기">
+            <span class="stage-num">2</span>
+            <span class="stage-name">듣고 말하기</span>
+          </button>
+          <button class="stage-btn" data-mode="from-prev" title="직전 구간부터 현재 구간까지 연결하여 듣기">
+            <span class="stage-num">3</span>
+            <span class="stage-name">직전 구간부터</span>
+          </button>
+          <button class="stage-btn" data-mode="from-start" title="1번 문장부터 현재 구간까지 누적해서 듣기">
+            <span class="stage-num">4</span>
+            <span class="stage-name">처음~현재</span>
+          </button>
+          <button class="stage-btn stage-role-b" data-mode="role-b" title="전체 대화에서 B 대사는 묵음으로 내가 말하고 A는 청취">
+            <span class="stage-num">5</span>
+            <span class="stage-name">B 말하기</span>
+          </button>
+          <button class="stage-btn stage-role-a" data-mode="role-a" title="전체 대화에서 A 대사는 묵음으로 내가 말하고 B는 청취">
+            <span class="stage-num">6</span>
+            <span class="stage-name">A 말하기</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Row 3: Live Status Strip & Mode Instruction Banner -->
+      <div class="status-strip">
+        <div class="status-left">
+          <span class="status-dot"></span>
+          <span class="status-text" id="file-status-text">음원과 SRT 자막을 불러와 학습을 시작하세요</span>
+        </div>
+        <div class="status-right">
+          <span class="status-counter" id="status-counter">- / -</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Visual Countdown Overlay Banner for A/B Role-play starting cue -->
+    <div class="cue-countdown-banner" id="cue-countdown-banner" style="display: none;">
+      <span class="cue-icon">🔔</span>
+      <span class="cue-text" id="cue-countdown-text">준비... 3</span>
+    </div>
+
+    <!-- Dialogue Bubble Message Feed -->
+    <section class="dialogue-feed" id="dialogue-feed">
+      <!-- Empty State View -->
+      <div class="empty-state" id="empty-state">
+        <div class="empty-icon">💬</div>
+        <h2>영어 암기 학습</h2>
+        <p>SRT 자막 파일과 음원을 불러오면 구간별 대화 카드가 표시됩니다.</p>
+        <div class="empty-features">
+          <div class="feature-tag">👆 <b>구간 터치</b>: 재생 / 일시정지 토글</div>
+          <div class="feature-tag">1️⃣ <b>섀도잉</b>: 원어민 음성을 실시간 따라 말하기</div>
+          <div class="feature-tag">2️⃣ <b>듣고 말하기</b>: 문장 청취 후 문장 시간만큼 따라 말하기</div>
+          <div class="feature-tag">3️⃣ <b>직전 구간부터</b>: 앞 문장과 이어서 2개 구간 복습</div>
+          <div class="feature-tag">4️⃣ <b>처음~현재</b>: 1번 문장부터 현재까지 누적 암기</div>
+          <div class="feature-tag">5️⃣6️⃣ <b>B/A 말하기</b>: 전체 대화에서 내 역할 묵음 처리 & 실전 대화</div>
+        </div>
+        <button class="btn btn-primary btn-lg" id="btn-empty-sample">샘플 대화로 바로 체험하기</button>
+      </div>
+
+      <!-- Dialogue Items Container -->
+      <div class="dialogue-list" id="dialogue-list" style="display: none;"></div>
+    </section>
+  </main>
+
+  <!-- Usage Guide Modal -->
+  <div class="modal-backdrop" id="guide-modal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>📖 영어 암기 앱 사용 설명서</h3>
+        <button class="modal-close" id="guide-modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body">
+        <section class="guide-section">
+          <h4>👆 구간 터치 재생 / 일시정지</h4>
+          <ul>
+            <li>대화 버블을 터치할 때마다 해당 구간이 즉시 <b>재생 / 일시정지</b> 토글됩니다.</li>
+            <li>다른 문장을 터치하면 즉시 해당 문장으로 전환됩니다.</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>🔁 반복 버튼 기능</h4>
+          <ul>
+            <li><b>반복 켜짐:</b> 해당 모드의 구간(또는 전체 대화)을 <b>무한 반복</b>합니다.</li>
+            <li><b>반복 꺼짐:</b> 1회 완료 후 다음 구간으로 넘어가거나 멈춥니다.</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>단계별 암기 학습 모드</h4>
+          <ul>
+            <li><b>1. 섀도잉:</b> 원어민 음성을 듣는 동시에 따라 발화합니다. 반복 ON이면 현재 구간만 무한 반복, OFF면 다음 구간으로 계속 진행됩니다.</li>
+            <li><b>2. 듣고 말하기:</b> 문장을 1회 들은 뒤 문장 길이만큼 오디오가 대기하며 따라 말합니다. 반복 ON이면 현재 구간 무한 반복, OFF면 다음 구간으로 자동 진행됩니다.</li>
+            <li><b>3. 직전 구간부터:</b> 직전 문장과 현재 문장을 연결하여 청취합니다. (반복 ON: 무한 반복, OFF: 1회 재생 후 정지)</li>
+            <li><b>4. 처음~현재:</b> 1번 문장부터 현재 문장까지 누적하여 암기합니다. (반복 ON: 무한 반복, OFF: 1회 재생 후 정지)</li>
+            <li><b>5. A 말하기:</b> 대화 전체를 처음부터 끝까지 재생하며, B는 청취하고 A 차례일 때 <b>대사 시간만큼 오디오가 자동 묵음</b> 처리되어 내가 직접 A 역할을 말합니다. (시작 시 '준비, 시작!' 신호음 제공)</li>
+            <li><b>6. B 말하기:</b> 대화 전체를 처음부터 끝까지 재생하며, A는 청취하고 B 차례일 때 <b>오디오가 자동 묵음</b> 처리되어 B 역할을 연습합니다.</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
+          <h4>화자 태그 수정</h4>
+          <ul>
+            <li>자막 카드의 <b>[A]</b> 또는 <b>[B]</b> 배지를 터치하면 화자를 즉시 변경할 수 있습니다.</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <audio id="dialogue-audio" preload="auto" playsinline style="display: none;"></audio>
+
+  <script src="dialogue.js"></script>
+  <script>
+    document.getElementById('nav-toggle').addEventListener('click', function() {
+      document.getElementById('nav-menu').classList.toggle('open');
+    });
+  </script>
+</body>
+
+</html>

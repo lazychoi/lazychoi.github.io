@@ -1,0 +1,752 @@
+/* ══════════════════════════════════════════════════════
+   dialogue.css — 영어 대화 암기 앱 (모바일/iPhone 최적화)
+   ══════════════════════════════════════════════════════ */
+
+:root {
+  --color-speaker-a: #2563eb;
+  --color-speaker-a-bg: rgba(37, 99, 235, 0.07);
+  --color-speaker-a-border: rgba(37, 99, 235, 0.22);
+  --color-speaker-b: #059669;
+  --color-speaker-b-bg: rgba(5, 150, 105, 0.07);
+  --color-speaker-b-border: rgba(5, 150, 105, 0.22);
+  --color-muted-speak: #d97706;
+  --color-repeat-timer: #8b5cf6;
+}
+
+/* ── App Container Layout ── */
+.app-container {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 10px 14px calc(env(safe-area-inset-bottom, 0px) + 40px);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* ── Top Control Panel (Directly under menu, contains all settings and stages) ── */
+.top-control-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.04);
+}
+
+/* Row 1: File actions and utility controls */
+.top-action-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.file-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-file {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.btn-file input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.utility-btns {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.control-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.select-sm {
+  padding: 5px 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: white;
+  color: var(--text-main);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Repeat Toggle Button */
+.btn-repeat-toggle {
+  background: white;
+  color: var(--text-muted);
+  border: 1px solid var(--glass-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.btn-repeat-toggle.active {
+  background: #10b981;
+  color: white;
+  border-color: #059669;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-sm {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  background: white;
+  color: var(--text-main);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  touch-action: manipulation;
+}
+
+.btn-sm:active {
+  transform: scale(0.96);
+}
+
+.btn-icon {
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+}
+
+.btn-danger-ghost {
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.2);
+  background: rgba(220, 38, 38, 0.04);
+}
+
+/* ── Row 2: Step-by-Step Learning Stage Buttons ── */
+.learning-stages-wrapper {
+  width: 100%;
+  padding-top: 4px;
+}
+
+.stages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  width: 100%;
+}
+
+.stage-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 4px;
+  background: white;
+  border: 1.5px solid rgba(0, 0, 0, 0.07);
+  border-radius: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.stage-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.stage-name {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+}
+
+/* Active Stage Highlight */
+.stage-btn.active {
+  background: #1e293b;
+  border-color: #1e293b;
+  box-shadow: 0 3px 10px rgba(30, 41, 59, 0.2);
+}
+
+.stage-btn.active .stage-num {
+  background: rgba(255, 255, 255, 0.25);
+  color: white;
+}
+
+.stage-btn.active .stage-name {
+  color: white;
+  font-weight: 700;
+}
+
+/* Special Role A & B Stage styling */
+.stage-btn.stage-role-a.active {
+  background: var(--color-speaker-a);
+  border-color: var(--color-speaker-a);
+  box-shadow: 0 3px 10px rgba(37, 99, 235, 0.25);
+}
+
+.stage-btn.stage-role-b.active {
+  background: var(--color-speaker-b);
+  border-color: var(--color-speaker-b);
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.25);
+}
+
+/* ── Row 3: Status Strip ── */
+.status-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 9px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.status-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #94a3b8;
+  flex-shrink: 0;
+  transition: background 0.3s ease;
+}
+
+.status-dot.active {
+  background: #10b981;
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
+}
+
+.status-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status-counter {
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Cue Countdown Banner (3, 2, 1, 시작!) ── */
+.cue-countdown-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #1e293b;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  animation: pulseCountdown 0.8s infinite ease-in-out;
+}
+
+@keyframes pulseCountdown {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.cue-icon {
+  font-size: 16px;
+}
+
+/* ── Dialogue Message Feed ── */
+.dialogue-feed {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 32px 20px;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.empty-icon {
+  font-size: 2.8rem;
+}
+
+.empty-state h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.empty-state p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  max-width: 400px;
+  line-height: 1.5;
+}
+
+.empty-features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 380px;
+  text-align: left;
+  margin: 4px 0 10px;
+}
+
+.feature-tag {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  color: var(--text-main);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.btn-lg {
+  padding: 12px 22px;
+  font-size: 14.5px;
+  border-radius: 12px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+  cursor: pointer;
+}
+
+.btn-primary:active {
+  background: var(--accent-hover);
+  transform: scale(0.97);
+}
+
+/* ── Dialogue Message List ── */
+.dialogue-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  padding-bottom: 20px;
+}
+
+/* ── Dialogue Bubble Card ── */
+.dialogue-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+/* Speaker Alignment */
+.dialogue-card.speaker-a {
+  align-items: flex-start;
+}
+
+.dialogue-card.speaker-b {
+  align-items: flex-end;
+}
+
+/* Inactive Default Bubbles */
+.bubble-content {
+  max-width: 88%;
+  background: #ffffff;
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+  border-radius: 18px;
+  padding: 12px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  opacity: 0.88;
+}
+
+.speaker-a .bubble-content {
+  background: #f8fafc;
+  border-color: rgba(37, 99, 235, 0.15);
+  border-top-left-radius: 4px;
+}
+
+.speaker-b .bubble-content {
+  background: #f8fafc;
+  border-color: rgba(5, 150, 105, 0.15);
+  border-top-right-radius: 4px;
+}
+
+.bubble-content:active {
+  transform: scale(0.985);
+}
+
+/* Header Inside Bubble */
+.bubble-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.speaker-badge-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.speaker-a .speaker-badge-btn {
+  background: #dbeafe;
+  color: var(--color-speaker-a);
+}
+
+.speaker-b .speaker-badge-btn {
+  background: #d1fae5;
+  color: var(--color-speaker-b);
+}
+
+.bubble-time-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Body Text Inside Bubble */
+.bubble-text {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-main);
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+/* Bubble Status Footer / Indicators */
+.bubble-status-footer {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.status-badge-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 2px 8px;
+  width: fit-content;
+}
+
+.status-badge-listening {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--accent);
+}
+
+.status-badge-speaking {
+  background: rgba(217, 119, 6, 0.15);
+  color: #b45309;
+  animation: pulseBadge 1.2s infinite ease-in-out;
+}
+
+.status-badge-repeat {
+  background: rgba(139, 92, 246, 0.15);
+  color: #6d28d9;
+  animation: pulseBadge 1.2s infinite ease-in-out;
+}
+
+@keyframes pulseBadge {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.85; }
+}
+
+/* Countdown & Timing Progress Bar on Card */
+.bubble-progress-track {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bubble-progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.08s linear;
+}
+
+.bubble-progress-fill.fill-speaking {
+  background: #f59e0b;
+}
+
+.bubble-progress-fill.fill-repeat {
+  background: #8b5cf6;
+}
+
+/* ── Active Playing & Muted States (현재 암기 중인 구간 강조) ── */
+.dialogue-card.is-active .bubble-content {
+  opacity: 1 !important;
+  transform: translateY(-2px);
+}
+
+/* Speaker A active: Rich distinct sky blue background */
+.dialogue-card.speaker-a.is-active .bubble-content {
+  background: #dbeafe !important;
+  border: 2px solid #2563eb !important;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.28) !important;
+}
+
+/* Speaker B active: Rich distinct mint/emerald background */
+.dialogue-card.speaker-b.is-active .bubble-content {
+  background: #d1fae5 !important;
+  border: 2px solid #059669 !important;
+  box-shadow: 0 4px 18px rgba(5, 150, 105, 0.28) !important;
+}
+
+/* When in Role Mute (User Speaking) - Warm vivid amber highlight */
+.dialogue-card.is-active.is-role-muted .bubble-content {
+  background: #fef3c7 !important;
+  border: 2.5px solid #d97706 !important;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.32) !important;
+}
+
+/* When in Listen & Speak Waiting Pause - Vivid purple highlight */
+.dialogue-card.is-active.is-repeat-waiting .bubble-content {
+  background: #ede9fe !important;
+  border: 2.5px solid #7c3aed !important;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3) !important;
+}
+
+/* Soundwave animation icon inside active card */
+.sound-wave-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  height: 12px;
+}
+
+.sound-wave-icon span {
+  width: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  animation: waveBar 0.8s infinite ease-in-out;
+}
+
+.sound-wave-icon span:nth-child(1) { height: 4px; animation-delay: 0.0s; }
+.sound-wave-icon span:nth-child(2) { height: 10px; animation-delay: 0.2s; }
+.sound-wave-icon span:nth-child(3) { height: 7px; animation-delay: 0.4s; }
+
+@keyframes waveBar {
+  0%, 100% { transform: scaleY(0.4); }
+  50% { transform: scaleY(1.2); }
+}
+
+/* ── Guide Modal ── */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  padding: 16px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 540px;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  animation: modalIn 0.25s ease-out;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.modal-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #334155;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guide-section h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 6px;
+}
+
+.guide-section ul {
+  padding-left: 18px;
+  margin: 0;
+}
+
+.guide-section li {
+  margin-bottom: 5px;
+}
+
+/* ── Mobile Responsive Refinements ── */
+@media (max-width: 480px) {
+  .app-container {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .top-control-panel {
+    padding: 10px 10px;
+    border-radius: 16px;
+  }
+
+  .bubble-content {
+    max-width: 92%;
+    padding: 10px 12px;
+  }
+
+  .bubble-text {
+    font-size: 0.98rem;
+  }
+
+  .stages-grid {
+    gap: 4px;
+  }
+
+  .stage-btn {
+    padding: 7px 2px;
+    gap: 3px;
+  }
+
+  .stage-name {
+    font-size: 10.5px;
+  }
+
+  .stage-num {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+}

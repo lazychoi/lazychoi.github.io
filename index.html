@@ -108,6 +108,10 @@
       background: #3b82f6; /* Blue highlight for reader */
     }
 
+    .card.dialogue::before {
+      background: #2563eb; /* Blue highlight for dialogue memorization */
+    }
+
     .card:hover {
       transform: translateY(-4px);
       border-color: rgba(0, 0, 0, 0.12);
@@ -183,6 +187,9 @@
       <a href="listening.html" class="nav-link">
         <span class="nav-icon">🎧</span> 영어 듣기
       </a>
+      <a href="dialogue.html" class="nav-link">
+        <span class="nav-icon">💬</span> 영어 암기
+      </a>
       <a href="reader.html" class="nav-link">
         <span class="nav-icon">📖</span> 영문 리더기
       </a>
@@ -229,6 +236,12 @@
         <div class="icon">🎧</div>
         <h2 class="card-title">영어 듣기 연습</h2>
         <p class="card-desc">오디오 파일(.mp3)과 구간 대본(.txt)을 임포트하여 듣기 연습(구간 반복, 배속 조절)</p>
+      </a>
+
+      <a href="dialogue.html" class="card dialogue">
+        <div class="icon">💬</div>
+        <h2 class="card-title">영어 암기</h2>
+        <p class="card-desc">모바일 최적화 영어 암기 앱 (구간 터치 토글, 6단계 암기 학습, A-B 대화 묵음, 누적 반복)</p>
       </a>
 
       <a href="reader.html" class="card reader">
