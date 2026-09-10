@@ -182,7 +182,8 @@ html, body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px 4px;
+  min-height: 54px;
+  padding: 12px 4px;
   background: white;
   border-radius: 12px;
   cursor: pointer;
@@ -196,16 +197,16 @@ html, body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  font-size: 11.5px;
+  font-size: 12px;
   font-weight: 800;
   flex-shrink: 0;
 }
 
 .stage-name {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
   white-space: nowrap;
 }
@@ -348,7 +349,7 @@ html, body {
   color: white;
 }
 
-/* Stage 6: 한글/영어 자막 토글 버튼 (아이콘 없음, 텍스트 전용) */
+/* Stage 6: 한글/영문 자막 토글 버튼 (아이콘 없음, 텍스트 전용) */
 .stage-btn.stage-lang-toggle {
   border: 1.5px solid #bfdbfe;
   color: #1d4ed8;
@@ -356,13 +357,24 @@ html, body {
   transition: all 0.2s ease;
 }
 .stage-btn.stage-lang-toggle .stage-name {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 13.5px;
+  font-weight: 800;
   white-space: nowrap;
+}
+.stage-btn.stage-lang-toggle.active {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+.stage-btn.stage-lang-toggle.is-en.active {
+  background: #db2777;
+  border-color: #be185d;
+  color: white;
+  box-shadow: 0 4px 12px rgba(219, 39, 119, 0.35);
 }
 .stage-btn.stage-lang-toggle:hover {
   border-color: #93c5fd;
-  background: #f8fafc;
 }
 .stage-btn.stage-lang-toggle:active {
   transform: scale(0.96);
@@ -774,6 +786,98 @@ html, body {
   50% { transform: scaleY(1.2); }
 }
 
+/* ── Target Segment (암기중) Badge & Highlight ── */
+.target-segment-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #f59e0b;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2.5px 7px;
+  border-radius: 6px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35);
+  animation: pulseTargetBadge 1.5s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+@keyframes pulseTargetBadge {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.88; }
+}
+
+/* Target card distinct styling when in from-prev or from-start */
+.dialogue-card.is-target:not(.is-active) .bubble-content {
+  border: 2px dashed #f59e0b !important;
+  background: #fffbeb !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18) !important;
+}
+
+.dialogue-card.is-target.is-active .bubble-content {
+  border-color: #d97706 !important;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.35) !important;
+}
+
+/* ── Swipe Gesture Action Hints ── */
+.swipe-action-hint {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 800;
+  color: white;
+  display: none;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+  white-space: nowrap;
+}
+
+.swipe-hint-listen-speak {
+  right: 14px;
+  background: #7c3aed;
+}
+
+.swipe-hint-from-prev {
+  left: 14px;
+  background: #0d9488;
+}
+
+/* ── Gesture Action Floating Toast Notification ── */
+.gesture-toast {
+  position: fixed;
+  top: 68px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-12px);
+  background: rgba(15, 23, 42, 0.92);
+  color: white;
+  padding: 9px 20px;
+  border-radius: 24px;
+  font-size: 13.5px;
+  font-weight: 700;
+  z-index: 1000;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+  opacity: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gesture-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* ── Guide Modal ── */
 .modal-backdrop {
   position: fixed;
@@ -897,17 +1001,18 @@ html, body {
   }
 
   .stage-btn {
-    padding: 8px 2px;
+    min-height: 48px;
+    padding: 9px 2px;
     gap: 4px;
   }
 
   .stage-name {
-    font-size: 12px;
+    font-size: 12.5px;
   }
 
   .stage-num {
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
     font-size: 11px;
   }
 }
@@ -928,7 +1033,12 @@ html, body {
     display: none; /* Hide icons on extremely narrow screens so text has ample room */
   }
 
+  .stage-btn {
+    min-height: 46px;
+    padding: 8px 1px;
+  }
+
   .stage-name {
-    font-size: 11px;
+    font-size: 11.5px;
   }
 }

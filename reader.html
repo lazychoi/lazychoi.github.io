@@ -63,7 +63,7 @@
       <div class="topbar-actions">
         <!-- 파일 열기 버튼 -->
         <div class="file-input-btn-wrap">
-          <button class="btn-reader primary">
+          <button class="btn-reader" id="btn-open-file">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path
                 d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z">
@@ -80,6 +80,14 @@
             <path d="M4 6h16M4 12h16M4 18h7"></path>
           </svg>
           목차
+        </button>
+
+        <!-- 책갈피 토글 버튼 -->
+        <button class="btn-reader" id="btn-toggle-bookmarks" title="책갈피 목록">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+          </svg>
+          책갈피
         </button>
 
         <!-- 하이라이트 서랍 토글 버튼 -->
@@ -261,7 +269,15 @@
             <input type="range" id="reader-progress-slider" min="0" max="100" value="0" step="1">
             <span id="reader-progress-percent">0%</span>
           </div>
-          <div id="reader-info-stat">읽는 중</div>
+          <div class="bottom-bar-actions" style="display:flex; align-items:center; gap:8px;">
+            <button type="button" class="btn-bottom-bookmark" id="btn-bottom-bookmark" title="현재 읽는 위치 책갈피 저장">
+              <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+              </svg>
+              <span>책갈피</span>
+            </button>
+            <div id="reader-info-stat">읽는 중</div>
+          </div>
         </footer>
 
       </main>
@@ -278,6 +294,12 @@
       <div class="color-dot blue" data-color="blue" title="하늘색 형광펜"></div>
       <div class="color-dot pink" data-color="pink" title="분홍색 형광펜"></div>
     </div>
+    <button type="button" class="toolbar-btn" id="btn-toolbar-bookmark" title="선택한 위치를 책갈피로 저장">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
+      </svg>
+      책갈피
+    </button>
     <button type="button" class="toolbar-btn ai-btn" id="btn-toolbar-ai">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -366,6 +388,15 @@
       </button>
       <button type="button" class="btn-drawer-action primary" id="btn-export-vocab" title="Excel/Anki 호환 CSV로 내보내기">
         📥 단어장 내보내기
+      </button>
+    </div>
+    <!-- 책갈피 전용 액션 바 -->
+    <div class="drawer-actions-bar" id="drawer-bookmark-actions-bar" style="display: none;">
+      <button type="button" class="btn-drawer-action primary" id="btn-add-current-bookmark" title="현재 읽고 있는 위치를 책갈피로 추가">
+        🔖 현재 위치 추가
+      </button>
+      <button type="button" class="btn-drawer-action" id="btn-sort-bookmarks" title="정렬 기준 변경 (위치순 / 최신순)">
+        ⇅ 위치순
       </button>
     </div>
     <div class="drawer-body" id="drawer-body">
@@ -467,6 +498,35 @@
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
         <button type="button" class="btn-reader" id="btn-cancel-meta">취소</button>
         <button type="button" class="btn-reader primary" id="btn-save-meta">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 책갈피 추가 / 편집 모달 -->
+  <div class="meta-edit-modal" id="bookmark-modal">
+    <div class="meta-edit-card bookmark-edit-card">
+      <h3 id="bookmark-modal-title" style="font-size: 18px; font-weight:700; display:flex; align-items:center; gap:8px;">
+        <span>🔖</span> 책갈피 추가
+      </h3>
+      <div class="meta-input-group">
+        <label for="input-bookmark-title">책갈피 이름</label>
+        <input type="text" id="input-bookmark-title" placeholder="예: 마지막 읽은 지점, 중요한 복선 등" autocomplete="off">
+        <div class="bookmark-chips-row" id="bookmark-quick-chips">
+          <button type="button" class="bookmark-chip" data-text="📍 마지막 읽은 지점">📍 마지막 읽은 지점</button>
+          <button type="button" class="bookmark-chip" data-text="⭐ 중요한 부분">⭐ 중요한 부분</button>
+          <button type="button" class="bookmark-chip" data-text="💡 인상 깊은 구절">💡 인상 깊은 구절</button>
+          <button type="button" class="bookmark-chip" data-text="❓ 다시 볼 문장">❓ 다시 볼 문장</button>
+        </div>
+      </div>
+      <div class="bookmark-modal-preview">
+        <div class="bookmark-preview-meta">
+          <span class="bookmark-preview-pct" id="bookmark-preview-pct">진행률 0%</span>
+          <span class="bookmark-preview-chapter" id="bookmark-preview-chapter"></span>
+        </div>
+      </div>
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+        <button type="button" class="btn-reader" id="btn-cancel-bookmark">취소</button>
+        <button type="button" class="btn-reader primary" id="btn-save-bookmark">저장</button>
       </div>
     </div>
   </div>

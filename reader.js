@@ -95,6 +95,8 @@ window.addEventListener('error', (e) => {
 const state = {
   currentBook: null, // { type: 'txt'|'epub', title: '', author: '', rawContent: any, id: '' }
   highlights: [],    // Array of highlight objects
+  bookmarks: [],     // Array of bookmark objects
+  bookmarkSortMode: 'position', // 'position' | 'latest'
   highlightSearchQuery: '', // Current search query in highlights drawer
   settings: {
     theme: 'light',
@@ -273,6 +275,7 @@ const elements = {
   btnLoadSample: document.getElementById('btn-load-sample'),
   btnEmptySample: document.getElementById('btn-empty-sample'),
   btnToggleToc: document.getElementById('btn-toggle-toc'),
+  btnToggleBookmarks: document.getElementById('btn-toggle-bookmarks'),
   btnToggleHighlights: document.getElementById('btn-toggle-highlights'),
   highlightCounter: document.getElementById('highlight-counter'),
   btnToggleSettings: document.getElementById('btn-toggle-settings'),
@@ -290,9 +293,11 @@ const elements = {
   currentChapterTitle: document.getElementById('current-chapter-title'),
   progressSlider: document.getElementById('reader-progress-slider'),
   progressPercent: document.getElementById('reader-progress-percent'),
+  btnBottomBookmark: document.getElementById('btn-bottom-bookmark'),
 
   // Toolbars
   selectionToolbar: document.getElementById('selection-toolbar'),
+  btnToolbarBookmark: document.getElementById('btn-toolbar-bookmark'),
   btnToolbarAi: document.getElementById('btn-toolbar-ai'),
   btnToolbarCopy: document.getElementById('btn-toolbar-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
@@ -334,6 +339,16 @@ const elements = {
   btnCancelMeta: document.getElementById('btn-cancel-meta'),
   btnSaveMeta: document.getElementById('btn-save-meta'),
 
+  // Bookmark Modal
+  bookmarkModal: document.getElementById('bookmark-modal'),
+  bookmarkModalTitle: document.getElementById('bookmark-modal-title'),
+  inputBookmarkTitle: document.getElementById('input-bookmark-title'),
+  bookmarkPreviewPct: document.getElementById('bookmark-preview-pct'),
+  bookmarkPreviewChapter: document.getElementById('bookmark-preview-chapter'),
+  btnCancelBookmark: document.getElementById('btn-cancel-bookmark'),
+  btnSaveBookmark: document.getElementById('btn-save-bookmark'),
+  bookmarkQuickChips: document.getElementById('bookmark-quick-chips'),
+
   // Settings
   themeBtns: document.querySelectorAll('.theme-btn[data-theme]'),
   btnFontDecrease: document.getElementById('btn-font-decrease'),
@@ -348,6 +363,9 @@ const elements = {
   btnOpenQuiz: document.getElementById('btn-open-quiz'),
   quizCounter: document.getElementById('quiz-counter'),
   drawerActionsBar: document.getElementById('drawer-actions-bar'),
+  drawerBookmarkActionsBar: document.getElementById('drawer-bookmark-actions-bar'),
+  btnAddCurrentBookmark: document.getElementById('btn-add-current-bookmark'),
+  btnSortBookmarks: document.getElementById('btn-sort-bookmarks'),
   btnBatchVocab: document.getElementById('btn-batch-vocab'),
   btnExportVocab: document.getElementById('btn-export-vocab'),
 
@@ -460,6 +478,10 @@ async function saveActiveBookToStorage(bookRecord) {
       ? state.highlights
       : (bookRecord.highlights || []);
 
+    const bookmarksToStore = (Array.isArray(state.bookmarks) && state.bookmarks.length > 0)
+      ? state.bookmarks
+      : (bookRecord.bookmarks || []);
+
     const lastPos = (bookRecord && bookRecord.lastPosition !== undefined && bookRecord.lastPosition !== null)
       ? bookRecord.lastPosition
       : (state.currentBook ? localStorage.getItem(`reader_pos_${state.currentBook.id}`) : null);
@@ -469,10 +491,30 @@ async function saveActiveBookToStorage(bookRecord) {
       ...bookRecord,
       lastPosition: lastPos,
       highlights: highlightsToStore,
+      bookmarks: bookmarksToStore,
       timestamp: Date.now()
     });
   } catch (err) {
     console.warn('Failed to save book to IndexedDB:', err);
+  }
+}
+
+async function saveActiveBookBookmarksToDB() {
+  try {
+    const db = await openReaderDB();
+    if (!db || !state.currentBook) return;
+    const tx = db.transaction(READER_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_STORE_NAME);
+    const req = store.get('current_reading_book');
+    req.onsuccess = () => {
+      const record = req.result;
+      if (record && record.bookId === state.currentBook.id) {
+        record.bookmarks = state.bookmarks;
+        store.put(record);
+      }
+    };
+  } catch (err) {
+    console.warn('Failed to save bookmarks to IndexedDB:', err);
   }
 }
 
@@ -530,14 +572,17 @@ async function resetReaderApp() {
   if (state.currentBook) {
     try {
       localStorage.removeItem(`reader_pos_${state.currentBook.id}`);
+      localStorage.removeItem(`reader_bookmarks_${state.currentBook.id}`);
     } catch (e) {}
   }
   state.currentBook = null;
   state.highlights = [];
+  state.bookmarks = [];
   state.toc = [];
   state.highlightSearchQuery = '';
   if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
   if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
+  updateBookmarkBadge();
 
   // 3. UI 초기화
   closeAllToolbars();
@@ -986,6 +1031,85 @@ function updateQuizBadge() {
   }
 }
 
+// ── Bookmarks Storage & Helper Functions ──
+function getBookmarkStorageKey(bookId) {
+  return `reader_bookmarks_${bookId}`;
+}
+
+function loadBookmarks(bookId, fallbackList = null) {
+  if (!bookId) return [];
+  let raw = null;
+  try {
+    raw = localStorage.getItem(getBookmarkStorageKey(bookId));
+  } catch (e) {
+    console.warn('loadBookmarks error:', e);
+  }
+
+  let list = null;
+  if (raw) {
+    try {
+      list = JSON.parse(raw);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  if (!list || !Array.isArray(list) || list.length === 0) {
+    if (Array.isArray(fallbackList) && fallbackList.length > 0) {
+      list = fallbackList;
+    }
+  }
+
+  if (Array.isArray(list)) {
+    const valid = list.filter(item => item && item.id);
+    return valid;
+  }
+  return [];
+}
+
+function saveBookmarks() {
+  if (!state.currentBook) return;
+  try {
+    localStorage.setItem(getBookmarkStorageKey(state.currentBook.id), JSON.stringify(state.bookmarks));
+  } catch (e) {
+    console.warn('localStorage setItem bookmarks failed:', e);
+  }
+  saveActiveBookBookmarksToDB();
+  updateBookmarkBadge();
+}
+
+function updateBookmarkBadge() {
+  // 책갈피 버튼에는 숫자를 표시하지 않고, 드로어 제목에만 개수를 표시함
+  if (elements.readerDrawer && elements.readerDrawer.classList.contains('open') && elements.drawerTitle) {
+    if (elements.drawerBookmarkActionsBar && elements.drawerBookmarkActionsBar.style.display !== 'none') {
+      const count = (Array.isArray(state.bookmarks) && state.bookmarks.length) || 0;
+      elements.drawerTitle.textContent = `책갈피 목록 (${count}개)`;
+    }
+  }
+}
+
+function sortBookmarks() {
+  if (!Array.isArray(state.bookmarks)) return;
+  if (state.bookmarkSortMode === 'latest') {
+    state.bookmarks.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  } else {
+    // Default: position order (pct ascending, then pIdx or createdAt)
+    state.bookmarks.sort((a, b) => {
+      const pctDiff = (a.pct ?? 0) - (b.pct ?? 0);
+      if (pctDiff !== 0) return pctDiff;
+      if (a.pIdx !== undefined && b.pIdx !== undefined) {
+        return a.pIdx - b.pIdx;
+      }
+      return (a.createdAt || 0) - (b.createdAt || 0);
+    });
+  }
+}
+
+function updateBookmarkSortBtnText() {
+  if (!elements.btnSortBookmarks) return;
+  elements.btnSortBookmarks.textContent = state.bookmarkSortMode === 'latest' ? '⇅ 최신순' : '⇅ 위치순';
+}
+
 // ── Book Loading (TXT / EPUB / Sample) ──
 function loadSampleBook() {
   openTxtBook(SAMPLE_BOOK.title, SAMPLE_BOOK.author, SAMPLE_BOOK.content, SAMPLE_BOOK.id);
@@ -1385,7 +1509,7 @@ async function downloadZipAsEpub(zip, bookTitle) {
 // ── TXT Book Viewer ──
 let isRestoringTxtScroll = false;
 
-function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null) {
+function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
   // Reset EPUB if any
   cleanupEpub();
 
@@ -1398,11 +1522,13 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   };
 
   state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
+  state.bookmarks = loadBookmarks(state.currentBook.id, fallbackBookmarks);
   state.highlightSearchQuery = '';
   if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
   if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
   updateMetadataUI();
   updateHighlightBadge();
+  updateBookmarkBadge();
 
   elements.emptyState.style.display = 'none';
   elements.epubViewer.style.display = 'none';
@@ -1609,7 +1735,7 @@ function cleanupEpub() {
   elements.epubArea.innerHTML = '';
 }
 
-function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null) {
+function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
   cleanupEpub();
 
   state.currentBook = {
@@ -1621,11 +1747,13 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   };
 
   state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
+  state.bookmarks = loadBookmarks(state.currentBook.id, fallbackBookmarks);
   state.highlightSearchQuery = '';
   if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
   if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
   updateMetadataUI();
   updateHighlightBadge();
+  updateBookmarkBadge();
 
   elements.emptyState.style.display = 'none';
   elements.txtViewer.style.display = 'none';
@@ -2805,7 +2933,7 @@ function saveVocabEdit() {
   showToast(colorChanged ? '단어장 정보 및 형광펜 색상이 저장되었습니다.' : '단어장 정보가 수정 및 저장되었습니다.');
 }
 
-// ── Drawer (TOC & Highlights) ──
+// ── Drawer (TOC, Bookmarks & Highlights) ──
 function openDrawer(mode) {
   closeAllToolbars();
   if (elements.readerDrawer) elements.readerDrawer.scrollTop = 0;
@@ -2813,16 +2941,21 @@ function openDrawer(mode) {
   elements.drawerBackdrop.classList.add('open');
   document.body.classList.add('drawer-open');
 
+  if (elements.drawerActionsBar) elements.drawerActionsBar.style.display = 'none';
+  if (elements.drawerBookmarkActionsBar) elements.drawerBookmarkActionsBar.style.display = 'none';
+  if (elements.drawerSearchBar) elements.drawerSearchBar.style.display = 'none';
+
   if (mode === 'toc') {
-    if (elements.drawerActionsBar) {
-      elements.drawerActionsBar.style.display = 'none';
-    }
-    if (elements.drawerSearchBar) {
-      elements.drawerSearchBar.style.display = 'none';
-    }
     elements.drawerIcon.textContent = '📑';
     elements.drawerTitle.textContent = '목차 (Table of Contents)';
     renderTocDrawer();
+  } else if (mode === 'bookmarks') {
+    elements.drawerIcon.textContent = '🔖';
+    if (elements.drawerBookmarkActionsBar) {
+      elements.drawerBookmarkActionsBar.style.display = 'flex';
+      updateBookmarkSortBtnText();
+    }
+    renderBookmarkDrawer();
   } else {
     elements.drawerIcon.textContent = '🖍️';
     renderHighlightDrawer();
@@ -3321,6 +3454,362 @@ function renderHighlightDrawer() {
 
     elements.drawerBody.appendChild(card);
   });
+}
+
+// ── Bookmarks Drawer & Interaction ──
+let pendingBookmarkData = null;
+let editingBookmarkId = null;
+
+function renderBookmarkDrawer() {
+  if (!elements.drawerBody) return;
+  elements.drawerBody.innerHTML = '';
+  sortBookmarks();
+
+  const count = (Array.isArray(state.bookmarks) && state.bookmarks.length) || 0;
+  elements.drawerTitle.textContent = `책갈피 목록 (${count}개)`;
+
+  if (!state.currentBook) {
+    elements.drawerBody.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+        <div style="font-size:36px; margin-bottom:12px;">📖</div>
+        <p style="font-weight:600; color:var(--reader-text); margin-bottom:6px;">열린 도서가 없습니다.</p>
+        <p style="font-size:13px;">상단의 [열기] 버튼으로 도서를 먼저 불러와주세요.</p>
+      </div>
+    `;
+    return;
+  }
+
+  if (count === 0) {
+    elements.drawerBody.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+        <div style="font-size:36px; margin-bottom:12px;">🔖</div>
+        <p style="font-weight:600; color:var(--reader-text); margin-bottom:6px;">저장된 책갈피가 없습니다.</p>
+        <p style="font-size:13px; line-height:1.6; max-width:280px; margin:0 auto 14px;">중요한 구절이나 마지막으로 읽은 위치를 책갈피로 저장하고 언제든 다시 찾아오세요.</p>
+        <button type="button" class="btn-drawer-action primary" id="btn-empty-add-bm" style="margin: 0 auto;">
+          🔖 현재 위치 책갈피 추가
+        </button>
+      </div>
+    `;
+    const emptyAddBtn = elements.drawerBody.querySelector('#btn-empty-add-bm');
+    if (emptyAddBtn) {
+      emptyAddBtn.addEventListener('click', () => {
+        openBookmarkModal();
+      });
+    }
+    return;
+  }
+
+  const listContainer = document.createElement('div');
+  listContainer.className = 'bookmarks-list';
+  listContainer.style.display = 'flex';
+  listContainer.style.flexDirection = 'column';
+  listContainer.style.gap = '10px';
+  listContainer.style.paddingBottom = '30px';
+
+  state.bookmarks.forEach(bm => {
+    const card = document.createElement('div');
+    card.className = 'bookmark-card';
+    card.dataset.bmId = bm.id;
+
+    const dateStr = bm.createdAt ? new Date(bm.createdAt).toLocaleDateString(undefined, {
+      month: 'numeric',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }) : '';
+
+    card.innerHTML = `
+      <div class="bookmark-card-header">
+        <div class="bookmark-card-badges">
+          <span class="bookmark-badge-pct">${bm.pct !== undefined ? `${bm.pct}%` : '위치'}</span>
+          ${bm.chapter ? `<span class="bookmark-badge-chapter" title="${escapeHtml(bm.chapter)}">${escapeHtml(bm.chapter)}</span>` : ''}
+        </div>
+        <span class="bookmark-card-date">${dateStr}</span>
+      </div>
+      <div class="bookmark-card-title-row">
+        <span style="font-size:15px; flex-shrink:0;">📌</span>
+        <h4 class="bookmark-card-title">${escapeHtml(bm.title)}</h4>
+      </div>
+      <div class="bookmark-card-actions">
+        <button type="button" class="btn-card-action primary btn-bm-jump" title="이 위치로 이동">🚀 이동</button>
+        <button type="button" class="btn-card-action btn-bm-edit" title="수정">✏️ 수정</button>
+        <button type="button" class="btn-card-action danger btn-bm-del" title="삭제">삭제</button>
+      </div>
+    `;
+
+    // Click card to jump
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.bookmark-card-actions')) return;
+      jumpToBookmark(bm);
+    });
+
+    // Jump button
+    const jumpBtn = card.querySelector('.btn-bm-jump');
+    if (jumpBtn) {
+      jumpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        jumpToBookmark(bm);
+      });
+    }
+
+    // Edit button
+    const editBtn = card.querySelector('.btn-bm-edit');
+    if (editBtn) {
+      editBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openBookmarkModal(null, bm);
+      });
+    }
+
+    // Delete button
+    const delBtn = card.querySelector('.btn-bm-del');
+    if (delBtn) {
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (confirm(`'${bm.title}' 책갈피를 삭제하시겠습니까?`)) {
+          state.bookmarks = state.bookmarks.filter(b => b.id !== bm.id);
+          saveBookmarks();
+          renderBookmarkDrawer();
+          showToast('책갈피가 삭제되었습니다.');
+        }
+      });
+    }
+
+    listContainer.appendChild(card);
+  });
+
+  elements.drawerBody.appendChild(listContainer);
+}
+
+function jumpToBookmark(bm) {
+  if (!bm || !state.currentBook) return;
+
+  if (bm.type === 'txt' || state.currentBook.type === 'txt') {
+    closeDrawer();
+    let jumped = false;
+    if (bm.pIdx !== undefined && elements.txtContent) {
+      const p = elements.txtContent.querySelector(`p[data-p-idx="${bm.pIdx}"]`);
+      if (p) {
+        p.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        p.classList.remove('bookmark-flash-target');
+        void p.offsetWidth;
+        p.classList.add('bookmark-flash-target');
+        setTimeout(() => p.classList.remove('bookmark-flash-target'), 2200);
+        jumped = true;
+      }
+    }
+    if (!jumped && elements.txtViewer) {
+      const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+      if (scrollHeight > 0 && typeof bm.pct === 'number') {
+        elements.txtViewer.scrollTo({
+          top: (bm.pct / 100) * scrollHeight,
+          behavior: 'smooth'
+        });
+        jumped = true;
+      }
+    }
+    showToast(`🔖 '${bm.title}'(으)로 이동했습니다.`);
+  } else if (bm.type === 'epub' || state.currentBook.type === 'epub') {
+    if (!state.epub.rendition || !bm.cfi) return;
+    closeDrawer();
+    state.epub.rendition.display(bm.cfi).then(() => {
+      showToast(`🔖 '${bm.title}'(으)로 이동했습니다.`);
+      if (elements.epubArea) {
+        elements.epubArea.classList.remove('bookmark-flash-target');
+        void elements.epubArea.offsetWidth;
+        elements.epubArea.classList.add('bookmark-flash-target');
+        setTimeout(() => elements.epubArea.classList.remove('bookmark-flash-target'), 2200);
+      }
+    }).catch(err => {
+      console.warn('Initial rendition display with bookmark cfi failed, trying startCfi:', err);
+      const startCfi = getStartCfi(bm.cfi);
+      if (startCfi && startCfi !== bm.cfi) {
+        state.epub.rendition.display(startCfi).then(() => {
+          showToast(`🔖 '${bm.title}'(으)로 이동했습니다.`);
+        }).catch(e => console.warn('startCfi failed too:', e));
+      }
+    });
+  }
+}
+
+function getCurrentReadingPositionInfo() {
+  if (!state.currentBook) return null;
+
+  if (state.currentBook.type === 'txt') {
+    const scrollHeight = elements.txtViewer ? (elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight) : 0;
+    const pct = scrollHeight > 0
+      ? Math.min(100, Math.max(0, Math.round((elements.txtViewer.scrollTop / scrollHeight) * 100)))
+      : (elements.progressSlider ? parseInt(elements.progressSlider.value, 10) || 0 : 0);
+
+    let targetPIdx = 0;
+    if (elements.txtViewer && elements.txtContent) {
+      const viewerRect = elements.txtViewer.getBoundingClientRect();
+      const ps = elements.txtContent.querySelectorAll('p[data-p-idx]');
+      for (const p of ps) {
+        const r = p.getBoundingClientRect();
+        if (r.bottom >= viewerRect.top + 35) {
+          targetPIdx = parseInt(p.dataset.pIdx, 10) || 0;
+          break;
+        }
+      }
+    }
+
+    return {
+      type: 'txt',
+      pct,
+      pIdx: targetPIdx,
+      chapter: state.currentBook.title || '텍스트'
+    };
+  } else if (state.currentBook.type === 'epub') {
+    const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+    const cfi = (loc && loc.start && loc.start.cfi)
+      ? loc.start.cfi
+      : (localStorage.getItem(`reader_pos_${state.currentBook.id}`) || '');
+
+    let pct = 0;
+    if (state.epub.book && state.epub.locationsReady && cfi) {
+      try {
+        pct = Math.round(state.epub.book.locations.percentageFromCfi(cfi) * 100);
+      } catch (e) {
+        pct = elements.progressSlider ? parseInt(elements.progressSlider.value, 10) || 0 : 0;
+      }
+    } else if (elements.progressSlider) {
+      pct = parseInt(elements.progressSlider.value, 10) || 0;
+    }
+
+    let chapter = '';
+    if (state.epub.toc && state.epub.toc.length > 0 && loc && loc.start && loc.start.href) {
+      const ch = state.epub.toc.find(item => loc.start.href.includes(item.href));
+      if (ch && ch.label) chapter = ch.label.trim();
+    }
+    if (!chapter && elements.currentChapterTitle) {
+      chapter = elements.currentChapterTitle.textContent.trim();
+    }
+
+    return {
+      type: 'epub',
+      pct,
+      cfi,
+      chapter
+    };
+  }
+  return null;
+}
+
+function openBookmarkModal(customData = null, existingBm = null) {
+  if (!state.currentBook) {
+    showToast('도서를 먼저 열어주세요.');
+    return;
+  }
+
+  if (existingBm) {
+    editingBookmarkId = existingBm.id;
+    pendingBookmarkData = { ...existingBm };
+    if (elements.bookmarkModalTitle) {
+      elements.bookmarkModalTitle.innerHTML = '<span>✏️</span> 책갈피 수정';
+    }
+    if (elements.inputBookmarkTitle) elements.inputBookmarkTitle.value = existingBm.title || '';
+    if (elements.bookmarkPreviewPct) elements.bookmarkPreviewPct.textContent = `진행률 ${existingBm.pct ?? 0}%`;
+    if (elements.bookmarkPreviewChapter) elements.bookmarkPreviewChapter.textContent = existingBm.chapter || '';
+  } else {
+    editingBookmarkId = null;
+    const info = customData || getCurrentReadingPositionInfo();
+    if (!info) {
+      showToast('현재 위치를 가져올 수 없습니다.');
+      return;
+    }
+    pendingBookmarkData = info;
+
+    const defaultTitle = customData && customData.title
+      ? customData.title
+      : `마지막 읽은 지점 (${info.pct ?? 0}%)`;
+
+    if (elements.bookmarkModalTitle) {
+      elements.bookmarkModalTitle.innerHTML = '<span>🔖</span> 책갈피 추가';
+    }
+    if (elements.inputBookmarkTitle) elements.inputBookmarkTitle.value = defaultTitle;
+    if (elements.bookmarkPreviewPct) elements.bookmarkPreviewPct.textContent = `진행률 ${info.pct ?? 0}%`;
+    if (elements.bookmarkPreviewChapter) elements.bookmarkPreviewChapter.textContent = info.chapter || '';
+  }
+
+  if (elements.bookmarkModal) {
+    elements.bookmarkModal.classList.add('open');
+    setTimeout(() => {
+      if (elements.inputBookmarkTitle) {
+        elements.inputBookmarkTitle.focus();
+        elements.inputBookmarkTitle.select();
+      }
+    }, 60);
+  }
+}
+
+function closeBookmarkModal() {
+  if (elements.bookmarkModal) {
+    elements.bookmarkModal.classList.remove('open');
+  }
+  pendingBookmarkData = null;
+  editingBookmarkId = null;
+}
+
+function saveBookmarkModal() {
+  if (!state.currentBook) return;
+
+  const title = (elements.inputBookmarkTitle ? elements.inputBookmarkTitle.value.trim() : '') || '책갈피';
+
+  if (editingBookmarkId) {
+    const targetIdx = state.bookmarks.findIndex(b => b.id === editingBookmarkId);
+    if (targetIdx !== -1) {
+      state.bookmarks[targetIdx].title = title;
+      saveBookmarks();
+      showToast('책갈피가 수정되었습니다.');
+      if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+        renderBookmarkDrawer();
+      }
+    }
+  } else if (pendingBookmarkData) {
+    const newBm = {
+      id: `bm_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      bookId: state.currentBook.id,
+      type: state.currentBook.type,
+      title,
+      pct: pendingBookmarkData.pct ?? 0,
+      chapter: pendingBookmarkData.chapter || '',
+      pIdx: pendingBookmarkData.pIdx,
+      cfi: pendingBookmarkData.cfi,
+      createdAt: Date.now()
+    };
+    state.bookmarks.push(newBm);
+    saveBookmarks();
+    showToast(`🔖 '${title}' 책갈피가 저장되었습니다.`);
+
+    if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+      renderBookmarkDrawer();
+    }
+  }
+
+  closeBookmarkModal();
+}
+
+function addBookmarkFromSelection() {
+  if (!state.activeSelection || !state.activeSelection.text) {
+    showToast('선택된 텍스트가 없습니다.');
+    return;
+  }
+  const selText = state.activeSelection.text.trim();
+  const baseInfo = getCurrentReadingPositionInfo() || {};
+
+  const titleSnippet = selText.replace(/\s+/g, ' ');
+  const defaultTitle = `중요: "${titleSnippet.slice(0, 24)}${titleSnippet.length > 24 ? '...' : ''}"`;
+
+  const customData = {
+    ...baseInfo,
+    title: defaultTitle,
+    pIdx: state.activeSelection.pIdx !== undefined ? state.activeSelection.pIdx : baseInfo.pIdx,
+    cfi: state.activeSelection.cfiRange || baseInfo.cfi
+  };
+
+  closeAllToolbars();
+  openBookmarkModal(customData);
 }
 
 // ── Metadata UI & Editing ──
@@ -4253,6 +4742,9 @@ function setupEventListeners() {
 
   // Drawer toggles
   elements.btnToggleToc.addEventListener('click', () => openDrawer('toc'));
+  if (elements.btnToggleBookmarks) {
+    elements.btnToggleBookmarks.addEventListener('click', () => openDrawer('bookmarks'));
+  }
   elements.btnToggleHighlights.addEventListener('click', () => openDrawer('highlights'));
   elements.btnDrawerClose.addEventListener('click', closeDrawer);
   elements.drawerBackdrop.addEventListener('click', closeDrawer);
@@ -4435,6 +4927,13 @@ function setupEventListeners() {
   });
 
   // Floating Selection Toolbar Buttons
+  if (elements.btnToolbarBookmark) {
+    elements.btnToolbarBookmark.addEventListener('click', (e) => {
+      e.stopPropagation();
+      addBookmarkFromSelection();
+    });
+  }
+
   document.querySelectorAll('#selection-toolbar .color-dot').forEach(dot => {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -4769,6 +5268,62 @@ function setupEventListeners() {
       saveCurrentReadingPosition();
     }
   });
+
+  // Bookmarks Listeners
+  if (elements.btnAddCurrentBookmark) {
+    elements.btnAddCurrentBookmark.addEventListener('click', () => openBookmarkModal());
+  }
+
+  if (elements.btnBottomBookmark) {
+    elements.btnBottomBookmark.addEventListener('click', () => openBookmarkModal());
+  }
+
+  if (elements.btnSortBookmarks) {
+    elements.btnSortBookmarks.addEventListener('click', () => {
+      state.bookmarkSortMode = state.bookmarkSortMode === 'latest' ? 'position' : 'latest';
+      updateBookmarkSortBtnText();
+      renderBookmarkDrawer();
+    });
+  }
+
+  if (elements.btnCancelBookmark) {
+    elements.btnCancelBookmark.addEventListener('click', closeBookmarkModal);
+  }
+
+  if (elements.btnSaveBookmark) {
+    elements.btnSaveBookmark.addEventListener('click', saveBookmarkModal);
+  }
+
+  if (elements.inputBookmarkTitle) {
+    elements.inputBookmarkTitle.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        saveBookmarkModal();
+      } else if (e.key === 'Escape') {
+        closeBookmarkModal();
+      }
+    });
+  }
+
+  if (elements.bookmarkQuickChips) {
+    elements.bookmarkQuickChips.querySelectorAll('.bookmark-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        const text = chip.dataset.text;
+        if (elements.inputBookmarkTitle && text) {
+          elements.inputBookmarkTitle.value = text;
+          elements.inputBookmarkTitle.focus();
+        }
+      });
+    });
+  }
+
+  if (elements.bookmarkModal) {
+    elements.bookmarkModal.addEventListener('click', (e) => {
+      if (e.target === elements.bookmarkModal) {
+        closeBookmarkModal();
+      }
+    });
+  }
 }
 
 function saveCurrentReadingPosition() {
@@ -4806,9 +5361,9 @@ async function restoreActiveBook() {
       : localStorage.getItem(`reader_pos_${record.bookId}`);
 
     if (record.type === 'epub') {
-      openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos);
+      openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos, record.bookmarks);
     } else if (record.type === 'txt') {
-      openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos);
+      openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos, record.bookmarks);
     }
   } catch (err) {
     console.warn('Failed to restore active book from IndexedDB:', err);

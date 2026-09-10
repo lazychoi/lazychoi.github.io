@@ -724,8 +724,8 @@ function handleSegmentEndReached(seg) {
   // ── Stage 3: 직전 구간부터 (From Previous) ──
   if (currentMode === 'from-prev') {
     if (activeIndex < targetIndex) {
-      // 직전 구간(targetIndex - 1) 끝남 -> 현재 구간(targetIndex)으로 이동
-      advanceToSegment(activeIndex + 1);
+      // 직전 구간(targetIndex - 1) 끝남 -> 현재 구간(targetIndex)으로 이동 (끊김 없는 연속 재생)
+      advanceToSegmentSeamless(activeIndex + 1);
     } else {
       // 현재 구간(targetIndex) 끝남
       if (isRepeatEnabled) {
@@ -743,8 +743,8 @@ function handleSegmentEndReached(seg) {
   // ── Stage 4: 처음~현재 (From Start) ──
   if (currentMode === 'from-start') {
     if (activeIndex < targetIndex) {
-      // 다음 구간으로 진행
-      advanceToSegment(activeIndex + 1);
+      // 다음 구간으로 진행 (음성 튐 없이 자연스럽게 연속 재생)
+      advanceToSegmentSeamless(activeIndex + 1);
     } else {
       // 목표 구간(targetIndex) 도달 완료
       if (isRepeatEnabled) {
@@ -876,12 +876,14 @@ function handleSegmentTouch(index) {
   saveStateToStorage();
 
   if (currentMode === 'from-prev') {
-    // 직전 구간부터 듣기: index - 1부터 시작
+    // 직전 구간부터 듣기: index - 1부터 시작 (index가 암기중 목표 구간)
     const startIdx = Math.max(0, index - 1);
     jumpToSegment(startIdx, true);
+    updateStatusBanner(`직전 구간부터 (암기중: ${targetIndex + 1}번 문장)`);
   } else if (currentMode === 'from-start') {
-    // 처음부터 현재까지: 0부터 시작하여 index까지
+    // 처음부터 현재까지: 0부터 시작하여 index까지 (index가 암기중 목표 구간)
     jumpToSegment(0, true);
+    updateStatusBanner(`처음~현재 (1번 ~ 암기중 ${targetIndex + 1}번 문장)`);
   } else {
     // 섀도잉, 듣고 말하기, A/B 말하기: 해당 구간으로 점프
     jumpToSegment(index, true);
@@ -928,6 +930,69 @@ function advanceToSegment(index) {
   jumpToSegment(index, true);
 }
 
+// Seamlessly transition active card in continuous range without touching audio playback
+function advanceToSegmentSeamless(index) {
+  if (index < 0 || index >= subtitles.length) return;
+  cancelRepeatWait();
+  activeIndex = index;
+  updateActiveCardUI();
+  updateStatusCounter();
+  saveStateToStorage();
+}
+
+// ── Gesture Toast Notification & Direct Mode Switchers ──
+let toastTimer = null;
+function showGestureToast(message) {
+  const toast = document.getElementById('gesture-toast');
+  if (!toast) return;
+  toast.textContent = message;
+  toast.style.display = 'flex';
+  void toast.offsetWidth;
+  toast.classList.add('show');
+  if (navigator.vibrate) {
+    try { navigator.vibrate(25); } catch {}
+  }
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => { toast.style.display = 'none'; }, 250);
+  }, 1300);
+}
+
+function switchToShadowingMode(index) {
+  cancelRepeatWait();
+  cancelCueCountdown();
+  currentMode = 'shadowing';
+  targetIndex = index;
+  updateModeSelectorUI('shadowing');
+  saveStateToStorage();
+  jumpToSegment(index, true);
+  showGestureToast('1️⃣ 섀도잉 모드로 전환');
+}
+
+function switchToListenSpeakMode(index) {
+  cancelRepeatWait();
+  cancelCueCountdown();
+  currentMode = 'listen-speak';
+  targetIndex = index;
+  updateModeSelectorUI('listen-speak');
+  saveStateToStorage();
+  jumpToSegment(index, true);
+  showGestureToast('2️⃣ 듣고 말하기 모드로 전환');
+}
+
+function switchToFromPrevMode(index) {
+  cancelRepeatWait();
+  cancelCueCountdown();
+  currentMode = 'from-prev';
+  targetIndex = index;
+  updateModeSelectorUI('from-prev');
+  saveStateToStorage();
+  const startIdx = Math.max(0, index - 1);
+  jumpToSegment(startIdx, true);
+  showGestureToast(`3️⃣ 직전 구간부터 모드 (암기중: ${index + 1}번)`);
+}
+
 function stopAudioPlayback() {
   audioPlayer.pause();
   cancelRepeatWait();
@@ -963,15 +1028,17 @@ function renderDialogueList() {
     card.dataset.index = idx;
 
     const speakerColorClass = seg.speaker === 'A' ? 'badge-speaker-a' : 'badge-speaker-b';
-
     const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
 
     card.innerHTML = `
       <div class="bubble-content" data-index="${idx}">
         <div class="bubble-header">
-          <button class="speaker-badge-btn ${speakerColorClass}" data-index="${idx}" title="화자 변경 (A ↔ B)">
-            <span>${seg.speaker}</span>
-          </button>
+          <div style="display: inline-flex; align-items: center; gap: 6px;">
+            <button class="speaker-badge-btn ${speakerColorClass}" data-index="${idx}" title="화자 변경 (A ↔ B)">
+              <span>${seg.speaker}</span>
+            </button>
+            <span class="target-segment-badge" id="target-badge-${idx}" style="display: none;">🎯 암기중</span>
+          </div>
           <div class="bubble-time-info">
             <span>${formatTime(seg.start)} - ${formatTime(seg.end)}</span>
           </div>
@@ -985,11 +1052,21 @@ function renderDialogueList() {
             <div class="bubble-progress-fill" id="fill-${idx}"></div>
           </div>
         </div>
+        <div class="swipe-action-hint swipe-hint-listen-speak" id="swipe-hint-ls-${idx}">
+          <span>🗣️ 듣고 말하기</span>
+        </div>
+        <div class="swipe-action-hint swipe-hint-from-prev" id="swipe-hint-fp-${idx}">
+          <span>⏮️ 직전 구간부터</span>
+        </div>
       </div>
     `;
 
-    // Click anywhere on bubble -> Toggle Play/Pause or select segment
     const bubbleContent = card.querySelector('.bubble-content');
+
+    // 1. Click & Double-tap handler (어떤 모드에서든 더블클릭/더블탭 시 1. 섀도잉 모드로 전환)
+    let lastTapTime = 0;
+    let tapMoved = false;
+
     bubbleContent.addEventListener('click', (e) => {
       // Tap speaker badge to toggle A <-> B
       if (e.target.closest('.speaker-badge-btn')) {
@@ -997,8 +1074,115 @@ function renderDialogueList() {
         toggleSpeaker(idx);
         return;
       }
+      if (tapMoved) {
+        tapMoved = false;
+        return;
+      }
+      const now = Date.now();
+      if ((now - lastTapTime) < 320 && (now - lastTapTime) > 40) {
+        lastTapTime = 0;
+        switchToShadowingMode(idx);
+        return;
+      }
+      lastTapTime = now;
       handleSegmentTouch(idx);
     });
+
+    bubbleContent.addEventListener('dblclick', (e) => {
+      if (e.target.closest('.speaker-badge-btn')) return;
+      e.preventDefault();
+      switchToShadowingMode(idx);
+    });
+
+    // 2. Touch Gesture Engine (좌 스와이프: 2. 듣고 말하기, 우 스와이프: 3. 직전 구간부터)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isSwiping = false;
+    let swipeDirection = null;
+
+    bubbleContent.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      isSwiping = false;
+      swipeDirection = null;
+      tapMoved = false;
+    }, { passive: true });
+
+    bubbleContent.addEventListener('touchmove', (e) => {
+      if (e.touches.length !== 1) return;
+      const curX = e.touches[0].clientX;
+      const curY = e.touches[0].clientY;
+      const dx = curX - touchStartX;
+      const dy = curY - touchStartY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (!isSwiping) {
+        if (absX > 10 && absX > absY * 1.3) {
+          isSwiping = true;
+          tapMoved = true;
+          bubbleContent.style.transition = 'none';
+        } else if (absY > 8) {
+          // 세로 스크롤 시 제스처 무시하여 부드러운 네이티브 스크롤 보장
+          return;
+        }
+      }
+
+      if (isSwiping) {
+        if (e.cancelable) e.preventDefault();
+        const clampedX = Math.max(-100, Math.min(100, dx));
+        bubbleContent.style.transform = `translateX(${clampedX}px)`;
+
+        const hintLS = card.querySelector('.swipe-hint-listen-speak');
+        const hintFP = card.querySelector('.swipe-hint-from-prev');
+
+        if (dx < -28) {
+          if (hintLS) hintLS.style.display = 'inline-flex';
+          if (hintFP) hintFP.style.display = 'none';
+          swipeDirection = 'left';
+        } else if (dx > 28) {
+          if (hintFP) hintFP.style.display = 'inline-flex';
+          if (hintLS) hintLS.style.display = 'none';
+          swipeDirection = 'right';
+        } else {
+          if (hintLS) hintLS.style.display = 'none';
+          if (hintFP) hintFP.style.display = 'none';
+          swipeDirection = null;
+        }
+      }
+    }, { passive: false });
+
+    const finishSwipe = () => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      bubbleContent.style.transition = 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)';
+      bubbleContent.style.transform = '';
+
+      const hintLS = card.querySelector('.swipe-hint-listen-speak');
+      const hintFP = card.querySelector('.swipe-hint-from-prev');
+      if (hintLS) hintLS.style.display = 'none';
+      if (hintFP) hintFP.style.display = 'none';
+
+      if (swipeDirection === 'left') {
+        switchToListenSpeakMode(idx);
+      } else if (swipeDirection === 'right') {
+        switchToFromPrevMode(idx);
+      }
+      swipeDirection = null;
+    };
+
+    bubbleContent.addEventListener('touchend', finishSwipe, { passive: true });
+    bubbleContent.addEventListener('touchcancel', () => {
+      isSwiping = false;
+      swipeDirection = null;
+      bubbleContent.style.transition = 'transform 0.25s ease';
+      bubbleContent.style.transform = '';
+      const hintLS = card.querySelector('.swipe-hint-listen-speak');
+      const hintFP = card.querySelector('.swipe-hint-from-prev');
+      if (hintLS) hintLS.style.display = 'none';
+      if (hintFP) hintFP.style.display = 'none';
+    }, { passive: true });
 
     dialogueList.appendChild(card);
   });
@@ -1009,7 +1193,20 @@ function renderDialogueList() {
 
 function updateActiveCardUI() {
   const cards = document.querySelectorAll('.dialogue-card');
+  const isTargetMode = (currentMode === 'from-prev' || currentMode === 'from-start');
+
   cards.forEach((c, idx) => {
+    // 1. [🎯 암기중] 구간 배지 표시
+    const targetBadge = document.getElementById(`target-badge-${idx}`);
+    if (isTargetMode && idx === targetIndex) {
+      c.classList.add('is-target');
+      if (targetBadge) targetBadge.style.display = 'inline-flex';
+    } else {
+      c.classList.remove('is-target');
+      if (targetBadge) targetBadge.style.display = 'none';
+    }
+
+    // 2. 현재 재생 중인 활성 구간 강조
     if (idx === activeIndex) {
       c.classList.add('is-active');
       c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1124,15 +1321,16 @@ function updateModeSelectorUI(mode) {
       b.classList.toggle('active', b.dataset.mode === mode);
     }
   });
+  updateActiveCardUI();
 }
 
 function updateRoleButtonUI() {
   if (!btnRoleToggle || !roleStageName) return;
-  // B 말하기 상태(기본값)일 때는 'A 말하기로', A 말하기 상태일 때는 'B 말하기로' 표시
-  const targetRole = (activeRole === 'B') ? 'A' : 'B';
-  roleStageName.textContent = `${targetRole} 말하기로`;
+  // B 말하기 상태(기본값)일 때는 'B 말하기', A 말하기 상태일 때는 'A 말하기' 표시
+  roleStageName.textContent = `${activeRole} 말하기`;
   btnRoleToggle.classList.toggle('is-role-a', activeRole === 'A');
-  btnRoleToggle.title = `A/B 말하기 (현재 ${activeRole} 역할 진행 중, 터치 시 ${targetRole} 말하기로 전환)`;
+  const targetRole = (activeRole === 'B') ? 'A' : 'B';
+  btnRoleToggle.title = `A/B 말하기 (현재: ${activeRole} 말하기, 터치 시 ${targetRole} 말하기로 전환)`;
 }
 
 // ── Subtitle Language Switcher ──
@@ -1151,12 +1349,15 @@ function toggleSubtitleLanguage() {
 function updateLangButtonUI() {
   const langToggleName = document.getElementById('lang-toggle-name');
   if (langToggleName) {
-    // 한글 상태(기본값)일 때는 '영어로', 영문 상태일 때는 '한글로' 표시
-    langToggleName.textContent = (currentSubtitleLang === 'ko') ? '영어로' : '한글로';
+    // 한글 자막 표시 중일 때는 '한글보기', 영문 자막 표시 중일 때는 '영문보기' 표시
+    langToggleName.textContent = (currentSubtitleLang === 'ko') ? '한글보기' : '영문보기';
   }
   if (btnLangToggle) {
     btnLangToggle.dataset.lang = currentSubtitleLang;
-    btnLangToggle.title = `자막 언어 전환 (터치 시 ${currentSubtitleLang === 'ko' ? '영어 자막으로' : '한글 자막으로'} 전환)`;
+    btnLangToggle.classList.add('active');
+    btnLangToggle.classList.toggle('is-en', currentSubtitleLang === 'en');
+    const targetLabel = (currentSubtitleLang === 'ko') ? '영문보기' : '한글보기';
+    btnLangToggle.title = `자막 언어 전환 (현재: ${currentSubtitleLang === 'ko' ? '한글보기' : '영문보기'}, 터치 시 ${targetLabel}로 전환)`;
   }
 }
 
@@ -1304,7 +1505,7 @@ function setupEventListeners() {
 
   // Mode Selector (5 Stages + Language Toggle)
   modeSelector.addEventListener('click', (e) => {
-    // 1. Language Toggle button clicked ('영어로' / '한글로')
+    // 1. Language Toggle button clicked ('한글보기' / '영문보기')
     const langBtn = e.target.closest('#btn-lang-toggle');
     if (langBtn) {
       toggleSubtitleLanguage();
@@ -1319,9 +1520,14 @@ function setupEventListeners() {
       cancelRepeatWait();
       cancelCueCountdown();
 
-      // 버튼에 표시된 대상('A 말하기로' or 'B 말하기로')으로 역할 전환 및 시작
-      activeRole = (activeRole === 'B') ? 'A' : 'B';
+      const isAlreadyRoleMode = (currentMode === 'role-a' || currentMode === 'role-b');
+      if (isAlreadyRoleMode) {
+        // 이미 말하기 모드인 상태에서 누르면 A <-> B 전환
+        activeRole = (activeRole === 'B') ? 'A' : 'B';
+      }
+      // 말하기 모드가 아니었으면 현재 activeRole(기본 B)로 시작
       currentMode = (activeRole === 'B') ? 'role-b' : 'role-a';
+      updateRoleButtonUI();
       updateModeSelectorUI(currentMode);
       saveStateToStorage();
 
@@ -1345,13 +1551,20 @@ function setupEventListeners() {
     cancelCueCountdown();
     currentMode = mode;
     updateModeSelectorUI(mode);
+
+    // 섀도잉이나 듣고 말하기 등에서 선택/재생 중이던 구간을 '암기중' 구간으로 동기화
+    if (activeIndex >= 0) {
+      targetIndex = activeIndex;
+    }
     saveStateToStorage();
 
     if (currentMode === 'from-prev') {
       const startIdx = Math.max(0, targetIndex - 1);
       jumpToSegment(startIdx, true);
+      updateStatusBanner(`직전 구간부터 (암기중: ${targetIndex + 1}번 문장)`);
     } else if (currentMode === 'from-start') {
       jumpToSegment(0, true);
+      updateStatusBanner(`처음~현재 (1번 ~ 암기중 ${targetIndex + 1}번 문장)`);
     } else {
       // 섀도잉 / 듣고 말하기: start at activeIndex
       if (activeIndex === -1) activeIndex = 0;
