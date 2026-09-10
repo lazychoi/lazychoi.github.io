@@ -320,7 +320,13 @@ async function restoreSavedState() {
         subtitles = state.subtitles;
         srtName = state.srtName || "대화 자막";
         currentMode = state.currentMode || 'shadowing';
-        activeRole = state.activeRole || ((currentMode === 'role-a') ? 'A' : 'B');
+        if (currentMode === 'role-a') {
+          activeRole = 'A';
+        } else if (currentMode === 'role-b') {
+          activeRole = 'B';
+        } else {
+          activeRole = state.activeRole || 'B';
+        }
         currentSubtitleLang = state.currentSubtitleLang || 'ko';
         isRepeatEnabled = !!state.isRepeatEnabled;
         playbackSpeed = state.playbackSpeed || 1.0;
@@ -765,7 +771,15 @@ function handleSegmentEndReached(seg) {
     } else {
       // 전체 대화 끝
       if (isRepeatEnabled) {
-        jumpToSegment(0, true);
+        // A 말하기 상태에서 반복 켜짐 시, 매 반복 시작 전에 시작 신호음 카운트다운(3, 2, 1, 시작!) 재생
+        if (subtitles.length > 0 && subtitles[0].speaker === 'A') {
+          audioPlayer.pause();
+          startStartingCueCountdown(() => {
+            jumpToSegment(0, true);
+          });
+        } else {
+          jumpToSegment(0, true);
+        }
       } else {
         stopAudioPlayback();
       }
@@ -780,7 +794,14 @@ function handleSegmentEndReached(seg) {
     } else {
       // 전체 대화 끝
       if (isRepeatEnabled) {
-        jumpToSegment(0, true);
+        if (subtitles.length > 0 && subtitles[0].speaker === 'B') {
+          audioPlayer.pause();
+          startStartingCueCountdown(() => {
+            jumpToSegment(0, true);
+          });
+        } else {
+          jumpToSegment(0, true);
+        }
       } else {
         stopAudioPlayback();
       }
@@ -886,7 +907,14 @@ function handleSegmentTouch(index) {
     updateStatusBanner(`처음~현재 (1번 ~ 암기중 ${targetIndex + 1}번 문장)`);
   } else {
     // 섀도잉, 듣고 말하기, A/B 말하기: 해당 구간으로 점프
-    jumpToSegment(index, true);
+    if (currentMode === 'role-a' && index === 0 && subtitles[0] && subtitles[0].speaker === 'A') {
+      audioPlayer.pause();
+      startStartingCueCountdown(() => {
+        jumpToSegment(0, true);
+      });
+    } else {
+      jumpToSegment(index, true);
+    }
   }
 }
 
@@ -991,6 +1019,35 @@ function switchToFromPrevMode(index) {
   const startIdx = Math.max(0, index - 1);
   jumpToSegment(startIdx, true);
   showGestureToast(`3️⃣ 직전 구간부터 모드 (암기중: ${index + 1}번)`);
+}
+
+function setRoleMode(role) {
+  cancelRepeatWait();
+  cancelCueCountdown();
+  activeRole = role;
+  currentMode = (role === 'B') ? 'role-b' : 'role-a';
+  updateRoleButtonUI();
+  updateModeSelectorUI(currentMode);
+  saveStateToStorage();
+
+  if (role === 'B') {
+    updateStatusBanner(`B 말하기 (내 역할: B 대사 따라 말하기 / 상대방 A 청취)`);
+    showGestureToast('5️⃣ B 말하기 모드 시작');
+  } else {
+    updateStatusBanner(`A 말하기 (내 역할: A 대사 따라 말하기 / 상대방 B 청취)`);
+    showGestureToast('5️⃣ A 말하기 모드 시작');
+  }
+
+  // 1번 문장이 내가 말할 차례이면 시작 신호음(3, 2, 1, 시작!) 재생
+  const roleSpeaker = activeRole;
+  if (subtitles.length > 0 && subtitles[0].speaker === roleSpeaker) {
+    audioPlayer.pause();
+    startStartingCueCountdown(() => {
+      jumpToSegment(0, true);
+    });
+  } else {
+    jumpToSegment(0, true);
+  }
 }
 
 function stopAudioPlayback() {
@@ -1326,6 +1383,11 @@ function updateModeSelectorUI(mode) {
 
 function updateRoleButtonUI() {
   if (!btnRoleToggle || !roleStageName) return;
+  if (currentMode === 'role-a') {
+    activeRole = 'A';
+  } else if (currentMode === 'role-b') {
+    activeRole = 'B';
+  }
   // B 말하기 상태(기본값)일 때는 'B 말하기', A 말하기 상태일 때는 'A 말하기' 표시
   roleStageName.textContent = `${activeRole} 말하기`;
   btnRoleToggle.classList.toggle('is-role-a', activeRole === 'A');
@@ -1517,28 +1579,17 @@ function setupEventListeners() {
 
     // 2. Role Toggle button clicked (Stage 5)
     if (btn.id === 'btn-role-toggle') {
-      cancelRepeatWait();
-      cancelCueCountdown();
-
-      const isAlreadyRoleMode = (currentMode === 'role-a' || currentMode === 'role-b');
-      if (isAlreadyRoleMode) {
-        // 이미 말하기 모드인 상태에서 누르면 A <-> B 전환
-        activeRole = (activeRole === 'B') ? 'A' : 'B';
+      // 만약 이미 B 말하기 상태라면 -> A 말하기로 전환
+      if (currentMode === 'role-b') {
+        setRoleMode('A');
       }
-      // 말하기 모드가 아니었으면 현재 activeRole(기본 B)로 시작
-      currentMode = (activeRole === 'B') ? 'role-b' : 'role-a';
-      updateRoleButtonUI();
-      updateModeSelectorUI(currentMode);
-      saveStateToStorage();
-
-      // Start role-play playback with countdown cue if applicable
-      const roleSpeaker = activeRole;
-      if (subtitles.length > 0 && subtitles[0].speaker === roleSpeaker) {
-        startStartingCueCountdown(() => {
-          jumpToSegment(0, true);
-        });
-      } else {
-        jumpToSegment(0, true);
+      // 만약 이미 A 말하기 상태라면 -> B 말하기로 전환
+      else if (currentMode === 'role-a') {
+        setRoleMode('B');
+      }
+      // 그 외 모드(섀도잉, 듣고말하기 등)에서 누르면 무조건 기본값인 'B 말하기'로 즉시 시작!
+      else {
+        setRoleMode('B');
       }
       return;
     }
