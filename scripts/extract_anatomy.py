@@ -2,8 +2,9 @@ import pdfplumber
 import re
 import os
 
-pdf_path = "data/용어-해부학anatomy.pdf"
-output_path = "anatomy.txt"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+pdf_path = os.path.join(BASE_DIR, "data", "용어-해부학anatomy.pdf")
+output_path = os.path.join(BASE_DIR, "anatomy.txt")
 
 def group_words_into_lines(words, tolerance=3.0):
     lines = []

@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const dataDir = '/Users/jun/Documents/lazychoi.github.io/data';
+const dataDir = path.join(__dirname, '..', 'data');
 const manifestPath = path.join(dataDir, 'manifest.json');
-const tablePath = path.join(__dirname, 'node_modules/@seyoungsong/hanjadict/data/table.json');
+const tablePath = path.join(__dirname, '..', 'node_modules/@seyoungsong/hanjadict/data/table.json');
 
 const files = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 const table = JSON.parse(fs.readFileSync(tablePath, 'utf8'));

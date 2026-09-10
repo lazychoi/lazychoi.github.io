@@ -21,7 +21,7 @@ jobs:
           python-version: '3.10'
 
       - name: Run backup script
-        run: python backup_supabase.py
+        run: python scripts/backup_supabase.py
 
       - name: Commit and push backup files
         run: |

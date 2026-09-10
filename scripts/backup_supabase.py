@@ -14,10 +14,11 @@ TABLES_TO_BACKUP = [
     ('genealogy_datasets', 'backup-genealogy_datasets.json')
 ]
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 def get_supabase_credentials():
-    """Extracts Supabase credentials dynamically from farm.js in the same directory."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    farm_js_path = os.path.join(current_dir, 'farm.js')
+    """Extracts Supabase credentials dynamically from js/farm.js."""
+    farm_js_path = os.path.join(BASE_DIR, 'js', 'farm.js')
     
     if os.path.exists(farm_js_path):
         try:
@@ -81,8 +82,7 @@ def fetch_table_data(supabase_url, supabase_key, table_name):
 
 def backup_to_json(data, filename):
     """Saves the raw JSON data to a backup file in the 'data' directory."""
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    backup_file_path = os.path.join(current_dir, 'data', filename)
+    backup_file_path = os.path.join(BASE_DIR, 'data', filename)
     os.makedirs(os.path.dirname(backup_file_path), exist_ok=True)
     
     with open(backup_file_path, 'w', encoding='utf-8') as f:

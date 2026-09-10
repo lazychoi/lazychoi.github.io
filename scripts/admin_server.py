@@ -8,7 +8,7 @@ import urllib.parse
 import re
 
 PORT = 8000
-DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+DIRECTORY = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
