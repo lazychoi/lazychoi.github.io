@@ -157,6 +157,17 @@
               </select>
             </div>
 
+            <div class="setting-group">
+              <div class="setting-toggle-row">
+                <span class="setting-label">복사 시 형광펜 자동 검색</span>
+                <label class="toggle-switch" title="구문 복사 시 형광펜 목록 창을 열고 자동으로 검색합니다">
+                  <input type="checkbox" id="toggle-copy-search-highlights" checked>
+                  <span class="toggle-slider"></span>
+                </label>
+              </div>
+              <span class="setting-subtext">본문 복사 시 형광펜 목록을 열어 해당 구문 자동 검색</span>
+            </div>
+
             <div class="setting-divider"></div>
 
             <!-- AI 설정 (Google Gemini API) -->
@@ -306,7 +317,7 @@
       </svg>
       AI 분석
     </button>
-    <button type="button" class="toolbar-btn" id="btn-toolbar-copy">
+    <button type="button" class="toolbar-btn" id="btn-toolbar-copy" title="복사 (설정에 따라 형광펜 목록 자동 검색)">
       <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path
           d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">

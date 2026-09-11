@@ -103,6 +103,7 @@ const state = {
     fontSize: 18,
     lineHeight: 1.8,
     fontFamily: 'serif',
+    copySearchHighlights: true,
   },
   epub: {
     book: null,
@@ -359,6 +360,7 @@ const elements = {
   btnLhIncrease: document.getElementById('btn-lh-increase'),
   lhIndicator: document.getElementById('lh-indicator'),
   fontFamilySelect: document.getElementById('font-family-select'),
+  toggleCopySearchHighlights: document.getElementById('toggle-copy-search-highlights'),
 
   // Quiz & Vocab Elements
   btnOpenQuiz: document.getElementById('btn-open-quiz'),
@@ -774,6 +776,9 @@ function loadSettings() {
     localStorage.setItem('reader_font_serif_migrated', 'true');
     saveSettings();
   }
+  if (state.settings.copySearchHighlights === undefined) {
+    state.settings.copySearchHighlights = true;
+  }
   if (!state.settings.geminiApiKey) {
     state.settings.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
   }
@@ -830,6 +835,11 @@ function applySettings() {
   document.documentElement.style.setProperty('--reader-font-family', fontValue);
   if (elements.fontFamilySelect) {
     elements.fontFamilySelect.value = state.settings.fontFamily;
+  }
+
+  // Copy auto-search highlights toggle
+  if (elements.toggleCopySearchHighlights) {
+    elements.toggleCopySearchHighlights.checked = state.settings.copySearchHighlights !== false;
   }
 
   // EPUB rendition theme update
@@ -3039,7 +3049,7 @@ function saveVocabEdit() {
 }
 
 // ── Drawer (TOC, Bookmarks & Highlights) ──
-function openDrawer(mode) {
+function openDrawer(mode, preserveSearch = false) {
   closeAllToolbars();
   if (elements.readerDrawer) elements.readerDrawer.scrollTop = 0;
   elements.readerDrawer.classList.add('open');
@@ -3063,6 +3073,10 @@ function openDrawer(mode) {
     renderBookmarkDrawer();
   } else {
     elements.drawerIcon.textContent = '🖍️';
+    if (!preserveSearch) {
+      state.highlightSearchQuery = '';
+      if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+    }
     renderHighlightDrawer();
   }
 }
@@ -3317,22 +3331,53 @@ function renderHighlightDrawer() {
 
   if (totalCount === 0) {
     elements.drawerTitle.textContent = '형광펜 목록 (0개)';
-    state.highlightSearchQuery = '';
-    if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
-    if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
-    elements.drawerBody.innerHTML = `
-      <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
-        <div style="font-size:32px; margin-bottom:12px;">🖍️</div>
-        <p>저장된 형광펜 구문이 없습니다.</p>
-        <p style="font-size:13px; margin-top:6px;">본문의 텍스트를 드래그하여 형광펜을 추가해보세요.</p>
-      </div>
-    `;
+    const searched = (state.highlightSearchQuery || '').trim();
+    if (searched) {
+      if (elements.drawerSearchBar) elements.drawerSearchBar.style.display = 'block';
+      if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = searched;
+      if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'flex';
+      elements.drawerBody.innerHTML = `
+        <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+          <div style="font-size:32px; margin-bottom:12px;">🔍</div>
+          <p><strong>'${escapeHtml(searched)}'</strong>에 대한 검색 결과가 없습니다.</p>
+          <p style="font-size:13px; margin-top:6px; color:var(--text-muted);">현재 도서에 저장된 형광펜이 없습니다.</p>
+          <button type="button" class="btn-drawer-action" id="btn-reset-highlight-search" style="margin: 14px auto 0; max-width: 140px;">검색어 초기화</button>
+        </div>
+      `;
+      const resetBtn = elements.drawerBody.querySelector('#btn-reset-highlight-search');
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          state.highlightSearchQuery = '';
+          if (elements.inputHighlightSearch) {
+            elements.inputHighlightSearch.value = '';
+            elements.inputHighlightSearch.focus();
+          }
+          renderHighlightDrawer();
+        });
+      }
+    } else {
+      state.highlightSearchQuery = '';
+      if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+      if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
+      elements.drawerBody.innerHTML = `
+        <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
+          <div style="font-size:32px; margin-bottom:12px;">🖍️</div>
+          <p>저장된 형광펜 구문이 없습니다.</p>
+          <p style="font-size:13px; margin-top:6px;">본문의 텍스트를 드래그하여 형광펜을 추가해보세요.</p>
+        </div>
+      `;
+    }
     return;
   }
 
   // Filter highlights
   const rawQuery = (state.highlightSearchQuery || '').trim();
   const terms = rawQuery ? rawQuery.toLowerCase().split(/\s+/).filter(Boolean) : [];
+
+  // Synchronize input value if different
+  if (elements.inputHighlightSearch && elements.inputHighlightSearch.value !== rawQuery) {
+    elements.inputHighlightSearch.value = rawQuery;
+  }
 
   let displayedHighlights = state.highlights;
   if (terms.length > 0) {
@@ -4993,6 +5038,17 @@ function setupEventListeners() {
     saveSettings();
   });
 
+  // Copy auto-search highlights toggle
+  if (elements.toggleCopySearchHighlights) {
+    elements.toggleCopySearchHighlights.addEventListener('change', (e) => {
+      state.settings.copySearchHighlights = e.target.checked;
+      saveSettings();
+      showToast(state.settings.copySearchHighlights
+        ? '복사 시 형광펜 목록 자동 검색이 켜졌습니다.'
+        : '복사 시 형광펜 목록 자동 검색이 꺼졌습니다.');
+    });
+  }
+
   // EPUB Nav arrows
   elements.btnEpubPrev.addEventListener('click', () => {
     if (state.epub.rendition) {
@@ -5091,10 +5147,38 @@ function setupEventListeners() {
   elements.btnToolbarCopy.addEventListener('click', (e) => {
     e.stopPropagation();
     if (state.activeSelection && state.activeSelection.text) {
-      navigator.clipboard.writeText(state.activeSelection.text).then(() => {
+      const rawText = state.activeSelection.text;
+      navigator.clipboard.writeText(rawText).catch(() => {});
+
+      const shouldAutoSearch = state.settings.copySearchHighlights !== false;
+
+      if (shouldAutoSearch) {
+        // Sanitize search keyword: trim spaces and strip leading/trailing non-word punctuation
+        // e.g. "fascinating," -> "fascinating", "“marvelous”" -> "marvelous", "(wonderful)" -> "wonderful"
+        const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
+        const searchTerm = cleanedText || rawText.trim();
+
+        showToast('텍스트를 복사하고 형광펜 목록을 검색합니다.');
+
+        state.highlightSearchQuery = searchTerm;
+        openDrawer('highlights', true);
+
+        if (elements.inputHighlightSearch) {
+          elements.inputHighlightSearch.value = searchTerm;
+          setTimeout(() => {
+            if (elements.inputHighlightSearch) {
+              elements.inputHighlightSearch.focus();
+              elements.inputHighlightSearch.select();
+            }
+          }, 60);
+        }
+        if (elements.btnClearHighlightSearch) {
+          elements.btnClearHighlightSearch.style.display = searchTerm ? 'flex' : 'none';
+        }
+      } else {
         showToast('텍스트가 클립보드에 복사되었습니다.');
-      });
-      closeAllToolbars();
+        closeAllToolbars();
+      }
     }
   });
 
