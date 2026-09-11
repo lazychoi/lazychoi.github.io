@@ -3027,9 +3027,21 @@ body.theme-dark .color-dot-btn.active {
     left: 12px;
     right: 12px;
     width: auto;
-    max-width: 340px;
+    max-width: 350px;
     margin: 0 auto;
+    padding: 16px 18px;
+    gap: 12px;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    max-height: calc(100dvh - 66px - env(safe-area-inset-bottom, 12px));
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  .settings-popover .setting-group {
+    gap: 6px;
+  }
+  .settings-popover .setting-divider {
+    margin: 2px 0;
   }
   .selection-toolbar {
     max-width: calc(100vw - 20px);

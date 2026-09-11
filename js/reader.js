@@ -710,26 +710,51 @@ function attachSwipeGesture(targetElement, getIframeSelection = null) {
   }, { passive: true });
 }
 
-// 설정 팝오버 위치 보정 (모바일에서 화면 밖 잘림 방지)
+// 설정 팝오버 위치 보정 (아이패드는 영향 없도록 640px 이하 모바일만 동적 보정 및 스크롤 적용)
 function positionSettingsPopover() {
   if (!elements.settingsPopover || !elements.settingsPopover.classList.contains('open')) return;
-  if (window.innerWidth <= 768) {
+  if (window.innerWidth <= 640) {
     const btnRect = elements.btnToggleSettings.getBoundingClientRect();
+    const vh = window.innerHeight;
+
     elements.settingsPopover.style.position = 'fixed';
-    elements.settingsPopover.style.top = `${btnRect.bottom + 8}px`;
     elements.settingsPopover.style.left = '12px';
     elements.settingsPopover.style.right = '12px';
     elements.settingsPopover.style.width = 'auto';
-    elements.settingsPopover.style.maxWidth = '340px';
+    elements.settingsPopover.style.maxWidth = '350px';
     elements.settingsPopover.style.margin = '0 auto';
+
+    // 기본 위치: 설정 버튼 바로 아래
+    const idealTop = btnRect.bottom + 8;
+    // 팝오버 실제 콘텐츠 높이 계산
+    const contentHeight = elements.settingsPopover.scrollHeight > 100 ? elements.settingsPopover.scrollHeight : 480;
+    const bottomPadding = 20;
+
+    // 버튼 아래 배치 시 화면 하단이 넘어가면 상단으로 당겨 올려 전체 내용 노출
+    let popoverTop = idealTop;
+    if (idealTop + contentHeight > vh - bottomPadding) {
+      const liftedTop = vh - contentHeight - bottomPadding;
+      // 글로벌 상단 내비바(약 50px) 아래를 최소 상단 여백(52px)으로 설정
+      popoverTop = Math.max(52, Math.min(idealTop, liftedTop));
+    }
+
+    elements.settingsPopover.style.top = `${popoverTop}px`;
+    elements.settingsPopover.style.maxHeight = `calc(100dvh - ${popoverTop + 14}px - env(safe-area-inset-bottom, 12px))`;
+    elements.settingsPopover.style.overflowY = 'auto';
+    elements.settingsPopover.style.webkitOverflowScrolling = 'touch';
   } else {
+    // 아이패드, 태블릿, 데스크톱 (641px 이상): CSS 원본 스타일 유지
     elements.settingsPopover.style.position = '';
     elements.settingsPopover.style.top = '';
+    elements.settingsPopover.style.bottom = '';
     elements.settingsPopover.style.left = '';
     elements.settingsPopover.style.right = '';
     elements.settingsPopover.style.width = '';
     elements.settingsPopover.style.maxWidth = '';
     elements.settingsPopover.style.margin = '';
+    elements.settingsPopover.style.maxHeight = '';
+    elements.settingsPopover.style.overflowY = '';
+    elements.settingsPopover.style.webkitOverflowScrolling = '';
   }
 }
 
