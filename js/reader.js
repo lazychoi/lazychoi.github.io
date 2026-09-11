@@ -109,6 +109,7 @@ const state = {
     rendition: null,
     toc: [],
     locationsReady: false,
+    resizeObserver: null
   },
   activeSelection: null, // { text, targetSentence, prevSentence, nextSentence, cfiRange, range, rect }
   activeHighlight: null, // clicked highlight item
@@ -1716,6 +1717,12 @@ function bindHighlightClickEvents() {
 
 // ── EPUB Book Viewer (epub.js) ──
 function cleanupEpub() {
+  if (state.epub.resizeObserver) {
+    try {
+      state.epub.resizeObserver.disconnect();
+    } catch (e) {}
+    state.epub.resizeObserver = null;
+  }
   if (state.epub.rendition) {
     try {
       state.epub.rendition.destroy();
@@ -1733,6 +1740,43 @@ function cleanupEpub() {
     state.epub.book = null;
   }
   elements.epubArea.innerHTML = '';
+}
+
+function setupEpubResizeObserver() {
+  if (!window.ResizeObserver || !elements.epubArea) return;
+  if (state.epub.resizeObserver) {
+    try {
+      state.epub.resizeObserver.disconnect();
+    } catch (e) {}
+    state.epub.resizeObserver = null;
+  }
+
+  let resizeRafId = null;
+  let lastObservedWidth = elements.epubArea.clientWidth || 0;
+  let lastObservedHeight = elements.epubArea.clientHeight || 0;
+
+  state.epub.resizeObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const cr = entry.contentRect;
+      if (!cr || cr.width <= 0 || cr.height <= 0) continue;
+
+      if (Math.abs(cr.width - lastObservedWidth) > 1 || Math.abs(cr.height - lastObservedHeight) > 1) {
+        lastObservedWidth = cr.width;
+        lastObservedHeight = cr.height;
+
+        if (resizeRafId) cancelAnimationFrame(resizeRafId);
+        resizeRafId = requestAnimationFrame(() => {
+          if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
+            try {
+              state.epub.rendition.resize();
+            } catch (e) {}
+          }
+        });
+      }
+    }
+  });
+
+  state.epub.resizeObserver.observe(elements.epubArea);
 }
 
 function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
@@ -1787,10 +1831,12 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       width: "100%",
       height: "100%",
       spread: "none",
+      minSpreadWidth: 10000,
       flow: "paginated",
       allowScriptedContent: true
     });
     state.epub.rendition = rendition;
+    setupEpubResizeObserver();
 
     // View render hook: patch Range DOM prototype immediately when any view is created
     rendition.hooks.render.register((view) => {
@@ -1953,6 +1999,22 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
     }).then(() => {
       applyEpubThemes();
       restoreEpubHighlights();
+
+      // 초기 렌더링 직후 뷰포트 크기 확정 동기화 (아이패드 초기 로딩 시 컬럼 잘림 방지)
+      requestAnimationFrame(() => {
+        if (state.epub.rendition) {
+          try {
+            state.epub.rendition.resize();
+          } catch (e) {}
+        }
+        setTimeout(() => {
+          if (state.epub.rendition) {
+            try {
+              state.epub.rendition.resize();
+            } catch (e) {}
+          }
+        }, 150);
+      });
     }).catch(err => {
       console.warn('Initial rendition display error, retrying default display:', err);
       if (state.epub.rendition) {
@@ -2399,26 +2461,33 @@ function showFloatingToolbar(rect) {
   const x = rect.left + (rect.width / 2);
   let y = rect.top + window.scrollY;
 
-  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+  const isMobile = window.innerWidth <= 1024 || ('ontouchstart' in window);
   let placeBelow = false;
   let extraOffset = 0;
 
   if (isMobile) {
-    // 모바일 OS(iOS Safari / Chrome) 자체 상황 팝업(복사/찾아보기 등) 위치를 동적으로 회피:
-    // - 화면 상단~중간 살짝 위(약 44% 지점 이하): 모바일 OS 팝업이 글자 '아래'에 나타나므로, 앱 팝업은 글자 '위'에 배치
-    // - 화면 중간 아래(약 44% 초과): 모바일 OS 팝업이 글자 '위'에 나타나므로, 앱 팝업은 글자 '아래'에 배치
-    // - 단, 글자가 최상단(top < 120px)에 위치해 상단 여백이 좁은 경우: OS 팝업(약 44px) 아래쪽으로 추가 오프셋 배치
+    // 모바일/태블릿 OS(iOS Safari / Chrome) 자체 상황 팝업(복사/찾아보기 등) 위치를 완벽히 회피:
+    // iOS Safari의 기본 팝업은 텍스트 바로 '위'에 나타납니다.
+    // 따라서 앱 형광펜 팝업은 텍스트 '아래'에 배치하면 [기기 팝업 (위)] - [선택 텍스트] - [형광펜 창 (아래)] 구조로 절대 겹치지 않습니다.
+    //
+    // 예외 케이스:
+    // 1) 화면 최하단 (viewportBottom > window.innerHeight - 90): 아래 여백이 부족하므로
+    //    앱 팝업을 텍스트 '위'에 배치하되, 기기 팝업(위)과 겹치지 않도록 충분한 거리(52px)를 띄움.
+    // 2) 화면 최상단 (viewportY < 90): 기기 팝업이 공간 부족으로 텍스트 '아래'에 뜨므로,
+    //    앱 팝업은 기기 팝업(약 44px) 아래쪽으로 추가 오프셋(52px)을 둠.
     const viewportY = rect.top;
-    const isUpperHalf = viewportY <= window.innerHeight * 0.44;
+    const viewportBottom = rect.top + (rect.height || 22);
 
-    if (isUpperHalf) {
-      if (viewportY < 120) {
-        placeBelow = true;
-        extraOffset = 54; // OS 팝업 높이(약 44px) + 여백(10px)을 피해 아래에 배치
-      } else {
-        placeBelow = false;
-      }
+    if (viewportBottom > window.innerHeight - 90) {
+      // 화면 최하단: 텍스트 위에 배치하되 기기 팝업 위로 추가 간격 확보
+      placeBelow = false;
+      extraOffset = 52;
+    } else if (viewportY < 90) {
+      // 화면 최상단: 기기 팝업이 아래에 뜨므로 기기 팝업 아래로 배치
+      placeBelow = true;
+      extraOffset = 52;
     } else {
+      // 중간 및 일반 위치: 기기 팝업(위)과 반대인 텍스트 '아래'에 배치하여 완벽 분리
       placeBelow = true;
       extraOffset = 0;
     }
@@ -2433,13 +2502,21 @@ function showFloatingToolbar(rect) {
     y = rect.top + (rect.height || 22) + window.scrollY + 8 + extraOffset;
   } else {
     tb.classList.remove('flipped');
-    tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
-    y = rect.top + window.scrollY - 8;
+    tb.style.transform = 'translate(-50%, -100%)';
+    y = rect.top + window.scrollY - 8 - extraOffset;
   }
 
-  const clampedX = Math.max(tbWidth / 2 + 10, Math.min(window.innerWidth - tbWidth / 2 - 10, x));
+  // 화면 왼쪽 끝에서 iOS 뒤로가기 제스처 영역(0~25px) 침범 및 가장 왼쪽 색상 버튼(노란색) 터치 실패 방지:
+  // 모바일/태블릿에서는 최소 좌측 여백을 28px 확보하여 툴바를 오른쪽으로 안전하게 이격
+  const minMargin = isMobile ? 28 : 16;
+  const clampedX = Math.max(tbWidth / 2 + minMargin, Math.min(window.innerWidth - tbWidth / 2 - minMargin, x));
   tb.style.left = `${clampedX}px`;
   tb.style.top = `${y}px`;
+
+  // 툴바 화살표가 선택 텍스트 위치를 가리키도록 상대 위치 계산
+  const arrowRelX = x - (clampedX - tbWidth / 2);
+  const clampedArrowX = Math.max(16, Math.min(tbWidth - 16, arrowRelX));
+  tb.style.setProperty('--arrow-left', `${clampedArrowX}px`);
 }
 
 function closeAllToolbars() {
@@ -2647,7 +2724,7 @@ function showHighlightToolbar(rect) {
   const x = rect.left + (rect.width / 2);
   let y = rect.top + window.scrollY;
 
-  const isMobile = window.innerWidth <= 768 || ('ontouchstart' in window);
+  const isMobile = window.innerWidth <= 1024 || ('ontouchstart' in window);
   const placeBelow = isMobile || (y - tbHeight - 12 < window.scrollY + 70);
 
   if (placeBelow) {
@@ -2660,9 +2737,14 @@ function showHighlightToolbar(rect) {
     y = rect.top + window.scrollY - 8;
   }
 
-  const clampedX = Math.max(tbWidth / 2 + 12, Math.min(window.innerWidth - tbWidth / 2 - 12, x));
+  const minMargin = isMobile ? 28 : 16;
+  const clampedX = Math.max(tbWidth / 2 + minMargin, Math.min(window.innerWidth - tbWidth / 2 - minMargin, x));
   tb.style.left = `${clampedX}px`;
   tb.style.top = `${y}px`;
+
+  const arrowRelX = x - (clampedX - tbWidth / 2);
+  const clampedArrowX = Math.max(16, Math.min(tbWidth - 16, arrowRelX));
+  tb.style.setProperty('--arrow-left', `${clampedArrowX}px`);
 }
 
 function openHighlightToolbar(hl, elem) {
@@ -3401,7 +3483,12 @@ function renderHighlightDrawer() {
         e.stopPropagation();
         try {
           showToast(`🤖 '${hl.text}' 문맥 분석 중...`);
-          const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+          const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text, {
+            prevSentence: hl.prevSentence,
+            nextSentence: hl.nextSentence,
+            author: state.currentBook?.author,
+            bookTitle: state.currentBook?.title
+          });
           if (res && res.targetMeaning) {
             hl.targetMeaning = res.targetMeaning;
             hl.phonetic = res.phonetic || '';
@@ -4125,7 +4212,7 @@ function parseQuotaRetryTime(err) {
   };
 }
 
-async function fetchGeminiVocabData(targetText, targetSentence) {
+async function fetchGeminiVocabData(targetText, targetSentence, contextOptions = {}) {
   const apiKey = getGeminiApiKey();
   if (!apiKey) {
     throw new Error('API_KEY_MISSING');
@@ -4136,16 +4223,36 @@ async function fetchGeminiVocabData(targetText, targetSentence) {
     modelName = await resolveGeminiModel(apiKey);
   }
 
+  const prevSentence = contextOptions.prevSentence || '';
+  const nextSentence = contextOptions.nextSentence || '';
+  const author = contextOptions.author || (state.currentBook ? state.currentBook.author : '');
+  const bookTitle = contextOptions.bookTitle || (state.currentBook ? state.currentBook.title : '');
+
+  const cleanA = cleanAuthor(author);
+  const cleanT = cleanBookTitle(bookTitle);
+  const hasSourceInfo = (cleanA !== '저자' || cleanT !== '<책명>');
+
+  let contextDetails = '';
+  if (hasSourceInfo) {
+    contextDetails += `Source Book & Author: ${cleanA}, ${cleanT}\n`;
+  }
+  if (prevSentence) {
+    contextDetails += `Previous sentence (context): "${prevSentence}"\n`;
+  }
+  contextDetails += `Target sentence: "${targetSentence}"\n`;
+  if (nextSentence) {
+    contextDetails += `Next sentence (context): "${nextSentence}"\n`;
+  }
+
   const prompt = `You are an expert bilingual English-Korean lexicographer and language tutor.
 Target phrase: "${targetText}"
-Sentence context: "${targetSentence}"
-
-Analyze the target phrase in the exact context of the provided sentence following these strict rules:
+${contextDetails}
+Analyze the target phrase in the exact context of the provided sentence, taking into account the surrounding context (previous/next sentences) and source book information, following these strict rules:
 
 1. [Meaning (targetMeaning)]:
-   - Prioritize the accurate, primary literal meaning (직역) so the learner understands the word's fundamental definition.
+   - Prioritize the accurate, primary literal meaning (직역) so the learner understands the word's fundamental definition in this context.
    - Do NOT produce vague or overly interpretive paraphrases on their own.
-   - However, if the literal meaning alone is awkward, unnatural, or insufficient to capture the nuanced contextual meaning, provide the literal meaning first, followed by the contextual meaning in parentheses using the format: "직역 (문맥: 의역)".
+   - Always base the meaning strictly on the literal meaning (직역 위주). If the literal meaning alone is awkward, unnatural, or insufficient to capture the contextual nuance in this passage, provide the literal meaning first, followed by the contextual interpretation/paraphrase in parentheses using the format: "직역 (문맥: 의역)".
      * Example (literal is sufficient): "금박을 입힌"
      * Example (needs contextual nuance): "달을 달라고 울다 (문맥: 불가능한 것을 조르다)"
      * Example (metaphorical): "수면을 스치다 (문맥: 구애하다)"
@@ -4155,13 +4262,13 @@ Analyze the target phrase in the exact context of the provided sentence followin
    - If it is a common/elementary word (e.g. "happy", "crying", "river") or a multi-word phrase composed of basic words, return an empty string ("").
 
 3. [Sentence Translation (sentenceTranslation)]:
-   - Provide a fluent, natural Korean translation of the entire sentence that faithfully reflects the context.
+   - Provide a fluent, natural Korean translation of the target sentence that faithfully reflects the surrounding context and tone of the book.
 
 Return ONLY a valid JSON object matching this schema without markdown fences:
 {
   "phonetic": "IPA transcription for difficult/advanced words, or empty string",
   "targetMeaning": "Korean literal meaning first. If awkward, format as: 직역 (문맥: 의역)",
-  "sentenceTranslation": "fluent Korean translation of the whole sentence"
+  "sentenceTranslation": "fluent Korean translation of the target sentence"
 }`;
 
   async function executeRequest(mName) {
@@ -4329,7 +4436,12 @@ async function autoFetchVocabForHighlight(hl) {
   if (!apiKey) return;
   try {
     showToast(`🤖 '${hl.text}' 문맥 분석 중...`);
-    const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+    const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text, {
+      prevSentence: hl.prevSentence,
+      nextSentence: hl.nextSentence,
+      author: state.currentBook?.author,
+      bookTitle: state.currentBook?.title
+    });
     if (res && res.targetMeaning) {
       hl.targetMeaning = res.targetMeaning;
       hl.phonetic = res.phonetic || '';
@@ -4429,7 +4541,12 @@ async function batchGenerateVocab() {
       showToast(`Q&A 생성 중... (${idx + 1}/${total}) '${shortText}'`);
 
       try {
-        const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text);
+        const res = await fetchGeminiVocabData(hl.text, hl.targetSentence || hl.text, {
+          prevSentence: hl.prevSentence,
+          nextSentence: hl.nextSentence,
+          author: state.currentBook?.author,
+          bookTitle: state.currentBook?.title
+        });
         if (res && res.targetMeaning) {
           hl.targetMeaning = res.targetMeaning;
           hl.phonetic = res.phonetic || '';
@@ -5241,19 +5358,33 @@ function setupEventListeners() {
     }
   });
 
-  // 윈도우 리사이즈 시 EPUB 뷰어 영역 재계산
-  window.addEventListener('resize', () => {
+  // 윈도우 리사이즈, 오리엔테이션 회전, 화면 복귀 시 EPUB 뷰어 영역 안전 재계산
+  const triggerEpubResizeSafe = () => {
     if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
-      try {
-        state.epub.rendition.resize();
-      } catch (e) {}
+      requestAnimationFrame(() => {
+        try {
+          state.epub.rendition.resize();
+        } catch (e) {}
+      });
     }
-  });
+  };
 
-  // 탭 전환 / 다른 앱 전환 / 페이지 종료 시 현재 위치(CFI 또는 스크롤) 즉시 보존
+  window.addEventListener('resize', triggerEpubResizeSafe);
+  window.addEventListener('orientationchange', () => {
+    setTimeout(triggerEpubResizeSafe, 150);
+  });
+  window.addEventListener('pageshow', triggerEpubResizeSafe);
+  window.addEventListener('load', triggerEpubResizeSafe);
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(triggerEpubResizeSafe).catch(() => {});
+  }
+
+  // 탭 전환 / 다른 앱 전환 / 페이지 종료 시 현재 위치(CFI 또는 스크롤) 즉시 보존 및 복귀 시 리사이즈 동기화
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'hidden' && state.currentBook) {
       saveCurrentReadingPosition();
+    } else if (document.visibilityState === 'visible' && state.currentBook) {
+      setTimeout(triggerEpubResizeSafe, 100);
     }
   });
 
