@@ -29,6 +29,18 @@ let cueTimeoutId = null;
 let wakeLock = null;
 let animationFrameId = null;
 
+// Speech Recognition (STT) State
+let sttRecognition = null;
+let isSTTEnabled = localStorage.getItem('dialogue_stt_enabled') !== 'false';
+let isSTTListening = false;
+let currentSTTTranscript = '';
+let activeSTTIndex = -1;
+let sttAnimFrameId = null;
+let isSingleRetryTurn = false;
+let isWeakPracticeOnly = false;
+let weakIndices = [];
+let weakPracticePos = 0;
+
 // IndexedDB Constants
 const DB_NAME = 'DialogueAppDB_v2';
 const DB_VERSION = 1;
@@ -59,6 +71,21 @@ const modeSelector = document.getElementById('mode-selector');
 const btnRoleToggle = document.getElementById('btn-role-toggle');
 const roleStageName = document.getElementById('role-stage-name');
 const btnLangToggle = document.getElementById('btn-lang-toggle');
+const btnSTTToggle = document.getElementById('btn-stt-toggle');
+const sttToggleLabel = document.getElementById('stt-toggle-label');
+
+// Roleplay Summary Modal Elements
+const roleplaySummaryModal = document.getElementById('roleplay-summary-modal');
+const summaryModalClose = document.getElementById('summary-modal-close');
+const summaryAvgScore = document.getElementById('summary-avg-score');
+const summaryScoreCircle = document.getElementById('summary-score-circle');
+const summaryScoreTitle = document.getElementById('summary-score-title');
+const summaryScoreDesc = document.getElementById('summary-score-desc');
+const summaryTurnCount = document.getElementById('summary-turn-count');
+const summarySentencesList = document.getElementById('summary-sentences-list');
+const btnSummaryRetryWeak = document.getElementById('btn-summary-retry-weak');
+const btnSummaryRestart = document.getElementById('btn-summary-restart');
+const btnSummaryClose = document.getElementById('btn-summary-close');
 
 // ── Built-in Realistic Everyday Dialogue Sample (Bilingual: Korean | English) ──
 const SAMPLE_DIALOGUE_SRT = `1
@@ -189,6 +216,8 @@ window.addEventListener('DOMContentLoaded', async () => {
   setSpeedSelectValue(1.00); // Ensure 1.00x is default
   updateLangButtonUI();
   updateRoleButtonUI();
+  initSTT();
+  updateSTTButtonUI();
   await initDB();
   await restoreSavedState();
   startRAFPrecisionLoop();
@@ -794,6 +823,9 @@ function handleSegmentEndReached(seg) {
       advanceToSegment(activeIndex + 1);
     } else {
       // 전체 대화 끝
+      if (isSTTEnabled) {
+        setTimeout(() => showRoleplaySummaryModal(), 600);
+      }
       if (isRepeatEnabled) {
         // A 말하기 상태에서 반복 켜짐 시, 매 반복 시작 전에 시작 신호음 카운트다운(3, 2, 1, 시작!) 재생
         if (subtitles.length > 0 && subtitles[0].speaker === 'A') {
@@ -817,6 +849,9 @@ function handleSegmentEndReached(seg) {
       advanceToSegment(activeIndex + 1);
     } else {
       // 전체 대화 끝
+      if (isSTTEnabled) {
+        setTimeout(() => showRoleplaySummaryModal(), 600);
+      }
       if (isRepeatEnabled) {
         if (subtitles.length > 0 && subtitles[0].speaker === 'B') {
           audioPlayer.pause();
@@ -904,6 +939,11 @@ function handleSegmentTouch(index) {
       audioPlayer.pause();
       return;
     }
+    if (activeSTTIndex !== -1) {
+      cancelSTTTurn();
+      audioPlayer.pause();
+      return;
+    }
 
     if (!audioPlayer.paused) {
       audioPlayer.pause();
@@ -916,6 +956,7 @@ function handleSegmentTouch(index) {
   // Case 2: Touching a different segment -> Switch to it based on current mode
   cancelRepeatWait();
   cancelCueCountdown();
+  cancelSTTTurn();
 
   if (currentMode === 'custom-range') {
     // 구간 반복 모드: 해당 구간으로 점프하여 재생하되 암기중 목표(targetIndex)와 반복 범위는 유지
@@ -954,12 +995,17 @@ function handleSegmentTouch(index) {
 function jumpToSegment(index, autoPlay = true) {
   if (index < 0 || index >= subtitles.length) return;
   cancelRepeatWait();
+  cancelSTTTurn();
 
   activeIndex = index;
   const seg = subtitles[index];
 
   // Set audio time
   audioPlayer.currentTime = seg.start;
+
+  // Check if role-play user speaking turn
+  const isUserTurnInRoleplay = (currentMode === 'role-a' && seg.speaker === 'A') || 
+                               (currentMode === 'role-b' && seg.speaker === 'B');
 
   // Set mute status based on role
   if (currentMode === 'role-a') {
@@ -975,6 +1021,11 @@ function jumpToSegment(index, autoPlay = true) {
   saveStateToStorage();
 
   if (autoPlay) {
+    if (isUserTurnInRoleplay && isSTTEnabled && isSTTSupported() && sttRecognition) {
+      audioPlayer.pause();
+      startRoleSTTTurn(seg, index);
+      return;
+    }
     audioPlayer.play().catch(err => console.warn('Play prevented:', err));
   }
 }
@@ -1083,6 +1134,8 @@ function switchToCustomRangeMode(index) {
 function setRoleMode(role) {
   cancelRepeatWait();
   cancelCueCountdown();
+  cancelSTTTurn();
+  isWeakPracticeOnly = false;
   activeRole = role;
   currentMode = (role === 'B') ? 'role-b' : 'role-a';
   updateRoleButtonUI();
@@ -1113,6 +1166,7 @@ function stopAudioPlayback() {
   audioPlayer.pause();
   cancelRepeatWait();
   cancelCueCountdown();
+  cancelSTTTurn();
   if (subtitles[0]) {
     audioPlayer.currentTime = subtitles[0].start;
   }
@@ -1121,7 +1175,605 @@ function stopAudioPlayback() {
 
 function handlePlaybackEnded() {
   cancelRepeatWait();
+  cancelSTTTurn();
   stopAudioPlayback();
+}
+
+// ── Text Normalization & Speech Evaluation Algorithm ──
+function expandContractions(str) {
+  if (!str) return '';
+  return str
+    .replace(/\bi'm\b/gi, 'i am')
+    .replace(/\bit's\b/gi, 'it is')
+    .replace(/\bdon't\b/gi, 'do not')
+    .replace(/\bcan't\b/gi, 'cannot')
+    .replace(/\bwon't\b/gi, 'will not')
+    .replace(/\byou're\b/gi, 'you are')
+    .replace(/\bwe're\b/gi, 'we are')
+    .replace(/\bthey're\b/gi, 'they are')
+    .replace(/\bthat's\b/gi, 'that is')
+    .replace(/\bwhat's\b/gi, 'what is')
+    .replace(/\bthere's\b/gi, 'there is')
+    .replace(/\blet's\b/gi, 'let us')
+    .replace(/\bdidn't\b/gi, 'did not')
+    .replace(/\bdoesn't\b/gi, 'does not')
+    .replace(/\bisn't\b/gi, 'is not')
+    .replace(/\baren't\b/gi, 'are not')
+    .replace(/\bwasn't\b/gi, 'was not')
+    .replace(/\bweren't\b/gi, 'were not')
+    .replace(/\bhaven't\b/gi, 'have not')
+    .replace(/\bhasn't\b/gi, 'has not')
+    .replace(/\bcouldn't\b/gi, 'could not')
+    .replace(/\bwouldn't\b/gi, 'would not')
+    .replace(/\bshouldn't\b/gi, 'should not')
+    .replace(/\bgonna\b/gi, 'going to')
+    .replace(/\bwanna\b/gi, 'want to')
+    .replace(/\bgotta\b/gi, 'got to')
+    .replace(/\byeah\b/gi, 'yes')
+    .replace(/\byep\b/gi, 'yes')
+    .replace(/\bnope\b/gi, 'no');
+}
+
+const NUMBER_MAP = {
+  "1": "one", "2": "two", "3": "three", "4": "four", "5": "five",
+  "6": "six", "7": "seven", "8": "eight", "9": "nine", "10": "ten"
+};
+
+function cleanWordForCompare(w) {
+  if (!w) return '';
+  let cleaned = w.toLowerCase().replace(/[^a-z0-9']/g, '').trim();
+  if (NUMBER_MAP[cleaned]) {
+    cleaned = NUMBER_MAP[cleaned];
+  }
+  return cleaned;
+}
+
+function computeLevenshtein(s1, s2) {
+  if (s1 === s2) return 0;
+  if (!s1) return s2.length;
+  if (!s2) return s1.length;
+
+  const d = [];
+  for (let i = 0; i <= s1.length; i++) d[i] = [i];
+  for (let j = 0; j <= s2.length; j++) d[0][j] = j;
+
+  for (let i = 1; i <= s1.length; i++) {
+    for (let j = 1; j <= s2.length; j++) {
+      const cost = (s1[i - 1] === s2[j - 1]) ? 0 : 1;
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+    }
+  }
+  return d[s1.length][s2.length];
+}
+
+function evaluateSpeechAccuracy(targetEnText, spokenText) {
+  if (!targetEnText) return { score: 0, diffHtml: '', spokenText: '', matchedCount: 0, totalWords: 0 };
+
+  const rawTargetWords = targetEnText.trim().split(/\s+/).filter(w => w.length > 0);
+  if (rawTargetWords.length === 0) return { score: 100, diffHtml: '', spokenText, matchedCount: 0, totalWords: 0 };
+
+  // Expand contractions on spoken side
+  const expandedSpoken = expandContractions(spokenText || '');
+  const rawSpokenWords = expandedSpoken.trim().split(/\s+/).filter(w => w.length > 0);
+  const spokenTokens = rawSpokenWords.map(cleanWordForCompare).filter(w => w.length > 0);
+
+  const usedSpokenIndices = new Set();
+  let correctCount = 0;
+  let similarCount = 0;
+
+  const wordResults = rawTargetWords.map((origWord) => {
+    // Expand target contraction if any (e.g. "I'm" -> "i", "am")
+    const expandedOrig = expandContractions(origWord);
+    const subWords = expandedOrig.split(/\s+/).map(cleanWordForCompare).filter(w => w.length > 0);
+
+    if (subWords.length === 0) {
+      return { orig: origWord, status: 'correct' };
+    }
+
+    let allSubMatched = true;
+    let anySimilar = false;
+
+    for (let sub of subWords) {
+      let foundIdx = -1;
+      for (let i = 0; i < spokenTokens.length; i++) {
+        if (!usedSpokenIndices.has(i) && spokenTokens[i] === sub) {
+          foundIdx = i;
+          break;
+        }
+      }
+
+      if (foundIdx !== -1) {
+        usedSpokenIndices.add(foundIdx);
+        continue;
+      }
+
+      // Try Fuzzy match (Levenshtein)
+      let bestDist = 999;
+      let bestIdx = -1;
+      for (let i = 0; i < spokenTokens.length; i++) {
+        if (!usedSpokenIndices.has(i)) {
+          const dist = computeLevenshtein(sub, spokenTokens[i]);
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIdx = i;
+          }
+        }
+      }
+
+      const threshold = sub.length >= 7 ? 2 : (sub.length >= 4 ? 1 : 0);
+      if (bestIdx !== -1 && bestDist <= threshold && bestDist > 0) {
+        usedSpokenIndices.add(bestIdx);
+        anySimilar = true;
+        continue;
+      }
+
+      allSubMatched = false;
+      break;
+    }
+
+    if (allSubMatched) {
+      if (anySimilar) {
+        similarCount++;
+        return { orig: origWord, status: 'similar' };
+      } else {
+        correctCount++;
+        return { orig: origWord, status: 'correct' };
+      }
+    }
+
+    return { orig: origWord, status: 'missed' };
+  });
+
+  const totalWords = rawTargetWords.length;
+  const rawScore = ((correctCount * 1.0 + similarCount * 0.7) / totalWords) * 100;
+  const score = Math.min(100, Math.max(0, Math.round(rawScore)));
+
+  const diffHtml = wordResults.map(item => {
+    let cls = 'diff-word-correct';
+    if (item.status === 'similar') cls = 'diff-word-similar';
+    else if (item.status === 'missed') cls = 'diff-word-missed';
+    return `<span class="diff-word ${cls}">${escapeHTML(item.orig)}</span>`;
+  }).join(' ');
+
+  return {
+    score,
+    diffHtml,
+    spokenText: spokenText || '(음성 감지되지 않음)',
+    matchedCount: correctCount,
+    totalWords
+  };
+}
+
+function getScoreBadgeClass(score) {
+  if (score >= 90) return 'score-perfect';
+  if (score >= 70) return 'score-good';
+  return 'score-try';
+}
+
+function getScoreBadgeLabel(score) {
+  if (score >= 90) return `🌟 ${score}% Perfect!`;
+  if (score >= 70) return `👍 ${score}% Good`;
+  return `⚠️ ${score}% Try Again`;
+}
+
+// ── Web Speech API (STT) Controller ──
+function isSTTSupported() {
+  return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+}
+
+function initSTT() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    console.warn('SpeechRecognition not supported or disabled due to insecure HTTP context.');
+    isSTTEnabled = false;
+    updateSTTButtonUI();
+    return;
+  }
+
+  try {
+    sttRecognition = new SpeechRecognition();
+    sttRecognition.lang = 'en-US';
+    sttRecognition.interimResults = true;
+    sttRecognition.continuous = false;
+    sttRecognition.maxAlternatives = 1;
+
+    sttRecognition.onstart = () => {
+      isSTTListening = true;
+    };
+
+    sttRecognition.onresult = (event) => {
+      let interim = '';
+      let final = '';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          final += event.results[i][0].transcript;
+        } else {
+          interim += event.results[i][0].transcript;
+        }
+      }
+      const text = (final || interim).trim();
+      if (text) {
+        currentSTTTranscript = text;
+        if (activeSTTIndex !== -1) {
+          const liveText = document.getElementById(`stt-live-text-${activeSTTIndex}`);
+          if (liveText) {
+            liveText.textContent = `"${text}"`;
+          }
+        }
+      }
+    };
+
+    sttRecognition.onerror = (event) => {
+      console.warn('STT error:', event.error);
+      if (event.error === 'not-allowed') {
+        showGestureToast('⚠️ 마이크 권한이 필요합니다');
+      }
+      isSTTListening = false;
+    };
+
+    sttRecognition.onend = () => {
+      isSTTListening = false;
+    };
+  } catch (err) {
+    console.error('Failed to init SpeechRecognition:', err);
+    sttRecognition = null;
+    isSTTEnabled = false;
+  }
+  updateSTTButtonUI();
+}
+
+function startSpeechRecognition() {
+  if (!sttRecognition || !isSTTEnabled) return;
+  try {
+    sttRecognition.start();
+  } catch (e) {
+    // Already running or aborted
+  }
+}
+
+function stopSpeechRecognition() {
+  if (!sttRecognition) return;
+  try {
+    sttRecognition.stop();
+  } catch (e) {}
+  isSTTListening = false;
+}
+
+function toggleSTT() {
+  if (!isSTTSupported()) {
+    if (!window.isSecureContext) {
+      alert('⚠️ 마이크 권한 요청이 나오지 않는 이유:\n\n' +
+            '애플(Safari) 및 구글(Chrome)의 보안 정책상 마이크(음성 인식) 기능은 HTTPS 보안 연결(예: GitHub Pages https://lazychoi.github.io) 또는 localhost에서만 허용됩니다.\n\n' +
+            '현재 접속하신 주소(' + location.host + ')는 일반 HTTP 사설 IP 주소여서 브라우저가 마이크 권한 팝업 자체를 차단했습니다.\n\n' +
+            '👉 해결 방법: GitHub Pages(https://lazychoi.github.io)로 접속하시거나 HTTPS 연결을 사용해 주세요.');
+      return;
+    }
+    alert('현재 브라우저에서는 음성 인식을 지원하지 않습니다. (iOS Safari 또는 Chrome을 권장합니다)');
+    return;
+  }
+  isSTTEnabled = !isSTTEnabled;
+  localStorage.setItem('dialogue_stt_enabled', isSTTEnabled ? 'true' : 'false');
+  updateSTTButtonUI();
+  showGestureToast(isSTTEnabled ? '🎙️ 실시간 채점 ON' : '🔇 실시간 채점 OFF (무음 모드)');
+}
+
+function updateSTTButtonUI() {
+  const btn = document.getElementById('btn-stt-toggle');
+  const label = document.getElementById('stt-toggle-label');
+  if (!btn || !label) return;
+
+  if (!isSTTSupported()) {
+    btn.classList.remove('active');
+    btn.style.opacity = '0.6';
+    if (!window.isSecureContext) {
+      label.textContent = '🎙️ HTTPS 필요';
+      btn.title = '마이크 기능은 HTTPS 보안 연결에서만 활성화됩니다';
+    } else {
+      label.textContent = '🎙️ 미지원';
+      btn.title = '이 브라우저는 Web Speech API를 지원하지 않습니다';
+    }
+    return;
+  }
+
+  btn.style.opacity = '1';
+  btn.classList.toggle('active', isSTTEnabled);
+  label.textContent = isSTTEnabled ? '🎙️ 채점 ON' : '🔇 채점 OFF';
+  btn.title = isSTTEnabled ? '실시간 음성인식 채점 켜짐 (클릭 시 끄기)' : '실시간 음성인식 채점 꺼짐 (클릭 시 켜기)';
+}
+
+// ── Roleplay STT Turn Lifecycle ──
+function startRoleSTTTurn(seg, index, isSingleRetry = false) {
+  cancelRepeatWait();
+  cancelSTTTurn();
+
+  isSingleRetryTurn = isSingleRetry;
+  activeSTTIndex = index;
+  activeIndex = index;
+  currentSTTTranscript = '';
+
+  updateActiveCardUI();
+  updateStatusCounter();
+
+  const card = document.getElementById(`card-${index}`);
+  const liveBox = document.getElementById(`stt-live-box-${index}`);
+  const liveText = document.getElementById(`stt-live-text-${index}`);
+  const feedbackBox = document.getElementById(`stt-feedback-${index}`);
+
+  if (card) {
+    card.classList.add('is-stt-listening');
+  }
+  if (liveBox) {
+    liveBox.style.display = 'block';
+  }
+  if (liveText) {
+    liveText.textContent = '말씀해 주세요...';
+  }
+  if (feedbackBox && !isSingleRetry) {
+    feedbackBox.style.display = 'none';
+  }
+
+  playTurnChime();
+  startSpeechRecognition();
+
+  const speakDurationSec = Math.max(2.8, (seg.duration * 1.15) / playbackSpeed);
+  repeatDurationTotal = speakDurationSec;
+  const startTime = performance.now();
+  repeatTimerEnd = startTime + (speakDurationSec * 1000);
+
+  updateCardStatusUI(index, (activeRole === 'A' ? 'speaking-a' : 'speaking-b'), 0);
+
+  function sttCountdownStep() {
+    if (activeSTTIndex !== index) return;
+    const now = performance.now();
+    const remainingMs = Math.max(0, repeatTimerEnd - now);
+    const elapsedSec = (repeatDurationTotal * 1000 - remainingMs) / 1000;
+
+    updateCardStatusUI(index, (activeRole === 'A' ? 'speaking-a' : 'speaking-b'), elapsedSec);
+
+    if (remainingMs <= 20) {
+      finishRoleSTTTurn(index, isSingleRetry);
+    } else {
+      sttAnimFrameId = requestAnimationFrame(sttCountdownStep);
+    }
+  }
+
+  sttAnimFrameId = requestAnimationFrame(sttCountdownStep);
+}
+
+function finishRoleSTTTurn(index, isSingleRetry) {
+  if (sttAnimFrameId) {
+    cancelAnimationFrame(sttAnimFrameId);
+    sttAnimFrameId = null;
+  }
+
+  stopSpeechRecognition();
+
+  const seg = subtitles[index];
+  if (!seg) return;
+
+  const card = document.getElementById(`card-${index}`);
+  const liveBox = document.getElementById(`stt-live-box-${index}`);
+  if (card) {
+    card.classList.remove('is-stt-listening');
+  }
+  if (liveBox) {
+    liveBox.style.display = 'none';
+  }
+  clearCardStatusUI(index);
+
+  const targetText = seg.enText || seg.text;
+  const evalResult = evaluateSpeechAccuracy(targetText, currentSTTTranscript);
+
+  seg.lastScore = evalResult.score;
+  seg.lastSpoken = evalResult.spokenText;
+  seg.lastDiff = evalResult.diffHtml;
+  saveStateToStorage();
+
+  updateCardSTTResultUI(index, evalResult);
+
+  if (evalResult.score >= 90) {
+    playTone(1046.5, 200, 'triangle');
+  } else if (evalResult.score >= 70) {
+    playTone(784, 180, 'triangle');
+  }
+
+  if (isSingleRetry) {
+    activeSTTIndex = -1;
+    showGestureToast(`✨ 채점 완료: ${evalResult.score}%`);
+    return;
+  }
+
+  activeSTTIndex = -1;
+
+  if (isWeakPracticeOnly) {
+    weakPracticePos++;
+    if (weakPracticePos < weakIndices.length) {
+      setTimeout(() => {
+        jumpToSegment(weakIndices[weakPracticePos], true);
+      }, 700);
+    } else {
+      isWeakPracticeOnly = false;
+      setTimeout(() => {
+        showRoleplaySummaryModal();
+      }, 800);
+    }
+    return;
+  }
+
+  if (index < subtitles.length - 1) {
+    setTimeout(() => {
+      advanceToSegment(index + 1);
+    }, 700);
+  } else {
+    setTimeout(() => {
+      showRoleplaySummaryModal();
+    }, 800);
+  }
+}
+
+function cancelSTTTurn() {
+  if (sttAnimFrameId) {
+    cancelAnimationFrame(sttAnimFrameId);
+    sttAnimFrameId = null;
+  }
+  if (activeSTTIndex !== -1) {
+    const card = document.getElementById(`card-${activeSTTIndex}`);
+    const liveBox = document.getElementById(`stt-live-box-${activeSTTIndex}`);
+    if (card) card.classList.remove('is-stt-listening');
+    if (liveBox) liveBox.style.display = 'none';
+    clearCardStatusUI(activeSTTIndex);
+    activeSTTIndex = -1;
+  }
+  stopSpeechRecognition();
+}
+
+function updateCardSTTResultUI(index, evalResult) {
+  const headerBadge = document.getElementById(`score-badge-${index}`);
+  const feedbackBox = document.getElementById(`stt-feedback-${index}`);
+  const diffBox = document.getElementById(`stt-diff-${index}`);
+  const spokenBox = document.getElementById(`stt-spoken-${index}`);
+
+  if (headerBadge) {
+    headerBadge.className = `stt-score-badge ${getScoreBadgeClass(evalResult.score)}`;
+    headerBadge.textContent = getScoreBadgeLabel(evalResult.score);
+    headerBadge.style.display = 'inline-flex';
+  }
+
+  if (feedbackBox) {
+    feedbackBox.style.display = 'flex';
+  }
+  if (diffBox) {
+    diffBox.innerHTML = evalResult.diffHtml;
+  }
+  if (spokenBox) {
+    spokenBox.textContent = `🗣️ 인식: "${evalResult.spokenText}"`;
+  }
+}
+
+function retrySingleSegmentSTT(index) {
+  if (index < 0 || index >= subtitles.length) return;
+  const seg = subtitles[index];
+  stopAudioPlayback();
+  cancelRepeatWait();
+  cancelCueCountdown();
+  cancelSTTTurn();
+
+  startRoleSTTTurn(seg, index, /* isSingleRetry = */ true);
+}
+
+// ── Roleplay Summary Modal ──
+function showRoleplaySummaryModal() {
+  const modal = document.getElementById('roleplay-summary-modal');
+  if (!modal) return;
+
+  const roleSegments = subtitles.filter(s => s.speaker === activeRole);
+  if (roleSegments.length === 0) return;
+
+  let totalScore = 0;
+  let scoredCount = 0;
+  let weakList = [];
+
+  roleSegments.forEach((s) => {
+    if (s.lastScore !== undefined) {
+      totalScore += s.lastScore;
+      scoredCount++;
+      if (s.lastScore < 75) {
+        weakList.push(s);
+      }
+    } else {
+      weakList.push(s);
+    }
+  });
+
+  const avgScore = scoredCount > 0 ? Math.round(totalScore / scoredCount) : 0;
+
+  const scoreVal = document.getElementById('summary-avg-score');
+  const scoreCircle = document.getElementById('summary-score-circle');
+  const scoreTitle = document.getElementById('summary-score-title');
+  const scoreDesc = document.getElementById('summary-score-desc');
+  const turnCount = document.getElementById('summary-turn-count');
+  const listContainer = document.getElementById('summary-sentences-list');
+  const btnRetryWeak = document.getElementById('btn-summary-retry-weak');
+
+  if (scoreVal) scoreVal.textContent = `${avgScore}%`;
+  if (turnCount) turnCount.textContent = `${roleSegments.length}개 중 ${scoredCount}개 채점 완료`;
+
+  if (scoreCircle) {
+    if (avgScore >= 90) {
+      scoreCircle.style.borderColor = '#10b981';
+      if (scoreVal) scoreVal.style.color = '#047857';
+    } else if (avgScore >= 70) {
+      scoreCircle.style.borderColor = '#3b82f6';
+      if (scoreVal) scoreVal.style.color = '#1d4ed8';
+    } else {
+      scoreCircle.style.borderColor = '#f43f5e';
+      if (scoreVal) scoreVal.style.color = '#be123c';
+    }
+  }
+
+  if (scoreTitle && scoreDesc) {
+    if (avgScore >= 90) {
+      scoreTitle.textContent = '🌟 완벽한 대화였습니다!';
+      scoreDesc.textContent = `${activeRole} 역할의 대사를 원어민처럼 정확하게 발화했습니다.`;
+    } else if (avgScore >= 70) {
+      scoreTitle.textContent = '👍 훌륭합니다!';
+      scoreDesc.textContent = '의미 전달이 원활합니다. 놓친 단어들을 확인해 보세요.';
+    } else {
+      scoreTitle.textContent = '⚠️ 조금 더 연습이 필요해요';
+      scoreDesc.textContent = '누락되거나 부정확한 단어들을 집중적으로 복습해보세요.';
+    }
+  }
+
+  if (btnRetryWeak) {
+    btnRetryWeak.style.display = weakList.length > 0 ? 'block' : 'none';
+    btnRetryWeak.textContent = `❌ 취약 문장 (${weakList.length}개) 다시 연습`;
+  }
+
+  if (listContainer) {
+    listContainer.innerHTML = '';
+    roleSegments.forEach((seg) => {
+      const isWeak = (seg.lastScore === undefined || seg.lastScore < 75);
+      const item = document.createElement('div');
+      item.className = `summary-sentence-item ${isWeak ? 'is-weak' : ''}`;
+      
+      const score = seg.lastScore !== undefined ? seg.lastScore : 0;
+      item.innerHTML = `
+        <div class="summary-item-header">
+          <span class="summary-item-speaker">${seg.speaker} 역할 (#${seg.index + 1})</span>
+          <span class="stt-score-badge ${getScoreBadgeClass(score)}">${getScoreBadgeLabel(score)}</span>
+        </div>
+        <div class="summary-item-ko">${escapeHTML(seg.koText || '')}</div>
+        <div class="stt-diff-words">${seg.lastDiff || `<span class="diff-word">${escapeHTML(seg.enText || seg.text)}</span>`}</div>
+      `;
+      listContainer.appendChild(item);
+    });
+  }
+
+  modal.style.display = 'flex';
+}
+
+function closeRoleplaySummaryModal() {
+  const modal = document.getElementById('roleplay-summary-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function startWeakSentencesPractice() {
+  weakIndices = [];
+  subtitles.forEach((s, i) => {
+    if (s.speaker === activeRole && (s.lastScore === undefined || s.lastScore < 75)) {
+      weakIndices.push(i);
+    }
+  });
+
+  if (weakIndices.length === 0) {
+    showGestureToast('취약 문장이 없습니다! 👍');
+    return;
+  }
+
+  isWeakPracticeOnly = true;
+  weakPracticePos = 0;
+  showGestureToast(`❌ 취약 ${weakIndices.length}개 문장 집중 연습 시작`);
+  jumpToSegment(weakIndices[0], true);
 }
 
 // ── UI Rendering & Dialogue Feed ──
@@ -1146,6 +1798,10 @@ function renderDialogueList() {
     const speakerColorClass = seg.speaker === 'A' ? 'badge-speaker-a' : 'badge-speaker-b';
     const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
 
+    const hasScore = seg.lastScore !== undefined;
+    const scoreClass = hasScore ? getScoreBadgeClass(seg.lastScore) : '';
+    const scoreText = hasScore ? getScoreBadgeLabel(seg.lastScore) : '';
+
     card.innerHTML = `
       <div class="bubble-content" data-index="${idx}">
         <div class="bubble-header">
@@ -1156,13 +1812,41 @@ function renderDialogueList() {
             <span class="range-start-badge" id="start-badge-${idx}" style="display: none;">🔁 시작</span>
             <span class="target-segment-badge" id="target-badge-${idx}" style="display: none;">🎯 암기중</span>
           </div>
-          <div class="bubble-time-info">
-            <span>${formatTime(seg.start)} - ${formatTime(seg.end)}</span>
+          <div style="display: inline-flex; align-items: center; gap: 8px;">
+            <span class="stt-score-badge ${scoreClass}" id="score-badge-${idx}" style="${hasScore ? '' : 'display: none;'}">${scoreText}</span>
+            <div class="bubble-time-info">
+              <span>${formatTime(seg.start)} - ${formatTime(seg.end)}</span>
+            </div>
           </div>
         </div>
         <div class="bubble-text" id="text-${idx}">
           ${escapeHTML(displayText)}
         </div>
+
+        <!-- STT Live In-turn indicator -->
+        <div class="stt-live-box" id="stt-live-box-${idx}" style="display: none;">
+          <div class="stt-live-indicator">
+            <span class="stt-mic-waves"><span></span><span></span><span></span><span></span></span>
+            <span>듣고 있습니다...</span>
+          </div>
+          <div class="stt-live-transcript" id="stt-live-text-${idx}">말씀해 주세요...</div>
+        </div>
+
+        <!-- STT Feedback Result (Diff & Score) -->
+        <div class="stt-feedback-container" id="stt-feedback-${idx}" style="${hasScore ? '' : 'display: none;'}">
+          <div class="stt-diff-words" id="stt-diff-${idx}">
+            ${seg.lastDiff || ''}
+          </div>
+          <div class="stt-spoken-sub" id="stt-spoken-${idx}">
+            🗣️ 인식: "${escapeHTML(seg.lastSpoken || '')}"
+          </div>
+          <div style="display: flex; justify-content: flex-end; margin-top: 2px;">
+            <button class="btn-stt-retry" data-index="${idx}">
+              <span>🔄</span><span>다시 말하기</span>
+            </button>
+          </div>
+        </div>
+
         <div class="bubble-status-footer" id="footer-${idx}" style="display: none;">
           <div class="status-badge-live" id="badge-${idx}"></div>
           <div class="bubble-progress-track">
@@ -1220,6 +1904,14 @@ function renderDialogueList() {
       if (e.target.closest('.speaker-badge-btn')) {
         e.stopPropagation();
         toggleSpeaker(idx);
+        return;
+      }
+
+      // Tap STT retry button
+      const retryBtn = e.target.closest('.btn-stt-retry');
+      if (retryBtn) {
+        e.stopPropagation();
+        retrySingleSegmentSTT(idx);
         return;
       }
 
@@ -1696,6 +2388,36 @@ function setupEventListeners() {
   if (guideModal) {
     guideModal.addEventListener('click', (e) => {
       if (e.target === guideModal) guideModal.style.display = 'none';
+    });
+  }
+
+  // STT Toggle Button
+  if (btnSTTToggle) {
+    btnSTTToggle.addEventListener('click', toggleSTT);
+  }
+
+  // Roleplay Summary Modal Listeners
+  if (summaryModalClose) {
+    summaryModalClose.addEventListener('click', closeRoleplaySummaryModal);
+  }
+  if (btnSummaryClose) {
+    btnSummaryClose.addEventListener('click', closeRoleplaySummaryModal);
+  }
+  if (roleplaySummaryModal) {
+    roleplaySummaryModal.addEventListener('click', (e) => {
+      if (e.target === roleplaySummaryModal) closeRoleplaySummaryModal();
+    });
+  }
+  if (btnSummaryRestart) {
+    btnSummaryRestart.addEventListener('click', () => {
+      closeRoleplaySummaryModal();
+      setRoleMode(activeRole);
+    });
+  }
+  if (btnSummaryRetryWeak) {
+    btnSummaryRetryWeak.addEventListener('click', () => {
+      closeRoleplaySummaryModal();
+      startWeakSentencesPractice();
     });
   }
 

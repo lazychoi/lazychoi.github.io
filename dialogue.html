@@ -98,6 +98,10 @@
           <span class="status-text" id="file-status-text">음원과 SRT 자막을 불러와 학습을 시작하세요</span>
         </div>
         <div class="status-right">
+          <button class="btn-stt-toggle active" id="btn-stt-toggle" title="실시간 음성인식 발음/정확도 채점 (ON/OFF)">
+            <span class="stt-dot"></span>
+            <span class="stt-label" id="stt-toggle-label">🎙️ 채점 ON</span>
+          </button>
           <span class="status-counter" id="status-counter">- / -</span>
         </div>
       </div>
@@ -186,6 +190,43 @@
             <li>자막 카드의 <b>[A]</b> 또는 <b>[B]</b> 배지를 터치하면 화자를 즉시 변경할 수 있습니다.</li>
           </ul>
         </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Roleplay Result Summary Modal -->
+  <div class="modal-backdrop" id="roleplay-summary-modal" style="display: none;">
+    <div class="modal-content modal-summary">
+      <div class="modal-header">
+        <div class="summary-header-badge">🎉 역할극 완료!</div>
+        <button class="modal-close" id="summary-modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body summary-body">
+        <div class="summary-score-hero">
+          <div class="summary-score-circle" id="summary-score-circle">
+            <span class="summary-score-val" id="summary-avg-score">0%</span>
+            <span class="summary-score-sub">평균 점수</span>
+          </div>
+          <div class="summary-score-text-box">
+            <h4 class="summary-score-title" id="summary-score-title">역할극 완주 축하합니다!</h4>
+            <p class="summary-score-desc" id="summary-score-desc">내 역할의 대사를 얼마나 정확하게 발화했는지 확인해보세요.</p>
+          </div>
+        </div>
+
+        <div class="summary-section-title">
+          <span>문장별 발화 성적표</span>
+          <span class="summary-count-badge" id="summary-turn-count">0개 문장</span>
+        </div>
+        
+        <div class="summary-sentences-list" id="summary-sentences-list">
+          <!-- Dynamically generated list of user sentences with scores -->
+        </div>
+
+        <div class="summary-actions">
+          <button class="btn btn-primary" id="btn-summary-retry-weak" style="display: none;">❌ 취약 문장만 다시 연습</button>
+          <button class="btn btn-secondary" id="btn-summary-restart">🔄 전체 다시 역할극</button>
+          <button class="btn btn-ghost" id="btn-summary-close">닫기</button>
+        </div>
       </div>
     </div>
   </div>
