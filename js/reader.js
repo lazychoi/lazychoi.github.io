@@ -2467,29 +2467,27 @@ function showFloatingToolbar(rect) {
 
   if (isMobile) {
     // 모바일/태블릿 OS(iOS Safari / Chrome) 자체 상황 팝업(복사/찾아보기 등) 위치를 완벽히 회피:
-    // iOS Safari의 기본 팝업은 텍스트 바로 '위'에 나타납니다.
-    // 따라서 앱 형광펜 팝업은 텍스트 '아래'에 배치하면 [기기 팝업 (위)] - [선택 텍스트] - [형광펜 창 (아래)] 구조로 절대 겹치지 않습니다.
-    //
-    // 예외 케이스:
-    // 1) 화면 최하단 (viewportBottom > window.innerHeight - 90): 아래 여백이 부족하므로
-    //    앱 팝업을 텍스트 '위'에 배치하되, 기기 팝업(위)과 겹치지 않도록 충분한 거리(52px)를 띄움.
-    // 2) 화면 최상단 (viewportY < 90): 기기 팝업이 공간 부족으로 텍스트 '아래'에 뜨므로,
-    //    앱 팝업은 기기 팝업(약 44px) 아래쪽으로 추가 오프셋(52px)을 둠.
+    // iPadOS/iOS는 화면 상반부(약 50% 미만)에서는 기기 자체 팝업을 텍스트 '아래'에,
+    // 화면 하반부(약 50% 이상)에서는 기기 자체 팝업을 텍스트 '위'에 띄웁니다.
+    // 
+    // 글자 크기나 줄간격에 따라 기기 팝업 방향이 전환되는 미세 위치가 달라지므로,
+    // 기기 팝업과 겹치지 않도록 항상 기기 팝업 바깥쪽으로 안전 거리(약 52px)를 두어 배치합니다:
+    // 1) 화면 상반부 (viewportY < 50%): 기기 팝업보다 더 '아래'에 배치 (+52px)
+    //    -> [선택 텍스트] -> [기기 팝업 (아래)] -> [형광펜 창 (그 아래)]
+    //    -> (만약 기기 팝업이 위에 뜨더라도 형광펜 창은 아래에 있으므로 겹침 0%)
+    // 2) 화면 하반부 (viewportY >= 50%): 기기 팝업보다 더 '위'에 배치 (+52px)
+    //    -> [형광펜 창 (그 위)] -> [기기 팝업 (위)] -> [선택 텍스트]
+    //    -> (만약 기기 팝업이 아래에 뜨더라도 형광펜 창은 위에 있으므로 겹침 0%)
     const viewportY = rect.top;
-    const viewportBottom = rect.top + (rect.height || 22);
+    const viewportHeight = window.innerHeight || 800;
+    const isUpperHalf = viewportY < (viewportHeight * 0.5);
 
-    if (viewportBottom > window.innerHeight - 90) {
-      // 화면 최하단: 텍스트 위에 배치하되 기기 팝업 위로 추가 간격 확보
-      placeBelow = false;
-      extraOffset = 52;
-    } else if (viewportY < 90) {
-      // 화면 최상단: 기기 팝업이 아래에 뜨므로 기기 팝업 아래로 배치
+    if (isUpperHalf) {
       placeBelow = true;
       extraOffset = 52;
     } else {
-      // 중간 및 일반 위치: 기기 팝업(위)과 반대인 텍스트 '아래'에 배치하여 완벽 분리
-      placeBelow = true;
-      extraOffset = 0;
+      placeBelow = false;
+      extraOffset = 52;
     }
   } else {
     // 데스크톱: 상단 여백이 좁으면 하단 배치, 충분하면 상단 배치
