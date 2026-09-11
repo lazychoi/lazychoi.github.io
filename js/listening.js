@@ -14,6 +14,9 @@ let volume = 1.0;
 // Looping & Timeline Status
 let globalLoopEnabled = false; // "R" toggle (Repeat Current Section)
 let loopSectionIndex = null;   // The locked section index for looping when globalLoopEnabled is ON
+let isRangeLoopActive = false; // Flag indicating custom range loop is active (롱프레스 구간 반복)
+let rangeLoopStart = 0;        // Start index for range loop
+let rangeLoopEnd = 0;          // End index for range loop
 let isDraggingTimeline = false;
 let loopCountRemaining = 5; // Default repeat count for current section (5 times)
 let loopDelayTimer = null;   // Timer for 1-second pause between loops
@@ -27,6 +30,110 @@ function clearLoopWaitTimer() {
     loopDelayTimer = null;
   }
   isLoopWaiting = false;
+}
+
+// ── Toast Notification ──
+let toastTimer = null;
+function showListeningToast(message) {
+  let toast = document.getElementById('listening-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'listening-toast';
+    toast.className = 'listening-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 1800);
+}
+
+// ── Custom Range Loop (길게 누른 구간부터 현재 재생 구간까지 반복) ──
+function startCustomRangeLoop(pressedIdx) {
+  if (subtitles.length === 0) return;
+  clearLoopWaitTimer();
+
+  // 현재 재생 중인 구간 파악 (오디오가 흐르고 있다면 activeIndex 또는 currentTime 기준)
+  let curPlayingIdx = activeIndex;
+  if (curPlayingIdx === -1) {
+    const curTime = audioPlayer.currentTime;
+    for (let i = 0; i < subtitles.length; i++) {
+      if (curTime >= subtitles[i].start && curTime < subtitles[i].end) {
+        curPlayingIdx = i;
+        break;
+      }
+    }
+  }
+  if (curPlayingIdx === -1) {
+    curPlayingIdx = pressedIdx;
+  }
+
+  const fromIdx = Math.min(pressedIdx, curPlayingIdx);
+  const toIdx = Math.max(pressedIdx, curPlayingIdx);
+
+  isRangeLoopActive = true;
+  rangeLoopStart = fromIdx;
+  rangeLoopEnd = toIdx;
+
+  // 루프 버튼 활성화
+  globalLoopEnabled = true;
+  repeatToggleBtn.classList.add('btn-active');
+  loopSectionIndex = fromIdx;
+
+  // 시작 구간으로 점프하여 바로 재생
+  jumpToSection(fromIdx);
+
+  updateTimelineLoopZone();
+  updateRangeLoopCardsUI();
+
+  const startNum = fromIdx + 1;
+  const endNum = toIdx + 1;
+  showListeningToast(`🔁 구간 반복: #${startNum} ~ #${endNum} 구간`);
+}
+
+function cancelCustomRangeLoop() {
+  if (!isRangeLoopActive) return;
+  isRangeLoopActive = false;
+  rangeLoopStart = 0;
+  rangeLoopEnd = 0;
+  updateRangeLoopCardsUI();
+  updateTimelineLoopZone();
+}
+
+function updateRangeLoopCardsUI() {
+  const cards = transcriptPane.querySelectorAll('.sub-card');
+  cards.forEach(card => {
+    const idx = parseInt(card.dataset.index, 10);
+
+    // 기존 동적 배지 제거
+    const existingStart = card.querySelector('.range-badge-start');
+    if (existingStart) existingStart.remove();
+    const existingEnd = card.querySelector('.range-badge-end');
+    if (existingEnd) existingEnd.remove();
+
+    if (isRangeLoopActive && idx >= rangeLoopStart && idx <= rangeLoopEnd) {
+      card.classList.add('is-in-range');
+      const badgeWrapper = card.querySelector('.sub-card-content > div:first-child');
+      if (badgeWrapper) {
+        if (idx === rangeLoopStart) {
+          const startBadge = document.createElement('span');
+          startBadge.className = 'range-badge range-badge-start';
+          startBadge.textContent = '🔁 시작';
+          badgeWrapper.appendChild(startBadge);
+        }
+        if (idx === rangeLoopEnd && rangeLoopStart !== rangeLoopEnd) {
+          const endBadge = document.createElement('span');
+          endBadge.className = 'range-badge range-badge-end';
+          endBadge.textContent = '🎯 끝';
+          badgeWrapper.appendChild(endBadge);
+        }
+      }
+    } else {
+      card.classList.remove('is-in-range');
+    }
+  });
 }
 
 
@@ -335,6 +442,17 @@ function updateTimelineLoopZone() {
   const dur = audioPlayer.duration;
   if (!dur) return;
 
+  if (isRangeLoopActive && subtitles[rangeLoopStart] && subtitles[rangeLoopEnd]) {
+    const startSec = subtitles[rangeLoopStart].start;
+    const endSec = subtitles[rangeLoopEnd].end;
+    const startPct = (startSec / dur) * 100;
+    const widthPct = Math.max(0, ((endSec - startSec) / dur) * 100);
+    timelineLoopZone.style.left = startPct + '%';
+    timelineLoopZone.style.width = widthPct + '%';
+    timelineLoopZone.style.display = 'block';
+    return;
+  }
+
   if (globalLoopEnabled && loopSectionIndex !== null && subtitles[loopSectionIndex]) {
     const section = subtitles[loopSectionIndex];
     const startPct = (section.start / dur) * 100;
@@ -577,6 +695,13 @@ function togglePlay() {
 
 function toggleGlobalSectionRepeat() {
   clearLoopWaitTimer();
+  if (isRangeLoopActive) {
+    cancelCustomRangeLoop();
+    globalLoopEnabled = false;
+    repeatToggleBtn.classList.remove('btn-active');
+    loopSectionIndex = null;
+    return;
+  }
   globalLoopEnabled = !globalLoopEnabled;
   if (globalLoopEnabled) {
     repeatToggleBtn.classList.add('btn-active');
@@ -603,6 +728,34 @@ function getCheckedIndices() {
 // ── Precision Section Repeating Logic ──
 function checkSectionLoop(curTime) {
   if (isLoopWaiting) return;
+
+  // Case -1: 롱프레스 구간 범위 반복 모드 (rangeLoopStart ~ rangeLoopEnd)
+  if (isRangeLoopActive) {
+    const endSection = subtitles[rangeLoopEnd];
+    if (endSection && curTime >= endSection.end) {
+      isLoopWaiting = true;
+      audioPlayer.pause();
+
+      // 반복듣기 시 repeated_number +1 및 last_updated 갱신
+      endSection.repeated_number = (endSection.repeated_number || 0) + 1;
+      endSection.last_updated = getCurrentDateString();
+      saveSubtitleStateToStorage();
+
+      // 시작 구간으로 이동 후 1초간 무음 대기 후 반복 재생
+      audioPlayer.currentTime = subtitles[rangeLoopStart].start;
+      updateTimelineProgress();
+      syncSubtitleHighlight(subtitles[rangeLoopStart].start);
+
+      loopDelayTimer = setTimeout(() => {
+        if (isRangeLoopActive && globalLoopEnabled) {
+          audioPlayer.play().catch(err => console.warn("Playback error:", err));
+        }
+        isLoopWaiting = false;
+        loopDelayTimer = null;
+      }, 1000);
+    }
+    return;
+  }
 
   // Case 0: '어려운 것부터 듣기' 모드 + Loop 버튼 OFF ➔ 해당 구간 1회 재생 후 멈춤
   if (sortMode === 'hardest' && !globalLoopEnabled) {
@@ -731,8 +884,8 @@ function syncSubtitleHighlight(curTime, forceRealTimeSync = false) {
 
   let foundIndex = -1;
 
-  // If forceRealTimeSync is false and looping is active, lock the highlighted subtitle to the looped one
-  if (!forceRealTimeSync && globalLoopEnabled && loopSectionIndex !== null) {
+  // If forceRealTimeSync is false and looping is active (단일 구간 루프 시), lock the highlighted subtitle to the looped one
+  if (!forceRealTimeSync && !isRangeLoopActive && globalLoopEnabled && loopSectionIndex !== null) {
     foundIndex = loopSectionIndex;
   } else {
     for (let i = 0; i < subtitles.length; i++) {
@@ -1587,16 +1740,95 @@ function renderSubtitles() {
     });
     card.appendChild(aiBtn);
 
-    // Card click defaults to seek to start and play
-    card.addEventListener('click', () => {
+    // ── Long-press & Click Handler ──
+    // - 길게 누르기 (450ms): 특정 구간부터 현재 재생 구간까지 무한 반복 모드
+    // - 싱글 클릭: 해당 구간으로 점프하여 재생
+    let longPressTimer = null;
+    let isLongPressTriggered = false;
+    let suppressClickUntil = 0;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const startLongPress = () => {
+      isLongPressTriggered = false;
+      card.classList.add('is-pressing');
+      if (longPressTimer) clearTimeout(longPressTimer);
+      longPressTimer = setTimeout(() => {
+        isLongPressTriggered = true;
+        card.classList.remove('is-pressing');
+        suppressClickUntil = Date.now() + 500; // 롱프레스 후 발생하는 click 방지
+
+        // 햅틱 진동 피드백
+        if (navigator.vibrate) {
+          try { navigator.vibrate(60); } catch {}
+        }
+        startCustomRangeLoop(s.index);
+      }, 450);
+    };
+
+    const cancelLongPress = () => {
+      card.classList.remove('is-pressing');
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    };
+
+    card.addEventListener('click', (e) => {
+      // 체크박스나 AI 버튼 클릭 시에는 카드 클릭 무시
+      if (e.target.closest('.sub-checkbox') || e.target.closest('.btn-ai-search')) {
+        return;
+      }
+      if (isLongPressTriggered || Date.now() < suppressClickUntil) {
+        isLongPressTriggered = false;
+        e.stopPropagation();
+        return;
+      }
+
+      // 일반 클릭 시 기존 범위 루프가 있었다면 해제하고 해당 구간으로 이동
+      if (isRangeLoopActive) {
+        cancelCustomRangeLoop();
+      }
       jumpToSection(s.index);
     });
+
+    // 데스크톱 마우스 롱클릭 지원
+    card.addEventListener('mousedown', (e) => {
+      if (e.button !== 0 || e.target.closest('.sub-checkbox') || e.target.closest('.btn-ai-search')) return;
+      startLongPress();
+    });
+    card.addEventListener('mouseup', () => cancelLongPress());
+    card.addEventListener('mouseleave', () => cancelLongPress());
+
+    // 모바일 터치 이벤트
+    card.addEventListener('touchstart', (e) => {
+      if (e.touches.length !== 1 || e.target.closest('.sub-checkbox') || e.target.closest('.btn-ai-search')) {
+        cancelLongPress();
+        return;
+      }
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      startLongPress();
+    }, { passive: true });
+
+    card.addEventListener('touchmove', (e) => {
+      if (e.touches.length !== 1) return;
+      const dx = e.touches[0].clientX - touchStartX;
+      const dy = e.touches[0].clientY - touchStartY;
+      if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+        cancelLongPress();
+      }
+    }, { passive: true });
+
+    card.addEventListener('touchend', () => cancelLongPress(), { passive: true });
+    card.addEventListener('touchcancel', () => cancelLongPress(), { passive: true });
 
     transcriptPane.appendChild(card);
   });
 
-  // Sync highlighting after render
+  // Sync highlighting and range loop cards UI after render
   syncSubtitleHighlight(audioPlayer.currentTime);
+  updateRangeLoopCardsUI();
 }
 
 // ── Keyboard Hotkeys ──

@@ -11,8 +11,9 @@ let audioBlob = null;
 let audioName = "";
 let srtName = "";
 
-// Learning Modes: 'shadowing' | 'listen-speak' | 'from-prev' | 'from-start' | 'role-a' | 'role-b'
+// Learning Modes: 'shadowing' | 'listen-speak' | 'from-prev' | 'from-start' | 'role-a' | 'role-b' | 'custom-range'
 let currentMode = 'shadowing';
+let rangeStartIdx = 0;           // Start segment for 'custom-range' (triple-tap gesture)
 let activeRole = 'B';            // Active role for stage 5 ('B' | 'A')
 let currentSubtitleLang = 'ko';  // Current subtitle language ('ko' | 'en') - Default: 'ko'
 let isRepeatEnabled = false;     // Repeat toggle state (false: 1회/연속, true: 무한 반복)
@@ -302,7 +303,8 @@ function saveStateToStorage() {
     isRepeatEnabled,
     playbackSpeed,
     activeIndex,
-    targetIndex
+    targetIndex,
+    rangeStartIdx
   };
   try {
     localStorage.setItem('dialogue_app_state_v2', JSON.stringify(state));
@@ -331,6 +333,7 @@ async function restoreSavedState() {
         isRepeatEnabled = !!state.isRepeatEnabled;
         playbackSpeed = state.playbackSpeed || 1.0;
         targetIndex = state.targetIndex || 0;
+        rangeStartIdx = state.rangeStartIdx || 0;
         activeIndex = (state.activeIndex >= 0 && state.activeIndex < subtitles.length) ? state.activeIndex : 0;
 
         // Apply UI values
@@ -764,6 +767,27 @@ function handleSegmentEndReached(seg) {
     return;
   }
 
+  // ── Custom Range: 특정 구간부터 암기중 구간까지 반복 (트리플탭 제스처) ──
+  if (currentMode === 'custom-range') {
+    const startIdx = Math.min(rangeStartIdx, targetIndex);
+    const endIdx = Math.max(rangeStartIdx, targetIndex);
+
+    if (activeIndex < endIdx) {
+      // 다음 구간으로 연속 진행 (음성 튐 없이 매끄럽게 재생)
+      advanceToSegmentSeamless(activeIndex + 1);
+    } else {
+      // 목표 구간(endIdx) 도달 완료
+      if (isRepeatEnabled) {
+        // 반복 ON: 지정한 시작 구간부터 다시 무한 반복
+        jumpToSegment(startIdx, true);
+      } else {
+        // 반복 OFF: 1회 완료 후 정지
+        stopAudioPlayback();
+      }
+    }
+    return;
+  }
+
   // ── Stage 5: A 말하기 (Role A) ──
   if (currentMode === 'role-a') {
     if (activeIndex < subtitles.length - 1) {
@@ -893,6 +917,15 @@ function handleSegmentTouch(index) {
   cancelRepeatWait();
   cancelCueCountdown();
 
+  if (currentMode === 'custom-range') {
+    // 구간 반복 모드: 해당 구간으로 점프하여 재생하되 암기중 목표(targetIndex)와 반복 범위는 유지
+    jumpToSegment(index, true);
+    const s = Math.min(rangeStartIdx, targetIndex) + 1;
+    const e = Math.max(rangeStartIdx, targetIndex) + 1;
+    updateStatusBanner(`구간 반복 (${s}번 ~ 암기중 ${e}번 문장)`);
+    return;
+  }
+
   targetIndex = index;
   saveStateToStorage();
 
@@ -1021,6 +1054,32 @@ function switchToFromPrevMode(index) {
   showGestureToast(`3️⃣ 직전 구간부터 모드 (암기중: ${index + 1}번)`);
 }
 
+function switchToCustomRangeMode(index) {
+  cancelRepeatWait();
+  cancelCueCountdown();
+  currentMode = 'custom-range';
+  rangeStartIdx = index;
+
+  // targetIndex가 유효하지 않으면 현재 activeIndex 또는 index로 지정
+  if (targetIndex < 0 || targetIndex >= subtitles.length) {
+    targetIndex = (activeIndex >= 0 && activeIndex < subtitles.length) ? activeIndex : index;
+  }
+
+  // 사용자 요청: "그 구간부터 암기중인 구간까지 반복되는 기능"에 따라 반복 기능 자동 활성화
+  isRepeatEnabled = true;
+  updateRepeatButtonUI();
+
+  updateModeSelectorUI('custom-range');
+  saveStateToStorage();
+
+  const startIdx = Math.min(rangeStartIdx, targetIndex);
+  const endIdx = Math.max(rangeStartIdx, targetIndex);
+
+  jumpToSegment(startIdx, true);
+  updateStatusBanner(`구간 반복 (${startIdx + 1}번 ~ 암기중 ${endIdx + 1}번 문장)`);
+  showGestureToast(`🔁 구간 반복: ${startIdx + 1}번 ~ ${endIdx + 1}번 문장`);
+}
+
 function setRoleMode(role) {
   cancelRepeatWait();
   cancelCueCountdown();
@@ -1094,6 +1153,7 @@ function renderDialogueList() {
             <button class="speaker-badge-btn ${speakerColorClass}" data-index="${idx}" title="화자 변경 (A ↔ B)">
               <span>${seg.speaker}</span>
             </button>
+            <span class="range-start-badge" id="start-badge-${idx}" style="display: none;">🔁 시작</span>
             <span class="target-segment-badge" id="target-badge-${idx}" style="display: none;">🎯 암기중</span>
           </div>
           <div class="bubble-time-info">
@@ -1120,9 +1180,40 @@ function renderDialogueList() {
 
     const bubbleContent = card.querySelector('.bubble-content');
 
-    // 1. Click & Double-tap handler (어떤 모드에서든 더블클릭/더블탭 시 1. 섀도잉 모드로 전환)
+    // 1. Long-press & Tap (Single / Double) Handler
+    // - 길게 누르기 (450ms): 해당 구간부터 [🎯 암기중] 구간까지 무한 반복 모드로 전환
+    // - 더블 탭: 1. 섀도잉 모드로 전환
+    // - 싱글 탭: 재생 / 일시정지 토글
     let lastTapTime = 0;
     let tapMoved = false;
+    let longPressTimer = null;
+    let isLongPressTriggered = false;
+    let suppressClickUntil = 0;
+
+    const startLongPress = () => {
+      isLongPressTriggered = false;
+      card.classList.add('is-pressing');
+      if (longPressTimer) clearTimeout(longPressTimer);
+      longPressTimer = setTimeout(() => {
+        isLongPressTriggered = true;
+        card.classList.remove('is-pressing');
+        suppressClickUntil = Date.now() + 500; // 롱프레스 후 touchend로 발생하는 click 방지
+
+        // 햅틱 진동 피드백
+        if (navigator.vibrate) {
+          try { navigator.vibrate(60); } catch {}
+        }
+        switchToCustomRangeMode(idx);
+      }, 450);
+    };
+
+    const cancelLongPress = () => {
+      card.classList.remove('is-pressing');
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
+    };
 
     bubbleContent.addEventListener('click', (e) => {
       // Tap speaker badge to toggle A <-> B
@@ -1131,39 +1222,62 @@ function renderDialogueList() {
         toggleSpeaker(idx);
         return;
       }
+
+      // 롱프레스가 발동되었거나 스크롤 이동한 경우 클릭 무시
+      if (isLongPressTriggered || Date.now() < suppressClickUntil) {
+        isLongPressTriggered = false;
+        e.stopPropagation();
+        return;
+      }
       if (tapMoved) {
         tapMoved = false;
         return;
       }
+
       const now = Date.now();
-      if ((now - lastTapTime) < 320 && (now - lastTapTime) > 40) {
+      const diff = now - lastTapTime;
+
+      // 더블탭 판정 (40ms ~ 320ms 간격)
+      if (diff > 40 && diff < 320) {
         lastTapTime = 0;
         switchToShadowingMode(idx);
         return;
       }
+
+      // 싱글탭: 즉각 재생 / 일시정지 토글
       lastTapTime = now;
       handleSegmentTouch(idx);
     });
 
     bubbleContent.addEventListener('dblclick', (e) => {
-      if (e.target.closest('.speaker-badge-btn')) return;
       e.preventDefault();
-      switchToShadowingMode(idx);
     });
 
-    // 2. Touch Gesture Engine (좌 스와이프: 2. 듣고 말하기, 우 스와이프: 3. 직전 구간부터)
+    // 데스크톱 마우스 롱클릭 지원
+    bubbleContent.addEventListener('mousedown', (e) => {
+      if (e.button !== 0 || e.target.closest('.speaker-badge-btn')) return;
+      startLongPress();
+    });
+    bubbleContent.addEventListener('mouseup', () => cancelLongPress());
+    bubbleContent.addEventListener('mouseleave', () => cancelLongPress());
+
+    // 2. Touch Gesture Engine (롱프레스 / 좌 스와이프: 듣고 말하기 / 우 스와이프: 직전 구간부터)
     let touchStartX = 0;
     let touchStartY = 0;
     let isSwiping = false;
     let swipeDirection = null;
 
     bubbleContent.addEventListener('touchstart', (e) => {
-      if (e.touches.length !== 1) return;
+      if (e.touches.length !== 1) {
+        cancelLongPress();
+        return;
+      }
       touchStartX = e.touches[0].clientX;
       touchStartY = e.touches[0].clientY;
       isSwiping = false;
       swipeDirection = null;
       tapMoved = false;
+      startLongPress();
     }, { passive: true });
 
     bubbleContent.addEventListener('touchmove', (e) => {
@@ -1174,6 +1288,11 @@ function renderDialogueList() {
       const dy = curY - touchStartY;
       const absX = Math.abs(dx);
       const absY = Math.abs(dy);
+
+      // 손가락이 8px 이상 움직이면 롱프레스 취소
+      if (absX > 8 || absY > 8) {
+        cancelLongPress();
+      }
 
       if (!isSwiping) {
         if (absX > 10 && absX > absY * 1.3) {
@@ -1211,6 +1330,7 @@ function renderDialogueList() {
     }, { passive: false });
 
     const finishSwipe = () => {
+      cancelLongPress();
       if (!isSwiping) return;
       isSwiping = false;
       bubbleContent.style.transition = 'transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1)';
@@ -1231,6 +1351,7 @@ function renderDialogueList() {
 
     bubbleContent.addEventListener('touchend', finishSwipe, { passive: true });
     bubbleContent.addEventListener('touchcancel', () => {
+      cancelLongPress();
       isSwiping = false;
       swipeDirection = null;
       bubbleContent.style.transition = 'transform 0.25s ease';
@@ -1250,7 +1371,10 @@ function renderDialogueList() {
 
 function updateActiveCardUI() {
   const cards = document.querySelectorAll('.dialogue-card');
-  const isTargetMode = (currentMode === 'from-prev' || currentMode === 'from-start');
+  const isCustomRange = (currentMode === 'custom-range');
+  const isTargetMode = (currentMode === 'from-prev' || currentMode === 'from-start' || isCustomRange);
+  const minRange = isCustomRange ? Math.min(rangeStartIdx, targetIndex) : -1;
+  const maxRange = isCustomRange ? Math.max(rangeStartIdx, targetIndex) : -1;
 
   cards.forEach((c, idx) => {
     // 1. [🎯 암기중] 구간 배지 표시
@@ -1263,7 +1387,22 @@ function updateActiveCardUI() {
       if (targetBadge) targetBadge.style.display = 'none';
     }
 
-    // 2. 현재 재생 중인 활성 구간 강조
+    // 2. [🔁 시작] 구간 배지 표시 (트리플탭 구간 반복 모드)
+    const startBadge = document.getElementById(`start-badge-${idx}`);
+    if (isCustomRange && idx === rangeStartIdx && rangeStartIdx !== targetIndex) {
+      if (startBadge) startBadge.style.display = 'inline-flex';
+    } else {
+      if (startBadge) startBadge.style.display = 'none';
+    }
+
+    // 3. [구간 반복 범위 하이라이트]
+    if (isCustomRange && idx >= minRange && idx <= maxRange) {
+      c.classList.add('is-in-range');
+    } else {
+      c.classList.remove('is-in-range');
+    }
+
+    // 4. 현재 재생 중인 활성 구간 강조
     if (idx === activeIndex) {
       c.classList.add('is-active');
       c.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1536,6 +1675,7 @@ function setupEventListeners() {
       subtitles = [];
       activeIndex = -1;
       targetIndex = 0;
+      rangeStartIdx = 0;
       audioBlob = null;
       audioName = '';
       srtName = '';
