@@ -23,7 +23,7 @@ let playbackSpeed = 1.0;
 // 실제 원어민 문장 길이 대비 몇 배의 시간을 제공할지 설정합니다.
 // - 2.0 : 실제 문장 길이의 2배 (기본값: 초보자/학습자가 여유있게 말하기)
 // - 1.0 : 실제 문장 길이와 동일 (나중에 실력이 늘어 원어민 속도로 연습할 때 이 값을 1.0으로 변경)
-const USER_SPEAKING_DURATION_RATIO = 2.0;
+const USER_SPEAKING_DURATION_RATIO = 1.5;
 
 // Internal Flags & Timers
 let isRepeatWaiting = false;     // Flag during 'listen-speak' wait countdown
