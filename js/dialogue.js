@@ -19,6 +19,12 @@ let currentSubtitleLang = 'ko';  // Current subtitle language ('ko' | 'en') - De
 let isRepeatEnabled = false;     // Repeat toggle state (false: 1회/연속, true: 무한 반복)
 let playbackSpeed = 1.0;
 
+// ── 사용자 발화 시간 배율 설정 (말하기 시간 조절) ──
+// 실제 원어민 문장 길이 대비 몇 배의 시간을 제공할지 설정합니다.
+// - 2.0 : 실제 문장 길이의 2배 (기본값: 초보자/학습자가 여유있게 말하기)
+// - 1.0 : 실제 문장 길이와 동일 (나중에 실력이 늘어 원어민 속도로 연습할 때 이 값을 1.0으로 변경)
+const USER_SPEAKING_DURATION_RATIO = 2.0;
+
 // Internal Flags & Timers
 let isRepeatWaiting = false;     // Flag during 'listen-speak' wait countdown
 let repeatTimerId = null;
@@ -357,6 +363,11 @@ async function restoreSavedState() {
           activeRole = 'B';
         } else {
           activeRole = state.activeRole || 'B';
+          subtitles.forEach(s => {
+            delete s.lastScore;
+            delete s.lastSpoken;
+            delete s.lastDiff;
+          });
         }
         currentSubtitleLang = state.currentSubtitleLang || 'ko';
         isRepeatEnabled = !!state.isRepeatEnabled;
@@ -874,7 +885,7 @@ function startListenSpeakPause(seg) {
   isRepeatWaiting = true;
   audioPlayer.pause();
 
-  const speakDurationSec = Math.max(1.2, seg.duration / audioPlayer.playbackRate);
+  const speakDurationSec = Math.max(1.5, (seg.duration * USER_SPEAKING_DURATION_RATIO) / audioPlayer.playbackRate);
   repeatDurationTotal = speakDurationSec;
   repeatTimerEnd = performance.now() + (speakDurationSec * 1000);
 
@@ -1072,6 +1083,7 @@ function showGestureToast(message) {
 }
 
 function switchToShadowingMode(index) {
+  clearSTTFeedback();
   cancelRepeatWait();
   cancelCueCountdown();
   currentMode = 'shadowing';
@@ -1083,6 +1095,7 @@ function switchToShadowingMode(index) {
 }
 
 function switchToListenSpeakMode(index) {
+  clearSTTFeedback();
   cancelRepeatWait();
   cancelCueCountdown();
   currentMode = 'listen-speak';
@@ -1094,6 +1107,7 @@ function switchToListenSpeakMode(index) {
 }
 
 function switchToFromPrevMode(index) {
+  clearSTTFeedback();
   cancelRepeatWait();
   cancelCueCountdown();
   currentMode = 'from-prev';
@@ -1106,6 +1120,7 @@ function switchToFromPrevMode(index) {
 }
 
 function switchToCustomRangeMode(index) {
+  clearSTTFeedback();
   cancelRepeatWait();
   cancelCueCountdown();
   currentMode = 'custom-range';
@@ -1132,6 +1147,7 @@ function switchToCustomRangeMode(index) {
 }
 
 function setRoleMode(role) {
+  clearSTTFeedback();
   cancelRepeatWait();
   cancelCueCountdown();
   cancelSTTTurn();
@@ -1515,7 +1531,7 @@ function startRoleSTTTurn(seg, index, isSingleRetry = false) {
   playTurnChime();
   startSpeechRecognition();
 
-  const speakDurationSec = Math.max(2.8, (seg.duration * 1.15) / playbackSpeed);
+  const speakDurationSec = Math.max(3.0, (seg.duration * USER_SPEAKING_DURATION_RATIO) / playbackSpeed);
   repeatDurationTotal = speakDurationSec;
   const startTime = performance.now();
   repeatTimerEnd = startTime + (speakDurationSec * 1000);
@@ -1648,6 +1664,60 @@ function updateCardSTTResultUI(index, evalResult) {
   if (spokenBox) {
     spokenBox.textContent = `🗣️ 인식: "${evalResult.spokenText}"`;
   }
+}
+
+// ── Clear STT Feedback & Diff (모드 전환 시 초기화) ──
+function clearSTTFeedback() {
+  cancelSTTTurn();
+  closeRoleplaySummaryModal();
+  isWeakPracticeOnly = false;
+  weakIndices = [];
+
+  if (subtitles && subtitles.length > 0) {
+    subtitles.forEach((seg, idx) => {
+      delete seg.lastScore;
+      delete seg.lastSpoken;
+      delete seg.lastDiff;
+
+      const headerBadge = document.getElementById(`score-badge-${idx}`);
+      if (headerBadge) {
+        headerBadge.className = 'stt-score-badge';
+        headerBadge.textContent = '';
+        headerBadge.style.display = 'none';
+      }
+
+      const feedbackBox = document.getElementById(`stt-feedback-${idx}`);
+      if (feedbackBox) {
+        feedbackBox.style.display = 'none';
+      }
+
+      const diffBox = document.getElementById(`stt-diff-${idx}`);
+      if (diffBox) {
+        diffBox.innerHTML = '';
+      }
+
+      const spokenBox = document.getElementById(`stt-spoken-${idx}`);
+      if (spokenBox) {
+        spokenBox.textContent = '';
+      }
+
+      const liveBox = document.getElementById(`stt-live-box-${idx}`);
+      if (liveBox) {
+        liveBox.style.display = 'none';
+      }
+
+      const liveText = document.getElementById(`stt-live-text-${idx}`);
+      if (liveText) {
+        liveText.textContent = '말씀해 주세요...';
+      }
+
+      const card = document.getElementById(`card-${idx}`);
+      if (card) {
+        card.classList.remove('is-stt-listening');
+      }
+    });
+  }
+  saveStateToStorage();
 }
 
 function retrySingleSegmentSTT(index) {
@@ -1798,7 +1868,8 @@ function renderDialogueList() {
     const speakerColorClass = seg.speaker === 'A' ? 'badge-speaker-a' : 'badge-speaker-b';
     const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
 
-    const hasScore = seg.lastScore !== undefined;
+    const isRoleplayMode = (currentMode === 'role-a' || currentMode === 'role-b');
+    const hasScore = isRoleplayMode && (seg.lastScore !== undefined);
     const scoreClass = hasScore ? getScoreBadgeClass(seg.lastScore) : '';
     const scoreText = hasScore ? getScoreBadgeLabel(seg.lastScore) : '';
 
@@ -2336,6 +2407,7 @@ function setupEventListeners() {
       const text = event.target.result;
       const parsed = parseSRT(text);
       if (parsed.length > 0) {
+        clearSTTFeedback();
         subtitles = parsed;
         srtName = file.name;
         activeIndex = 0;
@@ -2358,6 +2430,7 @@ function setupEventListeners() {
   // Reset Button
   btnReset.addEventListener('click', async () => {
     if (confirm('저장된 대화 자막과 음원 데이터를 모두 초기화하시겠습니까?')) {
+      clearSTTFeedback();
       cancelRepeatWait();
       cancelCueCountdown();
       await clearAudioFromDB();
@@ -2460,6 +2533,7 @@ function setupEventListeners() {
     const mode = btn.dataset.mode;
     if (!mode || mode === currentMode) return;
 
+    clearSTTFeedback();
     cancelRepeatWait();
     cancelCueCountdown();
     currentMode = mode;
@@ -2496,6 +2570,7 @@ function setupEventListeners() {
 
 // ── Sample Dialogue Fallback Loader ──
 function loadSampleDialogue() {
+  clearSTTFeedback();
   subtitles = parseSRT(SAMPLE_DIALOGUE_SRT);
   srtName = "샘플 일상 대화 (8개 구간)";
   activeIndex = 0;

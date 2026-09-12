@@ -39,3 +39,11 @@ Return ONLY a valid JSON object matching this schema without markdown fences:
   "targetMeaning": "Korean literal meaning first. If awkward, format as: 직역 (문맥: 의역)",
   "sentenceTranslation": "fluent Korean translation of the target sentence"
 }
+
+### 영어암기앱 역할극에서 사용자 말하기 시간 조정
+
+// ── 사용자 발화 시간 배율 설정 (말하기 시간 조절) ──
+// 실제 원어민 문장 길이 대비 몇 배의 시간을 제공할지 설정합니다.
+// - 2.0 : 실제 문장 길이의 2배 (기본값: 초보자/학습자가 여유있게 말하기)
+// - 1.0 : 실제 문장 길이와 동일 (나중에 실력이 늘어 원어민 속도로 연습할 때 이 값을 1.0으로 변경)
+const USER_SPEAKING_DURATION_RATIO = 2.0; // 👈 나중에 이 숫자를 1.0 으로 변경하시면 됩니다!
