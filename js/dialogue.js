@@ -835,7 +835,10 @@ function handleSegmentEndReached(seg) {
     } else {
       // 전체 대화 끝
       if (isSTTEnabled) {
+        stopAudioPlayback();
+        cancelCueCountdown();
         setTimeout(() => showRoleplaySummaryModal(), 600);
+        return; // 채점 ON 상태에서는 평가 모달을 띄우고 배경에서 자동 반복하지 않음
       }
       if (isRepeatEnabled) {
         // A 말하기 상태에서 반복 켜짐 시, 매 반복 시작 전에 시작 신호음 카운트다운(3, 2, 1, 시작!) 재생
@@ -861,7 +864,10 @@ function handleSegmentEndReached(seg) {
     } else {
       // 전체 대화 끝
       if (isSTTEnabled) {
+        stopAudioPlayback();
+        cancelCueCountdown();
         setTimeout(() => showRoleplaySummaryModal(), 600);
+        return; // 채점 ON 상태에서는 평가 모달을 띄우고 배경에서 자동 반복하지 않음
       }
       if (isRepeatEnabled) {
         if (subtitles.length > 0 && subtitles[0].speaker === 'B') {
@@ -1621,6 +1627,8 @@ function finishRoleSTTTurn(index, isSingleRetry) {
       advanceToSegment(index + 1);
     }, 700);
   } else {
+    stopAudioPlayback();
+    cancelCueCountdown();
     setTimeout(() => {
       showRoleplaySummaryModal();
     }, 800);
@@ -1733,6 +1741,11 @@ function retrySingleSegmentSTT(index) {
 
 // ── Roleplay Summary Modal ──
 function showRoleplaySummaryModal() {
+  stopAudioPlayback();
+  cancelRepeatWait();
+  cancelCueCountdown();
+  cancelSTTTurn();
+
   const modal = document.getElementById('roleplay-summary-modal');
   if (!modal) return;
 
