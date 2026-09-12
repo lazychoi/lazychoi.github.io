@@ -110,7 +110,14 @@ const state = {
     rendition: null,
     toc: [],
     locationsReady: false,
-    resizeObserver: null
+    resizeObserver: null,
+    currentCfi: null,
+    pendingRestoreCfi: null,
+    isResizing: false,
+  },
+  txt: {
+    currentRatio: 0,
+    isResizing: false,
   },
   activeSelection: null, // { text, targetSentence, prevSentence, nextSentence, cfiRange, range, rect }
   activeHighlight: null, // clicked highlight item
@@ -902,7 +909,8 @@ function applyEpubThemes() {
     '.epubjs-hl.hl-pink':   { 'fill': '#f472b6 !important' }
   });
 
-  // Re-sync highlights whenever themes (line-height, font-size, colors) change
+  // 테마/폰트 크기/줄간격 변경 시 현재 읽던 위치(CFI) 및 형광펜 유지
+  triggerEpubResizeSafe();
   setTimeout(() => {
     restoreEpubHighlights();
   }, 100);
@@ -1605,11 +1613,14 @@ function renderTxtContent(fallbackPosition = null) {
 
   // TXT Scroll progress tracking
   elements.txtViewer.onscroll = () => {
-    if (isRestoringTxtScroll) return;
+    if (isRestoringTxtScroll || (state.txt && state.txt.isResizing)) return;
     const scrollTop = elements.txtViewer.scrollTop;
     const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
     if (scrollHeight > 0) {
-      const pct = Math.min(100, Math.max(0, Math.round((scrollTop / scrollHeight) * 100)));
+      const ratio = Math.min(1, Math.max(0, scrollTop / scrollHeight));
+      if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+      state.txt.currentRatio = ratio;
+      const pct = Math.min(100, Math.max(0, Math.round(ratio * 100)));
       elements.progressSlider.value = pct;
       elements.progressPercent.textContent = `${pct}%`;
       if (state.currentBook) {
@@ -1630,7 +1641,10 @@ function renderTxtContent(fallbackPosition = null) {
     const applySavedScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
-        elements.txtViewer.scrollTop = (parseFloat(savedPos) / 100) * scrollHeight;
+        const ratio = Math.min(1, Math.max(0, parseFloat(savedPos) / 100));
+        if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+        state.txt.currentRatio = ratio;
+        elements.txtViewer.scrollTop = ratio * scrollHeight;
         const pct = Math.round(parseFloat(savedPos));
         elements.progressSlider.value = pct;
         elements.progressPercent.textContent = `${pct}%`;
@@ -1751,6 +1765,9 @@ function bindHighlightClickEvents() {
 }
 
 // ── EPUB Book Viewer (epub.js) ──
+let epubResizeDebounceTimer = null;
+let txtResizeDebounceTimer = null;
+
 function cleanupEpub() {
   if (state.epub.resizeObserver) {
     try {
@@ -1774,7 +1791,140 @@ function cleanupEpub() {
     }
     state.epub.book = null;
   }
+  state.epub.currentCfi = null;
+  state.epub.pendingRestoreCfi = null;
+  state.epub.isResizing = false;
+  if (epubResizeDebounceTimer) {
+    clearTimeout(epubResizeDebounceTimer);
+    epubResizeDebounceTimer = null;
+  }
   elements.epubArea.innerHTML = '';
+}
+
+/**
+ * EPUB 뷰어 영역 리사이즈 및 오리엔테이션 회전 시 현재 읽던 위치(CFI) 보존 동기화
+ */
+function triggerEpubResizeSafe(immediateTargetCfi = null) {
+  if (!state.currentBook || state.currentBook.type !== 'epub' || !state.epub.rendition) return;
+
+  // 1. 화면 회전/리사이즈로 인해 레이아웃이 초기화(54%)되기 전의 온전한 읽기 위치(57%)를 즉시 확보하여 잠금
+  const loc = state.epub.rendition.currentLocation();
+  const currentCfi = immediateTargetCfi
+    || state.epub.currentCfi
+    || (loc && loc.start && loc.start.cfi)
+    || localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+
+  if (currentCfi) {
+    if (!state.epub.pendingRestoreCfi) {
+      state.epub.pendingRestoreCfi = currentCfi;
+    }
+    state.epub.currentCfi = currentCfi;
+  }
+
+  // 2. 리사이즈 도중 epub.js가 챕터 첫 페이지로 튕기면서 발생하는 임시 relocated 이벤트가 localStorage를 덮어쓰지 못하도록 차단
+  state.epub.isResizing = true;
+
+  if (epubResizeDebounceTimer) {
+    clearTimeout(epubResizeDebounceTimer);
+  }
+
+  // iPadOS 회전 애니메이션 프레임 떨림을 방지하기 위한 디바운스
+  epubResizeDebounceTimer = setTimeout(async () => {
+    await executeEpubResizeAndRestore();
+  }, 120);
+}
+
+async function executeEpubResizeAndRestore() {
+  if (!state.currentBook || state.currentBook.type !== 'epub' || !state.epub.rendition) {
+    state.epub.isResizing = false;
+    state.epub.pendingRestoreCfi = null;
+    return;
+  }
+
+  const targetCfi = state.epub.pendingRestoreCfi || state.epub.currentCfi || localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+
+  try {
+    const area = elements.epubArea;
+    const w = area ? area.clientWidth : 0;
+    const h = area ? area.clientHeight : 0;
+
+    if (w > 0 && h > 0) {
+      state.epub.rendition.resize(w, h);
+    } else {
+      state.epub.rendition.resize();
+    }
+
+    // 브라우저 렌더링 엔진(WebKit/Blink)이 새로운 칼럼 폭을 계산할 시간 부여
+    await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+
+    // 가로/세로 변경된 화면 폭에 맞춰 직전에 읽던 정확한 문장/위치(CFI)로 복원
+    if (targetCfi) {
+      const pointCfi = getStartCfi(targetCfi) || targetCfi;
+      try {
+        await state.epub.rendition.display(pointCfi);
+      } catch (err) {
+        if (pointCfi !== targetCfi) {
+          try {
+            await state.epub.rendition.display(targetCfi);
+          } catch (e2) {
+            console.warn('Fallback targetCfi display error:', e2);
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('Error during EPUB resize and restore:', err);
+  } finally {
+    setTimeout(() => {
+      try {
+        const finalLoc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+        if (finalLoc && finalLoc.start && finalLoc.start.cfi) {
+          state.epub.currentCfi = finalLoc.start.cfi;
+          localStorage.setItem(`reader_pos_${state.currentBook.id}`, finalLoc.start.cfi);
+          localStorage.setItem('reader_last_book_id', state.currentBook.id);
+          updateActiveBookLastPosition(finalLoc.start.cfi);
+          updateEpubProgress(finalLoc);
+        } else if (targetCfi) {
+          state.epub.currentCfi = targetCfi;
+          if (state.epub.book && state.epub.locationsReady) {
+            const progress = state.epub.book.locations.percentageFromCfi(targetCfi);
+            const pct = Math.round(progress * 100);
+            elements.progressSlider.value = pct;
+            elements.progressPercent.textContent = `${pct}%`;
+          }
+        }
+      } catch (e) {}
+
+      state.epub.isResizing = false;
+      state.epub.pendingRestoreCfi = null;
+      restoreEpubHighlights();
+    }, 100);
+  }
+}
+
+/**
+ * TXT 뷰어 창 크기 및 화면 회전 시 스크롤 비율(독서 위치) 유지
+ */
+function triggerTxtResizeSafe() {
+  if (!state.currentBook || state.currentBook.type !== 'txt' || !elements.txtViewer) return;
+  if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+
+  const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+  const ratio = (state.txt.currentRatio > 0)
+    ? state.txt.currentRatio
+    : (savedPos !== null ? parseFloat(savedPos) / 100 : 0);
+
+  state.txt.isResizing = true;
+  if (txtResizeDebounceTimer) clearTimeout(txtResizeDebounceTimer);
+  txtResizeDebounceTimer = setTimeout(() => {
+    const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+    if (scrollHeight > 0 && ratio > 0) {
+      elements.txtViewer.scrollTop = ratio * scrollHeight;
+    }
+    setTimeout(() => {
+      if (state.txt) state.txt.isResizing = false;
+    }, 100);
+  }, 120);
 }
 
 function setupEpubResizeObserver() {
@@ -1786,7 +1936,6 @@ function setupEpubResizeObserver() {
     state.epub.resizeObserver = null;
   }
 
-  let resizeRafId = null;
   let lastObservedWidth = elements.epubArea.clientWidth || 0;
   let lastObservedHeight = elements.epubArea.clientHeight || 0;
 
@@ -1799,14 +1948,7 @@ function setupEpubResizeObserver() {
         lastObservedWidth = cr.width;
         lastObservedHeight = cr.height;
 
-        if (resizeRafId) cancelAnimationFrame(resizeRafId);
-        resizeRafId = requestAnimationFrame(() => {
-          if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
-            try {
-              state.epub.rendition.resize();
-            } catch (e) {}
-          }
-        });
+        triggerEpubResizeSafe();
       }
     }
   });
@@ -2015,6 +2157,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       if (savedCfi && typeof savedCfi === 'string' && savedCfi.startsWith('epubcfi(')) {
         try {
           await rendition.display(savedCfi);
+          state.epub.currentCfi = savedCfi;
           initialLocationRestored = true;
           return;
         } catch (e) {
@@ -2023,6 +2166,7 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
           if (startCfi && startCfi !== savedCfi) {
             try {
               await rendition.display(startCfi);
+              state.epub.currentCfi = startCfi;
               initialLocationRestored = true;
               return;
             } catch (e2) {}
@@ -2035,20 +2179,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       applyEpubThemes();
       restoreEpubHighlights();
 
-      // 초기 렌더링 직후 뷰포트 크기 확정 동기화 (아이패드 초기 로딩 시 컬럼 잘림 방지)
+      // 초기 렌더링 직후 뷰포트 크기 확정 동기화 (아이패드 초기 로딩 시 컬럼 잘림 방지 및 위치 보존)
       requestAnimationFrame(() => {
-        if (state.epub.rendition) {
-          try {
-            state.epub.rendition.resize();
-          } catch (e) {}
-        }
-        setTimeout(() => {
-          if (state.epub.rendition) {
-            try {
-              state.epub.rendition.resize();
-            } catch (e) {}
-          }
-        }, 150);
+        triggerEpubResizeSafe();
       });
     }).catch(err => {
       console.warn('Initial rendition display error, retrying default display:', err);
@@ -2071,11 +2204,16 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
     // Rendition Relocated event (Page changes)
     rendition.on("relocated", (location) => {
       if (initialLocationRestored && location && location.start && location.start.cfi && state.currentBook) {
-        localStorage.setItem(`reader_pos_${state.currentBook.id}`, location.start.cfi);
-        localStorage.setItem('reader_last_book_id', state.currentBook.id);
-        updateActiveBookLastPosition(location.start.cfi);
+        if (!state.epub.isResizing) {
+          state.epub.currentCfi = location.start.cfi;
+          localStorage.setItem(`reader_pos_${state.currentBook.id}`, location.start.cfi);
+          localStorage.setItem('reader_last_book_id', state.currentBook.id);
+          updateActiveBookLastPosition(location.start.cfi);
+        }
       }
-      updateEpubProgress(location);
+      if (!state.epub.isResizing) {
+        updateEpubProgress(location);
+      }
       showNavButtonsTemporarily(1800);
       setTimeout(() => {
         restoreEpubHighlights();
@@ -2361,9 +2499,10 @@ function getHighlightColorHex(colorName) {
 function updateEpubProgress(location) {
   if (!state.epub.book || !state.epub.locationsReady) return;
 
-  const currentLocation = location || state.epub.rendition.currentLocation();
-  if (currentLocation && currentLocation.start) {
-    if (state.currentBook) {
+  const currentLocation = location || (state.epub.rendition ? state.epub.rendition.currentLocation() : null);
+  if (currentLocation && currentLocation.start && currentLocation.start.cfi) {
+    if (state.currentBook && !state.epub.isResizing) {
+      state.epub.currentCfi = currentLocation.start.cfi;
       localStorage.setItem(`reader_pos_${state.currentBook.id}`, currentLocation.start.cfi);
     }
     const progress = state.epub.book.locations.percentageFromCfi(currentLocation.start.cfi);
@@ -5465,25 +5604,42 @@ function setupEventListeners() {
     }
   });
 
-  // 윈도우 리사이즈, 오리엔테이션 회전, 화면 복귀 시 EPUB 뷰어 영역 안전 재계산
-  const triggerEpubResizeSafe = () => {
-    if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
-      requestAnimationFrame(() => {
-        try {
-          state.epub.rendition.resize();
-        } catch (e) {}
-      });
+  // 윈도우 리사이즈, 오리엔테이션 회전, 화면 복귀 시 뷰어 영역 안전 재계산 및 독서 위치(CFI/스크롤) 100% 보존
+  const onViewerResize = () => {
+    if (state.currentBook) {
+      if (state.currentBook.type === 'epub') {
+        triggerEpubResizeSafe();
+      } else if (state.currentBook.type === 'txt') {
+        triggerTxtResizeSafe();
+      }
     }
   };
 
-  window.addEventListener('resize', triggerEpubResizeSafe);
+  window.addEventListener('resize', onViewerResize);
+
+  // iPadOS 기기 회전(세로 ↔ 가로) 시 독서 위치(57%) 100% 보존 특화 핸들러
   window.addEventListener('orientationchange', () => {
-    setTimeout(triggerEpubResizeSafe, 150);
+    if (state.currentBook) {
+      if (state.currentBook.type === 'epub') {
+        const targetCfi = state.epub.currentCfi
+          || (state.epub.rendition && state.epub.rendition.currentLocation()?.start?.cfi)
+          || localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+        triggerEpubResizeSafe(targetCfi);
+        // iPadOS 회전 애니메이션(약 300ms) 완료 직후 최종 뷰포트 크기로 안착
+        setTimeout(() => {
+          triggerEpubResizeSafe(targetCfi);
+        }, 350);
+      } else if (state.currentBook.type === 'txt') {
+        triggerTxtResizeSafe();
+        setTimeout(triggerTxtResizeSafe, 350);
+      }
+    }
   });
-  window.addEventListener('pageshow', triggerEpubResizeSafe);
-  window.addEventListener('load', triggerEpubResizeSafe);
+
+  window.addEventListener('pageshow', onViewerResize);
+  window.addEventListener('load', onViewerResize);
   if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(triggerEpubResizeSafe).catch(() => {});
+    document.fonts.ready.then(onViewerResize).catch(() => {});
   }
 
   // 탭 전환 / 다른 앱 전환 / 페이지 종료 시 현재 위치(CFI 또는 스크롤) 즉시 보존 및 복귀 시 리사이즈 동기화
@@ -5491,7 +5647,7 @@ function setupEventListeners() {
     if (document.visibilityState === 'hidden' && state.currentBook) {
       saveCurrentReadingPosition();
     } else if (document.visibilityState === 'visible' && state.currentBook) {
-      setTimeout(triggerEpubResizeSafe, 100);
+      setTimeout(onViewerResize, 100);
     }
   });
 
@@ -5569,8 +5725,11 @@ function saveCurrentReadingPosition() {
   if (state.currentBook.type === 'epub' && state.epub.rendition) {
     try {
       const loc = state.epub.rendition.currentLocation();
-      if (loc && loc.start && loc.start.cfi) {
-        const cfi = loc.start.cfi;
+      const cfi = (!state.epub.isResizing && loc && loc.start && loc.start.cfi)
+        ? loc.start.cfi
+        : (state.epub.pendingRestoreCfi || state.epub.currentCfi);
+      if (cfi) {
+        state.epub.currentCfi = cfi;
         localStorage.setItem(`reader_pos_${state.currentBook.id}`, cfi);
         localStorage.setItem('reader_last_book_id', state.currentBook.id);
         updateActiveBookLastPosition(cfi);
