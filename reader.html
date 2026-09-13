@@ -182,7 +182,16 @@
               </div>
               <div class="api-key-btn-row">
                 <button type="button" class="btn-setting-action primary" id="btn-save-api-key">저장</button>
-                <button type="button" class="btn-setting-action" id="btn-test-api-key">연결 테스트</button>
+                <button type="button" class="btn-setting-action danger" id="btn-delete-api-key" title="저장된 API 키 삭제">삭제</button>
+                <div class="api-toggle-container" id="api-toggle-wrap" title="형광펜 추가 시 AI API 작동 ON/OFF">
+                  <button type="button" class="pill-toggle-switch on" id="btn-toggle-ai-active" role="switch" aria-checked="true" aria-label="AI API 작동 토글">
+                    <span class="pill-track">
+                      <span class="pill-text-on">ON</span>
+                      <span class="pill-thumb"></span>
+                      <span class="pill-text-off">OFF</span>
+                    </span>
+                  </button>
+                </div>
               </div>
               <button type="button" class="btn-api-guide-link" id="btn-open-api-guide">
                 🔑 무료 API 키 발급 방법 (1분 안내)

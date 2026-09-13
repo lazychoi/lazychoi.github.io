@@ -1550,7 +1550,12 @@ body.theme-dark .btn-font-size:hover {
   line-height: 1;
 }
 
-.api-key-btn-row,
+.api-key-btn-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .book-manage-btn-row {
   display: flex;
   gap: 8px;
@@ -1571,6 +1576,8 @@ body.theme-dark .btn-font-size:hover {
   justify-content: center;
   gap: 6px;
   transition: all 0.2s;
+  min-height: 34px;
+  box-sizing: border-box;
 }
 
 .btn-setting-action:hover {
@@ -1595,6 +1602,151 @@ body.theme-dark .btn-font-size:hover {
 
 .btn-setting-action.danger:hover {
   background: #fee2e2;
+}
+
+body.theme-dark .btn-setting-action.danger {
+  color: #f87171;
+  background: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+body.theme-dark .btn-setting-action.danger:hover {
+  background: rgba(220, 38, 38, 0.25);
+}
+
+/* ── Pill Toggle Switch Container (ON/OFF) ── */
+.api-toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  box-sizing: border-box;
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+/* ── Pill Toggle Switch (입체감 있는 ON/OFF 토글) ── */
+.pill-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 66px;
+  height: 32px;
+  box-sizing: border-box;
+  padding: 0;
+  border: 2.5px solid #d1d5db;
+  border-radius: 9999px;
+  background-color: #e5e7eb;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.pill-toggle-switch:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ON 상태: 상큼한 라임 그린 배경 및 은은한 외곽선 */
+.pill-toggle-switch.on {
+  background: #70c217;
+  border-color: #e5e7eb;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(112, 194, 23, 0.3);
+}
+
+.pill-track {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* 원형 노브: 부드러운 3D 음영 */
+.pill-thumb {
+  position: absolute;
+  top: 1.5px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f3f5 100%);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.14);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+}
+
+.pill-toggle-switch.on .pill-thumb {
+  transform: translateX(33px);
+}
+
+.pill-toggle-switch.off .pill-thumb {
+  transform: translateX(0);
+}
+
+/* ON / OFF 텍스트 */
+.pill-text-on,
+.pill-text-off {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-weight: 800;
+  line-height: 1;
+  user-select: none;
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pill-text-on {
+  left: 9px;
+  font-size: 12px;
+  color: #ffffff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.85);
+}
+
+.pill-toggle-switch.on .pill-text-on {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.pill-text-off {
+  right: 8px;
+  font-size: 11px;
+  color: #374151;
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.pill-toggle-switch.on .pill-text-off {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.85);
+}
+
+/* 다크 테마 지원 */
+body.theme-dark .pill-toggle-switch {
+  border-color: #4b5563;
+  background-color: #374151;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.35);
+}
+
+body.theme-dark .pill-toggle-switch.on {
+  background: #65a30d;
+  border-color: #6b7280;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 4px rgba(101, 163, 13, 0.4);
+}
+
+body.theme-dark .pill-thumb {
+  background: linear-gradient(180deg, #ffffff 0%, #e2e8f0 100%);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+}
+
+body.theme-dark .pill-text-off {
+  color: #e5e7eb;
 }
 
 .btn-api-guide-link {

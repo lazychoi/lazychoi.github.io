@@ -104,6 +104,7 @@ const state = {
     lineHeight: 1.8,
     fontFamily: 'serif',
     copySearchHighlights: true,
+    aiAutoAnalysis: true,
   },
   epub: {
     book: null,
@@ -394,7 +395,8 @@ const elements = {
   inputGeminiApiKey: document.getElementById('input-gemini-api-key'),
   btnToggleApiMask: document.getElementById('btn-toggle-api-mask'),
   btnSaveApiKey: document.getElementById('btn-save-api-key'),
-  btnTestApiKey: document.getElementById('btn-test-api-key'),
+  btnDeleteApiKey: document.getElementById('btn-delete-api-key'),
+  btnToggleAiActive: document.getElementById('btn-toggle-ai-active'),
   apiStatusBadge: document.getElementById('api-status-badge'),
   btnOpenApiGuide: document.getElementById('btn-open-api-guide'),
   apiGuideModalBackdrop: document.getElementById('api-guide-modal-backdrop'),
@@ -567,7 +569,7 @@ async function clearAllReaderIndexedDB() {
 }
 
 async function resetReaderApp() {
-  if (!confirm('영어 읽기에 저장된 도서 데이터(IndexedDB)를 모두 삭제하고 초기화하시겠습니까?')) {
+  if (!confirm('영어 읽기에 저장된 도서 및 형광펜/책갈피 데이터를 초기화하시겠습니까?\n(설정 및 저장된 AI API 키는 유지됩니다)')) {
     return;
   }
 
@@ -786,6 +788,9 @@ function loadSettings() {
   if (state.settings.copySearchHighlights === undefined) {
     state.settings.copySearchHighlights = true;
   }
+  if (state.settings.aiAutoAnalysis === undefined) {
+    state.settings.aiAutoAnalysis = true;
+  }
   if (!state.settings.geminiApiKey) {
     state.settings.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
   }
@@ -793,6 +798,7 @@ function loadSettings() {
     elements.inputGeminiApiKey.value = state.settings.geminiApiKey;
   }
   updateApiStatusBadge(!!state.settings.geminiApiKey);
+  updateAiToggleUI();
   applySettings();
 }
 
@@ -804,6 +810,22 @@ function updateApiStatusBadge(hasKey) {
   } else {
     elements.apiStatusBadge.textContent = '⚠️ 미등록';
     elements.apiStatusBadge.className = 'api-status-badge unconfigured';
+  }
+}
+
+function updateAiToggleUI() {
+  if (!elements.btnToggleAiActive) return;
+  const isEnabled = state.settings.aiAutoAnalysis !== false;
+  if (isEnabled) {
+    elements.btnToggleAiActive.classList.add('on');
+    elements.btnToggleAiActive.classList.remove('off');
+    elements.btnToggleAiActive.setAttribute('aria-checked', 'true');
+    elements.btnToggleAiActive.title = '형광펜 추가 시 AI API 작동 중 (클릭 시 끄기)';
+  } else {
+    elements.btnToggleAiActive.classList.remove('on');
+    elements.btnToggleAiActive.classList.add('off');
+    elements.btnToggleAiActive.setAttribute('aria-checked', 'false');
+    elements.btnToggleAiActive.title = '형광펜 추가 시 AI API 꺼짐 (클릭 시 켜기)';
   }
 }
 
@@ -848,6 +870,9 @@ function applySettings() {
   if (elements.toggleCopySearchHighlights) {
     elements.toggleCopySearchHighlights.checked = state.settings.copySearchHighlights !== false;
   }
+
+  // AI API toggle button state
+  updateAiToggleUI();
 
   // EPUB rendition theme update
   if (state.epub.rendition) {
@@ -4231,24 +4256,11 @@ function getGeminiApiKey() {
   if (!key) {
     key = (localStorage.getItem('gemini_api_key') || '').trim();
   }
-  if (!key && elements.inputGeminiApiKey) {
-    key = (elements.inputGeminiApiKey.value || '').trim();
-  }
-
-  // 어떤 경로로든 키가 확인되면 state, localStorage, input, 뱃지에 모두 동기화 보장
   if (key) {
     if (!state.settings) state.settings = {};
     if (state.settings.geminiApiKey !== key) {
       state.settings.geminiApiKey = key;
-      saveSettings();
     }
-    if (localStorage.getItem('gemini_api_key') !== key) {
-      localStorage.setItem('gemini_api_key', key);
-    }
-    if (elements.inputGeminiApiKey && elements.inputGeminiApiKey.value !== key) {
-      elements.inputGeminiApiKey.value = key;
-    }
-    updateApiStatusBadge(true);
   }
   return key;
 }
@@ -4688,7 +4700,8 @@ async function testGeminiApiKey(apiKey) {
   return { ok: true, model: modelName };
 }
 
-async function autoFetchVocabForHighlight(hl) {
+async function autoFetchVocabForHighlight(hl, isManual = false) {
+  if (!isManual && state.settings.aiAutoAnalysis === false) return;
   const apiKey = getGeminiApiKey();
   if (!apiKey) return;
   try {
@@ -5006,7 +5019,7 @@ function renderCurrentQuizCard() {
         inlineGenBtn.disabled = true;
         inlineGenBtn.textContent = '⏳ AI 분석 중...';
         try {
-          await autoFetchVocabForHighlight(hl);
+          await autoFetchVocabForHighlight(hl, true);
           renderCurrentQuizCard();
           revealQuizAnswer();
         } catch (err) {
@@ -5462,47 +5475,88 @@ function setupEventListeners() {
   if (elements.inputGeminiApiKey) {
     elements.inputGeminiApiKey.addEventListener('input', () => {
       const val = elements.inputGeminiApiKey.value.trim();
-      state.settings.geminiApiKey = val;
-      localStorage.setItem('gemini_api_key', val);
-      saveSettings();
-      updateApiStatusBadge(!!val);
+      const savedKey = (localStorage.getItem('gemini_api_key') || '').trim();
+      // 저장된 검증 키와 입력값이 정확히 일치할 때만 등록됨 표시, 새 입력/수정 시 미등록 표시
+      if (!savedKey || val !== savedKey) {
+        updateApiStatusBadge(false);
+      } else {
+        updateApiStatusBadge(true);
+      }
     });
   }
 
   if (elements.btnSaveApiKey) {
-    elements.btnSaveApiKey.addEventListener('click', () => {
-      const val = elements.inputGeminiApiKey ? elements.inputGeminiApiKey.value.trim() : '';
-      state.settings.geminiApiKey = val;
-      localStorage.setItem('gemini_api_key', val);
-      saveSettings();
-      updateApiStatusBadge(!!val);
-      showToast(val ? '✅ Gemini API 키가 저장되었습니다.' : 'API 키가 삭제되었습니다.');
-    });
-  }
-
-  if (elements.btnTestApiKey) {
-    elements.btnTestApiKey.addEventListener('click', async () => {
+    elements.btnSaveApiKey.addEventListener('click', async () => {
       const val = elements.inputGeminiApiKey ? elements.inputGeminiApiKey.value.trim() : '';
       if (!val) {
-        showToast('테스트할 API 키를 입력해주세요.');
+        showToast('저장할 API 키를 입력해주세요.');
         return;
       }
+
+      // 저장 시 백그라운드로 자동 연결 테스트 수행
       try {
-        showToast('Gemini API 연결 테스트 중...');
-        elements.btnTestApiKey.disabled = true;
+        elements.btnSaveApiKey.disabled = true;
+        showToast('Gemini API 연결 확인 중...');
         const testResult = await testGeminiApiKey(val);
-        // 테스트 통과 시 자동으로 즉시 저장
+
+        // 연결 테스트가 성공했을 때만 공식 저장 및 '등록됨'으로 갱신!
         state.settings.geminiApiKey = val;
         localStorage.setItem('gemini_api_key', val);
         saveSettings();
         updateApiStatusBadge(true);
-        showToast(`✅ 연결 성공 및 키 저장 완료! (${testResult.model} 모델)`);
+        showToast(`✅ 저장 및 연결 성공! (${testResult.model} 모델)`);
       } catch (err) {
-        showToast('❌ 연결 실패: ' + err.message);
+        // 실패 시 등록됨으로 바꾸지 않고 오류 안내
+        updateApiStatusBadge(false);
+        showToast(`❌ 연결 실패: ${err.message}`, 6000);
       } finally {
-        elements.btnTestApiKey.disabled = false;
+        elements.btnSaveApiKey.disabled = false;
       }
     });
+  }
+
+  if (elements.btnDeleteApiKey) {
+    elements.btnDeleteApiKey.addEventListener('click', () => {
+      const currentKey = (state.settings?.geminiApiKey || localStorage.getItem('gemini_api_key') || (elements.inputGeminiApiKey ? elements.inputGeminiApiKey.value : '')).trim();
+      if (!currentKey) {
+        showToast('삭제할 저장된 API 키가 없습니다.');
+        return;
+      }
+      if (!confirm('저장된 Gemini API 키를 삭제하시겠습니까?')) {
+        return;
+      }
+      if (elements.inputGeminiApiKey) {
+        elements.inputGeminiApiKey.value = '';
+      }
+      state.settings.geminiApiKey = '';
+      localStorage.removeItem('gemini_api_key');
+      saveSettings();
+      updateApiStatusBadge(false);
+      showToast('🗑️ API 키가 삭제되었습니다.');
+    });
+  }
+
+  if (elements.btnToggleAiActive) {
+    elements.btnToggleAiActive.addEventListener('click', () => {
+      const current = state.settings.aiAutoAnalysis !== false;
+      state.settings.aiAutoAnalysis = !current;
+      saveSettings();
+      updateAiToggleUI();
+      if (state.settings.aiAutoAnalysis) {
+        showToast('⚡ API가 켜졌습니다. 형광펜 시 AI가 작동합니다.');
+      } else {
+        showToast('⏸️ API가 꺼졌습니다. 형광펜만 조용히 칠해집니다.');
+      }
+    });
+
+    const apiToggleWrap = document.getElementById('api-toggle-wrap');
+    if (apiToggleWrap) {
+      apiToggleWrap.addEventListener('click', (e) => {
+        if (e.target !== elements.btnToggleAiActive && !elements.btnToggleAiActive.contains(e.target)) {
+          elements.btnToggleAiActive.click();
+        }
+      });
+    }
   }
 
   if (elements.btnToggleApiMask) {

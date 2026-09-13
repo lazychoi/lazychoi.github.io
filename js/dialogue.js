@@ -300,16 +300,22 @@ async function getAudioFromDB() {
 }
 
 async function clearAudioFromDB() {
-  try {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onsuccess = (e) => {
-      const db = e.target.result;
-      const tx = db.transaction(STORE_AUDIO, 'readwrite');
-      tx.objectStore(STORE_AUDIO).delete('currentAudio');
-    };
-  } catch (err) {
-    console.warn('Failed to clear audio DB:', err);
-  }
+  return new Promise((resolve) => {
+    try {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onsuccess = (e) => {
+        const db = e.target.result;
+        const tx = db.transaction(STORE_AUDIO, 'readwrite');
+        tx.objectStore(STORE_AUDIO).delete('currentAudio');
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => resolve();
+      };
+      req.onerror = () => resolve();
+    } catch (err) {
+      console.warn('Failed to clear audio DB:', err);
+      resolve();
+    }
+  });
 }
 
 // ── Filename Comparison Helpers ──
@@ -766,7 +772,12 @@ function handleSegmentEndReached(seg) {
 
   // ── Stage 2: 듣고 말하기 (Listen & Speak) ──
   if (currentMode === 'listen-speak') {
-    startListenSpeakPause(seg);
+    if (isSTTEnabled && isSTTSupported() && sttRecognition) {
+      audioPlayer.pause();
+      startSTTTurn(seg, activeIndex);
+    } else {
+      startListenSpeakPause(seg);
+    }
     return;
   }
 
@@ -1040,7 +1051,7 @@ function jumpToSegment(index, autoPlay = true) {
   if (autoPlay) {
     if (isUserTurnInRoleplay && isSTTEnabled && isSTTSupported() && sttRecognition) {
       audioPlayer.pause();
-      startRoleSTTTurn(seg, index);
+      startSTTTurn(seg, index);
       return;
     }
     audioPlayer.play().catch(err => console.warn('Play prevented:', err));
@@ -1476,6 +1487,9 @@ function toggleSTT() {
   isSTTEnabled = !isSTTEnabled;
   localStorage.setItem('dialogue_stt_enabled', isSTTEnabled ? 'true' : 'false');
   updateSTTButtonUI();
+  if (!isSTTEnabled && activeSTTIndex !== -1) {
+    cancelSTTTurn();
+  }
   showGestureToast(isSTTEnabled ? '🎙️ 실시간 채점 ON' : '🔇 실시간 채점 OFF (무음 모드)');
 }
 
@@ -1503,8 +1517,8 @@ function updateSTTButtonUI() {
   btn.title = isSTTEnabled ? '실시간 음성인식 채점 켜짐 (클릭 시 끄기)' : '실시간 음성인식 채점 꺼짐 (클릭 시 켜기)';
 }
 
-// ── Roleplay STT Turn Lifecycle ──
-function startRoleSTTTurn(seg, index, isSingleRetry = false) {
+// ── Speech Recognition & Accuracy Grading (STT) Turn Lifecycle ──
+function startSTTTurn(seg, index, isSingleRetry = false) {
   cancelRepeatWait();
   cancelSTTTurn();
 
@@ -1523,6 +1537,11 @@ function startRoleSTTTurn(seg, index, isSingleRetry = false) {
 
   if (card) {
     card.classList.add('is-stt-listening');
+    if (currentMode === 'listen-speak') {
+      card.classList.add('mode-listen-speak');
+    } else {
+      card.classList.remove('mode-listen-speak');
+    }
   }
   if (liveBox) {
     liveBox.style.display = 'block';
@@ -1542,7 +1561,11 @@ function startRoleSTTTurn(seg, index, isSingleRetry = false) {
   const startTime = performance.now();
   repeatTimerEnd = startTime + (speakDurationSec * 1000);
 
-  updateCardStatusUI(index, (activeRole === 'A' ? 'speaking-a' : 'speaking-b'), 0);
+  const statusType = (currentMode === 'listen-speak')
+    ? 'speak-progress'
+    : (activeRole === 'A' ? 'speaking-a' : 'speaking-b');
+
+  updateCardStatusUI(index, statusType, 0);
 
   function sttCountdownStep() {
     if (activeSTTIndex !== index) return;
@@ -1550,10 +1573,10 @@ function startRoleSTTTurn(seg, index, isSingleRetry = false) {
     const remainingMs = Math.max(0, repeatTimerEnd - now);
     const elapsedSec = (repeatDurationTotal * 1000 - remainingMs) / 1000;
 
-    updateCardStatusUI(index, (activeRole === 'A' ? 'speaking-a' : 'speaking-b'), elapsedSec);
+    updateCardStatusUI(index, statusType, elapsedSec);
 
     if (remainingMs <= 20) {
-      finishRoleSTTTurn(index, isSingleRetry);
+      finishSTTTurn(index, isSingleRetry);
     } else {
       sttAnimFrameId = requestAnimationFrame(sttCountdownStep);
     }
@@ -1561,8 +1584,9 @@ function startRoleSTTTurn(seg, index, isSingleRetry = false) {
 
   sttAnimFrameId = requestAnimationFrame(sttCountdownStep);
 }
+const startRoleSTTTurn = startSTTTurn;
 
-function finishRoleSTTTurn(index, isSingleRetry) {
+function finishSTTTurn(index, isSingleRetry) {
   if (sttAnimFrameId) {
     cancelAnimationFrame(sttAnimFrameId);
     sttAnimFrameId = null;
@@ -1576,7 +1600,7 @@ function finishRoleSTTTurn(index, isSingleRetry) {
   const card = document.getElementById(`card-${index}`);
   const liveBox = document.getElementById(`stt-live-box-${index}`);
   if (card) {
-    card.classList.remove('is-stt-listening');
+    card.classList.remove('is-stt-listening', 'mode-listen-speak');
   }
   if (liveBox) {
     liveBox.style.display = 'none';
@@ -1622,6 +1646,30 @@ function finishRoleSTTTurn(index, isSingleRetry) {
     return;
   }
 
+  if (currentMode === 'listen-speak') {
+    if (isRepeatEnabled) {
+      // 반복 ON: 현재 문장 무한 반복 (청취 -> 발화 채점)
+      setTimeout(() => {
+        jumpToSegment(index, true);
+      }, 900);
+    } else {
+      // 반복 OFF: 다음 구간으로 자동 진행
+      if (index < subtitles.length - 1) {
+        setTimeout(() => {
+          advanceToSegment(index + 1);
+        }, 900);
+      } else {
+        stopAudioPlayback();
+        cancelCueCountdown();
+        setTimeout(() => {
+          showRoleplaySummaryModal();
+        }, 800);
+      }
+    }
+    return;
+  }
+
+  // 역할극 모드 (role-a, role-b)
   if (index < subtitles.length - 1) {
     setTimeout(() => {
       advanceToSegment(index + 1);
@@ -1634,6 +1682,7 @@ function finishRoleSTTTurn(index, isSingleRetry) {
     }, 800);
   }
 }
+const finishRoleSTTTurn = finishSTTTurn;
 
 function cancelSTTTurn() {
   if (sttAnimFrameId) {
@@ -1643,7 +1692,7 @@ function cancelSTTTurn() {
   if (activeSTTIndex !== -1) {
     const card = document.getElementById(`card-${activeSTTIndex}`);
     const liveBox = document.getElementById(`stt-live-box-${activeSTTIndex}`);
-    if (card) card.classList.remove('is-stt-listening');
+    if (card) card.classList.remove('is-stt-listening', 'mode-listen-speak');
     if (liveBox) liveBox.style.display = 'none';
     clearCardStatusUI(activeSTTIndex);
     activeSTTIndex = -1;
@@ -1730,16 +1779,24 @@ function clearSTTFeedback() {
 
 function retrySingleSegmentSTT(index) {
   if (index < 0 || index >= subtitles.length) return;
+  if (!isSTTSupported()) {
+    showGestureToast('⚠️ 음성 인식을 지원하지 않는 환경입니다');
+    return;
+  }
+  if (!isSTTEnabled) {
+    showGestureToast('⚠️ 상단의 채점 ON 버튼을 먼저 켜주세요');
+    return;
+  }
   const seg = subtitles[index];
   stopAudioPlayback();
   cancelRepeatWait();
   cancelCueCountdown();
   cancelSTTTurn();
 
-  startRoleSTTTurn(seg, index, /* isSingleRetry = */ true);
+  startSTTTurn(seg, index, /* isSingleRetry = */ true);
 }
 
-// ── Roleplay Summary Modal ──
+// ── Summary Score Modal (Roleplay & Listen-Speak) ──
 function showRoleplaySummaryModal() {
   stopAudioPlayback();
   cancelRepeatWait();
@@ -1749,14 +1806,17 @@ function showRoleplaySummaryModal() {
   const modal = document.getElementById('roleplay-summary-modal');
   if (!modal) return;
 
-  const roleSegments = subtitles.filter(s => s.speaker === activeRole);
-  if (roleSegments.length === 0) return;
+  const isListenSpeak = (currentMode === 'listen-speak');
+  const targetSegments = isListenSpeak
+    ? subtitles
+    : subtitles.filter(s => s.speaker === activeRole);
+  if (targetSegments.length === 0) return;
 
   let totalScore = 0;
   let scoredCount = 0;
   let weakList = [];
 
-  roleSegments.forEach((s) => {
+  targetSegments.forEach((s) => {
     if (s.lastScore !== undefined) {
       totalScore += s.lastScore;
       scoredCount++;
@@ -1770,6 +1830,7 @@ function showRoleplaySummaryModal() {
 
   const avgScore = scoredCount > 0 ? Math.round(totalScore / scoredCount) : 0;
 
+  const headerBadge = document.getElementById('summary-header-badge');
   const scoreVal = document.getElementById('summary-avg-score');
   const scoreCircle = document.getElementById('summary-score-circle');
   const scoreTitle = document.getElementById('summary-score-title');
@@ -1777,9 +1838,14 @@ function showRoleplaySummaryModal() {
   const turnCount = document.getElementById('summary-turn-count');
   const listContainer = document.getElementById('summary-sentences-list');
   const btnRetryWeak = document.getElementById('btn-summary-retry-weak');
+  const btnRestart = document.getElementById('btn-summary-restart');
+
+  if (headerBadge) {
+    headerBadge.textContent = isListenSpeak ? '🎉 듣고 말하기 완료!' : '🎉 역할극 완료!';
+  }
 
   if (scoreVal) scoreVal.textContent = `${avgScore}%`;
-  if (turnCount) turnCount.textContent = `${roleSegments.length}개 중 ${scoredCount}개 채점 완료`;
+  if (turnCount) turnCount.textContent = `${targetSegments.length}개 중 ${scoredCount}개 채점 완료`;
 
   if (scoreCircle) {
     if (avgScore >= 90) {
@@ -1796,8 +1862,10 @@ function showRoleplaySummaryModal() {
 
   if (scoreTitle && scoreDesc) {
     if (avgScore >= 90) {
-      scoreTitle.textContent = '🌟 완벽한 대화였습니다!';
-      scoreDesc.textContent = `${activeRole} 역할의 대사를 원어민처럼 정확하게 발화했습니다.`;
+      scoreTitle.textContent = isListenSpeak ? '🌟 완벽한 발화였습니다!' : '🌟 완벽한 대화였습니다!';
+      scoreDesc.textContent = isListenSpeak
+        ? '전체 문장의 발음을 원어민처럼 정확하게 발화했습니다.'
+        : `${activeRole} 역할의 대사를 원어민처럼 정확하게 발화했습니다.`;
     } else if (avgScore >= 70) {
       scoreTitle.textContent = '👍 훌륭합니다!';
       scoreDesc.textContent = '의미 전달이 원활합니다. 놓친 단어들을 확인해 보세요.';
@@ -1807,6 +1875,10 @@ function showRoleplaySummaryModal() {
     }
   }
 
+  if (btnRestart) {
+    btnRestart.textContent = isListenSpeak ? '🔄 처음부터 다시 듣고 말하기' : '🔄 전체 다시 역할극';
+  }
+
   if (btnRetryWeak) {
     btnRetryWeak.style.display = weakList.length > 0 ? 'block' : 'none';
     btnRetryWeak.textContent = `❌ 취약 문장 (${weakList.length}개) 다시 연습`;
@@ -1814,15 +1886,19 @@ function showRoleplaySummaryModal() {
 
   if (listContainer) {
     listContainer.innerHTML = '';
-    roleSegments.forEach((seg) => {
+    targetSegments.forEach((seg) => {
       const isWeak = (seg.lastScore === undefined || seg.lastScore < 75);
       const item = document.createElement('div');
       item.className = `summary-sentence-item ${isWeak ? 'is-weak' : ''}`;
       
       const score = seg.lastScore !== undefined ? seg.lastScore : 0;
+      const speakerLabel = isListenSpeak
+        ? `#${seg.index + 1} 문장 (${seg.speaker})`
+        : `${seg.speaker} 역할 (#${seg.index + 1})`;
+
       item.innerHTML = `
         <div class="summary-item-header">
-          <span class="summary-item-speaker">${seg.speaker} 역할 (#${seg.index + 1})</span>
+          <span class="summary-item-speaker">${speakerLabel}</span>
           <span class="stt-score-badge ${getScoreBadgeClass(score)}">${getScoreBadgeLabel(score)}</span>
         </div>
         <div class="summary-item-ko">${escapeHTML(seg.koText || '')}</div>
@@ -1842,8 +1918,10 @@ function closeRoleplaySummaryModal() {
 
 function startWeakSentencesPractice() {
   weakIndices = [];
+  const isListenSpeak = (currentMode === 'listen-speak');
   subtitles.forEach((s, i) => {
-    if (s.speaker === activeRole && (s.lastScore === undefined || s.lastScore < 75)) {
+    const isTarget = isListenSpeak || (s.speaker === activeRole);
+    if (isTarget && (s.lastScore === undefined || s.lastScore < 75)) {
       weakIndices.push(i);
     }
   });
@@ -1881,8 +1959,8 @@ function renderDialogueList() {
     const speakerColorClass = seg.speaker === 'A' ? 'badge-speaker-a' : 'badge-speaker-b';
     const displayText = (currentSubtitleLang === 'en') ? (seg.enText || seg.text) : (seg.koText || seg.text);
 
-    const isRoleplayMode = (currentMode === 'role-a' || currentMode === 'role-b');
-    const hasScore = isRoleplayMode && (seg.lastScore !== undefined);
+    const isScoringMode = (currentMode === 'role-a' || currentMode === 'role-b' || currentMode === 'listen-speak');
+    const hasScore = isScoringMode && (seg.lastScore !== undefined);
     const scoreClass = hasScore ? getScoreBadgeClass(seg.lastScore) : '';
     const scoreText = hasScore ? getScoreBadgeLabel(seg.lastScore) : '';
 
@@ -2207,12 +2285,19 @@ function updateCardStatusUI(index, type, curTimeOrElapsed) {
     card.classList.add('is-role-muted');
     card.classList.remove('is-repeat-waiting');
     const roleName = type === 'speaking-a' ? 'A' : 'B';
-    const remaining = Math.max(0, seg.end - curTimeOrElapsed);
+    let remaining, pct;
+    if (activeSTTIndex === index) {
+      remaining = Math.max(0, repeatDurationTotal - curTimeOrElapsed);
+      pct = Math.min(100, Math.max(0, (curTimeOrElapsed / repeatDurationTotal) * 100));
+    } else {
+      remaining = Math.max(0, seg.end - curTimeOrElapsed);
+      pct = Math.min(100, Math.max(0, ((curTimeOrElapsed - seg.start) / seg.duration) * 100));
+    }
+    const icon = isSTTEnabled ? '🎙️' : '🗣️';
     badge.className = 'status-badge-live status-badge-speaking';
-    badge.innerHTML = `🗣️ ${roleName} 말하기 (${remaining.toFixed(1)}s)`;
+    badge.innerHTML = `${icon} ${roleName} 말하기 (${remaining.toFixed(1)}s)`;
 
     fill.className = 'bubble-progress-fill fill-speaking';
-    const pct = Math.min(100, Math.max(0, ((curTimeOrElapsed - seg.start) / seg.duration) * 100));
     fill.style.width = `${pct}%`;
   } else if (type === 'listening-a' || type === 'listening-b' || type === 'normal-listening') {
     // Listening partner's turn (or normal listening)
@@ -2233,7 +2318,8 @@ function updateCardStatusUI(index, type, curTimeOrElapsed) {
     card.classList.remove('is-role-muted');
     const remaining = Math.max(0, repeatDurationTotal - curTimeOrElapsed);
     badge.className = 'status-badge-live status-badge-repeat';
-    badge.innerHTML = `🗣️ 따라 말하기 (${remaining.toFixed(1)}s)`;
+    const icon = isSTTEnabled ? '🎙️' : '🗣️';
+    badge.innerHTML = `${icon} 따라 말하기 (${remaining.toFixed(1)}s)`;
 
     fill.className = 'bubble-progress-fill fill-repeat';
     const pct = Math.min(100, Math.max(0, (curTimeOrElapsed / repeatDurationTotal) * 100));
@@ -2245,7 +2331,7 @@ function clearCardStatusUI(index) {
   const card = document.getElementById(`card-${index}`);
   const footer = document.getElementById(`footer-${index}`);
   if (card) {
-    card.classList.remove('is-role-muted', 'is-repeat-waiting');
+    card.classList.remove('is-role-muted', 'is-repeat-waiting', 'mode-listen-speak');
   }
   if (footer) {
     footer.style.display = 'none';
@@ -2357,20 +2443,59 @@ function setupEventListeners() {
     saveStateToStorage();
   });
 
-  // Audio File Picker
+// ── Safe Internal Reset Helper for Dialogue App ──
+async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false } = {}) {
+  // 1. 현재 재생 및 비동기 작업 정리
+  audioPlayer.pause();
+  cancelRepeatWait();
+  cancelCueCountdown();
+  cancelSTTTurn();
+  clearSTTFeedback();
+
+  // 2. 음원 초기화 (keepAudio가 아닐 때)
+  if (!keepAudio) {
+    audioPlayer.src = '';
+    audioBlob = null;
+    audioName = '';
+    await clearAudioFromDB();
+  }
+
+  // 3. 자막 초기화 (keepSubtitles가 아닐 때)
+  if (!keepSubtitles) {
+    subtitles = [];
+    srtName = '';
+  }
+
+  // 4. 인덱스 및 위치 초기화
+  activeIndex = (subtitles.length > 0) ? 0 : -1;
+  targetIndex = (subtitles.length > 0) ? Math.min(1, subtitles.length - 1) : 0;
+  rangeStartIdx = 0;
+
+  // 5. 저장소 상태 동기화
+  saveStateToStorage();
+
+  // 6. UI 반영
+  updateStatusCounter();
+  renderDialogueList();
+}
+
+  // Audio File Picker with Auto-Reset
+  audioFileInput.addEventListener('click', () => {
+    audioFileInput.value = '';
+  });
+
   audioFileInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    // Check filename match with existing SRT file
-    if (srtName && !isSampleFile(srtName) && subtitles.length > 0) {
-      const audioBase = getBaseFileName(file.name);
-      const srtBase = getBaseFileName(srtName);
-      if (audioBase.toLowerCase() !== srtBase.toLowerCase()) {
-        alert('음원 파일과 자막 파일이 다릅니다.');
-      }
-    }
+    // 1. 기존 자막과의 연계 판단 (기존 자막이 새 음원과 같은 파일명이거나, 기존 음원이 없던 상태면 자막 유지)
+    const audioBase = getBaseFileName(file.name).toLowerCase();
+    const srtBase = (srtName && !isSampleFile(srtName)) ? getBaseFileName(srtName).toLowerCase() : '';
+    const shouldKeepSubtitles = (subtitles.length > 0 && !isSampleFile(srtName) && (!audioName || !srtBase || srtBase === audioBase));
 
+    await resetDialogueAppState({ keepSubtitles: shouldKeepSubtitles });
+
+    // 2. 새 음원 등록
     audioBlob = file;
     audioName = file.name;
     const url = URL.createObjectURL(file);
@@ -2378,9 +2503,12 @@ function setupEventListeners() {
 
     await saveAudioToDB(file, file.name);
     saveStateToStorage();
-    updateStatusBanner(`음원: ${file.name}`);
+
     if (subtitles.length > 0) {
+      updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간) / 음원: ${file.name}`);
       jumpToSegment(0, false);
+    } else {
+      updateStatusBanner(`음원: ${file.name} (SRT 자막을 불러와주세요)`);
     }
   });
 
@@ -2399,37 +2527,47 @@ function setupEventListeners() {
     }
   };
   srtFileInput.addEventListener('pointerdown', ensureIOSAcceptRemoved);
-  srtFileInput.addEventListener('click', ensureIOSAcceptRemoved);
 
-  // SRT / TXT Subtitle File Picker
+  // SRT / TXT Subtitle File Picker with Auto-Reset
+  srtFileInput.addEventListener('click', () => {
+    ensureIOSAcceptRemoved();
+    srtFileInput.value = '';
+  });
+
   srtFileInput.addEventListener('change', (e) => {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
-    // Check filename match with existing Audio file
-    if (audioName && !isSampleFile(audioName)) {
-      const srtBase = getBaseFileName(file.name);
-      const audioBase = getBaseFileName(audioName);
-      if (srtBase.toLowerCase() !== audioBase.toLowerCase()) {
-        alert('음원 파일과 자막 파일이 다릅니다.');
-      }
-    }
-
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const text = event.target.result;
       const parsed = parseSRT(text);
-      if (parsed.length > 0) {
-        clearSTTFeedback();
-        subtitles = parsed;
-        srtName = file.name;
-        activeIndex = 0;
-        targetIndex = Math.min(1, subtitles.length - 1);
-        saveStateToStorage();
-        renderDialogueList();
-        updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간)`);
-      } else {
+      if (!parsed || parsed.length === 0) {
         alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
+        return;
+      }
+
+      // 1. 기존 음원과의 연계 판단 (기존 음원이 새 자막과 같은 파일명이거나, 기존 자막이 없던 상태면 음원 유지)
+      const srtBase = getBaseFileName(file.name).toLowerCase();
+      const audioBase = (audioName && !isSampleFile(audioName)) ? getBaseFileName(audioName).toLowerCase() : '';
+      const shouldKeepAudio = (audioBlob && !isSampleFile(audioName) && (subtitles.length === 0 || !audioBase || audioBase === srtBase));
+
+      await resetDialogueAppState({ keepAudio: shouldKeepAudio });
+
+      // 2. 새 자막 등록
+      subtitles = parsed;
+      srtName = file.name;
+      activeIndex = 0;
+      targetIndex = Math.min(1, subtitles.length - 1);
+
+      saveStateToStorage();
+      renderDialogueList();
+
+      if (audioBlob && !isSampleFile(audioName)) {
+        updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간) / 음원: ${audioName}`);
+        jumpToSegment(0, false);
+      } else {
+        updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간, 음원을 불러와주세요)`);
       }
     };
     reader.readAsText(file);
@@ -2440,33 +2578,16 @@ function setupEventListeners() {
     btnEmptySample.addEventListener('click', () => loadSampleDialogue());
   }
 
-  // Reset Button
-  btnReset.addEventListener('click', async () => {
-    if (confirm('저장된 대화 자막과 음원 데이터를 모두 초기화하시겠습니까?')) {
-      clearSTTFeedback();
-      cancelRepeatWait();
-      cancelCueCountdown();
-      await clearAudioFromDB();
-      localStorage.removeItem('dialogue_app_state_v2');
-      audioPlayer.pause();
-      audioPlayer.src = '';
-      subtitles = [];
-      activeIndex = -1;
-      targetIndex = 0;
-      rangeStartIdx = 0;
-      audioBlob = null;
-      audioName = '';
-      srtName = '';
-      currentSubtitleLang = 'ko';
-      activeRole = 'B';
-      updateRoleButtonUI();
-      updateLangButtonUI();
-      updateModeSelectorUI('shadowing');
-      statusDot.classList.remove('active');
-      fileStatusText.textContent = '음원과 SRT 자막을 불러와 학습을 시작하세요';
-      renderDialogueList();
-    }
-  });
+  // Reset Button (if exists)
+  if (btnReset) {
+    btnReset.addEventListener('click', async () => {
+      if (confirm('저장된 대화 자막과 음원 데이터를 모두 초기화하시겠습니까?')) {
+        await resetDialogueAppState();
+        statusDot.classList.remove('active');
+        fileStatusText.textContent = '음원과 SRT 자막을 불러와 학습을 시작하세요';
+      }
+    });
+  }
 
   // Guide Modal
   if (btnGuide) btnGuide.addEventListener('click', () => { guideModal.style.display = 'flex'; });
@@ -2497,7 +2618,11 @@ function setupEventListeners() {
   if (btnSummaryRestart) {
     btnSummaryRestart.addEventListener('click', () => {
       closeRoleplaySummaryModal();
-      setRoleMode(activeRole);
+      if (currentMode === 'listen-speak') {
+        switchToListenSpeakMode(0);
+      } else {
+        setRoleMode(activeRole);
+      }
     });
   }
   if (btnSummaryRetryWeak) {
