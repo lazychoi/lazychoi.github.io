@@ -3085,6 +3085,53 @@ function removeHighlight(hlId) {
   }
 }
 
+// ── Mobile / Tablet (iPadOS 포함) 환경 감지 ──
+function isMobileOrTabletDevice() {
+  const ua = navigator.userAgent || '';
+  // iPadOS 13+ 데스크톱 모드 감지 (Macintosh UA + 다중 터치 포인트)
+  const isIPadOS = /Macintosh/i.test(ua) && navigator.maxTouchPoints && navigator.maxTouchPoints > 1;
+  const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(ua);
+  const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  // 태블릿(iPad 포함) 또는 모바일 기기이거나 터치 기반이면서 화면 폭이 1024px 이하인 경우
+  return isMobileUA || isIPadOS || (isTouch && window.innerWidth <= 1024);
+}
+
+/**
+ * 구글 AI 검색 실행:
+ * - 아이패드 / 모바일: 팝업 차단 및 인터페이스 깨짐 방지를 위해 기존 새 탭(_blank) 안전 모드 100% 유지
+ * - 데스크톱: 화면 우측에 독립된 팝업 창(Popup Window)으로 띄워 책 본문과 검색 결과를 나란히 참고 가능
+ */
+function openGoogleAISearch(promptText) {
+  if (!promptText) return;
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(promptText).catch(() => {});
+  }
+
+  const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}&udm=50`;
+
+  if (isMobileOrTabletDevice()) {
+    // [아이패드 및 모바일 보호] 기존 새 탭 열기 유지
+    window.open(searchUrl, '_blank');
+  } else {
+    // [데스크톱 환경] 화면 우측에 플로팅 팝업 창 생성
+    const popupWidth = 560;
+    const popupHeight = Math.min(860, Math.round(window.screen.availHeight * 0.9));
+    const left = Math.max(0, window.screen.availWidth - popupWidth - 30);
+    const top = Math.max(20, Math.round((window.screen.availHeight - popupHeight) / 2));
+    const features = `width=${popupWidth},height=${popupHeight},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,toolbar=no,menubar=no,location=yes`;
+
+    const popup = window.open(searchUrl, 'GoogleAISearchPopup', features);
+    if (popup && popup.focus) {
+      popup.focus();
+    } else {
+      // 팝업이 브라우저 설정으로 차단된 경우를 대비한 새 탭 폴백
+      window.open(searchUrl, '_blank');
+    }
+  }
+}
+
 // ── AI Google Search Direct Execution ──
 function triggerGoogleAISearch(contextData) {
   closeAllToolbars();
@@ -3104,11 +3151,7 @@ function triggerGoogleAISearch(contextData) {
   });
 
   if (promptText) {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(promptText).catch(() => {});
-    }
-    const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}&udm=50`;
-    window.open(searchUrl, '_blank');
+    openGoogleAISearch(promptText);
   }
 }
 
@@ -4468,14 +4511,21 @@ Analyze the target phrase in the exact context of the provided sentence, taking 
    - If the target word is difficult, advanced (CEFR B2+), uncommon, or phonetically tricky/irregular, provide its International Phonetic Alphabet (IPA) transcription enclosed in slashes (e.g. "/ˈɡɪldɪd/", "/ˌpɪnəˈfɔːr/").
    - If it is a common/elementary word (e.g. "happy", "crying", "river") or a multi-word phrase composed of basic words, return an empty string ("").
 
-3. [Sentence Translation (sentenceTranslation)]:
-   - Provide a fluent, natural Korean translation of the target sentence that faithfully reflects the surrounding context and tone of the book.
+3. [Sentence Translation & Key Vocabulary (sentenceTranslation)]:
+   - First, provide a fluent, natural Korean translation of the target sentence that faithfully reflects the surrounding context and tone of the book.
+   - Then, immediately below the Korean translation (separated by an empty line and "[주요 단어 및 숙어]"), list and explain key words, idioms, phrasal verbs, and challenging grammatical expressions in the target sentence (just like Google AI Search results, helping English learners deeply understand the sentence structure and vocabulary).
+   - Format strictly as follows:
+     <자연스러운 한국어 문장 번역>
+
+     [주요 단어 및 숙어]
+     • <단어/숙어 1>: <문맥 속 한국어 뜻 및 설명>
+     • <단어/숙어 2>: <문맥 속 한국어 뜻 및 설명>
 
 Return ONLY a valid JSON object matching this schema without markdown fences:
 {
   "phonetic": "IPA transcription for difficult/advanced words, or empty string",
   "targetMeaning": "Korean literal meaning first. If awkward, format as: 직역 (문맥: 의역)",
-  "sentenceTranslation": "fluent Korean translation of the target sentence"
+  "sentenceTranslation": "자연스러운 한국어 문장 번역\n\n[주요 단어 및 숙어]\n• 단어/숙어: 문맥 속 뜻 및 설명"
 }`;
 
   async function executeRequest(mName) {
@@ -5381,8 +5431,7 @@ function setupEventListeners() {
     elements.btnLaunchGoogle.addEventListener('click', () => {
       const promptText = elements.aiPromptInput ? elements.aiPromptInput.value : '';
       if (promptText) {
-        const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}&udm=50`;
-        window.open(searchUrl, '_blank');
+        openGoogleAISearch(promptText);
       }
     });
   }

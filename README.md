@@ -30,14 +30,21 @@ Analyze the target phrase in the exact context of the provided sentence, taking 
    - If the target word is difficult, advanced (CEFR B2+), uncommon, or phonetically tricky/irregular, provide its International Phonetic Alphabet (IPA) transcription enclosed in slashes (e.g. "/ˈɡɪldɪd/", "/ˌpɪnəˈfɔːr/").
    - If it is a common/elementary word (e.g. "happy", "crying", "river") or a multi-word phrase composed of basic words, return an empty string ("").
 
-3. [Sentence Translation (sentenceTranslation)]:
-   - Provide a fluent, natural Korean translation of the target sentence that faithfully reflects the surrounding context and tone of the book.
+3. [Sentence Translation & Key Vocabulary (sentenceTranslation)]:
+   - First, provide a fluent, natural Korean translation of the target sentence that faithfully reflects the surrounding context and tone of the book.
+   - Then, immediately below the Korean translation (separated by an empty line and "[주요 단어 및 숙어]"), list and explain key words, idioms, phrasal verbs, and challenging expressions in the target sentence (just like Google AI Search results, helping English learners deeply understand the sentence).
+   - Format strictly as follows:
+     <자연스러운 한국어 문장 번역>
+
+     [주요 단어 및 숙어]
+     • <단어/숙어 1>: <문맥 속 한국어 뜻 및 설명>
+     • <단어/숙어 2>: <문맥 속 한국어 뜻 및 설명>
 
 Return ONLY a valid JSON object matching this schema without markdown fences:
 {
   "phonetic": "IPA transcription for difficult/advanced words, or empty string",
   "targetMeaning": "Korean literal meaning first. If awkward, format as: 직역 (문맥: 의역)",
-  "sentenceTranslation": "fluent Korean translation of the target sentence"
+  "sentenceTranslation": "자연스러운 한국어 문장 번역\n\n[주요 단어 및 숙어]\n• 단어/숙어: 문맥 속 뜻 및 설명"
 }
 
 ### 영어암기앱 역할극에서 사용자 말하기 시간 조정

@@ -1778,7 +1778,9 @@ body.theme-dark mark.search-match-highlight {
 .vocab-trans-line {
   font-size: 12px;
   color: var(--text-muted);
-  line-height: 1.4;
+  line-height: 1.5;
+  white-space: pre-line;
+  margin-top: 3px;
 }
 
 .highlight-vocab-unready {
@@ -2012,6 +2014,7 @@ body.theme-dark mark.search-match-highlight {
   border-left: 3.5px solid #3b82f6;
   word-break: keep-all;
   transition: background 0.2s ease;
+  white-space: pre-line;
 }
 
 .quiz-sentence-trans strong {
