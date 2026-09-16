@@ -122,6 +122,7 @@ const state = {
   },
   activeSelection: null, // { text, targetSentence, prevSentence, nextSentence, cfiRange, range, rect }
   activeHighlight: null, // clicked highlight item
+  activeColor: 'yellow', // currently selected highlight color
 };
 
 // ── Sample Book: Oscar Wilde's "The Happy Prince" ──
@@ -305,11 +306,11 @@ const elements = {
   progressPercent: document.getElementById('reader-progress-percent'),
   btnBottomBookmark: document.getElementById('btn-bottom-bookmark'),
 
-  // Toolbars
-  selectionToolbar: document.getElementById('selection-toolbar'),
-  btnToolbarBookmark: document.getElementById('btn-toolbar-bookmark'),
-  btnToolbarAi: document.getElementById('btn-toolbar-ai'),
-  btnToolbarCopy: document.getElementById('btn-toolbar-copy'),
+  // Toolbars & Menus
+  selectionMenuBar: document.getElementById('selection-menu-bar'),
+  btnMenuHighlight: document.getElementById('btn-menu-highlight'),
+  btnMenuAi: document.getElementById('btn-menu-ai'),
+  btnMenuCopy: document.getElementById('btn-menu-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
   btnHlAi: document.getElementById('btn-hl-ai'),
   btnHlEdit: document.getElementById('btn-hl-edit'),
@@ -1207,51 +1208,245 @@ function handleFileSelection(file) {
   }
 }
 
-// ── EPUB & Highlights Export Management ──
-async function exportBookWithHighlights() {
+// ── Markdown & Highlights Export Management ──
+function formatTxtParagraphHeading(pText) {
+  const trimmed = pText.trim();
+  if (/^#\s+/.test(trimmed)) {
+    return trimmed.replace(/^#\s+/, '## ');
+  }
+  if (/^##\s+/.test(trimmed)) {
+    return trimmed.replace(/^##\s+/, '### ');
+  }
+  if (/^###\s+/.test(trimmed)) {
+    return trimmed.replace(/^###\s+/, '#### ');
+  }
+
+  if (trimmed.length <= 80 && !trimmed.includes('\n')) {
+    if (/^(chapter|chap\.|part|book|act|scene)\s+([0-9ivxlcdm]+|\w+)([\s\:\.\-].*)?$/i.test(trimmed) ||
+        /^제\s*\d+\s*[장절부편]([\s\:\.\-].*)?$/.test(trimmed)) {
+      return `## ${trimmed}`;
+    }
+    if (/^(section|subchapter)\s+([0-9ivxlcdm]+|\w+)([\s\:\.\-].*)?$/i.test(trimmed)) {
+      return `### ${trimmed}`;
+    }
+  }
+
+  return trimmed;
+}
+
+async function exportBookAsMarkdown() {
   if (!state.currentBook) {
     showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
     return;
   }
 
-  if (typeof JSZip === 'undefined') {
-    showToast('ZIP 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
-    return;
-  }
-
-  showToast('형광펜 및 메모가 포함된 EPUB 파일 생성 중...');
+  showToast('내보내기 파일 생성 중...');
 
   try {
+    let markdownContent = '';
     if (state.currentBook.type === 'epub') {
-      await exportExistingEpubWithHighlights();
+      markdownContent = await exportEpubAsMarkdown();
     } else {
-      await exportTxtAsEpubWithHighlights();
+      markdownContent = exportTxtAsMarkdown();
     }
-    showToast('EPUB 내보내기가 완료되었습니다.');
+
+    const safeTitle = (state.currentBook.title || 'book')
+      .replace(/[\\/:*?"<>|]+/g, '_')
+      .trim() || 'book';
+    downloadMarkdown(markdownContent, `${safeTitle}.md`);
+    showToast('내보내기가 완료되었습니다.');
   } catch (err) {
     console.error('Export Error:', err);
-    showToast('EPUB 내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
+    showToast('내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
   }
 }
 
-async function exportExistingEpubWithHighlights() {
-  const zip = await JSZip.loadAsync(state.currentBook.content);
+function exportTxtAsMarkdown() {
+  const sortedHls = [...state.highlights].sort(compareHighlights);
+  const hlFootnoteMap = new Map();
+  sortedHls.forEach((hl, idx) => {
+    hlFootnoteMap.set(hl.id, idx + 1);
+  });
 
-  // 1. Save metadata inside EPUB archive
-  zip.file("META-INF/reader_highlights.json", JSON.stringify({
-    title: state.currentBook.title,
-    author: state.currentBook.author,
-    exportedAt: new Date().toISOString(),
-    highlights: state.highlights
-  }, null, 2));
+  const rawParagraphs = (state.currentBook.content || '').split(/\n\s*\n/);
+  let bodyMd = '';
 
-  // If no highlights, export as is
-  if (!state.highlights || state.highlights.length === 0) {
-    await downloadZipAsEpub(zip, state.currentBook.title);
-    return;
+  rawParagraphs.forEach((pText, pIdx) => {
+    const trimmed = pText.trim();
+    if (!trimmed) return;
+
+    const pHighlights = sortedHls.filter(h => h.pIdx === pIdx && h.text);
+    if (pHighlights.length === 0) {
+      bodyMd += `${formatTxtParagraphHeading(trimmed)}\n\n`;
+      return;
+    }
+
+    const validatedHls = [];
+    for (const hl of pHighlights) {
+      let start = -1;
+      const textLen = hl.text.length;
+      if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= trimmed.length) {
+        if (trimmed.substring(hl.offset, hl.offset + textLen) === hl.text) {
+          start = hl.offset;
+        }
+      }
+      if (start === -1 && hl.targetSentence) {
+        const targetSearch = trimmed.indexOf(hl.targetSentence);
+        if (targetSearch !== -1) {
+          const subIdx = trimmed.indexOf(hl.text, targetSearch);
+          if (subIdx !== -1 && subIdx <= targetSearch + hl.targetSentence.length) {
+            start = subIdx;
+          }
+        }
+      }
+      if (start === -1) {
+        start = trimmed.indexOf(hl.text);
+      }
+
+      if (start !== -1) {
+        validatedHls.push({
+          ...hl,
+          _start: start,
+          _end: start + textLen,
+          _fnNum: hlFootnoteMap.get(hl.id)
+        });
+      }
+    }
+
+    if (validatedHls.length === 0) {
+      bodyMd += `${trimmed}\n\n`;
+      return;
+    }
+
+    validatedHls.sort((a, b) => b._start - a._start);
+    const nonOverlapping = [];
+    let lastStart = Infinity;
+    for (const item of validatedHls) {
+      if (item._end <= lastStart) {
+        nonOverlapping.push(item);
+        lastStart = item._start;
+      }
+    }
+
+    nonOverlapping.sort((a, b) => a._start - b._start);
+    let pResult = '';
+    let curIdx = 0;
+    for (const hl of nonOverlapping) {
+      if (hl._start > curIdx) {
+        pResult += trimmed.substring(curIdx, hl._start);
+      }
+      const rawMatch = trimmed.substring(hl._start, hl._end);
+      pResult += `${rawMatch}[^${hl._fnNum}]`;
+      curIdx = hl._end;
+    }
+    if (curIdx < trimmed.length) {
+      pResult += trimmed.substring(curIdx);
+    }
+    bodyMd += `${formatTxtParagraphHeading(pResult)}\n\n`;
+  });
+
+  let fullMd = `# ${state.currentBook.title || 'Untitled'}\n\n`;
+  if (state.currentBook.author) {
+    fullMd += `*저자: ${state.currentBook.author}*\n\n`;
+  }
+  fullMd += `---\n\n${bodyMd.trim()}\n\n`;
+
+  if (sortedHls.length > 0) {
+    fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
   }
 
-  // 2. Resolve OPF package file location
+  return cleanMarkdown(fullMd) + '\n';
+}
+
+function cleanMarkdown(md) {
+  if (!md) return '';
+  return md
+    .replace(/[ \t]+\n/g, '\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
+function findSpineItemForHighlight(hl, allSpineItems, exportSpineItems) {
+  if (!hl) return null;
+
+  // 1. Try epub.js runtime spine lookup
+  if (state.epub && state.epub.book && state.epub.book.spine && hl.cfiRange) {
+    try {
+      const sec = state.epub.book.spine.get(hl.cfiRange);
+      if (sec) {
+        if (sec.idref) {
+          const found = exportSpineItems.find(s => s.idref === sec.idref);
+          if (found) return found;
+        }
+        if (sec.href) {
+          const found = exportSpineItems.find(s => s.href === sec.href || s.href.endsWith(sec.href) || sec.href.endsWith(s.href));
+          if (found) return found;
+        }
+        if (typeof sec.index === 'number') {
+          const original = allSpineItems[sec.index];
+          if (original) {
+            const found = exportSpineItems.find(s => s.spineIndex === original.spineIndex);
+            if (found) return found;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  // 2. Parse CFI string directly
+  if (hl.cfiRange && typeof hl.cfiRange === 'string') {
+    // 2a. ID assertion in brackets: epubcfi(/6/14[ch01]!...)
+    const idMatch = hl.cfiRange.match(/^epubcfi\(\/6\/\d+\[([^\]]+)\]/i);
+    if (idMatch) {
+      const asserted = idMatch[1];
+      const found = exportSpineItems.find(s => s.idref === asserted || s.href === asserted || s.href.endsWith(asserted));
+      if (found) return found;
+    }
+
+    // 2b. Step index: epubcfi(/6/14!...) -> (14 / 2) - 1 = index 6
+    const stepMatch = hl.cfiRange.match(/^epubcfi\(\/6\/(\d+)/i);
+    if (stepMatch) {
+      const step = parseInt(stepMatch[1], 10);
+      const spineIdx = (step / 2) - 1;
+      if (spineIdx >= 0 && spineIdx < allSpineItems.length) {
+        const original = allSpineItems[spineIdx];
+        const found = exportSpineItems.find(s => s.spineIndex === original.spineIndex);
+        if (found) return found;
+      }
+    }
+  }
+
+  return null;
+}
+
+function findTocItemForHref(href, tocList) {
+  if (!href || !tocList || tocList.length === 0) return null;
+  const cleanHref = href.split('#')[0].replace(/^.*[\\\/]/, '');
+
+  function search(items) {
+    for (const item of items) {
+      const itemClean = (item.href || '').split('#')[0].replace(/^.*[\\\/]/, '');
+      if (itemClean && (cleanHref === itemClean || href.endsWith(itemClean) || item.href.endsWith(cleanHref))) {
+        return item;
+      }
+      if (Array.isArray(item.subitems) && item.subitems.length > 0) {
+        const sub = search(item.subitems);
+        if (sub) return sub;
+      }
+    }
+    return null;
+  }
+
+  return search(tocList);
+}
+
+async function exportEpubAsMarkdown() {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('ZIP 라이브러리를 불러오지 못했습니다.');
+  }
+  const zip = await JSZip.loadAsync(state.currentBook.content);
+
+  // 1. Resolve OPF package file location
   let opfPath = 'OEBPS/content.opf';
   try {
     const containerFile = zip.file('META-INF/container.xml');
@@ -1263,273 +1458,322 @@ async function exportExistingEpubWithHighlights() {
   } catch (e) {}
   const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
 
-  // 3. Preserve original XHTML/HTML chapter files without DOM mutation
-  // This ensures EPUB CFI coordinates and book DOM integrity remain 100% exact.
-
-  // 4. Create and append "Highlights & Notes" Appendix chapter
-  const appendixFileName = `${opfDir}highlights_appendix.xhtml`;
-  const appendixRelativeHref = 'highlights_appendix.xhtml';
-  const appendixHtml = generateHighlightsAppendixHtml(state.currentBook.title, state.currentBook.author, state.highlights);
-  zip.file(appendixFileName, appendixHtml);
-
-  // 5. Register appendix in OPF manifest and spine
-  try {
-    const opfFile = zip.file(opfPath);
-    if (opfFile) {
-      let opfText = await opfFile.async('text');
-      if (!opfText.includes('highlights_appendix.xhtml')) {
-        const manifestItem = `  <item id="highlights-appendix" href="${appendixRelativeHref}" media-type="application/xhtml+xml"/>\n  </manifest>`;
-        opfText = opfText.replace(/<\/manifest>/i, manifestItem);
-
-        const spineItem = `  <itemref idref="highlights-appendix"/>\n  </spine>`;
-        opfText = opfText.replace(/<\/spine>/i, spineItem);
-
-        zip.file(opfPath, opfText);
-      }
-    }
-  } catch (err) {
-    console.warn('OPF update error:', err);
+  // 2. Parse OPF to get chapter files in spine reading order
+  const opfFile = zip.file(opfPath);
+  if (!opfFile) {
+    throw new Error('EPUB OPF 메타데이터 파일을 찾을 수 없습니다.');
   }
+  const opfText = await opfFile.async('text');
+  const opfDoc = new DOMParser().parseFromString(opfText, 'application/xml');
 
-  await downloadZipAsEpub(zip, state.currentBook.title);
-}
-
-async function exportTxtAsEpubWithHighlights() {
-  const zip = new JSZip();
-
-  // 1. mimetype (MUST be uncompressed per EPUB specification)
-  zip.file("mimetype", "application/epub+zip", { compression: "STORE" });
-
-  // 2. META-INF/container.xml
-  zip.file("META-INF/container.xml", `<?xml version="1.0" encoding="UTF-8"?>
-<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
-  <rootfiles>
-    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
-  </rootfiles>
-</container>`);
-
-  // 3. META-INF/reader_highlights.json
-  zip.file("META-INF/reader_highlights.json", JSON.stringify({
-    title: state.currentBook.title,
-    author: state.currentBook.author,
-    exportedAt: new Date().toISOString(),
-    highlights: state.highlights
-  }, null, 2));
-
-  // 4. Stylesheet
-  zip.file("OEBPS/styles.css", `
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; line-height: 1.8; padding: 24px 20px; color: #1e293b; max-width: 800px; margin: 0 auto; }
-h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
-.author { font-size: 14px; color: #64748b; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
-p { margin-bottom: 1.4em; }
-mark.reader-highlight { padding: 1px 2px; border-radius: 2px; color: inherit; }
-mark.reader-highlight.hl-yellow { background-color: #fde047; }
-mark.reader-highlight.hl-orange { background-color: #fdba74; }
-mark.reader-highlight.hl-green  { background-color: #86efac; }
-mark.reader-highlight.hl-purple { background-color: #d8b4fe; }
-mark.reader-highlight.hl-blue   { background-color: #7dd3fc; }
-mark.reader-highlight.hl-pink   { background-color: #f9a8d4; }
-.reader-note-badge { font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super; }
-`);
-
-  // 5. Book Content (XHTML)
-  const paragraphs = (state.currentBook.content || '').split(/\n\s*\n/);
-  let bookBodyHtml = `<h1>${escapeHtml(state.currentBook.title || 'Untitled')}</h1>\n`;
-  if (state.currentBook.author) {
-    bookBodyHtml += `<div class="author">${escapeHtml(state.currentBook.author)}</div>\n`;
-  }
-
-  paragraphs.forEach((pText, pIdx) => {
-    const trimmed = pText.trim();
-    if (!trimmed) return;
-    const pHtml = applyHighlightsToParagraph(trimmed, pIdx);
-    bookBodyHtml += `<p id="p-${pIdx}">${pHtml}</p>\n`;
+  const manifestItems = {};
+  opfDoc.querySelectorAll('manifest > item, item').forEach(item => {
+    const id = item.getAttribute('id');
+    const href = item.getAttribute('href');
+    if (id && href) manifestItems[id] = href;
   });
 
-  const bookXhtml = `<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
-<head>
-  <title>${escapeHtml(state.currentBook.title || 'Book')}</title>
-  <link rel="stylesheet" type="text/css" href="styles.css"/>
-</head>
-<body>
-  ${bookBodyHtml}
-</body>
-</html>`;
-  zip.file("OEBPS/book.xhtml", bookXhtml);
+  // Collect all spine items with original 0-based spine index
+  const allSpineItems = [];
+  opfDoc.querySelectorAll('spine > itemref, itemref').forEach((ref, idx) => {
+    const idref = ref.getAttribute('idref');
+    const href = manifestItems[idref] || '';
+    allSpineItems.push({
+      spineIndex: idx,
+      idref: idref || '',
+      href: href || ''
+    });
+  });
 
-  const hasHighlights = state.highlights && state.highlights.length > 0;
-  if (hasHighlights) {
-    const appendixHtml = generateHighlightsAppendixHtml(state.currentBook.title, state.currentBook.author, state.highlights);
-    zip.file("OEBPS/highlights_appendix.xhtml", appendixHtml);
+  const exportSpineItems = allSpineItems.filter(item => {
+    return item.href && !item.href.includes('highlights_appendix') && !item.href.includes('nav.xhtml');
+  });
+
+  const sortedHls = [...state.highlights].sort(compareHighlights);
+  const hlFootnoteMap = new Map();
+  sortedHls.forEach((hl, idx) => {
+    hlFootnoteMap.set(hl.id, idx + 1);
+  });
+
+  // Chapter-isolate highlights: strictly group highlights by spine item
+  const chapterHlsMap = new Map();
+  exportSpineItems.forEach(item => chapterHlsMap.set(item, []));
+  const unassignedHls = [];
+
+  sortedHls.forEach(hl => {
+    if (!hl.text) return;
+    const matchedItem = findSpineItemForHighlight(hl, allSpineItems, exportSpineItems);
+    if (matchedItem && chapterHlsMap.has(matchedItem)) {
+      chapterHlsMap.get(matchedItem).push(hl);
+    } else {
+      unassignedHls.push(hl);
+    }
+  });
+
+  let chaptersMd = '';
+
+  for (const spineItem of exportSpineItems) {
+    let cleanPath = opfDir + spineItem.href;
+    const parts = cleanPath.split('/');
+    const resolvedParts = [];
+    for (const part of parts) {
+      if (part === '..') {
+        resolvedParts.pop();
+      } else if (part !== '.' && part !== '') {
+        resolvedParts.push(part);
+      }
+    }
+    const resolvedPath = resolvedParts.join('/');
+
+    const chapterFile = zip.file(resolvedPath) || zip.file(cleanPath) || zip.file(spineItem.href);
+    if (!chapterFile) continue;
+
+    const chapterHtml = await chapterFile.async('text');
+    const doc = new DOMParser().parseFromString(chapterHtml, 'text/html');
+
+    // Get highlights explicitly assigned to this chapter
+    const chapterHls = chapterHlsMap.get(spineItem) || [];
+
+    // Fallback: only match unassigned highlights if their targetSentence exists in this chapter
+    for (let i = unassignedHls.length - 1; i >= 0; i--) {
+      const uHl = unassignedHls[i];
+      if (uHl.targetSentence && doc.body && doc.body.textContent.includes(uHl.targetSentence.trim())) {
+        chapterHls.push(uHl);
+        unassignedHls.splice(i, 1);
+      }
+    }
+
+    // Process highlights in reverse reading order so DOM modifications don't shift earlier offsets
+    chapterHls.sort((a, b) => compareHighlights(b, a));
+
+    chapterHls.forEach(hl => {
+      const fnNum = hlFootnoteMap.get(hl.id);
+      injectFootnoteInDoc(doc, hl, fnNum);
+    });
+
+    // Determine the minimum heading level present in this chapter
+    const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    let minHeadingLevel = 6;
+    let hasHeading = false;
+    headings.forEach(h => {
+      const lvl = parseInt(h.tagName.substring(1), 10);
+      if (lvl < minHeadingLevel) minHeadingLevel = lvl;
+      hasHeading = true;
+    });
+
+    const body = doc.body || doc.documentElement;
+    let chapMd = cleanMarkdown(domToMarkdown(body, hasHeading ? minHeadingLevel : 1));
+
+    // If chapter has no headings in DOM, check TOC to add H2 chapter title
+    if (!hasHeading) {
+      const tocItem = findTocItemForHref(spineItem.href, state.epub.toc);
+      if (tocItem && tocItem.label && tocItem.label.trim()) {
+        const tocTitle = tocItem.label.trim();
+        const firstLine = chapMd.split('\n')[0].replace(/^[#*_\s]+|[#*_\s]+$/g, '').trim();
+        if (firstLine && firstLine.toLowerCase() === tocTitle.toLowerCase()) {
+          chapMd = chapMd.replace(/^[^\n]+/, `## ${tocTitle}`);
+        } else {
+          chapMd = `## ${tocTitle}\n\n${chapMd}`;
+        }
+      }
+    }
+
+    if (chapMd) {
+      chaptersMd += `${chapMd}\n\n`;
+    }
   }
 
-  // 5-1. nav.xhtml (EPUB 3 Navigation Document 필수 등록)
-  const navXhtml = `<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
-<head>
-  <title>목차</title>
-  <link rel="stylesheet" type="text/css" href="styles.css"/>
-</head>
-<body>
-  <nav epub:type="toc" id="toc">
-    <h1>목차</h1>
-    <ol>
-      <li><a href="book.xhtml">${escapeHtml(state.currentBook.title || 'Book')}</a></li>
-      ${hasHighlights ? '<li><a href="highlights_appendix.xhtml">형광펜 및 독서 메모</a></li>' : ''}
-    </ol>
-  </nav>
-</body>
-</html>`;
-  zip.file("OEBPS/nav.xhtml", navXhtml);
+  let fullMd = `# ${state.currentBook.title || 'EPUB Book'}\n\n`;
+  if (state.currentBook.author) {
+    fullMd += `*저자: ${state.currentBook.author}*\n\n`;
+  }
+  fullMd += `---\n\n${chaptersMd.trim()}\n\n`;
 
-  // 6. content.opf
-  const bookId = `urn:uuid:${generateUUID()}`;
-  const opfContent = `<?xml version="1.0" encoding="UTF-8"?>
-<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
-  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
-    <dc:title>${escapeXml(state.currentBook.title || 'Book')}</dc:title>
-    <dc:creator>${escapeXml(state.currentBook.author || 'Unknown')}</dc:creator>
-    <dc:language>en</dc:language>
-    <dc:identifier id="BookId">${bookId}</dc:identifier>
-    <meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d+Z$/, 'Z')}</meta>
-  </metadata>
-  <manifest>
-    <item id="css" href="styles.css" media-type="text/css"/>
-    <item id="book" href="book.xhtml" media-type="application/xhtml+xml"/>
-    <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
-    ${hasHighlights ? '<item id="highlights-appendix" href="highlights_appendix.xhtml" media-type="application/xhtml+xml"/>' : ''}
-    <item id="toc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
-  </manifest>
-  <spine toc="toc">
-    <itemref idref="book"/>
-    ${hasHighlights ? '<itemref idref="highlights-appendix"/>' : ''}
-  </spine>
-</package>`;
-  zip.file("OEBPS/content.opf", opfContent);
+  if (sortedHls.length > 0) {
+    fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+  }
 
-  // 7. toc.ncx
-  const ncxContent = `<?xml version="1.0" encoding="UTF-8"?>
-<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
-  <head>
-    <meta name="dtb:uid" content="${bookId}"/>
-  </head>
-  <docTitle><text>${escapeXml(state.currentBook.title || 'Book')}</text></docTitle>
-  <navMap>
-    <navPoint id="navPoint-1" playOrder="1">
-      <navLabel><text>${escapeXml(state.currentBook.title || 'Book')}</text></navLabel>
-      <content src="book.xhtml"/>
-    </navPoint>
-    ${hasHighlights ? `
-    <navPoint id="navPoint-2" playOrder="2">
-      <navLabel><text>형광펜 및 독서 메모</text></navLabel>
-      <content src="highlights_appendix.xhtml"/>
-    </navPoint>` : ''}
-  </navMap>
-</ncx>`;
-  zip.file("OEBPS/toc.ncx", ncxContent);
-
-  await downloadZipAsEpub(zip, state.currentBook.title);
+  return cleanMarkdown(fullMd) + '\n';
 }
 
-function injectHighlightInDoc(doc, hl) {
+function injectFootnoteInDoc(doc, hl, fnNum) {
   if (!hl.text || !doc) return false;
   const body = doc.body || doc.documentElement;
   if (!body) return false;
 
-  const walker = doc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
-  let node;
-  let didInject = false;
-  const nodesToProcess = [];
+  // 1. Try exact DOM Range via ePub.CFI if available
+  if (typeof ePub !== 'undefined' && ePub.CFI && hl.cfiRange) {
+    try {
+      const cfi = new ePub.CFI(hl.cfiRange);
+      const range = cfi.toRange(doc);
+      if (range && range.endContainer) {
+        if (range.endContainer.nodeType === Node.TEXT_NODE) {
+          const val = range.endContainer.nodeValue;
+          const offset = range.endOffset;
+          range.endContainer.nodeValue = val.substring(0, offset) + `[^${fnNum}]` + val.substring(offset);
+          return true;
+        } else {
+          const fnNode = doc.createTextNode(`[^${fnNum}]`);
+          range.collapse(false);
+          range.insertNode(fnNode);
+          return true;
+        }
+      }
+    } catch (e) {}
+  }
 
-  while ((node = walker.nextNode())) {
-    if (node.nodeValue && node.nodeValue.includes(hl.text)) {
-      nodesToProcess.push(node);
+  // 2. Context-aware sentence search inside the chapter element
+  const targetSentence = (hl.targetSentence || '').trim();
+  const hlText = hl.text.trim();
+
+  if (targetSentence) {
+    const candidates = Array.from(doc.querySelectorAll('p, li, blockquote, h1, h2, h3, h4, h5, h6, div'));
+    let matchedEl = null;
+    for (const el of candidates) {
+      if (el.textContent && el.textContent.includes(targetSentence)) {
+        matchedEl = el;
+      }
+    }
+
+    if (matchedEl) {
+      const walker = doc.createTreeWalker(matchedEl, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const val = node.nodeValue;
+        if (!val) continue;
+
+        if (val.includes(targetSentence)) {
+          const sIdx = val.indexOf(targetSentence);
+          const subIdx = val.indexOf(hlText, sIdx);
+          if (subIdx !== -1 && subIdx <= sIdx + targetSentence.length) {
+            const endIdx = subIdx + hlText.length;
+            node.nodeValue = val.substring(0, endIdx) + `[^${fnNum}]` + val.substring(endIdx);
+            return true;
+          }
+        } else if (val.includes(hlText)) {
+          const matchIdx = val.indexOf(hlText);
+          const endIdx = matchIdx + hlText.length;
+          node.nodeValue = val.substring(0, endIdx) + `[^${fnNum}]` + val.substring(endIdx);
+          return true;
+        }
+      }
     }
   }
 
-  const colorHex = getHighlightColorHex(hl.color || 'yellow');
+  // 3. Fallback ONLY if hlText is sufficiently long and unique (>= 6 chars)
+  // NEVER do loose matching for common short words like "into", "the", etc.
+  if (!targetSentence && hlText.length >= 6) {
+    const walker = doc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const val = node.nodeValue;
+      if (!val) continue;
+      const parentTag = (node.parentNode ? node.parentNode.nodeName : '').toLowerCase();
+      if (parentTag === 'script' || parentTag === 'style') continue;
 
-  for (const textNode of nodesToProcess) {
-    const parent = textNode.parentNode;
-    if (!parent) continue;
-    const parentTag = (parent.nodeName || '').toLowerCase();
-    if (parentTag === 'mark' || parentTag === 'script' || parentTag === 'style') {
-      continue;
+      if (val.includes(hlText)) {
+        const matchIdx = val.indexOf(hlText);
+        const endIdx = matchIdx + hlText.length;
+        node.nodeValue = val.substring(0, endIdx) + `[^${fnNum}]` + val.substring(endIdx);
+        return true;
+      }
     }
-
-    const val = textNode.nodeValue;
-    const idx = val.indexOf(hl.text);
-    if (idx === -1) continue;
-
-    const before = val.substring(0, idx);
-    const match = val.substring(idx, idx + hl.text.length);
-    const after = val.substring(idx + hl.text.length);
-
-    const mark = doc.createElementNS('http://www.w3.org/1999/xhtml', 'mark');
-    mark.setAttribute('class', `reader-highlight hl-${hl.color || 'yellow'}`);
-    mark.setAttribute('data-hl-id', hl.id);
-    mark.setAttribute('style', `background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;`);
-    mark.textContent = match;
-
-    if (hl.note) {
-      mark.setAttribute('title', `메모: ${hl.note}`);
-      const sup = doc.createElementNS('http://www.w3.org/1999/xhtml', 'span');
-      sup.setAttribute('class', 'reader-note-badge');
-      sup.setAttribute('style', 'font-size: 0.75em; background: #2563eb; color: #ffffff; border-radius: 3px; padding: 0 4px; margin-left: 3px; vertical-align: super;');
-      sup.textContent = `💬 ${hl.note}`;
-      mark.appendChild(sup);
-    }
-
-    const fragment = doc.createDocumentFragment();
-    if (before) fragment.appendChild(doc.createTextNode(before));
-    fragment.appendChild(mark);
-    if (after) fragment.appendChild(doc.createTextNode(after));
-
-    parent.replaceChild(fragment, textNode);
-    didInject = true;
-    break;
   }
 
-  return didInject;
+  return false;
 }
 
-function generateHighlightsAppendixHtml(title, author, highlights) {
-  let entriesHtml = '';
-  highlights.forEach((hl, i) => {
-    const colorHex = getHighlightColorHex(hl.color || 'yellow');
-    const dateStr = hl.createdAt ? new Date(hl.createdAt).toLocaleDateString() : '';
-    entriesHtml += `
-      <div style="margin-bottom:18px; padding:14px 16px; border-radius:8px; background:#f8fafc; border:1px solid #e2e8f0; border-left:4px solid ${colorHex};">
-        <div style="font-size:12px; color:#64748b; margin-bottom:4px;">#${i + 1} · ${dateStr}</div>
-        <div style="font-size:16px; font-weight:600; color:#0f172a; margin-bottom:6px;">"${escapeHtml(hl.text)}"</div>
-        ${hl.targetSentence && hl.targetSentence !== hl.text ? `<div style="font-size:13px; color:#64748b; margin-bottom:6px; font-style:italic;">문맥: ${escapeHtml(hl.targetSentence)}</div>` : ''}
-        ${hl.note ? `<div style="background:#eff6ff; color:#1e40af; border-radius:6px; padding:8px 12px; font-size:14px; margin-top:6px;">💬 메모: ${escapeHtml(hl.note)}</div>` : ''}
-      </div>
-    `;
+function domToMarkdown(node, minHeadingLevel = 1) {
+  if (!node) return '';
+  if (node.nodeType === Node.TEXT_NODE) {
+    return node.nodeValue.replace(/[\r\n\t]+/g, ' ');
+  }
+  if (node.nodeType !== Node.ELEMENT_NODE) return '';
+
+  const tag = node.tagName.toLowerCase();
+  if (tag === 'script' || tag === 'style' || tag === 'meta' || tag === 'link') return '';
+
+  let children = '';
+  node.childNodes.forEach(child => {
+    children += domToMarkdown(child, minHeadingLevel);
   });
 
-  return `<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="ko">
-<head>
-  <title>형광펜 및 독서 메모</title>
-  <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 24px 20px; line-height: 1.7; color: #1e293b; max-width: 800px; margin: 0 auto; }
-    h1 { font-size: 22px; font-weight: 700; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 6px; }
-    .meta { font-size: 13px; color: #64748b; margin-bottom: 20px; }
-  </style>
-</head>
-<body>
-  <h1>📖 형광펜 및 독서 메모</h1>
-  <div class="meta">
-    도서: ${escapeHtml(title || '')} | 저자: ${escapeHtml(author || '미지정')} | 총 ${highlights.length}개 구문 | 내보낸 날짜: ${new Date().toLocaleDateString()}
-  </div>
-  ${entriesHtml}
-</body>
-</html>`;
+  const clean = children.trim();
+
+  switch (tag) {
+    case 'h1':
+    case 'h2':
+    case 'h3':
+    case 'h4':
+    case 'h5':
+    case 'h6': {
+      if (!clean) return '';
+      const tagLevel = parseInt(tag.substring(1), 10);
+      // Chapter heading is converted to H2 (##), Subchapter inside chapter is H3 (###)
+      const targetLevel = Math.min(6, 2 + Math.max(0, tagLevel - minHeadingLevel));
+      const hashes = '#'.repeat(targetLevel);
+      return `\n\n${hashes} ${clean}\n\n`;
+    }
+    case 'p': return clean ? `\n\n${clean}\n\n` : '';
+    case 'blockquote': return clean ? `\n\n> ${clean.replace(/\n+/g, '\n> ')}\n\n` : '';
+    case 'ul': return clean ? `\n\n${clean}\n\n` : '';
+    case 'ol': return clean ? `\n\n${clean}\n\n` : '';
+    case 'li': return clean ? `\n- ${clean}` : '';
+    case 'strong':
+    case 'b': return clean ? `**${clean}**` : '';
+    case 'em':
+    case 'i': return clean ? `*${clean}*` : '';
+    case 'code': return clean ? `\`${clean}\`` : '';
+    case 'pre': return clean ? `\n\n\`\`\`\n${clean}\n\`\`\`\n\n` : '';
+    case 'hr': return `\n\n---\n\n`;
+    case 'br': return `\n`;
+    default: return children;
+  }
+}
+
+function generateMarkdownQaSection(sortedHls, hlFootnoteMap) {
+  let qaMd = `\n---\n\n## 📑 Q&A (형광펜 및 단어장)\n\n`;
+
+  sortedHls.forEach(hl => {
+    const fnNum = hlFootnoteMap.get(hl.id);
+    const phoneticStr = hl.phonetic && hl.phonetic.trim() ? ` *${hl.phonetic.trim()}*` : '';
+    const meaningStr = hl.targetMeaning && hl.targetMeaning.trim() ? hl.targetMeaning.trim() : '(구문 뜻 미등록)';
+
+    qaMd += `[^${fnNum}]: **${hl.text.trim()}**${phoneticStr}\n`;
+    qaMd += `    - **💡 구문 뜻**: ${meaningStr}\n`;
+
+    if (hl.targetSentence && hl.targetSentence.trim() && hl.targetSentence.trim() !== hl.text.trim()) {
+      qaMd += `    - **📖 문맥 예문**: ${hl.targetSentence.trim().replace(/\n+/g, ' ')}\n`;
+    }
+
+    if (hl.sentenceTranslation && hl.sentenceTranslation.trim()) {
+      const transLines = hl.sentenceTranslation.trim().split('\n');
+      qaMd += `    - **📝 문장 해석 및 분석**:\n`;
+      transLines.forEach(line => {
+        qaMd += `      ${line}\n`;
+      });
+    }
+
+    if (hl.note && hl.note.trim()) {
+      qaMd += `    - **💬 독서 메모**: ${hl.note.trim()}\n`;
+    }
+
+    qaMd += `\n`;
+  });
+
+  return qaMd;
+}
+
+function downloadMarkdown(markdownContent, filename) {
+  const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename.endsWith('.md') ? filename : `${filename}.md`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 function escapeXml(unsafe) {
@@ -2521,6 +2765,17 @@ function getHighlightColorHex(colorName) {
   return colors[colorName] || '#facc15';
 }
 
+function setActiveHighlightColor(colorName) {
+  state.activeColor = colorName;
+  document.querySelectorAll('#selection-menu-bar .color-dot').forEach(dot => {
+    if (dot.dataset.color === colorName) {
+      dot.classList.add('active');
+    } else {
+      dot.classList.remove('active');
+    }
+  });
+}
+
 function updateEpubProgress(location) {
   if (!state.epub.book || !state.epub.locationsReady) return;
 
@@ -2549,14 +2804,14 @@ function updateEpubProgress(location) {
 
 // TXT Viewer Selection
 document.addEventListener('mousedown', (e) => {
-  if (e.target.closest('#selection-toolbar') || e.target.closest('#highlight-toolbar') || e.target.closest('#settings-popover') || e.target.closest('.ai-modal') || e.target.closest('.meta-edit-modal')) {
+  if (e.target.closest('#selection-menu-bar') || e.target.closest('#highlight-toolbar') || e.target.closest('#settings-popover') || e.target.closest('.ai-modal') || e.target.closest('.meta-edit-modal')) {
     return;
   }
   closeAllToolbars();
 });
 
 document.addEventListener('mouseup', (e) => {
-  if (e.target.closest('#selection-toolbar') || e.target.closest('#highlight-toolbar') || e.target.closest('#settings-popover') || e.target.closest('.ai-modal') || e.target.closest('.meta-edit-modal')) {
+  if (e.target.closest('#selection-menu-bar') || e.target.closest('#highlight-toolbar') || e.target.closest('#settings-popover') || e.target.closest('.ai-modal') || e.target.closest('.meta-edit-modal')) {
     return;
   }
 
@@ -2572,17 +2827,17 @@ function handleTxtSelection() {
   const selectedText = sel ? sel.toString().trim() : "";
 
   if (!selectedText || selectedText.length < 1) {
-    elements.selectionToolbar.style.display = 'none';
+    state.activeSelection = null;
     return;
   }
 
   // Check if selection is within txt-viewer
   const range = sel.getRangeAt(0);
   const commonAncestor = range.commonAncestorContainer;
-  const pElem = commonAncestor.nodeType === 1 ? commonAncestor.closest('p') : commonAncestor.parentElement.closest('p');
+  const pElem = commonAncestor.nodeType === 1 ? commonAncestor.closest('p') : (commonAncestor.parentElement ? commonAncestor.parentElement.closest('p') : null);
 
   if (!pElem || !elements.txtContent.contains(pElem)) {
-    elements.selectionToolbar.style.display = 'none';
+    state.activeSelection = null;
     return;
   }
 
@@ -2591,7 +2846,6 @@ function handleTxtSelection() {
   const context = extractContextFromText(fullParagraph, selectedText);
   const startOffset = fullParagraph.indexOf(selectedText);
 
-  const rect = range.getBoundingClientRect();
   state.activeSelection = {
     text: selectedText,
     targetSentence: context.targetSentence,
@@ -2599,11 +2853,8 @@ function handleTxtSelection() {
     nextSentence: context.nextSentence,
     pIdx,
     offset: startOffset >= 0 ? startOffset : 0,
-    range: range.cloneRange(),
-    rect
+    range: range.cloneRange()
   };
-
-  showFloatingToolbar(rect);
 }
 
 // EPUB Viewer Selection
@@ -2612,26 +2863,16 @@ function handleEpubSelection(cfiRange, contents) {
   const selectedText = sel ? sel.toString().trim() : "";
 
   if (!selectedText) {
-    elements.selectionToolbar.style.display = 'none';
+    state.activeSelection = null;
     return;
   }
 
   const range = sel.getRangeAt(0);
-  const rect = range.getBoundingClientRect();
-  const iframeRect = elements.epubArea.querySelector('iframe').getBoundingClientRect();
-
-  // Convert iframe rect to page rect
-  const absRect = {
-    top: iframeRect.top + rect.top,
-    left: iframeRect.left + rect.left,
-    width: rect.width,
-    height: rect.height
-  };
 
   // Extract surrounding paragraph text
   const parentP = range.commonAncestorContainer.nodeType === 1
     ? range.commonAncestorContainer.closest('p, div, section')
-    : range.commonAncestorContainer.parentElement.closest('p, div, section');
+    : (range.commonAncestorContainer.parentElement ? range.commonAncestorContainer.parentElement.closest('p, div, section') : null);
 
   const fullParagraph = parentP ? parentP.textContent : selectedText;
   const context = extractContextFromText(fullParagraph, selectedText);
@@ -2643,88 +2884,21 @@ function handleEpubSelection(cfiRange, contents) {
     nextSentence: context.nextSentence,
     cfiRange,
     contents,
-    range: range.cloneRange(),
-    rect: absRect
+    range: range.cloneRange()
   };
-
-  showFloatingToolbar(absRect);
-}
-
-function showFloatingToolbar(rect) {
-  closeAllToolbars();
-  const tb = elements.selectionToolbar;
-  tb.style.display = 'flex';
-
-  const tbWidth = tb.offsetWidth || 280;
-  const tbHeight = tb.offsetHeight || 44;
-  const x = rect.left + (rect.width / 2);
-  let y = rect.top + window.scrollY;
-
-  const isMobile = window.innerWidth <= 1024 || ('ontouchstart' in window);
-  let placeBelow = false;
-  let extraOffset = 0;
-
-  if (isMobile) {
-    // 모바일/태블릿 OS(iOS Safari / Chrome) 자체 상황 팝업(복사/찾아보기 등) 위치를 완벽히 회피:
-    // iPadOS/iOS는 화면 상반부(약 50% 미만)에서는 기기 자체 팝업을 텍스트 '아래'에,
-    // 화면 하반부(약 50% 이상)에서는 기기 자체 팝업을 텍스트 '위'에 띄웁니다.
-    // 
-    // 글자 크기나 줄간격에 따라 기기 팝업 방향이 전환되는 미세 위치가 달라지므로,
-    // 기기 팝업과 겹치지 않도록 항상 기기 팝업 바깥쪽으로 안전 거리(약 52px)를 두어 배치합니다:
-    // 1) 화면 상반부 (viewportY < 50%): 기기 팝업보다 더 '아래'에 배치 (+52px)
-    //    -> [선택 텍스트] -> [기기 팝업 (아래)] -> [형광펜 창 (그 아래)]
-    //    -> (만약 기기 팝업이 위에 뜨더라도 형광펜 창은 아래에 있으므로 겹침 0%)
-    // 2) 화면 하반부 (viewportY >= 50%): 기기 팝업보다 더 '위'에 배치 (+52px)
-    //    -> [형광펜 창 (그 위)] -> [기기 팝업 (위)] -> [선택 텍스트]
-    //    -> (만약 기기 팝업이 아래에 뜨더라도 형광펜 창은 위에 있으므로 겹침 0%)
-    const viewportY = rect.top;
-    const viewportHeight = window.innerHeight || 800;
-    const isUpperHalf = viewportY < (viewportHeight * 0.5);
-
-    if (isUpperHalf) {
-      placeBelow = true;
-      extraOffset = 52;
-    } else {
-      placeBelow = false;
-      extraOffset = 52;
-    }
-  } else {
-    // 데스크톱: 상단 여백이 좁으면 하단 배치, 충분하면 상단 배치
-    placeBelow = (y - tbHeight - 15 < window.scrollY + 60);
-  }
-
-  if (placeBelow) {
-    tb.classList.add('flipped');
-    tb.style.transform = 'translate(-50%, 0)';
-    y = rect.top + (rect.height || 22) + window.scrollY + 8 + extraOffset;
-  } else {
-    tb.classList.remove('flipped');
-    tb.style.transform = 'translate(-50%, -100%)';
-    y = rect.top + window.scrollY - 8 - extraOffset;
-  }
-
-  // 화면 왼쪽 끝에서 iOS 뒤로가기 제스처 영역(0~25px) 침범 및 가장 왼쪽 색상 버튼(노란색) 터치 실패 방지:
-  // 모바일/태블릿에서는 최소 좌측 여백을 28px 확보하여 툴바를 오른쪽으로 안전하게 이격
-  const minMargin = isMobile ? 28 : 16;
-  const clampedX = Math.max(tbWidth / 2 + minMargin, Math.min(window.innerWidth - tbWidth / 2 - minMargin, x));
-  tb.style.left = `${clampedX}px`;
-  tb.style.top = `${y}px`;
-
-  // 툴바 화살표가 선택 텍스트 위치를 가리키도록 상대 위치 계산
-  const arrowRelX = x - (clampedX - tbWidth / 2);
-  const clampedArrowX = Math.max(16, Math.min(tbWidth - 16, arrowRelX));
-  tb.style.setProperty('--arrow-left', `${clampedArrowX}px`);
 }
 
 function closeAllToolbars() {
-  if (elements.selectionToolbar) elements.selectionToolbar.style.display = 'none';
   if (elements.highlightToolbar) elements.highlightToolbar.style.display = 'none';
   if (elements.settingsPopover) elements.settingsPopover.classList.remove('open');
 }
 
 // ── Highlight Actions ──
 function applyHighlight(colorName) {
-  if (!state.activeSelection) return;
+  if (!state.activeSelection || !state.activeSelection.text) {
+    showToast('먼저 텍스트를 선택해주세요.');
+    return;
+  }
 
   // 1. Deduplication check: see if highlight at same range or exact text+target already exists
   const existingIdx = state.highlights.findIndex(h => {
@@ -2807,9 +2981,17 @@ function applyHighlight(colorName) {
     }
 
     if (state.activeSelection.contents) {
-      state.activeSelection.contents.window.getSelection().removeAllRanges();
+      try {
+        state.activeSelection.contents.window.getSelection().removeAllRanges();
+      } catch (e) {}
     }
   }
+
+  // Clear TXT viewer selection
+  try {
+    window.getSelection().removeAllRanges();
+  } catch (e) {}
+  state.activeSelection = null;
 
   closeAllToolbars();
   showToast('형광펜이 추가되었습니다.');
@@ -5112,7 +5294,7 @@ function setupEventListeners() {
 
   // Sample Book & Export buttons
   if (elements.btnExportBook) {
-    elements.btnExportBook.addEventListener('click', exportBookWithHighlights);
+    elements.btnExportBook.addEventListener('click', exportBookAsMarkdown);
   }
   if (elements.btnLoadSample) {
     elements.btnLoadSample.addEventListener('click', loadSampleBook);
@@ -5324,31 +5506,60 @@ function setupEventListeners() {
     }
   });
 
-  // Floating Selection Toolbar Buttons
-  if (elements.btnToolbarBookmark) {
-    elements.btnToolbarBookmark.addEventListener('click', (e) => {
-      e.stopPropagation();
-      addBookmarkFromSelection();
+  // 2단 형광펜 및 선택 도구 메뉴 이벤트 바인딩
+  if (elements.selectionMenuBar) {
+    elements.selectionMenuBar.addEventListener('mousedown', (e) => {
+      // 메뉴 클릭 시 본문 텍스트 선택(Range)이 브라우저 기본 동작으로 해제되지 않도록 방지
+      e.preventDefault();
     });
   }
 
-  document.querySelectorAll('#selection-toolbar .color-dot').forEach(dot => {
+  // 메인 형광펜 버튼 클릭
+  if (elements.btnMenuHighlight) {
+    elements.btnMenuHighlight.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!state.activeSelection || !state.activeSelection.text) {
+        showToast('먼저 텍스트를 선택해주세요.');
+        return;
+      }
+      applyHighlight(state.activeColor || 'yellow');
+    });
+  }
+
+  // 형광펜 색상 팔레트 dot 클릭
+  document.querySelectorAll('#selection-menu-bar .color-dot').forEach(dot => {
     dot.addEventListener('click', (e) => {
       e.stopPropagation();
-      applyHighlight(dot.dataset.color);
+      const color = dot.dataset.color || 'yellow';
+      setActiveHighlightColor(color);
+      if (!state.activeSelection || !state.activeSelection.text) {
+        showToast('먼저 텍스트를 선택해주세요.');
+        return;
+      }
+      applyHighlight(color);
     });
   });
 
-  elements.btnToolbarAi.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (state.activeSelection) {
+  // AI 분석 버튼 클릭
+  if (elements.btnMenuAi) {
+    elements.btnMenuAi.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!state.activeSelection || !state.activeSelection.text) {
+        showToast('먼저 텍스트를 선택해주세요.');
+        return;
+      }
       triggerGoogleAISearch(state.activeSelection);
-    }
-  });
+    });
+  }
 
-  elements.btnToolbarCopy.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (state.activeSelection && state.activeSelection.text) {
+  // 복사 버튼 클릭
+  if (elements.btnMenuCopy) {
+    elements.btnMenuCopy.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (!state.activeSelection || !state.activeSelection.text) {
+        showToast('먼저 텍스트를 선택해주세요.');
+        return;
+      }
       const rawText = state.activeSelection.text;
       navigator.clipboard.writeText(rawText).catch(() => {});
 
@@ -5356,7 +5567,6 @@ function setupEventListeners() {
 
       if (shouldAutoSearch) {
         // Sanitize search keyword: trim spaces and strip leading/trailing non-word punctuation
-        // e.g. "fascinating," -> "fascinating", "“marvelous”" -> "marvelous", "(wonderful)" -> "wonderful"
         const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
         const searchTerm = cleanedText || rawText.trim();
 
@@ -5381,8 +5591,8 @@ function setupEventListeners() {
         showToast('텍스트가 클립보드에 복사되었습니다.');
         closeAllToolbars();
       }
-    }
-  });
+    });
+  }
 
   // Highlight Popover Toolbar Color Dots
   document.querySelectorAll('#highlight-toolbar .color-dot').forEach(dot => {
