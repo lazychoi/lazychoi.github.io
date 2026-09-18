@@ -280,6 +280,11 @@ const elements = {
   btnEditMeta: document.getElementById('btn-edit-meta'),
   btnResetDb: document.getElementById('btn-reset-db'),
   btnResetDbMobile: document.getElementById('btn-reset-db-mobile'),
+  btnOpenFile: document.getElementById('btn-open-file'),
+  fileListView: document.getElementById('file-list-view'),
+  readerApp: document.getElementById('reader-app'),
+  fileCardsList: document.getElementById('file-cards-list'),
+  listFileInput: document.getElementById('list-file-input'),
   bookFileInput: document.getElementById('book-file-input'),
   emptyFileInput: document.getElementById('empty-file-input'),
   btnExportBook: document.getElementById('btn-export-book'),
@@ -356,6 +361,7 @@ const elements = {
   inputBookmarkTitle: document.getElementById('input-bookmark-title'),
   bookmarkPreviewPct: document.getElementById('bookmark-preview-pct'),
   bookmarkPreviewChapter: document.getElementById('bookmark-preview-chapter'),
+  bookmarkPreviewSnippet: document.getElementById('bookmark-preview-snippet'),
   btnCancelBookmark: document.getElementById('btn-cancel-bookmark'),
   btnSaveBookmark: document.getElementById('btn-save-bookmark'),
   bookmarkQuickChips: document.getElementById('bookmark-quick-chips'),
@@ -468,13 +474,24 @@ async function updateActiveBookLastPosition(pos) {
     if (!db) return;
     const tx = db.transaction(READER_STORE_NAME, 'readwrite');
     const store = tx.objectStore(READER_STORE_NAME);
-    const req = store.get('current_reading_book');
+    const bookId = state.currentBook.id;
+    const req = store.get(bookId);
     req.onsuccess = () => {
-      const record = req.result;
-      if (record) {
-        record.lastPosition = pos;
-        store.put(record);
+      let record = req.result;
+      if (!record) {
+        const legReq = store.get('current_reading_book');
+        legReq.onsuccess = () => {
+          if (legReq.result) {
+            legReq.result.lastPosition = pos;
+            legReq.result.timestamp = Date.now();
+            store.put(legReq.result);
+          }
+        };
+        return;
       }
+      record.lastPosition = pos;
+      record.timestamp = Date.now();
+      store.put(record);
     };
   } catch (e) {
     console.warn('Error updating last position in IndexedDB:', e);
@@ -495,13 +512,16 @@ async function saveActiveBookToStorage(bookRecord) {
       ? state.bookmarks
       : (bookRecord.bookmarks || []);
 
+    const bookId = bookRecord.bookId || (state.currentBook && state.currentBook.id) || ('book_' + Date.now());
+
     const lastPos = (bookRecord && bookRecord.lastPosition !== undefined && bookRecord.lastPosition !== null)
       ? bookRecord.lastPosition
-      : (state.currentBook ? localStorage.getItem(`reader_pos_${state.currentBook.id}`) : null);
+      : (state.currentBook ? localStorage.getItem(`reader_pos_${bookId}`) : null);
 
     store.put({
-      id: 'current_reading_book',
+      id: bookId,
       ...bookRecord,
+      bookId: bookId,
       lastPosition: lastPos,
       highlights: highlightsToStore,
       bookmarks: bookmarksToStore,
@@ -518,16 +538,95 @@ async function saveActiveBookBookmarksToDB() {
     if (!db || !state.currentBook) return;
     const tx = db.transaction(READER_STORE_NAME, 'readwrite');
     const store = tx.objectStore(READER_STORE_NAME);
-    const req = store.get('current_reading_book');
+    const bookId = state.currentBook.id;
+    const req = store.get(bookId);
     req.onsuccess = () => {
       const record = req.result;
-      if (record && record.bookId === state.currentBook.id) {
+      if (record) {
         record.bookmarks = state.bookmarks;
+        record.timestamp = Date.now();
         store.put(record);
       }
     };
   } catch (err) {
     console.warn('Failed to save bookmarks to IndexedDB:', err);
+  }
+}
+
+async function getAllBooksFromStorage() {
+  try {
+    const db = await openReaderDB();
+    if (!db) return [];
+    return new Promise((resolve) => {
+      const tx = db.transaction(READER_STORE_NAME, 'readonly');
+      const store = tx.objectStore(READER_STORE_NAME);
+      const req = store.getAll();
+      req.onsuccess = () => {
+        let books = req.result || [];
+        books = books.map(b => {
+          if (b.id === 'current_reading_book') {
+            return { ...b, id: b.bookId || 'legacy_current_book' };
+          }
+          return b;
+        });
+        books.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        resolve(books);
+      };
+      req.onerror = () => resolve([]);
+    });
+  } catch (err) {
+    console.warn('Failed to load books from IndexedDB:', err);
+    return [];
+  }
+}
+
+async function getBookByIdFromStorage(bookId) {
+  try {
+    const db = await openReaderDB();
+    if (!db) return null;
+    return new Promise((resolve) => {
+      const tx = db.transaction(READER_STORE_NAME, 'readonly');
+      const store = tx.objectStore(READER_STORE_NAME);
+      const req = store.get(bookId);
+      req.onsuccess = () => {
+        if (req.result) {
+          resolve(req.result);
+        } else {
+          const legReq = store.get('current_reading_book');
+          legReq.onsuccess = () => resolve(legReq.result || null);
+          legReq.onerror = () => resolve(null);
+        }
+      };
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    return null;
+  }
+}
+
+async function deleteBookFromStorage(bookId) {
+  try {
+    const db = await openReaderDB();
+    if (!db) return;
+    const tx = db.transaction(READER_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_STORE_NAME);
+    store.delete(bookId);
+
+    const legReq = store.get('current_reading_book');
+    legReq.onsuccess = () => {
+      if (legReq.result && (legReq.result.bookId === bookId || legReq.result.id === bookId)) {
+        store.delete('current_reading_book');
+      }
+    };
+
+    localStorage.removeItem(`reader_highlights_${bookId}`);
+    localStorage.removeItem(`reader_bookmarks_${bookId}`);
+    localStorage.removeItem(`reader_pos_${bookId}`);
+    if (localStorage.getItem('reader_last_book_id') === bookId) {
+      localStorage.removeItem('reader_last_book_id');
+    }
+  } catch (err) {
+    console.warn('Failed to delete book from IndexedDB:', err);
   }
 }
 
@@ -538,8 +637,16 @@ async function loadActiveBookFromStorage() {
     return new Promise((resolve) => {
       const tx = db.transaction(READER_STORE_NAME, 'readonly');
       const store = tx.objectStore(READER_STORE_NAME);
-      const req = store.get('current_reading_book');
-      req.onsuccess = () => resolve(req.result || null);
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const books = req.result || [];
+        if (books.length > 0) {
+          books.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          resolve(books[0]);
+        } else {
+          resolve(null);
+        }
+      };
       req.onerror = () => resolve(null);
     });
   } catch (err) {
@@ -547,6 +654,133 @@ async function loadActiveBookFromStorage() {
     return null;
   }
 }
+
+function showReaderWorkspace() {
+  const fileListView = document.getElementById('file-list-view');
+  const readerApp = document.getElementById('reader-app');
+  if (fileListView) fileListView.style.display = 'none';
+  if (readerApp) readerApp.style.display = 'flex';
+}
+
+async function showReaderFileList() {
+  const fileListView = document.getElementById('file-list-view');
+  const readerApp = document.getElementById('reader-app');
+  if (readerApp) readerApp.style.display = 'none';
+  if (fileListView) fileListView.style.display = 'block';
+  await renderReaderFileList();
+}
+
+async function renderReaderFileList() {
+  const listContainer = document.getElementById('file-cards-list');
+  if (!listContainer) return;
+
+  const books = await getAllBooksFromStorage();
+  if (!books || books.length === 0) {
+    listContainer.innerHTML = `
+      <div class="file-empty-state">
+        <div class="empty-icon">📖</div>
+        <h3>저장된 도서가 없습니다</h3>
+        <p>상단의 [새 파일 열기] 버튼을 눌러 .txt, .epub, .md 도서를 추가해보세요.</p>
+        <div class="empty-action-row">
+          <button type="button" class="btn-secondary-action" id="btn-list-sample-book">
+            샘플 도서 열기 (The Happy Prince)
+          </button>
+        </div>
+      </div>
+    `;
+    const sampleBtn = document.getElementById('btn-list-sample-book');
+    if (sampleBtn) {
+      sampleBtn.addEventListener('click', () => {
+        loadSampleBook();
+      });
+    }
+    return;
+  }
+
+  listContainer.innerHTML = books.map(book => {
+    const type = (book.type || 'txt').toUpperCase();
+    let posText = '';
+    if (book.lastPosition !== undefined && book.lastPosition !== null && book.lastPosition !== '') {
+      if (typeof book.lastPosition === 'number' || /^\d+$/.test(book.lastPosition)) {
+        posText = `진행률 ${book.lastPosition}%`;
+      } else {
+        posText = `읽던 위치 저장됨`;
+      }
+    } else {
+      posText = `처음`;
+    }
+
+    let dateText = '';
+    if (book.timestamp) {
+      const d = new Date(book.timestamp);
+      dateText = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    const hlCount = (book.highlights && book.highlights.length) ? book.highlights.length : 0;
+    const bmCount = (book.bookmarks && book.bookmarks.length) ? book.bookmarks.length : 0;
+    const bookKey = book.id || book.bookId;
+
+    return `
+      <div class="file-card" data-id="${escapeHtml(bookKey)}">
+        <div class="file-card-main" onclick="openBookFromList('${escapeHtml(bookKey)}')">
+          <div class="file-card-icon">📖</div>
+          <div class="file-card-info">
+            <div class="file-card-title">${escapeHtml(book.title || '제목 없음')}</div>
+            <div class="file-card-meta">
+              <span class="file-meta-tag">${type}</span>
+              ${book.author ? `<span class="file-meta-author">${escapeHtml(book.author)}</span>` : ''}
+              <span class="file-meta-tag green">${posText}</span>
+              ${hlCount > 0 ? `<span class="file-meta-tag amber">형광펜 ${hlCount}</span>` : ''}
+              ${bmCount > 0 ? `<span class="file-meta-tag">책갈피 ${bmCount}</span>` : ''}
+              ${dateText ? `<span class="file-meta-date">${dateText}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="file-card-actions">
+          <button type="button" class="btn-card-delete" onclick="deleteBookFromList('${escapeHtml(bookKey)}', event)" title="도서 삭제">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            <span>삭제</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+window.openBookFromList = async function(bookId) {
+  try {
+    const record = await getBookByIdFromStorage(bookId);
+    if (!record || !record.content) {
+      alert('도서 데이터를 불러올 수 없습니다.');
+      return;
+    }
+    const savedPos = (record.lastPosition !== undefined && record.lastPosition !== null && record.lastPosition !== '')
+      ? record.lastPosition
+      : localStorage.getItem(`reader_pos_${record.bookId || bookId}`);
+
+    if (record.type === 'epub') {
+      openEpubBook(record.title, record.author, record.content, record.bookId || bookId, true, record.highlights, savedPos, record.bookmarks);
+    } else if (record.type === 'txt') {
+      openTxtBook(record.title, record.author, record.content, record.bookId || bookId, true, record.highlights, savedPos, record.bookmarks);
+    } else if (record.type === 'md' || record.type === 'markdown') {
+      openMdBook(record.title, record.author, record.content, record.bookId || bookId, true, record.highlights, savedPos, record.bookmarks);
+    }
+  } catch (err) {
+    console.warn('Error opening book from list:', err);
+  }
+};
+
+window.deleteBookFromList = async function(bookId, e) {
+  if (e) e.stopPropagation();
+  if (!confirm('이 도서를 보관함에서 삭제하시겠습니까?')) return;
+  await deleteBookFromStorage(bookId);
+  if (state.currentBook && (state.currentBook.id === bookId || state.currentBook.bookId === bookId)) {
+    state.currentBook = null;
+  }
+  await renderReaderFileList();
+};
 
 async function clearAllReaderIndexedDB() {
   try {
@@ -711,7 +945,7 @@ function attachSwipeGesture(targetElement, getIframeSelection = null) {
       } else {
         state.epub.rendition.prev();
       }
-    } else if (state.currentBook && state.currentBook.type === 'txt' && elements.txtViewer) {
+    } else if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md') && elements.txtViewer) {
       const scrollStep = elements.txtViewer.clientHeight * 0.8;
       if (dx < 0) {
         elements.txtViewer.scrollBy({ top: scrollStep, behavior: 'smooth' });
@@ -948,7 +1182,20 @@ function compareHighlights(a, b) {
     if (a.cfiRange && b.cfiRange) {
       return compareEpubCfi(a.cfiRange, b.cfiRange);
     }
-  } else if (state.currentBook && state.currentBook.type === 'txt') {
+  } else if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+    if (typeof a.pIdx === 'number' && typeof b.pIdx === 'number' && a.pIdx !== b.pIdx) {
+      return a.pIdx - b.pIdx;
+    }
+    if (typeof a.pIdx === 'number' && typeof b.pIdx === 'number' && a.pIdx === b.pIdx) {
+      const offA = a.offset ?? 0;
+      const offB = b.offset ?? 0;
+      if (offA !== offB) return offA - offB;
+    }
+    if (a.fnTag && b.fnTag) {
+      const numA = parseInt(a.fnTag, 10);
+      const numB = parseInt(b.fnTag, 10);
+      if (!isNaN(numA) && !isNaN(numB) && numA !== numB) return numA - numB;
+    }
     const pA = a.pIdx ?? 0;
     const pB = b.pIdx ?? 0;
     if (pA !== pB) return pA - pB;
@@ -1191,6 +1438,7 @@ function handleFileSelection(file) {
 
   const fileName = file.name;
   const isEpub = fileName.toLowerCase().endsWith('.epub') || file.type.includes('epub');
+  const isMd = fileName.toLowerCase().endsWith('.md') || fileName.toLowerCase().endsWith('.markdown') || file.type.includes('markdown');
 
   if (isEpub) {
     const reader = new FileReader();
@@ -1198,6 +1446,14 @@ function handleFileSelection(file) {
       openEpubBook(fileName.replace(/\.epub$/i, ''), '저자 확인 중...', e.target.result, `epub_${fileName}_${file.size}`);
     };
     reader.readAsArrayBuffer(file);
+  } else if (isMd) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const rawContent = e.target.result || '';
+      const meta = extractMarkdownMetadata(rawContent, fileName);
+      openMdBook(meta.title, meta.author, rawContent, `md_${fileName}_${file.size}`);
+    };
+    reader.readAsText(file, 'utf-8');
   } else {
     // Assume TXT
     const reader = new FileReader();
@@ -1246,6 +1502,8 @@ async function exportBookAsMarkdown() {
     let markdownContent = '';
     if (state.currentBook.type === 'epub') {
       markdownContent = await exportEpubAsMarkdown();
+    } else if (state.currentBook.type === 'md') {
+      markdownContent = exportMdAsMarkdown();
     } else {
       markdownContent = exportTxtAsMarkdown();
     }
@@ -1354,6 +1612,143 @@ function exportTxtAsMarkdown() {
   if (sortedHls.length > 0) {
     fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
   }
+
+  return cleanMarkdown(fullMd) + '\n';
+}
+
+function exportMdAsMarkdown() {
+  // Extract base body from currentBook.content, stripping existing QA section and footnote defs
+  const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+
+  let cleanBody = bodyText;
+  const locatedList = [];
+  const occupiedRanges = [];
+
+  function isOccupied(start, end) {
+    return occupiedRanges.some(r => !(end <= r.start || start >= r.end));
+  }
+
+  function escapeRegex(s) {
+    return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  // 1. Locate existing footnotes by fnTag in cleanBody
+  state.highlights.filter(h => h.fnTag).forEach(hl => {
+    const escapedTag = escapeRegex(hl.fnTag);
+    const escapedTerm = escapeRegex(hl.text);
+    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})?\\s*\\[\\^${escapedTag}\\]`, 'g');
+    let m;
+    let found = false;
+    while ((m = re.exec(cleanBody)) !== null) {
+      const start = m.index;
+      const end = m.index + m[0].length;
+      if (!isOccupied(start, end)) {
+        const prefix = m[0].replace(/\s*\[\^[^\]]+\]$/, '') || hl.text;
+        locatedList.push({ hl, start, end, prefix, isExisting: true });
+        occupiedRanges.push({ start, end });
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      const tagOnlyRe = new RegExp(`\\[\\^${escapedTag}\\]`, 'g');
+      let m2;
+      while ((m2 = tagOnlyRe.exec(cleanBody)) !== null) {
+        const start = m2.index;
+        const end = m2.index + m2[0].length;
+        if (!isOccupied(start, end)) {
+          locatedList.push({ hl, start, end, prefix: hl.text, isExisting: true });
+          occupiedRanges.push({ start, end });
+          break;
+        }
+      }
+    }
+  });
+
+  // 2. Locate newly added highlights without fnTag in cleanBody
+  state.highlights.filter(h => !h.fnTag).forEach(hl => {
+    const escapedTerm = escapeRegex(hl.text);
+    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})(?!\\s*\\[\\^)`, 'g');
+    const candidates = [];
+    let m;
+    while ((m = re.exec(cleanBody)) !== null) {
+      const start = m.index;
+      const end = m.index + m[0].length;
+      if (!isOccupied(start, end)) {
+        let score = 10;
+        if (hl.targetSentence) {
+          const sentSnippet = cleanBody.substring(Math.max(0, start - 150), Math.min(cleanBody.length, end + 150));
+          if (sentSnippet.includes(hl.targetSentence)) {
+            score += 1000;
+          } else {
+            const targetWords = hl.targetSentence.split(/\s+/).filter(w => w.length > 2);
+            let wordMatches = 0;
+            targetWords.forEach(w => { if (sentSnippet.includes(w)) wordMatches++; });
+            score += wordMatches * 10;
+          }
+        }
+        candidates.push({ start, end, prefix: m[0], score });
+      }
+    }
+
+    if (candidates.length > 0) {
+      candidates.sort((a, b) => b.score - a.score);
+      const best = candidates[0];
+      locatedList.push({ hl, start: best.start, end: best.end, prefix: best.prefix, isExisting: false });
+      occupiedRanges.push({ start: best.start, end: best.end });
+    }
+  });
+
+  // 3. Sort strictly by appearance order in cleanBody (start offset ascending)
+  locatedList.sort((a, b) => a.start - b.start);
+
+  const hlFootnoteMap = new Map();
+  locatedList.forEach((item, idx) => {
+    item.fnNum = idx + 1;
+    hlFootnoteMap.set(item.hl.id, item.fnNum);
+    item.hl.fnTag = String(item.fnNum);
+    item.hl.isFootnote = true;
+  });
+
+  // 4. Any highlights that could not be located in cleanBody (safeguard)
+  const sortedHls = locatedList.map(item => item.hl);
+  const unlocatedHls = state.highlights.filter(h => !hlFootnoteMap.has(h.id));
+  unlocatedHls.forEach((hl, idx) => {
+    const fnNum = locatedList.length + idx + 1;
+    hlFootnoteMap.set(hl.id, fnNum);
+    hl.fnTag = String(fnNum);
+    hl.isFootnote = true;
+    sortedHls.push(hl);
+  });
+
+  // 5. Replace in cleanBody from bottom to top so offsets do not shift
+  const replaceList = [...locatedList].sort((a, b) => b.start - a.start);
+  replaceList.forEach(item => {
+    const replacement = `${item.prefix}[^${item.fnNum}]`;
+    cleanBody = cleanBody.substring(0, item.start) + replacement + cleanBody.substring(item.end);
+  });
+
+  // Strip any raw tags if present
+  cleanBody = cleanBody
+    .replace(/<mark[^>]*class="[^"]*reader-highlight[^"]*"[^>]*>([\s\S]*?)<\/mark>/gi, '$1')
+    .replace(/<sup[^>]*class="[^"]*fn-badge[^"]*"[^>]*>.*?<\/sup>/gi, '');
+
+  let fullMd = '';
+  if (!/^#\s+/m.test(cleanBody)) {
+    fullMd += `# ${state.currentBook.title || 'Untitled'}\n\n`;
+    if (state.currentBook.author) {
+      fullMd += `*저자: ${state.currentBook.author}*\n\n`;
+    }
+    fullMd += `---\n\n`;
+  }
+  cleanBody = cleanBody.replace(/(?:\r?\n\s*---\s*)+$/, '').trim();
+  fullMd += `${cleanBody}\n\n`;
+
+  if (sortedHls.length > 0) {
+    fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+  }
+
+  saveHighlights();
 
   return cleanMarkdown(fullMd) + '\n';
 }
@@ -1823,6 +2218,7 @@ async function downloadZipAsEpub(zip, bookTitle) {
 let isRestoringTxtScroll = false;
 
 function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
+  showReaderWorkspace();
   // Reset EPUB if any
   cleanupEpub();
 
@@ -1850,6 +2246,7 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   elements.readerBottomBar.style.display = 'flex';
   elements.currentChapterTitle.textContent = state.currentBook.title;
 
+  elements.txtContent.classList.remove('is-markdown');
   renderTxtContent(fallbackPosition);
 
   if (!skipSaveToDb) {
@@ -1865,8 +2262,13 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
 }
 
 function renderTxtContent(fallbackPosition = null) {
-  elements.txtContent.innerHTML = '';
+  const prevViewerScrollTop = elements.txtViewer ? elements.txtViewer.scrollTop : 0;
+  const prevWindowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  const wasScrolled = prevViewerScrollTop > 0 || prevWindowScrollY > 0;
 
+  isRestoringTxtScroll = true;
+
+  const frag = document.createDocumentFragment();
   const paragraphs = state.currentBook.content.split(/\n\s*\n/);
   paragraphs.forEach((pText, pIdx) => {
     const trimmed = pText.trim();
@@ -1877,8 +2279,11 @@ function renderTxtContent(fallbackPosition = null) {
 
     // Apply highlights if any exist for this paragraph
     p.innerHTML = applyHighlightsToParagraph(trimmed, pIdx);
-    elements.txtContent.appendChild(p);
+    frag.appendChild(p);
   });
+
+  elements.txtContent.innerHTML = '';
+  elements.txtContent.appendChild(frag);
 
   // TXT Scroll progress tracking
   elements.txtViewer.onscroll = () => {
@@ -1901,32 +2306,65 @@ function renderTxtContent(fallbackPosition = null) {
   };
 
   // Restore saved scroll position if any
-  const savedPos = (fallbackPosition !== undefined && fallbackPosition !== null && fallbackPosition !== '')
-    ? fallbackPosition
-    : localStorage.getItem(`reader_pos_${state.currentBook.id}`);
-
-  if (savedPos !== null && savedPos !== undefined && savedPos !== '') {
-    isRestoringTxtScroll = true;
-    const applySavedScroll = () => {
+  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '') {
+    const applyExplicitScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
-        const ratio = Math.min(1, Math.max(0, parseFloat(savedPos) / 100));
+        const ratio = Math.min(1, Math.max(0, parseFloat(fallbackPosition) / 100));
         if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
         state.txt.currentRatio = ratio;
         elements.txtViewer.scrollTop = ratio * scrollHeight;
-        const pct = Math.round(parseFloat(savedPos));
+        const pct = Math.round(parseFloat(fallbackPosition));
         elements.progressSlider.value = pct;
         elements.progressPercent.textContent = `${pct}%`;
       }
     };
-    setTimeout(applySavedScroll, 50);
-    setTimeout(applySavedScroll, 180);
+    applyExplicitScroll();
+    setTimeout(applyExplicitScroll, 50);
     setTimeout(() => {
-      applySavedScroll();
+      applyExplicitScroll();
       isRestoringTxtScroll = false;
-    }, 400);
+    }, 200);
+  } else if (wasScrolled) {
+    if (elements.txtViewer && prevViewerScrollTop > 0) {
+      elements.txtViewer.scrollTop = prevViewerScrollTop;
+    }
+    if (prevWindowScrollY > 0) {
+      window.scrollTo(0, prevWindowScrollY);
+    }
+    requestAnimationFrame(() => {
+      if (elements.txtViewer && prevViewerScrollTop > 0) {
+        elements.txtViewer.scrollTop = prevViewerScrollTop;
+      }
+      if (prevWindowScrollY > 0) {
+        window.scrollTo(0, prevWindowScrollY);
+      }
+      isRestoringTxtScroll = false;
+    });
   } else {
-    isRestoringTxtScroll = false;
+    const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+    if (savedPos !== null && savedPos !== undefined && savedPos !== '') {
+      const applySavedScroll = () => {
+        const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+        if (scrollHeight > 0) {
+          const ratio = Math.min(1, Math.max(0, parseFloat(savedPos) / 100));
+          if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+          state.txt.currentRatio = ratio;
+          elements.txtViewer.scrollTop = ratio * scrollHeight;
+          const pct = Math.round(parseFloat(savedPos));
+          elements.progressSlider.value = pct;
+          elements.progressPercent.textContent = `${pct}%`;
+        }
+      };
+      applySavedScroll();
+      setTimeout(applySavedScroll, 50);
+      setTimeout(() => {
+        applySavedScroll();
+        isRestoringTxtScroll = false;
+      }, 200);
+    } else {
+      isRestoringTxtScroll = false;
+    }
   }
 
   // Bind click on marks
@@ -2031,6 +2469,596 @@ function bindHighlightClickEvents() {
       }
     });
   });
+}
+
+// ── Markdown Book Viewer (marked.js) ──
+function extractMarkdownMetadata(rawContent, fileName) {
+  let title = fileName.replace(/\.(md|markdown|txt)$/i, '');
+  let author = '';
+
+  // 1. YAML frontmatter check
+  const fmMatch = rawContent.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+  if (fmMatch) {
+    const fmText = fmMatch[1];
+    const titleMatch = fmText.match(/^title:\s*["']?(.*?)["']?$/m);
+    if (titleMatch && titleMatch[1].trim()) title = titleMatch[1].trim();
+    const authorMatch = fmText.match(/^author:\s*["']?(.*?)["']?$/m);
+    if (authorMatch && authorMatch[1].trim()) author = authorMatch[1].trim();
+  }
+
+  // 2. Heading 1 check
+  if (!fmMatch) {
+    const h1Match = rawContent.match(/^#\s+(.+)$/m);
+    if (h1Match && h1Match[1].trim()) {
+      title = h1Match[1].trim();
+    }
+  }
+
+  // 3. Author check: *저자: ...* or _Author: ..._
+  const authorMatch = rawContent.match(/^\*(?:저자|Author):\s*(.+)\*$/mi) || rawContent.match(/^_(?:저자|Author):\s*(.+)_$/mi);
+  if (authorMatch && authorMatch[1].trim()) {
+    author = authorMatch[1].trim();
+  }
+
+  return { title, author };
+}
+
+function openMdBook(title, author, content, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
+  showReaderWorkspace();
+  // Reset EPUB if any
+  cleanupEpub();
+
+  state.currentBook = {
+    type: 'md',
+    title: title || 'Untitled Markdown',
+    author: author || '',
+    content,
+    id: bookId || `md_${Date.now()}`
+  };
+
+  state.highlights = loadHighlights(state.currentBook.id, fallbackHighlights);
+  state.bookmarks = loadBookmarks(state.currentBook.id, fallbackBookmarks);
+  state.highlightSearchQuery = '';
+  if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+  if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
+  updateMetadataUI();
+  updateHighlightBadge();
+  updateBookmarkBadge();
+
+  elements.emptyState.style.display = 'none';
+  elements.epubViewer.style.display = 'none';
+  elements.txtViewer.style.display = 'flex';
+  elements.readerBottomBar.style.display = 'flex';
+  elements.currentChapterTitle.textContent = state.currentBook.title;
+  elements.txtContent.classList.add('is-markdown');
+
+  renderMdContent(fallbackPosition);
+
+  if (!skipSaveToDb) {
+    saveActiveBookToStorage({
+      type: 'md',
+      title: state.currentBook.title,
+      author: state.currentBook.author,
+      content,
+      bookId: state.currentBook.id,
+      lastPosition: fallbackPosition
+    });
+  }
+}
+
+function parseMarkdownFootnotes(content, existingHighlights = []) {
+  const lines = (content || '').replace(/\r\n/g, '\n').split('\n');
+
+  let qaHeadingIndex = -1;
+  for (let i = 0; i < lines.length; i++) {
+    if (/^#{1,3}\s+.*(?:Q&A|각주|형광펜|단어장|Footnote)/i.test(lines[i])) {
+      qaHeadingIndex = i;
+      break;
+    }
+  }
+
+  const fnDefs = new Map();
+  let curTag = null;
+  let curLines = [];
+  const bodyLines = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const defMatch = line.match(/^\[\^([^\]]+)\]:\s*(.*)$/);
+    if (defMatch) {
+      if (curTag) {
+        fnDefs.set(curTag, curLines.join('\n'));
+      }
+      curTag = defMatch[1];
+      curLines = [defMatch[2]];
+    } else if (curTag) {
+      if (/^(?:[ \t]{2,}|\t|\s*$)/.test(line)) {
+        curLines.push(line);
+      } else {
+        fnDefs.set(curTag, curLines.join('\n'));
+        curTag = null;
+        curLines = [];
+        if (qaHeadingIndex === -1 || i < qaHeadingIndex) {
+          bodyLines.push(line);
+        }
+      }
+    } else {
+      if (qaHeadingIndex === -1 || i < qaHeadingIndex) {
+        bodyLines.push(line);
+      }
+    }
+  }
+  if (curTag) {
+    fnDefs.set(curTag, curLines.join('\n'));
+  }
+
+  while (bodyLines.length > 0 && /^\s*---\s*$/.test(bodyLines[bodyLines.length - 1])) {
+    bodyLines.pop();
+  }
+
+  let bodyText = bodyLines.join('\n').trim();
+
+  const parsedHls = [];
+  fnDefs.forEach((body, tag) => {
+    let term = '';
+    let phonetic = '';
+    let targetMeaning = '';
+    let targetSentence = '';
+    let sentenceTranslation = '';
+    let note = '';
+
+    const termMatch = body.match(/^\s*\*\*([^*]+)\*\*(?:\s*(?:\*([^*]+)\*|\/([^/]+)\/))?/);
+    if (termMatch) {
+      term = termMatch[1].trim();
+      phonetic = (termMatch[2] || termMatch[3] || '').trim();
+    }
+
+    const meaningMatch = body.match(/-\s*\*\*💡\s*구문\s*뜻\*\*:\s*([^\n]+)/);
+    if (meaningMatch) {
+      targetMeaning = meaningMatch[1].trim();
+    } else if (term) {
+      const firstLineRest = body.split('\n')[0].replace(/^\s*\*\*[^*]+\*\*(?:\s*(?:\*[^*]+\*|\/[^/]+\/))?[:\s-]*/, '').trim();
+      if (firstLineRest) {
+        targetMeaning = firstLineRest;
+      }
+    } else {
+      targetMeaning = body.split('\n')[0].trim();
+    }
+
+    const sentMatch = body.match(/-\s*\*\*📖\s*문맥\s*예문\*\*:\s*([^\n]+)/);
+    if (sentMatch) {
+      targetSentence = sentMatch[1].trim();
+    }
+
+    const transMatch = body.match(/-\s*\*\*📝\s*문장\s*해석[^*]*\*\*:\s*([\s\S]*?)(?=(?:\n\s*-\s*\*\*|$))/);
+    if (transMatch) {
+      sentenceTranslation = transMatch[1]
+        .split('\n')
+        .map(l => l.replace(/^[ \t]{2,}/, ''))
+        .join('\n')
+        .trim();
+    }
+
+    const noteMatch = body.match(/-\s*\*\*💬\s*독서\s*메모\*\*:\s*([\s\S]*?)(?=(?:\n\s*-\s*\*\*|$))/);
+    if (noteMatch) {
+      note = noteMatch[1].trim();
+    }
+
+    if (!term) {
+      const escapedTag = tag.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const refRegex = new RegExp(`(?:\\[([^\\]]+)\\]|\\*\\*([^*]+)\\*\\*|([A-Za-z0-9_\\-\\x27\\x22\\u2019]+))\\s*\\[\\^${escapedTag}\\]`);
+      const match = bodyText.match(refRegex);
+      if (match) {
+        term = (match[1] || match[2] || match[3] || '').trim();
+      } else {
+        term = `각주 ${tag}`;
+      }
+    }
+
+    const hlId = `fn_${tag}_${term.replace(/\W+/g, '_')}`;
+    const existing = existingHighlights.find(h => h.id === hlId || (h.text === term && h.fnTag === tag));
+
+    const hl = {
+      id: hlId,
+      text: term,
+      phonetic: phonetic || (existing ? existing.phonetic : '') || '',
+      targetMeaning: (existing && existing.targetMeaning) ? existing.targetMeaning : targetMeaning,
+      targetSentence: targetSentence || (existing ? existing.targetSentence : ''),
+      sentenceTranslation: (existing && existing.sentenceTranslation) ? existing.sentenceTranslation : sentenceTranslation,
+      note: (existing && existing.note) ? existing.note : note,
+      color: (existing && existing.color) ? existing.color : 'yellow',
+      fnTag: tag,
+      isFootnote: true,
+      studyCount: existing ? (existing.studyCount || 0) : 0,
+      wrongCount: existing ? (existing.wrongCount || 0) : 0,
+      createdAt: existing ? existing.createdAt : Date.now()
+    };
+    parsedHls.push(hl);
+  });
+
+  return { parsedHls, bodyText };
+}
+
+function injectFootnoteHighlightsInMarkdown(bodyText, highlights) {
+  let result = bodyText;
+  const footnoteHls = (highlights || []).filter(h => h.isFootnote || h.fnTag);
+
+  for (const hl of footnoteHls) {
+    const escapedTag = String(hl.fnTag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedTerm = String(hl.text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    const bracketRegex = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})\\s*\\[\\^${escapedTag}\\]`, 'g');
+    if (bracketRegex.test(result)) {
+      result = result.replace(bracketRegex, `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${hl.id}" id="fn-src-${hl.fnTag}">${hl.text}</mark>`);
+    } else {
+      const standaloneRegex = new RegExp(`\\[\\^${escapedTag}\\]`, 'g');
+      result = result.replace(standaloneRegex, '');
+    }
+  }
+
+  // Remove any remaining raw footnote markers in body text so no [^tag] text is displayed in reader
+  result = result.replace(/\[\^[a-zA-Z0-9_-]+\]/g, '');
+
+  return result;
+}
+
+function extractMarkdownToc() {
+  state.toc = [];
+  const headings = elements.txtContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  headings.forEach((h, idx) => {
+    if (h.classList.contains('footnotes-title')) return;
+    const id = `md-h-${idx}`;
+    h.id = id;
+    h.classList.add('md-heading');
+    const level = parseInt(h.tagName.substring(1), 10);
+    const label = h.textContent.trim();
+    if (label) {
+      state.toc.push({ id, label, level });
+    }
+  });
+
+  if (state.toc.length > 0) {
+    elements.btnToggleToc.style.display = 'inline-flex';
+  } else {
+    elements.btnToggleToc.style.display = 'none';
+  }
+}
+
+function applyDomHighlights(rootElem, highlights) {
+  if (!highlights || highlights.length === 0) return;
+
+  highlights.forEach(hl => {
+    if (!hl.text) return;
+    if (rootElem.querySelector(`[data-hl-id="${hl.id}"]`)) return;
+
+    const walker = document.createTreeWalker(rootElem, NodeFilter.SHOW_TEXT, null, false);
+    let node;
+    const matchedNodes = [];
+
+    while ((node = walker.nextNode())) {
+      if (node.parentElement && (node.parentElement.closest('.reader-highlight') || node.parentElement.closest('script, style, code, pre'))) {
+        continue;
+      }
+      if (node.nodeValue && node.nodeValue.includes(hl.text)) {
+        if (hl.targetSentence) {
+          const parentP = node.parentElement ? node.parentElement.textContent : '';
+          if (!parentP.includes(hl.targetSentence)) {
+            continue;
+          }
+        }
+        matchedNodes.push(node);
+        break;
+      }
+    }
+
+    matchedNodes.forEach(textNode => {
+      const idx = textNode.nodeValue.indexOf(hl.text);
+      if (idx !== -1) {
+        const afterNode = textNode.splitText(idx);
+        afterNode.splitText(hl.text.length);
+
+        const mark = document.createElement('mark');
+        mark.className = `reader-highlight hl-${hl.color || 'yellow'}`;
+        mark.dataset.hlId = hl.id;
+        mark.textContent = afterNode.nodeValue;
+
+        afterNode.parentNode.replaceChild(mark, afterNode);
+      }
+    });
+  });
+}
+
+function appendFootnotesSection(container, highlights) {
+  const footnoteHls = (highlights || []).filter(h => h.isFootnote || h.fnTag);
+  if (footnoteHls.length === 0) return;
+
+  footnoteHls.sort((a, b) => {
+    const numA = parseInt(a.fnTag, 10);
+    const numB = parseInt(b.fnTag, 10);
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+    return String(a.fnTag).localeCompare(String(b.fnTag));
+  });
+
+  const section = document.createElement('div');
+  section.className = 'markdown-footnotes-section';
+  section.id = 'markdown-footnotes-section';
+
+  const title = document.createElement('h2');
+  title.className = 'footnotes-title';
+  title.innerHTML = '<span>📑</span> 각주 및 Q&A 목록';
+  section.appendChild(title);
+
+  const ol = document.createElement('ol');
+  ol.className = 'footnotes-list';
+
+  footnoteHls.forEach(hl => {
+    const li = document.createElement('li');
+    li.className = 'footnote-item';
+    li.id = `fn-ref-${hl.fnTag}`;
+
+    const header = document.createElement('div');
+    header.className = 'footnote-item-header';
+
+    const left = document.createElement('div');
+    left.style.display = 'flex';
+    left.style.alignItems = 'center';
+    left.style.gap = '8px';
+
+    const tagBadge = document.createElement('span');
+    tagBadge.className = 'fn-badge';
+    tagBadge.textContent = `[${hl.fnTag}]`;
+
+    const wordEl = document.createElement('strong');
+    wordEl.style.fontSize = '1.05em';
+    wordEl.textContent = hl.text;
+
+    left.appendChild(tagBadge);
+    left.appendChild(wordEl);
+
+    if (hl.phonetic) {
+      const phEl = document.createElement('span');
+      phEl.className = 'hl-phonetic-badge';
+      phEl.textContent = hl.phonetic;
+      left.appendChild(phEl);
+    }
+
+    const backLink = document.createElement('a');
+    backLink.className = 'fn-backref';
+    backLink.href = `#fn-src-${hl.fnTag}`;
+    backLink.title = '본문으로 이동';
+    backLink.textContent = '↩ 본문';
+    backLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const mark = container.querySelector(`[data-hl-id="${hl.id}"]`);
+      if (mark) {
+        mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        mark.style.outline = '3px solid var(--accent)';
+        mark.style.borderRadius = '3px';
+        setTimeout(() => { mark.style.outline = 'none'; }, 1800);
+      }
+    });
+
+    header.appendChild(left);
+    header.appendChild(backLink);
+    li.appendChild(header);
+
+    const details = document.createElement('div');
+    details.className = 'footnote-item-details';
+
+    if (hl.targetMeaning) {
+      const row = document.createElement('div');
+      row.className = 'footnote-detail-row';
+      row.innerHTML = `<strong>💡 뜻:</strong> <span>${escapeHtml(hl.targetMeaning)}</span>`;
+      details.appendChild(row);
+    }
+
+    if (hl.targetSentence && hl.targetSentence !== hl.text) {
+      const row = document.createElement('div');
+      row.className = 'footnote-detail-row';
+      row.innerHTML = `<strong>📖 예문:</strong> <span>${escapeHtml(hl.targetSentence)}</span>`;
+      details.appendChild(row);
+    }
+
+    if (hl.sentenceTranslation) {
+      const row = document.createElement('div');
+      row.className = 'footnote-detail-row';
+      row.innerHTML = `<strong>📝 해석:</strong> <span>${escapeHtml(hl.sentenceTranslation)}</span>`;
+      details.appendChild(row);
+    }
+
+    if (hl.note) {
+      const row = document.createElement('div');
+      row.className = 'footnote-detail-row';
+      row.innerHTML = `<strong>💬 메모:</strong> <span>${escapeHtml(hl.note)}</span>`;
+      details.appendChild(row);
+    }
+
+    li.appendChild(details);
+    ol.appendChild(li);
+  });
+
+  section.appendChild(ol);
+  container.appendChild(section);
+}
+
+function bindFootnoteBadgeEvents() {
+  const badges = elements.txtContent.querySelectorAll('.fn-badge');
+  badges.forEach(badge => {
+    badge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const hlId = badge.dataset.hlId;
+      const hl = state.highlights.find(h => h.id === hlId);
+      if (hl) {
+        openHighlightToolbar(hl, badge);
+      }
+    });
+  });
+}
+
+function renderMdContent(fallbackPosition = null) {
+  // 1. Capture exact scroll positions BEFORE touching DOM!
+  const prevViewerScrollTop = elements.txtViewer ? elements.txtViewer.scrollTop : 0;
+  const prevWindowScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+  const wasScrolled = prevViewerScrollTop > 0 || prevWindowScrollY > 0;
+
+  isRestoringTxtScroll = true;
+
+  const { parsedHls, bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+
+  let hlChanged = false;
+  parsedHls.forEach(fnHl => {
+    const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && h.fnTag === fnHl.fnTag));
+    if (idx === -1) {
+      state.highlights.push(fnHl);
+      hlChanged = true;
+    } else {
+      const existing = state.highlights[idx];
+      if (!existing.targetMeaning && fnHl.targetMeaning) { existing.targetMeaning = fnHl.targetMeaning; hlChanged = true; }
+      if (!existing.phonetic && fnHl.phonetic) { existing.phonetic = fnHl.phonetic; hlChanged = true; }
+      if (!existing.sentenceTranslation && fnHl.sentenceTranslation) { existing.sentenceTranslation = fnHl.sentenceTranslation; hlChanged = true; }
+      if (!existing.note && fnHl.note) { existing.note = fnHl.note; hlChanged = true; }
+      existing.fnTag = fnHl.fnTag;
+      existing.isFootnote = true;
+    }
+  });
+
+  if (hlChanged) {
+    sortHighlights();
+    saveHighlights();
+    updateHighlightBadge();
+  }
+
+  const transformedMd = injectFootnoteHighlightsInMarkdown(bodyText, state.highlights);
+
+  let html = '';
+  if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+    html = marked.parse(transformedMd);
+  } else {
+    html = transformedMd.replace(/\n/g, '<br>');
+  }
+
+  // Update DOM in a single operation without premature clearing
+  elements.txtContent.innerHTML = html;
+  elements.txtContent.classList.add('is-markdown');
+
+  const blockElements = elements.txtContent.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, tr');
+  blockElements.forEach((el, idx) => {
+    el.dataset.pIdx = idx;
+  });
+
+  applyDomHighlights(elements.txtContent, state.highlights);
+
+  const marks = elements.txtContent.querySelectorAll('.reader-highlight');
+  marks.forEach(mark => {
+    const hlId = mark.dataset.hlId;
+    const hl = state.highlights.find(h => h.id === hlId);
+    if (hl) {
+      const parentBlock = mark.closest('[data-p-idx]');
+      if (parentBlock) {
+        hl.pIdx = parseInt(parentBlock.dataset.pIdx, 10);
+      }
+    }
+  });
+
+  extractMarkdownToc();
+  appendFootnotesSection(elements.txtContent, state.highlights);
+
+  elements.txtViewer.onscroll = () => {
+    if (isRestoringTxtScroll || (state.txt && state.txt.isResizing)) return;
+    const scrollTop = elements.txtViewer.scrollTop;
+    const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+    if (scrollHeight > 0) {
+      const ratio = Math.min(1, Math.max(0, scrollTop / scrollHeight));
+      if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+      state.txt.currentRatio = ratio;
+      const pct = Math.min(100, Math.max(0, Math.round(ratio * 100)));
+      elements.progressSlider.value = pct;
+      elements.progressPercent.textContent = `${pct}%`;
+      if (state.currentBook) {
+        localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+        localStorage.setItem('reader_last_book_id', state.currentBook.id);
+        updateActiveBookLastPosition(pct);
+      }
+    }
+
+    if (state.currentBook && state.currentBook.type === 'md' && state.toc.length > 0) {
+      const headings = elements.txtContent.querySelectorAll('.md-heading');
+      let currentHeadingText = state.currentBook.title;
+      const scrollThreshold = elements.txtViewer.scrollTop + 120;
+      headings.forEach(h => {
+        if (h.offsetTop <= scrollThreshold) {
+          currentHeadingText = h.textContent.trim();
+        }
+      });
+      elements.currentChapterTitle.textContent = currentHeadingText;
+    }
+  };
+
+  // Restore scroll position
+  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '') {
+    const applyExplicitScroll = () => {
+      const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+      if (scrollHeight > 0) {
+        const ratio = Math.min(1, Math.max(0, parseFloat(fallbackPosition) / 100));
+        if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+        state.txt.currentRatio = ratio;
+        elements.txtViewer.scrollTop = ratio * scrollHeight;
+        const pct = Math.round(parseFloat(fallbackPosition));
+        elements.progressSlider.value = pct;
+        elements.progressPercent.textContent = `${pct}%`;
+      }
+    };
+    applyExplicitScroll();
+    setTimeout(applyExplicitScroll, 50);
+    setTimeout(() => {
+      applyExplicitScroll();
+      isRestoringTxtScroll = false;
+    }, 200);
+  } else if (wasScrolled) {
+    // Synchronously restore previous scroll position on highlight edit
+    if (elements.txtViewer && prevViewerScrollTop > 0) {
+      elements.txtViewer.scrollTop = prevViewerScrollTop;
+    }
+    if (prevWindowScrollY > 0) {
+      window.scrollTo(0, prevWindowScrollY);
+    }
+    requestAnimationFrame(() => {
+      if (elements.txtViewer && prevViewerScrollTop > 0) {
+        elements.txtViewer.scrollTop = prevViewerScrollTop;
+      }
+      if (prevWindowScrollY > 0) {
+        window.scrollTo(0, prevWindowScrollY);
+      }
+      isRestoringTxtScroll = false;
+    });
+  } else {
+    const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+    if (savedPos !== null && savedPos !== undefined && savedPos !== '') {
+      const applySavedScroll = () => {
+        const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+        if (scrollHeight > 0) {
+          const ratio = Math.min(1, Math.max(0, parseFloat(savedPos) / 100));
+          if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
+          state.txt.currentRatio = ratio;
+          elements.txtViewer.scrollTop = ratio * scrollHeight;
+          const pct = Math.round(parseFloat(savedPos));
+          elements.progressSlider.value = pct;
+          elements.progressPercent.textContent = `${pct}%`;
+        }
+      };
+      applySavedScroll();
+      setTimeout(applySavedScroll, 50);
+      setTimeout(() => {
+        applySavedScroll();
+        isRestoringTxtScroll = false;
+      }, 200);
+    } else {
+      isRestoringTxtScroll = false;
+    }
+  }
+
+  bindHighlightClickEvents();
+  bindFootnoteBadgeEvents();
 }
 
 // ── EPUB Book Viewer (epub.js) ──
@@ -2175,7 +3203,7 @@ async function executeEpubResizeAndRestore() {
  * TXT 뷰어 창 크기 및 화면 회전 시 스크롤 비율(독서 위치) 유지
  */
 function triggerTxtResizeSafe() {
-  if (!state.currentBook || state.currentBook.type !== 'txt' || !elements.txtViewer) return;
+  if (!state.currentBook || (state.currentBook.type !== 'txt' && state.currentBook.type !== 'md') || !elements.txtViewer) return;
   if (!state.txt) state.txt = { currentRatio: 0, isResizing: false };
 
   const savedPos = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
@@ -2226,6 +3254,7 @@ function setupEpubResizeObserver() {
 }
 
 function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSaveToDb = false, fallbackHighlights = null, fallbackPosition = null, fallbackBookmarks = null) {
+  showReaderWorkspace();
   cleanupEpub();
 
   state.currentBook = {
@@ -2815,7 +3844,7 @@ document.addEventListener('mouseup', (e) => {
     return;
   }
 
-  if (state.currentBook && state.currentBook.type === 'txt') {
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
     setTimeout(() => {
       handleTxtSelection();
     }, 20);
@@ -2834,7 +3863,9 @@ function handleTxtSelection() {
   // Check if selection is within txt-viewer
   const range = sel.getRangeAt(0);
   const commonAncestor = range.commonAncestorContainer;
-  const pElem = commonAncestor.nodeType === 1 ? commonAncestor.closest('p') : (commonAncestor.parentElement ? commonAncestor.parentElement.closest('p') : null);
+  const pElem = commonAncestor.nodeType === 1
+    ? commonAncestor.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th')
+    : (commonAncestor.parentElement ? commonAncestor.parentElement.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th') : null);
 
   if (!pElem || !elements.txtContent.contains(pElem)) {
     state.activeSelection = null;
@@ -2905,7 +3936,7 @@ function applyHighlight(colorName) {
     if (state.currentBook.type === 'epub' && h.cfiRange && state.activeSelection.cfiRange) {
       return h.cfiRange === state.activeSelection.cfiRange;
     }
-    if (state.currentBook.type === 'txt' && h.pIdx !== undefined && state.activeSelection.pIdx !== undefined) {
+    if ((state.currentBook.type === 'txt' || state.currentBook.type === 'md') && h.pIdx !== undefined && state.activeSelection.pIdx !== undefined) {
       return h.pIdx === state.activeSelection.pIdx && h.text === state.activeSelection.text;
     }
     return h.text === state.activeSelection.text && h.targetSentence === state.activeSelection.targetSentence;
@@ -2937,7 +3968,7 @@ function applyHighlight(colorName) {
       lastStudiedAt: null
     };
 
-    if (state.currentBook.type === 'txt') {
+    if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
       targetHighlight.pIdx = state.activeSelection.pIdx;
       targetHighlight.offset = state.activeSelection.offset ?? 0;
     } else if (state.currentBook.type === 'epub') {
@@ -2953,6 +3984,8 @@ function applyHighlight(colorName) {
 
   if (state.currentBook.type === 'txt') {
     renderTxtContent();
+  } else if (state.currentBook.type === 'md') {
+    renderMdContent();
   } else if (state.currentBook.type === 'epub') {
     const isDark = state.settings.theme === 'dark';
     try {
@@ -3005,8 +4038,8 @@ function changeHighlightColor(hlId, newColor, showToastMsg = true) {
   hl.color = newColor;
   saveHighlights();
 
-  // 1. Update in TXT viewer
-  if (state.currentBook && state.currentBook.type === 'txt') {
+  // 1. Update in TXT/MD viewer
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
     const marks = elements.txtContent.querySelectorAll(`mark[data-hl-id="${hlId}"]`);
     marks.forEach(m => {
       m.className = `reader-highlight hl-${newColor}`;
@@ -3258,6 +4291,8 @@ function removeHighlight(hlId) {
 
   if (state.currentBook.type === 'txt') {
     renderTxtContent();
+  } else if (state.currentBook.type === 'md') {
+    renderMdContent();
   } else if (state.currentBook.type === 'epub') {
     if (state.epub.rendition && hl.cfiRange) {
       try {
@@ -3483,26 +4518,54 @@ function renderTocDrawer() {
   if (elements.drawerSearchBar) {
     elements.drawerSearchBar.style.display = 'none';
   }
+  if (elements.drawerBookmarkActionsBar) {
+    elements.drawerBookmarkActionsBar.style.display = 'none';
+  }
   elements.drawerBody.innerHTML = '';
-  if (!state.epub.toc || state.epub.toc.length === 0) {
+
+  const isMd = state.currentBook && state.currentBook.type === 'md';
+  const tocList = isMd ? state.toc : state.epub.toc;
+
+  if (!tocList || tocList.length === 0) {
     elements.drawerBody.innerHTML = '<p style="color:var(--text-muted); padding:20px; text-align:center;">목차 정보가 없습니다.</p>';
     return;
   }
 
   const ul = document.createElement('ul');
   ul.className = 'toc-list';
-  state.epub.toc.forEach(item => {
-    const li = document.createElement('li');
-    li.className = 'toc-item';
-    li.textContent = item.label ? item.label.trim() : 'Chapter';
-    li.addEventListener('click', () => {
-      if (state.epub.rendition) {
-        state.epub.rendition.display(item.href);
-      }
-      closeDrawer();
+
+  if (isMd) {
+    state.toc.forEach(item => {
+      const li = document.createElement('li');
+      li.className = `toc-item toc-level-${item.level}`;
+      li.textContent = item.label;
+      li.addEventListener('click', () => {
+        const headingEl = elements.txtContent.querySelector(`#${item.id}`);
+        if (headingEl) {
+          headingEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          headingEl.classList.remove('bookmark-flash-target');
+          void headingEl.offsetWidth;
+          headingEl.classList.add('bookmark-flash-target');
+          setTimeout(() => headingEl.classList.remove('bookmark-flash-target'), 2000);
+        }
+        closeDrawer();
+      });
+      ul.appendChild(li);
     });
-    ul.appendChild(li);
-  });
+  } else {
+    state.epub.toc.forEach(item => {
+      const li = document.createElement('li');
+      li.className = 'toc-item';
+      li.textContent = item.label ? item.label.trim() : 'Chapter';
+      li.addEventListener('click', () => {
+        if (state.epub.rendition) {
+          state.epub.rendition.display(item.href);
+        }
+        closeDrawer();
+      });
+      ul.appendChild(li);
+    });
+  }
   elements.drawerBody.appendChild(ul);
 }
 
@@ -3919,7 +4982,7 @@ function renderHighlightDrawer() {
     card.addEventListener('click', (e) => {
       if (e.target.closest('.btn-card-action') || e.target.closest('.card-color-picker-popover') || e.target.closest('.hl-badge-color')) return;
 
-      if (state.currentBook.type === 'txt') {
+      if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
         const mark = elements.txtContent.querySelector(`[data-hl-id="${hl.id}"]`);
         if (mark) {
           mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -4062,11 +5125,19 @@ function renderBookmarkDrawer() {
       minute: '2-digit'
     }) : '';
 
+    const pIdxBadge = (bm.pIdx !== undefined && bm.pIdx !== null)
+      ? `<span class="bookmark-badge-pidx" title="문단/블록 번호">#${bm.pIdx + 1}</span>`
+      : '';
+    const snippetHtml = (bm.sentence && bm.sentence !== bm.title)
+      ? `<div class="bookmark-card-snippet" title="${escapeHtml(bm.sentence)}">“${escapeHtml(bm.sentence)}”</div>`
+      : '';
+
     card.innerHTML = `
       <div class="bookmark-card-header">
         <div class="bookmark-card-badges">
           <span class="bookmark-badge-pct">${bm.pct !== undefined ? `${bm.pct}%` : '위치'}</span>
           ${bm.chapter ? `<span class="bookmark-badge-chapter" title="${escapeHtml(bm.chapter)}">${escapeHtml(bm.chapter)}</span>` : ''}
+          ${pIdxBadge}
         </div>
         <span class="bookmark-card-date">${dateStr}</span>
       </div>
@@ -4074,6 +5145,7 @@ function renderBookmarkDrawer() {
         <span style="font-size:15px; flex-shrink:0;">📌</span>
         <h4 class="bookmark-card-title">${escapeHtml(bm.title)}</h4>
       </div>
+      ${snippetHtml}
       <div class="bookmark-card-actions">
         <button type="button" class="btn-card-action primary btn-bm-jump" title="이 위치로 이동">🚀 이동</button>
         <button type="button" class="btn-card-action btn-bm-edit" title="수정">✏️ 수정</button>
@@ -4128,11 +5200,11 @@ function renderBookmarkDrawer() {
 function jumpToBookmark(bm) {
   if (!bm || !state.currentBook) return;
 
-  if (bm.type === 'txt' || state.currentBook.type === 'txt') {
+  if (bm.type === 'txt' || bm.type === 'md' || state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
     closeDrawer();
     let jumped = false;
-    if (bm.pIdx !== undefined && elements.txtContent) {
-      const p = elements.txtContent.querySelector(`p[data-p-idx="${bm.pIdx}"]`);
+    if (bm.pIdx !== undefined && bm.pIdx !== null && elements.txtContent) {
+      const p = elements.txtContent.querySelector(`[data-p-idx="${bm.pIdx}"]`);
       if (p) {
         p.scrollIntoView({ behavior: 'smooth', block: 'start' });
         p.classList.remove('bookmark-flash-target');
@@ -4143,13 +5215,21 @@ function jumpToBookmark(bm) {
       }
     }
     if (!jumped && elements.txtViewer) {
-      const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
-      if (scrollHeight > 0 && typeof bm.pct === 'number') {
+      if (bm.scrollTop !== undefined && bm.scrollTop !== null && bm.scrollTop >= 0) {
         elements.txtViewer.scrollTo({
-          top: (bm.pct / 100) * scrollHeight,
+          top: bm.scrollTop,
           behavior: 'smooth'
         });
         jumped = true;
+      } else {
+        const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+        if (scrollHeight > 0 && typeof bm.pct === 'number') {
+          elements.txtViewer.scrollTo({
+            top: (bm.pct / 100) * scrollHeight,
+            behavior: 'smooth'
+          });
+          jumped = true;
+        }
       }
     }
     showToast(`🔖 '${bm.title}'(으)로 이동했습니다.`);
@@ -4179,30 +5259,75 @@ function jumpToBookmark(bm) {
 function getCurrentReadingPositionInfo() {
   if (!state.currentBook) return null;
 
-  if (state.currentBook.type === 'txt') {
-    const scrollHeight = elements.txtViewer ? (elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight) : 0;
-    const pct = scrollHeight > 0
-      ? Math.min(100, Math.max(0, Math.round((elements.txtViewer.scrollTop / scrollHeight) * 100)))
-      : (elements.progressSlider ? parseInt(elements.progressSlider.value, 10) || 0 : 0);
+  if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
+    let scrollTop = 0;
+    let scrollHeight = 0;
+    let clientHeight = 0;
+
+    const isViewerScroll = elements.txtViewer && (elements.txtViewer.scrollHeight > elements.txtViewer.clientHeight);
+    if (isViewerScroll) {
+      scrollTop = elements.txtViewer.scrollTop;
+      clientHeight = elements.txtViewer.clientHeight;
+      scrollHeight = elements.txtViewer.scrollHeight - clientHeight;
+    } else {
+      scrollTop = window.scrollY || document.documentElement.scrollTop || 0;
+      clientHeight = window.innerHeight;
+      scrollHeight = Math.max(0, document.body.scrollHeight - clientHeight);
+    }
+
+    let pct = 0;
+    if (scrollHeight > 0) {
+      pct = Math.min(100, Math.max(0, Math.round((scrollTop / scrollHeight) * 100)));
+    } else if (elements.progressSlider) {
+      pct = parseInt(elements.progressSlider.value, 10) || 0;
+    }
 
     let targetPIdx = 0;
+    let targetSentence = '';
+    let currentChapter = state.currentBook.title || (state.currentBook.type === 'md' ? '마크다운' : '텍스트');
+
     if (elements.txtViewer && elements.txtContent) {
       const viewerRect = elements.txtViewer.getBoundingClientRect();
-      const ps = elements.txtContent.querySelectorAll('p[data-p-idx]');
-      for (const p of ps) {
-        const r = p.getBoundingClientRect();
-        if (r.bottom >= viewerRect.top + 35) {
-          targetPIdx = parseInt(p.dataset.pIdx, 10) || 0;
+      const containerTop = isViewerScroll ? viewerRect.top : 0;
+      // Search all block elements in order (p, h1~h6, li, blockquote, tr)
+      const blocks = elements.txtContent.querySelectorAll('[data-p-idx]');
+      for (const block of blocks) {
+        const r = block.getBoundingClientRect();
+        if (r.bottom >= containerTop + 35) {
+          targetPIdx = parseInt(block.dataset.pIdx, 10) || 0;
+          const text = block.textContent.trim();
+          if (text) {
+            const match = text.match(/[^.!?\n]+[.!?]?/);
+            targetSentence = match ? match[0].trim() : text.slice(0, 60);
+          }
           break;
         }
       }
     }
 
+    if (state.currentBook.type === 'md') {
+      if (elements.currentChapterTitle && elements.currentChapterTitle.textContent.trim() && elements.currentChapterTitle.textContent.trim() !== state.currentBook.title) {
+        currentChapter = elements.currentChapterTitle.textContent.trim();
+      } else if (state.toc && state.toc.length > 0) {
+        const scrollOffset = isViewerScroll ? elements.txtViewer.scrollTop : window.scrollY;
+        for (const item of state.toc) {
+          const h = elements.txtContent.querySelector(`#${item.id}`);
+          if (h && h.offsetTop <= scrollOffset + 140) {
+            currentChapter = item.label;
+          }
+        }
+      }
+    } else if (elements.currentChapterTitle && elements.currentChapterTitle.textContent.trim()) {
+      currentChapter = elements.currentChapterTitle.textContent.trim();
+    }
+
     return {
-      type: 'txt',
+      type: state.currentBook.type,
       pct,
       pIdx: targetPIdx,
-      chapter: state.currentBook.title || '텍스트'
+      scrollTop,
+      sentence: targetSentence,
+      chapter: currentChapter
     };
   } else if (state.currentBook.type === 'epub') {
     const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
@@ -4246,6 +5371,8 @@ function openBookmarkModal(customData = null, existingBm = null) {
     return;
   }
 
+  const snippetElem = elements.bookmarkPreviewSnippet || document.getElementById('bookmark-preview-snippet');
+
   if (existingBm) {
     editingBookmarkId = existingBm.id;
     pendingBookmarkData = { ...existingBm };
@@ -4255,6 +5382,14 @@ function openBookmarkModal(customData = null, existingBm = null) {
     if (elements.inputBookmarkTitle) elements.inputBookmarkTitle.value = existingBm.title || '';
     if (elements.bookmarkPreviewPct) elements.bookmarkPreviewPct.textContent = `진행률 ${existingBm.pct ?? 0}%`;
     if (elements.bookmarkPreviewChapter) elements.bookmarkPreviewChapter.textContent = existingBm.chapter || '';
+    if (snippetElem) {
+      if (existingBm.sentence) {
+        snippetElem.textContent = `“${existingBm.sentence}”`;
+        snippetElem.style.display = '-webkit-box';
+      } else {
+        snippetElem.style.display = 'none';
+      }
+    }
   } else {
     editingBookmarkId = null;
     const info = customData || getCurrentReadingPositionInfo();
@@ -4264,9 +5399,12 @@ function openBookmarkModal(customData = null, existingBm = null) {
     }
     pendingBookmarkData = info;
 
+    const sentencePreview = info.sentence || info.targetSentence;
     const defaultTitle = customData && customData.title
       ? customData.title
-      : `마지막 읽은 지점 (${info.pct ?? 0}%)`;
+      : (sentencePreview
+          ? `"${sentencePreview.slice(0, 24)}${sentencePreview.length > 24 ? '...' : ''}"`
+          : `마지막 읽은 지점 (${info.pct ?? 0}%)`);
 
     if (elements.bookmarkModalTitle) {
       elements.bookmarkModalTitle.innerHTML = '<span>🔖</span> 책갈피 추가';
@@ -4274,6 +5412,14 @@ function openBookmarkModal(customData = null, existingBm = null) {
     if (elements.inputBookmarkTitle) elements.inputBookmarkTitle.value = defaultTitle;
     if (elements.bookmarkPreviewPct) elements.bookmarkPreviewPct.textContent = `진행률 ${info.pct ?? 0}%`;
     if (elements.bookmarkPreviewChapter) elements.bookmarkPreviewChapter.textContent = info.chapter || '';
+    if (snippetElem) {
+      if (sentencePreview) {
+        snippetElem.textContent = `“${sentencePreview}”`;
+        snippetElem.style.display = '-webkit-box';
+      } else {
+        snippetElem.style.display = 'none';
+      }
+    }
   }
 
   if (elements.bookmarkModal) {
@@ -4317,6 +5463,8 @@ function saveBookmarkModal() {
       type: state.currentBook.type,
       title,
       pct: pendingBookmarkData.pct ?? 0,
+      scrollTop: pendingBookmarkData.scrollTop,
+      sentence: pendingBookmarkData.sentence || pendingBookmarkData.targetSentence || '',
       chapter: pendingBookmarkData.chapter || '',
       pIdx: pendingBookmarkData.pIdx,
       cfi: pendingBookmarkData.cfi,
@@ -4331,6 +5479,17 @@ function saveBookmarkModal() {
     }
   }
 
+  if (state.activeSelection) {
+    try {
+      if (state.activeSelection.contents) {
+        state.activeSelection.contents.window.getSelection().removeAllRanges();
+      } else {
+        window.getSelection().removeAllRanges();
+      }
+    } catch (e) {}
+    state.activeSelection = null;
+  }
+
   closeBookmarkModal();
 }
 
@@ -4341,13 +5500,21 @@ function addBookmarkFromSelection() {
   }
   const selText = state.activeSelection.text.trim();
   const baseInfo = getCurrentReadingPositionInfo() || {};
+  const targetSentence = state.activeSelection.targetSentence || selText;
 
-  const titleSnippet = selText.replace(/\s+/g, ' ');
-  const defaultTitle = `중요: "${titleSnippet.slice(0, 24)}${titleSnippet.length > 24 ? '...' : ''}"`;
+  let defaultTitle = '';
+  if (selText.length >= 10) {
+    defaultTitle = `"${selText.slice(0, 24)}${selText.length > 24 ? '...' : ''}"`;
+  } else if (targetSentence) {
+    defaultTitle = `"${targetSentence.slice(0, 26)}${targetSentence.length > 26 ? '...' : ''}"`;
+  } else {
+    defaultTitle = `"${selText}"`;
+  }
 
   const customData = {
     ...baseInfo,
     title: defaultTitle,
+    sentence: targetSentence,
     pIdx: state.activeSelection.pIdx !== undefined ? state.activeSelection.pIdx : baseInfo.pIdx,
     cfi: state.activeSelection.cfiRange || baseInfo.cfi
   };
@@ -5276,14 +6443,33 @@ function closeApiGuideModal() {
 // ── Setup Event Listeners ──
 function setupEventListeners() {
   // File Input Listeners
-  elements.bookFileInput.addEventListener('change', (e) => {
-    handleFileSelection(e.target.files[0]);
-    e.target.value = '';
-  });
-  elements.emptyFileInput.addEventListener('change', (e) => {
-    handleFileSelection(e.target.files[0]);
-    e.target.value = '';
-  });
+  if (elements.bookFileInput) {
+    elements.bookFileInput.addEventListener('change', (e) => {
+      handleFileSelection(e.target.files[0]);
+      e.target.value = '';
+    });
+  }
+  if (elements.listFileInput) {
+    elements.listFileInput.addEventListener('change', (e) => {
+      handleFileSelection(e.target.files[0]);
+      e.target.value = '';
+    });
+  }
+  if (elements.emptyFileInput) {
+    elements.emptyFileInput.addEventListener('change', (e) => {
+      handleFileSelection(e.target.files[0]);
+      e.target.value = '';
+    });
+  }
+
+  // 기존 열기 버튼 -> 목록 버튼으로 동작
+  if (elements.btnOpenFile) {
+    elements.btnOpenFile.addEventListener('click', (e) => {
+      e.preventDefault();
+      saveCurrentReadingPosition();
+      showReaderFileList();
+    });
+  }
 
   // Storage Reset buttons (Desktop & Mobile)
   [elements.btnResetDb, elements.btnResetDbMobile].forEach(btn => {
@@ -5312,7 +6498,35 @@ function setupEventListeners() {
   // Drawer toggles
   elements.btnToggleToc.addEventListener('click', () => openDrawer('toc'));
   if (elements.btnToggleBookmarks) {
-    elements.btnToggleBookmarks.addEventListener('click', () => openDrawer('bookmarks'));
+    elements.btnToggleBookmarks.addEventListener('mousedown', (e) => {
+      // If there's an active text selection, prevent selection collapse on button press
+      const winSel = window.getSelection();
+      if ((state.activeSelection && state.activeSelection.text) || (winSel && winSel.toString().trim())) {
+        e.preventDefault();
+      }
+    });
+
+    elements.btnToggleBookmarks.addEventListener('click', (e) => {
+      e.stopPropagation();
+      let hasSelection = false;
+      if (state.activeSelection && state.activeSelection.text) {
+        hasSelection = true;
+      } else {
+        const winSel = window.getSelection();
+        if (winSel && winSel.toString().trim()) {
+          handleTxtSelection();
+          if (state.activeSelection && state.activeSelection.text) {
+            hasSelection = true;
+          }
+        }
+      }
+
+      if (hasSelection) {
+        addBookmarkFromSelection();
+      } else {
+        openDrawer('bookmarks');
+      }
+    });
   }
   elements.btnToggleHighlights.addEventListener('click', () => openDrawer('highlights'));
   elements.btnDrawerClose.addEventListener('click', closeDrawer);
@@ -5484,7 +6698,7 @@ function setupEventListeners() {
     const val = parseInt(e.target.value, 10);
     elements.progressPercent.textContent = `${val}%`;
 
-    if (state.currentBook && state.currentBook.type === 'txt') {
+    if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       elements.txtViewer.scrollTop = (val / 100) * scrollHeight;
     } else if (state.currentBook && state.currentBook.type === 'epub' && state.epub.locationsReady) {
@@ -5922,7 +7136,7 @@ function setupEventListeners() {
     if (state.currentBook) {
       if (state.currentBook.type === 'epub') {
         triggerEpubResizeSafe();
-      } else if (state.currentBook.type === 'txt') {
+      } else if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
         triggerTxtResizeSafe();
       }
     }
@@ -5942,7 +7156,7 @@ function setupEventListeners() {
         setTimeout(() => {
           triggerEpubResizeSafe(targetCfi);
         }, 350);
-      } else if (state.currentBook.type === 'txt') {
+      } else if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
         triggerTxtResizeSafe();
         setTimeout(triggerTxtResizeSafe, 350);
       }
@@ -6048,7 +7262,7 @@ function saveCurrentReadingPosition() {
         updateActiveBookLastPosition(cfi);
       }
     } catch (e) {}
-  } else if (state.currentBook.type === 'txt' && elements.txtViewer) {
+  } else if ((state.currentBook.type === 'txt' || state.currentBook.type === 'md') && elements.txtViewer) {
     const scrollTop = elements.txtViewer.scrollTop;
     const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
     if (scrollHeight > 0) {
@@ -6074,6 +7288,8 @@ async function restoreActiveBook() {
       openEpubBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos, record.bookmarks);
     } else if (record.type === 'txt') {
       openTxtBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos, record.bookmarks);
+    } else if (record.type === 'md' || record.type === 'markdown') {
+      openMdBook(record.title, record.author, record.content, record.bookId, true, record.highlights, savedPos, record.bookmarks);
     }
   } catch (err) {
     console.warn('Failed to restore active book from IndexedDB:', err);
@@ -6084,5 +7300,5 @@ async function restoreActiveBook() {
 window.addEventListener('DOMContentLoaded', async () => {
   loadSettings();
   setupEventListeners();
-  await restoreActiveBook();
+  await showReaderFileList();
 });

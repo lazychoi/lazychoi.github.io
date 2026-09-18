@@ -49,8 +49,12 @@ let weakPracticePos = 0;
 
 // IndexedDB Constants
 const DB_NAME = 'DialogueAppDB_v2';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const STORE_AUDIO = 'audioStore';
+const STORE_ITEMS = 'dialogue_items';
+
+let currentDialogueItemId = null;
+let itemToAttachAudio = null;
 
 // DOM Elements
 const audioPlayer = document.getElementById('dialogue-audio');
@@ -225,7 +229,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   initSTT();
   updateSTTButtonUI();
   await initDB();
-  await restoreSavedState();
+  await showDialogueFileList();
   startRAFPrecisionLoop();
 });
 
@@ -253,8 +257,8 @@ function setSpeedSelectValue(speed) {
   }
 }
 
-// ── IndexedDB Storage ──
-function initDB() {
+// ── IndexedDB Storage for Dialogue Sets ──
+function openDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = (e) => {
@@ -262,10 +266,137 @@ function initDB() {
       if (!db.objectStoreNames.contains(STORE_AUDIO)) {
         db.createObjectStore(STORE_AUDIO);
       }
+      if (!db.objectStoreNames.contains(STORE_ITEMS)) {
+        db.createObjectStore(STORE_ITEMS, { keyPath: 'id' });
+      }
     };
-    request.onsuccess = () => resolve();
+    request.onsuccess = (e) => resolve(e.target.result);
     request.onerror = (e) => reject(e.target.error);
   });
+}
+
+function initDB() {
+  return openDB();
+}
+
+async function getAllDialogueItemsFromDB() {
+  try {
+    const db = await openDB();
+    await migrateLegacyDialogueData(db);
+
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_ITEMS, 'readonly');
+      const store = tx.objectStore(STORE_ITEMS);
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const items = req.result || [];
+        items.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+        resolve(items);
+      };
+      req.onerror = () => resolve([]);
+    });
+  } catch (err) {
+    console.warn('Failed to get dialogue items:', err);
+    return [];
+  }
+}
+
+async function getDialogueItemFromDB(id) {
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_ITEMS, 'readonly');
+      const store = tx.objectStore(STORE_ITEMS);
+      const req = store.get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (err) {
+    return null;
+  }
+}
+
+async function saveDialogueItemToDB(item) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE_ITEMS, 'readwrite');
+    const store = tx.objectStore(STORE_ITEMS);
+    item.updatedAt = Date.now();
+    store.put(item);
+  } catch (err) {
+    console.warn('Failed to save dialogue item:', err);
+  }
+}
+
+async function deleteDialogueItemFromDB(id) {
+  try {
+    const db = await openDB();
+    const tx = db.transaction(STORE_ITEMS, 'readwrite');
+    const store = tx.objectStore(STORE_ITEMS);
+    store.delete(id);
+  } catch (err) {
+    console.warn('Failed to delete dialogue item:', err);
+  }
+}
+
+async function migrateLegacyDialogueData(db) {
+  try {
+    if (!db.objectStoreNames.contains(STORE_ITEMS)) return;
+    const count = await new Promise((resolve) => {
+      const tx = db.transaction(STORE_ITEMS, 'readonly');
+      const req = tx.objectStore(STORE_ITEMS).count();
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => resolve(0);
+    });
+    if (count > 0) return;
+
+    let legacyAudio = null;
+    if (db.objectStoreNames.contains(STORE_AUDIO)) {
+      legacyAudio = await new Promise((resolve) => {
+        const tx = db.transaction(STORE_AUDIO, 'readonly');
+        const req = tx.objectStore(STORE_AUDIO).get('currentAudio');
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => resolve(null);
+      });
+    }
+
+    const legacyStateStr = localStorage.getItem('dialogue_app_state_v2');
+    let legacyState = null;
+    if (legacyStateStr) {
+      try {
+        legacyState = JSON.parse(legacyStateStr);
+      } catch (e) {}
+    }
+
+    const hasLegacySubs = legacyState && legacyState.subtitles && legacyState.subtitles.length > 0;
+    if (legacyAudio || hasLegacySubs) {
+      const itemTitle = (legacyState && legacyState.srtName && !isSampleFile(legacyState.srtName))
+        ? legacyState.srtName
+        : (legacyAudio ? legacyAudio.name : "기존 대화 파일");
+
+      const newItem = {
+        id: 'dialogue_' + Date.now(),
+        title: itemTitle,
+        audioBlob: legacyAudio ? legacyAudio.blob : null,
+        audioName: legacyAudio ? legacyAudio.name : "",
+        srtName: (legacyState && legacyState.srtName) || "",
+        subtitles: (legacyState && legacyState.subtitles) || [],
+        currentMode: (legacyState && legacyState.currentMode) || 'shadowing',
+        activeRole: (legacyState && legacyState.activeRole) || 'B',
+        currentSubtitleLang: (legacyState && legacyState.currentSubtitleLang) || 'ko',
+        isRepeatEnabled: legacyState ? !!legacyState.isRepeatEnabled : false,
+        playbackSpeed: (legacyState && legacyState.playbackSpeed) || 1.0,
+        activeIndex: (legacyState && legacyState.activeIndex) || 0,
+        targetIndex: (legacyState && legacyState.targetIndex) || 0,
+        rangeStartIdx: (legacyState && legacyState.rangeStartIdx) || 0,
+        updatedAt: Date.now()
+      };
+      const tx = db.transaction(STORE_ITEMS, 'readwrite');
+      tx.objectStore(STORE_ITEMS).put(newItem);
+    }
+  } catch (e) {
+    console.warn('Legacy dialogue migration skipped:', e);
+  }
 }
 
 async function saveAudioToDB(blob, name) {
@@ -333,6 +464,33 @@ function isSampleFile(name) {
   return !name || name.includes('샘플') || name === '대화 자막';
 }
 
+async function saveCurrentDialogueItemState() {
+  if (!currentDialogueItemId) return;
+  try {
+    const item = await getDialogueItemFromDB(currentDialogueItemId);
+    if (!item) return;
+
+    item.subtitles = subtitles;
+    item.audioName = audioName;
+    item.srtName = srtName;
+    item.currentMode = currentMode;
+    item.activeRole = activeRole;
+    item.currentSubtitleLang = currentSubtitleLang;
+    item.isRepeatEnabled = isRepeatEnabled;
+    item.playbackSpeed = playbackSpeed;
+    item.activeIndex = activeIndex;
+    item.targetIndex = targetIndex;
+    item.rangeStartIdx = rangeStartIdx;
+    if (audioBlob) {
+      item.audioBlob = audioBlob;
+    }
+    item.updatedAt = Date.now();
+    await saveDialogueItemToDB(item);
+  } catch (err) {
+    console.warn('Error saving current dialogue state:', err);
+  }
+}
+
 function saveStateToStorage() {
   const state = {
     subtitles,
@@ -351,6 +509,9 @@ function saveStateToStorage() {
     localStorage.setItem('dialogue_app_state_v2', JSON.stringify(state));
   } catch (e) {
     console.warn('Could not save state:', e);
+  }
+  if (currentDialogueItemId) {
+    saveCurrentDialogueItemState();
   }
 }
 
@@ -407,6 +568,312 @@ async function restoreSavedState() {
   } else if (subtitles.length > 0) {
     updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간, 음원 선택 필요)`);
   }
+}
+
+// ── Screen Switching: File List View vs Memorize View ──
+function showDialogueWorkspace() {
+  const fileListView = document.getElementById('file-list-view');
+  const memorizeView = document.getElementById('memorize-view');
+  if (fileListView) fileListView.style.display = 'none';
+  if (memorizeView) memorizeView.style.display = 'flex';
+}
+
+async function showDialogueFileList() {
+  if (audioPlayer && !audioPlayer.paused) {
+    audioPlayer.pause();
+  }
+  cancelRepeatWait();
+  cancelCueCountdown();
+  clearSTTFeedback();
+
+  await saveCurrentDialogueItemState();
+
+  const fileListView = document.getElementById('file-list-view');
+  const memorizeView = document.getElementById('memorize-view');
+  if (memorizeView) memorizeView.style.display = 'none';
+  if (fileListView) fileListView.style.display = 'block';
+
+  await renderDialogueFileList();
+}
+
+async function renderDialogueFileList() {
+  const listContainer = document.getElementById('file-cards-list');
+  if (!listContainer) return;
+
+  const items = await getAllDialogueItemsFromDB();
+  if (!items || items.length === 0) {
+    listContainer.innerHTML = `
+      <div class="file-empty-state">
+        <div class="empty-icon">💬</div>
+        <h3>저장된 대화 학습 파일이 없습니다</h3>
+        <p>상단의 [새 대화 열기] 버튼을 눌러 자막(.srt, .txt)이나 음원(.mp3) 파일을 추가해보세요.</p>
+        <div class="empty-action-row">
+          <button type="button" class="btn-primary-action" onclick="(document.getElementById('btn-toggle-new-picker') || document.getElementById('btn-open-new-dialogue')).click()">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"></path></svg>
+            새 대화 추가
+          </button>
+          <button type="button" class="btn-secondary-action" onclick="loadSampleDialogue()">
+            샘플 대화로 시작
+          </button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  listContainer.innerHTML = items.map(item => {
+    let dateText = '';
+    if (item.updatedAt) {
+      const d = new Date(item.updatedAt);
+      dateText = `${d.getFullYear()}.${String(d.getMonth() + 1).padStart(2, '0')}.${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    const hasAudio = !!(item.audioBlob || item.audioName);
+    const subCount = (item.subtitles && item.subtitles.length) ? item.subtitles.length : 0;
+    const hasSub = subCount > 0;
+    const title = item.title || item.srtName || item.audioName || '대화 학습 세트';
+
+    return `
+      <div class="file-card" data-id="${escapeHTML(item.id)}">
+        <div class="file-card-main" onclick="openDialogueItemFromList('${escapeHTML(item.id)}')">
+          <div class="file-card-icon">💬</div>
+          <div class="file-card-info">
+            <div class="file-card-title">${escapeHTML(title)}</div>
+            <div class="file-card-meta">
+              ${hasAudio ? `<span class="file-meta-tag green">🎵 ${escapeHTML(item.audioName || '음원 등록됨')}</span>` : `<span class="file-meta-tag amber">음원 없음</span>`}
+              ${hasSub ? `<span class="file-meta-tag">📝 대화 ${subCount}구간</span>` : `<span class="file-meta-tag amber">자막 없음</span>`}
+              ${dateText ? `<span class="file-meta-date">${dateText}</span>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="file-card-actions">
+          ${!hasAudio ? `
+            <button type="button" class="btn-card-action" onclick="attachAudioToDialogueItem('${escapeHTML(item.id)}', event)" title="음원 추가">
+              + 음원
+            </button>
+          ` : ''}
+          ${!hasSub ? `
+            <button type="button" class="btn-card-action" onclick="attachSubtitleToDialogueItem('${escapeHTML(item.id)}', event)" title="자막 추가">
+              + 자막
+            </button>
+          ` : ''}
+          <button type="button" class="btn-card-delete" onclick="deleteDialogueItemFromList('${escapeHTML(item.id)}', event)" title="삭제">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+            <span>삭제</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+async function openDialogueItem(itemId) {
+  try {
+    const item = await getDialogueItemFromDB(itemId);
+    if (!item) {
+      alert('대화 학습 데이터를 불러올 수 없습니다.');
+      return;
+    }
+
+    currentDialogueItemId = item.id;
+    srtName = item.srtName || item.title || "대화 자막";
+    audioName = item.audioName || "";
+
+    // 1. Restore Subtitles
+    if (item.subtitles && item.subtitles.length > 0) {
+      subtitles = item.subtitles;
+    } else {
+      subtitles = [];
+    }
+
+    // 2. Restore Modes & Settings
+    currentMode = item.currentMode || 'shadowing';
+    if (currentMode === 'role-a') {
+      activeRole = 'A';
+    } else if (currentMode === 'role-b') {
+      activeRole = 'B';
+    } else {
+      activeRole = item.activeRole || 'B';
+      subtitles.forEach(s => {
+        delete s.lastScore;
+        delete s.lastSpoken;
+        delete s.lastDiff;
+      });
+    }
+    currentSubtitleLang = item.currentSubtitleLang || 'ko';
+    isRepeatEnabled = !!item.isRepeatEnabled;
+    playbackSpeed = item.playbackSpeed || 1.0;
+    targetIndex = (item.targetIndex >= 0 && item.targetIndex < subtitles.length) ? item.targetIndex : 0;
+    rangeStartIdx = item.rangeStartIdx || 0;
+    activeIndex = (item.activeIndex >= 0 && item.activeIndex < subtitles.length) ? item.activeIndex : 0;
+
+    // Apply UI values
+    setSpeedSelectValue(playbackSpeed || 1.00);
+    updateRepeatButtonUI();
+    updateRoleButtonUI();
+    updateLangButtonUI();
+    updateModeSelectorUI(currentMode);
+    renderDialogueList();
+
+    // 3. Restore Audio
+    if (item.audioBlob) {
+      audioBlob = item.audioBlob;
+      audioName = item.audioName || "저장된 음원";
+      const audioUrl = URL.createObjectURL(audioBlob);
+      audioPlayer.src = audioUrl;
+      updateStatusBanner(`음원: ${audioName} (${subtitles.length}개 구간)`);
+    } else {
+      audioBlob = null;
+      audioPlayer.src = "";
+      if (subtitles.length > 0) {
+        updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간, 음원 선택 필요)`);
+      } else {
+        updateStatusBanner(`음원과 자막을 불러와주세요`);
+      }
+    }
+
+    if (subtitles.length > 0) {
+      jumpToSegment(activeIndex, false);
+    }
+
+    showDialogueWorkspace();
+  } catch (err) {
+    console.warn('Failed opening dialogue item:', err);
+  }
+}
+
+// Global functions for template callbacks
+window.openDialogueItemFromList = function(id) {
+  openDialogueItem(id);
+};
+
+window.deleteDialogueItemFromList = async function(id, e) {
+  if (e) e.stopPropagation();
+  if (!confirm('이 대화 학습 세트를 보관함에서 삭제하시겠습니까?')) return;
+  await deleteDialogueItemFromDB(id);
+  if (currentDialogueItemId === id) {
+    currentDialogueItemId = null;
+    if (audioPlayer) {
+      audioPlayer.pause();
+      audioPlayer.src = "";
+    }
+  }
+  await renderDialogueFileList();
+};
+
+let itemToAttachSub = null;
+
+window.attachAudioToDialogueItem = function(id, e) {
+  if (e) e.stopPropagation();
+  itemToAttachAudio = id;
+  const picker = document.getElementById('audio-file-input');
+  if (picker) {
+    picker.value = '';
+    picker.click();
+  }
+};
+
+window.attachSubtitleToDialogueItem = function(id, e) {
+  if (e) e.stopPropagation();
+  itemToAttachSub = id;
+  const picker = document.getElementById('srt-file-input');
+  if (picker) {
+    picker.value = '';
+    picker.click();
+  }
+};
+
+// 2단계 모바일 단일 파일 선택 임시 변수
+let tempDialogueAudio = null;
+let tempDialogueSrt = null;
+
+function updateDialogueSelectedTagsUI() {
+  const tagsBox = document.getElementById('selected-tags-box');
+  const startBtn = document.getElementById('btn-start-selected-learning');
+  if (!tagsBox) return;
+
+  tagsBox.innerHTML = '';
+  if (tempDialogueAudio) {
+    const tag = document.createElement('div');
+    tag.className = 'selected-file-tag';
+    tag.title = '터치하여 선택 취소';
+    tag.innerHTML = `<span>🎵 음원: ${escapeHTML(tempDialogueAudio.name)}</span> <span class="tag-remove-icon">&times;</span>`;
+    tag.addEventListener('click', () => {
+      tempDialogueAudio = null;
+      const audInput = document.getElementById('picker-audio-input');
+      if (audInput) audInput.value = '';
+      updateDialogueSelectedTagsUI();
+    });
+    tagsBox.appendChild(tag);
+  }
+
+  if (tempDialogueSrt) {
+    const tag = document.createElement('div');
+    tag.className = 'selected-file-tag';
+    tag.title = '터치하여 선택 취소';
+    tag.innerHTML = `<span>📝 자막: ${escapeHTML(tempDialogueSrt.name)} (${tempDialogueSrt.parsed.length}구간)</span> <span class="tag-remove-icon">&times;</span>`;
+    tag.addEventListener('click', () => {
+      tempDialogueSrt = null;
+      const srtInput = document.getElementById('picker-srt-input');
+      if (srtInput) srtInput.value = '';
+      updateDialogueSelectedTagsUI();
+    });
+    tagsBox.appendChild(tag);
+  }
+
+  if (startBtn) {
+    startBtn.style.display = (tempDialogueAudio || tempDialogueSrt) ? 'inline-flex' : 'none';
+  }
+}
+
+async function startDialogueWithSelectedFiles() {
+  if (!tempDialogueAudio && !tempDialogueSrt) {
+    alert('자막 또는 음원 파일을 최소 1개 이상 선택해주세요.');
+    return;
+  }
+
+  let itemTitle = '';
+  if (tempDialogueSrt) {
+    itemTitle = tempDialogueSrt.name;
+  } else if (tempDialogueAudio) {
+    itemTitle = tempDialogueAudio.name;
+  }
+
+  const newItem = {
+    id: 'dialogue_' + Date.now(),
+    title: itemTitle || '새 대화 세트',
+    audioBlob: tempDialogueAudio ? tempDialogueAudio.file : null,
+    audioName: tempDialogueAudio ? tempDialogueAudio.name : '',
+    srtName: tempDialogueSrt ? tempDialogueSrt.name : '',
+    subtitles: tempDialogueSrt ? tempDialogueSrt.parsed : [],
+    currentMode: 'shadowing',
+    activeRole: 'B',
+    currentSubtitleLang: 'ko',
+    isRepeatEnabled: false,
+    playbackSpeed: 1.0,
+    activeIndex: 0,
+    targetIndex: 0,
+    rangeStartIdx: 0,
+    updatedAt: Date.now()
+  };
+
+  await saveDialogueItemToDB(newItem);
+
+  // Reset picker
+  tempDialogueAudio = null;
+  tempDialogueSrt = null;
+  const pickerCard = document.getElementById('new-file-picker-card');
+  if (pickerCard) pickerCard.style.display = 'none';
+  const audInput = document.getElementById('picker-audio-input');
+  if (audInput) audInput.value = '';
+  const srtInput = document.getElementById('picker-srt-input');
+  if (srtInput) srtInput.value = '';
+  updateDialogueSelectedTagsUI();
+
+  // Open the newly created item
+  await openDialogueItem(newItem.id);
 }
 
 // ── SRT Subtitle Parser (Detecting A/B Roles) ──
@@ -2488,6 +2955,27 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    if (itemToAttachAudio) {
+      const targetId = itemToAttachAudio;
+      itemToAttachAudio = null;
+      const item = await getDialogueItemFromDB(targetId);
+      if (item) {
+        item.audioBlob = file;
+        item.audioName = file.name;
+        item.updatedAt = Date.now();
+        await saveDialogueItemToDB(item);
+        if (currentDialogueItemId === targetId) {
+          audioBlob = file;
+          audioName = file.name;
+          const url = URL.createObjectURL(file);
+          audioPlayer.src = url;
+          updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간) / 음원: ${file.name}`);
+        }
+        await renderDialogueFileList();
+      }
+      return;
+    }
+
     // 1. 기존 자막과의 연계 판단 (기존 자막이 새 음원과 같은 파일명이거나, 기존 음원이 없던 상태면 자막 유지)
     const audioBase = getBaseFileName(file.name).toLowerCase();
     const srtBase = (srtName && !isSampleFile(srtName)) ? getBaseFileName(srtName).toLowerCase() : '';
@@ -2544,6 +3032,31 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
       const parsed = parseSRT(text);
       if (!parsed || parsed.length === 0) {
         alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
+        return;
+      }
+
+      if (itemToAttachSub) {
+        const targetId = itemToAttachSub;
+        itemToAttachSub = null;
+        const item = await getDialogueItemFromDB(targetId);
+        if (item) {
+          item.subtitles = parsed;
+          item.srtName = file.name;
+          if (!item.title || item.title === '새 대화 세트' || item.title === '기존 대화 파일') {
+            item.title = file.name;
+          }
+          item.updatedAt = Date.now();
+          await saveDialogueItemToDB(item);
+          if (currentDialogueItemId === targetId) {
+            subtitles = parsed;
+            srtName = file.name;
+            activeIndex = 0;
+            targetIndex = Math.min(1, subtitles.length - 1);
+            renderDialogueList();
+            updateStatusBanner(`자막: ${file.name} (${parsed.length}개 구간) / 음원: ${audioName || '음원 없음'}`);
+          }
+          await renderDialogueFileList();
+        }
         return;
       }
 
@@ -2697,10 +3210,84 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
     }
   });
 
+  // Topbar [목록] Button: Return to File List View
+  const btnShowList = document.getElementById('btn-show-list');
+  if (btnShowList) {
+    btnShowList.addEventListener('click', () => {
+      showDialogueFileList();
+    });
+  }
+
+  // File List View: [새 대화 열기] & Mobile 2-Step File Picker
+  const btnToggleNewPicker = document.getElementById('btn-toggle-new-picker') || document.getElementById('btn-open-new-dialogue');
+  const newPickerCard = document.getElementById('new-file-picker-card');
+  const btnCloseNewPicker = document.getElementById('btn-close-new-picker');
+  const pickerSrtInput = document.getElementById('picker-srt-input');
+  const pickerAudioInput = document.getElementById('picker-audio-input');
+  const btnStartSelectedLearning = document.getElementById('btn-start-selected-learning');
+
+  if (btnToggleNewPicker && newPickerCard) {
+    btnToggleNewPicker.addEventListener('click', () => {
+      const isHidden = newPickerCard.style.display === 'none' || !newPickerCard.style.display;
+      newPickerCard.style.display = isHidden ? 'flex' : 'none';
+    });
+  }
+
+  if (btnCloseNewPicker && newPickerCard) {
+    btnCloseNewPicker.addEventListener('click', () => {
+      newPickerCard.style.display = 'none';
+      tempDialogueAudio = null;
+      tempDialogueSrt = null;
+      updateDialogueSelectedTagsUI();
+    });
+  }
+
+  if (pickerSrtInput) {
+    if (isIOS) pickerSrtInput.removeAttribute('accept');
+    pickerSrtInput.addEventListener('click', () => {
+      pickerSrtInput.value = '';
+    });
+    pickerSrtInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target.result;
+        const parsed = parseSRT(text);
+        if (!parsed || parsed.length === 0) {
+          alert('유효한 자막 형식(SRT 또는 TXT)을 찾을 수 없습니다.');
+          return;
+        }
+        tempDialogueSrt = { file, name: file.name, parsed };
+        updateDialogueSelectedTagsUI();
+      };
+      reader.readAsText(file);
+    });
+  }
+
+  if (pickerAudioInput) {
+    pickerAudioInput.addEventListener('click', () => {
+      pickerAudioInput.value = '';
+    });
+    pickerAudioInput.addEventListener('change', (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      tempDialogueAudio = { file, name: file.name };
+      updateDialogueSelectedTagsUI();
+    });
+  }
+
+  if (btnStartSelectedLearning) {
+    btnStartSelectedLearning.addEventListener('click', () => {
+      startDialogueWithSelectedFiles();
+    });
+  }
+
   // Prevent iOS pull-to-refresh & rubber-band bouncing when dragging on header/menu area
   document.addEventListener('touchmove', (e) => {
-    if (e.target.closest('.dialogue-feed') || e.target.closest('.modal-body')) {
-      return; // Allow natural scrolling inside the dialogue feed and modal dialogs
+    if (e.target.closest('.dialogue-feed') || e.target.closest('.modal-body') || e.target.closest('.file-list-view')) {
+      return; // Allow natural scrolling inside the dialogue feed, modal dialogs, and file list view
     }
     e.preventDefault();
   }, { passive: false });
@@ -2726,12 +3313,33 @@ function loadSampleDialogue() {
     console.warn('Synthetic audio creation failed:', e);
   }
 
+  const sampleItem = {
+    id: 'dialogue_sample_' + Date.now(),
+    title: "샘플 일상 대화 (8개 구간)",
+    audioBlob: audioBlob || null,
+    audioName: audioName || "",
+    srtName: srtName,
+    subtitles: subtitles,
+    currentMode: 'shadowing',
+    activeRole: 'B',
+    currentSubtitleLang: 'ko',
+    isRepeatEnabled: false,
+    playbackSpeed: 1.0,
+    activeIndex: 0,
+    targetIndex: 1,
+    rangeStartIdx: 0,
+    updatedAt: Date.now()
+  };
+  currentDialogueItemId = sampleItem.id;
+  saveDialogueItemToDB(sampleItem);
+
   saveStateToStorage();
   updateLangButtonUI();
   updateRoleButtonUI();
   renderDialogueList();
   updateStatusBanner(`샘플 대화 로드됨: ${srtName}`);
   jumpToSegment(0, false);
+  showDialogueWorkspace();
 }
 
 // ── Media Session API ──
@@ -2760,4 +3368,8 @@ function escapeHTML(str) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function escapeHtml(str) {
+  return escapeHTML(str);
 }

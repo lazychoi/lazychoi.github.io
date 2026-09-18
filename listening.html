@@ -35,28 +35,85 @@
   </nav>
 
   <div class="app-container">
-    <div class="panel main-panel">
-      <!-- <h2>🎧 영어 듣기</h2> -->
+    <!-- 첫 화면: IndexedDB 파일 목록 화면 -->
+    <div class="panel list-panel file-list-view" id="file-list-view">
+      <div class="file-list-container">
+        <div class="file-list-header">
+          <div class="file-list-title-wrap">
+            <h2 class="file-list-title">🎧 저장된 학습 목록</h2>
+            <p class="file-list-desc">IndexedDB에 저장된 음원 및 대본을 선택하여 듣기 학습을 시작하세요.</p>
+          </div>
+          <div class="file-list-header-actions">
+            <button type="button" class="btn-primary-action" id="btn-toggle-new-picker">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 4v16m8-8H4"></path>
+              </svg>
+              <span>새 파일 열기</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 모바일 친화형 2단계 파일 선택 카드 (토글) -->
+        <div class="mobile-file-picker-card" id="new-file-picker-card" style="display: none;">
+          <div class="picker-card-header">
+            <span class="picker-card-title">새 학습 파일 추가</span>
+            <button type="button" class="picker-card-close" id="btn-close-new-picker" aria-label="닫기">&times;</button>
+          </div>
+          <p style="font-size: 13px; color: var(--text-muted); margin: 0;">
+            음원과 대본을 각각 1개씩 편하게 선택하세요. 선택된 태그를 터치하면 제외(취소)됩니다.
+          </p>
+          <div class="picker-btn-group">
+            <label class="btn-secondary-action" style="cursor: pointer;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+              <span>음원 선택 (.mp3, .m4a)</span>
+              <input type="file" id="picker-audio-input" accept="audio/*,.mp3,audio/mpeg,.m4a,audio/mp4,audio/x-m4a,.wav,audio/wav" style="display: none;">
+            </label>
+            <label class="btn-secondary-action" style="cursor: pointer;">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+              <span>대본 선택 (.srt, .txt)</span>
+              <input type="file" id="picker-sub-input" accept=".srt,.vtt,.txt,text/plain,text/srt,text/vtt,text/*,*/*" style="display: none;">
+            </label>
+          </div>
+
+          <!-- 선택된 파일 태그 박스 -->
+          <div class="selected-tags-box" id="selected-tags-box">
+            <!-- 선택된 태그 동적 삽입 -->
+          </div>
+
+          <div class="picker-confirm-row">
+            <button type="button" class="btn-primary-action" id="btn-start-selected-learning" style="display: none;">
+              학습 시작
+            </button>
+          </div>
+        </div>
+
+        <!-- 저장된 파일 목록 그리드 -->
+        <div class="file-cards-grid" id="file-cards-list">
+          <!-- JS로 동적 렌더링 -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 플레이어 패널 (메인 작업 영역) -->
+    <div class="panel main-panel" id="player-view" style="display: none;">
+      <!-- Hidden file inputs for attaching missing audio/sub in player -->
+      <input type="file" id="audio-file" accept="audio/*,.mp3,audio/mpeg,.m4a,audio/mp4,audio/x-m4a,.wav,audio/wav" style="display: none;">
+      <input type="file" id="subtitle-file" accept=".srt,.vtt,.txt,text/plain,text/srt,text/vtt,text/*,*/*" style="display: none;">
+
       <!-- File Selector Setup -->
       <div class="setup-bar">
         <div class="import-buttons-group">
-          <div class="file-input-wrapper">
-            <button class="btn">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 19V6l12-3v13M9 10l12-3M9 14a3 3 0 11-6 0 3 3 0 016 0zm12 2a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-              음원 선택
-            </button>
-            <input type="file" id="audio-file" accept="audio/*,.mp3,audio/mpeg,.m4a,audio/mp4,audio/x-m4a,.wav,audio/wav">
-          </div>
-          <div class="file-input-wrapper">
-            <button class="btn">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-              대본 선택
-            </button>
-            <input type="file" id="subtitle-file" accept=".srt,.vtt,.txt,text/plain,text/srt,text/vtt,text/*,*/*">
-          </div>
-          <button class="btn" id="btn-guide" title="영어 듣기 앱 사용 설명서">설명서</button>
+          <!-- 기존 열기 버튼들을 [목록] 버튼으로 변경 -->
+          <button class="btn" id="btn-show-list" title="학습 파일 목록으로 이동">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+            <span>목록</span>
+          </button>
+          <button class="btn" id="btn-guide" title="영어 듣기 앱 사용 설명서">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+            <span>설명서</span>
+          </button>
           <div class="select-wrapper">
-            <select id="speed-select" title="배속 조절" style="width: 100%;">
+            <select id="speed-select" title="배속 조절">
               <option value="0.5">0.50x</option>
               <option value="0.75">0.75x</option>
               <option value="0.9">0.90x</option>

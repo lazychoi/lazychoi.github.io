@@ -48,6 +48,44 @@ html, body {
   overscroll-behavior: none;
 }
 
+.file-list-view {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: contain;
+  flex: 1;
+  min-height: 0;
+  max-height: 100%;
+}
+
+.memorize-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.btn-list {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 9px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-list:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
 /* ── Top Control Panel (Permanently pinned under nav, non-scrollable) ── */
 .top-control-panel {
   background: var(--glass-bg);

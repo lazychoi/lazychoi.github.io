@@ -6,6 +6,138 @@ const supabaseUrl = 'https://tpwwwpcbinxdhxqvcvqc.supabase.co';
 const supabaseKey = 'sb_publishable_A1sd3hvbeQx9-gVoFXL0qA_G923SWm9';
 const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
 
+/**
+ * 🏛️ 그리스 ⟷ 로마 신화 신명 및 주요 영웅 대응 사전 (Interpretatio Romana)
+ */
+const MYTHOLOGY_SYNCRETISM_MAP = {
+  // 올림포스 12신 및 주요 주신
+  '제우스': { roman: '유피테르', romanEng: 'Jupiter', aliases: ['유피테르', '주피터', 'Jupiter', 'Jove'] },
+  '헤라': { roman: '유노', romanEng: 'Juno', aliases: ['유노', '주노', 'Juno'] },
+  '포세이돈': { roman: '넵투누스', romanEng: 'Neptune', aliases: ['넵투누스', '넵튠', 'Neptune'] },
+  '데메테르': { roman: '케레스', romanEng: 'Ceres', aliases: ['케레스', '세레스', 'Ceres'] },
+  '아테나': { roman: '미네르바', romanEng: 'Minerva', aliases: ['미네르바', 'Minerva'] },
+  '아폴론': { roman: '아폴로', romanEng: 'Apollo', aliases: ['아폴로', '포이보스', 'Apollo', 'Phoebus'] },
+  '아르테미스': { roman: '디아나', romanEng: 'Diana', aliases: ['디아나', '다이애나', 'Diana'] },
+  '아레스': { roman: '마르스', romanEng: 'Mars', aliases: ['마르스', 'Mars'] },
+  '아프로디테': { roman: '베누스', romanEng: 'Venus', aliases: ['베누스', '비너스', 'Venus'] },
+  '헤르메스': { roman: '메르쿠리우스', romanEng: 'Mercury', aliases: ['메르쿠리우스', '머큐리', 'Mercury'] },
+  '헤파이스토스': { roman: '불카누스', romanEng: 'Vulcan', aliases: ['불카누스', '불칸', 'Vulcan'] },
+  '디오니소스': { roman: '바쿠스', romanEng: 'Bacchus', aliases: ['바쿠스', '리베르', 'Bacchus', 'Liber'] },
+  '헤스티아': { roman: '베스타', romanEng: 'Vesta', aliases: ['베스타', 'Vesta'] },
+  '하데스': { roman: '플루토', romanEng: 'Pluto', aliases: ['플루토', '디스 파테르', 'Pluto', 'Dis Pater'] },
+
+  // 원초신 및 티탄족
+  '우라노스': { roman: '카이엘루스', romanEng: 'Caelus', aliases: ['카이엘루스', 'Caelus'] },
+  '가이아': { roman: '테라', romanEng: 'Terra', aliases: ['테라', '텔루스', 'Terra', 'Tellus'] },
+  '크로노스': { roman: '사투르누스', romanEng: 'Saturn', aliases: ['사투르누스', '새턴', 'Saturn'] },
+  '레아': { roman: '옵스', romanEng: 'Ops', aliases: ['옵스', '마그나 마테르', 'Ops', 'Magna Mater'] },
+
+  // 주요 신령 및 권속
+  '에로스': { roman: '쿠피도', romanEng: 'Cupid', aliases: ['쿠피도', '아모르', '큐피드', 'Cupid', 'Amor'] },
+  '페르세포네': { roman: '프로세르피나', romanEng: 'Proserpina', aliases: ['프로세르피나', 'Proserpina'] },
+  '헤라클레스': { roman: '헤르쿨레스', romanEng: 'Hercules', aliases: ['헤르쿨레스', '허큘리스', 'Hercules'] },
+  '헬리오스': { roman: '솔', romanEng: 'Sol', aliases: ['솔', 'Sol'] },
+  '셀레네': { roman: '루나', romanEng: 'Luna', aliases: ['루나', 'Luna'] },
+  '에오스': { roman: '아우로라', romanEng: 'Aurora', aliases: ['아우로라', '오로라', 'Aurora'] },
+  '니케': { roman: '빅토리아', romanEng: 'Victoria', aliases: ['빅토리아', 'Victoria'] },
+  '튀케': { roman: '포르투나', romanEng: 'Fortuna', aliases: ['포르투나', 'Fortuna'] },
+  '네메시스': { roman: '인비디아', romanEng: 'Invidia', aliases: ['인비디아', 'Invidia'] },
+  '판': { roman: '파우누스', romanEng: 'Faunus', aliases: ['파우누스', 'Faunus'] },
+  '에리스': { roman: '디스코르디아', romanEng: 'Discordia', aliases: ['디스코르디아', 'Discordia'] },
+  '헤베': { roman: '유벤타스', romanEng: 'Juventas', aliases: ['유벤타스', 'Juventas'] },
+  '이리스': { roman: '아르쿠스', romanEng: 'Arcus', aliases: ['아르쿠스', 'Arcus'] },
+  '타나토스': { roman: '모르스', romanEng: 'Mors', aliases: ['모르스', 'Mors'] },
+  '휘프노스': { roman: '솜누스', romanEng: 'Somnus', aliases: ['솜누스', 'Somnus'] },
+  '모르페우스': { roman: '솜니아', romanEng: 'Somnia', aliases: ['솜니아', 'Somnia'] },
+  '아스클레피오스': { roman: '아에스쿨라피우스', romanEng: 'Aesculapius', aliases: ['아에스쿨라피우스', '베디오비스', 'Aesculapius'] }
+};
+
+/**
+ * 📜 복수 부모 전승 (상충하는 설화) 기본 사전
+ */
+const DEFAULT_PARENT_VARIANTS_MAP = {
+  '아프로디테': [
+    {
+      id: 'hesiod',
+      source: '헤시오도스 《신통기》 (통설)',
+      parentNames: ['우라노스'],
+      info: '크로노스에게 거세된 우라노스의 성기에서 나온 바다 거품(아프로스)에서 탄생 (어머니 없음)',
+      isPrimary: true
+    },
+    {
+      id: 'homer',
+      source: '호메로스 《일리아스》',
+      parentNames: ['제우스', '디오네'],
+      info: '하늘의 주신 제우스와 고대 바다 님프 디오네 사이에서 태어난 딸',
+      isPrimary: false
+    }
+  ],
+  '에로스': [
+    {
+      id: 'classical',
+      source: '서정시·로마 전승 (쿠피도)',
+      parentNames: ['아레스', '아프로디테'],
+      info: '전쟁의 신 아레스와 사랑의 여신 아프로디테의 아들',
+      isPrimary: true
+    },
+    {
+      id: 'hesiod',
+      source: '헤시오도스 《신통기》',
+      parentNames: ['카오스'],
+      info: '태초의 카오스 직후 스스로 생겨난 우주 생성과 결합의 원초신',
+      isPrimary: false
+    }
+  ],
+  '아테나': [
+    {
+      id: 'head',
+      source: '고전 전승 (단독 탄생)',
+      parentNames: ['제우스'],
+      info: '제우스의 머리/이마를 헤파이스토스가 도끼로 가르자 완전 무장한 채 단독 탄생',
+      isPrimary: true
+    },
+    {
+      id: 'metis',
+      source: '헤시오도스 전승 (메티스)',
+      parentNames: ['제우스', '메티스'],
+      info: '제우스가 통째로 삼킨 첫 번째 지혜의 아내 메티스가 제우스의 몸속에서 잉태',
+      isPrimary: false
+    }
+  ],
+  '헤파이스토스': [
+    {
+      id: 'zeus_hera',
+      source: '호메로스 전승 (일반설)',
+      parentNames: ['제우스', '헤라'],
+      info: '올림포스의 주신 제우스와 정실 왕비 헤라 사이의 정식 아들',
+      isPrimary: true
+    },
+    {
+      id: 'parthenogenesis',
+      source: '헤시오도스 전승 (처녀생식)',
+      parentNames: ['헤라'],
+      info: '제우스가 혼자 아테나를 낳은 것에 분노하여 헤라가 혼자 힘으로 단독 낳은 아들',
+      isPrimary: false
+    }
+  ],
+  '디오니소스': [
+    {
+      id: 'semele',
+      source: '테베 전승 (일반설)',
+      parentNames: ['제우스', '세멜레'],
+      info: '제우스와 테베의 인간 공주 세멜레의 아들 (제우스의 허벅지에서 다시 태어남)',
+      isPrimary: true
+    },
+    {
+      id: 'zagreus',
+      source: '오르페우스교 전승 (자그레우스)',
+      parentNames: ['제우스', '페르세포네'],
+      info: '제우스와 지하세계의 여왕 페르세포네 사이에서 태어난 자그레우스 전승',
+      isPrimary: false
+    }
+  ]
+};
+
 class DynamicGenealogyApp {
   constructor() {
     // Data Store
@@ -19,6 +151,10 @@ class DynamicGenealogyApp {
     this.currentDatasetKey = 'greek';
     this.currentUser = null;
     this.isEditMode = false;
+
+    // 그리스 로마 신화 표기 모드 및 다중 부모 전승 상태
+    this.mythNameMode = 'both'; // 'both' | 'greek' | 'roman'
+    this.activeParentVariants = new Map(); // personId -> variantId
 
     // 인물 추가 대화상자 임시 상태
     this.pendingQuickAddAction = null;
@@ -101,6 +237,18 @@ class DynamicGenealogyApp {
     this.btnQuickEditDelete = document.getElementById('btnQuickEditDelete');
     this.btnQuickEditCancel = document.getElementById('btnQuickEditCancel');
     this.btnQuickEditClose = document.getElementById('btnQuickEditClose');
+
+    // 그리스 로마 신화 표기 모드 및 전승 팝오버 요소
+    this.mythModeGroup = document.getElementById('mythModeGroup');
+    this.traditionPopover = document.getElementById('traditionPopover');
+    this.traditionPopoverList = document.getElementById('traditionPopoverList');
+    this.btnTraditionPopoverClose = document.getElementById('btnTraditionPopoverClose');
+    this.quickEditNameRoman = document.getElementById('quickEditNameRoman');
+    this.quickEditNameRomanEng = document.getElementById('quickEditNameRomanEng');
+    this.quickEditVariantsGroup = document.getElementById('quickEditVariantsGroup');
+    this.quickEditVariantsList = document.getElementById('quickEditVariantsList');
+    this.btnToggleVariants = document.getElementById('btnToggleVariants');
+    this.btnQuickEditAddVariant = document.getElementById('btnQuickEditAddVariant');
 
     this.init();
   }
@@ -231,6 +379,10 @@ class DynamicGenealogyApp {
     this.currentDatasetKey = datasetKey;
     this.renderDatasetSelectOptions();
 
+    if (this.mythModeGroup) {
+      this.mythModeGroup.style.display = (datasetKey === 'greek') ? 'flex' : 'none';
+    }
+
     if (!supabaseClient) return;
 
     try {
@@ -248,22 +400,65 @@ class DynamicGenealogyApp {
       if (data && data.length > 0) {
         data.forEach(node => {
           const nodeName = (node.name && !node.name.startsWith(`${datasetKey}_`)) ? node.name : "이름 없음";
+          const syn = (datasetKey === 'greek') ? (MYTHOLOGY_SYNCRETISM_MAP[nodeName] || {}) : {};
+          const nameRoman = node.name_roman || syn.roman || "";
+          const nameRomanEng = node.name_roman_eng || syn.romanEng || "";
+          const parentVariants = Array.isArray(node.parent_variants) ? [...node.parent_variants] : [];
 
           this.nodesMap.set(node.id, {
             id: node.id,
             name: nodeName,
             nameEng: node.name_eng || "",
+            nameRoman: nameRoman,
+            nameRomanEng: nameRomanEng,
             title: node.title || "",
             gender: node.gender || "male",
             info: node.info || "",
             groupName: node.group_name || node.groupName || "",
             parentIds: Array.isArray(node.parent_ids) ? [...node.parent_ids] : [],
-            spouseIds: Array.isArray(node.spouse_ids) ? [...node.spouse_ids] : []
+            spouseIds: Array.isArray(node.spouse_ids) ? [...node.spouse_ids] : [],
+            parentVariants: parentVariants
           });
         });
       }
     } catch (err) {
       console.error("Supabase connection exception:", err);
+    }
+
+    // 그리스 로마 신화 기본 전승 매핑 보완 (DB에 parent_variants가 아직 비어있는 경우)
+    if (this.currentDatasetKey === 'greek') {
+      const findIdByName = (targetName) => {
+        for (const [id, p] of this.nodesMap.entries()) {
+          if (p.name === targetName) return id;
+        }
+        return null;
+      };
+
+      for (const [id, person] of this.nodesMap.entries()) {
+        if ((!person.parentVariants || person.parentVariants.length === 0) && DEFAULT_PARENT_VARIANTS_MAP[person.name]) {
+          const defVariants = DEFAULT_PARENT_VARIANTS_MAP[person.name];
+          const resolved = [];
+          for (const v of defVariants) {
+            const pIds = v.parentNames.map(name => findIdByName(name)).filter(Boolean);
+            resolved.push({
+              id: v.id,
+              source: v.source,
+              parent_ids: pIds,
+              info: v.info,
+              is_primary: !!v.isPrimary
+            });
+          }
+          if (resolved.length > 0) {
+            person.parentVariants = resolved;
+          }
+        }
+
+        // 초기 활성 전승 설정
+        if (person.parentVariants && person.parentVariants.length > 0) {
+          const primary = person.parentVariants.find(v => v.is_primary) || person.parentVariants[0];
+          this.activeParentVariants.set(person.id, primary.id);
+        }
+      }
     }
 
     await this.deduplicateExistingNodes();
@@ -277,6 +472,22 @@ class DynamicGenealogyApp {
     } else {
       this.render();
     }
+  }
+
+  // ── 2.5 활성 전승(Tradition)에 따른 유효 부모 ID 반환 ──
+  getEffectiveParentIds(personId) {
+    const person = this.nodesMap.get(personId);
+    if (!person) return [];
+
+    if (person.parentVariants && person.parentVariants.length > 0) {
+      const activeVarId = this.activeParentVariants.get(personId);
+      const activeVar = person.parentVariants.find(v => v.id === activeVarId) || person.parentVariants[0];
+      if (activeVar && Array.isArray(activeVar.parent_ids)) {
+        return activeVar.parent_ids.filter(id => this.nodesMap.has(id));
+      }
+    }
+
+    return (person.parentIds || []).filter(id => this.nodesMap.has(id));
   }
 
   updateQuickAddDatalist() {
@@ -339,11 +550,12 @@ class DynamicGenealogyApp {
     }
   }
 
-  // ── 3. parent_ids 기반 자식 및 부부 공통 자식 추적 ──
+  // ── 3. parent_ids 및 복수 전승 기반 자식 및 부부 공통 자식 추적 ──
   getChildIds(personId) {
     const children = [];
     for (const [id, person] of this.nodesMap.entries()) {
-      if (person.parentIds.includes(personId)) {
+      const effParents = this.getEffectiveParentIds(id);
+      if (effParents.includes(personId)) {
         children.push(id);
       }
     }
@@ -353,7 +565,8 @@ class DynamicGenealogyApp {
   getCommonChildren(p1Id, p2Id) {
     const common = [];
     for (const [cId, person] of this.nodesMap.entries()) {
-      if (person.parentIds.includes(p1Id) && person.parentIds.includes(p2Id)) {
+      const effParents = this.getEffectiveParentIds(cId);
+      if (effParents.includes(p1Id) && effParents.includes(p2Id)) {
         common.push(cId);
       }
     }
@@ -389,38 +602,35 @@ class DynamicGenealogyApp {
     for (const [id, person] of this.nodesMap.entries()) {
       const normName = (person.name || '').replace(/\s+/g, '').toLowerCase();
       const normEng = (person.nameEng || '').replace(/\s+/g, '').toLowerCase();
+      const normRoman = (person.nameRoman || '').replace(/\s+/g, '').toLowerCase();
+      const normRomanEng = (person.nameRomanEng || '').replace(/\s+/g, '').toLowerCase();
 
-      if (normName === normalizedInput || (normEng && normEng === normalizedInput)) {
+      if (normName === normalizedInput || (normEng && normEng === normalizedInput) ||
+          normRoman === normalizedInput || (normRomanEng && normRomanEng === normalizedInput)) {
         return id;
       }
     }
+
+    const syn = (this.currentDatasetKey === 'greek') ? (MYTHOLOGY_SYNCRETISM_MAP[term] || {}) : {};
 
     const newAutoId = `${this.currentDatasetKey}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
     const newPerson = {
       id: newAutoId,
       name: term,
       nameEng: "",
+      nameRoman: syn.roman || "",
+      nameRomanEng: syn.romanEng || "",
       title: "",
       gender: defaultGender,
       info: "",
       parentIds: [],
-      spouseIds: []
+      spouseIds: [],
+      parentVariants: []
     };
     this.nodesMap.set(newAutoId, newPerson);
 
     if (supabaseClient) {
-      supabaseClient.from('genealogy_nodes').upsert({
-        id: newPerson.id,
-        dataset_id: this.currentDatasetKey,
-        name: newPerson.name,
-        name_eng: "",
-        title: "",
-        gender: newPerson.gender,
-        info: "",
-        parent_ids: [],
-        spouse_ids: [],
-        updated_at: new Date().toISOString()
-      }).then(() => {});
+      this.savePersonToDB(newAutoId).then(() => {});
     }
 
     return newAutoId;
@@ -430,19 +640,37 @@ class DynamicGenealogyApp {
     const person = this.nodesMap.get(personId);
     if (!person || !supabaseClient) return;
 
+    const payload = {
+      id: person.id,
+      dataset_id: this.currentDatasetKey,
+      name: person.name,
+      name_eng: person.nameEng || "",
+      name_roman: person.nameRoman || null,
+      name_roman_eng: person.nameRomanEng || null,
+      title: person.title || "",
+      gender: person.gender || "male",
+      info: person.info || "",
+      group_name: person.groupName || null,
+      parent_ids: person.parentIds || [],
+      spouse_ids: person.spouseIds || [],
+      parent_variants: person.parentVariants || [],
+      updated_at: new Date().toISOString()
+    };
+
     try {
-      await supabaseClient.from('genealogy_nodes').upsert({
-        id: person.id,
-        dataset_id: this.currentDatasetKey,
-        name: person.name,
-        name_eng: person.nameEng,
-        title: person.title,
-        gender: person.gender,
-        info: person.info,
-        parent_ids: person.parentIds,
-        spouse_ids: person.spouseIds,
-        updated_at: new Date().toISOString()
-      });
+      const { error } = await supabaseClient.from('genealogy_nodes').upsert(payload);
+      if (error) {
+        // Supabase DB에 name_roman 또는 parent_variants 컬럼이 아직 없을 경우의 안전한 폴백
+        if (error.message && (error.message.includes('name_roman') || error.message.includes('parent_variants'))) {
+          console.warn("Supabase schema missing new columns, falling back to legacy fields. Please execute ALTER TABLE in Supabase SQL editor.");
+          delete payload.name_roman;
+          delete payload.name_roman_eng;
+          delete payload.parent_variants;
+          await supabaseClient.from('genealogy_nodes').upsert(payload);
+        } else {
+          console.error("DB Save error:", error);
+        }
+      }
     } catch (err) {
       console.warn("DB Save warning:", err);
     }
@@ -603,7 +831,7 @@ class DynamicGenealogyApp {
       if (!this.expandedTop.has(childNodeId)) return;
       const person = this.nodesMap.get(childNodeId);
       if (!person) return;
-      const parents = person.parentIds.filter(pId => this.nodesMap.has(pId));
+      const parents = this.getEffectiveParentIds(childNodeId);
       if (parents.length === 0) return;
 
       const parentY = childY - 140;
@@ -647,7 +875,8 @@ class DynamicGenealogyApp {
     let leftSiblingMaxX = centerX - 280;
     if (this.expandedLeft.has(this.focusNodeId)) {
       const siblings = new Set();
-      focusPerson.parentIds.forEach(pId => {
+      const focusParents = this.getEffectiveParentIds(this.focusNodeId);
+      focusParents.forEach(pId => {
         const parentChildren = this.getChildIds(pId);
         parentChildren.forEach(cId => {
           if (cId !== this.focusNodeId) siblings.add(cId);
@@ -687,7 +916,7 @@ class DynamicGenealogyApp {
         childIds = allChildren.filter(cId => {
           const childPerson = this.nodesMap.get(cId);
           if (!childPerson) return false;
-          const validParents = childPerson.parentIds.filter(id => this.nodesMap.has(id));
+          const validParents = this.getEffectiveParentIds(cId);
           return validParents.length <= 1;
         });
       }
@@ -886,10 +1115,11 @@ class DynamicGenealogyApp {
       el.style.left = `${node.x - (this.nodeWidth / 2)}px`;
       el.style.top = `${node.y - (this.nodeHeight / 2)}px`;
 
-      const parentCount = node.parentIds.filter(id => this.nodesMap.has(id)).length;
+      const effectiveParents = this.getEffectiveParentIds(node.id);
+      const parentCount = effectiveParents.length;
 
       const siblings = new Set();
-      node.parentIds.forEach(pId => {
+      effectiveParents.forEach(pId => {
         const pChildren = this.getChildIds(pId);
         pChildren.forEach(cId => { if (cId !== node.id) siblings.add(cId); });
       });
@@ -902,7 +1132,7 @@ class DynamicGenealogyApp {
       const trueSingleChildCount = allNodeChildren.filter(cId => {
         const childPerson = this.nodesMap.get(cId);
         if (!childPerson) return false;
-        const validParents = childPerson.parentIds.filter(pId => this.nodesMap.has(pId));
+        const validParents = this.getEffectiveParentIds(cId);
         return validParents.length <= 1;
       }).length;
 
@@ -953,10 +1183,58 @@ class DynamicGenealogyApp {
         `;
       }
 
+      // 그리스 / 로마 표기 모드에 따른 이름 표시 결정
+      let mainName = node.name;
+      let subName = "";
+      const isGreekDataset = (this.currentDatasetKey === 'greek');
+
+      if (isGreekDataset) {
+        const roman = node.nameRoman || "";
+        const greekEng = node.nameEng || "";
+        if (this.mythNameMode === 'both') {
+          mainName = node.name;
+          if (roman) {
+            subName = `🏛️ ${roman}`;
+          } else if (greekEng) {
+            subName = greekEng;
+          }
+        } else if (this.mythNameMode === 'roman') {
+          mainName = roman || node.name;
+          if (roman) {
+            subName = `🇬🇷 ${node.name}`;
+          } else if (greekEng) {
+            subName = greekEng;
+          }
+        } else if (this.mythNameMode === 'greek') {
+          mainName = node.name;
+          if (greekEng) {
+            subName = `🇬🇷 ${greekEng}`;
+          }
+        }
+      }
+
+      // 복수 부모 전승 뱃지 (상단에 📜 표시)
+      let traditionBadgeHtml = '';
+      if (!this.isEditMode && node.parentVariants && node.parentVariants.length > 1) {
+        const activeVarId = this.activeParentVariants.get(node.id);
+        const activeVar = node.parentVariants.find(v => v.id === activeVarId) || node.parentVariants[0];
+        let varLabel = '전승';
+        if (activeVar && activeVar.source) {
+          varLabel = activeVar.source.split(' ')[0] || '전승';
+        }
+        traditionBadgeHtml = `
+          <button type="button" class="text-node-tradition-btn ${parentCount > 0 ? 'has-dir-top' : ''}" id="btnTradition_${node.id}" title="부모 전승 변경 (클릭)">
+            📜 ${this.escapeHtml(varLabel)} ▾
+          </button>
+        `;
+      }
+
       el.innerHTML = `
         ${directionalNodesHtml}
+        ${traditionBadgeHtml}
         <div class="text-node-content" id="textContent_${node.id}">
-          <span class="text-node-name">${this.escapeHtml(node.name)}</span>
+          <span class="text-node-name">${this.escapeHtml(mainName)}</span>
+          ${subName ? `<span class="text-node-subname">${this.escapeHtml(subName)}</span>` : ''}
           ${node.title ? `<span class="text-node-title">(${this.escapeHtml(node.title)})</span>` : ''}
         </div>
         <div style="display:flex; align-items:center; gap:2px;">
@@ -970,6 +1248,15 @@ class DynamicGenealogyApp {
       `;
 
       this.nodesLayer.appendChild(el);
+
+      const btnTradition = el.querySelector(`#btnTradition_${node.id}`);
+      if (btnTradition) {
+        this.preventDrag(btnTradition);
+        btnTradition.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.openTraditionPopover(node.id, btnTradition);
+        });
+      }
 
       const btnQuickEdit = el.querySelector(`#btnQuickEdit_${node.id}`);
       if (btnQuickEdit) {
@@ -1479,6 +1766,154 @@ class DynamicGenealogyApp {
     this.render();
   }
 
+  // ── 7.2 복수 부모 전승(이설) 편집 카드 생성 및 이벤트 관리 ──
+  renderQuickEditVariantCard(variant, idx, isLoggedIn) {
+    let parentNamesStr = "";
+    if (Array.isArray(variant.parent_ids) && variant.parent_ids.length > 0) {
+      parentNamesStr = variant.parent_ids.map(pId => {
+        const p = this.nodesMap.get(pId);
+        return p ? p.name : pId;
+      }).filter(Boolean).join(', ');
+    } else if (Array.isArray(variant.parentNames) && variant.parentNames.length > 0) {
+      parentNamesStr = variant.parentNames.join(', ');
+    } else if (typeof variant.parentNamesStr === 'string') {
+      parentNamesStr = variant.parentNamesStr;
+    }
+
+    const vId = variant.id || `var_${Date.now()}_${idx}`;
+    const isPrimary = !!variant.is_primary;
+    const disabledAttr = isLoggedIn ? '' : 'disabled';
+
+    return `
+      <div class="variant-edit-card ${isPrimary ? 'is-primary' : ''}" data-variant-id="${this.escapeHtml(vId)}">
+        <div class="variant-edit-header">
+          <label class="variant-primary-label" title="기본 통설(대표 계보)로 지정">
+            <input type="radio" name="quickEditPrimaryVariant" value="${this.escapeHtml(vId)}" ${isPrimary ? 'checked' : ''} ${disabledAttr} />
+            <span>기본 통설 (대표 계보)</span>
+            <span class="variant-primary-badge" style="font-size:10px; color:#2563eb; font-weight:700; background:#dbeafe; padding:1px 6px; border-radius:4px; display:${isPrimary ? 'inline' : 'none'};">기본</span>
+          </label>
+          ${isLoggedIn ? `
+            <button type="button" class="variant-delete-btn" title="이 전승 삭제">
+              🗑️ 삭제
+            </button>
+          ` : ''}
+        </div>
+        <div class="variant-fields-grid">
+          <div class="variant-field-group">
+            <label class="variant-field-label">출처 / 전승명</label>
+            <input type="text" class="variant-input variant-source-input" value="${this.escapeHtml(variant.source || '')}" placeholder="예: 헤시오도스 《신통기》" ${disabledAttr} />
+          </div>
+          <div class="variant-field-group">
+            <label class="variant-field-label">부모 (쉼표 , 구분)</label>
+            <input type="text" class="variant-input variant-parents-input" value="${this.escapeHtml(parentNamesStr)}" list="quickAddPersonDatalist" placeholder="예: 우라노스 (단독 탄생이면 비움)" autocomplete="off" ${disabledAttr} />
+          </div>
+        </div>
+        <div class="variant-field-group">
+          <label class="variant-field-label">설화 배경 / 부연 설명 (선택)</label>
+          <input type="text" class="variant-input variant-info-input" value="${this.escapeHtml(variant.info || '')}" placeholder="예: 바다 거품에서 탄생 (어머니 없음)" ${disabledAttr} />
+        </div>
+      </div>
+    `;
+  }
+
+  attachVariantCardEvents(cardEl, isLoggedIn) {
+    if (!cardEl) return;
+
+    // 1. 라디오 버튼 변경: 대표 전승 전환
+    const radio = cardEl.querySelector('input[name="quickEditPrimaryVariant"]');
+    if (radio) {
+      radio.addEventListener('change', () => {
+        if (!this.quickEditVariantsList) return;
+        const allCards = this.quickEditVariantsList.querySelectorAll('.variant-edit-card');
+        allCards.forEach(c => {
+          c.classList.remove('is-primary');
+          const badge = c.querySelector('.variant-primary-badge');
+          if (badge) badge.style.display = 'none';
+        });
+
+        cardEl.classList.add('is-primary');
+        const badge = cardEl.querySelector('.variant-primary-badge');
+        if (badge) badge.style.display = 'inline';
+
+        const parentsInput = cardEl.querySelector('.variant-parents-input');
+        if (parentsInput && this.quickEditParents) {
+          this.quickEditParents.value = parentsInput.value.trim();
+        }
+      });
+    }
+
+    // 2. 기본 통설 카드 부모 입력 시 메인 부모 필드 자동 동기화
+    const parentsInput = cardEl.querySelector('.variant-parents-input');
+    if (parentsInput) {
+      parentsInput.addEventListener('input', () => {
+        if (cardEl.classList.contains('is-primary') && this.quickEditParents) {
+          this.quickEditParents.value = parentsInput.value.trim();
+        }
+      });
+    }
+
+    // 3. 삭제 버튼
+    const deleteBtn = cardEl.querySelector('.variant-delete-btn');
+    if (deleteBtn && isLoggedIn) {
+      deleteBtn.addEventListener('click', () => {
+        const wasPrimary = cardEl.classList.contains('is-primary');
+        cardEl.remove();
+
+        if (this.quickEditVariantsList) {
+          const remainingCards = this.quickEditVariantsList.querySelectorAll('.variant-edit-card');
+          if (wasPrimary && remainingCards.length > 0) {
+            const firstCard = remainingCards[0];
+            firstCard.classList.add('is-primary');
+            const firstRadio = firstCard.querySelector('input[name="quickEditPrimaryVariant"]');
+            if (firstRadio) firstRadio.checked = true;
+            const firstBadge = firstCard.querySelector('.variant-primary-badge');
+            if (firstBadge) firstBadge.style.display = 'inline';
+
+            const firstParents = firstCard.querySelector('.variant-parents-input');
+            if (firstParents && this.quickEditParents) {
+              this.quickEditParents.value = firstParents.value.trim();
+            }
+          }
+        }
+      });
+    }
+  }
+
+  populateQuickEditVariants(variants, isLoggedIn) {
+    if (!this.quickEditVariantsList) return;
+    this.quickEditVariantsList.innerHTML = (variants || []).map((v, idx) => {
+      return this.renderQuickEditVariantCard(v, idx, isLoggedIn);
+    }).join('');
+
+    const cards = this.quickEditVariantsList.querySelectorAll('.variant-edit-card');
+    cards.forEach(c => this.attachVariantCardEvents(c, isLoggedIn));
+  }
+
+  addNewVariantCard(initialData = null) {
+    if (!this.quickEditVariantsList) return;
+    const existingCards = this.quickEditVariantsList.querySelectorAll('.variant-edit-card');
+    const isFirst = existingCards.length === 0;
+
+    const newVariant = initialData || {
+      id: `var_${Date.now()}_${existingCards.length + 1}`,
+      source: '',
+      parent_ids: [],
+      info: '',
+      is_primary: isFirst
+    };
+
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = this.renderQuickEditVariantCard(newVariant, existingCards.length, !!this.currentUser);
+    const newCard = tempDiv.firstElementChild;
+    if (!newCard) return;
+
+    this.quickEditVariantsList.appendChild(newCard);
+    this.attachVariantCardEvents(newCard, !!this.currentUser);
+
+    const srcInput = newCard.querySelector('.variant-source-input');
+    if (srcInput) srcInput.focus();
+  }
+
   // 카드 ✏️ 수정 모달 열기
   openQuickEditModal(personId) {
     const person = this.nodesMap.get(personId);
@@ -1510,20 +1945,41 @@ class DynamicGenealogyApp {
       this.quickEditSpouses.value = spouseNames.join(', ');
     }
 
+    if (this.quickEditNameRoman) this.quickEditNameRoman.value = person.nameRoman || '';
+    if (this.quickEditNameRomanEng) this.quickEditNameRomanEng.value = person.nameRomanEng || '';
+
     const isLoggedIn = !!this.currentUser;
+
+    // 복수 부모 전승(설화) 목록 표시 및 편집 박스 렌더링
+    if (this.quickEditVariantsGroup && this.quickEditVariantsList) {
+      if (person.parentVariants && person.parentVariants.length > 0) {
+        this.quickEditVariantsGroup.style.display = 'block';
+        if (this.btnToggleVariants) this.btnToggleVariants.textContent = '📜 복수 부모 전승 접기 ▴';
+        this.populateQuickEditVariants(person.parentVariants, isLoggedIn);
+      } else {
+        this.quickEditVariantsGroup.style.display = 'none';
+        if (this.btnToggleVariants) this.btnToggleVariants.textContent = '📜 복수 부모 전승(이설) 관리 ▾';
+        this.quickEditVariantsList.innerHTML = '';
+      }
+    }
+
+    if (this.btnQuickEditAddVariant) {
+      this.btnQuickEditAddVariant.style.display = isLoggedIn ? 'inline-block' : 'none';
+    }
+
     const titleEl = document.getElementById('quickEditModalTitle');
     const subtitleEl = document.getElementById('quickEditModalSubtitle');
     const loggedInActions = document.getElementById('quickEditLoggedInActions');
     const loggedOutActions = document.getElementById('quickEditLoggedOutActions');
     const formInputs = [
-      this.quickEditName, this.quickEditNameEng, this.quickEditParents,
-      this.quickEditSpouses, this.quickEditTitle, this.quickEditGender, this.quickEditInfo
+      this.quickEditName, this.quickEditNameEng, this.quickEditNameRoman, this.quickEditNameRomanEng,
+      this.quickEditParents, this.quickEditSpouses, this.quickEditTitle, this.quickEditGender, this.quickEditInfo
     ];
 
     if (titleEl) titleEl.textContent = '정보 수정';
 
     if (isLoggedIn) {
-      if (subtitleEl) subtitleEl.textContent = '이름, 영문명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.';
+      if (subtitleEl) subtitleEl.textContent = '이름, 영문명, 로마명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.';
       if (loggedInActions) loggedInActions.style.display = 'flex';
       if (loggedOutActions) loggedOutActions.style.display = 'none';
       formInputs.forEach(input => { if (input) input.disabled = false; });
@@ -1607,6 +2063,61 @@ class DynamicGenealogyApp {
       });
     }
 
+    if (this.btnToggleVariants) {
+      this.btnToggleVariants.addEventListener('click', () => {
+        if (!this.quickEditVariantsGroup) return;
+        const isCurrentlyHidden = (this.quickEditVariantsGroup.style.display === 'none' || !this.quickEditVariantsGroup.style.display);
+        if (isCurrentlyHidden) {
+          this.quickEditVariantsGroup.style.display = 'block';
+          this.btnToggleVariants.textContent = '📜 복수 부모 전승 접기 ▴';
+
+          const cards = this.quickEditVariantsList ? this.quickEditVariantsList.querySelectorAll('.variant-edit-card') : [];
+          if (cards.length === 0) {
+            const currentParentsVal = this.quickEditParents ? this.quickEditParents.value.trim() : '';
+            const initialVariants = [
+              {
+                id: `var_${Date.now()}_1`,
+                source: '기본 통설',
+                parentNamesStr: currentParentsVal,
+                info: '',
+                is_primary: true
+              },
+              {
+                id: `var_${Date.now()}_2`,
+                source: '',
+                parentNamesStr: '',
+                info: '',
+                is_primary: false
+              }
+            ];
+            this.populateQuickEditVariants(initialVariants, !!this.currentUser);
+          }
+        } else {
+          this.quickEditVariantsGroup.style.display = 'none';
+          this.btnToggleVariants.textContent = '📜 복수 부모 전승(이설) 관리 ▾';
+        }
+      });
+    }
+
+    if (this.btnQuickEditAddVariant) {
+      this.btnQuickEditAddVariant.addEventListener('click', () => {
+        if (!this.currentUser) return;
+        this.addNewVariantCard();
+      });
+    }
+
+    if (this.quickEditParents) {
+      this.quickEditParents.addEventListener('input', () => {
+        if (this.quickEditVariantsList) {
+          const primaryCard = this.quickEditVariantsList.querySelector('.variant-edit-card.is-primary');
+          if (primaryCard) {
+            const pInput = primaryCard.querySelector('.variant-parents-input');
+            if (pInput) pInput.value = this.quickEditParents.value;
+          }
+        }
+      });
+    }
+
     if (this.quickEditForm) {
       this.quickEditForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1617,19 +2128,86 @@ class DynamicGenealogyApp {
         if (person) {
           person.name = this.quickEditName.value.trim();
           if (this.quickEditNameEng) person.nameEng = this.quickEditNameEng.value.trim();
+          if (this.quickEditNameRoman) person.nameRoman = this.quickEditNameRoman.value.trim();
+          if (this.quickEditNameRomanEng) person.nameRomanEng = this.quickEditNameRomanEng.value.trim();
           if (this.quickEditTitle) person.title = this.quickEditTitle.value.trim();
           if (this.quickEditGroup) person.groupName = this.quickEditGroup.value.trim();
           if (this.quickEditGender) person.gender = this.quickEditGender.value;
           if (this.quickEditInfo) person.info = this.quickEditInfo.value.trim();
 
-          if (this.quickEditParents) {
-            const rawVal = this.quickEditParents.value.trim();
-            const parentNames = rawVal ? rawVal.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
-            const newParentIds = parentNames
-              .map(pName => this.findOrCreatePersonByNameOrId(pName, 'male'))
-              .filter(targetId => targetId && targetId !== pId);
+          // 📜 복수 부모 전승 데이터 추출 및 처리
+          const variantCards = this.quickEditVariantsList ? Array.from(this.quickEditVariantsList.querySelectorAll('.variant-edit-card')) : [];
+          const isVariantsActive = (this.quickEditVariantsGroup && this.quickEditVariantsGroup.style.display !== 'none' && variantCards.length > 0);
 
-            person.parentIds = newParentIds;
+          if (isVariantsActive) {
+            const selectedPrimaryRadio = this.quickEditVariantsList.querySelector('input[name="quickEditPrimaryVariant"]:checked');
+            const selectedPrimaryId = selectedPrimaryRadio ? selectedPrimaryRadio.value : (variantCards[0]?.dataset?.variantId || null);
+
+            const newVariants = [];
+            for (let i = 0; i < variantCards.length; i++) {
+              const card = variantCards[i];
+              const vId = card.dataset.variantId || `var_${Date.now()}_${i}`;
+              const srcInput = card.querySelector('.variant-source-input');
+              const parentsInput = card.querySelector('.variant-parents-input');
+              const infoInput = card.querySelector('.variant-info-input');
+
+              const source = srcInput ? srcInput.value.trim() : '';
+              const rawParents = parentsInput ? parentsInput.value.trim() : '';
+              const info = infoInput ? infoInput.value.trim() : '';
+              const isPrimary = (vId === selectedPrimaryId) || (selectedPrimaryId === null && i === 0);
+
+              // 완전 빈 카드는 스킵
+              if (!source && !rawParents && !info) continue;
+
+              const parentNames = rawParents ? rawParents.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+              const parentIds = parentNames
+                .map(pName => this.findOrCreatePersonByNameOrId(pName, 'male'))
+                .filter(targetId => targetId && targetId !== pId);
+
+              newVariants.push({
+                id: vId,
+                source: source || `전승 ${newVariants.length + 1}`,
+                parent_ids: parentIds,
+                info: info,
+                is_primary: isPrimary
+              });
+            }
+
+            if (newVariants.length > 0) {
+              if (!newVariants.some(v => v.is_primary)) {
+                newVariants[0].is_primary = true;
+              }
+              person.parentVariants = newVariants;
+
+              const primaryVar = newVariants.find(v => v.is_primary) || newVariants[0];
+              person.parentIds = [...primaryVar.parent_ids];
+
+              const currentActive = this.activeParentVariants.get(pId);
+              if (!newVariants.some(v => v.id === currentActive)) {
+                this.activeParentVariants.set(pId, primaryVar.id);
+              }
+            } else {
+              person.parentVariants = [];
+              if (this.quickEditParents) {
+                const rawVal = this.quickEditParents.value.trim();
+                const parentNames = rawVal ? rawVal.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+                person.parentIds = parentNames
+                  .map(pName => this.findOrCreatePersonByNameOrId(pName, 'male'))
+                  .filter(targetId => targetId && targetId !== pId);
+              }
+            }
+          } else {
+            // 전승 관리 그룹이 비활성이거나 비어있으면 기본 부모 필드 사용
+            if (this.quickEditParents) {
+              const rawVal = this.quickEditParents.value.trim();
+              const parentNames = rawVal ? rawVal.split(',').map(s => s.trim()).filter(s => s.length > 0) : [];
+              const newParentIds = parentNames
+                .map(pName => this.findOrCreatePersonByNameOrId(pName, 'male'))
+                .filter(targetId => targetId && targetId !== pId);
+
+              person.parentIds = newParentIds;
+            }
+            person.parentVariants = [];
           }
 
           if (this.quickEditSpouses) {
@@ -1649,6 +2227,72 @@ class DynamicGenealogyApp {
         }
       });
     }
+  }
+
+  // ── 7.5 복수 부모 전승(Tradition) 선택 팝오버 오픈 ──
+  openTraditionPopover(personId, anchorEl) {
+    const person = this.nodesMap.get(personId);
+    if (!person || !person.parentVariants || person.parentVariants.length <= 1) return;
+
+    const popover = this.traditionPopover;
+    const list = this.traditionPopoverList;
+    if (!popover || !list) return;
+
+    const activeVarId = this.activeParentVariants.get(personId);
+
+    list.innerHTML = person.parentVariants.map(v => {
+      const isActive = (v.id === activeVarId) || (!activeVarId && v.is_primary);
+
+      let parentNamesStr = "단독 탄생 (어머니/아버지 없음)";
+      if (Array.isArray(v.parent_ids) && v.parent_ids.length > 0) {
+        parentNamesStr = v.parent_ids.map(pId => {
+          const p = this.nodesMap.get(pId);
+          return p ? p.name : pId;
+        }).join(', ');
+      } else if (Array.isArray(v.parentNames) && v.parentNames.length > 0) {
+        parentNamesStr = v.parentNames.join(', ');
+      }
+
+      return `
+        <div class="tradition-option-card ${isActive ? 'active' : ''}" data-variant-id="${v.id}">
+          <div class="tradition-option-source">
+            <span>📜 ${this.escapeHtml(v.source)}</span>
+            <span style="font-size:11px; font-weight:600; color:${isActive ? 'var(--accent)' : 'var(--text-muted)'};">
+              ${isActive ? '✅ 적용중' : '선택'}
+            </span>
+          </div>
+          <div class="tradition-option-parents">부모 계보: ${this.escapeHtml(parentNamesStr)}</div>
+          ${v.info ? `<div class="tradition-option-info">${this.escapeHtml(v.info)}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+
+    popover.style.display = 'flex';
+
+    const rect = anchorEl.getBoundingClientRect();
+    let left = rect.left;
+    let top = rect.bottom + 6;
+
+    if (left + 300 > window.innerWidth) {
+      left = window.innerWidth - 310;
+    }
+    if (left < 10) left = 10;
+    if (top + 240 > window.innerHeight) {
+      top = rect.top - 230;
+    }
+
+    popover.style.left = `${left}px`;
+    popover.style.top = `${top}px`;
+
+    list.querySelectorAll('.tradition-option-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const variantId = card.dataset.variantId;
+        this.activeParentVariants.set(personId, variantId);
+        popover.style.display = 'none';
+        this.render();
+      });
+    });
   }
 
   preventDrag(element) {
@@ -1764,7 +2408,7 @@ class DynamicGenealogyApp {
         const singleChildren = allChildren.filter(cId => {
           const childPerson = this.nodesMap.get(cId);
           if (!childPerson) return false;
-          const validParents = childPerson.parentIds.filter(id => this.nodesMap.has(id));
+          const validParents = this.getEffectiveParentIds(cId);
           return validParents.length <= 1;
         });
 
@@ -1780,7 +2424,7 @@ class DynamicGenealogyApp {
 
       // Ancestor connections
       if (this.expandedTop.has(n.id)) {
-        const parents = n.parentIds.filter(pId => nodePosMap.has(pId));
+        const parents = this.getEffectiveParentIds(n.id).filter(pId => nodePosMap.has(pId));
         if (parents.length > 0) {
           let parentStartX = n.x;
           let parentStartY = n.y - (this.nodeHeight / 2) - 60;
@@ -2034,6 +2678,35 @@ class DynamicGenealogyApp {
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.search-wrapper')) {
         this.searchDropdown.classList.remove('show');
+      }
+    });
+
+    // 그리스 로마 신화 표기 모드 (병기 / 그리스 / 로마) 세그먼트 버튼 이벤트 바인딩
+    if (this.mythModeGroup) {
+      this.mythModeGroup.querySelectorAll('.segment-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const mode = btn.dataset.mode;
+          if (!mode) return;
+          this.mythNameMode = mode;
+          this.mythModeGroup.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          this.render();
+        });
+      });
+    }
+
+    // 복수 부모 전승 팝오버 닫기 이벤트 바인딩
+    if (this.btnTraditionPopoverClose) {
+      this.btnTraditionPopoverClose.addEventListener('click', () => {
+        if (this.traditionPopover) this.traditionPopover.style.display = 'none';
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (this.traditionPopover && this.traditionPopover.style.display !== 'none') {
+        if (!e.target.closest('#traditionPopover') && !e.target.closest('.text-node-tradition-btn')) {
+          this.traditionPopover.style.display = 'none';
+        }
       }
     });
 
@@ -2560,18 +3233,39 @@ class DynamicGenealogyApp {
 
     const matches = [];
     for (const [id, person] of this.nodesMap.entries()) {
-      if (
-        person.name.toLowerCase().includes(q) ||
-        (person.nameEng && person.nameEng.toLowerCase().includes(q)) ||
-        (person.title && person.title.toLowerCase().includes(q))
-      ) {
+      const matchName = person.name.toLowerCase().includes(q);
+      const matchNameEng = person.nameEng && person.nameEng.toLowerCase().includes(q);
+      const matchNameRoman = person.nameRoman && person.nameRoman.toLowerCase().includes(q);
+      const matchNameRomanEng = person.nameRomanEng && person.nameRomanEng.toLowerCase().includes(q);
+      const matchTitle = person.title && person.title.toLowerCase().includes(q);
+
+      // 신화 대응 사전 별칭 검색
+      let matchAlias = false;
+      const syn = (this.currentDatasetKey === 'greek') ? MYTHOLOGY_SYNCRETISM_MAP[person.name] : null;
+      if (syn && syn.aliases) {
+        matchAlias = syn.aliases.some(a => a.toLowerCase().includes(q));
+      }
+
+      if (matchName || matchNameEng || matchNameRoman || matchNameRomanEng || matchTitle || matchAlias) {
         matches.push(person);
       }
     }
 
     matches.sort((a, b) => {
-      const aExact = a.name.toLowerCase() === q ? 0 : 1;
-      const bExact = b.name.toLowerCase() === q ? 0 : 1;
+      const aExact = (
+        a.name.toLowerCase() === q ||
+        (a.nameRoman && a.nameRoman.toLowerCase() === q) ||
+        (a.nameEng && a.nameEng.toLowerCase() === q) ||
+        (a.nameRomanEng && a.nameRomanEng.toLowerCase() === q)
+      ) ? 0 : 1;
+
+      const bExact = (
+        b.name.toLowerCase() === q ||
+        (b.nameRoman && b.nameRoman.toLowerCase() === q) ||
+        (b.nameEng && b.nameEng.toLowerCase() === q) ||
+        (b.nameRomanEng && b.nameRomanEng.toLowerCase() === q)
+      ) ? 0 : 1;
+
       return aExact - bExact;
     });
 
@@ -2589,15 +3283,31 @@ class DynamicGenealogyApp {
     if (matches.length === 0) {
       this.searchDropdown.innerHTML = `<div class="search-item"><span class="search-item-title">검색 결과가 없습니다.</span></div>`;
     } else {
-      this.searchDropdown.innerHTML = matches.slice(0, 8).map(person => `
-        <div class="search-item" data-id="${person.id}">
-          <div>
-            <div class="search-item-name">${this.escapeHtml(person.name)}</div>
-            <div class="search-item-title">${this.escapeHtml(person.title || person.nameEng || '')}</div>
+      this.searchDropdown.innerHTML = matches.slice(0, 8).map(person => {
+        const hasRoman = !!person.nameRoman;
+        let nameHtml = this.escapeHtml(person.name);
+        if (hasRoman) {
+          nameHtml += ` <span style="font-size:12px; font-weight:normal; color:#64748b;">(로마: ${this.escapeHtml(person.nameRoman)})</span>`;
+        }
+
+        let titleHtml = "";
+        if (hasRoman) {
+          titleHtml = `🇬🇷 ${this.escapeHtml(person.nameEng || person.name)} · 🏛️ ${this.escapeHtml(person.nameRomanEng || person.nameRoman)}`;
+          if (person.title) titleHtml += ` | ${this.escapeHtml(person.title)}`;
+        } else {
+          titleHtml = this.escapeHtml(person.title || person.nameEng || '');
+        }
+
+        return `
+          <div class="search-item" data-id="${person.id}">
+            <div>
+              <div class="search-item-name">${nameHtml}</div>
+              <div class="search-item-title">${titleHtml}</div>
+            </div>
+            <span style="font-size:12px; color:var(--accent);">선택 ➔</span>
           </div>
-          <span style="font-size:12px; color:var(--accent);">선택 ➔</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       this.searchDropdown.querySelectorAll('.search-item[data-id]').forEach(item => {
         item.addEventListener('click', () => {
@@ -2635,7 +3345,10 @@ class DynamicGenealogyApp {
 
       <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
         <strong style="font-size:14px;">현재 가계도 인물 관리</strong>
-        <button class="btn-modal-primary" id="btnAddNewPerson" style="font-size:13px; padding:6px 14px;">+ 새 인물 추가</button>
+        <div style="display:flex; gap:6px;">
+          ${this.currentDatasetKey === 'greek' ? `<button class="btn btn-secondary" id="btnSyncMythologyToDB" style="font-size:12px; padding:6px 12px; background:#eff6ff; color:#2563eb; border:1px solid #bfdbfe;" title="신화 사전의 로마명 및 전승을 Supabase DB에 일괄 저장합니다.">🏛️ 로마명/전승 DB 일괄 저장</button>` : ''}
+          <button class="btn-modal-primary" id="btnAddNewPerson" style="font-size:13px; padding:6px 14px;">+ 새 인물 추가</button>
+        </div>
       </div>
 
       <div style="margin-bottom:12px;">
@@ -2646,6 +3359,31 @@ class DynamicGenealogyApp {
       <div id="editorPersonListContainer" style="max-height:220px; overflow-y:auto; border:1px solid #e2e8f0; border-radius:12px; padding:8px; background:#ffffff;">
       </div>
     `;
+
+    const btnSyncMyth = document.getElementById('btnSyncMythologyToDB');
+    if (btnSyncMyth) {
+      btnSyncMyth.addEventListener('click', async () => {
+        if (!confirm("그리스-로마 신화의 로마명(마르스, 베누스 등)과 복수 부모 전승 데이터를 Supabase DB에 일괄 동기화(저장)하시겠습니까?")) return;
+
+        btnSyncMyth.disabled = true;
+        btnSyncMyth.innerText = "⏳ DB 저장 중...";
+
+        let updatedCount = 0;
+        for (const [id, person] of this.nodesMap.entries()) {
+          const hasRoman = person.nameRoman && person.nameRoman.length > 0;
+          const hasVariants = person.parentVariants && person.parentVariants.length > 0;
+          if (hasRoman || hasVariants) {
+            await this.savePersonToDB(id);
+            updatedCount++;
+          }
+        }
+
+        alert(`총 ${updatedCount}명의 인물 데이터(로마 신화 이름 및 부모 전승)가 Supabase DB에 성공적으로 동기화되었습니다!`);
+        btnSyncMyth.disabled = false;
+        btnSyncMyth.innerText = "🏛️ 로마명/전승 DB 일괄 저장";
+        this.openEditorModal();
+      });
+    }
 
     const editorDatasetSelect = document.getElementById('editorDatasetSelect');
     if (editorDatasetSelect) {
@@ -2697,7 +3435,10 @@ class DynamicGenealogyApp {
       const term = filterTerm.trim().toLowerCase();
 
       const filtered = allPersons.filter(p => 
-        !term || p.name.toLowerCase().includes(term) || (p.nameEng && p.nameEng.toLowerCase().includes(term))
+        !term || p.name.toLowerCase().includes(term) ||
+        (p.nameEng && p.nameEng.toLowerCase().includes(term)) ||
+        (p.nameRoman && p.nameRoman.toLowerCase().includes(term)) ||
+        (p.nameRomanEng && p.nameRomanEng.toLowerCase().includes(term))
       );
 
       if (countLabel) {
@@ -2713,6 +3454,7 @@ class DynamicGenealogyApp {
         <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 10px; border-bottom:1px solid #f1f5f9;">
           <div>
             <strong>${this.escapeHtml(p.name)}</strong>
+            ${p.nameRoman ? `<span style="font-size:12px; color:var(--accent);"> [🏛️ ${this.escapeHtml(p.nameRoman)}]</span>` : ''}
             ${p.nameEng ? `<span style="font-size:12px; color:var(--text-muted);"> (${this.escapeHtml(p.nameEng)})</span>` : ''}
           </div>
           <div>
@@ -2878,16 +3620,21 @@ class DynamicGenealogyApp {
 
       const parentIds = parseNamesToIds(document.getElementById('formParents').value);
       const spouseIds = parseNamesToIds(document.getElementById('formSpouses').value);
+      const existingPerson = this.nodesMap.get(id);
 
       const updated = {
         id,
         name,
         nameEng: document.getElementById('formNameEng').value.trim(),
+        nameRoman: existingPerson ? existingPerson.nameRoman : "",
+        nameRomanEng: existingPerson ? existingPerson.nameRomanEng : "",
         title: document.getElementById('formTitle').value.trim(),
         gender: selectedGender,
         info: document.getElementById('formInfo').value.trim(),
+        groupName: existingPerson ? existingPerson.groupName : null,
         parentIds,
-        spouseIds
+        spouseIds,
+        parentVariants: existingPerson ? existingPerson.parentVariants : []
       };
 
       this.nodesMap.set(id, updated);

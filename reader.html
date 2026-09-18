@@ -25,6 +25,9 @@
   <!-- EPUB Parsing & Rendering Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/epubjs/dist/epub.min.js"></script>
+
+  <!-- Markdown Parsing Library -->
+  <script src="js/lib/marked.min.js"></script>
 </head>
 
 <body class="theme-light">
@@ -41,8 +44,34 @@
     <div class="nav-menu" id="nav-menu"></div>
   </nav>
 
+  <!-- 도서 목록 화면 (첫 화면) -->
+  <div class="file-list-view" id="file-list-view">
+    <div class="file-list-container">
+      <div class="file-list-header">
+        <div class="file-list-title-wrap">
+          <h2 class="file-list-title">📖 저장된 도서 목록</h2>
+          <p class="file-list-desc">IndexedDB에 저장된 책을 선택해 독서를 이어가거나 새 도서를 추가하세요.</p>
+        </div>
+        <div class="file-list-header-actions">
+          <label class="btn-primary-action" style="cursor: pointer;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 4v16m8-8H4"></path>
+            </svg>
+            <span>새 파일 열기</span>
+            <input type="file" id="list-file-input" accept=".txt,.epub,.md,.markdown,text/plain,text/markdown,application/epub+zip" style="display: none;">
+          </label>
+        </div>
+      </div>
+
+      <!-- 도서 카드 목록 그리드 -->
+      <div class="file-cards-grid" id="file-cards-list">
+        <!-- JS로 동적 렌더링 -->
+      </div>
+    </div>
+  </div>
+
   <!-- 리더기 메인 앱 컨테이너 -->
-  <div class="reader-app">
+  <div class="reader-app" id="reader-app" style="display: none;">
 
     <!-- 상단 툴바 -->
     <header class="reader-topbar">
@@ -63,18 +92,13 @@
         </div>
 
         <div class="topbar-actions">
-          <!-- 파일 열기 버튼 -->
-          <div class="file-input-btn-wrap">
-            <button class="btn-reader" id="btn-open-file">
-              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path
-                  d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z">
-                </path>
-              </svg>
-              열기
-            </button>
-            <input type="file" id="book-file-input" accept=".txt,.epub,text/plain,application/epub+zip">
-          </div>
+          <!-- 도서 목록으로 돌아가는 버튼 -->
+          <button class="btn-reader" id="btn-open-file" title="도서 목록으로 이동">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 6h16M4 12h16M4 18h7"></path>
+            </svg>
+            목록
+          </button>
 
           <!-- 목차 토글 버튼 -->
           <button class="btn-reader" id="btn-toggle-toc" title="목차 보기" style="display:none;">
@@ -272,9 +296,9 @@
         <!-- 초기 빈 상태 (파일 안내) -->
         <div class="reader-empty-state" id="empty-state">
           <div class="empty-state-icon">📖</div>
-          <h2 class="empty-state-title">영문 텍스트 또는 EPUB 파일을 열어보세요</h2>
+          <h2 class="empty-state-title">영문 텍스트, 마크다운 또는 EPUB 파일을 열어보세요</h2>
           <p class="empty-state-desc">
-            <strong>.txt</strong> 파일이나 <strong>.epub</strong> 전자책을 불러와 편안하게 읽을 수 있습니다.
+            <strong>.txt</strong>, <strong>.md</strong> 파일이나 <strong>.epub</strong> 전자책을 불러와 편안하게 읽을 수 있습니다.
             궁금한 문장이나 단어를 마우스로 드래그하여 <strong>형광펜</strong>으로 표시하고,
             <strong>AI</strong>에게 앞뒤 문맥을 포함한 심층 해설(번역, 단어/숙어, 문법)을 물어보세요!
           </p>
@@ -285,8 +309,8 @@
                   d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z">
                 </path>
               </svg>
-              내 파일 열기 (.txt / .epub)
-              <input type="file" id="empty-file-input" accept=".txt,.epub,text/plain,application/epub+zip"
+              내 파일 열기 (.txt / .epub / .md)
+              <input type="file" id="empty-file-input" accept=".txt,.epub,.md,.markdown,text/plain,text/markdown,application/epub+zip"
                 style="display:none;">
             </label>
             <button class="btn-reader" id="btn-empty-sample">
@@ -553,6 +577,7 @@
           <span class="bookmark-preview-pct" id="bookmark-preview-pct">진행률 0%</span>
           <span class="bookmark-preview-chapter" id="bookmark-preview-chapter"></span>
         </div>
+        <div class="bookmark-preview-snippet" id="bookmark-preview-snippet" style="display: none;"></div>
       </div>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
         <button type="button" class="btn-reader" id="btn-cancel-bookmark">취소</button>
