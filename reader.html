@@ -250,23 +250,15 @@
         </div>
       </div>
 
-      <!-- 2단: 현재 열기 ~ 설정 버튼들 밑에 한 줄로 추가된 형광펜 및 도구 메뉴 (중앙 정렬) -->
+      <!-- 2단: 6개 색상 도트, AI분석, 복사, 수정 순서로 정렬 -->
       <div class="selection-menu-bar" id="selection-menu-bar">
-        <div class="menu-highlight-group">
-          <button type="button" class="btn-selection-menu highlight-main" id="btn-menu-highlight" title="선택한 텍스트에 형광펜 칠하기">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
-            </svg>
-            <span>형광펜</span>
-          </button>
-          <div class="menu-color-dots">
-            <button type="button" class="color-dot yellow active" data-color="yellow" title="노란색 형광펜"></button>
-            <button type="button" class="color-dot orange" data-color="orange" title="주황색 형광펜"></button>
-            <button type="button" class="color-dot green" data-color="green" title="연두색 형광펜"></button>
-            <button type="button" class="color-dot purple" data-color="purple" title="보라색 형광펜"></button>
-            <button type="button" class="color-dot blue" data-color="blue" title="하늘색 형광펜"></button>
-            <button type="button" class="color-dot pink" data-color="pink" title="분홍색 형광펜"></button>
-          </div>
+        <div class="menu-color-dots">
+          <button type="button" class="color-dot yellow active" data-color="yellow" title="노란색 형광펜"></button>
+          <button type="button" class="color-dot orange" data-color="orange" title="주황색 형광펜"></button>
+          <button type="button" class="color-dot green" data-color="green" title="연두색 형광펜"></button>
+          <button type="button" class="color-dot purple" data-color="purple" title="보라색 형광펜"></button>
+          <button type="button" class="color-dot blue" data-color="blue" title="하늘색 형광펜"></button>
+          <button type="button" class="color-dot pink" data-color="pink" title="분홍색 형광펜"></button>
         </div>
 
         <div class="menu-separator"></div>
@@ -285,6 +277,14 @@
             </path>
           </svg>
           <span>복사</span>
+        </button>
+
+        <button type="button" class="btn-selection-menu edit-main" id="btn-menu-edit-word" title="선택한 원본 텍스트 수정하기">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          <span>수정</span>
         </button>
       </div>
     </header>
@@ -582,6 +582,42 @@
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
         <button type="button" class="btn-reader" id="btn-cancel-bookmark">취소</button>
         <button type="button" class="btn-reader primary" id="btn-save-bookmark">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 원본 텍스트/단어 수정 모달 -->
+  <div class="meta-edit-modal" id="word-edit-modal">
+    <div class="meta-edit-card word-edit-card">
+      <div class="word-edit-header" style="display:flex; align-items:center; justify-content:space-between;">
+        <h3 id="word-edit-title" style="font-size: 18px; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <span>✏️</span> 원문 텍스트 수정
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-word-modal" aria-label="닫기" style="background:none; border:none; cursor:pointer; font-size:18px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px;">✕</button>
+      </div>
+      
+      <div class="meta-input-group">
+        <label for="word-edit-original">선택한 원본 텍스트</label>
+        <input type="text" id="word-edit-original" readonly class="word-edit-readonly" style="opacity:0.85; background:var(--reader-bg-secondary, rgba(0,0,0,0.04)); font-weight:500;">
+      </div>
+
+      <div class="meta-input-group">
+        <label for="word-edit-input">수정할 내용</label>
+        <input type="text" id="word-edit-input" placeholder="수정할 단어나 문장을 입력하세요" autocomplete="off">
+        <span class="setting-subtext" style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+          * 수정한 내용은 도서에 저장되며 형광펜, 책갈피, 목차가 안전하게 유지됩니다.
+        </span>
+      </div>
+
+      <!-- 문맥 미리보기 -->
+      <div class="word-edit-context-preview" id="word-edit-context-preview" style="display:none; font-size:13px; padding:10px 12px; border-radius:8px; background:var(--reader-bg-secondary, rgba(0,0,0,0.03)); border:1px solid var(--reader-border); color:var(--reader-text-secondary); line-height:1.5;">
+        <div style="font-size:11px; font-weight:600; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px;">문맥 미리보기</div>
+        <div id="word-edit-context-text"></div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
+        <button type="button" class="btn-reader" id="btn-cancel-word-edit">취소</button>
+        <button type="button" class="btn-reader primary" id="btn-save-word-edit">수정 완료</button>
       </div>
     </div>
   </div>

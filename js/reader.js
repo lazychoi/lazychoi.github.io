@@ -314,6 +314,7 @@ const elements = {
   // Toolbars & Menus
   selectionMenuBar: document.getElementById('selection-menu-bar'),
   btnMenuHighlight: document.getElementById('btn-menu-highlight'),
+  btnMenuEditWord: document.getElementById('btn-menu-edit-word') || document.getElementById('btn-menu-highlight'),
   btnMenuAi: document.getElementById('btn-menu-ai'),
   btnMenuCopy: document.getElementById('btn-menu-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
@@ -365,6 +366,17 @@ const elements = {
   btnCancelBookmark: document.getElementById('btn-cancel-bookmark'),
   btnSaveBookmark: document.getElementById('btn-save-bookmark'),
   bookmarkQuickChips: document.getElementById('bookmark-quick-chips'),
+
+  // Word/Text Edit Modal Elements
+  wordEditModal: document.getElementById('word-edit-modal'),
+  wordEditTitle: document.getElementById('word-edit-title'),
+  wordEditOriginal: document.getElementById('word-edit-original'),
+  wordEditInput: document.getElementById('word-edit-input'),
+  wordEditContextPreview: document.getElementById('word-edit-context-preview'),
+  wordEditContextText: document.getElementById('word-edit-context-text'),
+  btnCancelWordEdit: document.getElementById('btn-cancel-word-edit'),
+  btnSaveWordEdit: document.getElementById('btn-save-word-edit'),
+  btnCloseWordModal: document.getElementById('btn-close-word-modal'),
 
   // Settings
   themeBtns: document.querySelectorAll('.theme-btn[data-theme]'),
@@ -3851,6 +3863,17 @@ document.addEventListener('mouseup', (e) => {
   }
 });
 
+function getSelectionCharacterOffsetWithin(element, range) {
+  try {
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(element);
+    preCaretRange.setEnd(range.startContainer, range.startOffset);
+    return preCaretRange.toString().length;
+  } catch (e) {
+    return -1;
+  }
+}
+
 function handleTxtSelection() {
   const sel = window.getSelection();
   const selectedText = sel ? sel.toString().trim() : "";
@@ -3875,7 +3898,8 @@ function handleTxtSelection() {
   const pIdx = parseInt(pElem.dataset.pIdx, 10);
   const fullParagraph = pElem.textContent;
   const context = extractContextFromText(fullParagraph, selectedText);
-  const startOffset = fullParagraph.indexOf(selectedText);
+  const exactOffset = getSelectionCharacterOffsetWithin(pElem, range);
+  const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(selectedText);
 
   state.activeSelection = {
     text: selectedText,
@@ -5523,6 +5547,302 @@ function addBookmarkFromSelection() {
   openBookmarkModal(customData);
 }
 
+// ── Word/Text Edit Modal & Logic ──
+function openWordEditModal() {
+  if (!state.currentBook) {
+    showToast('열려있는 도서가 없습니다.');
+    return;
+  }
+
+  if (!state.activeSelection || !state.activeSelection.text) {
+    showToast('수정할 텍스트를 먼저 선택해주세요.');
+    return;
+  }
+
+  const selText = state.activeSelection.text;
+  if (elements.wordEditOriginal) {
+    elements.wordEditOriginal.value = selText;
+  }
+  if (elements.wordEditInput) {
+    elements.wordEditInput.value = selText;
+  }
+
+  // 문맥 미리보기 구성
+  if (elements.wordEditContextPreview && elements.wordEditContextText) {
+    const targetSentence = state.activeSelection.targetSentence || selText;
+    if (targetSentence && targetSentence !== selText) {
+      const escapedSentence = escapeHtml(targetSentence);
+      const escapedWord = escapeHtml(selText);
+      const highlightedHtml = escapedSentence.replace(
+        escapedWord,
+        `<span class="word-edit-highlight-word">${escapedWord}</span>`
+      );
+      elements.wordEditContextText.innerHTML = `“${highlightedHtml}”`;
+      elements.wordEditContextPreview.style.display = 'block';
+    } else {
+      elements.wordEditContextPreview.style.display = 'none';
+    }
+  }
+
+  closeAllToolbars();
+  if (elements.wordEditModal) {
+    elements.wordEditModal.classList.add('open');
+  }
+
+  setTimeout(() => {
+    if (elements.wordEditInput) {
+      elements.wordEditInput.focus();
+      elements.wordEditInput.select();
+    }
+  }, 60);
+}
+
+function closeWordEditModal() {
+  if (elements.wordEditModal) {
+    elements.wordEditModal.classList.remove('open');
+  }
+}
+
+async function executeWordEdit() {
+  if (!state.currentBook) {
+    showToast('열려있는 도서가 없습니다.');
+    closeWordEditModal();
+    return;
+  }
+
+  if (!state.activeSelection || !state.activeSelection.text) {
+    showToast('수정할 텍스트 선택이 해제되었습니다.');
+    closeWordEditModal();
+    return;
+  }
+
+  const oldText = state.activeSelection.text;
+  const newText = elements.wordEditInput ? elements.wordEditInput.value.trim() : '';
+
+  if (!newText) {
+    showToast('수정할 내용을 입력해주세요.');
+    if (elements.wordEditInput) elements.wordEditInput.focus();
+    return;
+  }
+
+  if (newText === oldText) {
+    showToast('변경 사항이 없습니다.');
+    closeWordEditModal();
+    return;
+  }
+
+  const bookType = state.currentBook.type;
+  const pIdx = state.activeSelection.pIdx;
+  const charOffset = state.activeSelection.offset ?? 0;
+  const delta = newText.length - oldText.length;
+
+  let editSuccess = false;
+
+  // 1. TXT 도서 원문 수정
+  if (bookType === 'txt') {
+    if (typeof state.currentBook.content === 'string') {
+      const rawContent = state.currentBook.content;
+      const pRegex = /\n\s*\n/g;
+      let lastEnd = 0;
+      let curIdx = 0;
+      let match;
+      let targetPStart = 0;
+      let targetPEnd = rawContent.length;
+
+      while ((match = pRegex.exec(rawContent)) !== null) {
+        if (curIdx === pIdx) {
+          targetPStart = lastEnd;
+          targetPEnd = match.index;
+          break;
+        }
+        lastEnd = match.index + match[0].length;
+        curIdx++;
+      }
+      if (curIdx === pIdx && targetPEnd === rawContent.length) {
+        targetPStart = lastEnd;
+      }
+
+      const pText = rawContent.substring(targetPStart, targetPEnd);
+      let replaceStartInP = -1;
+      if (charOffset >= 0 && charOffset + oldText.length <= pText.length && pText.substring(charOffset, charOffset + oldText.length) === oldText) {
+        replaceStartInP = charOffset;
+      } else {
+        replaceStartInP = pText.indexOf(oldText);
+      }
+
+      if (replaceStartInP !== -1) {
+        const newPText = pText.substring(0, replaceStartInP) + newText + pText.substring(replaceStartInP + oldText.length);
+        state.currentBook.content = rawContent.substring(0, targetPStart) + newPText + rawContent.substring(targetPEnd);
+        editSuccess = true;
+      } else {
+        const globalIdx = rawContent.indexOf(oldText);
+        if (globalIdx !== -1) {
+          state.currentBook.content = rawContent.substring(0, globalIdx) + newText + rawContent.substring(globalIdx + oldText.length);
+          editSuccess = true;
+        }
+      }
+    }
+  }
+  // 2. MD (Markdown) 도서 원문 수정
+  else if (bookType === 'md') {
+    if (typeof state.currentBook.content === 'string') {
+      const rawContent = state.currentBook.content;
+      let replaced = false;
+      if (state.activeSelection.targetSentence) {
+        const sentenceIdx = rawContent.indexOf(state.activeSelection.targetSentence);
+        if (sentenceIdx !== -1) {
+          const wordInSentenceIdx = rawContent.indexOf(oldText, sentenceIdx);
+          if (wordInSentenceIdx !== -1 && wordInSentenceIdx <= sentenceIdx + state.activeSelection.targetSentence.length) {
+            state.currentBook.content = rawContent.substring(0, wordInSentenceIdx) + newText + rawContent.substring(wordInSentenceIdx + oldText.length);
+            replaced = true;
+            editSuccess = true;
+          }
+        }
+      }
+      if (!replaced) {
+        const wordIdx = rawContent.indexOf(oldText);
+        if (wordIdx !== -1) {
+          state.currentBook.content = rawContent.substring(0, wordIdx) + newText + rawContent.substring(wordIdx + oldText.length);
+          editSuccess = true;
+        }
+      }
+    }
+  }
+  // 3. EPUB 도서 수정
+  else if (bookType === 'epub') {
+    try {
+      if (state.activeSelection.range && state.activeSelection.contents) {
+        const range = state.activeSelection.range;
+        const doc = state.activeSelection.contents.document;
+        range.deleteContents();
+        range.insertNode(doc.createTextNode(newText));
+        editSuccess = true;
+      }
+    } catch (e) {
+      console.warn('EPUB DOM direct text replacement warning:', e);
+    }
+  }
+
+  if (!editSuccess) {
+    showToast('본문에서 단어 위치를 찾지 못했습니다.');
+    closeWordEditModal();
+    return;
+  }
+
+  // ── 형광펜(Highlights) 연동 및 보정 ──
+  if (Array.isArray(state.highlights) && state.highlights.length > 0) {
+    let hlChanged = false;
+    state.highlights.forEach(hl => {
+      // Case A: 수정된 단어 자체에 형광펜이 칠해져 있었던 경우
+      const isExactMatch = (pIdx !== undefined && hl.pIdx === pIdx && hl.text === oldText) ||
+                           (hl.text === oldText && hl.targetSentence === state.activeSelection.targetSentence);
+      const isOffsetOverlap = (pIdx !== undefined && hl.pIdx === pIdx && typeof hl.offset === 'number' &&
+                               hl.offset <= charOffset && hl.offset + hl.text.length >= charOffset + oldText.length);
+
+      if (isExactMatch || isOffsetOverlap) {
+        hl.text = newText;
+        if (hl.targetSentence) {
+          hl.targetSentence = hl.targetSentence.replace(oldText, newText);
+        }
+        if (hl.prevSentence) {
+          hl.prevSentence = hl.prevSentence.replace(oldText, newText);
+        }
+        if (hl.nextSentence) {
+          hl.nextSentence = hl.nextSentence.replace(oldText, newText);
+        }
+        autoFetchVocabForHighlight(hl);
+        hlChanged = true;
+      }
+      // Case B: 같은 문단 내에서 수정 단어 '뒤'에 있는 형광펜들의 오프셋 보정
+      else if (pIdx !== undefined && hl.pIdx === pIdx && typeof hl.offset === 'number' && hl.offset > charOffset) {
+        hl.offset += delta;
+        if (hl.targetSentence && hl.targetSentence.includes(oldText)) {
+          hl.targetSentence = hl.targetSentence.replace(oldText, newText);
+        }
+        hlChanged = true;
+      }
+    });
+
+    if (hlChanged) {
+      sortHighlights();
+      saveHighlights();
+      updateHighlightBadge();
+      if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+        renderHighlightDrawer();
+      }
+    }
+  }
+
+  // ── 책갈피(Bookmarks) 연동 및 보정 ──
+  if (Array.isArray(state.bookmarks) && state.bookmarks.length > 0) {
+    let bmChanged = false;
+    state.bookmarks.forEach(bm => {
+      if (pIdx !== undefined && bm.pIdx === pIdx) {
+        if (bm.sentence && bm.sentence.includes(oldText)) {
+          bm.sentence = bm.sentence.replace(oldText, newText);
+          bmChanged = true;
+        }
+        if (bm.title && bm.title.includes(oldText)) {
+          bm.title = bm.title.replace(oldText, newText);
+          bmChanged = true;
+        }
+      }
+    });
+
+    if (bmChanged) {
+      saveBookmarks();
+      if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+        renderBookmarkDrawer();
+      }
+    }
+  }
+
+  // ── 도서 내용 IndexedDB 영구 저장 ──
+  if (bookType === 'txt' || bookType === 'md') {
+    saveActiveBookToStorage({
+      type: bookType,
+      title: state.currentBook.title,
+      author: state.currentBook.author,
+      content: state.currentBook.content,
+      bookId: state.currentBook.id
+    });
+  }
+
+  // ── 뷰어 리렌더링 및 목차 갱신 ──
+  if (bookType === 'txt') {
+    renderTxtContent();
+  } else if (bookType === 'md') {
+    renderMdContent();
+    if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+      renderTocDrawer();
+    }
+  }
+
+  // ── 수정 위치 시각적 플래시 효과 ──
+  if (pIdx !== undefined && elements.txtContent) {
+    const pElem = elements.txtContent.querySelector(`[data-p-idx="${pIdx}"]`);
+    if (pElem) {
+      pElem.classList.remove('word-edit-flash');
+      void pElem.offsetWidth;
+      pElem.classList.add('word-edit-flash');
+      setTimeout(() => pElem.classList.remove('word-edit-flash'), 2200);
+    }
+  }
+
+  // ── 텍스트 선택 해제 및 정리 ──
+  try {
+    if (state.activeSelection.contents) {
+      state.activeSelection.contents.window.getSelection().removeAllRanges();
+    } else {
+      window.getSelection().removeAllRanges();
+    }
+  } catch (e) {}
+  state.activeSelection = null;
+
+  closeWordEditModal();
+  showToast(`✏️ '${oldText}' → '${newText}'(으)로 수정되었습니다.`);
+}
+
 // ── Metadata UI & Editing ──
 function updateMetadataUI() {
   if (!state.currentBook) {
@@ -6728,15 +7048,55 @@ function setupEventListeners() {
     });
   }
 
-  // 메인 형광펜 버튼 클릭
-  if (elements.btnMenuHighlight) {
-    elements.btnMenuHighlight.addEventListener('click', (e) => {
+  // 원문 텍스트 수정 버튼 클릭
+  const btnEditWord = elements.btnMenuEditWord || elements.btnMenuHighlight;
+  if (btnEditWord) {
+    btnEditWord.addEventListener('click', (e) => {
       e.stopPropagation();
       if (!state.activeSelection || !state.activeSelection.text) {
-        showToast('먼저 텍스트를 선택해주세요.');
+        showToast('먼저 수정할 텍스트를 선택해주세요.');
         return;
       }
-      applyHighlight(state.activeColor || 'yellow');
+      openWordEditModal();
+    });
+  }
+
+  // 단어 수정 모달 이벤트 바인딩
+  if (elements.btnCancelWordEdit) {
+    elements.btnCancelWordEdit.addEventListener('click', () => {
+      closeWordEditModal();
+    });
+  }
+
+  if (elements.btnCloseWordModal) {
+    elements.btnCloseWordModal.addEventListener('click', () => {
+      closeWordEditModal();
+    });
+  }
+
+  if (elements.btnSaveWordEdit) {
+    elements.btnSaveWordEdit.addEventListener('click', () => {
+      executeWordEdit();
+    });
+  }
+
+  if (elements.wordEditInput) {
+    elements.wordEditInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        executeWordEdit();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeWordEditModal();
+      }
+    });
+  }
+
+  if (elements.wordEditModal) {
+    elements.wordEditModal.addEventListener('click', (e) => {
+      if (e.target === elements.wordEditModal) {
+        closeWordEditModal();
+      }
     });
   }
 
@@ -7098,6 +7458,18 @@ function setupEventListeners() {
 
   // Keyboard Shortcuts (Quiz & Vocab Modal)
   document.addEventListener('keydown', (e) => {
+    // Word Edit Modal shortcuts
+    if (elements.wordEditModal && elements.wordEditModal.classList.contains('open')) {
+      if (e.key === 'Escape') {
+        closeWordEditModal();
+        return;
+      }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        executeWordEdit();
+        return;
+      }
+    }
+
     // Vocab Edit Modal shortcuts
     if (elements.vocabEditModalBackdrop && elements.vocabEditModalBackdrop.classList.contains('open')) {
       if (e.key === 'Escape') {

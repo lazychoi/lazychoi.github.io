@@ -201,6 +201,31 @@ body.theme-dark .btn-selection-menu:hover {
   border-color: rgba(37, 99, 235, 0.25);
 }
 
+.btn-selection-menu.edit-main {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.35);
+  font-weight: 600;
+}
+
+body.theme-dark .btn-selection-menu.edit-main {
+  background: rgba(16, 185, 129, 0.2);
+  color: #34d399;
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.btn-selection-menu.edit-main:hover {
+  background: rgba(16, 185, 129, 0.18);
+  color: #047857;
+  border-color: #10b981;
+}
+
+body.theme-dark .btn-selection-menu.edit-main:hover {
+  background: rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  border-color: #34d399;
+}
+
 .btn-selection-menu.ai-btn {
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(124, 58, 237, 0.08));
   color: #2563eb;
@@ -3230,6 +3255,53 @@ body.theme-dark .bookmark-preview-pct {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ── 원문 텍스트 수정 모달 및 플래시 애니메이션 ── */
+.word-edit-card {
+  max-width: 480px;
+}
+
+.word-edit-readonly {
+  user-select: all;
+  cursor: default;
+}
+
+.word-edit-context-preview {
+  margin-top: 4px;
+}
+
+.word-edit-highlight-word {
+  background: rgba(16, 185, 129, 0.25);
+  color: #047857;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+body.theme-dark .word-edit-highlight-word {
+  background: rgba(52, 211, 153, 0.3);
+  color: #a7f3d0;
+}
+
+@keyframes wordEditFlash {
+  0% {
+    background-color: rgba(16, 185, 129, 0.45);
+    outline: 2px solid rgba(16, 185, 129, 0.8);
+  }
+  50% {
+    background-color: rgba(16, 185, 129, 0.25);
+    outline: 2px solid rgba(16, 185, 129, 0.4);
+  }
+  100% {
+    background-color: transparent;
+    outline: none;
+  }
+}
+
+.word-edit-flash {
+  animation: wordEditFlash 1.8s ease-out;
+  border-radius: 4px;
 }
 
 /* ── 단어장 Q&A 및 메모 편집 모달 ── */
