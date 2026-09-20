@@ -1541,6 +1541,23 @@
     "parent_variants": []
   },
   {
+    "id": "greek_1789869247654_163",
+    "dataset_id": "greek",
+    "name": "아이기스, 이지스",
+    "name_eng": "Aigis, Aegis",
+    "title": "제우스와 아테나의 방패.",
+    "gender": "genderless",
+    "info": "헤파이스토스 제작. 중앙에 메두사의 머리가 있고 가장자리는 뱀 머리가 있다.",
+    "parent_ids": [],
+    "spouse_ids": [],
+    "created_at": "2026-09-20T01:54:08.659733+00:00",
+    "updated_at": "2026-09-20T01:54:22.266+00:00",
+    "group_name": null,
+    "name_roman": null,
+    "name_roman_eng": null,
+    "parent_variants": []
+  },
+  {
     "id": "greek_csv_1787124546896_1_498",
     "dataset_id": "greek",
     "name": "데메테르",
