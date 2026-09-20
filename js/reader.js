@@ -1531,6 +1531,138 @@ async function exportBookAsMarkdown() {
   }
 }
 
+// ── Text Search & Match Normalization Helpers ──
+function escapeRegex(s) {
+  return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function buildFlexibleRegex(searchStr) {
+  if (!searchStr) return null;
+  const trimmed = String(searchStr).trim();
+  if (!trimmed) return null;
+
+  const escaped = escapeRegex(trimmed);
+  let pattern = escaped.replace(/\\\s+/g, '\\s+').replace(/\s+/g, '\\s+');
+  pattern = pattern.replace(/['’‘`]/g, "['’‘`\\u2018\\u2019\\u201A\\u201B\\u02BC]");
+  pattern = pattern.replace(/["“”]/g, '["“”\\u201C\\u201D\\u201E\\u201F]');
+  pattern = pattern.replace(/[-–—]/g, '[-–—\\u2013\\u2014\\u2212]');
+
+  try {
+    return new RegExp(pattern, 'gi');
+  } catch (e) {
+    return null;
+  }
+}
+
+function buildWholeWordRegex(term) {
+  if (!term) return null;
+  const trimmed = String(term).trim();
+  if (!trimmed) return null;
+
+  const escaped = escapeRegex(trimmed);
+  let pattern = escaped.replace(/\\\s+/g, '\\s+').replace(/\s+/g, '\\s+');
+  pattern = pattern.replace(/['’‘`]/g, "['’‘`\\u2018\\u2019\\u201A\\u201B\\u02BC]");
+  pattern = pattern.replace(/["“”]/g, '["“”\\u201C\\u201D\\u201E\\u201F]');
+  pattern = pattern.replace(/[-–—]/g, '[-–—\\u2013\\u2014\\u2212]');
+
+  const hasWordStart = /^[a-zA-Z0-9가-힣]/.test(trimmed);
+  const hasEnglishEnd = /[a-zA-Z0-9]$/.test(trimmed);
+
+  const startBoundary = hasWordStart ? '(?<![a-zA-Z0-9가-힣])' : '';
+  const endBoundary = hasEnglishEnd ? '(?![a-zA-Z0-9])' : '';
+
+  try {
+    return new RegExp(startBoundary + pattern + endBoundary, 'iu');
+  } catch (e) {
+    return null;
+  }
+}
+
+function buildWholeWordHtmlPattern(term) {
+  if (!term) return '';
+  const trimmed = String(term).trim();
+  if (!trimmed) return '';
+
+  const esc = escapeRegex(escapeHtml(trimmed));
+  let p = esc.replace(/\\\s+/g, '\\s+').replace(/\s+/g, '\\s+');
+  p = p.replace(/(?:&#039;|['’‘`])/g, "(?:&#039;|&apos;|['’‘`\\u2018\\u2019\\u201A\\u201B\\u02BC])");
+  p = p.replace(/(?:&quot;|["“”])/g, '(?:&quot;|["“”\\u201C\\u201D\\u201E\\u201F])');
+  p = p.replace(/[-–—]/g, '[-–—\\u2013\\u2014\\u2212]');
+
+  const hasWordStart = /^[a-zA-Z0-9가-힣]/.test(trimmed);
+  const hasEnglishEnd = /[a-zA-Z0-9]$/.test(trimmed);
+
+  const startB = hasWordStart ? '(?<![a-zA-Z0-9가-힣])' : '';
+  const endB = hasEnglishEnd ? '(?![a-zA-Z0-9])' : '';
+
+  return `${startB}${p}${endB}`;
+}
+
+function findSubstringRangeInText(text, hl) {
+  if (!text || !hl || !hl.text) return null;
+  const targetText = String(hl.text).trim();
+  if (!targetText) return null;
+
+  const textLen = targetText.length;
+
+  // 1. Exact match at given offset
+  if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= text.length) {
+    if (text.substring(hl.offset, hl.offset + textLen) === targetText) {
+      return { start: hl.offset, end: hl.offset + textLen };
+    }
+  }
+
+  // 2. Search inside targetSentence if present
+  if (hl.targetSentence) {
+    const targetSentence = String(hl.targetSentence).trim();
+    const sentIdx = text.indexOf(targetSentence);
+    if (sentIdx !== -1) {
+      const subIdx = text.indexOf(targetText, sentIdx);
+      if (subIdx !== -1 && subIdx <= sentIdx + targetSentence.length) {
+        return { start: subIdx, end: subIdx + textLen };
+      }
+    }
+  }
+
+  // 3. Direct substring search
+  const directIdx = text.indexOf(targetText);
+  if (directIdx !== -1) {
+    return { start: directIdx, end: directIdx + textLen };
+  }
+
+  // 4. Case-insensitive search
+  const lowerIdx = text.toLowerCase().indexOf(targetText.toLowerCase());
+  if (lowerIdx !== -1) {
+    return { start: lowerIdx, end: lowerIdx + textLen };
+  }
+
+  // 5. Flexible regex search (normalizing whitespace, newlines, and quote variants)
+  const flexRegex = buildFlexibleRegex(targetText);
+  if (flexRegex) {
+    let match;
+    let bestMatch = null;
+    let minDistance = Infinity;
+    const targetOffset = typeof hl.offset === 'number' ? hl.offset : 0;
+
+    while ((match = flexRegex.exec(text)) !== null) {
+      const dist = Math.abs(match.index - targetOffset);
+      if (dist < minDistance) {
+        minDistance = dist;
+        bestMatch = { start: match.index, end: match.index + match[0].length };
+      }
+      if (match.index === flexRegex.lastIndex) {
+        flexRegex.lastIndex++;
+      }
+    }
+
+    if (bestMatch) {
+      return bestMatch;
+    }
+  }
+
+  return null;
+}
+
 function exportTxtAsMarkdown() {
   const sortedHls = [...state.highlights].sort(compareHighlights);
   const hlFootnoteMap = new Map();
@@ -1545,7 +1677,7 @@ function exportTxtAsMarkdown() {
     const trimmed = pText.trim();
     if (!trimmed) return;
 
-    const pHighlights = sortedHls.filter(h => h.pIdx === pIdx && h.text);
+    const pHighlights = sortedHls.filter(h => (h.pIdx === pIdx || (h.pIdx === undefined && trimmed.includes(h.text))) && h.text);
     if (pHighlights.length === 0) {
       bodyMd += `${formatTxtParagraphHeading(trimmed)}\n\n`;
       return;
@@ -1553,31 +1685,12 @@ function exportTxtAsMarkdown() {
 
     const validatedHls = [];
     for (const hl of pHighlights) {
-      let start = -1;
-      const textLen = hl.text.length;
-      if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= trimmed.length) {
-        if (trimmed.substring(hl.offset, hl.offset + textLen) === hl.text) {
-          start = hl.offset;
-        }
-      }
-      if (start === -1 && hl.targetSentence) {
-        const targetSearch = trimmed.indexOf(hl.targetSentence);
-        if (targetSearch !== -1) {
-          const subIdx = trimmed.indexOf(hl.text, targetSearch);
-          if (subIdx !== -1 && subIdx <= targetSearch + hl.targetSentence.length) {
-            start = subIdx;
-          }
-        }
-      }
-      if (start === -1) {
-        start = trimmed.indexOf(hl.text);
-      }
-
-      if (start !== -1) {
+      const range = findSubstringRangeInText(trimmed, hl);
+      if (range) {
         validatedHls.push({
           ...hl,
-          _start: start,
-          _end: start + textLen,
+          _start: range.start,
+          _end: range.end,
           _fnNum: hlFootnoteMap.get(hl.id)
         });
       }
@@ -1700,6 +1813,31 @@ function exportMdAsMarkdown() {
           }
         }
         candidates.push({ start, end, prefix: m[0], score });
+      }
+    }
+
+    // Fallback: search with flexible markdown formatting tokens (*, _, etc.) in case target text has internal emphasis
+    if (candidates.length === 0) {
+      const words = String(hl.text || '').trim().split(/\s+/).map(w => escapeRegex(w)).filter(Boolean);
+      if (words.length > 0) {
+        const mdPattern = words.map(w => '[*_`~]*' + w + '[*_`~]*').join('\\s+');
+        try {
+          const mdRe = new RegExp(`(?:${mdPattern})(?!\\s*\\[\\^)`, 'g');
+          while ((m = mdRe.exec(cleanBody)) !== null) {
+            const start = m.index;
+            const end = m.index + m[0].length;
+            if (!isOccupied(start, end)) {
+              let score = 10;
+              if (hl.targetSentence) {
+                const sentSnippet = cleanBody.substring(Math.max(0, start - 150), Math.min(cleanBody.length, end + 150));
+                if (sentSnippet.includes(hl.targetSentence) || (buildFlexibleRegex(hl.targetSentence) && buildFlexibleRegex(hl.targetSentence).test(sentSnippet))) {
+                  score += 1000;
+                }
+              }
+              candidates.push({ start, end, prefix: m[0], score });
+            }
+          }
+        } catch (e) {}
       }
     }
 
@@ -2394,7 +2532,7 @@ function escapeHtml(str) {
 }
 
 function applyHighlightsToParagraph(paragraphText, pIdx) {
-  const pHighlights = state.highlights.filter(h => h.pIdx === pIdx && h.text);
+  const pHighlights = state.highlights.filter(h => (h.pIdx === pIdx || (h.pIdx === undefined && paragraphText.includes(h.text))) && h.text);
   if (pHighlights.length === 0) {
     return escapeHtml(paragraphText);
   }
@@ -2402,35 +2540,16 @@ function applyHighlightsToParagraph(paragraphText, pIdx) {
   // Find precise start & end in raw paragraphText for each highlight
   const validatedHls = [];
   for (const hl of pHighlights) {
-    let start = -1;
-    const textLen = hl.text.length;
-    if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= paragraphText.length) {
-      if (paragraphText.substring(hl.offset, hl.offset + textLen) === hl.text) {
-        start = hl.offset;
-      }
-    }
-    // Fallback: search closest or first occurrence if offset not matched
-    if (start === -1) {
-      if (hl.targetSentence) {
-        const targetSearch = paragraphText.indexOf(hl.targetSentence);
-        if (targetSearch !== -1) {
-          const subIdx = paragraphText.indexOf(hl.text, targetSearch);
-          if (subIdx !== -1 && subIdx <= targetSearch + hl.targetSentence.length) {
-            start = subIdx;
-          }
-        }
-      }
-    }
-    if (start === -1) {
-      start = paragraphText.indexOf(hl.text);
-    }
-
-    if (start !== -1) {
+    const range = findSubstringRangeInText(paragraphText, hl);
+    if (range) {
       validatedHls.push({
         ...hl,
-        _start: start,
-        _end: start + textLen
+        _start: range.start,
+        _end: range.end
       });
+      if (hl.pIdx === undefined || hl.pIdx === null) {
+        hl.pIdx = pIdx;
+      }
     }
   }
 
@@ -2736,47 +2855,166 @@ function extractMarkdownToc() {
   }
 }
 
+function getTextNodesIn(el) {
+  const textNodes = [];
+  const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!node.nodeValue) return NodeFilter.FILTER_REJECT;
+      if (node.parentElement && node.parentElement.closest('script, style')) {
+        return NodeFilter.FILTER_REJECT;
+      }
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  let n;
+  while ((n = walker.nextNode())) {
+    textNodes.push(n);
+  }
+  return textNodes;
+}
+
+function wrapTextNodeRange(node, from, to, hl) {
+  let target = node;
+  if (from > 0) {
+    target = node.splitText(from);
+  }
+  const len = to - from;
+  if (len < target.nodeValue.length) {
+    target.splitText(len);
+  }
+  const mark = document.createElement('mark');
+  mark.className = `reader-highlight hl-${hl.color || 'yellow'}`;
+  mark.dataset.hlId = hl.id;
+  target.parentNode.replaceChild(mark, target);
+  mark.appendChild(target);
+  return mark;
+}
+
+function applyHighlightRangeInBlock(blockElem, start, end, hl) {
+  const textNodes = getTextNodesIn(blockElem);
+  let currentOffset = 0;
+  const nodesToWrap = [];
+
+  for (const node of textNodes) {
+    const nodeLen = node.nodeValue.length;
+    const nodeStart = currentOffset;
+    const nodeEnd = nodeStart + nodeLen;
+    currentOffset = nodeEnd;
+
+    // Check overlap with [start, end]
+    if (nodeEnd > start && nodeStart < end) {
+      // If this node is already wrapped in a reader-highlight, do not re-wrap
+      if (node.parentElement && node.parentElement.closest('.reader-highlight')) {
+        continue;
+      }
+      const from = Math.max(0, start - nodeStart);
+      const to = Math.min(nodeLen, end - nodeStart);
+      if (from < to) {
+        nodesToWrap.push({ node, from, to });
+      }
+    }
+  }
+
+  // Wrap in reverse order so splitting doesn't invalidate earlier node references
+  for (let i = nodesToWrap.length - 1; i >= 0; i--) {
+    const { node, from, to } = nodesToWrap[i];
+    wrapTextNodeRange(node, from, to, hl);
+  }
+}
+
 function applyDomHighlights(rootElem, highlights) {
   if (!highlights || highlights.length === 0) return;
+
+  const candidateBlocks = Array.from(rootElem.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, tr'));
+  const blockMap = new Map(); // blockElem -> [{ hl, range }]
 
   highlights.forEach(hl => {
     if (!hl.text) return;
     if (rootElem.querySelector(`[data-hl-id="${hl.id}"]`)) return;
 
-    const walker = document.createTreeWalker(rootElem, NodeFilter.SHOW_TEXT, null, false);
-    let node;
-    const matchedNodes = [];
+    let targetBlock = null;
+    let range = null;
 
-    while ((node = walker.nextNode())) {
-      if (node.parentElement && (node.parentElement.closest('.reader-highlight') || node.parentElement.closest('script, style, code, pre'))) {
-        continue;
-      }
-      if (node.nodeValue && node.nodeValue.includes(hl.text)) {
-        if (hl.targetSentence) {
-          const parentP = node.parentElement ? node.parentElement.textContent : '';
-          if (!parentP.includes(hl.targetSentence)) {
-            continue;
-          }
+    // 1. Try finding by hl.pIdx first
+    if (typeof hl.pIdx === 'number' && !isNaN(hl.pIdx)) {
+      const pBlock = rootElem.querySelector(`[data-p-idx="${hl.pIdx}"]`);
+      if (pBlock) {
+        range = findSubstringRangeInText(pBlock.textContent, hl);
+        if (range) {
+          targetBlock = pBlock;
         }
-        matchedNodes.push(node);
-        break;
       }
     }
 
-    matchedNodes.forEach(textNode => {
-      const idx = textNode.nodeValue.indexOf(hl.text);
-      if (idx !== -1) {
-        const afterNode = textNode.splitText(idx);
-        afterNode.splitText(hl.text.length);
-
-        const mark = document.createElement('mark');
-        mark.className = `reader-highlight hl-${hl.color || 'yellow'}`;
-        mark.dataset.hlId = hl.id;
-        mark.textContent = afterNode.nodeValue;
-
-        afterNode.parentNode.replaceChild(mark, afterNode);
+    // 2. If not found by pIdx, search across all candidate blocks
+    if (!targetBlock) {
+      if (hl.targetSentence) {
+        const targetSentence = String(hl.targetSentence).trim();
+        const flexSentRegex = buildFlexibleRegex(targetSentence);
+        for (const block of candidateBlocks) {
+          if (block.textContent.includes(targetSentence) || (flexSentRegex && flexSentRegex.test(block.textContent))) {
+            const r = findSubstringRangeInText(block.textContent, hl);
+            if (r) {
+              targetBlock = block;
+              range = r;
+              break;
+            }
+          }
+        }
       }
-    });
+
+      if (!targetBlock) {
+        for (const block of candidateBlocks) {
+          const r = findSubstringRangeInText(block.textContent, hl);
+          if (r) {
+            targetBlock = block;
+            range = r;
+            break;
+          }
+        }
+      }
+
+      if (targetBlock && targetBlock.dataset && targetBlock.dataset.pIdx !== undefined) {
+        hl.pIdx = parseInt(targetBlock.dataset.pIdx, 10);
+      }
+    }
+
+    // 3. Fallback to rootElem if no block matched
+    if (!targetBlock) {
+      const r = findSubstringRangeInText(rootElem.textContent, hl);
+      if (r) {
+        targetBlock = rootElem;
+        range = r;
+      }
+    }
+
+    if (targetBlock && range) {
+      if (!blockMap.has(targetBlock)) {
+        blockMap.set(targetBlock, []);
+      }
+      blockMap.get(targetBlock).push({ hl, range });
+    }
+  });
+
+  // Apply highlights in each block
+  blockMap.forEach((items, block) => {
+    // Sort descending by start position to safely split from end to beginning
+    items.sort((a, b) => b.range.start - a.range.start);
+
+    // Filter out overlapping ranges
+    const nonOverlapping = [];
+    let lastStart = Infinity;
+    for (const item of items) {
+      if (item.range.end <= lastStart) {
+        nonOverlapping.push(item);
+        lastStart = item.range.start;
+      }
+    }
+
+    // Apply each highlight in reverse document order within the block
+    for (const item of nonOverlapping) {
+      applyHighlightRangeInBlock(block, item.range.start, item.range.end, item.hl);
+    }
   });
 }
 
@@ -4846,9 +5084,9 @@ function renderHighlightDrawer() {
     return;
   }
 
-  // Filter highlights
+  // Filter highlights with Match Whole Word
   const rawQuery = (state.highlightSearchQuery || '').trim();
-  const terms = rawQuery ? rawQuery.toLowerCase().split(/\s+/).filter(Boolean) : [];
+  const terms = rawQuery ? rawQuery.split(/\s+/).filter(Boolean) : [];
 
   // Synchronize input value if different
   if (elements.inputHighlightSearch && elements.inputHighlightSearch.value !== rawQuery) {
@@ -4857,19 +5095,20 @@ function renderHighlightDrawer() {
 
   let displayedHighlights = state.highlights;
   if (terms.length > 0) {
+    const termRegexes = terms.map(t => buildWholeWordRegex(t)).filter(Boolean);
     displayedHighlights = state.highlights.filter(hl => {
-      const text = (hl.text || '').toLowerCase();
-      const meaning = (hl.targetMeaning || '').toLowerCase();
-      const trans = (hl.sentenceTranslation || '').toLowerCase();
-      const sentence = (hl.targetSentence || '').toLowerCase();
-      const note = (hl.note || '').toLowerCase();
+      const text = hl.text || '';
+      const meaning = hl.targetMeaning || '';
+      const trans = hl.sentenceTranslation || '';
+      const sentence = hl.targetSentence || '';
+      const note = hl.note || '';
 
-      return terms.every(term => 
-        text.includes(term) ||
-        meaning.includes(term) ||
-        trans.includes(term) ||
-        sentence.includes(term) ||
-        note.includes(term)
+      return termRegexes.every(re => 
+        re.test(text) ||
+        re.test(sentence) ||
+        re.test(meaning) ||
+        re.test(trans) ||
+        re.test(note)
       );
     });
   }
@@ -5891,9 +6130,16 @@ function highlightSearchTerm(text, terms = []) {
   if (!text && text !== 0) return '';
   const escaped = escapeHtml(text);
   if (!terms || terms.length === 0) return escaped;
-  const pattern = terms.map(t => escapeRegex(escapeHtml(t))).filter(Boolean).join('|');
-  if (!pattern) return escaped;
-  return escaped.replace(new RegExp(`(${pattern})`, 'gi'), '<mark class="search-match-highlight">$1</mark>');
+
+  const patterns = terms.map(t => buildWholeWordHtmlPattern(t)).filter(Boolean);
+  if (patterns.length === 0) return escaped;
+
+  try {
+    const combinedRegex = new RegExp(`(${patterns.join('|')})`, 'giu');
+    return escaped.replace(combinedRegex, '<mark class="search-match-highlight">$1</mark>');
+  } catch (e) {
+    return escaped;
+  }
 }
 
 function formatQuestionHtml(sentence, target, searchTerms = []) {
