@@ -1977,6 +1977,8 @@ class DynamicGenealogyApp {
     ];
 
     if (titleEl) titleEl.textContent = '정보 수정';
+    if (this.btnQuickEditDelete) this.btnQuickEditDelete.style.display = isLoggedIn ? 'inline-block' : 'none';
+    if (this.btnQuickEditSubmit) this.btnQuickEditSubmit.textContent = '💾 저장하기';
 
     if (isLoggedIn) {
       if (subtitleEl) subtitleEl.textContent = '이름, 영문명, 로마명, 관계, 칭호, 성별, 설명을 수정하여 DB에 반영합니다.';
@@ -1994,6 +1996,70 @@ class DynamicGenealogyApp {
 
     setTimeout(() => {
       if (isLoggedIn && this.quickEditName) this.quickEditName.focus();
+    }, 100);
+  }
+
+  // 🌟 신규 인물 추가 전용 모달 열기 (검색 결과 없을 때 연동) 🌟
+  openCreatePersonModal(initialName = '') {
+    this.updateQuickAddDatalist();
+
+    if (this.quickEditId) this.quickEditId.value = '';
+    if (this.quickEditName) this.quickEditName.value = initialName;
+    if (this.quickEditNameEng) this.quickEditNameEng.value = '';
+
+    // 그리스 로마 신화 가계도일 경우 신명 사전 자동 매핑
+    const syn = (this.currentDatasetKey === 'greek') ? (MYTHOLOGY_SYNCRETISM_MAP[initialName] || {}) : {};
+    if (this.quickEditNameRoman) this.quickEditNameRoman.value = syn.roman || '';
+    if (this.quickEditNameRomanEng) this.quickEditNameRomanEng.value = syn.romanEng || '';
+
+    if (this.quickEditParents) this.quickEditParents.value = '';
+    if (this.quickEditSpouses) this.quickEditSpouses.value = '';
+    if (this.quickEditTitle) this.quickEditTitle.value = '';
+    if (this.quickEditGroup) this.quickEditGroup.value = '';
+    if (this.quickEditGender) this.quickEditGender.value = 'male';
+    if (this.quickEditInfo) this.quickEditInfo.value = '';
+
+    // 복수 부모 전승 접기 및 초기화
+    if (this.quickEditVariantsGroup && this.quickEditVariantsList) {
+      this.quickEditVariantsGroup.style.display = 'none';
+      if (this.btnToggleVariants) this.btnToggleVariants.textContent = '📜 복수 부모 전승(이설) 관리 ▾';
+      this.quickEditVariantsList.innerHTML = '';
+    }
+    if (this.btnQuickEditAddVariant) {
+      this.btnQuickEditAddVariant.style.display = 'inline-block';
+    }
+
+    const titleEl = document.getElementById('quickEditModalTitle');
+    const subtitleEl = document.getElementById('quickEditModalSubtitle');
+    const loggedInActions = document.getElementById('quickEditLoggedInActions');
+    const loggedOutActions = document.getElementById('quickEditLoggedOutActions');
+    const formInputs = [
+      this.quickEditName, this.quickEditNameEng, this.quickEditNameRoman, this.quickEditNameRomanEng,
+      this.quickEditParents, this.quickEditSpouses, this.quickEditTitle, this.quickEditGender, this.quickEditInfo
+    ];
+
+    if (titleEl) titleEl.textContent = '✨ 새 인물 추가';
+    if (subtitleEl) subtitleEl.textContent = initialName 
+      ? `'${initialName}' 인물의 기본 정보와 부모/배우자 관계를 입력하여 추가합니다.`
+      : '새로운 인물의 기본 정보와 부모/배우자 관계를 입력하여 추가합니다.';
+
+    if (this.btnQuickEditDelete) this.btnQuickEditDelete.style.display = 'none';
+    if (this.btnQuickEditSubmit) this.btnQuickEditSubmit.textContent = '💾 추가하기';
+
+    if (loggedInActions) loggedInActions.style.display = 'flex';
+    if (loggedOutActions) loggedOutActions.style.display = 'none';
+    formInputs.forEach(input => { if (input) input.disabled = false; });
+
+    this.quickEditModal.classList.add('active');
+
+    setTimeout(() => {
+      if (this.quickEditName) {
+        if (!initialName) {
+          this.quickEditName.focus();
+        } else if (this.quickEditParents) {
+          this.quickEditParents.focus();
+        }
+      }
     }, 100);
   }
 
@@ -2122,8 +2188,29 @@ class DynamicGenealogyApp {
       this.quickEditForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         if (!this.currentUser) return;
-        const pId = this.quickEditId.value;
-        const person = this.nodesMap.get(pId);
+        let pId = this.quickEditId.value ? this.quickEditId.value.trim() : '';
+        let person = pId ? this.nodesMap.get(pId) : null;
+        const isCreating = !person;
+
+        if (isCreating) {
+          const newName = this.quickEditName.value.trim();
+          if (!newName) return;
+          pId = `${this.currentDatasetKey}_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+          person = {
+            id: pId,
+            name: newName,
+            nameEng: "",
+            nameRoman: "",
+            nameRomanEng: "",
+            title: "",
+            gender: "male",
+            info: "",
+            parentIds: [],
+            spouseIds: [],
+            parentVariants: []
+          };
+          this.nodesMap.set(pId, person);
+        }
 
         if (person) {
           person.name = this.quickEditName.value.trim();
@@ -2223,7 +2310,14 @@ class DynamicGenealogyApp {
           this.sanitizeRelationships();
           await this.savePersonToDB(pId);
           this.closeQuickEditModal();
-          this.render();
+
+          if (isCreating) {
+            this.searchInput.value = '';
+            this.searchDropdown.classList.remove('show');
+            this.setFocusPerson(pId);
+          } else {
+            this.render();
+          }
         }
       });
     }
@@ -2486,131 +2580,168 @@ class DynamicGenealogyApp {
   }
 
   zoomAt(deltaScale, clientX, clientY) {
+    if (isNaN(deltaScale) || deltaScale <= 0) return;
     const newZoom = Math.min(Math.max(0.3, this.zoom * deltaScale), 2.5);
-    if (newZoom === this.zoom) return;
+    if (newZoom === this.zoom || isNaN(newZoom)) return;
 
     const rect = this.viewport.getBoundingClientRect();
-    const mouseX = clientX - rect.left;
-    const mouseY = clientY - rect.top;
+    const cx = (clientX !== undefined && clientX !== null) ? clientX : (rect.left + rect.width / 2);
+    const cy = (clientY !== undefined && clientY !== null) ? clientY : (rect.top + rect.height / 2);
 
-    this.panX = mouseX - ((mouseX - this.panX) * (newZoom / this.zoom));
-    this.panY = mouseY - ((mouseY - this.panY) * (newZoom / this.zoom));
-    this.zoom = newZoom;
-    this.updateTransform();
+    const mouseX = cx - rect.left;
+    const mouseY = cy - rect.top;
+
+    if (!isNaN(mouseX) && !isNaN(mouseY)) {
+      this.panX = mouseX - ((mouseX - this.panX) * (newZoom / this.zoom));
+      this.panY = mouseY - ((mouseY - this.panY) * (newZoom / this.zoom));
+      this.zoom = newZoom;
+      this.updateTransform();
+    }
   }
 
   // ── 10. 이벤트 바인딩 ──
   bindEvents() {
-    // 🌟 iOS Safari 브라우저 페이지 전체 핀치 줌 방지 (gesturestart, gesturechange)
+    // 🌟 iOS Safari 브라우저 페이지 전체 핀치 줌 방지 (gesturestart, gesturechange, gestureend)
     const preventNativeGesture = (e) => {
       e.preventDefault();
     };
     document.addEventListener('gesturestart', preventNativeGesture, { passive: false });
     document.addEventListener('gesturechange', preventNativeGesture, { passive: false });
+    document.addEventListener('gestureend', preventNativeGesture, { passive: false });
+
+    // UI 요소 여부 확인 (버튼, 인풋, 모달, 노드 등)
+    const isUIElement = (target) => {
+      return (
+        target.closest('.genealogy-header') ||
+        target.closest('.modal-backdrop') ||
+        target.closest('.empty-placeholder') ||
+        target.closest('.nav') ||
+        target.closest('button') ||
+        target.closest('input') ||
+        target.closest('select') ||
+        target.closest('.text-node') ||
+        target.closest('.couple-node-btn') ||
+        target.closest('.tradition-popover')
+      );
+    };
+
+    // 🌟 통합 멀티터치 Pointer Events 관리자 (마우스 드래그 & 모바일 터치 핀치 줌/팬) 🌟
+    const activePointers = new Map();
+    let pinchStartDist = 0;
+    let pinchStartZoom = 1;
+    let pinchStartPanX = 0;
+    let pinchStartPanY = 0;
+    let pinchStartCenter = { x: 0, y: 0 };
+    let lastSinglePointerPos = { x: 0, y: 0 };
 
     this.viewport.addEventListener('pointerdown', (e) => {
-      if (
-        e.target.closest('.genealogy-header') ||
-        e.target.closest('.modal-backdrop') ||
-        e.target.closest('.empty-placeholder') ||
-        e.target.closest('.nav') ||
-        e.target.closest('button') ||
-        e.target.closest('input') ||
-        e.target.closest('select') ||
-        e.target.closest('.text-node') ||
-        e.target.closest('.couple-node-btn')
-      ) {
-        return;
-      }
-      this.isDragging = true;
-      this.dragStartX = e.clientX;
-      this.dragStartY = e.clientY;
-      this.lastPanX = this.panX;
-      this.lastPanY = this.panY;
-      this.viewport.setPointerCapture(e.pointerId);
-    });
+      if (isUIElement(e.target)) return;
 
-    this.viewport.addEventListener('pointermove', (e) => {
-      if (!this.isDragging) return;
-      const dx = e.clientX - this.dragStartX;
-      const dy = e.clientY - this.dragStartY;
-      this.panX = this.lastPanX + dx;
-      this.panY = this.lastPanY + dy;
-      this.updateTransform();
-    });
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-    const stopDrag = (e) => {
-      if (this.isDragging) {
+      if (activePointers.size === 1) {
+        this.isDragging = true;
+        lastSinglePointerPos = { x: e.clientX, y: e.clientY };
+      } else if (activePointers.size === 2) {
+        // 두 손가락 핀치 줌 진입: 단일 드래그 일시 중지
         this.isDragging = false;
-        try { this.viewport.releasePointerCapture(e.pointerId); } catch (_) {}
+        const pts = Array.from(activePointers.values());
+        pinchStartDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        pinchStartZoom = this.zoom;
+        pinchStartPanX = this.panX;
+        pinchStartPanY = this.panY;
+        pinchStartCenter = {
+          x: (pts[0].x + pts[1].x) / 2,
+          y: (pts[0].y + pts[1].y) / 2
+        };
+      }
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!activePointers.has(e.pointerId)) return;
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+      if (activePointers.size === 1 && this.isDragging) {
+        // 1개 포인터 (마우스 또는 1손가락 터치) 상대 이동량 기반 부드러운 패닝
+        const dx = e.clientX - lastSinglePointerPos.x;
+        const dy = e.clientY - lastSinglePointerPos.y;
+        lastSinglePointerPos = { x: e.clientX, y: e.clientY };
+
+        this.panX += dx;
+        this.panY += dy;
+        this.updateTransform();
+      } else if (activePointers.size === 2 && pinchStartDist > 10) {
+        // 2손가락 정밀 핀치 줌 및 중심점 동시 이동
+        const pts = Array.from(activePointers.values());
+        const currentDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+        const currentCenter = {
+          x: (pts[0].x + pts[1].x) / 2,
+          y: (pts[0].y + pts[1].y) / 2
+        };
+
+        const factor = currentDist / pinchStartDist;
+        const newZoom = Math.min(Math.max(0.3, pinchStartZoom * factor), 2.5);
+
+        const rect = this.viewport.getBoundingClientRect();
+        const startCenterX = pinchStartCenter.x - rect.left;
+        const startCenterY = pinchStartCenter.y - rect.top;
+        const currentCenterX = currentCenter.x - rect.left;
+        const currentCenterY = currentCenter.y - rect.top;
+
+        // 원본 시작 기준 스테이지 좌표 역계산
+        const stageX = (startCenterX - pinchStartPanX) / pinchStartZoom;
+        const stageY = (startCenterY - pinchStartPanY) / pinchStartZoom;
+
+        const nextPanX = currentCenterX - (stageX * newZoom);
+        const nextPanY = currentCenterY - (stageY * newZoom);
+
+        if (!isNaN(nextPanX) && !isNaN(nextPanY) && !isNaN(newZoom)) {
+          this.panX = nextPanX;
+          this.panY = nextPanY;
+          this.zoom = newZoom;
+          this.updateTransform();
+        }
+      }
+    });
+
+    const removePointer = (e) => {
+      if (!activePointers.has(e.pointerId)) return;
+      activePointers.delete(e.pointerId);
+
+      if (activePointers.size === 1) {
+        // 핀치 중 한 손가락을 떼었을 때: 남은 손가락의 현재 위치에서 점프 없이 단일 드래그 복귀
+        this.isDragging = true;
+        const remainingPt = activePointers.values().next().value;
+        lastSinglePointerPos = { x: remainingPt.x, y: remainingPt.y };
+      } else if (activePointers.size === 0) {
+        this.isDragging = false;
+        pinchStartDist = 0;
       }
     };
-    this.viewport.addEventListener('pointerup', stopDrag);
-    this.viewport.addEventListener('pointercancel', stopDrag);
 
+    window.addEventListener('pointerup', removePointer);
+    window.addEventListener('pointercancel', removePointer);
+
+    // 휠 스크롤 줌
     this.viewport.addEventListener('wheel', (e) => {
       e.preventDefault();
       const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
       this.zoomAt(zoomFactor, e.clientX, e.clientY);
     }, { passive: false });
 
-    // 🌟 모바일 터치 & 핀치 줌 제어 (가계도 캔버스 영역만 확대/축소) 🌟
-    const isUIElement = (target) => {
-      return (
-        target.closest('.genealogy-header') ||
-        target.closest('.modal-backdrop') ||
-        target.closest('.nav') ||
-        target.closest('input') ||
-        target.closest('select') ||
-        target.closest('button')
-      );
-    };
-
-    this.viewport.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 2) {
-        if (!isUIElement(e.target)) {
-          e.preventDefault();
-        }
-        this.initialPinchDistance = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        this.initialZoom = this.zoom;
-      }
-    }, { passive: false });
-
+    // iOS Safari에서 캔버스 터치 시 브라우저 바운스 스크롤 방지
     this.viewport.addEventListener('touchmove', (e) => {
-      if (e.touches.length === 2 && this.initialPinchDistance) {
-        e.preventDefault();
-        const currentDist = Math.hypot(
-          e.touches[0].clientX - e.touches[1].clientX,
-          e.touches[0].clientY - e.touches[1].clientY
-        );
-        const factor = currentDist / this.initialPinchDistance;
-        const centerX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-        const centerY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-        const targetZoom = Math.min(Math.max(0.3, this.initialZoom * factor), 2.5);
-        this.zoomAt(targetZoom / this.zoom, centerX, centerY);
-      } else if (e.touches.length === 1 && !isUIElement(e.target)) {
-        // 단일 손가락 터치 시 캔버스 영역에서는 브라우저 기본 바운스 스크롤 방지
+      if (!isUIElement(e.target) && e.cancelable) {
         e.preventDefault();
       }
     }, { passive: false });
-
-    const stopTouchPinch = () => {
-      this.initialPinchDistance = null;
-    };
-    this.viewport.addEventListener('touchend', stopTouchPinch);
-    this.viewport.addEventListener('touchcancel', stopTouchPinch);
 
     this.btnZoomIn.addEventListener('click', () => {
-      const rect = this.viewport.getBoundingClientRect();
-      this.zoomAt(1.2, rect.width / 2, rect.height / 2);
+      this.zoomAt(1.2);
     });
 
     this.btnZoomOut.addEventListener('click', () => {
-      const rect = this.viewport.getBoundingClientRect();
-      this.zoomAt(0.8, rect.width / 2, rect.height / 2);
+      this.zoomAt(0.8);
     });
 
     this.btnResetView.addEventListener('click', () => {
@@ -2670,6 +2801,11 @@ class DynamicGenealogyApp {
             this.searchDropdown.classList.remove('show');
             this.searchInput.value = '';
             this.searchInput.blur();
+          } else if (query.trim()) {
+            const btnAdd = this.searchDropdown.querySelector('#btnSearchAddPerson');
+            if (btnAdd) {
+              btnAdd.click();
+            }
           }
         }
       }
@@ -3281,7 +3417,32 @@ class DynamicGenealogyApp {
     }
 
     if (matches.length === 0) {
-      this.searchDropdown.innerHTML = `<div class="search-item"><span class="search-item-title">검색 결과가 없습니다.</span></div>`;
+      const trimmedQuery = query.trim();
+      const safeQuery = this.escapeHtml(trimmedQuery);
+      this.searchDropdown.innerHTML = `
+        <div class="search-item-empty">
+          <div class="search-item-title">검색 결과가 없습니다.</div>
+          <button type="button" class="btn-search-add" id="btnSearchAddPerson">
+            <span>➕</span>
+            <span>'<strong>${safeQuery}</strong>' 인물 추가하기</span>
+          </button>
+        </div>
+      `;
+
+      const btnAdd = this.searchDropdown.querySelector('#btnSearchAddPerson');
+      if (btnAdd) {
+        btnAdd.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.searchDropdown.classList.remove('show');
+          if (!this.currentUser) {
+            alert("🔒 인물 추가는 Supabase 로그인 후 이용 가능합니다.");
+            if (this.loginError) this.loginError.style.display = 'none';
+            if (this.authModal) this.authModal.classList.add('active');
+            return;
+          }
+          this.openCreatePersonModal(trimmedQuery);
+        });
+      }
     } else {
       this.searchDropdown.innerHTML = matches.slice(0, 8).map(person => {
         const hasRoman = !!person.nameRoman;
