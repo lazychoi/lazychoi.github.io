@@ -1598,6 +1598,49 @@ function buildWholeWordHtmlPattern(term) {
   return `${startB}${p}${endB}`;
 }
 
+function isWordBoundary(text, start, end, targetText) {
+  if (!text || !targetText) return false;
+  const trimmed = String(targetText).trim();
+  const hasWordStart = /^[a-zA-Z0-9가-힣]/.test(trimmed);
+  const hasWordEnd = /[a-zA-Z0-9가-힣]$/.test(trimmed);
+
+  if (hasWordStart && start > 0) {
+    const prevChar = text.charAt(start - 1);
+    if (/[a-zA-Z0-9가-힣]/.test(prevChar)) {
+      return false;
+    }
+  }
+
+  if (hasWordEnd && end < text.length) {
+    const nextChar = text.charAt(end);
+    if (/[a-zA-Z0-9가-힣]/.test(nextChar)) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function findSubstringWithWordBoundary(text, targetText, caseSensitive = true, searchStart = 0, searchEnd = text.length) {
+  if (!text || !targetText) return -1;
+  const trimmed = String(targetText).trim();
+  const tLen = trimmed.length;
+  let fromIndex = Math.max(0, searchStart);
+  const maxIndex = Math.min(text.length, searchEnd) - tLen;
+  const haystack = caseSensitive ? text : text.toLowerCase();
+  const needle = caseSensitive ? trimmed : trimmed.toLowerCase();
+
+  while (fromIndex <= maxIndex) {
+    const idx = haystack.indexOf(needle, fromIndex);
+    if (idx === -1 || idx > maxIndex) return -1;
+    if (isWordBoundary(text, idx, idx + tLen, trimmed)) {
+      return idx;
+    }
+    fromIndex = idx + 1;
+  }
+  return -1;
+}
+
 function findSubstringRangeInText(text, hl) {
   if (!text || !hl || !hl.text) return null;
   const targetText = String(hl.text).trim();
@@ -1607,7 +1650,7 @@ function findSubstringRangeInText(text, hl) {
 
   // 1. Exact match at given offset
   if (typeof hl.offset === 'number' && hl.offset >= 0 && hl.offset + textLen <= text.length) {
-    if (text.substring(hl.offset, hl.offset + textLen) === targetText) {
+    if (text.substring(hl.offset, hl.offset + textLen) === targetText && isWordBoundary(text, hl.offset, hl.offset + textLen, targetText)) {
       return { start: hl.offset, end: hl.offset + textLen };
     }
   }
@@ -1617,26 +1660,39 @@ function findSubstringRangeInText(text, hl) {
     const targetSentence = String(hl.targetSentence).trim();
     const sentIdx = text.indexOf(targetSentence);
     if (sentIdx !== -1) {
-      const subIdx = text.indexOf(targetText, sentIdx);
-      if (subIdx !== -1 && subIdx <= sentIdx + targetSentence.length) {
-        return { start: subIdx, end: subIdx + textLen };
+      const boundIdx = findSubstringWithWordBoundary(text, targetText, true, sentIdx, sentIdx + targetSentence.length);
+      if (boundIdx !== -1) {
+        return { start: boundIdx, end: boundIdx + textLen };
+      }
+      const boundLowerIdx = findSubstringWithWordBoundary(text, targetText, false, sentIdx, sentIdx + targetSentence.length);
+      if (boundLowerIdx !== -1) {
+        return { start: boundLowerIdx, end: boundLowerIdx + textLen };
       }
     }
   }
 
-  // 3. Direct substring search
-  const directIdx = text.indexOf(targetText);
+  // 3. Direct substring search with word boundary
+  const directIdx = findSubstringWithWordBoundary(text, targetText, true);
   if (directIdx !== -1) {
     return { start: directIdx, end: directIdx + textLen };
   }
 
-  // 4. Case-insensitive search
-  const lowerIdx = text.toLowerCase().indexOf(targetText.toLowerCase());
+  // 4. Case-insensitive search with word boundary
+  const lowerIdx = findSubstringWithWordBoundary(text, targetText, false);
   if (lowerIdx !== -1) {
     return { start: lowerIdx, end: lowerIdx + textLen };
   }
 
-  // 5. Flexible regex search (normalizing whitespace, newlines, and quote variants)
+  // 5. Whole-word regex search
+  const wordRegex = buildWholeWordRegex(targetText);
+  if (wordRegex) {
+    const match = wordRegex.exec(text);
+    if (match) {
+      return { start: match.index, end: match.index + match[0].length };
+    }
+  }
+
+  // 6. Flexible regex search (normalizing whitespace, newlines, and quote variants)
   const flexRegex = buildFlexibleRegex(targetText);
   if (flexRegex) {
     let match;
@@ -1645,10 +1701,14 @@ function findSubstringRangeInText(text, hl) {
     const targetOffset = typeof hl.offset === 'number' ? hl.offset : 0;
 
     while ((match = flexRegex.exec(text)) !== null) {
-      const dist = Math.abs(match.index - targetOffset);
-      if (dist < minDistance) {
-        minDistance = dist;
-        bestMatch = { start: match.index, end: match.index + match[0].length };
+      const matchStart = match.index;
+      const matchEnd = match.index + match[0].length;
+      if (isWordBoundary(text, matchStart, matchEnd, targetText)) {
+        const dist = Math.abs(matchStart - targetOffset);
+        if (dist < minDistance) {
+          minDistance = dist;
+          bestMatch = { start: matchStart, end: matchEnd };
+        }
       }
       if (match.index === flexRegex.lastIndex) {
         flexRegex.lastIndex++;
@@ -1757,13 +1817,12 @@ function exportMdAsMarkdown() {
     return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  // 1. Locate existing footnotes by fnTag in cleanBody
+  // 1. Locate existing footnotes by fnTag in cleanBody (requiring term to match before [^tag])
   state.highlights.filter(h => h.fnTag).forEach(hl => {
     const escapedTag = escapeRegex(hl.fnTag);
     const escapedTerm = escapeRegex(hl.text);
-    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})?\\s*\\[\\^${escapedTag}\\]`, 'g');
+    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})\\s*\\[\\^${escapedTag}\\]`, 'g');
     let m;
-    let found = false;
     while ((m = re.exec(cleanBody)) !== null) {
       const start = m.index;
       const end = m.index + m[0].length;
@@ -1771,27 +1830,14 @@ function exportMdAsMarkdown() {
         const prefix = m[0].replace(/\s*\[\^[^\]]+\]$/, '') || hl.text;
         locatedList.push({ hl, start, end, prefix, isExisting: true });
         occupiedRanges.push({ start, end });
-        found = true;
         break;
-      }
-    }
-    if (!found) {
-      const tagOnlyRe = new RegExp(`\\[\\^${escapedTag}\\]`, 'g');
-      let m2;
-      while ((m2 = tagOnlyRe.exec(cleanBody)) !== null) {
-        const start = m2.index;
-        const end = m2.index + m2[0].length;
-        if (!isOccupied(start, end)) {
-          locatedList.push({ hl, start, end, prefix: hl.text, isExisting: true });
-          occupiedRanges.push({ start, end });
-          break;
-        }
       }
     }
   });
 
-  // 2. Locate newly added highlights without fnTag in cleanBody
-  state.highlights.filter(h => !h.fnTag).forEach(hl => {
+  // 2. Locate remaining/newly added highlights in cleanBody
+  const unlocatedSoFar = state.highlights.filter(h => !locatedList.some(item => item.hl.id === h.id));
+  unlocatedSoFar.forEach(hl => {
     const escapedTerm = escapeRegex(hl.text);
     const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})(?!\\s*\\[\\^)`, 'g');
     const candidates = [];
@@ -2589,7 +2635,7 @@ function applyHighlightsToParagraph(paragraphText, pIdx) {
 }
 
 function bindHighlightClickEvents() {
-  const marks = elements.txtContent.querySelectorAll('.reader-highlight');
+  const marks = elements.txtContent.querySelectorAll('.reader-highlight, .fn-badge[data-hl-id]');
   marks.forEach(mark => {
     mark.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -2818,12 +2864,43 @@ function injectFootnoteHighlightsInMarkdown(bodyText, highlights) {
     const escapedTag = String(hl.fnTag).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const escapedTerm = String(hl.text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
+    // 1. Try matching with exact term or formatting tokens
     const bracketRegex = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})\\s*\\[\\^${escapedTag}\\]`, 'g');
     if (bracketRegex.test(result)) {
       result = result.replace(bracketRegex, `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${hl.id}" id="fn-src-${hl.fnTag}">${hl.text}</mark>`);
-    } else {
-      const standaloneRegex = new RegExp(`\\[\\^${escapedTag}\\]`, 'g');
-      result = result.replace(standaloneRegex, '');
+      continue;
+    }
+
+    // 1b. Try matching with flexible markdown tokens (*, _, etc.) for terms with internal formatting
+    const words = String(hl.text || '').trim().split(/\s+/).map(w => String(w).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).filter(Boolean);
+    if (words.length > 0) {
+      const mdPattern = words.map(w => '[*_`~]*' + w + '[*_`~]*').join('\\s+');
+      try {
+        const mdBracketRegex = new RegExp(`(?:\\[${mdPattern}\\]|${mdPattern})\\s*\\[\\^${escapedTag}\\]`, 'g');
+        if (mdBracketRegex.test(result)) {
+          result = result.replace(mdBracketRegex, (match) => {
+            const innerText = match.replace(/\s*\[\^[^\]]+\]$/, '');
+            return `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${hl.id}" id="fn-src-${hl.fnTag}">${innerText}</mark>`;
+          });
+          continue;
+        }
+      } catch (e) {}
+    }
+
+    // 2. If term didn't match directly, but [^tag] has preceding brackets [text][^tag] or **text**[^tag]
+    const genericBracketRegex = new RegExp(`(?:\\[([^\\]]+)\\]|\\*\\*([^*]+)\\*\\*|\\*([^*]+)\\*)\\s*\\[\\^${escapedTag}\\]`, 'g');
+    if (genericBracketRegex.test(result)) {
+      result = result.replace(genericBracketRegex, (match, p1, p2, p3) => {
+        const textToMark = p1 || p2 || p3 || hl.text;
+        return `<mark class="reader-highlight hl-${hl.color || 'yellow'}" data-hl-id="${hl.id}" id="fn-src-${hl.fnTag}">${textToMark}</mark>`;
+      });
+      continue;
+    }
+
+    // 3. If [^tag] exists in text as standalone or attached to preceding word
+    const standaloneTagRegex = new RegExp(`\\[\\^${escapedTag}\\]`, 'g');
+    if (standaloneTagRegex.test(result)) {
+      result = result.replace(standaloneTagRegex, `<sup class="fn-badge" id="fn-src-${hl.fnTag}" data-hl-id="${hl.id}"><a href="#fn-ref-${hl.fnTag}" style="color:inherit;text-decoration:none;">[${hl.fnTag}]</a></sup>`);
     }
   }
 
@@ -2932,6 +3009,13 @@ function applyDomHighlights(rootElem, highlights) {
     if (!hl.text) return;
     if (rootElem.querySelector(`[data-hl-id="${hl.id}"]`)) return;
 
+    // Footnote highlights (isFootnote || fnTag) in Markdown are strictly placed by [^tag] in markdown text.
+    // If injectFootnoteHighlightsInMarkdown did not inject a mark for it, that footnote has no marker in the body!
+    // Never allow orphan/unreferenced footnotes to attach to arbitrary text.
+    if (hl.isFootnote || hl.fnTag) {
+      return;
+    }
+
     let targetBlock = null;
     let range = null;
 
@@ -2946,7 +3030,7 @@ function applyDomHighlights(rootElem, highlights) {
       }
     }
 
-    // 2. If not found by pIdx, search across all candidate blocks
+    // 2. If not found by pIdx, search across candidate blocks
     if (!targetBlock) {
       if (hl.targetSentence) {
         const targetSentence = String(hl.targetSentence).trim();
@@ -2963,7 +3047,24 @@ function applyDomHighlights(rootElem, highlights) {
         }
       }
 
-      if (!targetBlock) {
+      // 3. Try nearby blocks if pIdx was specified (handling minor paragraph insertions/deletions)
+      if (!targetBlock && typeof hl.pIdx === 'number') {
+        const nearbyDeltas = [-1, 1, -2, 2, -3, 3];
+        for (const delta of nearbyDeltas) {
+          const nearBlock = rootElem.querySelector(`[data-p-idx="${hl.pIdx + delta}"]`);
+          if (nearBlock) {
+            const r = findSubstringRangeInText(nearBlock.textContent, hl);
+            if (r) {
+              targetBlock = nearBlock;
+              range = r;
+              break;
+            }
+          }
+        }
+      }
+
+      // 4. Distinctive phrase fallback: only search all candidate blocks if hl.text is sufficiently long
+      if (!targetBlock && hl.text.trim().length >= 20) {
         for (const block of candidateBlocks) {
           const r = findSubstringRangeInText(block.textContent, hl);
           if (r) {
@@ -2976,15 +3077,6 @@ function applyDomHighlights(rootElem, highlights) {
 
       if (targetBlock && targetBlock.dataset && targetBlock.dataset.pIdx !== undefined) {
         hl.pIdx = parseInt(targetBlock.dataset.pIdx, 10);
-      }
-    }
-
-    // 3. Fallback to rootElem if no block matched
-    if (!targetBlock) {
-      const r = findSubstringRangeInText(rootElem.textContent, hl);
-      if (r) {
-        targetBlock = rootElem;
-        range = r;
       }
     }
 
@@ -3079,12 +3171,14 @@ function appendFootnotesSection(container, highlights) {
     backLink.textContent = '↩ 본문';
     backLink.addEventListener('click', (e) => {
       e.preventDefault();
-      const mark = container.querySelector(`[data-hl-id="${hl.id}"]`);
+      const mark = container.querySelector(`[data-hl-id="${hl.id}"]`) || container.querySelector(`#fn-src-${hl.fnTag}`);
       if (mark) {
         mark.scrollIntoView({ behavior: 'smooth', block: 'center' });
         mark.style.outline = '3px solid var(--accent)';
         mark.style.borderRadius = '3px';
         setTimeout(() => { mark.style.outline = 'none'; }, 1800);
+      } else {
+        showToast('본문에 위치 표시가 없는 각주입니다.');
       }
     });
 
@@ -3209,6 +3303,21 @@ function renderMdContent(fallbackPosition = null) {
       }
     }
   });
+
+  // Clean up corrupted pIdx for any markdown footnotes that are not in the body DOM
+  let anyCleaned = false;
+  state.highlights.forEach(hl => {
+    if (hl.isFootnote || hl.fnTag) {
+      const mark = elements.txtContent.querySelector(`[data-hl-id="${hl.id}"]`);
+      if (!mark && hl.pIdx !== undefined) {
+        delete hl.pIdx;
+        anyCleaned = true;
+      }
+    }
+  });
+  if (anyCleaned) {
+    saveHighlights();
+  }
 
   extractMarkdownToc();
   appendFootnotesSection(elements.txtContent, state.highlights);
