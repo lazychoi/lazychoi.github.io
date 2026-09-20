@@ -298,10 +298,40 @@ function updatePreview() {
     }
 }
 
-// 용어를 검색하고 조건부 렌더링하는 함수
+// Helper to construct a Whole Word matching RegExp supporting multilingual Unicode (Korean, English, etc.)
+function buildWholeWordRegex(query) {
+    const trimmed = (query || '').trim();
+    if (!trimmed) return null;
+
+    try {
+        const isWordChar = (char) => /^[\p{L}\p{N}]$/u.test(char);
+        const firstChar = trimmed[0];
+        const lastChar = trimmed[trimmed.length - 1];
+
+        const prefix = isWordChar(firstChar) ? '(?<![\\p{L}\\p{N}])' : '';
+        const suffix = isWordChar(lastChar) ? '(?![\\p{L}\\p{N}])' : '';
+        const escaped = trimmed
+            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+            .replace(/\s+/g, '\\s+');
+
+        return new RegExp(prefix + escaped + suffix, 'iu');
+    } catch (e) {
+        console.warn('Unicode word boundary regex failed, falling back:', e);
+        try {
+            const escaped = trimmed
+                .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+                .replace(/\s+/g, '\\s+');
+            return new RegExp('(^|[^a-zA-Z0-9가-힣])' + escaped + '([^a-zA-Z0-9가-힣]|$)', 'i');
+        } catch (err) {
+            return null;
+        }
+    }
+}
+
+// 용어를 검색하고 조건부 렌더링하는 함수 (Match Whole Word)
 function searchTerms() {
     toggleClearButton();
-    const query = searchTerm.value.toLowerCase().trim();
+    const query = searchTerm.value.trim();
     resultsList.innerHTML = '';
 
     if (query === '') {
@@ -311,11 +341,33 @@ function searchTerms() {
 
     resultsList.style.display = 'block';
 
+    const regex = buildWholeWordRegex(query);
+    if (!regex) {
+        resultsList.innerHTML = '<li style="text-align: center; color: var(--text-muted); padding: 20px;">검색 결과가 없습니다.</li>';
+        return;
+    }
+
     const filteredTerms = terms.filter(t => 
-        t.term.toLowerCase().includes(query) || 
-        t.easyTerm.toLowerCase().includes(query) ||
-        t.foreignTerm.toLowerCase().includes(query)
+        (t.term && regex.test(t.term)) || 
+        (t.easyTerm && regex.test(t.easyTerm)) ||
+        (t.foreignTerm && regex.test(t.foreignTerm))
     );
+
+    // 검색 정확도 순 정렬: 표제어 완전 일치 > 표제어 단어 일치 > 기타(외래어/쉬운용어) 일치
+    filteredTerms.sort((a, b) => {
+        const qLower = query.toLowerCase();
+        const aExact = (a.term || '').toLowerCase() === qLower;
+        const bExact = (b.term || '').toLowerCase() === qLower;
+        if (aExact && !bExact) return -1;
+        if (!aExact && bExact) return 1;
+
+        const aTermMatch = a.term && regex.test(a.term);
+        const bTermMatch = b.term && regex.test(b.term);
+        if (aTermMatch && !bTermMatch) return -1;
+        if (!aTermMatch && bTermMatch) return 1;
+
+        return a.id - b.id;
+    });
 
     filteredTerms.forEach(t => {
         const li = document.createElement('li');
