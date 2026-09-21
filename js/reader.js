@@ -2466,8 +2466,11 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   elements.emptyState.hidden = true;
   elements.epubViewer.style.display = 'none';
   elements.epubViewer.hidden = true;
-  elements.btnToggleToc.style.display = 'none';
-  elements.btnToggleToc.hidden = true;
+  if (elements.btnToggleToc) {
+    elements.btnToggleToc.style.display = 'inline-flex';
+    elements.btnToggleToc.hidden = false;
+    elements.btnToggleToc.removeAttribute('hidden');
+  }
   elements.txtViewer.style.display = 'flex';
   elements.txtViewer.hidden = false;
   elements.readerBottomBar.style.display = 'flex';
@@ -2513,6 +2516,8 @@ function renderTxtContent(fallbackPosition = null) {
   elements.txtContent.innerHTML = '';
   elements.txtContent.appendChild(frag);
 
+  extractTxtToc();
+
   // TXT Scroll progress tracking
   elements.txtViewer.onscroll = () => {
     if (isRestoringTxtScroll || (state.txt && state.txt.isResizing)) return;
@@ -2530,6 +2535,18 @@ function renderTxtContent(fallbackPosition = null) {
         localStorage.setItem('reader_last_book_id', state.currentBook.id);
         updateActiveBookLastPosition(pct);
       }
+    }
+
+    if (state.currentBook && state.currentBook.type === 'txt' && state.toc && state.toc.length > 0) {
+      const headings = elements.txtContent.querySelectorAll('.txt-heading');
+      let currentHeadingText = state.currentBook.title;
+      const scrollThreshold = elements.txtViewer.scrollTop + 120;
+      headings.forEach(h => {
+        if (h.offsetTop <= scrollThreshold) {
+          currentHeadingText = h.textContent.trim();
+        }
+      });
+      elements.currentChapterTitle.textContent = currentHeadingText;
     }
   };
 
@@ -2597,6 +2614,30 @@ function renderTxtContent(fallbackPosition = null) {
 
   // Bind click on marks
   bindHighlightClickEvents();
+}
+
+function extractTxtToc() {
+  state.toc = [];
+  if (!elements.txtContent) return;
+  const paragraphs = elements.txtContent.querySelectorAll('p[data-p-idx]');
+  let headingCount = 0;
+  paragraphs.forEach((p) => {
+    const text = p.textContent.trim();
+    if (!text || text.length > 80 || text.includes('\n')) return;
+    if (/^(chapter|chap\.|part|book|act|scene)\s+([0-9ivxlcdm]+|\w+)([\s\:\.\-].*)?$/i.test(text) ||
+        /^제\s*\d+\s*[장절부편]([\s\:\.\-].*)?$/.test(text)) {
+      const id = `txt-h-${headingCount++}`;
+      p.id = id;
+      p.classList.add('txt-heading');
+      state.toc.push({ id, label: text, level: 2 });
+    }
+  });
+
+  if (elements.btnToggleToc) {
+    elements.btnToggleToc.style.display = 'inline-flex';
+    elements.btnToggleToc.hidden = false;
+    elements.btnToggleToc.removeAttribute('hidden');
+  }
 }
 
 function escapeHtml(str) {
@@ -2739,8 +2780,9 @@ function openMdBook(title, author, content, bookId, skipSaveToDb = false, fallba
   elements.epubViewer.style.display = 'none';
   elements.epubViewer.hidden = true;
   if (elements.btnToggleToc) {
-    elements.btnToggleToc.style.display = 'none';
-    elements.btnToggleToc.hidden = true;
+    elements.btnToggleToc.style.display = 'inline-flex';
+    elements.btnToggleToc.hidden = false;
+    elements.btnToggleToc.removeAttribute('hidden');
   }
   elements.txtViewer.style.display = 'flex';
   elements.txtViewer.hidden = false;
@@ -2965,10 +3007,27 @@ function extractMarkdownToc() {
     }
   });
 
-  if (state.toc.length > 0) {
+  // Fallback: If no h1-h6 headings found, check if paragraphs have chapter patterns
+  if (state.toc.length === 0) {
+    const paragraphs = elements.txtContent.querySelectorAll('p[data-p-idx]');
+    let fallbackCount = 0;
+    paragraphs.forEach((p) => {
+      const text = p.textContent.trim();
+      if (!text || text.length > 80 || text.includes('\n')) return;
+      if (/^(chapter|chap\.|part|book|act|scene)\s+([0-9ivxlcdm]+|\w+)([\s\:\.\-].*)?$/i.test(text) ||
+          /^제\s*\d+\s*[장절부편]([\s\:\.\-].*)?$/.test(text)) {
+        const id = `md-h-${fallbackCount++}`;
+        p.id = id;
+        p.classList.add('md-heading');
+        state.toc.push({ id, label: text, level: 2 });
+      }
+    });
+  }
+
+  if (elements.btnToggleToc) {
     elements.btnToggleToc.style.display = 'inline-flex';
-  } else {
-    elements.btnToggleToc.style.display = 'none';
+    elements.btnToggleToc.hidden = false;
+    elements.btnToggleToc.removeAttribute('hidden');
   }
 }
 
@@ -3679,8 +3738,11 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   elements.txtViewer.hidden = true;
   elements.epubViewer.style.display = 'flex';
   elements.epubViewer.hidden = false;
-  elements.btnToggleToc.style.display = 'inline-flex';
-  elements.btnToggleToc.hidden = false;
+  if (elements.btnToggleToc) {
+    elements.btnToggleToc.style.display = 'inline-flex';
+    elements.btnToggleToc.hidden = false;
+    elements.btnToggleToc.removeAttribute('hidden');
+  }
   elements.readerBottomBar.style.display = 'flex';
   elements.readerBottomBar.hidden = false;
 
@@ -4939,8 +5001,8 @@ function renderTocDrawer() {
   }
   elements.drawerBody.innerHTML = '';
 
-  const isMd = state.currentBook && state.currentBook.type === 'md';
-  const tocList = isMd ? state.toc : state.epub.toc;
+  const isTxtOrMd = state.currentBook && (state.currentBook.type === 'md' || state.currentBook.type === 'txt');
+  const tocList = isTxtOrMd ? (state.toc || []) : (state.epub && state.epub.toc ? state.epub.toc : []);
 
   if (!tocList || tocList.length === 0) {
     elements.drawerBody.innerHTML = '<p style="color:var(--text-muted); padding:20px; text-align:center;">목차 정보가 없습니다.</p>';
@@ -4950,10 +5012,10 @@ function renderTocDrawer() {
   const ul = document.createElement('ul');
   ul.className = 'toc-list';
 
-  if (isMd) {
+  if (isTxtOrMd) {
     state.toc.forEach(item => {
       const li = document.createElement('li');
-      li.className = `toc-item toc-level-${item.level}`;
+      li.className = `toc-item toc-level-${item.level || 2}`;
       li.textContent = item.label;
       li.addEventListener('click', () => {
         const headingEl = elements.txtContent.querySelector(`#${item.id}`);
