@@ -32,6 +32,32 @@ html, body {
   overscroll-behavior-y: none;
 }
 
+/* 인라인 style="display: none" 또는 hidden 속성 적용 시 반응형 규칙보다 최우선 숨김 보장 */
+.reader-app[style*="display: none"],
+.reader-app[style*="display:none"],
+.file-list-view[style*="display: none"],
+.file-list-view[style*="display:none"],
+.epub-viewer-container[style*="display: none"],
+.epub-viewer-container[style*="display:none"],
+.txt-viewer-container[style*="display: none"],
+.txt-viewer-container[style*="display:none"],
+.reader-empty-state[style*="display: none"],
+.reader-empty-state[style*="display:none"],
+.reader-bottom-bar[style*="display: none"],
+.reader-bottom-bar[style*="display:none"],
+[hidden] {
+  display: none !important;
+}
+
+.file-list-view {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y !important;
+  overscroll-behavior-y: contain;
+  flex: 1 1 0%;
+  min-height: 0;
+}
+
 /* ── 테마별 스타일 ── */
 body.theme-light {
   --reader-bg: #f8fafc;
@@ -3514,10 +3540,19 @@ body.theme-dark .color-dot-btn.active {
     overflow: hidden;
     height: 100%;
     height: 100dvh;
+    display: flex;
+    flex-direction: column;
   }
 
   .nav {
     flex-shrink: 0;
+  }
+
+  .file-list-view {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   .reader-app {
@@ -3645,12 +3680,30 @@ body.theme-dark .color-dot-btn.active {
     overscroll-behavior: none;
   }
 
+  body {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
   .nav {
     flex-shrink: 0 !important;
     padding: 6px 12px 0 !important;
     touch-action: none !important;
     overscroll-behavior: none !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .file-list-view {
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: 0 !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-y !important;
+    overscroll-behavior: contain !important;
+    padding: 12px 14px max(32px, calc(20px + env(safe-area-inset-bottom, 16px))) !important;
     box-sizing: border-box !important;
   }
 
@@ -3661,7 +3714,7 @@ body.theme-dark .color-dot-btn.active {
     height: 0 !important;
     max-height: 100% !important;
     overflow: hidden !important;
-    display: flex !important;
+    display: flex;
     flex-direction: column !important;
     gap: 6px !important;
     touch-action: none !important;
@@ -3781,7 +3834,6 @@ body.theme-dark .color-dot-btn.active {
     flex: 1 1 0% !important;
     min-height: 0 !important;
     height: 100% !important;
-    display: flex !important;
     flex-direction: column !important;
     overflow: hidden !important;
     position: relative !important;
@@ -3802,7 +3854,7 @@ body.theme-dark .color-dot-btn.active {
 
   .reader-bottom-bar {
     flex-shrink: 0 !important;
-    padding: 6px 12px !important;
+    padding: 6px 12px max(6px, env(safe-area-inset-bottom, 6px)) !important;
     touch-action: none !important;
     overscroll-behavior: none !important;
     width: 100% !important;

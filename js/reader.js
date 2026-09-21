@@ -670,15 +670,27 @@ async function loadActiveBookFromStorage() {
 function showReaderWorkspace() {
   const fileListView = document.getElementById('file-list-view');
   const readerApp = document.getElementById('reader-app');
-  if (fileListView) fileListView.style.display = 'none';
-  if (readerApp) readerApp.style.display = 'flex';
+  if (fileListView) {
+    fileListView.style.display = 'none';
+    fileListView.hidden = true;
+  }
+  if (readerApp) {
+    readerApp.style.display = 'flex';
+    readerApp.hidden = false;
+  }
 }
 
 async function showReaderFileList() {
   const fileListView = document.getElementById('file-list-view');
   const readerApp = document.getElementById('reader-app');
-  if (readerApp) readerApp.style.display = 'none';
-  if (fileListView) fileListView.style.display = 'block';
+  if (readerApp) {
+    readerApp.style.display = 'none';
+    readerApp.hidden = true;
+  }
+  if (fileListView) {
+    fileListView.style.display = 'block';
+    fileListView.hidden = false;
+  }
   await renderReaderFileList();
 }
 
@@ -848,11 +860,26 @@ async function resetReaderApp() {
   if (typeof closeDrawer === 'function') {
     closeDrawer();
   }
-  if (elements.txtViewer) elements.txtViewer.style.display = 'none';
-  if (elements.epubViewer) elements.epubViewer.style.display = 'none';
-  if (elements.emptyState) elements.emptyState.style.display = 'flex';
-  if (elements.btnToggleToc) elements.btnToggleToc.style.display = 'none';
-  if (elements.readerBottomBar) elements.readerBottomBar.style.display = 'none';
+  if (elements.txtViewer) {
+    elements.txtViewer.style.display = 'none';
+    elements.txtViewer.hidden = true;
+  }
+  if (elements.epubViewer) {
+    elements.epubViewer.style.display = 'none';
+    elements.epubViewer.hidden = true;
+  }
+  if (elements.emptyState) {
+    elements.emptyState.style.display = 'flex';
+    elements.emptyState.hidden = false;
+  }
+  if (elements.btnToggleToc) {
+    elements.btnToggleToc.style.display = 'none';
+    elements.btnToggleToc.hidden = true;
+  }
+  if (elements.readerBottomBar) {
+    elements.readerBottomBar.style.display = 'none';
+    elements.readerBottomBar.hidden = true;
+  }
 
   updateMetadataUI();
   if (elements.currentChapterTitle) elements.currentChapterTitle.textContent = '';
@@ -2436,10 +2463,15 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   updateBookmarkBadge();
 
   elements.emptyState.style.display = 'none';
+  elements.emptyState.hidden = true;
   elements.epubViewer.style.display = 'none';
+  elements.epubViewer.hidden = true;
   elements.btnToggleToc.style.display = 'none';
+  elements.btnToggleToc.hidden = true;
   elements.txtViewer.style.display = 'flex';
+  elements.txtViewer.hidden = false;
   elements.readerBottomBar.style.display = 'flex';
+  elements.readerBottomBar.hidden = false;
   elements.currentChapterTitle.textContent = state.currentBook.title;
 
   elements.txtContent.classList.remove('is-markdown');
@@ -2703,9 +2735,17 @@ function openMdBook(title, author, content, bookId, skipSaveToDb = false, fallba
   updateBookmarkBadge();
 
   elements.emptyState.style.display = 'none';
+  elements.emptyState.hidden = true;
   elements.epubViewer.style.display = 'none';
+  elements.epubViewer.hidden = true;
+  if (elements.btnToggleToc) {
+    elements.btnToggleToc.style.display = 'none';
+    elements.btnToggleToc.hidden = true;
+  }
   elements.txtViewer.style.display = 'flex';
+  elements.txtViewer.hidden = false;
   elements.readerBottomBar.style.display = 'flex';
+  elements.readerBottomBar.hidden = false;
   elements.currentChapterTitle.textContent = state.currentBook.title;
   elements.txtContent.classList.add('is-markdown');
 
@@ -3634,10 +3674,15 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   updateBookmarkBadge();
 
   elements.emptyState.style.display = 'none';
+  elements.emptyState.hidden = true;
   elements.txtViewer.style.display = 'none';
+  elements.txtViewer.hidden = true;
   elements.epubViewer.style.display = 'flex';
+  elements.epubViewer.hidden = false;
   elements.btnToggleToc.style.display = 'inline-flex';
+  elements.btnToggleToc.hidden = false;
   elements.readerBottomBar.style.display = 'flex';
+  elements.readerBottomBar.hidden = false;
 
   // Force layout reflow so epubArea has definite width and height
   void elements.epubViewer.offsetWidth;
