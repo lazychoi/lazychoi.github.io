@@ -1002,6 +1002,7 @@ function positionSettingsPopover() {
     const btnRect = elements.btnToggleSettings ? elements.btnToggleSettings.getBoundingClientRect() : null;
 
     elements.settingsPopover.style.position = 'fixed';
+    elements.settingsPopover.style.zIndex = '3500';
     elements.settingsPopover.style.left = '12px';
     elements.settingsPopover.style.right = '12px';
     elements.settingsPopover.style.width = 'auto';
@@ -1020,6 +1021,7 @@ function positionSettingsPopover() {
   } else {
     // 아이패드, 태블릿, 데스크톱 (641px 이상): CSS 원본 스타일 유지
     elements.settingsPopover.style.position = '';
+    elements.settingsPopover.style.zIndex = '';
     elements.settingsPopover.style.top = '';
     elements.settingsPopover.style.bottom = '';
     elements.settingsPopover.style.left = '';
@@ -2547,7 +2549,7 @@ function renderTxtContent(fallbackPosition = null) {
   };
 
   // Restore saved scroll position if any
-  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '') {
+  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '' && fallbackPosition !== 'preserve') {
     const applyExplicitScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
@@ -2566,15 +2568,15 @@ function renderTxtContent(fallbackPosition = null) {
       applyExplicitScroll();
       isRestoringTxtScroll = false;
     }, 200);
-  } else if (wasScrolled) {
-    if (elements.txtViewer && prevViewerScrollTop > 0) {
+  } else if (fallbackPosition === 'preserve' || wasScrolled) {
+    if (elements.txtViewer) {
       elements.txtViewer.scrollTop = prevViewerScrollTop;
     }
     if (prevWindowScrollY > 0) {
       window.scrollTo(0, prevWindowScrollY);
     }
     requestAnimationFrame(() => {
-      if (elements.txtViewer && prevViewerScrollTop > 0) {
+      if (elements.txtViewer) {
         elements.txtViewer.scrollTop = prevViewerScrollTop;
       }
       if (prevWindowScrollY > 0) {
@@ -2703,9 +2705,12 @@ function applyHighlightsToParagraph(paragraphText, pIdx) {
   return resultHtml;
 }
 
-function bindHighlightClickEvents() {
-  const marks = elements.txtContent.querySelectorAll('.reader-highlight, .fn-badge[data-hl-id]');
+function bindHighlightClickEvents(container = elements.txtContent) {
+  if (!container) return;
+  const marks = container.querySelectorAll('.reader-highlight, .fn-badge[data-hl-id]');
   marks.forEach(mark => {
+    if (mark.dataset.hlBound) return;
+    mark.dataset.hlBound = 'true';
     mark.addEventListener('click', (e) => {
       e.stopPropagation();
       const hlId = mark.dataset.hlId;
@@ -3453,7 +3458,7 @@ function renderMdContent(fallbackPosition = null) {
   };
 
   // Restore scroll position
-  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '') {
+  if (fallbackPosition !== null && fallbackPosition !== undefined && fallbackPosition !== '' && fallbackPosition !== 'preserve') {
     const applyExplicitScroll = () => {
       const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
       if (scrollHeight > 0) {
@@ -3472,16 +3477,16 @@ function renderMdContent(fallbackPosition = null) {
       applyExplicitScroll();
       isRestoringTxtScroll = false;
     }, 200);
-  } else if (wasScrolled) {
+  } else if (fallbackPosition === 'preserve' || wasScrolled) {
     // Synchronously restore previous scroll position on highlight edit
-    if (elements.txtViewer && prevViewerScrollTop > 0) {
+    if (elements.txtViewer) {
       elements.txtViewer.scrollTop = prevViewerScrollTop;
     }
     if (prevWindowScrollY > 0) {
       window.scrollTo(0, prevWindowScrollY);
     }
     requestAnimationFrame(() => {
-      if (elements.txtViewer && prevViewerScrollTop > 0) {
+      if (elements.txtViewer) {
         elements.txtViewer.scrollTop = prevViewerScrollTop;
       }
       if (prevWindowScrollY > 0) {
@@ -4317,6 +4322,32 @@ document.addEventListener('mouseup', (e) => {
   }
 });
 
+// 모바일 터치 및 iOS Safari 선택 핸들 조작 시 실시간 텍스트 선택 감지
+document.addEventListener('selectionchange', () => {
+  if (!state.currentBook) return;
+  if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0 && sel.toString().trim().length > 0) {
+      handleTxtSelection();
+    }
+  }
+});
+
+// 모바일 터치 종료 시 선택 영역 확정
+document.addEventListener('touchend', (e) => {
+  if (e.target.closest('#selection-menu-bar') || e.target.closest('#highlight-toolbar') || e.target.closest('#settings-popover') || e.target.closest('.ai-modal') || e.target.closest('.meta-edit-modal') || e.target.closest('.reader-drawer')) {
+    return;
+  }
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+    setTimeout(() => {
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0 && sel.toString().trim().length > 0) {
+        handleTxtSelection();
+      }
+    }, 40);
+  }
+}, { passive: true });
+
 function getSelectionCharacterOffsetWithin(element, range) {
   try {
     const preCaretRange = range.cloneRange();
@@ -4330,40 +4361,93 @@ function getSelectionCharacterOffsetWithin(element, range) {
 
 function handleTxtSelection() {
   const sel = window.getSelection();
-  const selectedText = sel ? sel.toString().trim() : "";
+  if (!sel || !sel.rangeCount) return null;
+  const selectedText = sel.toString().trim();
 
   if (!selectedText || selectedText.length < 1) {
-    state.activeSelection = null;
-    return;
+    return null;
   }
 
-  // Check if selection is within txt-viewer
-  const range = sel.getRangeAt(0);
-  const commonAncestor = range.commonAncestorContainer;
-  const pElem = commonAncestor.nodeType === 1
-    ? commonAncestor.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th')
-    : (commonAncestor.parentElement ? commonAncestor.parentElement.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th') : null);
+  try {
+    // Check if selection is within txt-viewer
+    const range = sel.getRangeAt(0);
+    const commonAncestor = range.commonAncestorContainer;
+    const pElem = commonAncestor.nodeType === 1
+      ? commonAncestor.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th')
+      : (commonAncestor.parentElement ? commonAncestor.parentElement.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th') : null);
 
-  if (!pElem || !elements.txtContent.contains(pElem)) {
-    state.activeSelection = null;
-    return;
+    if (!pElem && !elements.txtContent.contains(commonAncestor) && !elements.txtViewer.contains(commonAncestor)) {
+      return null;
+    }
+
+    let pIdx = 0;
+    let fullParagraph = '';
+    if (pElem && (elements.txtContent.contains(pElem) || elements.txtViewer.contains(pElem))) {
+      pIdx = parseInt(pElem.dataset.pIdx, 10) || 0;
+      fullParagraph = pElem.textContent || '';
+    } else {
+      fullParagraph = selectedText;
+    }
+
+    const context = extractContextFromText(fullParagraph, selectedText);
+    const exactOffset = pElem ? getSelectionCharacterOffsetWithin(pElem, range) : -1;
+    const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(selectedText);
+
+    state.activeSelection = {
+      text: selectedText,
+      targetSentence: context.targetSentence,
+      prevSentence: context.prevSentence,
+      nextSentence: context.nextSentence,
+      pIdx,
+      offset: startOffset >= 0 ? startOffset : 0,
+      range: range.cloneRange()
+    };
+    return state.activeSelection;
+  } catch (err) {
+    console.warn('handleTxtSelection error:', err);
+    return null;
+  }
+}
+
+// 아이폰/모바일 등에서 포커스 이동 시 선택 해제를 방지하고 최신 선택 상태를 안전하게 반환
+function getActiveSelection() {
+  // 1. 기존에 보존된 유효한 선택 데이터가 있으면 반환
+  if (state.activeSelection && state.activeSelection.text && state.activeSelection.text.trim().length > 0) {
+    return state.activeSelection;
   }
 
-  const pIdx = parseInt(pElem.dataset.pIdx, 10);
-  const fullParagraph = pElem.textContent;
-  const context = extractContextFromText(fullParagraph, selectedText);
-  const exactOffset = getSelectionCharacterOffsetWithin(pElem, range);
-  const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(selectedText);
+  // 2. 활성 선택이 없으면 현재 창의 셀렉션에서 즉시 읽기 시도 (TXT/MD)
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+    const fresh = handleTxtSelection();
+    if (fresh && fresh.text && fresh.text.trim().length > 0) {
+      return fresh;
+    }
+  }
 
-  state.activeSelection = {
-    text: selectedText,
-    targetSentence: context.targetSentence,
-    prevSentence: context.prevSentence,
-    nextSentence: context.nextSentence,
-    pIdx,
-    offset: startOffset >= 0 ? startOffset : 0,
-    range: range.cloneRange()
-  };
+  // 3. EPUB iframe 셀렉션 백업 확인
+  if (state.currentBook && state.currentBook.type === 'epub') {
+    const iframe = elements.epubArea ? elements.epubArea.querySelector('iframe') : null;
+    if (iframe && iframe.contentWindow) {
+      try {
+        const iSel = iframe.contentWindow.getSelection();
+        const iText = iSel ? iSel.toString().trim() : '';
+        if (iText) {
+          state.activeSelection = {
+            text: iText,
+            targetSentence: iText,
+            prevSentence: '',
+            nextSentence: '',
+            cfiRange: null,
+            contents: null,
+            range: iSel.rangeCount ? iSel.getRangeAt(0).cloneRange() : null
+          };
+          return state.activeSelection;
+        }
+      } catch (e) {}
+    }
+  }
+
+  return state.activeSelection;
 }
 
 // EPUB Viewer Selection
@@ -4372,7 +4456,6 @@ function handleEpubSelection(cfiRange, contents) {
   const selectedText = sel ? sel.toString().trim() : "";
 
   if (!selectedText) {
-    state.activeSelection = null;
     return;
   }
 
@@ -4404,7 +4487,8 @@ function closeAllToolbars() {
 
 // ── Highlight Actions ──
 function applyHighlight(colorName) {
-  if (!state.activeSelection || !state.activeSelection.text) {
+  const currentSel = getActiveSelection();
+  if (!currentSel || !currentSel.text) {
     showToast('먼저 텍스트를 선택해주세요.');
     return;
   }
@@ -4460,10 +4544,40 @@ function applyHighlight(colorName) {
   sortHighlights();
   saveHighlights();
 
+  // 형광펜 추가 전 현재 스크롤 위치 보존 (화면 흔들림 및 이동 원천 방지)
+  const savedScrollTop = elements.txtViewer ? elements.txtViewer.scrollTop : 0;
+  const savedWindowY = window.scrollY || document.documentElement.scrollTop || 0;
+
   if (state.currentBook.type === 'txt') {
-    renderTxtContent();
+    let updatedInPlace = false;
+    if (targetHighlight && targetHighlight.pIdx !== undefined && elements.txtContent) {
+      const pElem = elements.txtContent.querySelector(`p[data-p-idx="${targetHighlight.pIdx}"]`);
+      if (pElem) {
+        const rawParagraphs = state.currentBook.content.split(/\n\s*\n/);
+        const rawText = rawParagraphs[targetHighlight.pIdx];
+        if (rawText) {
+          pElem.innerHTML = applyHighlightsToParagraph(rawText.trim(), targetHighlight.pIdx);
+          bindHighlightClickEvents(pElem);
+          updatedInPlace = true;
+        }
+      }
+    }
+    if (!updatedInPlace) {
+      renderTxtContent('preserve');
+    }
   } else if (state.currentBook.type === 'md') {
-    renderMdContent();
+    let updatedInPlace = false;
+    if (targetHighlight && elements.txtContent) {
+      applyDomHighlights(elements.txtContent, [targetHighlight]);
+      const addedMark = elements.txtContent.querySelector(`mark[data-hl-id="${hlId}"]`);
+      if (addedMark) {
+        bindHighlightClickEvents(addedMark.parentElement || elements.txtContent);
+        updatedInPlace = true;
+      }
+    }
+    if (!updatedInPlace) {
+      renderMdContent('preserve');
+    }
   } else if (state.currentBook.type === 'epub') {
     const isDark = state.settings.theme === 'dark';
     try {
@@ -4495,6 +4609,16 @@ function applyHighlight(colorName) {
       try {
         state.activeSelection.contents.window.getSelection().removeAllRanges();
       } catch (e) {}
+    }
+  }
+
+  // 화면 스크롤 위치 강제 유지 (형광펜 추가 후 화면이 움직이지 않도록 보장)
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+    if (elements.txtViewer && elements.txtViewer.scrollTop !== savedScrollTop) {
+      elements.txtViewer.scrollTop = savedScrollTop;
+    }
+    if ((window.scrollY || document.documentElement.scrollTop || 0) !== savedWindowY) {
+      window.scrollTo(0, savedWindowY);
     }
   }
 
@@ -4767,10 +4891,45 @@ function removeHighlight(hlId) {
   saveHighlights();
   updateHighlightBadge();
 
+  // 형광펜 삭제 전 현재 스크롤 위치 보존
+  const savedScrollTop = elements.txtViewer ? elements.txtViewer.scrollTop : 0;
+  const savedWindowY = window.scrollY || document.documentElement.scrollTop || 0;
+
   if (state.currentBook.type === 'txt') {
-    renderTxtContent();
+    let updatedInPlace = false;
+    if (hl && hl.pIdx !== undefined && elements.txtContent) {
+      const pElem = elements.txtContent.querySelector(`p[data-p-idx="${hl.pIdx}"]`);
+      if (pElem) {
+        const rawParagraphs = state.currentBook.content.split(/\n\s*\n/);
+        const rawText = rawParagraphs[hl.pIdx];
+        if (rawText) {
+          pElem.innerHTML = applyHighlightsToParagraph(rawText.trim(), hl.pIdx);
+          bindHighlightClickEvents(pElem);
+          updatedInPlace = true;
+        }
+      }
+    }
+    if (!updatedInPlace) {
+      renderTxtContent('preserve');
+    }
   } else if (state.currentBook.type === 'md') {
-    renderMdContent();
+    const marks = elements.txtContent.querySelectorAll(`mark[data-hl-id="${hlId}"]`);
+    if (marks.length > 0) {
+      marks.forEach(mark => {
+        const badge = mark.querySelector('.reader-note-badge');
+        if (badge) badge.remove();
+        const parent = mark.parentNode;
+        if (parent) {
+          while (mark.firstChild) {
+            parent.insertBefore(mark.firstChild, mark);
+          }
+          parent.removeChild(mark);
+          parent.normalize();
+        }
+      });
+    } else {
+      renderMdContent('preserve');
+    }
   } else if (state.currentBook.type === 'epub') {
     if (state.epub.rendition && hl.cfiRange) {
       try {
@@ -4798,6 +4957,16 @@ function removeHighlight(hlId) {
     }
   }
 
+  // 삭제 후 스크롤 위치 유지
+  if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+    if (elements.txtViewer && elements.txtViewer.scrollTop !== savedScrollTop) {
+      elements.txtViewer.scrollTop = savedScrollTop;
+    }
+    if ((window.scrollY || document.documentElement.scrollTop || 0) !== savedWindowY) {
+      window.scrollTo(0, savedWindowY);
+    }
+  }
+
   closeAllToolbars();
   showToast('형광펜이 삭제되었습니다.');
   if (elements.readerDrawer.classList.contains('open')) {
@@ -4817,6 +4986,40 @@ function isMobileOrTabletDevice() {
   return isMobileUA || isIPadOS || (isTouch && window.innerWidth <= 1024);
 }
 
+// ── 클립보드 복사 유틸리티 (iOS Safari 및 구형 모바일 100% 호환 보장) ──
+function copyTextToClipboard(text) {
+  if (!text) return Promise.resolve(false);
+
+  let execSuccess = false;
+  try {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.setAttribute('readonly', '');
+    textArea.style.position = 'fixed';
+    textArea.style.top = '-9999px';
+    textArea.style.left = '-9999px';
+    textArea.style.opacity = '0';
+    textArea.style.pointerEvents = 'none';
+    document.body.appendChild(textArea);
+
+    textArea.focus();
+    textArea.select();
+    textArea.setSelectionRange(0, text.length);
+    execSuccess = document.execCommand('copy');
+    document.body.removeChild(textArea);
+  } catch (e) {
+    execSuccess = false;
+  }
+
+  if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    return navigator.clipboard.writeText(text)
+      .then(() => true)
+      .catch(() => execSuccess);
+  }
+
+  return Promise.resolve(execSuccess);
+}
+
 /**
  * 구글 AI 검색 실행:
  * - 아이패드 / 모바일: 팝업 차단 및 인터페이스 깨짐 방지를 위해 기존 새 탭(_blank) 안전 모드 100% 유지
@@ -4825,9 +5028,7 @@ function isMobileOrTabletDevice() {
 function openGoogleAISearch(promptText) {
   if (!promptText) return;
 
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(promptText).catch(() => {});
-  }
+  copyTextToClipboard(promptText);
 
   const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(promptText)}&udm=50`;
 
@@ -6009,12 +6210,13 @@ function openWordEditModal() {
     return;
   }
 
-  if (!state.activeSelection || !state.activeSelection.text) {
+  const sel = getActiveSelection();
+  if (!sel || !sel.text) {
     showToast('수정할 텍스트를 먼저 선택해주세요.');
     return;
   }
 
-  const selText = state.activeSelection.text;
+  const selText = sel.text;
   if (elements.wordEditOriginal) {
     elements.wordEditOriginal.value = selText;
   }
@@ -7386,9 +7588,30 @@ function setupEventListeners() {
     }
   });
 
+  // Settings popover pointerdown close for iOS touch
+  document.addEventListener('pointerdown', (e) => {
+    if (elements.settingsPopover && elements.settingsPopover.classList.contains('open')) {
+      if (!e.target.closest('#settings-popover') && !e.target.closest('#btn-toggle-settings')) {
+        elements.settingsPopover.classList.remove('open');
+      }
+    }
+  });
+
   document.addEventListener('click', (e) => {
     if (!e.target.closest('#settings-popover') && !e.target.closest('#btn-toggle-settings')) {
       elements.settingsPopover.classList.remove('open');
+    }
+    // 본문 읽기 영역의 빈 곳을 탭하여 선택 해제한 경우에만 activeSelection 초기화
+    if (!e.target.closest('#selection-menu-bar') && !e.target.closest('#highlight-toolbar') &&
+        !e.target.closest('#settings-popover') && !e.target.closest('.ai-modal') &&
+        !e.target.closest('.meta-edit-modal') && !e.target.closest('.reader-drawer') &&
+        !e.target.closest('.reader-topbar') && !e.target.closest('.reader-bottom-bar')) {
+      setTimeout(() => {
+        const sel = window.getSelection();
+        if (!sel || !sel.toString().trim()) {
+          state.activeSelection = null;
+        }
+      }, 120);
     }
   });
 
@@ -7541,7 +7764,8 @@ function setupEventListeners() {
   if (btnEditWord) {
     btnEditWord.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (!state.activeSelection || !state.activeSelection.text) {
+      const sel = getActiveSelection();
+      if (!sel || !sel.text) {
         showToast('먼저 수정할 텍스트를 선택해주세요.');
         return;
       }
@@ -7594,7 +7818,8 @@ function setupEventListeners() {
       e.stopPropagation();
       const color = dot.dataset.color || 'yellow';
       setActiveHighlightColor(color);
-      if (!state.activeSelection || !state.activeSelection.text) {
+      const sel = getActiveSelection();
+      if (!sel || !sel.text) {
         showToast('먼저 텍스트를 선택해주세요.');
         return;
       }
@@ -7606,24 +7831,26 @@ function setupEventListeners() {
   if (elements.btnMenuAi) {
     elements.btnMenuAi.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (!state.activeSelection || !state.activeSelection.text) {
+      const sel = getActiveSelection();
+      if (!sel || !sel.text) {
         showToast('먼저 텍스트를 선택해주세요.');
         return;
       }
-      triggerGoogleAISearch(state.activeSelection);
+      triggerGoogleAISearch(sel);
     });
   }
 
   // 복사 버튼 클릭
   if (elements.btnMenuCopy) {
-    elements.btnMenuCopy.addEventListener('click', (e) => {
+    elements.btnMenuCopy.addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (!state.activeSelection || !state.activeSelection.text) {
+      const sel = getActiveSelection();
+      if (!sel || !sel.text) {
         showToast('먼저 텍스트를 선택해주세요.');
         return;
       }
-      const rawText = state.activeSelection.text;
-      navigator.clipboard.writeText(rawText).catch(() => {});
+      const rawText = sel.text;
+      await copyTextToClipboard(rawText);
 
       const shouldAutoSearch = state.settings.copySearchHighlights !== false;
 
@@ -7632,7 +7859,7 @@ function setupEventListeners() {
         const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
         const searchTerm = cleanedText || rawText.trim();
 
-        showToast('텍스트를 복사하고 형광펜 목록을 검색합니다.');
+        showToast('텍스트가 복사되었습니다. 형광펜 목록을 검색합니다.');
 
         state.highlightSearchQuery = searchTerm;
         openDrawer('highlights', true);

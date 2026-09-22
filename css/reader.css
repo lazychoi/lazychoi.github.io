@@ -3758,12 +3758,22 @@ body.theme-dark .color-dot-btn.active {
     gap: 4px !important;
     border-radius: 12px !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
-    touch-action: none !important;
     overscroll-behavior: none !important;
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: var(--reader-card-bg) !important;
+    z-index: 2500 !important;
+  }
+
+  .reader-topbar button,
+  .reader-topbar .btn-reader,
+  .selection-menu-bar .btn-selection-menu,
+  .selection-menu-bar .color-dot {
+    touch-action: manipulation !important;
   }
 
   .topbar-main-row {
@@ -3969,8 +3979,12 @@ body.theme-dark .color-dot-btn.active {
   .topbar-actions .btn-reader .badge-counter {
     display: none !important;
   }
+  .settings-btn-wrap {
+    position: static !important;
+  }
   .settings-popover {
-    position: fixed;
+    position: fixed !important;
+    z-index: 3500 !important;
     left: 12px;
     right: 12px;
     width: auto;
@@ -4006,6 +4020,7 @@ body.theme-dark .color-dot-btn.active {
     padding-top: 3px !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
+    touch-action: pan-x !important;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
