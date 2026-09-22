@@ -2465,6 +2465,7 @@ function openTxtBook(title, author, content, bookId, skipSaveToDb = false, fallb
   }
   elements.txtViewer.style.display = 'flex';
   elements.txtViewer.hidden = false;
+  elements.txtViewer.scrollLeft = 0;
   elements.readerBottomBar.style.display = 'flex';
   elements.readerBottomBar.hidden = false;
   elements.currentChapterTitle.textContent = state.currentBook.title;
@@ -2512,6 +2513,9 @@ function renderTxtContent(fallbackPosition = null) {
 
   // TXT Scroll progress tracking
   elements.txtViewer.onscroll = () => {
+    if (elements.txtViewer.scrollLeft !== 0) {
+      elements.txtViewer.scrollLeft = 0;
+    }
     if (isRestoringTxtScroll || (state.txt && state.txt.isResizing)) return;
     const scrollTop = elements.txtViewer.scrollTop;
     const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
@@ -2778,6 +2782,7 @@ function openMdBook(title, author, content, bookId, skipSaveToDb = false, fallba
   }
   elements.txtViewer.style.display = 'flex';
   elements.txtViewer.hidden = false;
+  elements.txtViewer.scrollLeft = 0;
   elements.readerBottomBar.style.display = 'flex';
   elements.readerBottomBar.hidden = false;
   elements.currentChapterTitle.textContent = state.currentBook.title;
@@ -3414,6 +3419,9 @@ function renderMdContent(fallbackPosition = null) {
   appendFootnotesSection(elements.txtContent, state.highlights);
 
   elements.txtViewer.onscroll = () => {
+    if (elements.txtViewer.scrollLeft !== 0) {
+      elements.txtViewer.scrollLeft = 0;
+    }
     if (isRestoringTxtScroll || (state.txt && state.txt.isResizing)) return;
     const scrollTop = elements.txtViewer.scrollTop;
     const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
