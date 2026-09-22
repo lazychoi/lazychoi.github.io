@@ -95,7 +95,10 @@
           <!-- 도서 목록으로 돌아가는 버튼 -->
           <button class="btn-reader" id="btn-open-file" title="도서 목록으로 이동">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M4 6h16M4 12h16M4 18h7"></path>
+              <rect x="3" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1.5"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1.5"></rect>
             </svg>
             목록
           </button>
@@ -103,7 +106,10 @@
           <!-- 목차 토글 버튼 -->
           <button class="btn-reader" id="btn-toggle-toc" title="목차 보기">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M4 6h16M4 12h16M4 18h7"></path>
+              <circle cx="4" cy="6" r="1.5" fill="currentColor"></circle>
+              <circle cx="4" cy="12" r="1.5" fill="currentColor"></circle>
+              <circle cx="4" cy="18" r="1.5" fill="currentColor"></circle>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 6h13M8 12h13M8 18h13"></path>
             </svg>
             목차
           </button>
@@ -361,7 +367,6 @@
               </svg>
               <span>책갈피</span>
             </button>
-            <div id="reader-info-stat">읽는 중</div>
           </div>
         </footer>
 

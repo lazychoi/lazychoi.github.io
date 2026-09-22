@@ -999,8 +999,7 @@ function attachSwipeGesture(targetElement, getIframeSelection = null) {
 function positionSettingsPopover() {
   if (!elements.settingsPopover || !elements.settingsPopover.classList.contains('open')) return;
   if (window.innerWidth <= 640) {
-    const btnRect = elements.btnToggleSettings.getBoundingClientRect();
-    const vh = window.innerHeight;
+    const btnRect = elements.btnToggleSettings ? elements.btnToggleSettings.getBoundingClientRect() : null;
 
     elements.settingsPopover.style.position = 'fixed';
     elements.settingsPopover.style.left = '12px';
@@ -1010,23 +1009,14 @@ function positionSettingsPopover() {
     elements.settingsPopover.style.margin = '0 auto';
 
     // 기본 위치: 설정 버튼 바로 아래
-    const idealTop = btnRect.bottom + 8;
-    // 팝오버 실제 콘텐츠 높이 계산
-    const contentHeight = elements.settingsPopover.scrollHeight > 100 ? elements.settingsPopover.scrollHeight : 480;
-    const bottomPadding = 20;
-
-    // 버튼 아래 배치 시 화면 하단이 넘어가면 상단으로 당겨 올려 전체 내용 노출
-    let popoverTop = idealTop;
-    if (idealTop + contentHeight > vh - bottomPadding) {
-      const liftedTop = vh - contentHeight - bottomPadding;
-      // 글로벌 상단 내비바(약 50px) 아래를 최소 상단 여백(52px)으로 설정
-      popoverTop = Math.max(52, Math.min(idealTop, liftedTop));
-    }
+    const popoverTop = (btnRect && btnRect.bottom > 0) ? Math.round(btnRect.bottom + 6) : 74;
 
     elements.settingsPopover.style.top = `${popoverTop}px`;
-    elements.settingsPopover.style.maxHeight = `calc(100dvh - ${popoverTop + 14}px - env(safe-area-inset-bottom, 12px))`;
+    elements.settingsPopover.style.maxHeight = `calc(100dvh - ${popoverTop}px - max(30px, calc(16px + env(safe-area-inset-bottom, 20px))))`;
     elements.settingsPopover.style.overflowY = 'auto';
     elements.settingsPopover.style.webkitOverflowScrolling = 'touch';
+    elements.settingsPopover.style.touchAction = 'pan-y';
+    elements.settingsPopover.style.paddingBottom = 'max(44px, calc(28px + env(safe-area-inset-bottom, 24px)))';
   } else {
     // 아이패드, 태블릿, 데스크톱 (641px 이상): CSS 원본 스타일 유지
     elements.settingsPopover.style.position = '';
@@ -1040,6 +1030,8 @@ function positionSettingsPopover() {
     elements.settingsPopover.style.maxHeight = '';
     elements.settingsPopover.style.overflowY = '';
     elements.settingsPopover.style.webkitOverflowScrolling = '';
+    elements.settingsPopover.style.touchAction = '';
+    elements.settingsPopover.style.paddingBottom = '';
   }
 }
 
@@ -6870,33 +6862,59 @@ function exportVocabToCsv() {
     showToast('내보낼 형광펜/단어가 없습니다.');
     return;
   }
-  const bookTitle = state.currentBook ? state.currentBook.title : '도서';
-  let csv = '\uFEFF'; // UTF-8 BOM for Excel / Anki
-  csv += '구문,발음기호,문맥 질문(전체 문장),구문 뜻,전체 문장 해석,공부횟수,오답횟수,도서명,등록일\n';
 
-  state.highlights.forEach(hl => {
-    const target = `"${(hl.text || '').replace(/"/g, '""')}"`;
-    const phonetic = `"${(hl.phonetic || '').replace(/"/g, '""')}"`;
-    const qSentence = `"${(hl.targetSentence || hl.text || '').replace(/"/g, '""')}"`;
-    const meaning = `"${(hl.targetMeaning || '').replace(/"/g, '""')}"`;
-    const trans = `"${(hl.sentenceTranslation || '').replace(/"/g, '""')}"`;
-    const study = hl.studyCount || 0;
-    const wrong = hl.wrongCount || 0;
-    const bTitle = `"${bookTitle.replace(/"/g, '""')}"`;
-    const date = hl.createdAt ? hl.createdAt.slice(0, 10) : '';
-    csv += `${target},${phonetic},${qSentence},${meaning},${trans},${study},${wrong},${bTitle},${date}\n`;
-  });
+  try {
+    const rawTitle = (state.currentBook && state.currentBook.title) ? state.currentBook.title : '도서';
+    const safeTitle = rawTitle.replace(/[\\/:*?"<>|]+/g, '_').trim() || '도서';
 
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${bookTitle}_단어장_${new Date().toISOString().slice(0, 10)}.csv`;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('단어장이 CSV 파일로 다운로드되었습니다.');
+    let csv = '\uFEFF'; // UTF-8 BOM for Excel / Anki
+    csv += '구문,발음기호,문맥 질문(전체 문장),구문 뜻,전체 문장 해석,공부횟수,오답횟수,도서명,등록일\n';
+
+    state.highlights.forEach(hl => {
+      const target = `"${String(hl.text || '').replace(/"/g, '""')}"`;
+      const phonetic = `"${String(hl.phonetic || '').replace(/"/g, '""')}"`;
+      const qSentence = `"${String(hl.targetSentence || hl.text || '').replace(/"/g, '""')}"`;
+      const meaning = `"${String(hl.targetMeaning || '').replace(/"/g, '""')}"`;
+      const trans = `"${String(hl.sentenceTranslation || '').replace(/"/g, '""')}"`;
+      const study = hl.studyCount || 0;
+      const wrong = hl.wrongCount || 0;
+      const bTitle = `"${rawTitle.replace(/"/g, '""')}"`;
+
+      let date = '';
+      if (hl.createdAt) {
+        try {
+          const d = new Date(hl.createdAt);
+          if (!isNaN(d.getTime())) {
+            date = d.toISOString().slice(0, 10);
+          } else {
+            date = String(hl.createdAt).slice(0, 10);
+          }
+        } catch (e) {
+          date = String(hl.createdAt).slice(0, 10);
+        }
+      }
+
+      csv += `${target},${phonetic},${qSentence},${meaning},${trans},${study},${wrong},${bTitle},${date}\n`;
+    });
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${safeTitle}_단어장_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => {
+      if (a.parentNode) {
+        document.body.removeChild(a);
+      }
+      URL.revokeObjectURL(url);
+    }, 2000);
+    showToast('단어장이 CSV 파일로 다운로드되었습니다.');
+  } catch (err) {
+    console.error('Export CSV Error:', err);
+    showToast('단어장 내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
+  }
 }
 
 let isBatchGenerating = false;
