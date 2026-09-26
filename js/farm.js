@@ -7,6 +7,88 @@ let terms = [];
 let editingId = null; // 수정 시 DB 고유 ID를 보관 (동음이의어 지원)
 let isLoggedIn = false; // 로그인 상태 여부
 
+// 인메모리 관련 용어 탐색용 인덱스
+let termSet = new Set();
+let multiWordTerms = [];
+
+// 표제어 인덱스 구축 (최초 로드 및 데이터 변경 시 호출)
+function buildTermIndex() {
+    termSet = new Set();
+    multiWordTerms = [];
+
+    for (let i = 0; i < terms.length; i++) {
+        const t = (terms[i].term || '').trim();
+        if (!t || t.length < 2) continue;
+
+        if (t.includes(' ')) {
+            multiWordTerms.push(t);
+        } else {
+            termSet.add(t);
+        }
+    }
+
+    // 긴 다어절 용어가 먼저 매칭되도록 길이 내림차순 정렬
+    multiWordTerms.sort((a, b) => b.length - a.length);
+}
+
+// 설명문에서 표제어 목록과 일치하는 관련 용어를 초고속으로 추출
+function extractRelatedTerms(meaning, currentTerm) {
+    if (!meaning) return [];
+
+    const matched = new Set();
+    const currentNorm = (currentTerm || '').trim().toLowerCase();
+
+    // 1. 다어절 표제어 (공백 포함) 검색
+    for (let i = 0; i < multiWordTerms.length; i++) {
+        const term = multiWordTerms[i];
+        if (term.toLowerCase() !== currentNorm && meaning.includes(term)) {
+            matched.add(term);
+        }
+    }
+
+    // 2. 텍스트 정제 (LaTeX 수식, 이미지 태그, 마크다운 기호 및 특수문자 제거)
+    const cleaned = meaning
+        .replace(/\[\[.*?\]\]/g, ' ')
+        .replace(/\$\$[\s\S]*?\$\$/g, ' ')
+        .replace(/\$[^\$]+?\$/g, ' ')
+        .replace(/[#*`_~\[\]\(\)\{\}<>"'.,;!?/:\-+=\\n\r]/g, ' ');
+
+    const words = cleaned.split(/\s+/).filter(w => w.length >= 2);
+
+    // 3. 단일어 표제어 검색 (어절 전체 일치 및 조사/어미 분리 접두사 일치)
+    for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+
+        // 3-1. 어절 전체가 표제어와 일치
+        if (termSet.has(word) && word.toLowerCase() !== currentNorm) {
+            matched.add(word);
+            continue;
+        }
+
+        // 3-2. 한국어 조사/어미가 붙은 경우 접두사 매칭 (예: '원생생물의' -> '원생생물')
+        for (let len = word.length - 1; len >= 2; len--) {
+            const prefix = word.slice(0, len);
+            if (termSet.has(prefix) && prefix.toLowerCase() !== currentNorm) {
+                matched.add(prefix);
+                break; // 가장 긴 접두사 1개만 매칭 후 다음 어절로
+            }
+        }
+    }
+
+    // 가나다순으로 정렬하여 반환
+    return Array.from(matched).sort((a, b) => a.localeCompare(b, 'ko'));
+}
+
+// 관련 용어 칩 클릭 시 해당 용어로 즉시 검색
+window.selectRelatedTerm = function(termName) {
+    if (!termName) return;
+    searchTerm.value = termName;
+    toggleClearButton();
+    searchTerms();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+
 // 1. DOM Elements
 const searchTerm = document.getElementById('searchTerm');
 const btnClearSearch = document.getElementById('btnClearSearch');
@@ -173,6 +255,8 @@ async function loadTermsFromSupabase() {
             meaning: row.meaning || ''
         }));
         
+        buildTermIndex(); // 관련 용어 인덱스 구축
+
         if (loadingMessage) {
             loadingMessage.style.display = 'none';
         }
@@ -241,26 +325,50 @@ function updatePreview() {
 
     const processedMeaning = renderMarkdownAndMath(meaning);
 
+    const relatedTerms = extractRelatedTerms(meaning, term);
+    let relatedHtml = '';
+    if (relatedTerms.length > 0) {
+        const chipsHtml = relatedTerms
+            .map(rt => `<span class="related-term-chip" style="cursor: default;">${rt}</span>`)
+            .join('');
+
+        relatedHtml = `
+            <div class="related-terms-container">
+                <div class="related-terms-header">
+                    <span class="related-terms-icon">🏷️</span>
+                    <span>관련 용어 (미리보기)</span>
+                </div>
+                <div class="related-terms-list">
+                    ${chipsHtml}
+                </div>
+            </div>
+        `;
+    }
+
     let html = '';
     if (foreign === '' && easy === '') {
         html = `
             <span class="term">${term}</span>
             <div class="meaning">${processedMeaning}</div>
+            ${relatedHtml}
         `;
     } else if (easy === '') {
         html = `
             <span class="term">${term}(${foreign})</span>
             <div class="meaning">${processedMeaning}</div>
+            ${relatedHtml}
         `;
     } else if (foreign === '') {
         html = `
             <span class="term">${term} → <span class="easyTerm">${easy}</span></span>
             <div class="meaning">${processedMeaning}</div>
+            ${relatedHtml}
         `;
     } else {
         html = `
             <span class="term">${term}(${foreign}) → <span class="easyTerm">${easy}</span></span>
             <div class="meaning">${processedMeaning}</div>
+            ${relatedHtml}
         `;
     }
 
@@ -399,13 +507,37 @@ function searchTerms() {
             `;
         }
 
-        // 3. Assemble Card Layout
+        // 3. Assemble Card Layout with Related Terms
+        const relatedTerms = extractRelatedTerms(t.meaning, t.term);
+        let relatedHtml = '';
+        if (relatedTerms.length > 0) {
+            const chipsHtml = relatedTerms
+                .map(rt => {
+                    const escaped = rt.replace(/'/g, "\\'");
+                    return `<button type="button" class="related-term-chip" onclick="selectRelatedTerm('${escaped}')" title="'${rt}' 용어 검색">${rt}</button>`;
+                })
+                .join('');
+
+            relatedHtml = `
+                <div class="related-terms-container">
+                    <div class="related-terms-header">
+                        <span class="related-terms-icon">🏷️</span>
+                        <span>관련 용어</span>
+                    </div>
+                    <div class="related-terms-list">
+                        ${chipsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
         li.innerHTML = `
             <div class="term-card-header">
                 ${titleHtml}
                 ${actionsHtml}
             </div>
             <div class="meaning">${processedMeaning}</div>
+            ${relatedHtml}
         `;
 
         resultsList.appendChild(li);
@@ -515,6 +647,8 @@ async function handleFormSubmit(e) {
             editingId = null;
         }
 
+        buildTermIndex(); // 관련 용어 인덱스 동기화
+
         termForm.reset();
         termFormDialog.close();
         searchTerm.value = termVal;
@@ -581,6 +715,8 @@ window.deleteTerm = async function(id) {
             if (idx !== -1) {
                 terms.splice(idx, 1);
             }
+
+            buildTermIndex(); // 관련 용어 인덱스 동기화
 
             // Close form dialog if currently editing this deleted item
             if (editingId === id) {
