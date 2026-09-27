@@ -7,40 +7,114 @@ let terms = [];
 let editingId = null; // 수정 시 DB 고유 ID를 보관 (동음이의어 지원)
 let isLoggedIn = false; // 로그인 상태 여부
 
-// 인메모리 관련 용어 탐색용 인덱스
-let termSet = new Set();
-let multiWordTerms = [];
+// HTML 특수문자 이스케이프 유틸리티
+function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+// 인메모리 관련 용어 탐색용 인덱스 (분야별 그룹화)
+// key: category (소문자/정규화), value: { termSet: Set, multiWordTerms: Array }
+let termIndexByCategory = new Map();
+let availableCategories = [];
 
 // 표제어 인덱스 구축 (최초 로드 및 데이터 변경 시 호출)
 function buildTermIndex() {
-    termSet = new Set();
-    multiWordTerms = [];
+    termIndexByCategory.clear();
+    const catSet = new Set();
 
     for (let i = 0; i < terms.length; i++) {
         const t = (terms[i].term || '').trim();
         if (!t || t.length < 2) continue;
 
-        if (t.includes(' ')) {
-            multiWordTerms.push(t);
-        } else {
-            termSet.add(t);
+        // 분야 목록 파싱 (쉼표 구분 복수 분야 지원)
+        const rawCats = (terms[i].category || '').split(',').map(s => s.trim()).filter(Boolean);
+        if (rawCats.length > 0) {
+            rawCats.forEach(c => catSet.add(c));
+        }
+
+        // 분야가 없으면 빈 문자열('') 키로 분류
+        const catKeys = rawCats.length > 0 ? rawCats.map(c => c.toLowerCase()) : [''];
+
+        for (const catKey of catKeys) {
+            if (!termIndexByCategory.has(catKey)) {
+                termIndexByCategory.set(catKey, {
+                    termSet: new Set(),
+                    multiWordTerms: []
+                });
+            }
+
+            const bucket = termIndexByCategory.get(catKey);
+            if (t.includes(' ')) {
+                bucket.multiWordTerms.push(t);
+            } else {
+                bucket.termSet.add(t);
+            }
         }
     }
 
-    // 긴 다어절 용어가 먼저 매칭되도록 길이 내림차순 정렬
-    multiWordTerms.sort((a, b) => b.length - a.length);
+    // 긴 다어절 용어가 먼저 매칭되도록 각 분야별 길이 내림차순 정렬
+    for (const bucket of termIndexByCategory.values()) {
+        bucket.multiWordTerms.sort((a, b) => b.length - a.length);
+    }
+
+    // 등록된 분야 목록 갱신 및 datalist 자동완성 반영
+    availableCategories = Array.from(catSet).sort((a, b) => a.localeCompare(b, 'ko'));
+    updateCategoryDatalist();
 }
 
-// 설명문에서 표제어 목록과 일치하는 관련 용어를 초고속으로 추출
-function extractRelatedTerms(meaning, currentTerm) {
+// 분야 자동완성 datalist 동적 갱신
+function updateCategoryDatalist() {
+    const datalist = document.getElementById('categoryOptions');
+    if (!datalist) return;
+    datalist.innerHTML = availableCategories.map(c => `<option value="${escapeHtml(c)}">`).join('');
+}
+
+// 설명문에서 같은 분야의 표제어와 일치하는 관련 용어를 추출
+function extractRelatedTerms(meaning, currentTerm, currentCategory) {
     if (!meaning) return [];
+
+    const cats = (currentCategory || '')
+        .split(',')
+        .map(s => s.trim().toLowerCase())
+        .filter(Boolean);
+
+    // 분야가 지정되지 않은 경우(미분류), 다른 분야와의 오탐 방지를 위해 관련 용어 매칭을 제외
+    if (cats.length === 0) return [];
+
+    // 현재 용어의 분야들에 속한 인덱스 버킷 결합
+    const combinedTermSet = new Set();
+    const combinedMultiWords = [];
+    const seenMulti = new Set();
+
+    for (const cat of cats) {
+        const bucket = termIndexByCategory.get(cat);
+        if (!bucket) continue;
+        for (const t of bucket.termSet) combinedTermSet.add(t);
+        for (const t of bucket.multiWordTerms) {
+            if (!seenMulti.has(t)) {
+                seenMulti.add(t);
+                combinedMultiWords.push(t);
+            }
+        }
+    }
+
+    if (combinedTermSet.size === 0 && combinedMultiWords.length === 0) return [];
+
+    // 긴 다어절 용어가 먼저 매칭되도록 정렬
+    combinedMultiWords.sort((a, b) => b.length - a.length);
 
     const matched = new Set();
     const currentNorm = (currentTerm || '').trim().toLowerCase();
 
     // 1. 다어절 표제어 (공백 포함) 검색
-    for (let i = 0; i < multiWordTerms.length; i++) {
-        const term = multiWordTerms[i];
+    for (let i = 0; i < combinedMultiWords.length; i++) {
+        const term = combinedMultiWords[i];
         if (term.toLowerCase() !== currentNorm && meaning.includes(term)) {
             matched.add(term);
         }
@@ -60,7 +134,7 @@ function extractRelatedTerms(meaning, currentTerm) {
         const word = words[i];
 
         // 3-1. 어절 전체가 표제어와 일치
-        if (termSet.has(word) && word.toLowerCase() !== currentNorm) {
+        if (combinedTermSet.has(word) && word.toLowerCase() !== currentNorm) {
             matched.add(word);
             continue;
         }
@@ -68,7 +142,7 @@ function extractRelatedTerms(meaning, currentTerm) {
         // 3-2. 한국어 조사/어미가 붙은 경우 접두사 매칭 (예: '원생생물의' -> '원생생물')
         for (let len = word.length - 1; len >= 2; len--) {
             const prefix = word.slice(0, len);
-            if (termSet.has(prefix) && prefix.toLowerCase() !== currentNorm) {
+            if (combinedTermSet.has(prefix) && prefix.toLowerCase() !== currentNorm) {
                 matched.add(prefix);
                 break; // 가장 긴 접두사 1개만 매칭 후 다음 어절로
             }
@@ -112,6 +186,7 @@ const btnSubmitTerm = document.getElementById('btnSubmitTerm');
 const btnCancelTerm = document.getElementById('btnCancelTerm');
 
 const inputTerm = document.getElementById('inputTerm');
+const inputCategory = document.getElementById('inputCategory');
 const inputForeign = document.getElementById('inputForeign');
 const inputEasy = document.getElementById('inputEasy');
 const inputMeaning = document.getElementById('inputMeaning');
@@ -187,6 +262,8 @@ window.addEventListener('DOMContentLoaded', () => {
         termFormTitle.textContent = '➕ 새 용어 추가';
         btnSubmitTerm.innerHTML = '➕ 추가하기';
         termForm.reset();
+        if (inputCategory) inputCategory.value = '';
+        updateCategoryDatalist();
         updatePreview();
         termFormDialog.showModal();
     });
@@ -199,6 +276,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Form inputs event listeners for real-time live preview inside dialog
     inputTerm.addEventListener('input', updatePreview);
+    if (inputCategory) inputCategory.addEventListener('input', updatePreview);
     inputForeign.addEventListener('input', updatePreview);
     inputEasy.addEventListener('input', updatePreview);
     inputMeaning.addEventListener('input', updatePreview);
@@ -250,6 +328,7 @@ async function loadTermsFromSupabase() {
         terms = allData.map(row => ({
             id: row.id,
             term: row.term || '',
+            category: row.category || '',
             foreignTerm: row.foreign_term || '',
             easyTerm: row.easy_term || '',
             meaning: row.meaning || ''
@@ -319,17 +398,18 @@ function renderMarkdownAndMath(text) {
 // Live Preview Render Logic
 function updatePreview() {
     const term = inputTerm.value.trim() || '표제어';
+    const category = inputCategory ? inputCategory.value.trim() : '';
     const foreign = inputForeign.value.trim();
     const easy = inputEasy.value.trim();
     const meaning = inputMeaning.value.trim() || '용어의 설명이 이곳에 표시됩니다.';
 
     const processedMeaning = renderMarkdownAndMath(meaning);
 
-    const relatedTerms = extractRelatedTerms(meaning, term);
+    const relatedTerms = extractRelatedTerms(meaning, term, category);
     let relatedHtml = '';
     if (relatedTerms.length > 0) {
         const chipsHtml = relatedTerms
-            .map(rt => `<span class="related-term-chip" style="cursor: default;">${rt}</span>`)
+            .map(rt => `<span class="related-term-chip" style="cursor: default;">${escapeHtml(rt)}</span>`)
             .join('');
 
         relatedHtml = `
@@ -345,28 +425,30 @@ function updatePreview() {
         `;
     }
 
+    const categoryBadge = category ? `<span class="term-category-badge">${escapeHtml(category)}</span>` : '';
+
     let html = '';
     if (foreign === '' && easy === '') {
         html = `
-            <span class="term">${term}</span>
+            <span class="term">${categoryBadge}${escapeHtml(term)}</span>
             <div class="meaning">${processedMeaning}</div>
             ${relatedHtml}
         `;
     } else if (easy === '') {
         html = `
-            <span class="term">${term}(${foreign})</span>
+            <span class="term">${categoryBadge}${escapeHtml(term)}(${escapeHtml(foreign)})</span>
             <div class="meaning">${processedMeaning}</div>
             ${relatedHtml}
         `;
     } else if (foreign === '') {
         html = `
-            <span class="term">${term} → <span class="easyTerm">${easy}</span></span>
+            <span class="term">${categoryBadge}${escapeHtml(term)} → <span class="easyTerm">${escapeHtml(easy)}</span></span>
             <div class="meaning">${processedMeaning}</div>
             ${relatedHtml}
         `;
     } else {
         html = `
-            <span class="term">${term}(${foreign}) → <span class="easyTerm">${easy}</span></span>
+            <span class="term">${categoryBadge}${escapeHtml(term)}(${escapeHtml(foreign)}) → <span class="easyTerm">${escapeHtml(easy)}</span></span>
             <div class="meaning">${processedMeaning}</div>
             ${relatedHtml}
         `;
@@ -457,6 +539,7 @@ function searchTerms() {
 
     const filteredTerms = terms.filter(t => 
         (t.term && regex.test(t.term)) || 
+        (t.category && regex.test(t.category)) ||
         (t.easyTerm && regex.test(t.easyTerm)) ||
         (t.foreignTerm && regex.test(t.foreignTerm))
     );
@@ -483,16 +566,20 @@ function searchTerms() {
         
         const processedMeaning = renderMarkdownAndMath(t.meaning);
         
-        // 1. Title formatting based on values
+        // 1. Title formatting with Category Badge based on values
+        const categoryBadge = t.category 
+            ? `<span class="term-category-badge">${escapeHtml(t.category)}</span>` 
+            : '';
+
         let titleHtml = '';
         if (t.foreignTerm === "" && t.easyTerm === "") {
-            titleHtml = `<span class="term">${t.term}</span>`;
+            titleHtml = `<span class="term">${categoryBadge}${escapeHtml(t.term)}</span>`;
         } else if (t.easyTerm === "") {
-            titleHtml = `<span class="term">${t.term}(${t.foreignTerm})</span>`;
+            titleHtml = `<span class="term">${categoryBadge}${escapeHtml(t.term)}(${escapeHtml(t.foreignTerm)})</span>`;
         } else if (t.foreignTerm === "") {
-            titleHtml = `<span class="term">${t.term} → <span class="easyTerm">${t.easyTerm}</span></span>`;
+            titleHtml = `<span class="term">${categoryBadge}${escapeHtml(t.term)} → <span class="easyTerm">${escapeHtml(t.easyTerm)}</span></span>`;
         } else {
-            titleHtml = `<span class="term">${t.term}(${t.foreignTerm}) → <span class="easyTerm">${t.easyTerm}</span></span>`;
+            titleHtml = `<span class="term">${categoryBadge}${escapeHtml(t.term)}(${escapeHtml(t.foreignTerm)}) → <span class="easyTerm">${escapeHtml(t.easyTerm)}</span></span>`;
         }
 
         // 2. Action buttons if logged in
@@ -507,14 +594,14 @@ function searchTerms() {
             `;
         }
 
-        // 3. Assemble Card Layout with Related Terms
-        const relatedTerms = extractRelatedTerms(t.meaning, t.term);
+        // 3. Assemble Card Layout with Related Terms (same category only)
+        const relatedTerms = extractRelatedTerms(t.meaning, t.term, t.category);
         let relatedHtml = '';
         if (relatedTerms.length > 0) {
             const chipsHtml = relatedTerms
                 .map(rt => {
                     const escaped = rt.replace(/'/g, "\\'");
-                    return `<button type="button" class="related-term-chip" onclick="selectRelatedTerm('${escaped}')" title="'${rt}' 용어 검색">${rt}</button>`;
+                    return `<button type="button" class="related-term-chip" onclick="selectRelatedTerm('${escaped}')" title="'${rt}' 용어 검색">${escapeHtml(rt)}</button>`;
                 })
                 .join('');
 
@@ -583,6 +670,7 @@ function searchTerms() {
 async function handleFormSubmit(e) {
     e.preventDefault();
     const termVal = inputTerm.value.trim();
+    const categoryVal = inputCategory ? inputCategory.value.trim() : '';
     const foreignVal = inputForeign.value.trim();
     const easyVal = inputEasy.value.trim();
     const meaningVal = inputMeaning.value.trim();
@@ -591,6 +679,7 @@ async function handleFormSubmit(e) {
 
     const termData = {
         term: termVal,
+        category: categoryVal,
         foreign_term: foreignVal,
         easy_term: easyVal,
         meaning: meaningVal
@@ -623,6 +712,7 @@ async function handleFormSubmit(e) {
             terms.push({
                 id: inserted.id,
                 term: inserted.term,
+                category: inserted.category || categoryVal,
                 foreignTerm: inserted.foreign_term,
                 easyTerm: inserted.easy_term,
                 meaning: inserted.meaning
@@ -640,6 +730,7 @@ async function handleFormSubmit(e) {
             terms.push({
                 id: editingId,
                 term: termVal,
+                category: categoryVal,
                 foreignTerm: foreignVal,
                 easyTerm: easyVal,
                 meaning: meaningVal
@@ -650,6 +741,7 @@ async function handleFormSubmit(e) {
         buildTermIndex(); // 관련 용어 인덱스 동기화
 
         termForm.reset();
+        if (inputCategory) inputCategory.value = '';
         termFormDialog.close();
         searchTerm.value = termVal;
         searchTerms();
@@ -672,10 +764,12 @@ window.startEdit = function(id) {
     btnSubmitTerm.innerHTML = '✏️ 수정완료';
 
     inputTerm.value = term.term;
+    if (inputCategory) inputCategory.value = term.category || '';
     inputForeign.value = term.foreignTerm || '';
     inputEasy.value = term.easyTerm || '';
     inputMeaning.value = term.meaning || '';
 
+    updateCategoryDatalist();
     updatePreview();
     termFormDialog.showModal();
 };
@@ -684,6 +778,7 @@ window.startEdit = function(id) {
 function cancelEditing() {
     editingId = null;
     inputTerm.value = '';
+    if (inputCategory) inputCategory.value = '';
     inputForeign.value = '';
     inputEasy.value = '';
     inputMeaning.value = '';
@@ -722,6 +817,7 @@ window.deleteTerm = async function(id) {
             if (editingId === id) {
                 editingId = null;
                 termForm.reset();
+                if (inputCategory) inputCategory.value = '';
                 termFormDialog.close();
             }
 
