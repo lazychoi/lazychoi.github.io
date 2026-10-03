@@ -898,12 +898,25 @@ function isHighlightTarget(target) {
   const tag = (target.tagName || '').toLowerCase();
   if (tag === 'rect' || tag === 'mark') return true;
   if (typeof target.closest === 'function') {
-    if (target.closest('.epubjs-hl') || target.closest('.reader-highlight') || target.closest('mark') || target.closest('.reader-note-badge')) {
+    if (
+      target.closest('.epubjs-hl') ||
+      target.closest('.reader-highlight') ||
+      target.closest('mark') ||
+      target.closest('.reader-note-badge') ||
+      target.closest('.reader-footnote-badge') ||
+      target.closest('a[epub\\:type="noteref"]') ||
+      target.closest('a[role="doc-noteref"]')
+    ) {
       return true;
     }
   }
   if (target.classList) {
-    if (target.classList.contains('epubjs-hl') || target.classList.contains('reader-highlight') || target.classList.contains('reader-note-badge')) {
+    if (
+      target.classList.contains('epubjs-hl') ||
+      target.classList.contains('reader-highlight') ||
+      target.classList.contains('reader-note-badge') ||
+      target.classList.contains('reader-footnote-badge')
+    ) {
       return true;
     }
   }
@@ -3522,6 +3535,7 @@ function bindHighlightClickEvents(container = elements.txtContent) {
     if (mark.dataset.hlBound) return;
     mark.dataset.hlBound = 'true';
     mark.addEventListener('click', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       const hlId = mark.dataset.hlId;
       const hl = state.highlights.find(h => h.id === hlId);
@@ -4867,6 +4881,46 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
         attachSwipeGesture(doc, () => (contents.window ? contents.window.getSelection() : null));
         doc.addEventListener("click", () => { showNavButtonsTemporarily(); });
 
+        // 형광펜 및 Popup Footnote 링크 가로채기 (capture: true로 최우선 가로채어 각주 xhtml 페이지 이동 방지)
+        const interceptFootnoteLinks = (e) => {
+          const target = e.target;
+          if (!target) return;
+
+          // 본문 복귀용 backlink는 정상 링크 동작 허용
+          if (target.closest && target.closest('[role="doc-backlink"], .footnote-backlink')) {
+            return;
+          }
+
+          const noterefAnchor = target.closest ? target.closest('a[epub\\:type="noteref"], a[role="doc-noteref"], mark a, .reader-footnote-badge a') : null;
+          const markEl = target.closest ? target.closest('mark.reader-highlight, .reader-highlight, mark') : null;
+          const badgeEl = target.closest ? target.closest('.reader-footnote-badge') : null;
+
+          const href = (noterefAnchor && noterefAnchor.getAttribute('href')) ||
+                       (target.tagName === 'A' ? target.getAttribute('href') : '') || '';
+
+          const isHighlightFootnote = noterefAnchor || markEl || badgeEl || href.includes('highlights.xhtml') || href.includes('#fn-');
+
+          if (isHighlightFootnote) {
+            // EPUB 3 각주 페이지(highlights.xhtml)로 이동하는 브라우저 및 epub.js 기본 동작 차단
+            e.preventDefault();
+            e.stopPropagation();
+            if (typeof e.stopImmediatePropagation === 'function') {
+              e.stopImmediatePropagation();
+            }
+
+            justClickedHighlight = true;
+            setTimeout(() => { justClickedHighlight = false; }, 400);
+
+            const { hl, mark } = findHighlightFromEpubTarget(target, doc);
+            if (hl) {
+              openHighlightToolbarFromEpub(hl, e, mark || target);
+            }
+          }
+        };
+
+        doc.addEventListener('click', interceptFootnoteLinks, true);
+        doc.addEventListener('touchend', interceptFootnoteLinks, { passive: false, capture: true });
+
         // EPUB 내 이미 삽입된 <mark> 형광펜 요소들에 클릭/탭 이벤트 바인딩
         bindAllMarksInEpub();
         setTimeout(bindAllMarksInEpub, 200);
@@ -4923,7 +4977,78 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
   }
 }
 
-// EPUB 내 삽입된 <mark> 태그들에 상호작용 바인딩
+// target 요소로부터 해당 highlight 객체와 기준 DOM 요소(mark)를 탐색
+function findHighlightFromEpubTarget(target, doc) {
+  if (!target) return { hl: null, mark: null };
+
+  // 1. target이 mark이거나 mark의 자식인 경우 (예: mark 내부의 a 태그)
+  const mark = target.closest ? target.closest('mark.reader-highlight, .reader-highlight, mark') : null;
+  if (mark) {
+    const hlId = mark.dataset.hlId;
+    if (hlId) {
+      const hl = state.highlights.find(h => h.id === hlId);
+      if (hl) return { hl, mark };
+    }
+    const markText = mark.textContent.replace(/💬.*$/, '').trim();
+    if (markText) {
+      let hl = state.highlights.find(h => h.text === markText);
+      if (!hl) {
+        const parentText = (mark.parentElement ? mark.parentElement.textContent : '').trim();
+        hl = state.highlights.find(h => h.text === markText && h.targetSentence && parentText.includes(h.targetSentence));
+      }
+      if (hl) return { hl, mark };
+    }
+  }
+
+  // 2. target이 .reader-footnote-badge이거나 그 자식인 경우 (예: sup.reader-footnote-badge 안의 a 태그)
+  const badge = target.closest ? target.closest('.reader-footnote-badge') : null;
+  if (badge) {
+    const prevMark = (badge.previousElementSibling && badge.previousElementSibling.matches && badge.previousElementSibling.matches('mark, .reader-highlight'))
+      ? badge.previousElementSibling
+      : (badge.parentElement ? badge.parentElement.querySelector('mark, .reader-highlight') : null);
+    if (prevMark) {
+      const res = findHighlightFromEpubTarget(prevMark, doc);
+      if (res.hl) return { hl: res.hl, mark: prevMark };
+    }
+
+    const a = badge.querySelector('a') || (target.tagName === 'A' ? target : null);
+    if (a) {
+      const href = a.getAttribute('href') || '';
+      const fnMatch = href.match(/#fn-(\d+)/);
+      if (fnMatch) {
+        const fnNum = parseInt(fnMatch[1], 10);
+        const sortedHls = [...state.highlights].sort(compareHighlights);
+        if (fnNum >= 1 && fnNum <= sortedHls.length) {
+          return { hl: sortedHls[fnNum - 1], mark: prevMark || badge };
+        }
+      }
+    }
+  }
+
+  // 3. target이 a[epub:type="noteref"]인 경우
+  const noterefA = target.closest ? target.closest('a[epub\\:type="noteref"], a[role="doc-noteref"]') : null;
+  if (noterefA) {
+    const parentMark = noterefA.closest ? noterefA.closest('mark, .reader-highlight') : null;
+    if (parentMark) {
+      const res = findHighlightFromEpubTarget(parentMark, doc);
+      if (res.hl) return res;
+    }
+
+    const href = noterefA.getAttribute('href') || '';
+    const fnMatch = href.match(/#fn-(\d+)/);
+    if (fnMatch) {
+      const fnNum = parseInt(fnMatch[1], 10);
+      const sortedHls = [...state.highlights].sort(compareHighlights);
+      if (fnNum >= 1 && fnNum <= sortedHls.length) {
+        return { hl: sortedHls[fnNum - 1], mark: parentMark || noterefA };
+      }
+    }
+  }
+
+  return { hl: null, mark: mark || null };
+}
+
+// EPUB 내 삽입된 <mark> 및 각주 태그들에 상호작용 바인딩
 let lastMarkTapTime = 0;
 function bindAllMarksInEpub() {
   const iframe = elements.epubArea.querySelector('iframe');
@@ -4931,12 +5056,17 @@ function bindAllMarksInEpub() {
   const doc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
   if (!doc) return;
 
-  const marks = doc.querySelectorAll('mark.reader-highlight, .reader-highlight, mark');
-  marks.forEach(mark => {
-    if (mark.dataset.boundClick === 'true') return;
-    mark.dataset.boundClick = 'true';
+  const targets = doc.querySelectorAll('mark.reader-highlight, .reader-highlight, mark, .reader-footnote-badge, a[epub\\:type="noteref"], a[role="doc-noteref"]');
+  targets.forEach(elem => {
+    if (elem.dataset.boundClick === 'true') return;
+    elem.dataset.boundClick = 'true';
 
     const onMarkClick = (e) => {
+      // 본문 복귀용 backlink는 통과
+      if (elem.closest && elem.closest('[role="doc-backlink"], .footnote-backlink')) {
+        return;
+      }
+
       const now = Date.now();
       if (e.type === 'click' && now - lastMarkTapTime < 500) {
         e.stopPropagation();
@@ -4949,41 +5079,34 @@ function bindAllMarksInEpub() {
 
       e.stopPropagation();
       e.preventDefault();
+      if (typeof e.stopImmediatePropagation === 'function') {
+        e.stopImmediatePropagation();
+      }
       justClickedHighlight = true;
       setTimeout(() => { justClickedHighlight = false; }, 400);
 
-      const hlId = mark.dataset.hlId;
-      const markText = mark.textContent.replace(/💬.*$/, '').trim();
-
-      // 1. 정확한 ID로 매칭
-      let hl = hlId ? state.highlights.find(h => h.id === hlId) : null;
-
-      // 2. 정확한 텍스트 및 문맥으로 정밀 매칭
-      if (!hl && markText) {
-        // 2-1. 텍스트 완전 일치 항목 우선 탐색
-        hl = state.highlights.find(h => h.text === markText);
-        
-        // 2-2. 부모 문맥이 일치하는 경우 탐색
-        if (!hl) {
-          const parentText = (mark.parentElement ? mark.parentElement.textContent : '').trim();
-          hl = state.highlights.find(h => h.text === markText && h.targetSentence && parentText.includes(h.targetSentence));
-        }
+      const { hl, mark } = findHighlightFromEpubTarget(elem, doc);
+      if (hl) {
+        openHighlightToolbarFromEpub(hl, e, mark || elem);
+        return;
       }
 
-      // 3. 매칭되는 하이라이트가 없을 때만 신규 생성 및 등록
-      if (!hl && markText) {
+      // 만약 기존 state에 아직 등록되지 않은 마크인 경우 즉석 생성
+      const markEl = elem.closest ? elem.closest('mark.reader-highlight, .reader-highlight, mark') : elem;
+      const markText = (markEl ? markEl.textContent : elem.textContent).replace(/💬.*$/, '').trim();
+      if (markText) {
         let detectedColor = 'yellow';
         for (const c of ['yellow', 'green', 'purple', 'blue', 'pink']) {
-          if (mark.classList.contains('hl-' + c)) {
+          if (elem.classList.contains('hl-' + c) || (markEl && markEl.classList.contains('hl-' + c))) {
             detectedColor = c;
             break;
           }
         }
-        const badge = mark.querySelector('.reader-note-badge');
-        const noteText = badge ? badge.textContent.replace(/^💬\s*/, '').trim() : (mark.getAttribute('title') ? mark.getAttribute('title').replace(/^메모:\s*/, '').trim() : '');
+        const badge = markEl ? markEl.querySelector('.reader-note-badge') : null;
+        const noteText = badge ? badge.textContent.replace(/^💬\s*/, '').trim() : (elem.getAttribute('title') ? elem.getAttribute('title').replace(/^메모:\s*/, '').trim() : '');
 
-        hl = {
-          id: hlId || `hl_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+        const newHl = {
+          id: `hl_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
           text: markText,
           color: detectedColor,
           note: noteText || '',
@@ -4995,20 +5118,17 @@ function bindAllMarksInEpub() {
           lastStudiedAt: null,
           createdAt: new Date().toISOString()
         };
-        mark.dataset.hlId = hl.id;
-        state.highlights.push(hl);
+        if (markEl) markEl.dataset.hlId = newHl.id;
+        state.highlights.push(newHl);
         sortHighlights();
         saveHighlights();
         updateHighlightBadge();
-      }
-
-      if (hl) {
-        openHighlightToolbarFromEpub(hl, e, mark);
+        openHighlightToolbarFromEpub(newHl, e, markEl || elem);
       }
     };
 
-    mark.addEventListener('click', onMarkClick);
-    mark.addEventListener('touchend', onMarkClick, { passive: false });
+    elem.addEventListener('click', onMarkClick, true);
+    elem.addEventListener('touchend', onMarkClick, { passive: false, capture: true });
   });
 }
 
