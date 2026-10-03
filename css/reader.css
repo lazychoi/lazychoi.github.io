@@ -3222,6 +3222,70 @@ body.theme-dark .quiz-phonetic-badge {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
+/* ── 도서 내보내기 모달 ── */
+.export-option-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--reader-border);
+  background: var(--reader-bg, #ffffff);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.export-option-card:hover {
+  border-color: var(--primary, #2563eb);
+  background: var(--btn-hover-bg, #f1f5f9);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.export-option-icon {
+  font-size: 26px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--border-light, #f1f5f9);
+}
+
+.export-option-content {
+  flex: 1;
+}
+
+.export-option-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.export-option-desc {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.export-option-arrow {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+  transition: transform 0.15s;
+}
+
+.export-option-card:hover .export-option-arrow {
+  color: var(--primary, #2563eb);
+  transform: translateX(3px);
+}
+
 .meta-input-group {
   display: flex;
   flex-direction: column;

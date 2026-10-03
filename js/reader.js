@@ -288,6 +288,11 @@ const elements = {
   bookFileInput: document.getElementById('book-file-input'),
   emptyFileInput: document.getElementById('empty-file-input'),
   btnExportBook: document.getElementById('btn-export-book'),
+  exportModal: document.getElementById('export-modal'),
+  btnChooseExportEpub: document.getElementById('btn-choose-export-epub'),
+  btnChooseExportMd: document.getElementById('btn-choose-export-md'),
+  btnCloseExportModal: document.getElementById('btn-close-export-modal'),
+  btnCancelExport: document.getElementById('btn-cancel-export'),
   btnLoadSample: document.getElementById('btn-load-sample'),
   btnEmptySample: document.getElementById('btn-empty-sample'),
   btnToggleToc: document.getElementById('btn-toggle-toc'),
@@ -1536,7 +1541,27 @@ function formatTxtParagraphHeading(pText) {
   return trimmed;
 }
 
+function openExportModal() {
+  if (!state.currentBook) {
+    showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
+    return;
+  }
+  if (elements.settingsPopover) {
+    elements.settingsPopover.classList.remove('open');
+  }
+  if (elements.exportModal) {
+    elements.exportModal.classList.add('open');
+  }
+}
+
+function closeExportModal() {
+  if (elements.exportModal) {
+    elements.exportModal.classList.remove('open');
+  }
+}
+
 async function exportBookAsEpub() {
+  closeExportModal();
   if (!state.currentBook) {
     showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
     return;
@@ -1562,7 +1587,329 @@ async function exportBookAsEpub() {
   }
 }
 
-const exportBookAsMarkdown = exportBookAsEpub;
+async function exportBookAsMarkdownZip() {
+  closeExportModal();
+  if (!state.currentBook) {
+    showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
+    return;
+  }
+
+  if (typeof JSZip === 'undefined') {
+    showToast('ZIP 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    return;
+  }
+
+  showToast('Markdown 및 이미지 압축 파일 생성 중...');
+
+  try {
+    const outZip = new JSZip();
+    const imgFolder = outZip.folder("images");
+    const bookTitle = state.currentBook.title || 'book';
+    const safeTitle = bookTitle.replace(/[/\\?%*:|"<>]/g, '_').trim() || 'book';
+
+    const sortedHls = [...state.highlights].sort(compareHighlights);
+    const hlFootnoteMap = new Map();
+    sortedHls.forEach((hl, idx) => hlFootnoteMap.set(hl.id, idx + 1));
+
+    if (state.currentBook.type === 'epub') {
+      const epubZip = await JSZip.loadAsync(state.currentBook.content);
+
+      // 1. Resolve OPF
+      let opfPath = 'OEBPS/content.opf';
+      try {
+        const containerFile = epubZip.file('META-INF/container.xml');
+        if (containerFile) {
+          const containerXml = await containerFile.async('text');
+          const match = containerXml.match(/full-path\s*=\s*["']([^"']+)["']/i);
+          if (match) opfPath = match[1];
+        }
+      } catch (e) {}
+      const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
+
+      const opfFile = epubZip.file(opfPath);
+      if (!opfFile) throw new Error('EPUB OPF 메타데이터 파일을 찾을 수 없습니다.');
+      const opfText = await opfFile.async('text');
+      const opfDoc = new DOMParser().parseFromString(opfText, 'application/xml');
+
+      const manifestItems = {};
+      opfDoc.querySelectorAll('manifest > item, item').forEach(item => {
+        const id = item.getAttribute('id');
+        const href = item.getAttribute('href');
+        if (id && href) manifestItems[id] = href;
+      });
+
+      const allSpineItems = [];
+      opfDoc.querySelectorAll('spine > itemref, itemref').forEach((ref, idx) => {
+        const idref = ref.getAttribute('idref');
+        const href = manifestItems[idref] || '';
+        allSpineItems.push({
+          spineIndex: idx,
+          idref: idref || '',
+          href: href || ''
+        });
+      });
+
+      const exportSpineItems = allSpineItems.filter(item => {
+        return item.href && !item.href.includes('highlights.xhtml') && !item.href.includes('highlights_appendix') && !item.href.includes('nav.xhtml');
+      });
+
+      const chapterHlsMap = new Map();
+      exportSpineItems.forEach(item => chapterHlsMap.set(item, []));
+      const unassignedHls = [];
+
+      sortedHls.forEach(hl => {
+        if (!hl.text) return;
+        const matchedItem = findSpineItemForHighlight(hl, allSpineItems, exportSpineItems);
+        if (matchedItem && chapterHlsMap.has(matchedItem)) {
+          chapterHlsMap.get(matchedItem).push(hl);
+        } else {
+          unassignedHls.push(hl);
+        }
+      });
+
+      const imagePathMap = new Map();
+      let imgSeq = 1;
+
+      const resolveAndSaveImage = async (src, chapterZipPath) => {
+        if (!src) return '';
+        const trimmed = src.trim();
+        if (trimmed.startsWith('data:image/')) {
+          const match = trimmed.match(/^data:image\/([a-zA-Z0-9+]+);base64,(.+)$/);
+          if (match) {
+            const ext = match[1].replace('jpeg', 'jpg');
+            const b64Data = match[2];
+            const fname = `image_${imgSeq++}.${ext}`;
+            imgFolder.file(fname, b64Data, { base64: true });
+            return `./images/${fname}`;
+          }
+          return trimmed;
+        }
+
+        if (/^https?:\/\//i.test(trimmed)) {
+          return trimmed;
+        }
+
+        // Relative path resolution in epub
+        let fullPath = trimmed;
+        if (!trimmed.startsWith('/')) {
+          const chapterDir = chapterZipPath.includes('/') ? chapterZipPath.substring(0, chapterZipPath.lastIndexOf('/') + 1) : '';
+          const parts = (chapterDir + trimmed).split('/');
+          const resolved = [];
+          for (const p of parts) {
+            if (p === '..') resolved.pop();
+            else if (p !== '.' && p !== '') resolved.push(p);
+          }
+          fullPath = resolved.join('/');
+        } else {
+          fullPath = trimmed.substring(1);
+        }
+
+        let zipFile = epubZip.file(fullPath);
+        if (!zipFile) {
+          zipFile = epubZip.file(opfDir + trimmed) || epubZip.file(trimmed);
+        }
+        if (!zipFile) {
+          const baseName = trimmed.split('/').pop().split('?')[0];
+          const foundKey = Object.keys(epubZip.files).find(k => k.endsWith('/' + baseName) || k === baseName);
+          if (foundKey) zipFile = epubZip.file(foundKey);
+        }
+
+        if (zipFile) {
+          if (imagePathMap.has(zipFile.name)) {
+            return imagePathMap.get(zipFile.name);
+          }
+          let baseName = zipFile.name.split('/').pop().split('?')[0] || `img_${imgSeq++}.png`;
+          baseName = baseName.replace(/[^a-zA-Z0-9._-]/g, '_');
+          let finalName = baseName;
+          let counter = 1;
+          while (outZip.file(`images/${finalName}`)) {
+            const dotIdx = baseName.lastIndexOf('.');
+            if (dotIdx !== -1) {
+              finalName = `${baseName.substring(0, dotIdx)}_${counter++}${baseName.substring(dotIdx)}`;
+            } else {
+              finalName = `${baseName}_${counter++}`;
+            }
+          }
+          const imgData = await zipFile.async('uint8array');
+          imgFolder.file(finalName, imgData);
+          const targetRef = `./images/${finalName}`;
+          imagePathMap.set(zipFile.name, targetRef);
+          return targetRef;
+        }
+
+        return trimmed;
+      };
+
+      let chaptersMd = '';
+
+      for (const spineItem of exportSpineItems) {
+        let cleanPath = opfDir + spineItem.href;
+        const parts = cleanPath.split('/');
+        const resolvedParts = [];
+        for (const part of parts) {
+          if (part === '..') resolvedParts.pop();
+          else if (part !== '.' && part !== '') resolvedParts.push(part);
+        }
+        const resolvedPath = resolvedParts.join('/');
+        const chapterZipPath = resolvedPath;
+        const chapterFile = epubZip.file(resolvedPath) || epubZip.file(cleanPath) || epubZip.file(spineItem.href);
+        if (!chapterFile) continue;
+
+        const chapterHtml = await chapterFile.async('text');
+        const doc = new DOMParser().parseFromString(chapterHtml, 'text/html');
+
+        // Clean any existing badge/mark leftover from previous exports so they don't corrupt markdown
+        doc.querySelectorAll('.reader-footnote-badge').forEach(b => b.remove());
+        doc.querySelectorAll('mark.reader-highlight, mark').forEach(m => {
+          const p = m.parentNode;
+          if (p) {
+            while (m.firstChild) p.insertBefore(m.firstChild, m);
+            p.removeChild(m);
+          }
+        });
+
+        // Resolve images in chapter
+        const imgEls = doc.querySelectorAll('img, image');
+        for (const el of imgEls) {
+          const src = el.getAttribute('src') || el.getAttribute('xlink:href') || el.getAttribute('href') || '';
+          if (src) {
+            const newSrc = await resolveAndSaveImage(src, chapterZipPath);
+            if (el.tagName.toLowerCase() === 'image') {
+              el.setAttribute('href', newSrc);
+              el.removeAttribute('xlink:href');
+            } else {
+              el.setAttribute('src', newSrc);
+            }
+          }
+        }
+
+        const chapterHls = chapterHlsMap.get(spineItem) || [];
+        for (let i = unassignedHls.length - 1; i >= 0; i--) {
+          const uHl = unassignedHls[i];
+          if (uHl.targetSentence && doc.body && doc.body.textContent.includes(uHl.targetSentence.trim())) {
+            chapterHls.push(uHl);
+            unassignedHls.splice(i, 1);
+          }
+        }
+
+        chapterHls.sort((a, b) => compareHighlights(b, a));
+        chapterHls.forEach(hl => {
+          const fnNum = hlFootnoteMap.get(hl.id);
+          injectFootnoteInDoc(doc, hl, fnNum);
+        });
+
+        const headings = doc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+        let minHeadingLevel = 6;
+        let hasHeading = false;
+        headings.forEach(h => {
+          const lvl = parseInt(h.tagName.substring(1), 10);
+          if (lvl < minHeadingLevel) minHeadingLevel = lvl;
+          hasHeading = true;
+        });
+
+        const body = doc.body || doc.documentElement;
+        let chapMd = cleanMarkdown(domToMarkdown(body, hasHeading ? minHeadingLevel : 1));
+
+        if (!hasHeading) {
+          const tocItem = findTocItemForHref(spineItem.href, state.epub.toc);
+          if (tocItem && tocItem.label && tocItem.label.trim()) {
+            const tocTitle = tocItem.label.trim();
+            const firstLine = chapMd.split('\n')[0].replace(/^[#*_\s]+|[#*_\s]+$/g, '').trim();
+            if (firstLine && firstLine.toLowerCase() === tocTitle.toLowerCase()) {
+              chapMd = chapMd.replace(/^[^\n]+/, `## ${tocTitle}`);
+            } else {
+              chapMd = `## ${tocTitle}\n\n${chapMd}`;
+            }
+          }
+        }
+
+        if (chapMd) {
+          chaptersMd += `${chapMd}\n\n`;
+        }
+      }
+
+      let fullMd = `# ${state.currentBook.title || 'EPUB Book'}\n\n`;
+      if (state.currentBook.author) {
+        fullMd += `*저자: ${state.currentBook.author}*\n\n`;
+      }
+      fullMd += `---\n\n${chaptersMd.trim()}\n\n`;
+
+      if (sortedHls.length > 0) {
+        fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+      }
+
+      const finalMdText = cleanMarkdown(fullMd) + '\n';
+      outZip.file(`${safeTitle}.md`, finalMdText);
+
+    } else if (state.currentBook.type === 'md' || state.currentBook.type === 'markdown') {
+      const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+      let mdText = bodyText;
+
+      let imgSeq = 1;
+      mdText = mdText.replace(/!\[([^\]]*)\]\((data:image\/([a-zA-Z0-9+]+);base64,([^\)]+))\)/g, (match, alt, fullData, ext, b64) => {
+        const cleanExt = ext.replace('jpeg', 'jpg');
+        const fname = `image_${imgSeq++}.${cleanExt}`;
+        imgFolder.file(fname, b64, { base64: true });
+        return `![${alt}](./images/${fname})`;
+      });
+
+      if (sortedHls.length > 0) {
+        mdText = mdText.trim() + '\n\n' + generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+      }
+
+      const finalMdText = cleanMarkdown(mdText) + '\n';
+      outZip.file(`${safeTitle}.md`, finalMdText);
+
+    } else {
+      const paragraphs = (state.currentBook.content || '').split(/\n\s*\n/);
+      let mdBody = '';
+      paragraphs.forEach((p, pIdx) => {
+        let pText = p.trim();
+        if (!pText) return;
+        const pHighlights = sortedHls.filter(h => (h.pIdx === pIdx || (h.pIdx === undefined && pText.includes(h.text))) && h.text);
+        pHighlights.sort((a, b) => b.text.length - a.text.length);
+        pHighlights.forEach(hl => {
+          const fnNum = hlFootnoteMap.get(hl.id);
+          const idx = pText.indexOf(hl.text);
+          if (idx !== -1) {
+            pText = pText.substring(0, idx + hl.text.length) + `[^${fnNum}]` + pText.substring(idx + hl.text.length);
+          }
+        });
+        mdBody += `${pText}\n\n`;
+      });
+
+      let fullMd = `# ${state.currentBook.title || 'Untitled'}\n\n`;
+      if (state.currentBook.author) fullMd += `*저자: ${state.currentBook.author}*\n\n`;
+      fullMd += `---\n\n${mdBody.trim()}\n\n`;
+      if (sortedHls.length > 0) {
+        fullMd += generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+      }
+      outZip.file(`${safeTitle}.md`, cleanMarkdown(fullMd) + '\n');
+    }
+
+    const zipBlob = await outZip.generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 }
+    });
+
+    const url = URL.createObjectURL(zipBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${safeTitle}_markdown.zip`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+    showToast('Markdown ZIP 내보내기가 완료되었습니다.');
+  } catch (err) {
+    console.error('Markdown Export Error:', err);
+    showToast('Markdown 내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
+  }
+}
+
+const exportBookAsMarkdown = exportBookAsMarkdownZip;
 
 // ── Text Search & Match Normalization Helpers ──
 function escapeRegex(s) {
@@ -2129,26 +2476,24 @@ function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
     mark.setAttribute('data-hl-id', hl.id || '');
     mark.setAttribute('style', `background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;`);
 
-    // <a epub:type="noteref" role="doc-noteref" href="..." id="...">
+    // 양방향 내부 링크: 본문 형광펜 단어 링크
     const a = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-    a.setAttribute('epub:type', 'noteref');
-    a.setAttribute('role', 'doc-noteref');
     a.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
     a.setAttribute('id', refId);
+    a.setAttribute('class', 'reader-highlight-link');
     a.setAttribute('style', 'color: inherit; text-decoration: none;');
     a.textContent = match;
     mark.appendChild(a);
     fragment.appendChild(mark);
 
-    // <sup class="reader-footnote-badge"><a epub:type="noteref" role="doc-noteref" href="...">[1]</a></sup>
+    // 양방향 내부 링크: <sup class="reader-footnote-badge"><a href="..." class="reader-footnote-link">[1]</a></sup>
     const sup = doc.createElementNS('http://www.w3.org/1999/xhtml', 'sup');
     sup.setAttribute('class', 'reader-footnote-badge');
     sup.setAttribute('style', 'font-size: 0.75em; vertical-align: super; margin-left: 2px;');
 
     const supA = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-    supA.setAttribute('epub:type', 'noteref');
-    supA.setAttribute('role', 'doc-noteref');
     supA.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
+    supA.setAttribute('class', 'reader-footnote-link');
     supA.setAttribute('style', 'color: #2563eb; text-decoration: none; font-weight: bold;');
     supA.textContent = `[${fnNum}]`;
     sup.appendChild(supA);
@@ -2258,20 +2603,20 @@ function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBac
       }
 
       itemsHtml += `
-    <aside epub:type="footnote" role="doc-footnote" id="fn-${fnNum}" class="reader-footnote-card hl-${color}">
+    <div id="fn-${fnNum}" class="reader-footnote-card hl-${color}">
       <div class="footnote-top">
         <div class="footnote-title-wrap">
           <span class="footnote-badge-num">#${fnNum}</span>
           <span class="footnote-term">${escapeXml(hl.text || '')}</span>
           ${hl.phonetic && hl.phonetic.trim() ? `<span class="footnote-phonetic">${escapeXml(hl.phonetic.trim())}</span>` : ''}
         </div>
-        ${backlinkHref ? `<a href="${backlinkHref}" role="doc-backlink" class="footnote-backlink">↩ 본문 위치</a>` : ''}
+        ${backlinkHref ? `<a href="${backlinkHref}" class="footnote-backlink">↩ 본문 위치로 돌아가기</a>` : ''}
       </div>
       ${meaningHtml}
       ${contextHtml}
       ${transHtml}
       ${noteHtml}
-    </aside>`;
+    </div>`;
     });
   }
 
@@ -2304,21 +2649,21 @@ function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBac
       color: #64748b;
       margin-bottom: 24px;
     }
-    aside[epub\\:type~="footnote"], aside.reader-footnote-card {
+    .reader-footnote-card {
       display: block;
-      margin-bottom: 20px;
+      margin-bottom: 22px;
       padding: 16px 18px;
       border-radius: 8px;
       background-color: #f8fafc;
       border: 1px solid #e2e8f0;
       border-left: 5px solid #eab308;
     }
-    aside.hl-yellow { border-left-color: #eab308; }
-    aside.hl-orange { border-left-color: #f97316; }
-    aside.hl-green  { border-left-color: #22c55e; }
-    aside.hl-purple { border-left-color: #a855f7; }
-    aside.hl-blue   { border-left-color: #0ea5e9; }
-    aside.hl-pink   { border-left-color: #ec4899; }
+    .reader-footnote-card.hl-yellow { border-left-color: #eab308; }
+    .reader-footnote-card.hl-orange { border-left-color: #f97316; }
+    .reader-footnote-card.hl-green  { border-left-color: #22c55e; }
+    .reader-footnote-card.hl-purple { border-left-color: #a855f7; }
+    .reader-footnote-card.hl-blue   { border-left-color: #0ea5e9; }
+    .reader-footnote-card.hl-pink   { border-left-color: #ec4899; }
     .footnote-top {
       display: flex;
       align-items: baseline;
@@ -2620,7 +2965,6 @@ async function exportExistingEpubWithHighlights() {
       if (!itemrefEl) {
         itemrefEl = opfDoc.createElementNS('http://www.idpf.org/2007/opf', 'itemref');
         itemrefEl.setAttribute('idref', 'highlights-notes');
-        itemrefEl.setAttribute('linear', 'no');
         spineEl.appendChild(itemrefEl);
       }
     }
@@ -2636,7 +2980,7 @@ async function exportExistingEpubWithHighlights() {
     let rawOpf = opfText;
     if (!rawOpf.includes(notesOpfHref)) {
       rawOpf = rawOpf.replace(/<\/manifest>/i, `  <item id="highlights-notes" href="${notesOpfHref}" media-type="application/xhtml+xml"/>\n  </manifest>`);
-      rawOpf = rawOpf.replace(/<\/spine>/i, `  <itemref idref="highlights-notes" linear="no"/>\n  </spine>`);
+      rawOpf = rawOpf.replace(/<\/spine>/i, `  <itemref idref="highlights-notes"/>\n  </spine>`);
       zip.file(opfPath, rawOpf);
     }
   }
@@ -2858,7 +3202,7 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
   </manifest>
   <spine toc="toc">
     <itemref idref="book"/>
-    <itemref idref="highlights-notes" linear="no"/>
+    <itemref idref="highlights-notes"/>
   </spine>
 </package>`;
   zip.file("OEBPS/content.opf", opfContent);
@@ -3170,6 +3514,16 @@ function domToMarkdown(node, minHeadingLevel = 1) {
     case 'i': return clean ? `*${clean}*` : '';
     case 'code': return clean ? `\`${clean}\`` : '';
     case 'pre': return clean ? `\n\n\`\`\`\n${clean}\n\`\`\`\n\n` : '';
+    case 'img': {
+      const src = node.getAttribute('src') || '';
+      const alt = node.getAttribute('alt') || '';
+      return src ? `\n\n![${alt}](${src})\n\n` : '';
+    }
+    case 'image': {
+      const src = node.getAttribute('href') || node.getAttribute('xlink:href') || '';
+      const alt = node.getAttribute('alt') || 'image';
+      return src ? `\n\n![${alt}](${src})\n\n` : '';
+    }
     case 'hr': return `\n\n---\n\n`;
     case 'br': return `\n`;
     default: return children;
@@ -8813,7 +9167,30 @@ function setupEventListeners() {
 
   // Sample Book & Export buttons
   if (elements.btnExportBook) {
-    elements.btnExportBook.addEventListener('click', exportBookAsEpub);
+    elements.btnExportBook.addEventListener('click', openExportModal);
+  }
+  if (elements.btnChooseExportEpub) {
+    elements.btnChooseExportEpub.addEventListener('click', () => {
+      closeExportModal();
+      exportBookAsEpub();
+    });
+  }
+  if (elements.btnChooseExportMd) {
+    elements.btnChooseExportMd.addEventListener('click', () => {
+      closeExportModal();
+      exportBookAsMarkdownZip();
+    });
+  }
+  if (elements.btnCloseExportModal) {
+    elements.btnCloseExportModal.addEventListener('click', closeExportModal);
+  }
+  if (elements.btnCancelExport) {
+    elements.btnCancelExport.addEventListener('click', closeExportModal);
+  }
+  if (elements.exportModal) {
+    elements.exportModal.addEventListener('click', (e) => {
+      if (e.target === elements.exportModal) closeExportModal();
+    });
   }
   if (elements.btnLoadSample) {
     elements.btnLoadSample.addEventListener('click', loadSampleBook);
@@ -9496,6 +9873,14 @@ function setupEventListeners() {
 
   // Keyboard Shortcuts (Quiz & Vocab Modal)
   document.addEventListener('keydown', (e) => {
+    // Export Modal shortcuts
+    if (elements.exportModal && elements.exportModal.classList.contains('open')) {
+      if (e.key === 'Escape') {
+        closeExportModal();
+        return;
+      }
+    }
+
     // Word Edit Modal shortcuts
     if (elements.wordEditModal && elements.wordEditModal.classList.contains('open')) {
       if (e.key === 'Escape') {

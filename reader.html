@@ -236,7 +236,7 @@
               <div class="setting-group">
                 <span class="setting-label">📁 도서 데이터 관리</span>
                 <div class="book-manage-btn-row">
-                  <button type="button" class="btn-setting-action" id="btn-export-book" title="형광펜 및 각주가 포함된 EPUB(.epub) 파일로 내보내기">
+                  <button type="button" class="btn-setting-action" id="btn-export-book" title="도서 내보내기 (EPUB / Markdown ZIP)">
                     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
                     </svg>
@@ -538,6 +538,51 @@
             Google AI 질문
           </button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 도서 내보내기 형식 선택 모달 -->
+  <div class="meta-edit-modal" id="export-modal">
+    <div class="meta-edit-card export-modal-card" style="max-width: 480px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <h3 style="font-size: 19px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+          <span>📦</span> 도서 내보내기
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-export-modal" aria-label="닫기" style="background:none; border:none; cursor:pointer; font-size:18px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px;">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">
+        내보낼 파일 형식을 선택해주세요.
+      </p>
+
+      <div class="export-options-list" style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+        <!-- Option 1: EPUB -->
+        <button type="button" class="export-option-card" id="btn-choose-export-epub">
+          <div class="export-option-icon">📖</div>
+          <div class="export-option-content">
+            <div class="export-option-title">EPUB 전자책 (.epub)</div>
+            <div class="export-option-desc">
+              형광펜 및 단어장/해석이 별도 각주 챕터(highlights.xhtml)로 포함된 전자책 (Apple Books 호환 양방향 내부 링크)
+            </div>
+          </div>
+          <div class="export-option-arrow">→</div>
+        </button>
+
+        <!-- Option 2: Markdown ZIP -->
+        <button type="button" class="export-option-card" id="btn-choose-export-md">
+          <div class="export-option-icon">📝</div>
+          <div class="export-option-content">
+            <div class="export-option-title">Markdown + 이미지 (.zip)</div>
+            <div class="export-option-desc">
+              도서 본문 Markdown(.md)과 본문에 포함된 모든 이미지(images/), 형광펜/Q&A 각주를 ZIP으로 압축하여 내보냅니다.
+            </div>
+          </div>
+          <div class="export-option-arrow">→</div>
+        </button>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end;">
+        <button type="button" class="btn-reader" id="btn-cancel-export">취소</button>
       </div>
     </div>
   </div>
