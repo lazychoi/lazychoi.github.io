@@ -3513,7 +3513,7 @@ class DynamicGenealogyApp {
       </div>
 
       <div style="margin-bottom:12px;">
-        <input type="text" id="editorSearchInput" class="form-control" placeholder="🔍 수정/삭제할 인물 이름 검색 (예: 정종, 세종대왕, 제우스)..." />
+        <input type="text" id="editorSearchInput" class="form-control" placeholder="" />
       </div>
 
       <div class="detail-label" id="editorPersonCount">인물 목록 (${allPersons.length}명)</div>
@@ -3709,12 +3709,12 @@ class DynamicGenealogyApp {
 
         <div class="form-group">
           <label class="form-label">이름 (필수)</label>
-          <input type="text" id="formName" class="form-control" value="${person.name}" required placeholder="예: 정종, 세종대왕, 제우스, 카오스" />
+          <input type="text" id="formName" class="form-control" value="${person.name}" required placeholder="" />
         </div>
 
         <div class="form-group">
           <label class="form-label">영문 이름 (선택)</label>
-          <input type="text" id="formNameEng" class="form-control" value="${person.nameEng || ''}" placeholder="예: Jeongjong, Zeus, Chaos" />
+          <input type="text" id="formNameEng" class="form-control" value="${person.nameEng || ''}" placeholder="" />
         </div>
 
         <div class="form-group">
@@ -3728,22 +3728,22 @@ class DynamicGenealogyApp {
 
         <div class="form-group">
           <label class="form-label">부모 이름 (쉼표 , 구분)</label>
-          <input type="text" id="formParents" class="form-control" list="personDatalist" value="${getNameListStr(person.parentIds)}" placeholder="예: 태조, 신의왕후 (이름 검색 가능)" />
+          <input type="text" id="formParents" class="form-control" list="personDatalist" value="${getNameListStr(person.parentIds)}" placeholder="" />
         </div>
 
         <div class="form-group">
           <label class="form-label">배우자 이름 (쉼표 , 구분)</label>
-          <input type="text" id="formSpouses" class="form-control" list="personDatalist" value="${getNameListStr(person.spouseIds)}" placeholder="예: 정안왕후 (이름 검색 가능)" />
+          <input type="text" id="formSpouses" class="form-control" list="personDatalist" value="${getNameListStr(person.spouseIds)}" placeholder="" />
         </div>
 
         <div class="form-group">
           <label class="form-label">칭호 / 부연 설명 (선택)</label>
-          <input type="text" id="formTitle" class="form-control" value="${this.escapeHtml(person.title || '')}" placeholder="예: 번개와 하늘의 신" />
+          <input type="text" id="formTitle" class="form-control" value="${this.escapeHtml(person.title || '')}" placeholder="" />
         </div>
 
         <div class="form-group">
           <label class="form-label">상세 정보 / 설명 (선택)</label>
-          <textarea id="formInfo" class="form-control" rows="3" placeholder="상세 설명을 입력하세요...">${this.escapeHtml(person.info || '')}</textarea>
+          <textarea id="formInfo" class="form-control" rows="3" placeholder="">${this.escapeHtml(person.info || '')}</textarea>
         </div>
 
         <div class="form-actions" style="margin-top:24px;">

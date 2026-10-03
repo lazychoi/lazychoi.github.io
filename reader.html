@@ -432,7 +432,7 @@
         <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
         </svg>
-        <input type="text" id="input-highlight-search" placeholder="단어(단어 단위 일치), 뜻, 예문 검색..." title="단어 단위 완전 일치(Match Whole Word)로 검색합니다" autocomplete="off" spellcheck="false">
+        <input type="text" id="input-highlight-search" placeholder="" title="단어 단위 완전 일치(Match Whole Word)로 검색합니다" autocomplete="off" spellcheck="false">
         <button type="button" id="btn-clear-highlight-search" class="btn-clear-search" aria-label="검색어 지우기" title="검색어 지우기" style="display: none;">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <line x1="2" y1="2" x2="10" y2="10"></line>
@@ -548,11 +548,11 @@
       <h3 style="font-size: 18px; font-weight:700;">도서 정보 수정</h3>
       <div class="meta-input-group">
         <label for="input-edit-title">도서명</label>
-        <input type="text" id="input-edit-title" placeholder="도서명 입력">
+        <input type="text" id="input-edit-title" placeholder="">
       </div>
       <div class="meta-input-group">
         <label for="input-edit-author">저자</label>
-        <input type="text" id="input-edit-author" placeholder="저자명 입력">
+        <input type="text" id="input-edit-author" placeholder="">
       </div>
       <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:8px;">
         <button type="button" class="btn-reader" id="btn-cancel-meta">취소</button>
@@ -569,7 +569,7 @@
       </h3>
       <div class="meta-input-group">
         <label for="input-bookmark-title">책갈피 이름</label>
-        <input type="text" id="input-bookmark-title" placeholder="예: 마지막 읽은 지점, 중요한 복선 등" autocomplete="off">
+        <input type="text" id="input-bookmark-title" placeholder="" autocomplete="off">
         <div class="bookmark-chips-row" id="bookmark-quick-chips">
           <button type="button" class="bookmark-chip" data-text="📍 마지막 읽은 지점">📍 마지막 읽은 지점</button>
           <button type="button" class="bookmark-chip" data-text="⭐ 중요한 부분">⭐ 중요한 부분</button>
@@ -608,7 +608,7 @@
 
       <div class="meta-input-group">
         <label for="word-edit-input">수정할 내용</label>
-        <input type="text" id="word-edit-input" placeholder="수정할 단어나 문장을 입력하세요" autocomplete="off">
+        <input type="text" id="word-edit-input" placeholder="" autocomplete="off">
         <span class="setting-subtext" style="font-size:12px; color:var(--text-muted); margin-top:2px;">
           * 수정한 내용은 도서에 저장되며 형광펜, 책갈피, 목차가 안전하게 유지됩니다.
         </span>
@@ -658,15 +658,15 @@
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-phonetic">🔊 발음기호 (IPA)</label>
-          <input type="text" id="input-edit-phonetic" placeholder="예: /ˈɡɪldɪd/ (선택사항)">
+          <input type="text" id="input-edit-phonetic" placeholder="">
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-meaning">💡 구문 뜻 (직역/의역)</label>
-          <input type="text" id="input-edit-meaning" placeholder="예: 금박을 입힌 또는 달을 달라고 울다 (문맥: 불가능한 것을 조르다)">
+          <input type="text" id="input-edit-meaning" placeholder="">
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-trans">📖 문장 한글 해석 및 주요 단어</label>
-          <textarea id="input-edit-trans" rows="5" placeholder="예: 내가 마지막으로 기억하는 것은 요한센이 손을 뻗는 모습이었다.&#10;&#10;[주요 단어 및 숙어]&#10;• reach out: 손을 뻗다"></textarea>
+          <textarea id="input-edit-trans" rows="5" placeholder=""></textarea>
         </div>
       </div>
       <div class="vocab-edit-footer">
