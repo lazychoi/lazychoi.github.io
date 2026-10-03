@@ -6752,6 +6752,43 @@ function copyTextToClipboard(text) {
   return Promise.resolve(execSuccess);
 }
 
+// ── 복사 및 형광펜 목록 자동 검색 공통 처리 함수 ──
+async function handleCopyAndSearch(rawText) {
+  if (!rawText) return;
+  await copyTextToClipboard(rawText);
+
+  const shouldAutoSearch = state.settings.copySearchHighlights !== false;
+
+  if (shouldAutoSearch) {
+    // 검색어 정제: 양 끝 공백 및 특수문자/문장부호 제거
+    const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
+    const searchTerm = cleanedText || rawText.trim();
+
+    showToast('텍스트가 복사되었습니다. 형광펜 목록을 검색합니다.');
+
+    closeAllToolbars();
+    state.highlightSearchQuery = searchTerm;
+    if (elements.inputHighlightSearch) {
+      elements.inputHighlightSearch.value = searchTerm;
+    }
+    if (elements.btnClearHighlightSearch) {
+      elements.btnClearHighlightSearch.style.display = searchTerm ? 'flex' : 'none';
+    }
+
+    openDrawer('highlights', true);
+
+    setTimeout(() => {
+      if (elements.inputHighlightSearch) {
+        elements.inputHighlightSearch.focus();
+        elements.inputHighlightSearch.select();
+      }
+    }, 60);
+  } else {
+    showToast('텍스트가 클립보드에 복사되었습니다.');
+    closeAllToolbars();
+  }
+}
+
 /**
  * 구글 AI 검색 실행:
  * - 아이패드 / 모바일: 팝업 차단 및 인터페이스 깨짐 방지를 위해 기존 새 탭(_blank) 안전 모드 100% 유지
@@ -6911,6 +6948,10 @@ function openDrawer(mode, preserveSearch = false) {
     if (!preserveSearch) {
       state.highlightSearchQuery = '';
       if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+    } else {
+      if (elements.inputHighlightSearch && state.highlightSearchQuery !== undefined) {
+        elements.inputHighlightSearch.value = state.highlightSearchQuery;
+      }
     }
     renderHighlightDrawer();
   }
@@ -7238,33 +7279,49 @@ function renderHighlightDrawer() {
   }
 
   // Filter highlights with Match Whole Word
-  const currentQuery = elements.inputHighlightSearch ? elements.inputHighlightSearch.value : (state.highlightSearchQuery || '');
-  const rawQuery = currentQuery.trim();
+  const isTypingInSearch = elements.inputHighlightSearch && document.activeElement === elements.inputHighlightSearch;
+  const currentQuery = isTypingInSearch
+    ? (elements.inputHighlightSearch.value || '')
+    : (state.highlightSearchQuery !== undefined && state.highlightSearchQuery !== null ? state.highlightSearchQuery : (elements.inputHighlightSearch ? elements.inputHighlightSearch.value : ''));
+  const rawQuery = (currentQuery || '').trim();
   const terms = rawQuery ? rawQuery.split(/\s+/).filter(Boolean) : [];
 
+  state.highlightSearchQuery = currentQuery;
+
   // Synchronize input value ONLY when user is NOT actively typing inside it
-  if (elements.inputHighlightSearch && document.activeElement !== elements.inputHighlightSearch && elements.inputHighlightSearch.value !== (state.highlightSearchQuery || '')) {
-    elements.inputHighlightSearch.value = state.highlightSearchQuery || '';
+  if (elements.inputHighlightSearch && !isTypingInSearch && elements.inputHighlightSearch.value !== currentQuery) {
+    elements.inputHighlightSearch.value = currentQuery;
   }
 
   let displayedHighlights = state.highlights;
   if (terms.length > 0) {
-    const termRegexes = terms.map(t => buildWholeWordRegex(t)).filter(Boolean);
-    displayedHighlights = state.highlights.filter(hl => {
-      const text = hl.text || '';
-      const meaning = hl.targetMeaning || '';
-      const trans = hl.sentenceTranslation || '';
-      const sentence = hl.targetSentence || '';
-      const note = hl.note || '';
+    const termRegexes = terms.map(t => {
+      const whole = buildWholeWordRegex(t);
+      if (whole) return whole;
+      try {
+        return new RegExp(escapeRegex(t), 'i');
+      } catch (e) {
+        return null;
+      }
+    }).filter(Boolean);
 
-      return termRegexes.every(re => 
-        re.test(text) ||
-        re.test(sentence) ||
-        re.test(meaning) ||
-        re.test(trans) ||
-        re.test(note)
-      );
-    });
+    if (termRegexes.length > 0) {
+      displayedHighlights = state.highlights.filter(hl => {
+        const text = hl.text || '';
+        const meaning = hl.targetMeaning || '';
+        const trans = hl.sentenceTranslation || '';
+        const sentence = hl.targetSentence || '';
+        const note = hl.note || '';
+
+        return termRegexes.every(re => 
+          re.test(text) ||
+          re.test(sentence) ||
+          re.test(meaning) ||
+          re.test(trans) ||
+          re.test(note)
+        );
+      });
+    }
   }
 
   // Update title with filtered count
@@ -9600,7 +9657,7 @@ function setupEventListeners() {
     });
   }
 
-  // 복사 버튼 클릭
+  // 복사 버튼 클릭 (메인 텍스트 선택 툴바)
   if (elements.btnMenuCopy) {
     elements.btnMenuCopy.addEventListener('click', async (e) => {
       e.stopPropagation();
@@ -9609,37 +9666,7 @@ function setupEventListeners() {
         showToast('먼저 텍스트를 선택해주세요.');
         return;
       }
-      const rawText = sel.text;
-      await copyTextToClipboard(rawText);
-
-      const shouldAutoSearch = state.settings.copySearchHighlights !== false;
-
-      if (shouldAutoSearch) {
-        // Sanitize search keyword: trim spaces and strip leading/trailing non-word punctuation
-        const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
-        const searchTerm = cleanedText || rawText.trim();
-
-        showToast('텍스트가 복사되었습니다. 형광펜 목록을 검색합니다.');
-
-        state.highlightSearchQuery = searchTerm;
-        openDrawer('highlights', true);
-
-        if (elements.inputHighlightSearch) {
-          elements.inputHighlightSearch.value = searchTerm;
-          setTimeout(() => {
-            if (elements.inputHighlightSearch) {
-              elements.inputHighlightSearch.focus();
-              elements.inputHighlightSearch.select();
-            }
-          }, 60);
-        }
-        if (elements.btnClearHighlightSearch) {
-          elements.btnClearHighlightSearch.style.display = searchTerm ? 'flex' : 'none';
-        }
-      } else {
-        showToast('텍스트가 클립보드에 복사되었습니다.');
-        closeAllToolbars();
-      }
+      await handleCopyAndSearch(sel.text);
     });
   }
 
@@ -9660,44 +9687,22 @@ function setupEventListeners() {
     }
   });
 
+  // 복사 버튼 클릭 (형광펜 하이라이트 팝업 툴바)
   if (elements.btnHlCopy) {
     elements.btnHlCopy.addEventListener('click', async (e) => {
       e.stopPropagation();
-      if (!state.activeHighlight || !state.activeHighlight.text) {
+      let targetText = (state.activeHighlight && state.activeHighlight.text) ? state.activeHighlight.text : '';
+      if (!targetText) {
+        const sel = getActiveSelection();
+        if (sel && sel.text) {
+          targetText = sel.text;
+        }
+      }
+      if (!targetText) {
         showToast('선택된 형광펜 텍스트가 없습니다.');
         return;
       }
-      const rawText = state.activeHighlight.text;
-      await copyTextToClipboard(rawText);
-
-      const shouldAutoSearch = state.settings.copySearchHighlights !== false;
-
-      if (shouldAutoSearch) {
-        // Sanitize search keyword: trim spaces and strip leading/trailing non-word punctuation
-        const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
-        const searchTerm = cleanedText || rawText.trim();
-
-        showToast('텍스트가 복사되었습니다. 형광펜 목록을 검색합니다.');
-
-        state.highlightSearchQuery = searchTerm;
-        openDrawer('highlights', true);
-
-        if (elements.inputHighlightSearch) {
-          elements.inputHighlightSearch.value = searchTerm;
-          setTimeout(() => {
-            if (elements.inputHighlightSearch) {
-              elements.inputHighlightSearch.focus();
-              elements.inputHighlightSearch.select();
-            }
-          }, 60);
-        }
-        if (elements.btnClearHighlightSearch) {
-          elements.btnClearHighlightSearch.style.display = searchTerm ? 'flex' : 'none';
-        }
-      } else {
-        showToast('텍스트가 클립보드에 복사되었습니다.');
-        closeAllToolbars();
-      }
+      await handleCopyAndSearch(targetText);
     });
   }
 
