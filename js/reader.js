@@ -324,6 +324,7 @@ const elements = {
   btnMenuCopy: document.getElementById('btn-menu-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
   btnHlAi: document.getElementById('btn-hl-ai'),
+  btnHlCopy: document.getElementById('btn-hl-copy'),
   btnHlEdit: document.getElementById('btn-hl-edit'),
   btnHlRemove: document.getElementById('btn-hl-remove'),
   hlToolbarMeaning: document.getElementById('hl-toolbar-meaning'),
@@ -6098,7 +6099,7 @@ function showHighlightToolbar(rect) {
     dot.classList.toggle('active', dot.dataset.color === currentColor);
   });
 
-  // Render bottom meaning if present
+  // Render bottom meaning & translation simultaneously (like quiz answer card)
   if (elements.hlToolbarMeaning) {
     const meaning = (state.activeHighlight && state.activeHighlight.targetMeaning)
       ? state.activeHighlight.targetMeaning.trim()
@@ -6106,43 +6107,102 @@ function showHighlightToolbar(rect) {
     const phonetic = (state.activeHighlight && state.activeHighlight.phonetic)
       ? state.activeHighlight.phonetic.trim()
       : '';
+    const trans = (state.activeHighlight && state.activeHighlight.sentenceTranslation)
+      ? state.activeHighlight.sentenceTranslation.trim()
+      : '';
+
     const phoneticBadge = phonetic ? `<span class="hl-phonetic-badge">${escapeHtml(phonetic)}</span>` : '';
-    if (meaning) {
-      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text">${phoneticBadge}${escapeHtml(meaning)}</span>`;
-      elements.hlToolbarMeaning.style.display = 'flex';
-    } else {
-      elements.hlToolbarMeaning.innerHTML = `<span class="hl-meaning-icon">💡</span><span class="hl-meaning-text" style="color:var(--text-muted); font-size:12px;">등록된 뜻 없음 (편집 버튼에서 추가)</span>`;
-      elements.hlToolbarMeaning.style.display = 'flex';
-    }
+    const hasMeaning = !!meaning;
+    const hasTrans = !!trans;
+
+    const meaningHtml = hasMeaning
+      ? `<span class="hl-meaning-text">${phoneticBadge}${escapeHtml(meaning)}</span>`
+      : `<span class="hl-unregistered-text">(뜻 미등록 - 편집 버튼에서 추가)</span>`;
+
+    const transHtml = hasTrans
+      ? `<span class="hl-trans-text">${escapeHtml(trans)}</span>`
+      : `<span class="hl-unregistered-text">(해석 미등록 - 편집 버튼에서 추가)</span>`;
+
+    elements.hlToolbarMeaning.innerHTML = `
+      <div class="hl-toolbar-field meaning-field">
+        <strong class="hl-field-label">💡 뜻:</strong>
+        ${meaningHtml}
+      </div>
+      <div class="hl-toolbar-field trans-field">
+        <strong class="hl-field-label">📖 해석:</strong>
+        ${transHtml}
+      </div>
+    `;
+    elements.hlToolbarMeaning.style.display = 'flex';
   }
 
   tb.style.display = 'flex';
 
-  const tbWidth = tb.offsetWidth || 240;
-  const tbHeight = tb.offsetHeight || 50;
+  const tbWidth = tb.offsetWidth || 500;
+  const tbHeight = tb.offsetHeight || 160;
   const x = rect.left + (rect.width / 2);
-  let y = rect.top + window.scrollY;
 
-  const isMobile = window.innerWidth <= 1024 || ('ontouchstart' in window);
-  const placeBelow = isMobile || (y - tbHeight - 12 < window.scrollY + 70);
+  const textTop = rect.top;
+  const textHeight = rect.height || 22;
+  const textBottom = rect.top + textHeight;
+  const viewportH = window.innerHeight;
+  const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
 
-  if (placeBelow) {
-    tb.classList.add('flipped');
-    tb.style.transform = 'translate(-50%, 0)';
-    y = rect.top + (rect.height || 22) + window.scrollY + 8;
+  const headerHeight = 65;
+  const bottomBarHeight = 45;
+
+  const spaceAbove = textTop - headerHeight;
+  const spaceBelow = (viewportH - bottomBarHeight) - textBottom;
+
+  // Decision logic:
+  // 1. If text is near the bottom (spaceBelow not enough for toolbar): MUST place ABOVE.
+  // 2. If text is near the top (spaceAbove not enough for toolbar): MUST place BELOW.
+  // 3. If both have enough space:
+  //    Prefer placing ABOVE if text is in lower half of screen (textTop >= viewportH * 0.45).
+  //    Prefer placing BELOW if text is in upper half of screen (textTop < viewportH * 0.45).
+  let placeAbove = false;
+  if (spaceBelow < tbHeight + 16) {
+    placeAbove = true;
+  } else if (spaceAbove < tbHeight + 16) {
+    placeAbove = false;
   } else {
-    tb.classList.remove('flipped');
-    tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
-    y = rect.top + window.scrollY - 8;
+    placeAbove = (textTop >= viewportH * 0.45);
   }
 
-  const minMargin = isMobile ? 28 : 16;
+  let y = 0;
+  if (placeAbove) {
+    tb.classList.remove('flipped');
+    tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
+    y = textTop + scrollY - 8;
+
+    // Safety check: if placing above would collide with top header
+    const topInViewport = textTop - 8 - tbHeight;
+    if (topInViewport < headerHeight + 6 && spaceBelow >= tbHeight + 16) {
+      tb.classList.add('flipped');
+      tb.style.transform = 'translate(-50%, 0)';
+      y = textBottom + scrollY + 8;
+    }
+  } else {
+    tb.classList.add('flipped');
+    tb.style.transform = 'translate(-50%, 0)';
+    y = textBottom + scrollY + 8;
+
+    // Safety check: if placing below would collide with bottom bar
+    const bottomInViewport = textBottom + 8 + tbHeight;
+    if (bottomInViewport > viewportH - bottomBarHeight && spaceAbove >= tbHeight + 16) {
+      tb.classList.remove('flipped');
+      tb.style.transform = 'translate(-50%, -100%) translateY(-8px)';
+      y = textTop + scrollY - 8;
+    }
+  }
+
+  const minMargin = 16;
   const clampedX = Math.max(tbWidth / 2 + minMargin, Math.min(window.innerWidth - tbWidth / 2 - minMargin, x));
   tb.style.left = `${clampedX}px`;
   tb.style.top = `${y}px`;
 
   const arrowRelX = x - (clampedX - tbWidth / 2);
-  const clampedArrowX = Math.max(16, Math.min(tbWidth - 16, arrowRelX));
+  const clampedArrowX = Math.max(24, Math.min(tbWidth - 24, arrowRelX));
   tb.style.setProperty('--arrow-left', `${clampedArrowX}px`);
 }
 
@@ -9599,6 +9659,47 @@ function setupEventListeners() {
       triggerGoogleAISearch(state.activeHighlight);
     }
   });
+
+  if (elements.btnHlCopy) {
+    elements.btnHlCopy.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      if (!state.activeHighlight || !state.activeHighlight.text) {
+        showToast('선택된 형광펜 텍스트가 없습니다.');
+        return;
+      }
+      const rawText = state.activeHighlight.text;
+      await copyTextToClipboard(rawText);
+
+      const shouldAutoSearch = state.settings.copySearchHighlights !== false;
+
+      if (shouldAutoSearch) {
+        // Sanitize search keyword: trim spaces and strip leading/trailing non-word punctuation
+        const cleanedText = rawText.trim().replace(/^[^\w가-힣]+|[^\w가-힣]+$/g, '');
+        const searchTerm = cleanedText || rawText.trim();
+
+        showToast('텍스트가 복사되었습니다. 형광펜 목록을 검색합니다.');
+
+        state.highlightSearchQuery = searchTerm;
+        openDrawer('highlights', true);
+
+        if (elements.inputHighlightSearch) {
+          elements.inputHighlightSearch.value = searchTerm;
+          setTimeout(() => {
+            if (elements.inputHighlightSearch) {
+              elements.inputHighlightSearch.focus();
+              elements.inputHighlightSearch.select();
+            }
+          }, 60);
+        }
+        if (elements.btnClearHighlightSearch) {
+          elements.btnClearHighlightSearch.style.display = searchTerm ? 'flex' : 'none';
+        }
+      } else {
+        showToast('텍스트가 클립보드에 복사되었습니다.');
+        closeAllToolbars();
+      }
+    });
+  }
 
   if (elements.btnHlEdit) {
     elements.btnHlEdit.addEventListener('click', () => {

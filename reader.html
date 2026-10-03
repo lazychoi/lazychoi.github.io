@@ -392,6 +392,14 @@
         </svg>
         AI 분석
       </button>
+      <button type="button" class="toolbar-btn" id="btn-hl-copy" title="복사 (설정에 따라 형광펜 목록 자동 검색)">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path
+            d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+          </path>
+        </svg>
+        복사
+      </button>
       <button type="button" class="toolbar-btn" id="btn-hl-edit" title="단어 뜻 및 문장 해석 편집">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path
@@ -707,11 +715,11 @@
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-meaning">💡 구문 뜻 (직역/의역)</label>
-          <input type="text" id="input-edit-meaning" placeholder="">
+          <textarea id="input-edit-meaning" rows="4" placeholder=""></textarea>
         </div>
         <div class="vocab-input-group">
           <label for="input-edit-trans">📖 문장 한글 해석 및 주요 단어</label>
-          <textarea id="input-edit-trans" rows="5" placeholder=""></textarea>
+          <textarea id="input-edit-trans" rows="4" placeholder=""></textarea>
         </div>
       </div>
       <div class="vocab-edit-footer">

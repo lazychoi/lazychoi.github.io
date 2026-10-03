@@ -1173,33 +1173,42 @@ body.theme-dark .toolbar-btn:hover {
   background: rgba(239, 68, 68, 0.1);
 }
 
-/* ── 하이라이트 팝오버 툴바 ('편집' 및 하단 뜻 표시) ── */
+/* ── 하이라이트 팝오버 툴바 ('편집' 및 하단 뜻/해석 표시) ── */
 #highlight-toolbar {
   flex-direction: column;
   align-items: stretch;
-  padding: 8px 10px;
-  gap: 8px;
-  max-width: 320px;
-  min-width: 220px;
+  padding: 12px 14px;
+  gap: 10px;
+  width: 500px;
+  max-width: min(520px, calc(100vw - 24px));
+  min-width: 280px;
   box-sizing: border-box;
+  border-radius: 16px;
+  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.22), 0 6px 14px -2px rgba(0, 0, 0, 0.08);
 }
 
 .highlight-toolbar-colors {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 2px 4px 6px;
+  gap: 12px;
+  padding: 2px 4px 8px;
   border-bottom: 1px solid var(--glass-border);
 }
 
 .highlight-toolbar-colors .color-dot {
-  width: 13px;
-  height: 13px;
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.highlight-toolbar-colors .color-dot:hover {
+  transform: scale(1.15);
 }
 
 .highlight-toolbar-colors .color-dot.active {
-  transform: scale(1.22);
+  transform: scale(1.25);
   outline: 2px solid var(--accent, #2563eb);
   outline-offset: 2px;
   box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
@@ -1215,23 +1224,30 @@ body.theme-dark .highlight-toolbar-colors .color-dot.active {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  white-space: nowrap;
+  flex-wrap: wrap;
+}
+
+.highlight-toolbar-buttons .toolbar-btn {
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  gap: 5px;
 }
 
 .highlight-toolbar-meaning {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  padding: 6px 10px;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
   background: var(--reader-bg, rgba(0, 0, 0, 0.04));
-  border-radius: 8px;
-  font-size: 13px;
-  line-height: 1.4;
+  border-radius: 10px;
+  font-size: 13.5px;
+  line-height: 1.5;
   color: var(--reader-text, #1e293b);
   border: 1px solid var(--reader-border, rgba(0, 0, 0, 0.08));
   word-break: break-word;
   white-space: normal;
-  max-height: 110px;
+  max-height: 220px;
   overflow-y: auto;
 }
 
@@ -1241,16 +1257,49 @@ body.theme-dark .highlight-toolbar-meaning {
   color: #f1f5f9;
 }
 
-.highlight-toolbar-meaning .hl-meaning-icon {
+.highlight-toolbar-meaning .hl-toolbar-field {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.highlight-toolbar-meaning .hl-field-label {
   flex-shrink: 0;
   font-size: 13px;
+  font-weight: 700;
+  color: var(--accent, #2563eb);
+}
+
+body.theme-dark .highlight-toolbar-meaning .hl-field-label {
+  color: #93c5fd;
 }
 
 .highlight-toolbar-meaning .hl-meaning-text {
   flex: 1;
-  font-size: 13px;
-  line-height: 1.4;
-  font-weight: 500;
+  font-weight: 600;
+  color: var(--reader-text, #1e293b);
+}
+
+body.theme-dark .highlight-toolbar-meaning .hl-meaning-text {
+  color: #f8fafc;
+}
+
+.highlight-toolbar-meaning .hl-trans-text {
+  flex: 1;
+  color: var(--reader-text, #334155);
+}
+
+body.theme-dark .highlight-toolbar-meaning .hl-trans-text {
+  color: #cbd5e1;
+}
+
+.highlight-toolbar-meaning .hl-unregistered-text {
+  flex: 1;
+  color: var(--text-muted, #94a3b8);
+  font-size: 12px;
+  font-style: italic;
 }
 
 /* ── 사이드패널 (목차 & 하이라이트 목록) ── */
@@ -3538,7 +3587,13 @@ body.theme-dark .word-edit-highlight-word {
 
 .vocab-input-group textarea {
   resize: vertical;
-  min-height: 75px;
+  min-height: 85px;
+}
+
+#input-edit-meaning,
+#input-edit-trans {
+  min-height: 90px;
+  height: 90px;
 }
 
 /* 단어장 모달 내 형광펜 색상 선택기 */
