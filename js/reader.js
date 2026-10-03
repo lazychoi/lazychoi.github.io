@@ -1523,34 +1523,33 @@ function formatTxtParagraphHeading(pText) {
   return trimmed;
 }
 
-async function exportBookAsMarkdown() {
+async function exportBookAsEpub() {
   if (!state.currentBook) {
     showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
     return;
   }
 
-  showToast('내보내기 파일 생성 중...');
+  if (typeof JSZip === 'undefined') {
+    showToast('ZIP 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+    return;
+  }
+
+  showToast('형광펜 및 각주가 포함된 EPUB 파일 생성 중...');
 
   try {
-    let markdownContent = '';
     if (state.currentBook.type === 'epub') {
-      markdownContent = await exportEpubAsMarkdown();
-    } else if (state.currentBook.type === 'md') {
-      markdownContent = exportMdAsMarkdown();
+      await exportExistingEpubWithHighlights();
     } else {
-      markdownContent = exportTxtAsMarkdown();
+      await exportTxtOrMdAsEpubWithHighlights();
     }
-
-    const safeTitle = (state.currentBook.title || 'book')
-      .replace(/[\\/:*?"<>|]+/g, '_')
-      .trim() || 'book';
-    downloadMarkdown(markdownContent, `${safeTitle}.md`);
-    showToast('내보내기가 완료되었습니다.');
+    showToast('EPUB 내보내기가 완료되었습니다.');
   } catch (err) {
     console.error('Export Error:', err);
-    showToast('내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
+    showToast('EPUB 내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
   }
 }
+
+const exportBookAsMarkdown = exportBookAsEpub;
 
 // ── Text Search & Match Normalization Helpers ──
 function escapeRegex(s) {
@@ -2052,6 +2051,817 @@ function findTocItemForHref(href, tocList) {
   return search(tocList);
 }
 
+// ── EPUB Export with Popup Footnotes & Isolated Highlights XHTML ──
+
+function getRelativePath(fromPath, toPath) {
+  if (!fromPath || !toPath) return toPath || '';
+  if (fromPath === toPath) return '';
+  const fromParts = fromPath.split('/').filter(Boolean);
+  const toParts = toPath.split('/').filter(Boolean);
+  fromParts.pop(); // Remove source file name, keep directory
+
+  let commonLen = 0;
+  while (commonLen < fromParts.length && commonLen < toParts.length && fromParts[commonLen] === toParts[commonLen]) {
+    commonLen++;
+  }
+
+  const upHops = fromParts.slice(commonLen).map(() => '..');
+  const downHops = toParts.slice(commonLen);
+
+  const rel = [...upHops, ...downHops].join('/');
+  return rel || './';
+}
+
+function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
+  if (!hl.text || !doc) return false;
+  const body = doc.body || doc.documentElement;
+  if (!body) return false;
+
+  const colorHex = getHighlightColorHex(hl.color || 'yellow');
+  const targetSentence = (hl.targetSentence || '').trim();
+  const hlText = (hl.text || '').trim();
+  if (!hlText) return false;
+
+  const replaceTextNodeAtOffset = (textNode, startIdx, endIdx) => {
+    const parent = textNode.parentNode;
+    if (!parent) return false;
+    const parentTag = (parent.nodeName || '').toLowerCase();
+    if (parentTag === 'mark' || parentTag === 'a' || parentTag === 'script' || parentTag === 'style') {
+      return false;
+    }
+
+    const val = textNode.nodeValue;
+    if (!val || startIdx < 0 || endIdx > val.length || startIdx >= endIdx) return false;
+
+    const before = val.substring(0, startIdx);
+    const match = val.substring(startIdx, endIdx);
+    const after = val.substring(endIdx);
+
+    const fragment = doc.createDocumentFragment();
+    if (before) fragment.appendChild(doc.createTextNode(before));
+
+    // <mark class="reader-highlight hl-yellow" ...>
+    const mark = doc.createElementNS('http://www.w3.org/1999/xhtml', 'mark');
+    mark.setAttribute('class', `reader-highlight hl-${hl.color || 'yellow'}`);
+    mark.setAttribute('data-hl-id', hl.id || '');
+    mark.setAttribute('style', `background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;`);
+
+    // <a epub:type="noteref" role="doc-noteref" href="..." id="...">
+    const a = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    a.setAttribute('epub:type', 'noteref');
+    a.setAttribute('role', 'doc-noteref');
+    a.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
+    a.setAttribute('id', refId);
+    a.setAttribute('style', 'color: inherit; text-decoration: none;');
+    a.textContent = match;
+    mark.appendChild(a);
+    fragment.appendChild(mark);
+
+    // <sup class="reader-footnote-badge"><a epub:type="noteref" role="doc-noteref" href="...">[1]</a></sup>
+    const sup = doc.createElementNS('http://www.w3.org/1999/xhtml', 'sup');
+    sup.setAttribute('class', 'reader-footnote-badge');
+    sup.setAttribute('style', 'font-size: 0.75em; vertical-align: super; margin-left: 2px;');
+
+    const supA = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+    supA.setAttribute('epub:type', 'noteref');
+    supA.setAttribute('role', 'doc-noteref');
+    supA.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
+    supA.setAttribute('style', 'color: #2563eb; text-decoration: none; font-weight: bold;');
+    supA.textContent = `[${fnNum}]`;
+    sup.appendChild(supA);
+    fragment.appendChild(sup);
+
+    if (after) fragment.appendChild(doc.createTextNode(after));
+
+    parent.replaceChild(fragment, textNode);
+    return true;
+  };
+
+  const replaceTextNodeWithFootnote = (textNode, searchText) => {
+    const val = textNode.nodeValue;
+    if (!val) return false;
+    let idx = val.indexOf(searchText);
+    if (idx === -1) {
+      idx = val.toLowerCase().indexOf(searchText.toLowerCase());
+    }
+    if (idx === -1) return false;
+    return replaceTextNodeAtOffset(textNode, idx, idx + searchText.length);
+  };
+
+  // 1. Context-aware sentence search
+  if (targetSentence) {
+    const candidates = Array.from(doc.querySelectorAll('p, li, blockquote, h1, h2, h3, h4, h5, h6, div, span'));
+    let matchedEl = null;
+    for (const el of candidates) {
+      if (el.textContent && el.textContent.includes(targetSentence)) {
+        matchedEl = el;
+      }
+    }
+
+    if (matchedEl) {
+      const walker = doc.createTreeWalker(matchedEl, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const val = node.nodeValue;
+        if (!val) continue;
+
+        if (val.includes(targetSentence)) {
+          const sIdx = val.indexOf(targetSentence);
+          let subIdx = val.indexOf(hlText, sIdx);
+          if (subIdx === -1) {
+            const lowerVal = val.toLowerCase();
+            const lowerHl = hlText.toLowerCase();
+            subIdx = lowerVal.indexOf(lowerHl, sIdx);
+          }
+          if (subIdx !== -1 && subIdx <= sIdx + targetSentence.length) {
+            if (replaceTextNodeAtOffset(node, subIdx, subIdx + hlText.length)) return true;
+          }
+        } else if (val.includes(hlText)) {
+          if (replaceTextNodeWithFootnote(node, hlText)) return true;
+        }
+      }
+    }
+  }
+
+  // 2. Fallback: Sufficiently long word or sentence (>= 4 chars)
+  if (!targetSentence || hlText.length >= 4) {
+    const walker = doc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const val = node.nodeValue;
+      if (!val) continue;
+      const parentTag = (node.parentNode ? node.parentNode.nodeName : '').toLowerCase();
+      if (parentTag === 'script' || parentTag === 'style' || parentTag === 'mark' || parentTag === 'a') continue;
+
+      if (val.includes(hlText)) {
+        if (replaceTextNodeWithFootnote(node, hlText)) return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBacklinkMap) {
+  let itemsHtml = '';
+  if (!highlights || highlights.length === 0) {
+    itemsHtml = '<p style="color: #64748b; font-size: 14px; text-align: center; padding: 40px 0;">저장된 형광펜 및 메모가 없습니다.</p>';
+  } else {
+    highlights.forEach((hl, i) => {
+      const fnNum = (hlFootnoteMap && hlFootnoteMap.get(hl.id)) || (i + 1);
+      const backlinkInfo = hlBacklinkMap && hlBacklinkMap.get(hl.id);
+      const backlinkHref = backlinkInfo ? backlinkInfo.href : '';
+      const color = hl.color || 'yellow';
+
+      let transHtml = '';
+      if (hl.sentenceTranslation && hl.sentenceTranslation.trim()) {
+        const escapedTrans = escapeXml(hl.sentenceTranslation.trim()).replace(/\n/g, '<br/>');
+        transHtml = `<div class="footnote-translation"><strong>📝 문장 해석 및 분석:</strong><br/>${escapedTrans}</div>`;
+      }
+
+      let contextHtml = '';
+      if (hl.targetSentence && hl.targetSentence.trim() && hl.targetSentence.trim() !== hl.text.trim()) {
+        contextHtml = `<div class="footnote-context"><strong>📖 문맥 예문:</strong> ${escapeXml(hl.targetSentence.trim())}</div>`;
+      }
+
+      let meaningHtml = '';
+      if (hl.targetMeaning && hl.targetMeaning.trim()) {
+        meaningHtml = `<div class="footnote-meaning">💡 ${escapeXml(hl.targetMeaning.trim())}</div>`;
+      }
+
+      let noteHtml = '';
+      if (hl.note && hl.note.trim()) {
+        noteHtml = `<div class="footnote-note">💬 <strong>독서 메모:</strong> ${escapeXml(hl.note.trim())}</div>`;
+      }
+
+      itemsHtml += `
+    <aside epub:type="footnote" role="doc-footnote" id="fn-${fnNum}" class="reader-footnote-card hl-${color}">
+      <div class="footnote-top">
+        <div class="footnote-title-wrap">
+          <span class="footnote-badge-num">#${fnNum}</span>
+          <span class="footnote-term">${escapeXml(hl.text || '')}</span>
+          ${hl.phonetic && hl.phonetic.trim() ? `<span class="footnote-phonetic">${escapeXml(hl.phonetic.trim())}</span>` : ''}
+        </div>
+        ${backlinkHref ? `<a href="${backlinkHref}" role="doc-backlink" class="footnote-backlink">↩ 본문 위치</a>` : ''}
+      </div>
+      ${meaningHtml}
+      ${contextHtml}
+      ${transHtml}
+      ${noteHtml}
+    </aside>`;
+    });
+  }
+
+  return `<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <title>형광펜 및 각주 - ${escapeXml(title || '도서')}</title>
+  <style type="text/css">
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.6;
+      padding: 24px 20px;
+      color: #1e293b;
+      background-color: #ffffff;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 12px;
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+    .meta-info {
+      font-size: 13px;
+      color: #64748b;
+      margin-bottom: 24px;
+    }
+    aside[epub\\:type~="footnote"], aside.reader-footnote-card {
+      display: block;
+      margin-bottom: 20px;
+      padding: 16px 18px;
+      border-radius: 8px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-left: 5px solid #eab308;
+    }
+    aside.hl-yellow { border-left-color: #eab308; }
+    aside.hl-orange { border-left-color: #f97316; }
+    aside.hl-green  { border-left-color: #22c55e; }
+    aside.hl-purple { border-left-color: #a855f7; }
+    aside.hl-blue   { border-left-color: #0ea5e9; }
+    aside.hl-pink   { border-left-color: #ec4899; }
+    .footnote-top {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .footnote-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .footnote-badge-num {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #2563eb;
+      background: #dbeafe;
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    .footnote-term {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .footnote-phonetic {
+      font-size: 14px;
+      color: #64748b;
+      font-style: italic;
+    }
+    .footnote-backlink {
+      font-size: 12px;
+      color: #2563eb;
+      text-decoration: none;
+      padding: 3px 8px;
+      background: #ffffff;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+    }
+    .footnote-meaning {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+      margin: 8px 0;
+    }
+    .footnote-context {
+      font-size: 13px;
+      color: #475569;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+    .footnote-translation {
+      font-size: 13px;
+      color: #334155;
+      line-height: 1.6;
+      margin: 8px 0;
+      background: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #e2e8f0;
+    }
+    .footnote-note {
+      font-size: 13px;
+      color: #1e40af;
+      background: #eff6ff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #bfdbfe;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>📖 형광펜 및 각주</h1>
+  <div class="meta-info">
+    도서: ${escapeXml(title || '미지정')} | 저자: ${escapeXml(author || '미지정')} | 총 ${highlights.length}개 구문 | 내보낸 날짜: ${new Date().toLocaleDateString()}
+  </div>
+  ${itemsHtml}
+</body>
+</html>`;
+}
+
+async function exportExistingEpubWithHighlights() {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('ZIP 라이브러리를 불러오지 못했습니다.');
+  }
+  const zip = await JSZip.loadAsync(state.currentBook.content);
+
+  // 1. Resolve OPF package file location
+  let opfPath = 'OEBPS/content.opf';
+  try {
+    const containerFile = zip.file('META-INF/container.xml');
+    if (containerFile) {
+      const containerXml = await containerFile.async('text');
+      const match = containerXml.match(/full-path\s*=\s*["']([^"']+)["']/i);
+      if (match) opfPath = match[1];
+    }
+  } catch (e) {}
+  const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
+
+  // 2. Parse OPF to get chapter files in spine reading order
+  const opfFile = zip.file(opfPath);
+  if (!opfFile) {
+    throw new Error('EPUB OPF 메타데이터 파일을 찾을 수 없습니다.');
+  }
+  const opfText = await opfFile.async('text');
+  const opfDoc = new DOMParser().parseFromString(opfText, 'application/xml');
+
+  const manifestItems = {};
+  opfDoc.querySelectorAll('manifest > item, item').forEach(item => {
+    const id = item.getAttribute('id');
+    const href = item.getAttribute('href');
+    if (id && href) manifestItems[id] = href;
+  });
+
+  const allSpineItems = [];
+  opfDoc.querySelectorAll('spine > itemref, itemref').forEach((ref, idx) => {
+    const idref = ref.getAttribute('idref');
+    const href = manifestItems[idref] || '';
+    allSpineItems.push({
+      spineIndex: idx,
+      idref: idref || '',
+      href: href || ''
+    });
+  });
+
+  const exportSpineItems = allSpineItems.filter(item => {
+    return item.href && !item.href.includes('highlights.xhtml') && !item.href.includes('highlights_appendix') && !item.href.includes('nav.xhtml');
+  });
+
+  const sortedHls = [...state.highlights].sort(compareHighlights);
+  const hlFootnoteMap = new Map();
+  sortedHls.forEach((hl, idx) => {
+    hlFootnoteMap.set(hl.id, idx + 1);
+  });
+
+  const chapterHlsMap = new Map();
+  exportSpineItems.forEach(item => chapterHlsMap.set(item, []));
+  const unassignedHls = [];
+
+  sortedHls.forEach(hl => {
+    if (!hl.text) return;
+    const matchedItem = findSpineItemForHighlight(hl, allSpineItems, exportSpineItems);
+    if (matchedItem && chapterHlsMap.has(matchedItem)) {
+      chapterHlsMap.get(matchedItem).push(hl);
+    } else {
+      unassignedHls.push(hl);
+    }
+  });
+
+  const notesFileName = `${opfDir}highlights.xhtml`;
+  const notesOpfHref = 'highlights.xhtml';
+  const hlBacklinkMap = new Map();
+
+  for (const spineItem of exportSpineItems) {
+    let cleanPath = opfDir + spineItem.href;
+    const parts = cleanPath.split('/');
+    const resolvedParts = [];
+    for (const part of parts) {
+      if (part === '..') {
+        resolvedParts.pop();
+      } else if (part !== '.' && part !== '') {
+        resolvedParts.push(part);
+      }
+    }
+    const resolvedPath = resolvedParts.join('/');
+
+    let actualZipEntryName = resolvedPath;
+    let chapterFile = zip.file(actualZipEntryName);
+    if (!chapterFile) {
+      actualZipEntryName = cleanPath;
+      chapterFile = zip.file(actualZipEntryName);
+    }
+    if (!chapterFile) {
+      actualZipEntryName = spineItem.href;
+      chapterFile = zip.file(actualZipEntryName);
+    }
+    if (!chapterFile) continue;
+
+    const chapterHtml = await chapterFile.async('text');
+    let doc = new DOMParser().parseFromString(chapterHtml, 'application/xhtml+xml');
+    if (doc.querySelector('parsererror')) {
+      doc = new DOMParser().parseFromString(chapterHtml, 'text/html');
+    }
+
+    if (doc.documentElement) {
+      doc.documentElement.setAttribute('xmlns:epub', 'http://www.idpf.org/2007/ops');
+      if (!doc.documentElement.getAttribute('xmlns')) {
+        doc.documentElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+      }
+    }
+
+    const chapterHls = chapterHlsMap.get(spineItem) || [];
+
+    for (let i = unassignedHls.length - 1; i >= 0; i--) {
+      const uHl = unassignedHls[i];
+      if (uHl.targetSentence && doc.body && doc.body.textContent.includes(uHl.targetSentence.trim())) {
+        chapterHls.push(uHl);
+        unassignedHls.splice(i, 1);
+      }
+    }
+
+    const relativeNotesHref = getRelativePath(actualZipEntryName, notesFileName);
+    const relativeChapterHref = getRelativePath(notesFileName, actualZipEntryName);
+
+    chapterHls.sort((a, b) => compareHighlights(b, a));
+
+    chapterHls.forEach(hl => {
+      const fnNum = hlFootnoteMap.get(hl.id);
+      const refId = `ref-fn-${fnNum}`;
+      const ok = injectPopupFootnoteInDoc(doc, hl, fnNum, relativeNotesHref, refId);
+      if (ok) {
+        hlBacklinkMap.set(hl.id, {
+          href: `${relativeChapterHref}#${refId}`
+        });
+      }
+    });
+
+    if (doc.head && !doc.head.querySelector('#reader-epub-export-style')) {
+      const styleEl = doc.createElementNS('http://www.w3.org/1999/xhtml', 'style');
+      styleEl.setAttribute('id', 'reader-epub-export-style');
+      styleEl.setAttribute('type', 'text/css');
+      styleEl.textContent = `
+        mark.reader-highlight {
+          color: inherit !important;
+          padding: 1px 3px !important;
+          border-radius: 3px !important;
+          text-decoration: none !important;
+        }
+        mark.reader-highlight.hl-yellow { background-color: #fde047 !important; }
+        mark.reader-highlight.hl-orange { background-color: #fdba74 !important; }
+        mark.reader-highlight.hl-green  { background-color: #86efac !important; }
+        mark.reader-highlight.hl-purple { background-color: #d8b4fe !important; }
+        mark.reader-highlight.hl-blue   { background-color: #7dd3fc !important; }
+        mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
+        .reader-footnote-badge {
+          font-size: 0.75em !important;
+          vertical-align: super !important;
+          margin-left: 2px !important;
+          text-decoration: none !important;
+        }
+        .reader-footnote-badge a {
+          color: #2563eb !important;
+          text-decoration: none !important;
+          font-weight: bold !important;
+        }
+      `;
+      doc.head.appendChild(styleEl);
+    }
+
+    let updatedXml = new XMLSerializer().serializeToString(doc);
+    if (!updatedXml.trim().startsWith('<?xml')) {
+      updatedXml = '<?xml version="1.0" encoding="utf-8"?>\n' + updatedXml;
+    }
+    zip.file(actualZipEntryName, updatedXml);
+  }
+
+  const notesHtml = generateHighlightsXhtml(
+    state.currentBook.title || 'EPUB Book',
+    state.currentBook.author || '',
+    sortedHls,
+    hlFootnoteMap,
+    hlBacklinkMap
+  );
+  zip.file(notesFileName, notesHtml);
+
+  let opfUpdated = false;
+  try {
+    const pkgEl = opfDoc.querySelector('package');
+    if (pkgEl) {
+      pkgEl.setAttribute('version', '3.0');
+      pkgEl.setAttribute('xmlns:epub', 'http://www.idpf.org/2007/ops');
+    }
+
+    const manifestEl = opfDoc.querySelector('manifest');
+    if (manifestEl) {
+      let itemEl = manifestEl.querySelector(`item[href="${notesOpfHref}"]`) || manifestEl.querySelector('#highlights-notes');
+      if (!itemEl) {
+        itemEl = opfDoc.createElementNS('http://www.idpf.org/2007/opf', 'item');
+        itemEl.setAttribute('id', 'highlights-notes');
+        itemEl.setAttribute('href', notesOpfHref);
+        itemEl.setAttribute('media-type', 'application/xhtml+xml');
+        manifestEl.appendChild(itemEl);
+      } else {
+        itemEl.setAttribute('href', notesOpfHref);
+        itemEl.setAttribute('media-type', 'application/xhtml+xml');
+      }
+    }
+
+    const spineEl = opfDoc.querySelector('spine');
+    if (spineEl) {
+      let itemrefEl = spineEl.querySelector('itemref[idref="highlights-notes"]');
+      if (!itemrefEl) {
+        itemrefEl = opfDoc.createElementNS('http://www.idpf.org/2007/opf', 'itemref');
+        itemrefEl.setAttribute('idref', 'highlights-notes');
+        itemrefEl.setAttribute('linear', 'no');
+        spineEl.appendChild(itemrefEl);
+      }
+    }
+
+    const updatedOpfText = new XMLSerializer().serializeToString(opfDoc);
+    zip.file(opfPath, updatedOpfText);
+    opfUpdated = true;
+  } catch (e) {
+    console.warn('OPF XML DOM update failed, falling back to string injection:', e);
+  }
+
+  if (!opfUpdated) {
+    let rawOpf = opfText;
+    if (!rawOpf.includes(notesOpfHref)) {
+      rawOpf = rawOpf.replace(/<\/manifest>/i, `  <item id="highlights-notes" href="${notesOpfHref}" media-type="application/xhtml+xml"/>\n  </manifest>`);
+      rawOpf = rawOpf.replace(/<\/spine>/i, `  <itemref idref="highlights-notes" linear="no"/>\n  </spine>`);
+      zip.file(opfPath, rawOpf);
+    }
+  }
+
+  try {
+    const navEntry = Object.values(manifestItems).find(h => h.includes('nav.xhtml')) || 'nav.xhtml';
+    const navFullPath = opfDir + navEntry;
+    const navFile = zip.file(navFullPath) || zip.file(navEntry);
+    if (navFile) {
+      const navXml = await navFile.async('text');
+      if (!navXml.includes(notesOpfHref) && navXml.includes('<ol>')) {
+        const relativeNavToNotes = getRelativePath(navFullPath, notesFileName);
+        const navItemStr = `\n      <li><a href="${relativeNavToNotes}">형광펜 및 각주</a></li>\n    </ol>`;
+        const updatedNavXml = navXml.replace(/<\/ol>/, navItemStr);
+        zip.file(navFile.name, updatedNavXml);
+      }
+    }
+  } catch (e) {}
+
+  try {
+    const ncxEntry = Object.values(manifestItems).find(h => h.endsWith('.ncx')) || 'toc.ncx';
+    const ncxFullPath = opfDir + ncxEntry;
+    const ncxFile = zip.file(ncxFullPath) || zip.file(ncxEntry);
+    if (ncxFile) {
+      const ncxXml = await ncxFile.async('text');
+      if (!ncxXml.includes(notesOpfHref) && ncxXml.includes('</navMap>')) {
+        const relativeNcxToNotes = getRelativePath(ncxFullPath, notesFileName);
+        const playOrderMatches = ncxXml.match(/playOrder="(\d+)"/g) || [];
+        let maxOrder = playOrderMatches.length + 1;
+        const navPointStr = `
+    <navPoint id="navPoint-highlights-notes" playOrder="${maxOrder}">
+      <navLabel><text>형광펜 및 각주</text></navLabel>
+      <content src="${relativeNcxToNotes}"/>
+    </navPoint>
+  </navMap>`;
+        const updatedNcx = ncxXml.replace(/<\/navMap>/, navPointStr);
+        zip.file(ncxFile.name, updatedNcx);
+      }
+    }
+  } catch (e) {}
+
+  zip.file("META-INF/reader_highlights.json", JSON.stringify({
+    title: state.currentBook.title,
+    author: state.currentBook.author,
+    exportedAt: new Date().toISOString(),
+    highlights: state.highlights
+  }, null, 2));
+
+  await downloadZipAsEpub(zip, state.currentBook.title);
+}
+
+async function exportTxtOrMdAsEpubWithHighlights() {
+  const zip = new JSZip();
+
+  zip.file("mimetype", "application/epub+zip", { compression: "STORE" });
+
+  zip.file("META-INF/container.xml", `<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="OEBPS/content.opf" media-type="application/oebps-package+xml"/>
+  </rootfiles>
+</container>`);
+
+  zip.file("META-INF/reader_highlights.json", JSON.stringify({
+    title: state.currentBook.title,
+    author: state.currentBook.author,
+    exportedAt: new Date().toISOString(),
+    highlights: state.highlights
+  }, null, 2));
+
+  zip.file("OEBPS/styles.css", `
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.8;
+  padding: 24px 20px;
+  color: #1e293b;
+  max-width: 800px;
+  margin: 0 auto;
+}
+h1 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.author { font-size: 14px; color: #64748b; margin-bottom: 24px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
+p { margin-bottom: 1.4em; }
+mark.reader-highlight {
+  color: inherit !important;
+  padding: 1px 3px !important;
+  border-radius: 3px !important;
+  text-decoration: none !important;
+}
+mark.reader-highlight.hl-yellow { background-color: #fde047 !important; }
+mark.reader-highlight.hl-orange { background-color: #fdba74 !important; }
+mark.reader-highlight.hl-green  { background-color: #86efac !important; }
+mark.reader-highlight.hl-purple { background-color: #d8b4fe !important; }
+mark.reader-highlight.hl-blue   { background-color: #7dd3fc !important; }
+mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
+.reader-footnote-badge {
+  font-size: 0.75em !important;
+  vertical-align: super !important;
+  margin-left: 2px !important;
+  text-decoration: none !important;
+}
+.reader-footnote-badge a {
+  color: #2563eb !important;
+  text-decoration: none !important;
+  font-weight: bold !important;
+}
+`);
+
+  let bodyInnerHtml = `<h1>${escapeXml(state.currentBook.title || 'Untitled')}</h1>\n`;
+  if (state.currentBook.author) {
+    bodyInnerHtml += `<div class="author">${escapeXml(state.currentBook.author)}</div>\n`;
+  }
+
+  if (state.currentBook.type === 'md' || state.currentBook.type === 'markdown') {
+    const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+    let renderedHtml = '';
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+      renderedHtml = marked.parse(bodyText);
+    } else {
+      renderedHtml = bodyText.split(/\n\s*\n/).map((p, i) => `<p id="p-${i}">${escapeXml(p.trim())}</p>`).join('\n');
+    }
+    bodyInnerHtml += renderedHtml;
+  } else {
+    const paragraphs = (state.currentBook.content || '').split(/\n\s*\n/);
+    paragraphs.forEach((pText, pIdx) => {
+      const trimmed = pText.trim();
+      if (!trimmed) return;
+      bodyInnerHtml += `<p id="p-${pIdx}">${escapeXml(trimmed)}</p>\n`;
+    });
+  }
+
+  const rawDocXml = `<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <title>${escapeXml(state.currentBook.title || 'Book')}</title>
+  <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body>
+  ${bodyInnerHtml}
+</body>
+</html>`;
+
+  let bookDoc = new DOMParser().parseFromString(rawDocXml, 'application/xhtml+xml');
+  if (bookDoc.querySelector('parsererror')) {
+    bookDoc = new DOMParser().parseFromString(rawDocXml, 'text/html');
+    if (bookDoc.documentElement) {
+      bookDoc.documentElement.setAttribute('xmlns:epub', 'http://www.idpf.org/2007/ops');
+      bookDoc.documentElement.setAttribute('xmlns', 'http://www.w3.org/1999/xhtml');
+    }
+  }
+
+  const sortedHls = [...state.highlights].sort(compareHighlights);
+  const hlFootnoteMap = new Map();
+  sortedHls.forEach((hl, idx) => hlFootnoteMap.set(hl.id, idx + 1));
+
+  const hlBacklinkMap = new Map();
+  const revHls = [...sortedHls].reverse();
+  revHls.forEach(hl => {
+    const fnNum = hlFootnoteMap.get(hl.id);
+    const refId = `ref-fn-${fnNum}`;
+    const ok = injectPopupFootnoteInDoc(bookDoc, hl, fnNum, 'highlights.xhtml', refId);
+    if (ok) {
+      hlBacklinkMap.set(hl.id, { href: `book.xhtml#${refId}` });
+    }
+  });
+
+  let bookXhtml = new XMLSerializer().serializeToString(bookDoc);
+  if (!bookXhtml.trim().startsWith('<?xml')) {
+    bookXhtml = '<?xml version="1.0" encoding="utf-8"?>\n' + bookXhtml;
+  }
+  zip.file("OEBPS/book.xhtml", bookXhtml);
+
+  const notesHtml = generateHighlightsXhtml(
+    state.currentBook.title,
+    state.currentBook.author,
+    sortedHls,
+    hlFootnoteMap,
+    hlBacklinkMap
+  );
+  zip.file("OEBPS/highlights.xhtml", notesHtml);
+
+  const navXhtml = `<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
+<head>
+  <meta charset="utf-8"/>
+  <title>목차</title>
+  <link rel="stylesheet" type="text/css" href="styles.css"/>
+</head>
+<body>
+  <nav epub:type="toc" id="toc">
+    <h1>목차</h1>
+    <ol>
+      <li><a href="book.xhtml">${escapeXml(state.currentBook.title || 'Book')}</a></li>
+      <li><a href="highlights.xhtml">형광펜 및 각주</a></li>
+    </ol>
+  </nav>
+</body>
+</html>`;
+  zip.file("OEBPS/nav.xhtml", navXhtml);
+
+  const bookId = `urn:uuid:${generateUUID()}`;
+  const opfContent = `<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title>${escapeXml(state.currentBook.title || 'Book')}</dc:title>
+    <dc:creator>${escapeXml(state.currentBook.author || 'Unknown')}</dc:creator>
+    <dc:language>en</dc:language>
+    <dc:identifier id="BookId">${bookId}</dc:identifier>
+    <meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d+Z$/, 'Z')}</meta>
+  </metadata>
+  <manifest>
+    <item id="css" href="styles.css" media-type="text/css"/>
+    <item id="book" href="book.xhtml" media-type="application/xhtml+xml"/>
+    <item id="highlights-notes" href="highlights.xhtml" media-type="application/xhtml+xml"/>
+    <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="toc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+  </manifest>
+  <spine toc="toc">
+    <itemref idref="book"/>
+    <itemref idref="highlights-notes" linear="no"/>
+  </spine>
+</package>`;
+  zip.file("OEBPS/content.opf", opfContent);
+
+  const ncxContent = `<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta name="dtb:uid" content="${bookId}"/>
+  </head>
+  <docTitle><text>${escapeXml(state.currentBook.title || 'Book')}</text></docTitle>
+  <navMap>
+    <navPoint id="navPoint-1" playOrder="1">
+      <navLabel><text>${escapeXml(state.currentBook.title || 'Book')}</text></navLabel>
+      <content src="book.xhtml"/>
+    </navPoint>
+    <navPoint id="navPoint-2" playOrder="2">
+      <navLabel><text>형광펜 및 각주</text></navLabel>
+      <content src="highlights.xhtml"/>
+    </navPoint>
+  </navMap>
+</ncx>`;
+  zip.file("OEBPS/toc.ncx", ncxContent);
+
+  await downloadZipAsEpub(zip, state.currentBook.title);
+}
+
 async function exportEpubAsMarkdown() {
   if (typeof JSZip === 'undefined') {
     throw new Error('ZIP 라이브러리를 불러오지 못했습니다.');
@@ -2420,7 +3230,7 @@ async function downloadZipAsEpub(zip, bookTitle) {
     compressionOptions: { level: 6 }
   });
   const safeTitle = (bookTitle || 'book').replace(/[/\\?%*:|"<>]/g, '_').trim();
-  const fileName = `${safeTitle}_with_highlights.epub`;
+  const fileName = safeTitle.toLowerCase().endsWith('.epub') ? safeTitle : `${safeTitle}.epub`;
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
@@ -7490,7 +8300,7 @@ function setupEventListeners() {
 
   // Sample Book & Export buttons
   if (elements.btnExportBook) {
-    elements.btnExportBook.addEventListener('click', exportBookAsMarkdown);
+    elements.btnExportBook.addEventListener('click', exportBookAsEpub);
   }
   if (elements.btnLoadSample) {
     elements.btnLoadSample.addEventListener('click', loadSampleBook);
