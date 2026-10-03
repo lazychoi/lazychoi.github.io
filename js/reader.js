@@ -1753,6 +1753,16 @@ function findSubstringRangeInText(text, hl) {
     }
   }
 
+  // 7. Final fallback: simple substring search if all boundary checks failed
+  const simpleIdx = text.indexOf(targetText);
+  if (simpleIdx !== -1) {
+    return { start: simpleIdx, end: simpleIdx + textLen };
+  }
+  const simpleLowerIdx = text.toLowerCase().indexOf(targetText.toLowerCase());
+  if (simpleLowerIdx !== -1) {
+    return { start: simpleLowerIdx, end: simpleLowerIdx + textLen };
+  }
+
   return null;
 }
 
@@ -4989,12 +4999,32 @@ function findHighlightFromEpubTarget(target, doc) {
       const hl = state.highlights.find(h => h.id === hlId);
       if (hl) return { hl, mark };
     }
+
+    // 1-1. Try finding by noteref link inside mark
+    const noterefA = mark.querySelector ? mark.querySelector('a[epub\\:type="noteref"], a[role="doc-noteref"], a[href*="#fn-"]') : null;
+    if (noterefA) {
+      const href = noterefA.getAttribute('href') || '';
+      const fnMatch = href.match(/#fn-(\d+)/);
+      if (fnMatch) {
+        const fnNum = parseInt(fnMatch[1], 10);
+        const sortedHls = [...state.highlights].sort(compareHighlights);
+        if (fnNum >= 1 && fnNum <= sortedHls.length) {
+          const cand = sortedHls[fnNum - 1];
+          const markText = mark.textContent.replace(/💬.*$/, '').trim().toLowerCase();
+          const candText = (cand.text || '').trim().toLowerCase();
+          if (!candText || markText.includes(candText) || candText.includes(markText)) {
+            return { hl: cand, mark };
+          }
+        }
+      }
+    }
+
     const markText = mark.textContent.replace(/💬.*$/, '').trim();
     if (markText) {
-      let hl = state.highlights.find(h => h.text === markText);
+      const parentText = (mark.parentElement ? mark.parentElement.textContent : '').trim();
+      let hl = state.highlights.find(h => h.text === markText && h.targetSentence && parentText.includes(h.targetSentence));
       if (!hl) {
-        const parentText = (mark.parentElement ? mark.parentElement.textContent : '').trim();
-        hl = state.highlights.find(h => h.text === markText && h.targetSentence && parentText.includes(h.targetSentence));
+        hl = state.highlights.find(h => h.text === markText);
       }
       if (hl) return { hl, mark };
     }
@@ -5019,7 +5049,16 @@ function findHighlightFromEpubTarget(target, doc) {
         const fnNum = parseInt(fnMatch[1], 10);
         const sortedHls = [...state.highlights].sort(compareHighlights);
         if (fnNum >= 1 && fnNum <= sortedHls.length) {
-          return { hl: sortedHls[fnNum - 1], mark: prevMark || badge };
+          const cand = sortedHls[fnNum - 1];
+          if (prevMark) {
+            const pmText = prevMark.textContent.replace(/💬.*$/, '').trim().toLowerCase();
+            const candText = (cand.text || '').trim().toLowerCase();
+            if (!candText || pmText.includes(candText) || candText.includes(pmText)) {
+              return { hl: cand, mark: prevMark };
+            }
+          } else {
+            return { hl: cand, mark: badge };
+          }
         }
       }
     }
@@ -5040,7 +5079,16 @@ function findHighlightFromEpubTarget(target, doc) {
       const fnNum = parseInt(fnMatch[1], 10);
       const sortedHls = [...state.highlights].sort(compareHighlights);
       if (fnNum >= 1 && fnNum <= sortedHls.length) {
-        return { hl: sortedHls[fnNum - 1], mark: parentMark || noterefA };
+        const cand = sortedHls[fnNum - 1];
+        if (parentMark) {
+          const pmText = parentMark.textContent.replace(/💬.*$/, '').trim().toLowerCase();
+          const candText = (cand.text || '').trim().toLowerCase();
+          if (!candText || pmText.includes(candText) || candText.includes(pmText)) {
+            return { hl: cand, mark: parentMark || noterefA };
+          }
+        } else {
+          return { hl: cand, mark: noterefA };
+        }
       }
     }
   }
@@ -5088,6 +5136,11 @@ function bindAllMarksInEpub() {
       const { hl, mark } = findHighlightFromEpubTarget(elem, doc);
       if (hl) {
         openHighlightToolbarFromEpub(hl, e, mark || elem);
+        return;
+      }
+
+      // 각주 번호 배지(.reader-footnote-badge)인 경우 형광펜 신규 자동 생성 방지
+      if (elem.classList.contains('reader-footnote-badge') || (elem.closest && elem.closest('.reader-footnote-badge'))) {
         return;
       }
 
@@ -5362,14 +5415,33 @@ function getActiveSelection() {
         const iSel = iframe.contentWindow.getSelection();
         const iText = iSel ? iSel.toString().trim() : '';
         if (iText) {
+          let cfi = null;
+          let range = null;
+          let contentsObj = null;
+          if (iSel.rangeCount > 0) {
+            range = iSel.getRangeAt(0).cloneRange();
+            try {
+              if (state.epub && state.epub.rendition) {
+                const contentsList = state.epub.rendition.getContents();
+                if (contentsList && contentsList.length > 0) {
+                  contentsObj = contentsList[0];
+                  if (typeof contentsObj.cfiFromRange === 'function') {
+                    cfi = contentsObj.cfiFromRange(range);
+                  }
+                }
+              }
+            } catch (ce) {
+              console.warn('cfiFromRange error in getActiveSelection:', ce);
+            }
+          }
           state.activeSelection = {
             text: iText,
             targetSentence: iText,
             prevSentence: '',
             nextSentence: '',
-            cfiRange: null,
-            contents: null,
-            range: iSel.rangeCount ? iSel.getRangeAt(0).cloneRange() : null
+            cfiRange: cfi,
+            contents: contentsObj,
+            range: range
           };
           return state.activeSelection;
         }
@@ -5464,6 +5536,18 @@ function applyHighlight(colorName) {
       targetHighlight.pIdx = state.activeSelection.pIdx;
       targetHighlight.offset = state.activeSelection.offset ?? 0;
     } else if (state.currentBook.type === 'epub') {
+      if (!state.activeSelection.cfiRange && state.activeSelection.range) {
+        try {
+          if (state.epub && state.epub.rendition) {
+            const contentsList = state.epub.rendition.getContents();
+            if (contentsList && contentsList.length > 0 && typeof contentsList[0].cfiFromRange === 'function') {
+              state.activeSelection.cfiRange = contentsList[0].cfiFromRange(state.activeSelection.range);
+            }
+          }
+        } catch (ce) {
+          console.warn('cfiFromRange fallback error:', ce);
+        }
+      }
       targetHighlight.cfiRange = state.activeSelection.cfiRange;
     }
 
@@ -5510,15 +5594,17 @@ function applyHighlight(colorName) {
     }
   } else if (state.currentBook.type === 'epub') {
     const isDark = state.settings.theme === 'dark';
-    try {
-      if (state.activeSelection.cfiRange) {
-        try {
-          state.epub.rendition.annotations.remove(state.activeSelection.cfiRange, "highlight");
-        } catch (e) {}
+    const cfiToApply = targetHighlight.cfiRange || (state.activeSelection && state.activeSelection.cfiRange);
 
+    if (cfiToApply && state.epub && state.epub.rendition) {
+      try {
+        state.epub.rendition.annotations.remove(cfiToApply, "highlight");
+      } catch (e) {}
+
+      try {
         state.epub.rendition.annotations.add(
           "highlight",
-          state.activeSelection.cfiRange,
+          cfiToApply,
           { id: hlId },
           (e) => {
             openHighlightToolbarFromEpub(targetHighlight, e);
@@ -5530,16 +5616,31 @@ function applyHighlight(colorName) {
             "mix-blend-mode": isDark ? "screen" : "multiply"
           }
         );
+      } catch (e) {
+        console.warn('Annotation add error:', e);
       }
-    } catch (e) {
-      console.warn(e);
     }
 
-    if (state.activeSelection.contents) {
+    if (state.activeSelection && state.activeSelection.contents && state.activeSelection.contents.window) {
       try {
         state.activeSelection.contents.window.getSelection().removeAllRanges();
       } catch (e) {}
+    } else {
+      const iframe = elements.epubArea ? elements.epubArea.querySelector('iframe') : null;
+      if (iframe && iframe.contentWindow) {
+        try {
+          iframe.contentWindow.getSelection().removeAllRanges();
+        } catch (e) {}
+      }
     }
+
+    // 어노테이션 렌더링 누락 방지 및 화면 즉각 동기화 (지연 재시도 포함)
+    setTimeout(() => {
+      restoreEpubHighlights();
+    }, 40);
+    setTimeout(() => {
+      restoreEpubHighlights();
+    }, 200);
   }
 
   // 화면 스크롤 위치 강제 유지 (형광펜 추가 후 화면이 움직이지 않도록 보장)
@@ -5811,15 +5912,305 @@ function getEventCoord(e, coordName) {
   return undefined;
 }
 
+function renumberFootnotesInDoc(doc, deletedFnNum) {
+  if (!doc || !deletedFnNum) return;
+
+  // 1. Update .reader-footnote-badge elements
+  const badges = doc.querySelectorAll('.reader-footnote-badge');
+  badges.forEach(badge => {
+    const a = badge.querySelector('a');
+    if (a) {
+      const href = a.getAttribute('href') || '';
+      const m = href.match(/#fn-(\d+)/);
+      if (m) {
+        const num = parseInt(m[1], 10);
+        if (num > deletedFnNum) {
+          const newNum = num - 1;
+          a.setAttribute('href', href.replace(/#fn-\d+/, `#fn-${newNum}`));
+          a.textContent = `[${newNum}]`;
+        }
+      }
+    }
+  });
+
+  // 2. Update noteref links inside or around text (e.g. <a epub:type="noteref" ...>)
+  const noterefs = doc.querySelectorAll('a[epub\\:type="noteref"], a[role="doc-noteref"]');
+  noterefs.forEach(a => {
+    if (a.closest && a.closest('.reader-footnote-badge')) return;
+
+    const href = a.getAttribute('href') || '';
+    const m = href.match(/#fn-(\d+)/);
+    if (m) {
+      const num = parseInt(m[1], 10);
+      if (num > deletedFnNum) {
+        const newNum = num - 1;
+        a.setAttribute('href', href.replace(/#fn-\d+/, `#fn-${newNum}`));
+      }
+    }
+
+    if (a.id && a.id.startsWith('ref-fn-')) {
+      const idMatch = a.id.match(/^ref-fn-(\d+)$/);
+      if (idMatch) {
+        const num = parseInt(idMatch[1], 10);
+        if (num > deletedFnNum) {
+          a.id = `ref-fn-${num - 1}`;
+        }
+      }
+    }
+  });
+}
+
+function removeHighlightFromDoc(doc, hlId, originalFnNum, hl) {
+  if (!doc) return;
+
+  const targetMarks = new Set();
+  const targetBadges = new Set();
+
+  // 1. Identify marks and badges to remove
+  if (hlId) {
+    doc.querySelectorAll(`mark[data-hl-id="${hlId}"], [data-hl-id="${hlId}"]`).forEach(el => {
+      if (el.tagName === 'MARK' || el.classList.contains('reader-highlight')) {
+        targetMarks.add(el);
+      }
+    });
+  }
+
+  if (originalFnNum > 0) {
+    // Badges matching #fn-N
+    doc.querySelectorAll('.reader-footnote-badge').forEach(b => {
+      const a = b.querySelector('a');
+      const href = (a && a.getAttribute('href')) || '';
+      if (href.includes(`#fn-${originalFnNum}`)) {
+        targetBadges.add(b);
+        const prev = b.previousElementSibling;
+        if (prev && (prev.tagName === 'MARK' || prev.classList.contains('reader-highlight'))) {
+          targetMarks.add(prev);
+        }
+      }
+    });
+
+    // Anchors linking to #fn-N or with id ref-fn-N
+    doc.querySelectorAll(`a[href*="#fn-${originalFnNum}"], a[id="ref-fn-${originalFnNum}"]`).forEach(a => {
+      const m = a.closest ? a.closest('mark, .reader-highlight') : null;
+      if (m) targetMarks.add(m);
+      const b = a.closest ? a.closest('.reader-footnote-badge') : null;
+      if (b) targetBadges.add(b);
+    });
+  }
+
+  // Fallback by text matching if mark wasn't identified by id/link
+  if (targetMarks.size === 0 && hl && hl.text) {
+    const hlTextTrimmed = hl.text.trim().toLowerCase();
+    doc.querySelectorAll('mark.reader-highlight, mark').forEach(m => {
+      const mText = m.textContent.replace(/💬.*$/, '').trim().toLowerCase();
+      if (mText === hlTextTrimmed) {
+        if (!hl.targetSentence || (m.parentElement && m.parentElement.textContent.includes(hl.targetSentence.trim()))) {
+          targetMarks.add(m);
+        }
+      }
+    });
+  }
+
+  // Find adjacent footnote badges for all identified marks
+  targetMarks.forEach(mark => {
+    let next = mark.nextSibling;
+    while (next && next.nodeType === 3 && !next.nodeValue.trim()) {
+      next = next.nextSibling;
+    }
+    if (next && next.nodeType === 1 && (next.classList.contains('reader-footnote-badge') || (next.matches && next.matches('.reader-footnote-badge')))) {
+      targetBadges.add(next);
+    }
+    const childBadge = mark.querySelector('.reader-footnote-badge, .reader-note-badge');
+    if (childBadge) targetBadges.add(childBadge);
+  });
+
+  // 2. Remove all target footnote badges
+  targetBadges.forEach(badge => {
+    if (badge && badge.parentNode) {
+      badge.parentNode.removeChild(badge);
+    }
+  });
+
+  // 3. Cleanly unwrap all target marks to plain text
+  targetMarks.forEach(mark => {
+    const parent = mark.parentNode;
+    if (!parent) return;
+
+    // Remove any note badge inside mark before getting text
+    const innerBadge = mark.querySelector('.reader-note-badge, .reader-footnote-badge');
+    if (innerBadge) innerBadge.remove();
+
+    const textContent = mark.textContent;
+    const textNode = doc.createTextNode(textContent);
+    parent.replaceChild(textNode, mark);
+    parent.normalize();
+  });
+
+  // 4. Renumber all remaining footnote badges and links in doc
+  if (originalFnNum > 0) {
+    renumberFootnotesInDoc(doc, originalFnNum);
+  }
+}
+
+async function removeHighlightFromEpubZip(hlId, originalFnNum, deletedHl) {
+  if (!state.currentBook || state.currentBook.type !== 'epub') return;
+  if (typeof JSZip === 'undefined') return;
+
+  try {
+    let zip = null;
+    if (state.epub && state.epub.book && state.epub.book.archive && state.epub.book.archive.zip) {
+      zip = state.epub.book.archive.zip;
+    } else if (state.currentBook.content) {
+      zip = await JSZip.loadAsync(state.currentBook.content);
+    }
+    if (!zip) return;
+
+    let modified = false;
+
+    // 1. Update META-INF/reader_highlights.json
+    const hlFile = zip.file('META-INF/reader_highlights.json');
+    if (hlFile) {
+      const sortedHls = [...state.highlights].sort(compareHighlights);
+      zip.file('META-INF/reader_highlights.json', JSON.stringify({
+        version: 2,
+        highlights: sortedHls
+      }, null, 2));
+      modified = true;
+    }
+
+    // 2. Process chapter XHTML files
+    const chapterEntries = Object.keys(zip.files).filter(name => {
+      const lower = name.toLowerCase();
+      return (lower.endsWith('.xhtml') || lower.endsWith('.html') || lower.endsWith('.htm')) &&
+             !lower.includes('highlights.xhtml') &&
+             !lower.includes('highlights_appendix') &&
+             !lower.includes('nav.xhtml') &&
+             !lower.includes('toc.xhtml');
+    });
+
+    for (const name of chapterEntries) {
+      const file = zip.file(name);
+      if (!file) continue;
+      const htmlText = await file.async('text');
+
+      const hasHlId = hlId && htmlText.includes(hlId);
+      const hasFnNum = originalFnNum && (htmlText.includes(`#fn-${originalFnNum}`) || htmlText.includes(`ref-fn-${originalFnNum}`));
+      const hasBadges = originalFnNum && htmlText.includes('reader-footnote-badge');
+
+      if (!hasHlId && !hasFnNum && !hasBadges) continue;
+
+      let doc = new DOMParser().parseFromString(htmlText, 'application/xhtml+xml');
+      if (doc.querySelector('parsererror')) {
+        doc = new DOMParser().parseFromString(htmlText, 'text/html');
+      }
+
+      removeHighlightFromDoc(doc, hlId, originalFnNum, deletedHl);
+
+      let newHtml = new XMLSerializer().serializeToString(doc);
+      if (htmlText.trim().startsWith('<?xml') && !newHtml.trim().startsWith('<?xml')) {
+        newHtml = '<?xml version="1.0" encoding="utf-8"?>\n' + newHtml;
+      }
+      zip.file(name, newHtml);
+      modified = true;
+    }
+
+    // 3. Process highlights.xhtml
+    const notesEntry = Object.keys(zip.files).find(name => name.toLowerCase().endsWith('highlights.xhtml'));
+    if (notesEntry) {
+      const notesFile = zip.file(notesEntry);
+      if (notesFile) {
+        const notesHtml = await notesFile.async('text');
+        let nDoc = new DOMParser().parseFromString(notesHtml, 'application/xhtml+xml');
+        if (nDoc.querySelector('parsererror')) {
+          nDoc = new DOMParser().parseFromString(notesHtml, 'text/html');
+        }
+
+        let notesChanged = false;
+        if (originalFnNum > 0) {
+          const targetAside = nDoc.getElementById(`fn-${originalFnNum}`) || nDoc.querySelector(`#fn-${originalFnNum}`);
+          if (targetAside) {
+            targetAside.remove();
+            notesChanged = true;
+          }
+
+          const asides = nDoc.querySelectorAll('aside[epub\\:type="footnote"], aside[role="doc-footnote"], aside.reader-footnote-card');
+          asides.forEach(aside => {
+            const m = (aside.id || '').match(/^fn-(\d+)$/);
+            if (m) {
+              const num = parseInt(m[1], 10);
+              if (num > originalFnNum) {
+                const newNum = num - 1;
+                aside.id = `fn-${newNum}`;
+                const numEl = aside.querySelector('.footnote-badge-num, .footnote-num');
+                if (numEl) numEl.textContent = `#${newNum}`;
+                const backlink = aside.querySelector('a[role="doc-backlink"], a.footnote-backlink');
+                if (backlink) {
+                  const bHref = backlink.getAttribute('href') || '';
+                  backlink.setAttribute('href', bHref.replace(/#ref-fn-\d+/, `#ref-fn-${newNum}`));
+                }
+                notesChanged = true;
+              }
+            }
+          });
+
+          if (asides.length === 0 || (asides.length === 1 && targetAside)) {
+            const listContainer = nDoc.querySelector('.footnotes-list') || nDoc.body;
+            if (listContainer) {
+              listContainer.innerHTML = '<p style="color: #64748b; font-size: 14px; text-align: center; padding: 40px 0;">저장된 형광펜 및 메모가 없습니다.</p>';
+              notesChanged = true;
+            }
+          }
+        }
+
+        if (notesChanged) {
+          let newNotesHtml = new XMLSerializer().serializeToString(nDoc);
+          if (notesHtml.trim().startsWith('<?xml') && !newNotesHtml.trim().startsWith('<?xml')) {
+            newNotesHtml = '<?xml version="1.0" encoding="utf-8"?>\n' + newNotesHtml;
+          }
+          zip.file(notesEntry, newNotesHtml);
+          modified = true;
+        }
+      }
+    }
+
+    if (modified) {
+      const newBuffer = await zip.generateAsync({
+        type: 'arraybuffer',
+        mimeType: 'application/epub+zip'
+      });
+      state.currentBook.content = newBuffer;
+      await saveActiveBookToStorage({
+        type: 'epub',
+        title: state.currentBook.title,
+        author: state.currentBook.author,
+        content: newBuffer,
+        bookId: state.currentBook.id
+      });
+    }
+  } catch (err) {
+    console.warn('Error in removeHighlightFromEpubZip:', err);
+  }
+}
+
 function removeHighlight(hlId) {
   const idx = state.highlights.findIndex(h => h.id === hlId);
   if (idx === -1) return;
 
   const hl = state.highlights[idx];
+  const sortedBefore = [...state.highlights].sort(compareHighlights);
+  const originalFnNum = sortedBefore.findIndex(h => h.id === hlId) + 1;
+
   state.highlights.splice(idx, 1);
   sortHighlights();
   saveHighlights();
   updateHighlightBadge();
+
+  if (state.activeHighlight && state.activeHighlight.id === hlId) {
+    state.activeHighlight = null;
+  }
+  if (elements.vocabEditModalBackdrop && elements.vocabEditModalBackdrop.classList.contains('open')) {
+    closeVocabEditModal();
+  }
 
   // 형광펜 삭제 전 현재 스크롤 위치 보존
   const savedScrollTop = elements.txtViewer ? elements.txtViewer.scrollTop : 0;
@@ -5868,23 +6259,20 @@ function removeHighlight(hlId) {
         console.warn(e);
       }
     }
-    // Also remove from EPUB iframe DOM if it was a <mark> element
-    const iframe = elements.epubArea.querySelector('iframe');
-    const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
-    if (iframeDoc) {
-      const marks = iframeDoc.querySelectorAll(`mark[data-hl-id="${hlId}"], [data-hl-id="${hlId}"]`);
-      marks.forEach(mark => {
-        const badge = mark.querySelector('.reader-note-badge');
-        if (badge) badge.remove();
-        const parent = mark.parentNode;
-        if (parent) {
-          while (mark.firstChild) {
-            parent.insertBefore(mark.firstChild, mark);
-          }
-          parent.removeChild(mark);
-        }
-      });
-    }
+
+    // Also remove from all EPUB iframe DOMs if rendered
+    const iframes = elements.epubArea ? elements.epubArea.querySelectorAll('iframe') : [];
+    iframes.forEach(iframe => {
+      const iframeDoc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+      if (!iframeDoc) return;
+
+      removeHighlightFromDoc(iframeDoc, hlId, originalFnNum, hl);
+    });
+
+    // Update EPUB archive asynchronously in memory and IndexedDB
+    removeHighlightFromEpubZip(hlId, originalFnNum, hl).catch(err => {
+      console.warn('Failed to update EPUB zip after highlight removal:', err);
+    });
   }
 
   // 삭제 후 스크롤 위치 유지
@@ -6395,7 +6783,9 @@ function renderHighlightDrawer() {
     const searched = (state.highlightSearchQuery || '').trim();
     if (searched) {
       if (elements.drawerSearchBar) elements.drawerSearchBar.style.display = 'block';
-      if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = searched;
+      if (elements.inputHighlightSearch && document.activeElement !== elements.inputHighlightSearch) {
+        elements.inputHighlightSearch.value = state.highlightSearchQuery || '';
+      }
       if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'flex';
       elements.drawerBody.innerHTML = `
         <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
@@ -6418,7 +6808,9 @@ function renderHighlightDrawer() {
       }
     } else {
       state.highlightSearchQuery = '';
-      if (elements.inputHighlightSearch) elements.inputHighlightSearch.value = '';
+      if (elements.inputHighlightSearch && document.activeElement !== elements.inputHighlightSearch) {
+        elements.inputHighlightSearch.value = '';
+      }
       if (elements.btnClearHighlightSearch) elements.btnClearHighlightSearch.style.display = 'none';
       elements.drawerBody.innerHTML = `
         <div style="text-align:center; padding:40px 20px; color:var(--text-muted);">
@@ -6432,12 +6824,13 @@ function renderHighlightDrawer() {
   }
 
   // Filter highlights with Match Whole Word
-  const rawQuery = (state.highlightSearchQuery || '').trim();
+  const currentQuery = elements.inputHighlightSearch ? elements.inputHighlightSearch.value : (state.highlightSearchQuery || '');
+  const rawQuery = currentQuery.trim();
   const terms = rawQuery ? rawQuery.split(/\s+/).filter(Boolean) : [];
 
-  // Synchronize input value if different
-  if (elements.inputHighlightSearch && elements.inputHighlightSearch.value !== rawQuery) {
-    elements.inputHighlightSearch.value = rawQuery;
+  // Synchronize input value ONLY when user is NOT actively typing inside it
+  if (elements.inputHighlightSearch && document.activeElement !== elements.inputHighlightSearch && elements.inputHighlightSearch.value !== (state.highlightSearchQuery || '')) {
+    elements.inputHighlightSearch.value = state.highlightSearchQuery || '';
   }
 
   let displayedHighlights = state.highlights;
