@@ -3361,6 +3361,7 @@ a.reader-highlight-link {
   }
 
   let bookXhtml = new XMLSerializer().serializeToString(bookDoc);
+  bookXhtml = bookXhtml.replace(/<!--\?xml[\s\S]*?\?-->\s*/gi, '');
   if (!bookXhtml.trim().startsWith('<?xml')) {
     bookXhtml = '<?xml version="1.0" encoding="utf-8"?>\n' + bookXhtml;
   }
@@ -3418,6 +3419,9 @@ a.reader-highlight-link {
   <manifest>
 ${manifestItemsXml}
   </manifest>
+  <spine toc="toc">
+    <itemref idref="book"/>
+    <itemref idref="highlights-notes"/>
   </spine>
 </package>`;
   zip.file("OEBPS/content.opf", opfContent);
