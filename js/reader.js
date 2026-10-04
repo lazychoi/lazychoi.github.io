@@ -1234,7 +1234,7 @@ function compareHighlights(a, b) {
     if (a.cfiRange && b.cfiRange) {
       return compareEpubCfi(a.cfiRange, b.cfiRange);
     }
-  } else if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md')) {
+  } else if (state.currentBook && (state.currentBook.type === 'txt' || state.currentBook.type === 'md' || state.currentBook.type === 'markdown')) {
     if (typeof a.pIdx === 'number' && typeof b.pIdx === 'number' && a.pIdx !== b.pIdx) {
       return a.pIdx - b.pIdx;
     }
@@ -1248,12 +1248,9 @@ function compareHighlights(a, b) {
       const numB = parseInt(b.fnTag, 10);
       if (!isNaN(numA) && !isNaN(numB) && numA !== numB) return numA - numB;
     }
-    const pA = a.pIdx ?? 0;
-    const pB = b.pIdx ?? 0;
-    if (pA !== pB) return pA - pB;
-    const offA = a.offset ?? 0;
-    const offB = b.offset ?? 0;
-    if (offA !== offB) return offA - offB;
+    if (typeof a.pIdx === 'number' && typeof b.pIdx === 'number') {
+      if (a.pIdx !== b.pIdx) return a.pIdx - b.pIdx;
+    }
   }
   const tA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
   const tB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
@@ -1844,19 +1841,34 @@ async function exportBookAsMarkdownZip() {
 
     } else if (state.currentBook.type === 'md' || state.currentBook.type === 'markdown') {
       const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
-      let mdText = bodyText;
+      let cleanBody = bodyText;
+
+      const { locatedList, sortedHls: mdSortedHls, hlFootnoteMap: mdFootnoteMap } = locateHighlightsInMarkdownText(cleanBody, state.highlights);
+
+      const replaceList = [...locatedList].sort((a, b) => b.start - a.start);
+      replaceList.forEach(item => {
+        const replacement = `${item.prefix}[^${item.fnNum}]`;
+        cleanBody = cleanBody.substring(0, item.start) + replacement + cleanBody.substring(item.end);
+      });
+
+      cleanBody = cleanBody
+        .replace(/<mark[^>]*class="[^"]*reader-highlight[^"]*"[^>]*>([\s\S]*?)<\/mark>/gi, '$1')
+        .replace(/<sup[^>]*class="[^"]*fn-badge[^"]*"[^>]*>.*?<\/sup>/gi, '');
 
       let imgSeq = 1;
-      mdText = mdText.replace(/!\[([^\]]*)\]\((data:image\/([a-zA-Z0-9+]+);base64,([^\)]+))\)/g, (match, alt, fullData, ext, b64) => {
+      cleanBody = cleanBody.replace(/!\[([^\]]*)\]\((data:image\/([a-zA-Z0-9+]+);base64,([^\)]+))\)/g, (match, alt, fullData, ext, b64) => {
         const cleanExt = ext.replace('jpeg', 'jpg');
         const fname = `image_${imgSeq++}.${cleanExt}`;
         imgFolder.file(fname, b64, { base64: true });
         return `![${alt}](./images/${fname})`;
       });
 
-      if (sortedHls.length > 0) {
-        mdText = mdText.trim() + '\n\n' + generateMarkdownQaSection(sortedHls, hlFootnoteMap);
+      let mdText = cleanBody;
+      if (mdSortedHls.length > 0) {
+        mdText = mdText.trim() + '\n\n' + generateMarkdownQaSection(mdSortedHls, mdFootnoteMap);
       }
+
+      saveHighlights();
 
       const finalMdText = cleanMarkdown(mdText) + '\n';
       outZip.file(`${safeTitle}.md`, finalMdText);
@@ -2192,11 +2204,7 @@ function exportTxtAsMarkdown() {
   return cleanMarkdown(fullMd) + '\n';
 }
 
-function exportMdAsMarkdown() {
-  // Extract base body from currentBook.content, stripping existing QA section and footnote defs
-  const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
-
-  let cleanBody = bodyText;
+function locateHighlightsInMarkdownText(cleanBody, highlights) {
   const locatedList = [];
   const occupiedRanges = [];
 
@@ -2204,33 +2212,85 @@ function exportMdAsMarkdown() {
     return occupiedRanges.some(r => !(end <= r.start || start >= r.end));
   }
 
-  function escapeRegex(s) {
-    return String(s || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  }
-
-  // 1. Locate existing footnotes by fnTag in cleanBody (requiring term to match before [^tag])
-  state.highlights.filter(h => h.fnTag).forEach(hl => {
+  // 1. Locate existing footnotes by fnTag in cleanBody
+  const footnoteHls = (highlights || []).filter(h => h.fnTag || h.isFootnote);
+  footnoteHls.forEach(hl => {
     const escapedTag = escapeRegex(hl.fnTag);
     const escapedTerm = escapeRegex(hl.text);
-    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})\\s*\\[\\^${escapedTag}\\]`, 'g');
+
+    // 1a. Direct match with exact term and markdown formatting
+    const directRe = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})\\s*\\[\\^${escapedTag}\\]`, 'gi');
     let m;
-    while ((m = re.exec(cleanBody)) !== null) {
+    let found = false;
+    while ((m = directRe.exec(cleanBody)) !== null) {
       const start = m.index;
       const end = m.index + m[0].length;
       if (!isOccupied(start, end)) {
         const prefix = m[0].replace(/\s*\[\^[^\]]+\]$/, '') || hl.text;
         locatedList.push({ hl, start, end, prefix, isExisting: true });
         occupiedRanges.push({ start, end });
+        found = true;
+        break;
+      }
+    }
+    if (found) return;
+
+    // 1b. Flexible tokens match for terms with internal formatting or quotes
+    const words = String(hl.text || '').trim().split(/\s+/).map(w => escapeRegex(w)).filter(Boolean);
+    if (words.length > 0) {
+      const mdPattern = words.map(w => '[*_`~]*' + w + '[*_`~]*').join('\\s+');
+      try {
+        const mdBracketRe = new RegExp(`(?:\\[${mdPattern}\\]|${mdPattern})\\s*\\[\\^${escapedTag}\\]`, 'gi');
+        while ((m = mdBracketRe.exec(cleanBody)) !== null) {
+          const start = m.index;
+          const end = m.index + m[0].length;
+          if (!isOccupied(start, end)) {
+            const prefix = m[0].replace(/\s*\[\^[^\]]+\]$/, '') || hl.text;
+            locatedList.push({ hl, start, end, prefix, isExisting: true });
+            occupiedRanges.push({ start, end });
+            found = true;
+            break;
+          }
+        }
+      } catch (e) {}
+    }
+    if (found) return;
+
+    // 1c. Generic bracket match: [any text][^tag] or **any text**[^tag]
+    const genericRe = new RegExp(`(?:\\[([^\\]]+)\\]|\\*\\*([^*]+)\\*\\*|\\*([^*]+)\\*)\\s*\\[\\^${escapedTag}\\]`, 'gi');
+    while ((m = genericRe.exec(cleanBody)) !== null) {
+      const start = m.index;
+      const end = m.index + m[0].length;
+      if (!isOccupied(start, end)) {
+        const prefix = m[1] || m[2] || m[3] || hl.text;
+        locatedList.push({ hl, start, end, prefix, isExisting: true });
+        occupiedRanges.push({ start, end });
+        found = true;
+        break;
+      }
+    }
+    if (found) return;
+
+    // 1d. Standalone [^tag]
+    const standaloneRe = new RegExp(`\\[\\^${escapedTag}\\]`, 'gi');
+    while ((m = standaloneRe.exec(cleanBody)) !== null) {
+      const start = m.index;
+      const end = m.index + m[0].length;
+      if (!isOccupied(start, end)) {
+        locatedList.push({ hl, start, end, prefix: hl.text, isExisting: true });
+        occupiedRanges.push({ start, end });
+        found = true;
         break;
       }
     }
   });
 
-  // 2. Locate remaining/newly added highlights in cleanBody
-  const unlocatedSoFar = state.highlights.filter(h => !locatedList.some(item => item.hl.id === h.id));
+  // 2. Locate remaining / newly added highlights in cleanBody
+  const unlocatedSoFar = (highlights || []).filter(h => !locatedList.some(item => item.hl.id === h.id));
   unlocatedSoFar.forEach(hl => {
+    if (!hl.text) return;
     const escapedTerm = escapeRegex(hl.text);
-    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})(?!\\s*\\[\\^)`, 'g');
+    const re = new RegExp(`(?:\\[\\*\\*${escapedTerm}\\*\\*\\]|\\[${escapedTerm}\\]|\\*\\*${escapedTerm}\\*\\*|\\*${escapedTerm}\\*|${escapedTerm})(?!\\s*\\[\\^)`, 'gi');
     const candidates = [];
     let m;
     while ((m = re.exec(cleanBody)) !== null) {
@@ -2243,38 +2303,38 @@ function exportMdAsMarkdown() {
           if (sentSnippet.includes(hl.targetSentence)) {
             score += 1000;
           } else {
-            const targetWords = hl.targetSentence.split(/\s+/).filter(w => w.length > 2);
-            let wordMatches = 0;
-            targetWords.forEach(w => { if (sentSnippet.includes(w)) wordMatches++; });
-            score += wordMatches * 10;
+            const flexSentRegex = buildFlexibleRegex(hl.targetSentence);
+            if (flexSentRegex && flexSentRegex.test(sentSnippet)) {
+              score += 1000;
+            } else {
+              const targetWords = hl.targetSentence.split(/\s+/).filter(w => w.length > 2);
+              let wordMatches = 0;
+              targetWords.forEach(w => { if (sentSnippet.includes(w)) wordMatches++; });
+              score += wordMatches * 10;
+            }
           }
         }
         candidates.push({ start, end, prefix: m[0], score });
       }
     }
 
-    // Fallback: search with flexible markdown formatting tokens (*, _, etc.) in case target text has internal emphasis
     if (candidates.length === 0) {
-      const words = String(hl.text || '').trim().split(/\s+/).map(w => escapeRegex(w)).filter(Boolean);
-      if (words.length > 0) {
-        const mdPattern = words.map(w => '[*_`~]*' + w + '[*_`~]*').join('\\s+');
-        try {
-          const mdRe = new RegExp(`(?:${mdPattern})(?!\\s*\\[\\^)`, 'g');
-          while ((m = mdRe.exec(cleanBody)) !== null) {
-            const start = m.index;
-            const end = m.index + m[0].length;
-            if (!isOccupied(start, end)) {
-              let score = 10;
-              if (hl.targetSentence) {
-                const sentSnippet = cleanBody.substring(Math.max(0, start - 150), Math.min(cleanBody.length, end + 150));
-                if (sentSnippet.includes(hl.targetSentence) || (buildFlexibleRegex(hl.targetSentence) && buildFlexibleRegex(hl.targetSentence).test(sentSnippet))) {
-                  score += 1000;
-                }
+      const flexRe = buildFlexibleRegex(hl.text);
+      if (flexRe) {
+        while ((m = flexRe.exec(cleanBody)) !== null) {
+          const start = m.index;
+          const end = m.index + m[0].length;
+          if (!isOccupied(start, end)) {
+            let score = 10;
+            if (hl.targetSentence) {
+              const sentSnippet = cleanBody.substring(Math.max(0, start - 150), Math.min(cleanBody.length, end + 150));
+              if (sentSnippet.includes(hl.targetSentence) || (buildFlexibleRegex(hl.targetSentence) && buildFlexibleRegex(hl.targetSentence).test(sentSnippet))) {
+                score += 1000;
               }
-              candidates.push({ start, end, prefix: m[0], score });
             }
+            candidates.push({ start, end, prefix: m[0], score });
           }
-        } catch (e) {}
+        }
       }
     }
 
@@ -2299,7 +2359,7 @@ function exportMdAsMarkdown() {
 
   // 4. Any highlights that could not be located in cleanBody (safeguard)
   const sortedHls = locatedList.map(item => item.hl);
-  const unlocatedHls = state.highlights.filter(h => !hlFootnoteMap.has(h.id));
+  const unlocatedHls = (highlights || []).filter(h => !hlFootnoteMap.has(h.id));
   unlocatedHls.forEach((hl, idx) => {
     const fnNum = locatedList.length + idx + 1;
     hlFootnoteMap.set(hl.id, fnNum);
@@ -2308,7 +2368,16 @@ function exportMdAsMarkdown() {
     sortedHls.push(hl);
   });
 
-  // 5. Replace in cleanBody from bottom to top so offsets do not shift
+  return { locatedList, unlocatedHls, sortedHls, hlFootnoteMap };
+}
+
+function exportMdAsMarkdown() {
+  const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+  let cleanBody = bodyText;
+
+  const { locatedList, sortedHls, hlFootnoteMap } = locateHighlightsInMarkdownText(cleanBody, state.highlights);
+
+  // Replace in cleanBody from bottom to top so offsets do not shift
   const replaceList = [...locatedList].sort((a, b) => b.start - a.start);
   replaceList.forEach(item => {
     const replacement = `${item.prefix}[^${item.fnNum}]`;
@@ -2513,17 +2582,65 @@ function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
     if (idx === -1) {
       idx = val.toLowerCase().indexOf(searchText.toLowerCase());
     }
-    if (idx === -1) return false;
+    if (idx === -1) {
+      const flexRe = buildFlexibleRegex(searchText);
+      if (flexRe) {
+        const m = flexRe.exec(val);
+        if (m) {
+          return replaceTextNodeAtOffset(textNode, m.index, m.index + m[0].length);
+        }
+      }
+      return false;
+    }
     return replaceTextNodeAtOffset(textNode, idx, idx + searchText.length);
   };
 
-  // 1. Context-aware sentence search
+  // 1. Check by hl.pIdx if available (exact paragraph match)
+  if (typeof hl.pIdx === 'number' && !isNaN(hl.pIdx)) {
+    const pEl = doc.getElementById('p-' + hl.pIdx) || doc.querySelector(`[data-p-idx="${hl.pIdx}"]`);
+    if (pEl) {
+      const walker = doc.createTreeWalker(pEl, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        const pTag = (node.parentNode ? node.parentNode.nodeName : '').toLowerCase();
+        if (pTag === 'mark' || pTag === 'a' || pTag === 'script' || pTag === 'style') continue;
+        if (node.nodeValue && (node.nodeValue.includes(hlText) || (buildFlexibleRegex(hlText) && buildFlexibleRegex(hlText).test(node.nodeValue)))) {
+          if (replaceTextNodeWithFootnote(node, hlText)) return true;
+        }
+      }
+    }
+  }
+
+  // 2. Context-aware sentence search
   if (targetSentence) {
     const candidates = Array.from(doc.querySelectorAll('p, li, blockquote, h1, h2, h3, h4, h5, h6, div, span'));
     let matchedEl = null;
+    const flexSentRegex = buildFlexibleRegex(targetSentence);
+
     for (const el of candidates) {
-      if (el.textContent && el.textContent.includes(targetSentence)) {
+      if (!el.textContent) continue;
+      if (el.textContent.includes(targetSentence) || (flexSentRegex && flexSentRegex.test(el.textContent))) {
         matchedEl = el;
+        break;
+      }
+    }
+
+    // Fuzzy sentence match if strict/flexible search did not match
+    if (!matchedEl) {
+      const targetWords = targetSentence.split(/\s+/).filter(w => w.length > 2);
+      if (targetWords.length >= 2) {
+        let bestScore = 0;
+        let bestCandidate = null;
+        for (const el of candidates) {
+          if (!el.textContent) continue;
+          let score = 0;
+          targetWords.forEach(w => { if (el.textContent.includes(w)) score++; });
+          if (score > bestScore && score >= Math.min(3, targetWords.length)) {
+            bestScore = score;
+            bestCandidate = el;
+          }
+        }
+        if (bestCandidate) matchedEl = bestCandidate;
       }
     }
 
@@ -2533,36 +2650,43 @@ function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
       while ((node = walker.nextNode())) {
         const val = node.nodeValue;
         if (!val) continue;
+        const pTag = (node.parentNode ? node.parentNode.nodeName : '').toLowerCase();
+        if (pTag === 'mark' || pTag === 'a' || pTag === 'script' || pTag === 'style') continue;
 
-        if (val.includes(targetSentence)) {
+        if (val.includes(targetSentence) || (flexSentRegex && flexSentRegex.test(val))) {
           const sIdx = val.indexOf(targetSentence);
-          let subIdx = val.indexOf(hlText, sIdx);
+          let subIdx = sIdx !== -1 ? val.indexOf(hlText, sIdx) : -1;
           if (subIdx === -1) {
             const lowerVal = val.toLowerCase();
             const lowerHl = hlText.toLowerCase();
-            subIdx = lowerVal.indexOf(lowerHl, sIdx);
+            subIdx = sIdx !== -1 ? lowerVal.indexOf(lowerHl, sIdx) : -1;
           }
           if (subIdx !== -1 && subIdx <= sIdx + targetSentence.length) {
             if (replaceTextNodeAtOffset(node, subIdx, subIdx + hlText.length)) return true;
+          } else if (replaceTextNodeWithFootnote(node, hlText)) {
+            return true;
           }
-        } else if (val.includes(hlText)) {
+        } else if (val.includes(hlText) || (buildFlexibleRegex(hlText) && buildFlexibleRegex(hlText).test(val))) {
           if (replaceTextNodeWithFootnote(node, hlText)) return true;
         }
       }
     }
   }
 
-  // 2. Fallback: Sufficiently long word or sentence (>= 4 chars)
-  if (!targetSentence || hlText.length >= 4) {
+  // 3. Fallback ONLY for multi-word or long unique phrase, OR when no targetSentence was provided
+  const isMultiWord = hlText.trim().split(/\s+/).length >= 2;
+  const isLongPhrase = hlText.length >= 15;
+  if (!targetSentence || isMultiWord || isLongPhrase) {
     const walker = doc.createTreeWalker(body, NodeFilter.SHOW_TEXT);
     let node;
+    const wordRe = buildWholeWordRegex(hlText);
     while ((node = walker.nextNode())) {
       const val = node.nodeValue;
       if (!val) continue;
       const parentTag = (node.parentNode ? node.parentNode.nodeName : '').toLowerCase();
       if (parentTag === 'script' || parentTag === 'style' || parentTag === 'mark' || parentTag === 'a') continue;
 
-      if (val.includes(hlText)) {
+      if (wordRe ? wordRe.test(val) : val.includes(hlText)) {
         if (replaceTextNodeWithFootnote(node, hlText)) return true;
       }
     }
@@ -2867,7 +2991,9 @@ async function exportExistingEpubWithHighlights() {
 
     for (let i = unassignedHls.length - 1; i >= 0; i--) {
       const uHl = unassignedHls[i];
-      if (uHl.targetSentence && doc.body && doc.body.textContent.includes(uHl.targetSentence.trim())) {
+      const targetSent = (uHl.targetSentence || '').trim();
+      const flexSentRe = targetSent ? buildFlexibleRegex(targetSent) : null;
+      if (targetSent && doc.body && (doc.body.textContent.includes(targetSent) || (flexSentRe && flexSentRe.test(doc.body.textContent)))) {
         chapterHls.push(uHl);
         unassignedHls.splice(i, 1);
       }
@@ -2876,7 +3002,11 @@ async function exportExistingEpubWithHighlights() {
     const relativeNotesHref = getRelativePath(actualZipEntryName, notesFileName);
     const relativeChapterHref = getRelativePath(notesFileName, actualZipEntryName);
 
-    chapterHls.sort((a, b) => compareHighlights(b, a));
+    chapterHls.sort((a, b) => {
+      const cmp = compareHighlights(b, a);
+      if (cmp !== 0) return cmp;
+      return (b.text || '').length - (a.text || '').length;
+    });
 
     chapterHls.forEach(hl => {
       const fnNum = hlFootnoteMap.get(hl.id);
@@ -3076,6 +3206,10 @@ mark.reader-highlight.hl-green  { background-color: #86efac !important; }
 mark.reader-highlight.hl-purple { background-color: #d8b4fe !important; }
 mark.reader-highlight.hl-blue   { background-color: #7dd3fc !important; }
 mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
+a.reader-highlight-link {
+  color: inherit !important;
+  text-decoration: none !important;
+}
 .reader-footnote-badge {
   font-size: 0.75em !important;
   vertical-align: super !important;
@@ -3089,21 +3223,99 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
 }
 `);
 
-  let bodyInnerHtml = `<h1>${escapeXml(state.currentBook.title || 'Untitled')}</h1>\n`;
-  if (state.currentBook.author) {
-    bodyInnerHtml += `<div class="author">${escapeXml(state.currentBook.author)}</div>\n`;
-  }
+  let bodyInnerHtml = '';
+  let sortedHls = [];
+  const hlFootnoteMap = new Map();
+  const hlBacklinkMap = new Map();
+  const extraManifestItems = [];
 
-  if (state.currentBook.type === 'md' || state.currentBook.type === 'markdown') {
-    const { bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
-    let renderedHtml = '';
-    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
-      renderedHtml = marked.parse(bodyText);
-    } else {
-      renderedHtml = bodyText.split(/\n\s*\n/).map((p, i) => `<p id="p-${i}">${escapeXml(p.trim())}</p>`).join('\n');
+  const isMarkdownBook = state.currentBook.type === 'md' || state.currentBook.type === 'markdown';
+
+  if (isMarkdownBook) {
+    const { parsedHls, bodyText } = parseMarkdownFootnotes(state.currentBook.content || '', state.highlights);
+
+    // Sync any parsed footnotes to state.highlights
+    parsedHls.forEach(fnHl => {
+      const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && h.fnTag === fnHl.fnTag));
+      if (idx === -1) {
+        state.highlights.push(fnHl);
+      } else {
+        const existing = state.highlights[idx];
+        if (!existing.targetMeaning && fnHl.targetMeaning) existing.targetMeaning = fnHl.targetMeaning;
+        if (!existing.phonetic && fnHl.phonetic) existing.phonetic = fnHl.phonetic;
+        if (!existing.sentenceTranslation && fnHl.sentenceTranslation) existing.sentenceTranslation = fnHl.sentenceTranslation;
+        if (!existing.note && fnHl.note) existing.note = fnHl.note;
+        existing.fnTag = fnHl.fnTag;
+        existing.isFootnote = true;
+      }
+    });
+
+    let cleanBody = bodyText;
+
+    // Handle embedded base64 images if any
+    let imgSeq = 1;
+    cleanBody = cleanBody.replace(/!\[([^\]]*)\]\((data:image\/([a-zA-Z0-9+]+);base64,([^\)]+))\)/g, (match, alt, fullData, ext, b64) => {
+      const cleanExt = ext.replace('jpeg', 'jpg');
+      const fname = `img_${imgSeq++}.${cleanExt}`;
+      zip.file(`OEBPS/images/${fname}`, b64, { base64: true });
+      const mediaType = cleanExt === 'jpg' ? 'image/jpeg' : `image/${cleanExt}`;
+      extraManifestItems.push({ id: `img-${imgSeq}`, href: `images/${fname}`, mediaType });
+      return `![${alt}](images/${fname})`;
+    });
+
+    const { locatedList, sortedHls: locatedSortedHls, hlFootnoteMap: locatedFootnoteMap } = locateHighlightsInMarkdownText(cleanBody, state.highlights);
+    sortedHls = locatedSortedHls;
+    locatedFootnoteMap.forEach((v, k) => hlFootnoteMap.set(k, v));
+
+    // Register backlinks
+    locatedList.forEach(item => {
+      const refId = `ref-fn-${item.fnNum}`;
+      hlBacklinkMap.set(item.hl.id, { href: `book.xhtml#${refId}` });
+    });
+
+    // Replace located highlights in cleanBody from bottom to top so offsets do not shift
+    const replaceList = [...locatedList].sort((a, b) => b.start - a.start);
+    replaceList.forEach(item => {
+      const fnNum = item.fnNum;
+      const refId = `ref-fn-${fnNum}`;
+      const color = item.hl.color || 'yellow';
+      const colorHex = getHighlightColorHex(color);
+
+      let displayTerm = item.prefix;
+      if (displayTerm.startsWith('[') && displayTerm.endsWith(']')) {
+        displayTerm = displayTerm.slice(1, -1);
+      }
+
+      const replacement = `<mark class="reader-highlight hl-${color}" data-hl-id="${escapeXml(item.hl.id)}" style="background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;"><a href="highlights.xhtml#fn-${fnNum}" id="${refId}" class="reader-highlight-link" style="color: inherit; text-decoration: none;">${displayTerm}</a></mark><sup class="reader-footnote-badge" style="font-size: 0.75em; vertical-align: super; margin-left: 2px;"><a href="highlights.xhtml#fn-${fnNum}" class="reader-footnote-link" style="color: #2563eb; text-decoration: none; font-weight: bold;">[${fnNum}]</a></sup>`;
+
+      cleanBody = cleanBody.substring(0, item.start) + replacement + cleanBody.substring(item.end);
+    });
+
+    // Strip any remaining raw footnote references like [^123] so no unparsed marker text remains
+    cleanBody = cleanBody.replace(/\[\^[a-zA-Z0-9_-]+\]/g, '');
+
+    // Prevent duplicate title if markdown already starts with # Title
+    if (!/^#\s+/m.test(cleanBody)) {
+      bodyInnerHtml += `<h1>${escapeXml(state.currentBook.title || 'Untitled')}</h1>\n`;
+      if (state.currentBook.author) {
+        bodyInnerHtml += `<div class="author">${escapeXml(state.currentBook.author)}</div>\n`;
+      }
     }
-    bodyInnerHtml += renderedHtml;
+
+    if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+      bodyInnerHtml += marked.parse(cleanBody);
+    } else {
+      bodyInnerHtml += cleanBody.split(/\n\s*\n/).map((p, i) => `<p id="p-${i}">${p.trim()}</p>`).join('\n');
+    }
+
+    saveHighlights();
   } else {
+    // TXT file handling
+    bodyInnerHtml += `<h1>${escapeXml(state.currentBook.title || 'Untitled')}</h1>\n`;
+    if (state.currentBook.author) {
+      bodyInnerHtml += `<div class="author">${escapeXml(state.currentBook.author)}</div>\n`;
+    }
+
     const paragraphs = (state.currentBook.content || '').split(/\n\s*\n/);
     paragraphs.forEach((pText, pIdx) => {
       const trimmed = pText.trim();
@@ -3134,20 +3346,19 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
     }
   }
 
-  const sortedHls = [...state.highlights].sort(compareHighlights);
-  const hlFootnoteMap = new Map();
-  sortedHls.forEach((hl, idx) => hlFootnoteMap.set(hl.id, idx + 1));
+  if (!isMarkdownBook) {
+    sortedHls = [...state.highlights].sort(compareHighlights);
+    sortedHls.forEach((hl, idx) => hlFootnoteMap.set(hl.id, idx + 1));
 
-  const hlBacklinkMap = new Map();
-  const revHls = [...sortedHls].reverse();
-  revHls.forEach(hl => {
-    const fnNum = hlFootnoteMap.get(hl.id);
-    const refId = `ref-fn-${fnNum}`;
-    const ok = injectPopupFootnoteInDoc(bookDoc, hl, fnNum, 'highlights.xhtml', refId);
-    if (ok) {
-      hlBacklinkMap.set(hl.id, { href: `book.xhtml#${refId}` });
-    }
-  });
+    sortedHls.forEach(hl => {
+      const fnNum = hlFootnoteMap.get(hl.id);
+      const refId = `ref-fn-${fnNum}`;
+      const ok = injectPopupFootnoteInDoc(bookDoc, hl, fnNum, 'highlights.xhtml', refId);
+      if (ok) {
+        hlBacklinkMap.set(hl.id, { href: `book.xhtml#${refId}` });
+      }
+    });
+  }
 
   let bookXhtml = new XMLSerializer().serializeToString(bookDoc);
   if (!bookXhtml.trim().startsWith('<?xml')) {
@@ -3185,6 +3396,16 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
   zip.file("OEBPS/nav.xhtml", navXhtml);
 
   const bookId = `urn:uuid:${generateUUID()}`;
+  let manifestItemsXml = `    <item id="css" href="styles.css" media-type="text/css"/>
+    <item id="book" href="book.xhtml" media-type="application/xhtml+xml"/>
+    <item id="highlights-notes" href="highlights.xhtml" media-type="application/xhtml+xml"/>
+    <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
+    <item id="toc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>`;
+
+  if (extraManifestItems.length > 0) {
+    manifestItemsXml += '\n' + extraManifestItems.map(item => `    <item id="${item.id}" href="${item.href}" media-type="${item.mediaType}"/>`).join('\n');
+  }
+
   const opfContent = `<?xml version="1.0" encoding="UTF-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="BookId" version="3.0">
   <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
@@ -3195,15 +3416,8 @@ mark.reader-highlight.hl-pink   { background-color: #f9a8d4 !important; }
     <meta property="dcterms:modified">${new Date().toISOString().replace(/\.\d+Z$/, 'Z')}</meta>
   </metadata>
   <manifest>
-    <item id="css" href="styles.css" media-type="text/css"/>
-    <item id="book" href="book.xhtml" media-type="application/xhtml+xml"/>
-    <item id="highlights-notes" href="highlights.xhtml" media-type="application/xhtml+xml"/>
-    <item id="nav" href="nav.xhtml" media-type="application/xhtml+xml" properties="nav"/>
-    <item id="toc" href="toc.ncx" media-type="application/x-dtbncx+xml"/>
+${manifestItemsXml}
   </manifest>
-  <spine toc="toc">
-    <itemref idref="book"/>
-    <itemref idref="highlights-notes"/>
   </spine>
 </package>`;
   zip.file("OEBPS/content.opf", opfContent);
