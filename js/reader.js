@@ -6988,15 +6988,19 @@ function showHighlightToolbar(rect) {
 
   // Render bottom meaning & translation simultaneously (like quiz answer card)
   if (elements.hlToolbarMeaning) {
-    const meaning = (state.activeHighlight && state.activeHighlight.targetMeaning)
+    const rawMeaning = (state.activeHighlight && state.activeHighlight.targetMeaning)
       ? state.activeHighlight.targetMeaning.trim()
       : '';
     const phonetic = (state.activeHighlight && state.activeHighlight.phonetic)
       ? state.activeHighlight.phonetic.trim()
       : '';
-    const trans = (state.activeHighlight && state.activeHighlight.sentenceTranslation)
+    const rawTrans = (state.activeHighlight && state.activeHighlight.sentenceTranslation)
       ? state.activeHighlight.sentenceTranslation.trim()
       : '';
+
+    // <br> 태그가 포함되어 있을 경우 줄바꿈(\n)으로 정규화
+    const meaning = rawMeaning.replace(/<br\s*\/?>/gi, '\n');
+    const trans = rawTrans.replace(/<br\s*\/?>/gi, '\n');
 
     const phoneticBadge = phonetic ? `<span class="hl-phonetic-badge">${escapeHtml(phonetic)}</span>` : '';
     const hasMeaning = !!meaning;
