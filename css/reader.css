@@ -879,6 +879,12 @@ body.theme-dark .btn-reset-db:hover {
   -webkit-overflow-scrolling: touch;
 }
 
+/* 영어읽기앱 내에서는 EPUB 본문 각주 번호 배지([1], [2], ...) 숨김 (형광펜만 표시) */
+.reader-footnote-badge,
+sup.reader-footnote-badge {
+  display: none !important;
+}
+
 .epub-nav-arrow {
   position: absolute;
   top: 50%;

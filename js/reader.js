@@ -1234,7 +1234,9 @@ function applyEpubThemes() {
     '.epubjs-hl.hl-green':  { 'fill': '#4ade80 !important' },
     '.epubjs-hl.hl-purple': { 'fill': '#c084fc !important' },
     '.epubjs-hl.hl-blue':   { 'fill': '#38bdf8 !important' },
-    '.epubjs-hl.hl-pink':   { 'fill': '#f472b6 !important' }
+    '.epubjs-hl.hl-pink':   { 'fill': '#f472b6 !important' },
+    '.reader-footnote-badge': { 'display': 'none !important' },
+    'sup.reader-footnote-badge': { 'display': 'none !important' }
   });
 
   // 테마/폰트 크기/줄간격 변경 시 현재 읽던 위치(CFI) 및 형광펜 유지
@@ -2528,6 +2530,46 @@ function getRelativePath(fromPath, toPath) {
   return rel || './';
 }
 
+function cleanDocHighlightsAndFootnotes(doc) {
+  if (!doc) return;
+  // 1. Remove all footnote badges (.reader-footnote-badge, sup.reader-footnote-badge)
+  doc.querySelectorAll('.reader-footnote-badge, sup.reader-footnote-badge').forEach(b => {
+    if (b.parentNode) b.parentNode.removeChild(b);
+  });
+
+  // 2. Remove injected export style tag if present so it doesn't duplicate
+  doc.querySelectorAll('#reader-epub-export-style').forEach(s => {
+    if (s.parentNode) s.parentNode.removeChild(s);
+  });
+
+  // 3. Unwrap any existing <mark> elements and highlight links back to clean text
+  doc.querySelectorAll('mark.reader-highlight, mark[data-hl-id], mark').forEach(mark => {
+    const parent = mark.parentNode;
+    if (!parent) return;
+    mark.querySelectorAll('.reader-footnote-badge, .reader-note-badge').forEach(b => b.remove());
+    mark.querySelectorAll('a.reader-highlight-link, a[epub\\:type="noteref"], a[role="doc-noteref"]').forEach(a => {
+      const aParent = a.parentNode;
+      if (aParent) {
+        while (a.firstChild) aParent.insertBefore(a.firstChild, a);
+        aParent.removeChild(a);
+      }
+    });
+    while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+    parent.removeChild(mark);
+    parent.normalize();
+  });
+
+  // 4. Unwrap any remaining noteref anchors not inside mark
+  doc.querySelectorAll('a.reader-highlight-link, a.reader-footnote-link, a[epub\\:type="noteref"], a[role="doc-noteref"]').forEach(a => {
+    const parent = a.parentNode;
+    if (parent) {
+      while (a.firstChild) parent.insertBefore(a.firstChild, a);
+      parent.removeChild(a);
+      parent.normalize();
+    }
+  });
+}
+
 function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
   if (!hl.text || !doc) return false;
   const body = doc.body || doc.documentElement;
@@ -2567,6 +2609,8 @@ function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
     a.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
     a.setAttribute('id', refId);
     a.setAttribute('class', 'reader-highlight-link');
+    a.setAttribute('epub:type', 'noteref');
+    a.setAttribute('role', 'doc-noteref');
     a.setAttribute('style', 'color: inherit; text-decoration: none;');
     a.textContent = match;
     mark.appendChild(a);
@@ -2580,6 +2624,8 @@ function injectPopupFootnoteInDoc(doc, hl, fnNum, notesRelativeHref, refId) {
     const supA = doc.createElementNS('http://www.w3.org/1999/xhtml', 'a');
     supA.setAttribute('href', `${notesRelativeHref}#fn-${fnNum}`);
     supA.setAttribute('class', 'reader-footnote-link');
+    supA.setAttribute('epub:type', 'noteref');
+    supA.setAttribute('role', 'doc-noteref');
     supA.setAttribute('style', 'color: #2563eb; text-decoration: none; font-weight: bold;');
     supA.textContent = `[${fnNum}]`;
     sup.appendChild(supA);
@@ -2744,20 +2790,22 @@ function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBac
       }
 
       itemsHtml += `
-    <div id="fn-${fnNum}" class="reader-footnote-card hl-${color}">
+    <aside id="fn-${fnNum}" class="reader-footnote-card hl-${color}" epub:type="footnote" role="doc-footnote">
       <div class="footnote-top">
         <div class="footnote-title-wrap">
-          <span class="footnote-badge-num">#${fnNum}</span>
+          ${backlinkHref
+            ? `<a href="${backlinkHref}" class="footnote-badge-link" role="doc-backlink" title="본문 위치로 이동"><span class="footnote-badge-num">#${fnNum}</span></a>`
+            : `<span class="footnote-badge-num">#${fnNum}</span>`}
           <span class="footnote-term">${escapeXml(hl.text || '')}</span>
           ${hl.phonetic && hl.phonetic.trim() ? `<span class="footnote-phonetic">${escapeXml(hl.phonetic.trim())}</span>` : ''}
         </div>
-        ${backlinkHref ? `<a href="${backlinkHref}" class="footnote-backlink">↩ 본문 위치로 돌아가기</a>` : ''}
+        ${backlinkHref ? `<a href="${backlinkHref}" class="footnote-backlink" role="doc-backlink" aria-label="본문 위치로 이동">↩ 본문 위치로 돌아가기</a>` : ''}
       </div>
       ${meaningHtml}
       ${contextHtml}
       ${transHtml}
       ${noteHtml}
-    </div>`;
+    </aside>`;
     });
   }
 
@@ -2807,25 +2855,33 @@ function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBac
     .reader-footnote-card.hl-pink   { border-left-color: #ec4899; }
     .footnote-top {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       justify-content: space-between;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 10px;
     }
     .footnote-title-wrap {
       display: flex;
-      align-items: baseline;
+      align-items: center;
       gap: 8px;
+    }
+    .footnote-badge-link {
+      text-decoration: none;
+      display: inline-block;
     }
     .footnote-badge-num {
       display: inline-block;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      color: #2563eb;
+      color: #1d4ed8;
       background: #dbeafe;
-      padding: 1px 6px;
-      border-radius: 4px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transition: background 0.15s ease;
+    }
+    .footnote-badge-link:hover .footnote-badge-num {
+      background: #bfdbfe;
     }
     .footnote-term {
       font-size: 18px;
@@ -2838,13 +2894,23 @@ function generateHighlightsXhtml(title, author, highlights, hlFootnoteMap, hlBac
       font-style: italic;
     }
     .footnote-backlink {
-      font-size: 12px;
+      font-size: 13px;
+      font-weight: 600;
       color: #2563eb;
       text-decoration: none;
-      padding: 3px 8px;
-      background: #ffffff;
+      padding: 5px 12px;
+      background: #eff6ff;
       border: 1px solid #bfdbfe;
-      border-radius: 4px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+    .footnote-backlink:hover {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1d4ed8;
     }
     .footnote-meaning {
       font-size: 15px;
@@ -3003,13 +3069,20 @@ async function exportExistingEpubWithHighlights() {
       }
     }
 
+    // Clean previous highlights/badges before re-injecting fresh footnotes
+    cleanDocHighlightsAndFootnotes(doc);
+
     const chapterHls = chapterHlsMap.get(spineItem) || [];
 
     for (let i = unassignedHls.length - 1; i >= 0; i--) {
       const uHl = unassignedHls[i];
       const targetSent = (uHl.targetSentence || '').trim();
       const flexSentRe = targetSent ? buildFlexibleRegex(targetSent) : null;
-      if (targetSent && doc.body && (doc.body.textContent.includes(targetSent) || (flexSentRe && flexSentRe.test(doc.body.textContent)))) {
+      const wordRe = uHl.text ? buildWholeWordRegex(uHl.text.trim()) : null;
+      if (
+        (targetSent && doc.body && (doc.body.textContent.includes(targetSent) || (flexSentRe && flexSentRe.test(doc.body.textContent)))) ||
+        (wordRe && doc.body && wordRe.test(doc.body.textContent))
+      ) {
         chapterHls.push(uHl);
         unassignedHls.splice(i, 1);
       }
@@ -3032,6 +3105,12 @@ async function exportExistingEpubWithHighlights() {
         hlBacklinkMap.set(hl.id, {
           href: `${relativeChapterHref}#${refId}`
         });
+      } else {
+        if (!hlBacklinkMap.has(hl.id) && relativeChapterHref) {
+          hlBacklinkMap.set(hl.id, {
+            href: relativeChapterHref
+          });
+        }
       }
     });
 
@@ -3068,11 +3147,26 @@ async function exportExistingEpubWithHighlights() {
     }
 
     let updatedXml = new XMLSerializer().serializeToString(doc);
+    updatedXml = updatedXml.replace(/<!--\?xml[\s\S]*?\?-->\s*/gi, '');
+    if (!updatedXml.includes('<!DOCTYPE') && !updatedXml.includes('<!doctype')) {
+      updatedXml = '<!DOCTYPE html>\n' + updatedXml;
+    }
     if (!updatedXml.trim().startsWith('<?xml')) {
       updatedXml = '<?xml version="1.0" encoding="utf-8"?>\n' + updatedXml;
     }
     zip.file(actualZipEntryName, updatedXml);
   }
+
+  // Ensure every highlight has a backlink to its chapter
+  unassignedHls.forEach(uHl => {
+    if (!hlBacklinkMap.has(uHl.id)) {
+      const matched = findSpineItemForHighlight(uHl, allSpineItems, exportSpineItems) || exportSpineItems[0];
+      if (matched) {
+        const rel = getRelativePath(notesFileName, opfDir + matched.href);
+        hlBacklinkMap.set(uHl.id, { href: rel });
+      }
+    }
+  });
 
   const notesHtml = generateHighlightsXhtml(
     state.currentBook.title || 'EPUB Book',
@@ -3350,7 +3444,7 @@ a.reader-highlight-link {
         displayTerm = displayTerm.slice(1, -1);
       }
 
-      const replacement = `<mark class="reader-highlight hl-${color}" data-hl-id="${escapeXml(item.hl.id)}" style="background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;"><a href="highlights.xhtml#fn-${fnNum}" id="${refId}" class="reader-highlight-link" style="color: inherit; text-decoration: none;">${displayTerm}</a></mark><sup class="reader-footnote-badge" style="font-size: 0.75em; vertical-align: super; margin-left: 2px;"><a href="highlights.xhtml#fn-${fnNum}" class="reader-footnote-link" style="color: #2563eb; text-decoration: none; font-weight: bold;">[${fnNum}]</a></sup>`;
+      const replacement = `<mark class="reader-highlight hl-${color}" data-hl-id="${escapeXml(item.hl.id)}" style="background-color: ${colorHex}; color: inherit; padding: 1px 3px; border-radius: 3px;"><a href="highlights.xhtml#fn-${fnNum}" id="${refId}" class="reader-highlight-link" epub:type="noteref" role="doc-noteref" style="color: inherit; text-decoration: none;">${displayTerm}</a></mark><sup class="reader-footnote-badge" style="font-size: 0.75em; vertical-align: super; margin-left: 2px;"><a href="highlights.xhtml#fn-${fnNum}" class="reader-footnote-link" epub:type="noteref" role="doc-noteref" style="color: #2563eb; text-decoration: none; font-weight: bold;">[${fnNum}]</a></sup>`;
 
       cleanBody = cleanBody.substring(0, item.start) + replacement + cleanBody.substring(item.end);
     });
@@ -3473,6 +3567,9 @@ a.reader-highlight-link {
 
   let bookXhtml = new XMLSerializer().serializeToString(bookDoc);
   bookXhtml = bookXhtml.replace(/<!--\?xml[\s\S]*?\?-->\s*/gi, '');
+  if (!bookXhtml.includes('<!DOCTYPE') && !bookXhtml.includes('<!doctype')) {
+    bookXhtml = '<!DOCTYPE html>\n' + bookXhtml;
+  }
   if (!bookXhtml.trim().startsWith('<?xml')) {
     bookXhtml = '<?xml version="1.0" encoding="utf-8"?>\n' + bookXhtml;
   }
@@ -5566,6 +5663,11 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
             cursor: pointer !important;
             pointer-events: auto !important;
           }
+          /* 영어읽기앱 내에서는 각주 숫자 배지([1], [2], ...)를 숨기고 형광펜만 표시 */
+          .reader-footnote-badge,
+          sup.reader-footnote-badge {
+            display: none !important;
+          }
         `;
         doc.head.appendChild(style);
       }
@@ -6870,6 +6972,10 @@ async function removeHighlightFromEpubZip(hlId, originalFnNum, deletedHl) {
       removeHighlightFromDoc(doc, hlId, originalFnNum, deletedHl);
 
       let newHtml = new XMLSerializer().serializeToString(doc);
+      newHtml = newHtml.replace(/<!--\?xml[\s\S]*?\?-->\s*/gi, '');
+      if (!newHtml.includes('<!DOCTYPE') && !newHtml.includes('<!doctype')) {
+        newHtml = '<!DOCTYPE html>\n' + newHtml;
+      }
       if (htmlText.trim().startsWith('<?xml') && !newHtml.trim().startsWith('<?xml')) {
         newHtml = '<?xml version="1.0" encoding="utf-8"?>\n' + newHtml;
       }
