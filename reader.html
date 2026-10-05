@@ -240,6 +240,33 @@
 
               <div class="setting-divider"></div>
 
+              <!-- 기기간 독서 진도 동기화 (원클릭 클립보드 연동) -->
+              <div class="setting-group">
+                <div class="setting-label-row">
+                  <span class="setting-label">📲 기기간 독서 진도 동기화</span>
+                  <span class="api-status-badge configured" id="sync-status-badge" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">원클릭 연동</span>
+                </div>
+                <div class="book-manage-btn-row">
+                  <button type="button" class="btn-setting-action primary" id="btn-copy-sync-code" title="현재 도서의 읽은 위치, 형광펜, 책갈피를 클립보드로 복사 (Apple 유니버설 클립보드 연동)">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                    진도 복사
+                  </button>
+                  <button type="button" class="btn-setting-action" id="btn-paste-sync-code" title="다른 기기에서 복사한 진도 코드를 가져와 즉시 적용합니다">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                    </svg>
+                    진도 가져오기
+                  </button>
+                </div>
+                <span class="setting-subtext">
+                  아이패드/아이폰 ↔ 맥 간에 복사/붙여넣기만으로 읽던 위치와 형광펜이 즉시 동기화됩니다.
+                </span>
+              </div>
+
+              <div class="setting-divider"></div>
+
               <!-- 도서 데이터 관리 (내보내기 & 초기화) -->
               <div class="setting-group">
                 <span class="setting-label">📁 도서 데이터 관리</span>
@@ -599,6 +626,93 @@
 
       <div style="display:flex; justify-content:flex-end;">
         <button type="button" class="btn-reader" id="btn-cancel-export">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 독서 진도 동기화 (기기간 연동) 모달 -->
+  <div class="meta-edit-modal" id="sync-modal">
+    <div class="meta-edit-card sync-modal-card" style="max-width: 520px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+        <h3 style="font-size: 19px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+          <span>📲</span> 기기간 독서 진도 동기화
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-sync-modal" aria-label="닫기" style="background:none; border:none; cursor:pointer; font-size:18px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px;">✕</button>
+      </div>
+      <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px; line-height:1.4;">
+        별도 서버나 로그인 없이 클립보드 복사/붙여넣기로 아이패드, 아이폰, 맥의 읽던 위치와 형광펜을 즉시 동기화합니다.
+      </p>
+
+      <!-- 탭 선택 바 -->
+      <div class="sync-tab-bar">
+        <button type="button" class="sync-tab-btn active" id="btn-sync-tab-export" data-tab="export">
+          📋 진도 복사 (내보내기)
+        </button>
+        <button type="button" class="sync-tab-btn" id="btn-sync-tab-import" data-tab="import">
+          📥 진도 가져오기 (적용)
+        </button>
+      </div>
+
+      <!-- TAB 1: 내보내기 (복사) -->
+      <div class="sync-tab-panel" id="sync-panel-export">
+        <!-- 요약 카드 -->
+        <div class="sync-summary-box" id="sync-export-summary">
+          <div class="sync-summary-title" id="sync-summary-book-title">현재 도서: -</div>
+          <div class="sync-summary-items">
+            <span class="sync-summary-chip" id="sync-summary-pos">📍 읽던 위치: -</span>
+            <span class="sync-summary-chip" id="sync-summary-hl-count">🖍️ 형광펜 0개</span>
+            <span class="sync-summary-chip" id="sync-summary-bm-count">🔖 책갈피 0개</span>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <button type="button" class="btn-reader primary" id="btn-sync-copy-code" style="flex:1; justify-content:center; padding:10px;">
+            📋 클립보드에 복사하기
+          </button>
+          <button type="button" class="btn-reader" id="btn-sync-download-file" title="백업용 JSON 파일 저장" style="justify-content:center; padding:10px;">
+            💾 파일 다운로드
+          </button>
+        </div>
+
+        <div class="meta-input-group" style="margin-bottom:12px;">
+          <label for="sync-export-code" style="display:flex; justify-content:space-between;">
+            <span>진도 코드 미리보기</span>
+            <span style="font-size:11px; color:var(--text-muted); font-weight:normal;">클립보드 연동(Apple Continuity) 시 자동 복사됨</span>
+          </label>
+          <textarea id="sync-export-code" readonly rows="5" style="font-family:monospace; font-size:11px; line-height:1.4; resize:vertical; background:var(--reader-bg-secondary, rgba(0,0,0,0.03));"></textarea>
+        </div>
+      </div>
+
+      <!-- TAB 2: 가져오기 (적용) -->
+      <div class="sync-tab-panel" id="sync-panel-import" style="display:none;">
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <button type="button" class="btn-reader primary" id="btn-sync-quick-paste" style="flex:1; justify-content:center; padding:10px;" title="클립보드의 진도 코드를 자동으로 읽어와 적용합니다">
+            📋 클립보드에서 바로 가져와 적용
+          </button>
+          <label class="btn-reader" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="저장된 JSON 백업 파일 불러오기">
+            📂 파일 불러오기
+            <input type="file" id="input-sync-file" accept=".json,application/json" style="display:none;">
+          </label>
+        </div>
+
+        <div class="meta-input-group" style="margin-bottom:12px;">
+          <label for="sync-import-code">진도 코드 직접 붙여넣기</label>
+          <textarea id="sync-import-code" rows="5" placeholder="다른 기기에서 복사한 진도 코드를 여기에 붙여넣거나, 상단 [클립보드에서 바로 가져와 적용]을 누르세요." style="font-family:monospace; font-size:11px; line-height:1.4; resize:vertical;"></textarea>
+        </div>
+
+        <div style="background:var(--reader-bg-secondary, rgba(0,0,0,0.03)); border:1px solid var(--reader-border); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--reader-text-secondary); line-height:1.45; margin-bottom:14px;">
+          ℹ️ <strong>동기화 안내</strong>: 가져오기를 실행하면 형광펜과 읽던 위치가 복사해 온 시점의 상태로 완전히 맞춰집니다. (다른 기기에서 삭제한 형광펜도 깔끔하게 반영됩니다)
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn-reader primary" id="btn-sync-apply" style="min-width:110px;">
+            🚀 진도 적용하기
+          </button>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; border-top:1px solid var(--reader-border); padding-top:10px; margin-top:6px;">
+        <button type="button" class="btn-reader" id="btn-cancel-sync">닫기</button>
       </div>
     </div>
   </div>

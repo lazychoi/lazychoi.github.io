@@ -294,6 +294,26 @@ const elements = {
   btnChooseExportMd: document.getElementById('btn-choose-export-md'),
   btnCloseExportModal: document.getElementById('btn-close-export-modal'),
   btnCancelExport: document.getElementById('btn-cancel-export'),
+  btnCopySyncCode: document.getElementById('btn-copy-sync-code'),
+  btnPasteSyncCode: document.getElementById('btn-paste-sync-code'),
+  syncModal: document.getElementById('sync-modal'),
+  btnCloseSyncModal: document.getElementById('btn-close-sync-modal'),
+  btnCancelSync: document.getElementById('btn-cancel-sync'),
+  btnSyncTabExport: document.getElementById('btn-sync-tab-export'),
+  btnSyncTabImport: document.getElementById('btn-sync-tab-import'),
+  syncPanelExport: document.getElementById('sync-panel-export'),
+  syncPanelImport: document.getElementById('sync-panel-import'),
+  syncSummaryBookTitle: document.getElementById('sync-summary-book-title'),
+  syncSummaryPos: document.getElementById('sync-summary-pos'),
+  syncSummaryHlCount: document.getElementById('sync-summary-hl-count'),
+  syncSummaryBmCount: document.getElementById('sync-summary-bm-count'),
+  btnSyncCopyCode: document.getElementById('btn-sync-copy-code'),
+  btnSyncDownloadFile: document.getElementById('btn-sync-download-file'),
+  syncExportCode: document.getElementById('sync-export-code'),
+  btnSyncQuickPaste: document.getElementById('btn-sync-quick-paste'),
+  inputSyncFile: document.getElementById('input-sync-file'),
+  syncImportCode: document.getElementById('sync-import-code'),
+  btnSyncApply: document.getElementById('btn-sync-apply'),
   btnLoadSample: document.getElementById('btn-load-sample'),
   btnEmptySample: document.getElementById('btn-empty-sample'),
   btnToggleToc: document.getElementById('btn-toggle-toc'),
@@ -1555,6 +1575,382 @@ function formatTxtParagraphHeading(pText) {
   }
 
   return trimmed;
+}
+
+// ── 기기간 독서 진도 동기화 (Lightweight Sync Code) ──
+function getCurrentReadingPosition() {
+  if (!state.currentBook) return null;
+  if (state.currentBook.type === 'epub') {
+    const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+    const cfi = (!state.epub.isResizing && loc && loc.start && loc.start.cfi)
+      ? loc.start.cfi
+      : (state.epub.pendingRestoreCfi || state.epub.currentCfi || localStorage.getItem(`reader_pos_${state.currentBook.id}`));
+    let pct = null;
+    if (state.epub.book && state.epub.locationsReady && cfi) {
+      try {
+        pct = Math.round(state.epub.book.locations.percentageFromCfi(cfi) * 100);
+      } catch (e) {}
+    } else if (elements.progressSlider) {
+      pct = parseInt(elements.progressSlider.value, 10) || null;
+    }
+    return {
+      type: 'epub',
+      cfi: cfi || null,
+      percent: pct
+    };
+  } else if (state.currentBook.type === 'txt' || state.currentBook.type === 'md') {
+    let pct = 0;
+    if (elements.txtViewer) {
+      const scrollTop = elements.txtViewer.scrollTop;
+      const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+      if (scrollHeight > 0) {
+        pct = Math.min(100, Math.max(0, Math.round((scrollTop / scrollHeight) * 100)));
+      }
+    } else {
+      const saved = localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+      if (saved !== null) pct = parseInt(saved, 10) || 0;
+    }
+    return {
+      type: state.currentBook.type,
+      percent: pct
+    };
+  }
+  return null;
+}
+
+function generateSyncData() {
+  if (!state.currentBook) return null;
+  const pos = getCurrentReadingPosition();
+  return {
+    version: 1,
+    app: "lazychoi-reader",
+    exportedAt: new Date().toISOString(),
+    book: {
+      id: state.currentBook.id,
+      title: state.currentBook.title,
+      author: state.currentBook.author || "",
+      type: state.currentBook.type
+    },
+    readingPosition: pos,
+    highlights: Array.isArray(state.highlights) ? state.highlights : [],
+    bookmarks: Array.isArray(state.bookmarks) ? state.bookmarks : []
+  };
+}
+
+function openSyncModal(initialTab = 'export') {
+  if (initialTab === 'export' && !state.currentBook) {
+    showToast('열려 있는 도서가 없습니다. 먼저 도서를 열어주세요.');
+    return;
+  }
+  if (elements.settingsPopover) {
+    elements.settingsPopover.classList.remove('open');
+  }
+
+  // 내보내기 요약 및 코드 갱신
+  if (state.currentBook) {
+    const syncObj = generateSyncData();
+    if (syncObj) {
+      if (elements.syncSummaryBookTitle) {
+        elements.syncSummaryBookTitle.textContent = `현재 도서: ${state.currentBook.title || 'Untitled'}`;
+      }
+      if (elements.syncSummaryPos) {
+        const pos = syncObj.readingPosition;
+        let posText = '처음';
+        if (pos) {
+          if (pos.percent !== null && pos.percent !== undefined) {
+            posText = `진행률 ${pos.percent}%`;
+          } else if (pos.cfi) {
+            posText = '읽던 위치 저장됨';
+          }
+        }
+        elements.syncSummaryPos.textContent = `📍 읽던 위치: ${posText}`;
+      }
+      if (elements.syncSummaryHlCount) {
+        elements.syncSummaryHlCount.textContent = `🖍️ 형광펜 ${(state.highlights || []).length}개`;
+      }
+      if (elements.syncSummaryBmCount) {
+        elements.syncSummaryBmCount.textContent = `🔖 책갈피 ${(state.bookmarks || []).length}개`;
+      }
+      if (elements.syncExportCode) {
+        elements.syncExportCode.value = JSON.stringify(syncObj, null, 2);
+      }
+    }
+  }
+
+  switchSyncTab(initialTab);
+  if (elements.syncModal) {
+    elements.syncModal.classList.add('open');
+  }
+}
+
+function closeSyncModal() {
+  if (elements.syncModal) {
+    elements.syncModal.classList.remove('open');
+  }
+}
+
+function switchSyncTab(tab = 'export') {
+  if (tab === 'export') {
+    if (elements.btnSyncTabExport) elements.btnSyncTabExport.classList.add('active');
+    if (elements.btnSyncTabImport) elements.btnSyncTabImport.classList.remove('active');
+    if (elements.syncPanelExport) elements.syncPanelExport.style.display = 'block';
+    if (elements.syncPanelImport) elements.syncPanelImport.style.display = 'none';
+  } else {
+    if (elements.btnSyncTabExport) elements.btnSyncTabExport.classList.remove('active');
+    if (elements.btnSyncTabImport) elements.btnSyncTabImport.classList.add('active');
+    if (elements.syncPanelExport) elements.syncPanelExport.style.display = 'none';
+    if (elements.syncPanelImport) elements.syncPanelImport.style.display = 'block';
+  }
+}
+
+async function copySyncCodeToClipboard() {
+  if (!state.currentBook) {
+    showToast('열려 있는 도서가 없습니다.');
+    return;
+  }
+  const syncObj = generateSyncData();
+  if (!syncObj) return;
+  const jsonStr = JSON.stringify(syncObj, null, 2);
+  if (elements.syncExportCode) {
+    elements.syncExportCode.value = jsonStr;
+  }
+  const ok = await copyTextToClipboard(jsonStr);
+  if (ok) {
+    showToast('📋 진도 코드가 복사되었습니다! (다른 기기에서 [진도 가져오기] 클릭)');
+  } else {
+    showToast('클립보드 자동 복사에 실패했습니다. 아래 텍스트 상자에서 직접 복사해주세요.');
+    if (elements.syncExportCode) {
+      elements.syncExportCode.focus();
+      elements.syncExportCode.select();
+    }
+  }
+}
+
+function downloadSyncJsonFile() {
+  if (!state.currentBook) {
+    showToast('열려 있는 도서가 없습니다.');
+    return;
+  }
+  const syncObj = generateSyncData();
+  if (!syncObj) return;
+  const jsonStr = JSON.stringify(syncObj, null, 2);
+  const safeTitle = (state.currentBook.title || 'book').replace(/[\\/:*?"<>|]+/g, '_').trim();
+  const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  const fileName = `${safeTitle}_sync_${dateStr}.json`;
+
+  const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1500);
+  showToast(`💾 ${fileName} 파일로 저장되었습니다.`);
+}
+
+async function applySyncData(syncObj) {
+  if (!syncObj || typeof syncObj !== 'object') {
+    throw new Error('유효한 동기화 데이터 형식이 아닙니다.');
+  }
+  if (syncObj.app !== 'lazychoi-reader' && !syncObj.highlights && !syncObj.readingPosition && !syncObj.lastPosition) {
+    throw new Error('리더기 진도 데이터 형식이 아닙니다.');
+  }
+
+  // 1. 도서 확인 및 일치 여부 검증
+  if (!state.currentBook) {
+    const books = await getAllBooksFromStorage();
+    const syncTitle = syncObj.book?.title;
+    const syncId = syncObj.book?.id;
+    const matched = books.find(b => (syncId && (b.id === syncId || b.bookId === syncId)) || (syncTitle && b.title === syncTitle));
+    if (matched) {
+      await window.openBookFromList(matched.id || matched.bookId);
+    } else {
+      alert(`현재 열린 도서가 없으며, 보관함에서 "${syncTitle || '해당 도서'}"를 찾을 수 없습니다.\n먼저 해당 책 파일을 리더기에 추가해주세요.`);
+      return false;
+    }
+  } else if (syncObj.book && syncObj.book.title) {
+    const curTitle = (state.currentBook.title || '').trim();
+    const newTitle = (syncObj.book.title || '').trim();
+    if (curTitle && newTitle && curTitle !== newTitle) {
+      const ok = confirm(`현재 열려 있는 책("${curTitle}")과 동기화 데이터의 책("${newTitle}")이 다릅니다.\n그래도 현재 도서에 이 진도와 형광펜을 적용하시겠습니까?`);
+      if (!ok) return false;
+    }
+  }
+
+  // 2. 형광펜 스냅샷 완전 교체 (이전 형광펜 잔재 및 삭제 항목 부활 방지)
+  const newHighlights = Array.isArray(syncObj.highlights) ? JSON.parse(JSON.stringify(syncObj.highlights)) : [];
+  const newIds = new Set(newHighlights.map(h => h.id));
+  const deletedHls = (state.highlights || []).filter(h => h && h.id && !newIds.has(h.id));
+
+  if (state.currentBook.type === 'epub') {
+    // 2-A. 삭제된 항목 및 기존 어노테이션 오버레이 제거
+    if (state.epub.rendition) {
+      (state.highlights || []).forEach(h => {
+        if (h && h.cfiRange) {
+          try { state.epub.rendition.annotations.remove(h.cfiRange, "highlight"); } catch (e) {}
+        }
+      });
+    }
+    // 2-B. DOM mark 및 각주 태그 제거 (DOM에 직접 삽입된 경우)
+    const iframes = elements.epubArea ? elements.epubArea.querySelectorAll('iframe') : [];
+    deletedHls.forEach(delHl => {
+      iframes.forEach(iframe => {
+        const doc = iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null);
+        if (doc && typeof removeHighlightFromDoc === 'function') {
+          removeHighlightFromDoc(doc, delHl.id, delHl.fnNum, delHl);
+        }
+      });
+    });
+  }
+
+  state.highlights = newHighlights;
+  saveHighlights();
+
+  // 3. 책갈피 스냅샷 완전 교체
+  state.bookmarks = Array.isArray(syncObj.bookmarks) ? JSON.parse(JSON.stringify(syncObj.bookmarks)) : [];
+  saveBookmarks();
+
+  // 4. 읽던 위치 복원
+  const pos = syncObj.readingPosition || (syncObj.lastPosition !== undefined ? {
+    type: typeof syncObj.lastPosition === 'string' && syncObj.lastPosition.startsWith('epubcfi(') ? 'epub' : 'txt',
+    cfi: typeof syncObj.lastPosition === 'string' && syncObj.lastPosition.startsWith('epubcfi(') ? syncObj.lastPosition : null,
+    percent: typeof syncObj.lastPosition === 'number' ? syncObj.lastPosition : null
+  } : null);
+
+  if (state.currentBook.type === 'epub') {
+    const targetCfi = pos?.cfi || (typeof syncObj.lastPosition === 'string' && syncObj.lastPosition.startsWith('epubcfi(') ? syncObj.lastPosition : null);
+    if (targetCfi) {
+      state.epub.currentCfi = targetCfi;
+      localStorage.setItem(`reader_pos_${state.currentBook.id}`, targetCfi);
+      localStorage.setItem('reader_last_book_id', state.currentBook.id);
+      updateActiveBookLastPosition(targetCfi);
+
+      if (state.epub.rendition) {
+        try {
+          await state.epub.rendition.display(targetCfi);
+        } catch (err) {
+          console.warn('rendition.display targetCfi failed, trying startCfi:', err);
+          const startCfi = getStartCfi(targetCfi);
+          if (startCfi) {
+            await state.epub.rendition.display(startCfi).catch(() => {});
+          }
+        }
+      }
+    }
+    // 형광펜 시각적 어노테이션 렌더링
+    setTimeout(() => restoreEpubHighlights(), 60);
+    setTimeout(() => restoreEpubHighlights(), 220);
+  } else if (state.currentBook.type === 'txt') {
+    const pct = pos?.percent ?? syncObj.lastPosition;
+    if (typeof pct === 'number') {
+      localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+      localStorage.setItem('reader_last_book_id', state.currentBook.id);
+      updateActiveBookLastPosition(pct);
+      if (elements.txtViewer) {
+        const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+        if (scrollHeight > 0) {
+          elements.txtViewer.scrollTop = (pct / 100) * scrollHeight;
+        }
+      }
+    }
+    renderTxtContent('preserve');
+  } else if (state.currentBook.type === 'md') {
+    const pct = pos?.percent ?? syncObj.lastPosition;
+    if (typeof pct === 'number') {
+      localStorage.setItem(`reader_pos_${state.currentBook.id}`, pct);
+      localStorage.setItem('reader_last_book_id', state.currentBook.id);
+      updateActiveBookLastPosition(pct);
+      if (elements.txtViewer) {
+        const scrollHeight = elements.txtViewer.scrollHeight - elements.txtViewer.clientHeight;
+        if (scrollHeight > 0) {
+          elements.txtViewer.scrollTop = (pct / 100) * scrollHeight;
+        }
+      }
+    }
+    renderMdContent('preserve');
+  }
+
+  // 5. 드로어 및 뱃지 UI 갱신
+  updateHighlightBadge();
+  updateBookmarkBadge();
+  if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+    renderHighlightDrawer();
+    renderBookmarkDrawer();
+  }
+
+  closeSyncModal();
+  showToast(`✅ 진도 동기화 완료! (형광펜 ${state.highlights.length}개, 책갈피 ${state.bookmarks.length}개)`);
+  return true;
+}
+
+async function handleSyncQuickPaste() {
+  let text = '';
+  try {
+    if (navigator.clipboard && navigator.clipboard.readText) {
+      text = await navigator.clipboard.readText();
+    }
+  } catch (err) {
+    console.warn('navigator.clipboard.readText failed or permission denied:', err);
+  }
+
+  if (!text || !text.trim()) {
+    showToast('클립보드에서 텍스트를 읽을 수 없습니다. 아래 입력창에 직접 붙여넣어주세요.');
+    if (elements.syncImportCode) {
+      elements.syncImportCode.focus();
+    }
+    return;
+  }
+
+  try {
+    const syncObj = JSON.parse(text.trim());
+    if (elements.syncImportCode) {
+      elements.syncImportCode.value = text.trim();
+    }
+    await applySyncData(syncObj);
+  } catch (err) {
+    showToast('클립보드의 내용이 유효한 진도 데이터(JSON)가 아닙니다.');
+    if (elements.syncImportCode) {
+      elements.syncImportCode.value = text.trim();
+      elements.syncImportCode.focus();
+    }
+  }
+}
+
+async function handleSyncManualApply() {
+  const text = elements.syncImportCode ? elements.syncImportCode.value.trim() : '';
+  if (!text) {
+    showToast('붙여넣은 진도 코드가 없습니다. 텍스트를 입력하거나 파일을 선택해주세요.');
+    return;
+  }
+  try {
+    const syncObj = JSON.parse(text);
+    await applySyncData(syncObj);
+  } catch (err) {
+    showToast('올바른 진도 데이터(JSON) 형식이 아닙니다: ' + (err.message || ''));
+  }
+}
+
+function handleSyncFileImport(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const text = e.target.result;
+      if (elements.syncImportCode) {
+        elements.syncImportCode.value = text;
+      }
+      const syncObj = JSON.parse(text);
+      await applySyncData(syncObj);
+    } catch (err) {
+      showToast('파일을 불러오거나 적용하는 중 오류가 발생했습니다: ' + (err.message || ''));
+    }
+  };
+  reader.onerror = () => {
+    showToast('파일을 읽지 못했습니다.');
+  };
+  reader.readAsText(file);
 }
 
 function openExportModal() {
@@ -9825,6 +10221,56 @@ function setupEventListeners() {
       if (e.target === elements.exportModal) closeExportModal();
     });
   }
+
+  // Cross-device Reading Progress Sync
+  if (elements.btnCopySyncCode) {
+    elements.btnCopySyncCode.addEventListener('click', () => {
+      openSyncModal('export');
+      copySyncCodeToClipboard();
+    });
+  }
+  if (elements.btnPasteSyncCode) {
+    elements.btnPasteSyncCode.addEventListener('click', () => {
+      openSyncModal('import');
+    });
+  }
+  if (elements.btnSyncTabExport) {
+    elements.btnSyncTabExport.addEventListener('click', () => switchSyncTab('export'));
+  }
+  if (elements.btnSyncTabImport) {
+    elements.btnSyncTabImport.addEventListener('click', () => switchSyncTab('import'));
+  }
+  if (elements.btnSyncCopyCode) {
+    elements.btnSyncCopyCode.addEventListener('click', copySyncCodeToClipboard);
+  }
+  if (elements.btnSyncDownloadFile) {
+    elements.btnSyncDownloadFile.addEventListener('click', downloadSyncJsonFile);
+  }
+  if (elements.btnSyncQuickPaste) {
+    elements.btnSyncQuickPaste.addEventListener('click', handleSyncQuickPaste);
+  }
+  if (elements.inputSyncFile) {
+    elements.inputSyncFile.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        handleSyncFileImport(e.target.files[0]);
+        e.target.value = '';
+      }
+    });
+  }
+  if (elements.btnSyncApply) {
+    elements.btnSyncApply.addEventListener('click', handleSyncManualApply);
+  }
+  if (elements.btnCloseSyncModal) {
+    elements.btnCloseSyncModal.addEventListener('click', closeSyncModal);
+  }
+  if (elements.btnCancelSync) {
+    elements.btnCancelSync.addEventListener('click', closeSyncModal);
+  }
+  if (elements.syncModal) {
+    elements.syncModal.addEventListener('click', (e) => {
+      if (e.target === elements.syncModal) closeSyncModal();
+    });
+  }
   if (elements.btnLoadSample) {
     elements.btnLoadSample.addEventListener('click', loadSampleBook);
   }
@@ -10522,6 +10968,14 @@ function setupEventListeners() {
     if (elements.exportModal && elements.exportModal.classList.contains('open')) {
       if (e.key === 'Escape') {
         closeExportModal();
+        return;
+      }
+    }
+
+    // Sync Modal shortcuts
+    if (elements.syncModal && elements.syncModal.classList.contains('open')) {
+      if (e.key === 'Escape') {
+        closeSyncModal();
         return;
       }
     }
