@@ -3163,6 +3163,54 @@ async function exportExistingEpubWithHighlights() {
   await downloadZipAsEpub(zip, state.currentBook.title);
 }
 
+function buildTocTree(items) {
+  const root = [];
+  const stack = [];
+
+  items.forEach(item => {
+    const node = { ...item, children: [] };
+    while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
+      stack.pop();
+    }
+    if (stack.length === 0) {
+      root.push(node);
+    } else {
+      stack[stack.length - 1].children.push(node);
+    }
+    stack.push(node);
+  });
+
+  return root;
+}
+
+function renderNavTree(treeNodes, indent = '    ') {
+  let html = indent + '<ol>\n';
+  treeNodes.forEach(node => {
+    html += indent + '  <li><a href="' + escapeXml(node.href) + '">' + escapeXml(node.label) + '</a>';
+    if (node.children && node.children.length > 0) {
+      html += '\n' + renderNavTree(node.children, indent + '    ') + '\n' + indent + '  ';
+    }
+    html += '</li>\n';
+  });
+  html += indent + '</ol>';
+  return html;
+}
+
+function renderNcxTree(treeNodes, getPlayOrder, indent = '    ') {
+  let xml = '';
+  treeNodes.forEach(node => {
+    const order = getPlayOrder();
+    xml += indent + '<navPoint id="navPoint-' + order + '" playOrder="' + order + '">\n';
+    xml += indent + '  <navLabel><text>' + escapeXml(node.label) + '</text></navLabel>\n';
+    xml += indent + '  <content src="' + escapeXml(node.href) + '"/>\n';
+    if (node.children && node.children.length > 0) {
+      xml += renderNcxTree(node.children, getPlayOrder, indent + '  ');
+    }
+    xml += indent + '</navPoint>\n';
+  });
+  return xml;
+}
+
 async function exportTxtOrMdAsEpubWithHighlights() {
   const zip = new JSZip();
 
@@ -3360,6 +3408,53 @@ a.reader-highlight-link {
     });
   }
 
+  // Extract TOC headings from bookDoc & ensure anchor IDs
+  const headings = bookDoc.querySelectorAll('h1, h2, h3, h4, h5, h6');
+  const tocEntries = [];
+  let headingIdx = 0;
+  headings.forEach(h => {
+    if (h.classList.contains('footnotes-title')) return;
+    const label = (h.textContent || '').trim();
+    if (!label) return;
+    let id = h.id;
+    if (!id) {
+      id = `toc-h-${headingIdx++}`;
+      h.id = id;
+    }
+    const level = parseInt(h.tagName.substring(1), 10) || 2;
+    tocEntries.push({ id, label, level, href: `book.xhtml#${id}` });
+  });
+
+  if (tocEntries.length <= 1) {
+    const paragraphs = bookDoc.querySelectorAll('p');
+    let chapIdx = 0;
+    paragraphs.forEach(p => {
+      const text = (p.textContent || '').trim();
+      if (!text || text.length > 80 || text.includes('\n')) return;
+      if (/^(chapter|chap\.|part|book|act|scene)\s+([0-9ivxlcdm]+|\w+)([\s\:\.\-].*)?$/i.test(text) ||
+          /^제\s*\d+\s*[장절부편]([\s\:\.\-].*)?$/.test(text)) {
+        let id = p.id;
+        if (!id) {
+          id = `toc-chap-${chapIdx++}`;
+          p.id = id;
+        }
+        tocEntries.push({ id: p.id, label: text, level: 2, href: `book.xhtml#${p.id}` });
+      }
+    });
+  }
+
+  const bookTitle = (state.currentBook.title || 'Book').trim();
+  if (tocEntries.length === 0) {
+    tocEntries.push({ id: 'book-start', label: bookTitle, level: 1, href: 'book.xhtml' });
+  } else if (tocEntries[0].label.toLowerCase() === bookTitle.toLowerCase()) {
+    tocEntries[0].href = 'book.xhtml';
+  } else {
+    tocEntries.unshift({ id: 'book-start', label: bookTitle, level: 1, href: 'book.xhtml' });
+  }
+
+  // Highlights & Notes chapter
+  tocEntries.push({ id: 'highlights-notes', label: '형광펜 및 각주', level: 1, href: 'highlights.xhtml' });
+
   let bookXhtml = new XMLSerializer().serializeToString(bookDoc);
   bookXhtml = bookXhtml.replace(/<!--\?xml[\s\S]*?\?-->\s*/gi, '');
   if (!bookXhtml.trim().startsWith('<?xml')) {
@@ -3376,6 +3471,9 @@ a.reader-highlight-link {
   );
   zip.file("OEBPS/highlights.xhtml", notesHtml);
 
+  const tocTree = buildTocTree(tocEntries);
+  const navListHtml = renderNavTree(tocTree);
+
   const navXhtml = `<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:epub="http://www.idpf.org/2007/ops" lang="ko">
@@ -3387,10 +3485,7 @@ a.reader-highlight-link {
 <body>
   <nav epub:type="toc" id="toc">
     <h1>목차</h1>
-    <ol>
-      <li><a href="book.xhtml">${escapeXml(state.currentBook.title || 'Book')}</a></li>
-      <li><a href="highlights.xhtml">형광펜 및 각주</a></li>
-    </ol>
+${navListHtml}
   </nav>
 </body>
 </html>`;
@@ -3426,6 +3521,9 @@ ${manifestItemsXml}
 </package>`;
   zip.file("OEBPS/content.opf", opfContent);
 
+  let ncxPlayOrder = 1;
+  const ncxListXml = renderNcxTree(tocTree, () => ncxPlayOrder++);
+
   const ncxContent = `<?xml version="1.0" encoding="UTF-8"?>
 <ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
   <head>
@@ -3433,14 +3531,7 @@ ${manifestItemsXml}
   </head>
   <docTitle><text>${escapeXml(state.currentBook.title || 'Book')}</text></docTitle>
   <navMap>
-    <navPoint id="navPoint-1" playOrder="1">
-      <navLabel><text>${escapeXml(state.currentBook.title || 'Book')}</text></navLabel>
-      <content src="book.xhtml"/>
-    </navPoint>
-    <navPoint id="navPoint-2" playOrder="2">
-      <navLabel><text>형광펜 및 각주</text></navLabel>
-      <content src="highlights.xhtml"/>
-    </navPoint>
+${ncxListXml}
   </navMap>
 </ncx>`;
   zip.file("OEBPS/toc.ncx", ncxContent);
@@ -5848,8 +5939,18 @@ function updateEpubProgress(location) {
 
     // Chapter title
     if (state.epub.toc.length > 0 && currentLocation.start.href) {
-      const currentChapter = state.epub.toc.find(item => currentLocation.start.href.includes(item.href));
-      if (currentChapter) {
+      const findChapter = (items) => {
+        for (const item of items) {
+          if (item.href && currentLocation.start.href.includes(item.href)) return item;
+          if (item.subitems && item.subitems.length > 0) {
+            const found = findChapter(item.subitems);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const currentChapter = findChapter(state.epub.toc);
+      if (currentChapter && elements.currentChapterTitle) {
         elements.currentChapterTitle.textContent = currentChapter.label.trim();
       }
     }
@@ -7223,18 +7324,29 @@ function renderTocDrawer() {
       ul.appendChild(li);
     });
   } else {
-    state.epub.toc.forEach(item => {
-      const li = document.createElement('li');
-      li.className = 'toc-item';
-      li.textContent = item.label ? item.label.trim() : 'Chapter';
-      li.addEventListener('click', () => {
-        if (state.epub.rendition) {
-          state.epub.rendition.display(item.href);
+    const renderEpubTocItems = (items, level = 1) => {
+      if (!Array.isArray(items)) return;
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.className = `toc-item toc-level-${Math.min(level, 6)}`;
+        li.textContent = item.label ? item.label.trim() : 'Chapter';
+        li.addEventListener('click', () => {
+          if (state.epub.rendition && item.href) {
+            state.epub.rendition.display(item.href);
+            if (elements.currentChapterTitle && item.label) {
+              elements.currentChapterTitle.textContent = item.label.trim();
+            }
+          }
+          closeDrawer();
+        });
+        ul.appendChild(li);
+
+        if (Array.isArray(item.subitems) && item.subitems.length > 0) {
+          renderEpubTocItems(item.subitems, level + 1);
         }
-        closeDrawer();
       });
-      ul.appendChild(li);
-    });
+    };
+    renderEpubTocItems(state.epub.toc, 1);
   }
   elements.drawerBody.appendChild(ul);
 }
@@ -8040,7 +8152,17 @@ function getCurrentReadingPositionInfo() {
 
     let chapter = '';
     if (state.epub.toc && state.epub.toc.length > 0 && loc && loc.start && loc.start.href) {
-      const ch = state.epub.toc.find(item => loc.start.href.includes(item.href));
+      const findChapter = (items) => {
+        for (const item of items) {
+          if (item.href && loc.start.href.includes(item.href)) return item;
+          if (item.subitems && item.subitems.length > 0) {
+            const found = findChapter(item.subitems);
+            if (found) return found;
+          }
+        }
+        return null;
+      };
+      const ch = findChapter(state.epub.toc);
       if (ch && ch.label) chapter = ch.label.trim();
     }
     if (!chapter && elements.currentChapterTitle) {
