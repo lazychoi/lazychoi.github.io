@@ -103,6 +103,7 @@ const state = {
     fontSize: 18,
     lineHeight: 1.8,
     fontFamily: 'serif',
+    epubFlow: 'paginated',
     copySearchHighlights: true,
     aiAutoAnalysis: true,
   },
@@ -386,6 +387,7 @@ const elements = {
 
   // Settings
   themeBtns: document.querySelectorAll('.theme-btn[data-theme]'),
+  flowBtns: document.querySelectorAll('.theme-btn[data-flow]'),
   btnFontDecrease: document.getElementById('btn-font-decrease'),
   btnFontIncrease: document.getElementById('btn-font-increase'),
   fontSizeIndicator: document.getElementById('font-size-indicator'),
@@ -1072,6 +1074,9 @@ function loadSettings() {
     localStorage.setItem('reader_font_serif_migrated', 'true');
     saveSettings();
   }
+  if (!state.settings.epubFlow) {
+    state.settings.epubFlow = 'paginated';
+  }
   if (state.settings.copySearchHighlights === undefined) {
     state.settings.copySearchHighlights = true;
   }
@@ -1160,6 +1165,17 @@ function applySettings() {
 
   // AI API toggle button state
   updateAiToggleUI();
+
+  // EPUB Flow mode (paginated vs scrolled-doc)
+  const currentFlow = state.settings.epubFlow || 'paginated';
+  if (elements.flowBtns) {
+    elements.flowBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.flow === currentFlow);
+    });
+  }
+  if (elements.epubViewer) {
+    elements.epubViewer.classList.toggle('is-scrolled-flow', currentFlow === 'scrolled-doc');
+  }
 
   // EPUB rendition theme update
   if (state.epub.rendition) {
@@ -5271,15 +5287,19 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
     const book = ePub(arrayBuffer);
     state.epub.book = book;
 
+    const currentFlow = state.settings.epubFlow || 'paginated';
     const rendition = book.renderTo("epub-area", {
       width: "100%",
       height: "100%",
       spread: "none",
       minSpreadWidth: 10000,
-      flow: "paginated",
+      flow: currentFlow,
       allowScriptedContent: true
     });
     state.epub.rendition = rendition;
+    if (elements.epubViewer) {
+      elements.epubViewer.classList.toggle('is-scrolled-flow', currentFlow === 'scrolled-doc');
+    }
     setupEpubResizeObserver();
 
     // View render hook: patch Range DOM prototype immediately when any view is created
@@ -5551,6 +5571,16 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }
 
       if (doc) {
+        // Forward wheel events to container in scrolled-doc mode
+        doc.addEventListener('wheel', (e) => {
+          if (state.settings.epubFlow === 'scrolled-doc') {
+            const container = elements.epubArea ? (elements.epubArea.querySelector('.epub-container') || elements.epubArea) : null;
+            if (container) {
+              container.scrollTop += e.deltaY;
+            }
+          }
+        }, { passive: true });
+
         // 스와이프 제스처 및 터치 시 네비게이션 버튼 표시
         attachSwipeGesture(doc, () => (contents.window ? contents.window.getSelection() : null));
         doc.addEventListener("click", () => { showNavButtonsTemporarily(); });
@@ -9781,6 +9811,29 @@ function setupEventListeners() {
     });
   });
 
+  // EPUB Flow buttons (horizontal paginated vs vertical scrolled-doc)
+  if (elements.flowBtns) {
+    elements.flowBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const flow = btn.dataset.flow;
+        if (state.settings.epubFlow === flow) return;
+        state.settings.epubFlow = flow;
+        saveSettings();
+        applySettings();
+        if (state.epub.rendition) {
+          const loc = state.epub.rendition.currentLocation();
+          const cfi = state.epub.currentCfi || (loc && loc.start ? loc.start.cfi : null);
+          state.epub.rendition.flow(flow);
+          if (cfi) {
+            setTimeout(() => {
+              state.epub.rendition.display(cfi).catch(() => {});
+            }, 80);
+          }
+        }
+      });
+    });
+  }
+
   // Line Height decrease / increase buttons
   if (elements.btnLhDecrease) {
     elements.btnLhDecrease.addEventListener('click', () => {
@@ -9900,9 +9953,9 @@ function setupEventListeners() {
     if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
 
     if (state.currentBook && state.currentBook.type === 'epub' && state.epub.rendition) {
-      if (e.key === 'ArrowLeft') {
+      if (e.key === 'ArrowLeft' || (state.settings.epubFlow === 'scrolled-doc' && e.key === 'ArrowUp')) {
         state.epub.rendition.prev().catch(err => console.warn('Key prev:', err));
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowRight' || (state.settings.epubFlow === 'scrolled-doc' && e.key === 'ArrowDown')) {
         state.epub.rendition.next().catch(err => console.warn('Key next:', err));
       }
     }

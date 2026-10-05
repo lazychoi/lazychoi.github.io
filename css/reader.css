@@ -869,6 +869,16 @@ body.theme-dark .btn-reset-db:hover {
   border: none !important;
 }
 
+#epub-area .epub-container {
+  -webkit-overflow-scrolling: touch;
+}
+
+.epub-viewer-container.is-scrolled-flow #epub-area .epub-container {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  -webkit-overflow-scrolling: touch;
+}
+
 .epub-nav-arrow {
   position: absolute;
   top: 50%;
