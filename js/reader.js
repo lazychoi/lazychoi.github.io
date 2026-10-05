@@ -3263,9 +3263,15 @@ async function exportExistingEpubWithHighlights() {
     }
   } catch (e) {}
 
+  const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+  const currentCfi = state.epub.currentCfi || (loc && loc.start ? loc.start.cfi : null) || localStorage.getItem(`reader_pos_${state.currentBook.id}`);
+
   zip.file("META-INF/reader_highlights.json", JSON.stringify({
+    version: 2,
     title: state.currentBook.title,
     author: state.currentBook.author,
+    lastPosition: currentCfi || null,
+    bookmarks: state.bookmarks || [],
     exportedAt: new Date().toISOString(),
     highlights: state.highlights
   }, null, 2));
@@ -5524,6 +5530,40 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
                 setTimeout(() => {
                   restoreEpubHighlights();
                 }, 100);
+              }
+
+              // Restore last reading position from exported EPUB if not present on this device
+              if (data.lastPosition) {
+                if (!fallbackPosition && !localStorage.getItem(`reader_pos_${state.currentBook.id}`)) {
+                  fallbackPosition = data.lastPosition;
+                  state.epub.currentCfi = data.lastPosition;
+                  localStorage.setItem(`reader_pos_${state.currentBook.id}`, data.lastPosition);
+                  updateActiveBookLastPosition(data.lastPosition);
+                  if (state.epub.rendition && !initialLocationRestored) {
+                    state.epub.rendition.display(data.lastPosition).catch(() => {});
+                  }
+                }
+              }
+
+              // Restore bookmarks
+              if (Array.isArray(data.bookmarks) && data.bookmarks.length > 0) {
+                const currentBm = state.bookmarks || [];
+                const bmMap = new Map();
+                currentBm.forEach(b => bmMap.set(b.id || b.cfi, b));
+                let bmChanged = false;
+                data.bookmarks.forEach(b => {
+                  const key = b.id || b.cfi;
+                  if (!bmMap.has(key)) {
+                    currentBm.push(b);
+                    bmMap.set(key, b);
+                    bmChanged = true;
+                  }
+                });
+                if (bmChanged) {
+                  state.bookmarks = currentBm;
+                  saveBookmarks();
+                  updateBookmarkBadge();
+                }
               }
             } catch (e) {
               console.warn('Error merging embedded reader_highlights.json:', e);
