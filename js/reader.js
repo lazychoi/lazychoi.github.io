@@ -57,7 +57,10 @@ function patchRangeForEpub(win) {
 patchRangeForEpub(window);
 
 function patchEpubCfi() {
-  if (typeof ePub !== 'undefined' && ePub.CFI && ePub.CFI.prototype && !ePub.CFI.prototype._patchedForSafeRange) {
+  if (typeof ePub === 'undefined') return;
+
+  // 1. Patch ePub.CFI.prototype.toRange
+  if (ePub.CFI && ePub.CFI.prototype && !ePub.CFI.prototype._patchedForSafeRange) {
     const origToRange = ePub.CFI.prototype.toRange;
     ePub.CFI.prototype.toRange = function(_doc, ignoreClass) {
       const doc = _doc || (typeof document !== 'undefined' ? document : null);
@@ -67,18 +70,65 @@ function patchEpubCfi() {
           patchRangeForEpub(win);
         }
       }
+      let r = null;
       try {
-        return origToRange.call(this, _doc, ignoreClass);
+        r = origToRange.call(this, _doc, ignoreClass);
       } catch (err) {
-        console.warn('ePub.CFI.toRange safely handled boundary error:', err);
+        r = null;
+      }
+      // If resolving failed and the CFI has bracketed step assertions like [page3], retry without them
+      if (!r && this.str && this.str.includes('[')) {
         try {
-          return doc ? doc.createRange() : null;
-        } catch (e) {
-          return null;
+          const stripped = this.str.replace(/\[[^\]]*\]/g, '');
+          const strippedCfi = new ePub.CFI(stripped);
+          r = origToRange.call(strippedCfi, _doc, ignoreClass);
+        } catch (e2) {
+          r = null;
         }
       }
+      return r;
     };
     ePub.CFI.prototype._patchedForSafeRange = true;
+  }
+
+  // 2. Patch ePub.Contents.prototype.range
+  if (ePub.Contents && ePub.Contents.prototype && !ePub.Contents.prototype._patchedSafeRange) {
+    const origContentsRange = ePub.Contents.prototype.range;
+    ePub.Contents.prototype.range = function(_cfi, ignoreClass) {
+      try {
+        return origContentsRange.call(this, _cfi, ignoreClass);
+      } catch (err) {
+        return null;
+      }
+    };
+    ePub.Contents.prototype._patchedSafeRange = true;
+  }
+
+  // 3. Patch IframeView.prototype.highlight so unresolved ranges do not crash epub.js Highlight rendering
+  if (ePub.Rendition && ePub.Rendition.prototype && !ePub.Rendition.prototype._patchedSafeHighlight) {
+    try {
+      const IframeView = ePub.Rendition.prototype.requireView("iframe");
+      if (IframeView && IframeView.prototype && IframeView.prototype.highlight) {
+        const origHighlight = IframeView.prototype.highlight;
+        IframeView.prototype.highlight = function(cfiRange, data, cb, className, styles) {
+          if (!this.contents) return;
+          let range = null;
+          try {
+            range = this.contents.range(cfiRange);
+          } catch (e) {
+            range = null;
+          }
+          if (!range) {
+            // Cannot resolve range from this CFI in current view, safely skip to prevent crashing
+            return;
+          }
+          return origHighlight.call(this, cfiRange, data, cb, className, styles);
+        };
+      }
+    } catch (ve) {
+      console.warn('IframeView highlight patch warning:', ve);
+    }
+    ePub.Rendition.prototype._patchedSafeHighlight = true;
   }
 }
 
@@ -1328,6 +1378,196 @@ function getStartCfi(cfiRange) {
   return cfiRange;
 }
 
+function getChapterBaseCfi(cfi) {
+  if (!cfi || typeof cfi !== 'string') return null;
+  const match = cfi.match(/epubcfi\((\/[0-9]+\/[0-9]+!)/);
+  if (match) {
+    return `epubcfi(${match[1]})`;
+  }
+  return null;
+}
+
+function getSpinePosFromCfi(cfi) {
+  if (!cfi || typeof cfi !== 'string') return null;
+  if (typeof ePub !== 'undefined' && ePub.CFI) {
+    try {
+      const parsed = new ePub.CFI(cfi);
+      if (typeof parsed.spinePos === 'number' && parsed.spinePos >= 0) {
+        return parsed.spinePos;
+      }
+    } catch (e) {}
+  }
+  const match = cfi.match(/epubcfi\(\/[0-9]+\/([0-9]+)!/);
+  if (match) {
+    const num = parseInt(match[1], 10);
+    return Math.floor(num / 2) - 1;
+  }
+  return null;
+}
+
+function normalizeSearchText(str) {
+  if (!str) return '';
+  return str
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/\u00A0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function createRangeAcrossNodes(doc, containerEl, targetText, normTarget) {
+  const textNodes = [];
+  const showTextFilter = (typeof NodeFilter !== 'undefined' && NodeFilter.SHOW_TEXT) ? NodeFilter.SHOW_TEXT : 4;
+  const walker = doc.createTreeWalker(containerEl, showTextFilter);
+  let tn;
+  while ((tn = walker.nextNode())) {
+    textNodes.push(tn);
+  }
+  if (textNodes.length === 0) return null;
+
+  let fullNorm = '';
+  const charMap = [];
+
+  for (const node of textNodes) {
+    const val = node.nodeValue || '';
+    for (let i = 0; i < val.length; i++) {
+      let ch = val[i];
+      let normCh = ch;
+      if (ch === '\u2018' || ch === '\u2019') normCh = "'";
+      if (ch === '\u201C' || ch === '\u201D') normCh = '"';
+      if (/\s/.test(ch)) normCh = ' ';
+
+      if (normCh === ' ' && fullNorm.endsWith(' ')) {
+        continue;
+      }
+      fullNorm += normCh;
+      charMap.push({ node, offset: i });
+    }
+  }
+
+  const matchIdx = fullNorm.indexOf(normTarget);
+  if (matchIdx !== -1 && matchIdx + normTarget.length <= charMap.length) {
+    const startObj = charMap[matchIdx];
+    const endObj = charMap[matchIdx + normTarget.length - 1];
+    if (startObj && endObj) {
+      try {
+        const range = doc.createRange();
+        range.setStart(startObj.node, startObj.offset);
+        range.setEnd(endObj.node, endObj.offset + 1);
+        return range;
+      } catch (e) {}
+    }
+  }
+  return null;
+}
+
+function findHighlightRangeInDoc(doc, hl) {
+  if (!doc || !hl) return null;
+  const targetText = (hl.text || '').trim();
+  if (!targetText) return null;
+
+  const normTarget = normalizeSearchText(targetText);
+  const normSentence = normalizeSearchText(hl.targetSentence);
+  const normPrev = normalizeSearchText(hl.prevSentence);
+  const normNext = normalizeSearchText(hl.nextSentence);
+
+  // 1. Fast path: Search within single text nodes
+  const candidates = [];
+  try {
+    const showTextFilter = (typeof NodeFilter !== 'undefined' && NodeFilter.SHOW_TEXT) ? NodeFilter.SHOW_TEXT : 4;
+    const walker = doc.createTreeWalker(doc.body || doc.documentElement, showTextFilter);
+    let node;
+    while ((node = walker.nextNode())) {
+      const rawVal = node.nodeValue || '';
+      if (!rawVal) continue;
+
+      let matchIdx = rawVal.indexOf(targetText);
+      let matchLen = targetText.length;
+
+      if (matchIdx === -1) {
+        const normVal = normalizeSearchText(rawVal);
+        if (normVal.includes(normTarget)) {
+          const escaped = normTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/'/g, "['’‘]").replace(/"/g, '["“”]');
+          try {
+            const re = new RegExp(escaped, 'i');
+            const m = rawVal.match(re);
+            if (m) {
+              matchIdx = m.index;
+              matchLen = m[0].length;
+            }
+          } catch (reErr) {}
+        }
+      }
+
+      if (matchIdx !== -1) {
+        let score = 10;
+        const parentEl = node.parentElement;
+        const parentText = parentEl ? normalizeSearchText(parentEl.textContent) : '';
+        if (normSentence && parentText.includes(normSentence)) {
+          score += 100;
+        } else if (normSentence) {
+          const words = normSentence.split(' ').filter(w => w.length > 3);
+          const matchedWords = words.filter(w => parentText.includes(w));
+          score += (matchedWords.length / (words.length || 1)) * 50;
+        }
+        if (normPrev && parentText.includes(normPrev)) score += 30;
+        if (normNext && parentText.includes(normNext)) score += 30;
+
+        candidates.push({
+          node,
+          startOffset: matchIdx,
+          endOffset: matchIdx + matchLen,
+          score
+        });
+      }
+    }
+  } catch (err) {
+    console.warn('Single text node search error in findHighlightRangeInDoc:', err);
+  }
+
+  if (candidates.length > 0) {
+    candidates.sort((a, b) => b.score - a.score);
+    const best = candidates[0];
+    try {
+      const r = doc.createRange();
+      r.setStart(best.node, best.startOffset);
+      r.setEnd(best.node, best.endOffset);
+      return r;
+    } catch (e) {}
+  }
+
+  // 2. Multi-node search within container elements (e.g. paragraphs or headings spanning inline formatting)
+  try {
+    const containers = doc.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, div');
+    let bestMulti = null;
+    let bestMultiScore = -1;
+
+    for (const el of containers) {
+      const normEl = normalizeSearchText(el.textContent || '');
+      if (normEl.includes(normTarget)) {
+        let score = 10;
+        if (normSentence && normEl.includes(normSentence)) score += 100;
+        if (normPrev && normEl.includes(normPrev)) score += 30;
+        if (normNext && normEl.includes(normNext)) score += 30;
+
+        if (score > bestMultiScore) {
+          const r = createRangeAcrossNodes(doc, el, targetText, normTarget);
+          if (r) {
+            bestMulti = r;
+            bestMultiScore = score;
+            if (score >= 100) break;
+          }
+        }
+      }
+    }
+    if (bestMulti) return bestMulti;
+  } catch (err) {
+    console.warn('Multi-node search error in findHighlightRangeInDoc:', err);
+  }
+
+  return null;
+}
+
 function sortHighlights() {
   if (Array.isArray(state.highlights)) {
     state.highlights.sort(compareHighlights);
@@ -1833,15 +2073,26 @@ async function applySyncData(syncObj) {
         } catch (err) {
           console.warn('rendition.display targetCfi failed, trying startCfi:', err);
           const startCfi = getStartCfi(targetCfi);
+          let navOk = false;
           if (startCfi) {
-            await state.epub.rendition.display(startCfi).catch(() => {});
+            try {
+              await state.epub.rendition.display(startCfi);
+              navOk = true;
+            } catch (e2) {}
+          }
+          if (!navOk) {
+            const chCfi = getChapterBaseCfi(targetCfi);
+            if (chCfi) {
+              await state.epub.rendition.display(chCfi).catch(() => {});
+            }
           }
         }
       }
     }
-    // 형광펜 시각적 어노테이션 렌더링
+    // 형광펜 시각적 어노테이션 렌더링 (다단계 지연으로 레이아웃 확정 후 복원 보장)
     setTimeout(() => restoreEpubHighlights(), 60);
-    setTimeout(() => restoreEpubHighlights(), 220);
+    setTimeout(() => restoreEpubHighlights(), 250);
+    setTimeout(() => restoreEpubHighlights(), 600);
   } else if (state.currentBook.type === 'txt') {
     const pct = pos?.percent ?? syncObj.lastPosition;
     if (typeof pct === 'number') {
@@ -6038,6 +6289,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       setTimeout(() => {
         restoreEpubHighlights();
       }, 50);
+      setTimeout(() => {
+        restoreEpubHighlights();
+      }, 250);
     });
 
     // Rendition Rendered event
@@ -6051,6 +6305,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       setTimeout(() => {
         restoreEpubHighlights();
       }, 50);
+      setTimeout(() => {
+        restoreEpubHighlights();
+      }, 250);
     });
 
     // Register content hook for EPUB document styling & interaction
@@ -6422,49 +6679,161 @@ function restoreEpubHighlights() {
   if (!state.epub.rendition || !state.currentBook || state.currentBook.type !== 'epub') return;
   if (!state.highlights || state.highlights.length === 0) return;
 
-  const iframe = elements.epubArea.querySelector('iframe');
-  if (iframe && iframe.contentWindow) {
-    patchRangeForEpub(iframe.contentWindow);
-  }
-  const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
-
   const isDark = state.settings.theme === 'dark';
+  const contentsList = (state.epub.rendition.getContents && typeof state.epub.rendition.getContents === 'function')
+    ? state.epub.rendition.getContents()
+    : [];
 
-  state.highlights.forEach(hl => {
-    if (hl.cfiRange) {
-      // If this highlight is already present as an actual <mark> in the DOM (e.g. legacy exported EPUB), skip duplicate SVG annotation
-      if (iframeDoc && hl.id && iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`)) {
-        return;
+  let hasHlChanges = false;
+
+  if (contentsList.length > 0) {
+    contentsList.forEach(contentsObj => {
+      const doc = contentsObj.document;
+      if (!doc || !doc.body) return;
+
+      if (contentsObj.window) {
+        patchRangeForEpub(contentsObj.window);
       }
 
-      const colorName = hl.color || 'yellow';
-      const colorHex = getHighlightColorHex(colorName);
+      const curSectionIndex = contentsObj.sectionIndex;
+      const cfiBase = contentsObj.cfiBase;
+      const bodyText = doc.body.textContent || '';
+      const normBodyText = normalizeSearchText(bodyText);
 
-      // Remove existing first to avoid duplicate annotation overlays
-      try {
-        state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
-      } catch (err) {}
+      state.highlights.forEach(hl => {
+        if (!hl) return;
 
-      try {
-        state.epub.rendition.annotations.add(
-          "highlight",
-          hl.cfiRange,
-          { id: hl.id },
-          (e) => {
-            openHighlightToolbarFromEpub(hl, e);
-          },
-          `hl-${colorName}`,
-          {
-            "fill": colorHex,
-            "fill-opacity": isDark ? "0.4" : "0.35",
-            "mix-blend-mode": isDark ? "screen" : "multiply"
+        // Determine if highlight belongs to this section
+        let belongsToSection = false;
+        if (hl.cfiRange) {
+          const spinePos = getSpinePosFromCfi(hl.cfiRange);
+          if (spinePos !== null && curSectionIndex !== undefined && curSectionIndex !== null) {
+            belongsToSection = (spinePos === curSectionIndex);
+          } else if (cfiBase && hl.cfiRange.includes(cfiBase)) {
+            belongsToSection = true;
           }
-        );
-      } catch (e) {
-        console.warn('Annotation restore error for CFI:', hl.cfiRange, e);
-      }
+        }
+
+        // Context fallback: if spinePos matching is ambiguous or missing, check if text exists in this section
+        if (!belongsToSection && hl.text) {
+          const normHlText = normalizeSearchText(hl.text);
+          const normHlSentence = normalizeSearchText(hl.targetSentence);
+          if (normHlText && normBodyText.includes(normHlText)) {
+            if (normHlSentence && normBodyText.includes(normHlSentence)) {
+              belongsToSection = true;
+            }
+          }
+        }
+
+        if (!belongsToSection) return;
+
+        // Skip if highlight is already represented by an actual DOM <mark> tag
+        if (hl.id && doc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`)) {
+          return;
+        }
+
+        // Test if existing cfiRange resolves cleanly to non-collapsed range matching text
+        let liveRange = null;
+        if (hl.cfiRange) {
+          try {
+            liveRange = contentsObj.range(hl.cfiRange);
+          } catch (e) {
+            liveRange = null;
+          }
+        }
+
+        let isRangeValid = false;
+        if (liveRange && !liveRange.collapsed) {
+          const rangeText = normalizeSearchText(liveRange.toString());
+          const hlText = normalizeSearchText(hl.text);
+          if (rangeText === hlText || rangeText.includes(hlText) || hlText.includes(rangeText)) {
+            isRangeValid = true;
+          }
+        }
+
+        // Self-Healing: if CFI is broken, missing, or misaligned, heal it via Smart Text Anchoring
+        if (!isRangeValid && hl.text) {
+          const healedRange = findHighlightRangeInDoc(doc, hl);
+          if (healedRange && !healedRange.collapsed) {
+            try {
+              const liveCfi = contentsObj.cfiFromRange(healedRange);
+              if (liveCfi) {
+                if (hl.cfiRange && hl.cfiRange !== liveCfi) {
+                  try { state.epub.rendition.annotations.remove(hl.cfiRange, "highlight"); } catch (re) {}
+                }
+                hl.cfiRange = liveCfi;
+                hasHlChanges = true;
+                isRangeValid = true;
+              }
+            } catch (ce) {
+              console.warn('[Smart Anchoring] cfiFromRange failed:', ce);
+            }
+          }
+        }
+
+        // If range is valid and CFI is ready, register visual SVG annotation
+        if (hl.cfiRange) {
+          const colorName = hl.color || 'yellow';
+          const colorHex = getHighlightColorHex(colorName);
+
+          try {
+            state.epub.rendition.annotations.remove(hl.cfiRange, "highlight");
+          } catch (err) {}
+
+          try {
+            state.epub.rendition.annotations.add(
+              "highlight",
+              hl.cfiRange,
+              { id: hl.id },
+              (e) => {
+                openHighlightToolbarFromEpub(hl, e);
+              },
+              `hl-${colorName}`,
+              {
+                "fill": colorHex,
+                "fill-opacity": isDark ? "0.4" : "0.35",
+                "mix-blend-mode": isDark ? "screen" : "multiply"
+              }
+            );
+          } catch (e) {
+            console.warn('Annotation restore error for CFI:', hl.cfiRange, e);
+          }
+        }
+      });
+    });
+  } else {
+    // Fallback if contentsList not populated yet: standard iframe-based restore
+    const iframe = elements.epubArea.querySelector('iframe');
+    const iframeDoc = iframe ? (iframe.contentDocument || (iframe.contentWindow ? iframe.contentWindow.document : null)) : null;
+    if (iframeDoc) {
+      state.highlights.forEach(hl => {
+        if (hl.cfiRange) {
+          if (hl.id && iframeDoc.querySelector(`mark[data-hl-id="${hl.id}"], [data-hl-id="${hl.id}"]`)) return;
+          const colorName = hl.color || 'yellow';
+          const colorHex = getHighlightColorHex(colorName);
+          try { state.epub.rendition.annotations.remove(hl.cfiRange, "highlight"); } catch (e) {}
+          try {
+            state.epub.rendition.annotations.add(
+              "highlight",
+              hl.cfiRange,
+              { id: hl.id },
+              (e) => { openHighlightToolbarFromEpub(hl, e); },
+              `hl-${colorName}`,
+              {
+                "fill": colorHex,
+                "fill-opacity": isDark ? "0.4" : "0.35",
+                "mix-blend-mode": isDark ? "screen" : "multiply"
+              }
+            );
+          } catch (e) {}
+        }
+      });
     }
-  });
+  }
+
+  if (hasHlChanges) {
+    saveHighlights();
+  }
 }
 
 function getHighlightColorHex(colorName) {
@@ -7973,30 +8342,12 @@ function findHighlightTargetInDoc(doc, hl) {
 
   // 4. Context-aware text search fallback (Smart Anchoring)
   if (hl.text) {
-    try {
-      const walker = doc.createTreeWalker(doc.body || doc.documentElement, NodeFilter.SHOW_TEXT);
-      let node;
-      while ((node = walker.nextNode())) {
-        const val = node.nodeValue;
-        if (val && val.includes(hl.text)) {
-          if (hl.targetSentence) {
-            const pText = (node.parentElement ? node.parentElement.textContent : '') || '';
-            if (!val.includes(hl.targetSentence) && !pText.includes(hl.targetSentence)) {
-              continue;
-            }
-          }
-          const idx = val.indexOf(hl.text);
-          const r = doc.createRange();
-          r.setStart(node, idx);
-          r.setEnd(node, idx + hl.text.length);
-          const rRect = r.getBoundingClientRect();
-          if (rRect && (rRect.width > 0 || rRect.height > 0)) {
-            return { element: null, rect: rRect, range: r };
-          }
-        }
+    const range = findHighlightRangeInDoc(doc, hl);
+    if (range) {
+      const rRect = range.getBoundingClientRect();
+      if (rRect && (rRect.width > 0 || rRect.height > 0)) {
+        return { element: null, rect: rRect, range };
       }
-    } catch (err) {
-      console.warn('Fallback text search in findHighlightTargetInDoc:', err);
     }
   }
 
@@ -8008,16 +8359,30 @@ async function jumpToHighlightInEpub(hl) {
 
   const startCfi = getStartCfi(hl.cfiRange);
   const targetCfi = startCfi || hl.cfiRange;
+  const chapterBaseCfi = getChapterBaseCfi(hl.cfiRange);
 
-  // 1. Initial navigation to chapter/page via Point CFI
+  // 1. Initial navigation to chapter/page via Point CFI or Chapter Base CFI
+  let navSuccess = false;
   if (targetCfi) {
     try {
       await state.epub.rendition.display(targetCfi);
+      navSuccess = true;
     } catch (err) {
       console.warn('Navigation with targetCfi failed, retrying with cfiRange:', err);
       try {
         await state.epub.rendition.display(hl.cfiRange);
-      } catch (e2) {}
+        navSuccess = true;
+      } catch (e2) {
+        console.warn('Navigation with cfiRange failed, retrying with chapterBaseCfi:', e2);
+      }
+    }
+  }
+  if (!navSuccess && chapterBaseCfi) {
+    try {
+      await state.epub.rendition.display(chapterBaseCfi);
+      navSuccess = true;
+    } catch (e3) {
+      console.warn('Navigation with chapterBaseCfi failed:', e3);
     }
   }
 
@@ -8050,23 +8415,40 @@ async function jumpToHighlightInEpub(hl) {
 
   if (!activeDoc || !activeWin) return;
 
+  // Heal CFI immediately if live range found
+  if (found && found.range && state.epub.rendition) {
+    const contentsList = state.epub.rendition.getContents ? state.epub.rendition.getContents() : [];
+    if (contentsList && contentsList.length > 0 && typeof contentsList[0].cfiFromRange === 'function') {
+      try {
+        const liveCfi = contentsList[0].cfiFromRange(found.range);
+        if (liveCfi && liveCfi !== hl.cfiRange) {
+          hl.cfiRange = liveCfi;
+          saveHighlights();
+        }
+      } catch (ce) {}
+    }
+  }
+
   // 3. In paginated mode: verify if target is on the currently visible page
   // When switching chapters, epub.js initial render may land on column 0 while the target is on column N.
   // Now that the chapter layout is 100% computed, re-displaying targetCfi accurately turns to that column.
   const isPaginated = !state.epub.rendition.settings || state.epub.rendition.settings.flow === 'paginated';
   if (isPaginated && targetRect) {
     const isOffscreen = (targetRect.left < 0 || targetRect.left >= activeWin.innerWidth);
-    if (isOffscreen && targetCfi) {
-      try {
-        await state.epub.rendition.display(targetCfi);
-        await new Promise(r => setTimeout(r, 80));
-        const reFound = findHighlightTargetInDoc(activeDoc, hl);
-        if (reFound && reFound.rect && (reFound.rect.width > 0 || reFound.rect.height > 0)) {
-          targetRect = reFound.rect;
-          targetElement = reFound.element || targetElement;
+    if (isOffscreen) {
+      const pageCfi = getStartCfi(hl.cfiRange) || hl.cfiRange;
+      if (pageCfi) {
+        try {
+          await state.epub.rendition.display(pageCfi);
+          await new Promise(r => setTimeout(r, 80));
+          const reFound = findHighlightTargetInDoc(activeDoc, hl);
+          if (reFound && reFound.rect && (reFound.rect.width > 0 || reFound.rect.height > 0)) {
+            targetRect = reFound.rect;
+            targetElement = reFound.element || targetElement;
+          }
+        } catch (e) {
+          console.warn('Re-display to page column failed:', e);
         }
-      } catch (e) {
-        console.warn('Re-display to page column failed:', e);
       }
     }
   }
