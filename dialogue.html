@@ -267,6 +267,17 @@
         </section>
 
         <section class="guide-section">
+          <h4>⏱️ 구간 싱크(In/Out) 정밀 조절</h4>
+          <ul>
+            <li><b>구간 터치는 재생/일시정지:</b> 문장 버블을 터치할 때는 언제나 기존처럼 <b>재생/일시정지 토글</b>로 안전하게 작동합니다.</li>
+            <li><b>편집 아이콘(✏️) 전용 진입:</b> 오직 시간 옆의 <b>편집 아이콘(✏️)을 터치할 때만</b> 하단 싱크 조절 창이 열립니다.</li>
+            <li><b>In / Out 미세 조절:</b> <code>±0.05s</code>, <code>±0.2s</code> 버튼으로 0.05초 단위까지 정밀 조정하며, <b>[📍 지금 위치]</b> 버튼으로 현재 듣고 있는 순간을 바로 In/Out으로 지정합니다.</li>
+            <li><b>첫머리/끝머리 즉각 청음:</b> [첫머리 0.6초 확인]과 [끝머리 0.6초 확인]으로 첫 자음이나 말끝 짤림 여부를 1초 만에 검증합니다.</li>
+            <li><b>🌐 전체 일괄 이동:</b> 음원 전체가 일괄적으로 밀릴 때 모든 문장을 한 번에 앞뒤로 이동합니다.</li>
+          </ul>
+        </section>
+
+        <section class="guide-section">
           <h4>화자 태그 수정</h4>
           <ul>
             <li>자막 카드의 <b>[A]</b> 또는 <b>[B]</b> 배지를 터치하면 화자를 즉시 변경할 수 있습니다.</li>
@@ -308,6 +319,129 @@
           <button class="btn btn-primary" id="btn-summary-retry-weak" style="display: none;">❌ 취약 문장만 다시 연습</button>
           <button class="btn btn-secondary" id="btn-summary-restart">🔄 전체 다시 역할극</button>
           <button class="btn btn-ghost" id="btn-summary-close">닫기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sync (In/Out) Adjustment Bottom Sheet Modal -->
+  <div class="sheet-backdrop" id="sync-sheet-backdrop" style="display: none;">
+    <div class="sync-bottom-sheet" id="sync-bottom-sheet">
+      <div class="sheet-drag-handle"></div>
+      <div class="sheet-header">
+        <div class="sheet-title-wrap">
+          <span class="sheet-badge">⏱️ 구간 싱크 조절</span>
+          <h3 class="sheet-title" id="sync-sheet-title">1번 문장</h3>
+        </div>
+        <button type="button" class="sheet-close-btn" id="btn-close-sync-sheet" aria-label="닫기">&times;</button>
+      </div>
+
+      <!-- Active Sentence Preview -->
+      <div class="sheet-sentence-box" id="sync-sheet-sentence"></div>
+
+      <!-- In (Start Time) Controller -->
+      <div class="sync-control-card in-card">
+        <div class="sync-card-header">
+          <div class="sync-label-group">
+            <span class="sync-badge in-badge">In</span>
+            <span class="sync-card-title">시작 시간</span>
+          </div>
+          <div class="sync-time-display" id="sync-in-time">00:00.00</div>
+          <button type="button" class="btn-stamp" id="btn-stamp-in" title="현재 오디오 재생 위치를 시작점으로 설정">
+            <span>📍 지금 위치</span>
+          </button>
+        </div>
+        <div class="sync-step-row">
+          <button type="button" class="btn-step" data-target="in" data-delta="-0.20">-0.2s</button>
+          <button type="button" class="btn-step" data-target="in" data-delta="-0.05">-0.05s</button>
+          <div class="sync-step-sep"></div>
+          <button type="button" class="btn-step" data-target="in" data-delta="0.05">+0.05s</button>
+          <button type="button" class="btn-step" data-target="in" data-delta="0.20">+0.2s</button>
+        </div>
+        <div class="sync-preview-row">
+          <button type="button" class="btn-preview-part" id="btn-preview-in">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>첫머리 0.6초 확인</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Out (End Time) Controller -->
+      <div class="sync-control-card out-card">
+        <div class="sync-card-header">
+          <div class="sync-label-group">
+            <span class="sync-badge out-badge">Out</span>
+            <span class="sync-card-title">종료 시간</span>
+          </div>
+          <div class="sync-time-display" id="sync-out-time">00:00.00</div>
+          <button type="button" class="btn-stamp" id="btn-stamp-out" title="현재 오디오 재생 위치를 종료점으로 설정">
+            <span>📍 지금 위치</span>
+          </button>
+        </div>
+        <div class="sync-step-row">
+          <button type="button" class="btn-step" data-target="out" data-delta="-0.20">-0.2s</button>
+          <button type="button" class="btn-step" data-target="out" data-delta="-0.05">-0.05s</button>
+          <div class="sync-step-sep"></div>
+          <button type="button" class="btn-step" data-target="out" data-delta="0.05">+0.05s</button>
+          <button type="button" class="btn-step" data-target="out" data-delta="0.20">+0.2s</button>
+        </div>
+        <div class="sync-preview-row">
+          <button type="button" class="btn-preview-part" id="btn-preview-out">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            <span>끝머리 0.6초 확인</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation & Full Segment Preview -->
+      <div class="sync-nav-row">
+        <button type="button" class="btn-sync-nav" id="btn-sync-prev">◀ 이전</button>
+        <button type="button" class="btn-sync-play-full" id="btn-sync-play-full">
+          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>구간 전체 재생</span>
+        </button>
+        <button type="button" class="btn-sync-nav" id="btn-sync-next">다음 ▶</button>
+      </div>
+
+      <!-- Extra Actions: Global Shift & Export -->
+      <div class="sync-bottom-actions">
+        <button type="button" class="btn-sync-extra" id="btn-open-global-sync">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          <span>전체 자막 일괄 이동</span>
+        </button>
+        <button type="button" class="btn-sync-extra" id="btn-export-srt">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          <span>수정된 SRT 저장</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Subtitle Sync Modal -->
+  <div class="modal-backdrop" id="global-sync-modal" style="display: none;">
+    <div class="modal-content modal-global-sync">
+      <div class="modal-header">
+        <h3>🌐 전체 자막 일괄 싱크 조정</h3>
+        <button class="modal-close" id="global-sync-modal-close" aria-label="닫기">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 16px 20px 24px;">
+        <p style="font-size: 13px; color: var(--text-muted); margin: 0 0 14px; line-height: 1.5;">
+          음원 도입부 차이 등으로 전체 자막이 일괄적으로 밀리거나 빠를 때, 모든 문장의 시작/종료 시간을 동시에 이동합니다.
+        </p>
+        <div class="global-offset-hero">
+          <span style="font-size: 12px; font-weight: 600; color: #64748b;">현재 누적 보정치</span>
+          <div class="global-offset-val" id="global-offset-val">+0.00s</div>
+        </div>
+        <div class="sync-step-row" style="margin-bottom: 16px;">
+          <button type="button" class="btn-step" data-global-delta="-0.5">-0.5s</button>
+          <button type="button" class="btn-step" data-global-delta="-0.1">-0.1s</button>
+          <div class="sync-step-sep"></div>
+          <button type="button" class="btn-step" data-global-delta="0.1">+0.1s</button>
+          <button type="button" class="btn-step" data-global-delta="0.5">+0.5s</button>
+        </div>
+        <div class="global-sync-actions">
+          <button type="button" class="btn btn-secondary" id="btn-reset-global-sync" style="flex: 1;">0초 리셋</button>
+          <button type="button" class="btn btn-primary" id="btn-close-global-modal" style="flex: 1;">확인 완료</button>
         </div>
       </div>
     </div>

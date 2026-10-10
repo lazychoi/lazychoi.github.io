@@ -2441,11 +2441,16 @@ function renderDialogueList() {
             <span class="range-start-badge" id="start-badge-${idx}" style="display: none;">🔁 시작</span>
             <span class="target-segment-badge" id="target-badge-${idx}" style="display: none;">🎯 암기중</span>
           </div>
-          <div style="display: inline-flex; align-items: center; gap: 8px;">
+          <div style="display: inline-flex; align-items: center; gap: 6px;">
             <span class="stt-score-badge ${scoreClass}" id="score-badge-${idx}" style="${hasScore ? '' : 'display: none;'}">${scoreText}</span>
             <div class="bubble-time-info">
               <span>${formatTime(seg.start)} - ${formatTime(seg.end)}</span>
             </div>
+            <button type="button" class="btn-sync-edit" data-index="${idx}" title="구간 싱크(In/Out) 정밀 편집" aria-label="구간 싱크 편집">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+              </svg>
+            </button>
           </div>
         </div>
         <div class="bubble-text" id="text-${idx}">
@@ -2529,6 +2534,16 @@ function renderDialogueList() {
     };
 
     bubbleContent.addEventListener('click', (e) => {
+      // 1. 편집 아이콘 터치 시: 오직 싱크 편집 바텀 시트만 열리고 재생/일시정지는 절대 작동하지 않음
+      const editBtn = e.target.closest('.btn-sync-edit');
+      if (editBtn) {
+        e.stopPropagation();
+        cancelLongPress();
+        const editIdx = parseInt(editBtn.dataset.index, 10);
+        openSyncAdjustmentSheet(editIdx);
+        return;
+      }
+
       // Tap speaker badge to toggle A <-> B
       if (e.target.closest('.speaker-badge-btn')) {
         e.stopPropagation();
@@ -2576,7 +2591,7 @@ function renderDialogueList() {
 
     // 데스크톱 마우스 롱클릭 지원
     bubbleContent.addEventListener('mousedown', (e) => {
-      if (e.button !== 0 || e.target.closest('.speaker-badge-btn')) return;
+      if (e.button !== 0 || e.target.closest('.speaker-badge-btn') || e.target.closest('.btn-sync-edit') || e.target.closest('.btn-stt-retry')) return;
       startLongPress();
     });
     bubbleContent.addEventListener('mouseup', () => cancelLongPress());
@@ -2589,7 +2604,7 @@ function renderDialogueList() {
     let swipeDirection = null;
 
     bubbleContent.addEventListener('touchstart', (e) => {
-      if (e.touches.length !== 1) {
+      if (e.touches.length !== 1 || e.target.closest('.btn-sync-edit') || e.target.closest('.speaker-badge-btn') || e.target.closest('.btn-stt-retry')) {
         cancelLongPress();
         return;
       }
@@ -3284,10 +3299,13 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
     });
   }
 
+  // Initialize In/Out Sync Adjustment UI listeners
+  initSyncAdjustmentListeners();
+
   // Prevent iOS pull-to-refresh & rubber-band bouncing when dragging on header/menu area
   document.addEventListener('touchmove', (e) => {
-    if (e.target.closest('.dialogue-feed') || e.target.closest('.modal-body') || e.target.closest('.file-list-view')) {
-      return; // Allow natural scrolling inside the dialogue feed, modal dialogs, and file list view
+    if (e.target.closest('.dialogue-feed') || e.target.closest('.modal-body') || e.target.closest('.file-list-view') || e.target.closest('.sync-bottom-sheet')) {
+      return; // Allow natural scrolling inside the dialogue feed, modal dialogs, file list view, and sync bottom sheet
     }
     e.preventDefault();
   }, { passive: false });
@@ -3373,3 +3391,392 @@ function escapeHTML(str) {
 function escapeHtml(str) {
   return escapeHTML(str);
 }
+
+// ══════════════════════════════════════════════════════
+// 구간 싱크(In/Out) 정밀 조절 및 바텀 시트 로직 (모바일 최적화)
+// ══════════════════════════════════════════════════════
+let editSyncIndex = -1;
+let syncPreviewTimer = null;
+let globalOffsetAccum = 0;
+
+function formatTimeWithMs(seconds) {
+  if (isNaN(seconds) || seconds < 0) return "00:00.00";
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.floor((seconds % 1) * 100);
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+}
+
+function formatSrtTimestamp(seconds) {
+  if (isNaN(seconds) || seconds < 0) seconds = 0;
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  const ms = Math.floor((seconds % 1) * 1000);
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(ms).padStart(3, '0')}`;
+}
+
+function exportSubtitlesToSRT() {
+  if (!subtitles || subtitles.length === 0) return '';
+  return subtitles.map((seg, idx) => {
+    const startStr = formatSrtTimestamp(seg.start);
+    const endStr = formatSrtTimestamp(seg.end);
+    const speakerTag = `[${seg.speaker || 'A'}] `;
+    let text = seg.text || '';
+    if (seg.enText && seg.koText) {
+      text = `${seg.enText}\n${seg.koText}`;
+    }
+    return `${idx + 1}\n${startStr} --> ${endStr}\n${speakerTag}${text}\n`;
+  }).join('\n');
+}
+
+function openSyncAdjustmentSheet(index) {
+  if (index < 0 || index >= subtitles.length) return;
+  stopAudioPlayback();
+  stopSyncPreview();
+
+  editSyncIndex = index;
+  updateSyncSheetUI();
+
+  const backdrop = document.getElementById('sync-sheet-backdrop');
+  if (backdrop) backdrop.style.display = 'flex';
+}
+
+function closeSyncAdjustmentSheet() {
+  stopSyncPreview();
+  const backdrop = document.getElementById('sync-sheet-backdrop');
+  if (backdrop) backdrop.style.display = 'none';
+  editSyncIndex = -1;
+}
+
+function updateSyncSheetUI() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+
+  const titleEl = document.getElementById('sync-sheet-title');
+  if (titleEl) {
+    titleEl.textContent = `${seg.speaker} 화자 · ${editSyncIndex + 1}번 문장 (${editSyncIndex + 1}/${subtitles.length})`;
+  }
+
+  const sentenceEl = document.getElementById('sync-sheet-sentence');
+  if (sentenceEl) {
+    const en = seg.enText || seg.text || '';
+    const ko = seg.koText || '';
+    let html = `<div class="sheet-en-text">${escapeHTML(en)}</div>`;
+    if (ko && ko !== en) {
+      html += `<div class="sheet-ko-text">${escapeHTML(ko)}</div>`;
+    }
+    sentenceEl.innerHTML = html;
+  }
+
+  const inTimeEl = document.getElementById('sync-in-time');
+  if (inTimeEl) inTimeEl.textContent = formatTimeWithMs(seg.start);
+
+  const outTimeEl = document.getElementById('sync-out-time');
+  if (outTimeEl) outTimeEl.textContent = formatTimeWithMs(seg.end);
+
+  const prevBtn = document.getElementById('btn-sync-prev');
+  if (prevBtn) prevBtn.disabled = (editSyncIndex === 0);
+
+  const nextBtn = document.getElementById('btn-sync-next');
+  if (nextBtn) nextBtn.disabled = (editSyncIndex === subtitles.length - 1);
+}
+
+function updateCardTimeDisplay(idx) {
+  const card = document.getElementById(`card-${idx}`);
+  if (!card || !subtitles[idx]) return;
+  const timeInfo = card.querySelector('.bubble-time-info span');
+  if (timeInfo) {
+    timeInfo.textContent = `${formatTime(subtitles[idx].start)} - ${formatTime(subtitles[idx].end)}`;
+  }
+}
+
+async function persistSubtitlesChanges() {
+  saveStateToStorage();
+  if (currentDialogueItemId) {
+    const item = await getDialogueItemFromDB(currentDialogueItemId);
+    if (item) {
+      item.subtitles = subtitles;
+      item.updatedAt = Date.now();
+      await saveDialogueItemToDB(item);
+    }
+  }
+}
+
+function adjustSegmentTime(target, delta) {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+
+  if (target === 'in') {
+    let newStart = parseFloat((seg.start + delta).toFixed(2));
+    if (newStart < 0) newStart = 0;
+    if (newStart >= seg.end - 0.1) newStart = parseFloat((seg.end - 0.1).toFixed(2));
+    seg.start = newStart;
+  } else if (target === 'out') {
+    let newEnd = parseFloat((seg.end + delta).toFixed(2));
+    if (newEnd <= seg.start + 0.1) newEnd = parseFloat((seg.start + 0.1).toFixed(2));
+    seg.end = newEnd;
+  }
+  seg.duration = Math.max(0.1, parseFloat((seg.end - seg.start).toFixed(2)));
+
+  updateSyncSheetUI();
+  updateCardTimeDisplay(editSyncIndex);
+  persistSubtitlesChanges();
+
+  if (navigator.vibrate) {
+    try { navigator.vibrate(15); } catch {}
+  }
+}
+
+function stampCurrentTimeToIn() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+  let cur = parseFloat((audioPlayer.currentTime || 0).toFixed(2));
+  seg.start = Math.max(0, cur);
+  if (seg.start >= seg.end - 0.1) {
+    seg.end = parseFloat((seg.start + 1.0).toFixed(2));
+  }
+  seg.duration = Math.max(0.1, parseFloat((seg.end - seg.start).toFixed(2)));
+
+  updateSyncSheetUI();
+  updateCardTimeDisplay(editSyncIndex);
+  persistSubtitlesChanges();
+  showGestureToast(`📍 In: ${formatTimeWithMs(seg.start)} 설정`);
+}
+
+function stampCurrentTimeToOut() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+  let cur = parseFloat((audioPlayer.currentTime || 0).toFixed(2));
+  seg.end = Math.max(seg.start + 0.1, cur);
+  seg.duration = Math.max(0.1, parseFloat((seg.end - seg.start).toFixed(2)));
+
+  updateSyncSheetUI();
+  updateCardTimeDisplay(editSyncIndex);
+  persistSubtitlesChanges();
+  showGestureToast(`📍 Out: ${formatTimeWithMs(seg.end)} 설정`);
+}
+
+function stopSyncPreview() {
+  if (syncPreviewTimer) {
+    clearTimeout(syncPreviewTimer);
+    syncPreviewTimer = null;
+  }
+  if (!audioPlayer.paused) {
+    audioPlayer.pause();
+  }
+}
+
+function previewSegmentIn() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+  stopSyncPreview();
+  if (!audioPlayer.src) return;
+
+  audioPlayer.currentTime = seg.start;
+  audioPlayer.play().catch(e => console.warn(e));
+
+  const durationMs = 600 / (audioPlayer.playbackRate || 1.0);
+  syncPreviewTimer = setTimeout(() => {
+    audioPlayer.pause();
+    syncPreviewTimer = null;
+  }, durationMs);
+}
+
+function previewSegmentOut() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+  stopSyncPreview();
+  if (!audioPlayer.src) return;
+
+  const startTime = Math.max(seg.start, seg.end - 0.6);
+  const durationMs = Math.max(200, (seg.end - startTime) * 1000) / (audioPlayer.playbackRate || 1.0);
+
+  audioPlayer.currentTime = startTime;
+  audioPlayer.play().catch(e => console.warn(e));
+
+  syncPreviewTimer = setTimeout(() => {
+    audioPlayer.pause();
+    syncPreviewTimer = null;
+  }, durationMs);
+}
+
+function previewSegmentFull() {
+  if (editSyncIndex < 0 || editSyncIndex >= subtitles.length) return;
+  const seg = subtitles[editSyncIndex];
+  stopSyncPreview();
+  if (!audioPlayer.src) return;
+
+  const durationMs = Math.max(300, (seg.end - seg.start) * 1000) / (audioPlayer.playbackRate || 1.0);
+
+  audioPlayer.currentTime = seg.start;
+  audioPlayer.play().catch(e => console.warn(e));
+
+  syncPreviewTimer = setTimeout(() => {
+    audioPlayer.pause();
+    syncPreviewTimer = null;
+  }, durationMs);
+}
+
+function downloadCorrectedSRT() {
+  if (!subtitles || subtitles.length === 0) {
+    alert('내보낼 자막이 없습니다.');
+    return;
+  }
+  const srtContent = exportSubtitlesToSRT();
+  const blob = new Blob([srtContent], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const baseName = (srtName ? getBaseFileName(srtName) : 'dialogue') + '_synced.srt';
+  a.href = url;
+  a.download = baseName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showGestureToast(`💾 ${baseName} 저장 완료`);
+}
+
+function openGlobalSyncModal() {
+  const modal = document.getElementById('global-sync-modal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function closeGlobalSyncModal() {
+  const modal = document.getElementById('global-sync-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function shiftAllSubtitles(delta) {
+  globalOffsetAccum = parseFloat((globalOffsetAccum + delta).toFixed(2));
+  subtitles.forEach(seg => {
+    seg.start = Math.max(0, parseFloat((seg.start + delta).toFixed(2)));
+    seg.end = Math.max(seg.start + 0.1, parseFloat((seg.end + delta).toFixed(2)));
+    seg.duration = Math.max(0.1, parseFloat((seg.end - seg.start).toFixed(2)));
+  });
+
+  subtitles.forEach((_, idx) => updateCardTimeDisplay(idx));
+  if (editSyncIndex !== -1) updateSyncSheetUI();
+  persistSubtitlesChanges();
+
+  const offsetEl = document.getElementById('global-offset-val');
+  if (offsetEl) {
+    const sign = globalOffsetAccum > 0 ? '+' : '';
+    offsetEl.textContent = `${sign}${globalOffsetAccum.toFixed(2)}s`;
+  }
+  showGestureToast(`전체 자막 ${delta > 0 ? '+' : ''}${delta}s 이동`);
+}
+
+function resetGlobalSyncOffset() {
+  if (globalOffsetAccum === 0) return;
+  const reverse = -globalOffsetAccum;
+  globalOffsetAccum = 0;
+  subtitles.forEach(seg => {
+    seg.start = Math.max(0, parseFloat((seg.start + reverse).toFixed(2)));
+    seg.end = Math.max(seg.start + 0.1, parseFloat((seg.end + reverse).toFixed(2)));
+    seg.duration = Math.max(0.1, parseFloat((seg.end - seg.start).toFixed(2)));
+  });
+  subtitles.forEach((_, idx) => updateCardTimeDisplay(idx));
+  if (editSyncIndex !== -1) updateSyncSheetUI();
+  persistSubtitlesChanges();
+
+  const offsetEl = document.getElementById('global-offset-val');
+  if (offsetEl) offsetEl.textContent = '+0.00s';
+  showGestureToast('전체 오프셋 0s 리셋 완료');
+}
+
+function initSyncAdjustmentListeners() {
+  const backdrop = document.getElementById('sync-sheet-backdrop');
+  const closeBtn = document.getElementById('btn-close-sync-sheet');
+  if (closeBtn) closeBtn.addEventListener('click', closeSyncAdjustmentSheet);
+  if (backdrop) {
+    backdrop.addEventListener('click', (e) => {
+      if (e.target === backdrop) closeSyncAdjustmentSheet();
+    });
+  }
+
+  // Step buttons for In & Out
+  document.querySelectorAll('.sync-bottom-sheet .btn-step').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const target = e.currentTarget.dataset.target;
+      const delta = parseFloat(e.currentTarget.dataset.delta);
+      if (target && !isNaN(delta)) {
+        adjustSegmentTime(target, delta);
+      }
+    });
+  });
+
+  // Stamp buttons
+  const stampInBtn = document.getElementById('btn-stamp-in');
+  if (stampInBtn) stampInBtn.addEventListener('click', stampCurrentTimeToIn);
+
+  const stampOutBtn = document.getElementById('btn-stamp-out');
+  if (stampOutBtn) stampOutBtn.addEventListener('click', stampCurrentTimeToOut);
+
+  // Preview buttons
+  const prevInBtn = document.getElementById('btn-preview-in');
+  if (prevInBtn) prevInBtn.addEventListener('click', previewSegmentIn);
+
+  const prevOutBtn = document.getElementById('btn-preview-out');
+  if (prevOutBtn) prevOutBtn.addEventListener('click', previewSegmentOut);
+
+  const playFullBtn = document.getElementById('btn-sync-play-full');
+  if (playFullBtn) playFullBtn.addEventListener('click', previewSegmentFull);
+
+  // Nav buttons
+  const prevSegBtn = document.getElementById('btn-sync-prev');
+  if (prevSegBtn) {
+    prevSegBtn.addEventListener('click', () => {
+      if (editSyncIndex > 0) {
+        editSyncIndex--;
+        updateSyncSheetUI();
+        jumpToSegment(editSyncIndex, false);
+      }
+    });
+  }
+
+  const nextSegBtn = document.getElementById('btn-sync-next');
+  if (nextSegBtn) {
+    nextSegBtn.addEventListener('click', () => {
+      if (editSyncIndex < subtitles.length - 1) {
+        editSyncIndex++;
+        updateSyncSheetUI();
+        jumpToSegment(editSyncIndex, false);
+      }
+    });
+  }
+
+  // Extra actions
+  const openGlobalBtn = document.getElementById('btn-open-global-sync');
+  if (openGlobalBtn) openGlobalBtn.addEventListener('click', openGlobalSyncModal);
+
+  const exportSrtBtn = document.getElementById('btn-export-srt');
+  if (exportSrtBtn) exportSrtBtn.addEventListener('click', downloadCorrectedSRT);
+
+  // Global Sync Modal listeners
+  const closeGlobalBtn = document.getElementById('global-sync-modal-close');
+  if (closeGlobalBtn) closeGlobalBtn.addEventListener('click', closeGlobalSyncModal);
+
+  const confirmGlobalBtn = document.getElementById('btn-close-global-modal');
+  if (confirmGlobalBtn) confirmGlobalBtn.addEventListener('click', closeGlobalSyncModal);
+
+  const globalBackdrop = document.getElementById('global-sync-modal');
+  if (globalBackdrop) {
+    globalBackdrop.addEventListener('click', (e) => {
+      if (e.target === globalBackdrop) closeGlobalSyncModal();
+    });
+  }
+
+  document.querySelectorAll('#global-sync-modal .btn-step').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const delta = parseFloat(e.currentTarget.dataset.globalDelta);
+      if (!isNaN(delta)) {
+        shiftAllSubtitles(delta);
+      }
+    });
+  });
+
+  const resetGlobalBtn = document.getElementById('btn-reset-global-sync');
+  if (resetGlobalBtn) resetGlobalBtn.addEventListener('click', resetGlobalSyncOffset);
+}
+
