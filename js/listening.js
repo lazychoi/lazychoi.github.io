@@ -5,6 +5,8 @@
 // Audio & Subtitle States
 let subtitles = [];
 let audioName = "";
+let audioBlob = null;
+let currentAudioUrl = null;
 let activeIndex = -1;
 
 // Playback Settings
@@ -141,6 +143,79 @@ function updateRangeLoopCardsUI() {
 const PLAY_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg>`;
 const PAUSE_SVG = `<svg width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"></path></svg>`;
 
+// ── Audio MIME Type & Blob Normalization Helpers (iOS Safari Compatible) ──
+function getAudioMimeType(fileName, fileType) {
+  if (fileType && fileType.startsWith('audio/')) return fileType;
+  const name = (fileName || '').toLowerCase();
+  if (name.endsWith('.mp3')) return 'audio/mpeg';
+  if (name.endsWith('.m4a') || name.endsWith('.mp4') || name.endsWith('.aac')) return 'audio/mp4';
+  if (name.endsWith('.wav')) return 'audio/wav';
+  if (name.endsWith('.ogg')) return 'audio/ogg';
+  if (name.endsWith('.webm')) return 'audio/webm';
+  return 'audio/mpeg';
+}
+
+function ensureAudioBlob(fileOrBlob, fileName) {
+  if (!fileOrBlob) return null;
+  const mimeType = getAudioMimeType(fileName || fileOrBlob.name, fileOrBlob.type);
+  try {
+    if (fileOrBlob instanceof Blob) {
+      if (!fileOrBlob.type || fileOrBlob.type === '' || fileOrBlob instanceof File) {
+        return new Blob([fileOrBlob], { type: mimeType });
+      }
+      return fileOrBlob;
+    }
+  } catch (e) {
+    console.warn('ensureAudioBlob conversion fallback:', e);
+  }
+  return fileOrBlob;
+}
+
+// iOS Safari WebKitBlobResource Error 1 방지:
+// IndexedDB에서 복원된 Blob을 렌더러 메모리로 직접 읽어 순수 in-memory Blob으로 재생성합니다.
+async function createFreshAudioBlob(storedBlob, fileName) {
+  if (!storedBlob) return null;
+  const mimeType = getAudioMimeType(fileName || storedBlob.name, storedBlob.type);
+
+  try {
+    let buffer = null;
+    if (storedBlob instanceof ArrayBuffer) {
+      buffer = storedBlob;
+    } else if (typeof storedBlob.arrayBuffer === 'function') {
+      buffer = await storedBlob.arrayBuffer();
+    } else {
+      buffer = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(storedBlob);
+      });
+    }
+
+    if (!buffer || buffer.byteLength === 0) {
+      console.warn('Stored audio blob has 0 bytes or is corrupted');
+      return null;
+    }
+
+    return new Blob([buffer], { type: mimeType });
+  } catch (err) {
+    console.warn('Failed to create fresh audio blob from storage:', err);
+    return null;
+  }
+}
+
+// iOS Safari Audio Unlock: 사용자의 첫 터치(목록 클릭 등)에서 audioPlayer를 미리 언락
+function unlockAudioElement() {
+  if (audioPlayer) {
+    try {
+      const p = audioPlayer.play();
+      if (p !== undefined) {
+        p.then(() => audioPlayer.pause()).catch(() => {});
+      }
+    } catch {}
+  }
+}
+
 // ── IndexedDB Storage for Audio & Subtitle Sets ──
 const DB_NAME = 'ListeningAppDB';
 const DB_VERSION = 2;
@@ -232,23 +307,35 @@ async function getListeningItemFromDB(id) {
 async function saveListeningItemToDB(item) {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_ITEMS, 'readwrite');
-    const store = tx.objectStore(STORE_ITEMS);
-    item.updatedAt = Date.now();
-    store.put(item);
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_ITEMS, 'readwrite');
+      const store = tx.objectStore(STORE_ITEMS);
+      item.updatedAt = Date.now();
+      store.put(item);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+      tx.onabort = (e) => reject(e.target.error);
+    });
   } catch (err) {
     console.warn('Failed to save listening item:', err);
+    return false;
   }
 }
 
 async function deleteListeningItemFromDB(id) {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_ITEMS, 'readwrite');
-    const store = tx.objectStore(STORE_ITEMS);
-    store.delete(id);
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_ITEMS, 'readwrite');
+      const store = tx.objectStore(STORE_ITEMS);
+      store.delete(id);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+      tx.onabort = (e) => reject(e.target.error);
+    });
   } catch (err) {
     console.warn('Failed to delete listening item:', err);
+    return false;
   }
 }
 
@@ -467,26 +554,55 @@ async function openListeningItem(itemId) {
       renderSubtitles();
     }
 
-    // 2. Restore Audio
-    if (item.audioBlob) {
-      audioName = item.audioName || "저장된 음원";
+    // 2. Restore Audio with Safari/iOS WebKitBlobResource fix & Self-Healing
+    let rawBlob = item.audioBlob;
+    if (!rawBlob) {
+      const fallbackAudio = await getAudioFromDB();
+      if (fallbackAudio && fallbackAudio.blob) {
+        rawBlob = fallbackAudio.blob;
+        if (!audioName) audioName = fallbackAudio.name || "저장된 음원";
+        item.audioBlob = rawBlob;
+        item.audioName = audioName;
+        await saveListeningItemToDB(item);
+      }
+    }
+
+    let freshBlob = null;
+    if (rawBlob) {
+      freshBlob = await createFreshAudioBlob(rawBlob, audioName || item.audioName);
+      if (freshBlob && freshBlob !== rawBlob) {
+        item.audioBlob = freshBlob;
+        saveListeningItemToDB(item);
+      }
+    }
+
+    if (freshBlob) {
+      audioBlob = freshBlob;
+      audioName = item.audioName || audioName || "저장된 음원";
       if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
       if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
-      const mimeType = item.audioBlob.type || "audio/mpeg";
-      const objectURL = URL.createObjectURL(item.audioBlob);
+      const mimeType = getAudioMimeType(audioName, audioBlob.type);
+      if (currentAudioUrl) {
+        try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+        currentAudioUrl = null;
+      }
+      currentAudioUrl = URL.createObjectURL(audioBlob);
 
-      audioPlayer.src = objectURL;
+      // Cleanly reset and reload media element for iOS Safari
+      audioPlayer.pause();
+      audioPlayer.removeAttribute('src');
       audioPlayer.innerHTML = "";
       const source = document.createElement('source');
-      source.src = objectURL;
+      source.src = currentAudioUrl;
       source.type = mimeType;
       audioPlayer.appendChild(source);
+      audioPlayer.src = currentAudioUrl;
       audioPlayer.load();
 
       const restoreTime = () => {
         const savedTime = item.lastTime || 0;
-        if (savedTime > 0 && savedTime < (audioPlayer.duration || Infinity)) {
+        if (savedTime > 0 && !isNaN(audioPlayer.duration) && savedTime < audioPlayer.duration) {
           audioPlayer.currentTime = savedTime;
           updateTimelineProgress();
           syncSubtitleHighlight(savedTime);
@@ -499,8 +615,14 @@ async function openListeningItem(itemId) {
         audioPlayer.addEventListener('loadedmetadata', restoreTime, { once: true });
       }
     } else {
+      audioBlob = null;
+      if (currentAudioUrl) {
+        try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+        currentAudioUrl = null;
+      }
       audioName = "";
-      audioPlayer.src = "";
+      audioPlayer.pause();
+      audioPlayer.removeAttribute('src');
       audioPlayer.innerHTML = "";
       if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = "음원 없음";
     }
@@ -517,6 +639,7 @@ async function openListeningItem(itemId) {
 
 // Global functions for template callbacks
 window.openListeningItemFromList = function(id) {
+  unlockAudioElement();
   openListeningItem(id);
 };
 
@@ -618,12 +741,13 @@ async function startLearningWithSelectedFiles() {
     author = '';
   }
 
+  const safeBlob = tempListeningAudio ? ensureAudioBlob(tempListeningAudio.blob, tempListeningAudio.name) : null;
   const newItem = {
     id: 'listen_' + Date.now(),
     title: itemTitle || '듣기 학습 파일',
     docAuthor: author || '',
     docBookTitle: bookTitle || itemTitle,
-    audioBlob: tempListeningAudio ? tempListeningAudio.blob : null,
+    audioBlob: safeBlob,
     audioName: tempListeningAudio ? tempListeningAudio.name : '',
     subtitles: tempListeningSubtitle ? tempListeningSubtitle.parsed : [],
     subtitleText: tempListeningSubtitle ? tempListeningSubtitle.text : '',
@@ -635,6 +759,9 @@ async function startLearningWithSelectedFiles() {
   };
 
   await saveListeningItemToDB(newItem);
+  if (safeBlob) {
+    await saveAudioToDB(safeBlob, newItem.audioName);
+  }
 
   tempListeningAudio = null;
   tempListeningSubtitle = null;
@@ -683,13 +810,8 @@ function setupFileListListeners() {
     pickerAudioInput.addEventListener('change', (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
-      let mimeType = file.type || "audio/mpeg";
-      if (file.name.endsWith('.mp3')) mimeType = "audio/mpeg";
-      else if (file.name.endsWith('.m4a')) mimeType = "audio/mp4";
-      else if (file.name.endsWith('.wav')) mimeType = "audio/wav";
-
-      const audioBlob = new Blob([file], { type: mimeType });
-      tempListeningAudio = { blob: audioBlob, name: file.name };
+      const safeBlob = ensureAudioBlob(file, file.name);
+      tempListeningAudio = { blob: safeBlob, name: file.name };
       updateSelectedTagsUI();
     });
   }
@@ -723,10 +845,17 @@ function setupFileListListeners() {
 async function saveAudioToDB(blob, name) {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).put({ blob, name }, 'lastAudio');
+    const safeBlob = ensureAudioBlob(blob, name);
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put({ blob: safeBlob, name }, 'lastAudio');
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+      tx.onabort = (e) => reject(e.target.error);
+    });
   } catch (err) {
     console.warn('Failed to save audio to IndexedDB:', err);
+    return false;
   }
 }
 
@@ -748,10 +877,16 @@ async function getAudioFromDB() {
 async function clearAudioFromDB() {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_NAME, 'readwrite');
-    tx.objectStore(STORE_NAME).delete('lastAudio');
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).delete('lastAudio');
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+      tx.onabort = () => resolve(false);
+    });
   } catch (err) {
     console.warn('Failed to clear audio from IndexedDB:', err);
+    return false;
   }
 }
 
@@ -2085,30 +2220,36 @@ function setupImportListeners() {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Explicitly enforce MIME type in iOS Safari to enable proper seeking
-    let mimeType = file.type || "audio/mpeg";
-    if (file.name.endsWith('.mp3')) {
-      mimeType = "audio/mpeg";
-    } else if (file.name.endsWith('.m4a')) {
-      mimeType = "audio/mp4";
-    } else if (file.name.endsWith('.wav')) {
-      mimeType = "audio/wav";
-    }
-
-    const audioBlob = new Blob([file], { type: mimeType });
+    const safeBlob = ensureAudioBlob(file, file.name);
+    const mimeType = getAudioMimeType(file.name, file.type);
 
     if (itemToAttachAudio) {
       const item = await getListeningItemFromDB(itemToAttachAudio);
       if (item) {
-        item.audioBlob = audioBlob;
+        item.audioBlob = safeBlob;
         item.audioName = file.name;
         await saveListeningItemToDB(item);
+        await saveAudioToDB(safeBlob, file.name);
       }
       if (currentListeningItemId === itemToAttachAudio) {
         audioName = file.name;
+        audioBlob = safeBlob;
         if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
-        const objectURL = URL.createObjectURL(audioBlob);
-        audioPlayer.src = objectURL;
+
+        if (currentAudioUrl) {
+          try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+          currentAudioUrl = null;
+        }
+        currentAudioUrl = URL.createObjectURL(safeBlob);
+
+        audioPlayer.pause();
+        audioPlayer.removeAttribute('src');
+        audioPlayer.innerHTML = "";
+        const source = document.createElement('source');
+        source.src = currentAudioUrl;
+        source.type = mimeType;
+        audioPlayer.appendChild(source);
+        audioPlayer.src = currentAudioUrl;
         audioPlayer.load();
       }
       itemToAttachAudio = null;
@@ -2117,32 +2258,39 @@ function setupImportListeners() {
     }
 
     audioName = file.name;
+    audioBlob = safeBlob;
     if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
     if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
-    const objectURL = URL.createObjectURL(audioBlob);
+    if (currentAudioUrl) {
+      try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+      currentAudioUrl = null;
+    }
+    currentAudioUrl = URL.createObjectURL(safeBlob);
 
     // Save audio blob to IndexedDB & metadata to localStorage
-    await saveAudioToDB(audioBlob, file.name);
+    await saveAudioToDB(safeBlob, file.name);
     localStorage.setItem('listening_audio_name', file.name);
     localStorage.setItem('listening_last_time', '0');
 
     if (currentListeningItemId) {
       const item = await getListeningItemFromDB(currentListeningItemId);
       if (item) {
-        item.audioBlob = audioBlob;
+        item.audioBlob = safeBlob;
         item.audioName = file.name;
         await saveListeningItemToDB(item);
       }
     }
 
     // Directly assign src to audioPlayer for iOS Safari compatibility
-    audioPlayer.src = objectURL;
+    audioPlayer.pause();
+    audioPlayer.removeAttribute('src');
     audioPlayer.innerHTML = "";
     const source = document.createElement('source');
-    source.src = objectURL;
+    source.src = currentAudioUrl;
     source.type = mimeType;
     audioPlayer.appendChild(source);
+    audioPlayer.src = currentAudioUrl;
     audioPlayer.load();
   });
 
@@ -2241,6 +2389,12 @@ function setupImportListeners() {
 
         if (searchInput) searchInput.value = "";
         performSearch("");
+
+        if (currentAudioUrl) {
+          try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+          currentAudioUrl = null;
+        }
+        audioBlob = null;
 
         audioPlayer.pause();
         audioPlayer.src = "";
@@ -2719,36 +2873,46 @@ async function restoreSavedState() {
   // 2. Restore Audio File from IndexedDB
   const savedAudio = await getAudioFromDB();
   if (savedAudio && savedAudio.blob) {
-    audioName = savedAudio.name || "저장된 음원";
-    if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
-    if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
+    const freshBlob = await createFreshAudioBlob(savedAudio.blob, savedAudio.name);
+    if (freshBlob) {
+      audioBlob = freshBlob;
+      audioName = savedAudio.name || "저장된 음원";
+      if (loadedAudioNameSpan) loadedAudioNameSpan.textContent = audioName;
+      if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
 
-    const mimeType = savedAudio.blob.type || "audio/mpeg";
-    const objectURL = URL.createObjectURL(savedAudio.blob);
-
-    // Directly assign src to audioPlayer for iOS Safari compatibility
-    audioPlayer.src = objectURL;
-    audioPlayer.innerHTML = "";
-    const source = document.createElement('source');
-    source.src = objectURL;
-    source.type = mimeType;
-    audioPlayer.appendChild(source);
-    audioPlayer.load();
-
-    // 3. Restore Playback Position
-    const restoreTime = () => {
-      const savedTime = parseFloat(localStorage.getItem('listening_last_time'));
-      if (!isNaN(savedTime) && savedTime > 0 && savedTime < (audioPlayer.duration || Infinity)) {
-        audioPlayer.currentTime = savedTime;
-        updateTimelineProgress();
-        syncSubtitleHighlight(savedTime);
+      const mimeType = getAudioMimeType(audioName, audioBlob.type);
+      if (currentAudioUrl) {
+        try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+        currentAudioUrl = null;
       }
-    };
+      currentAudioUrl = URL.createObjectURL(audioBlob);
 
-    if (audioPlayer.readyState >= 1) {
-      restoreTime();
-    } else {
-      audioPlayer.addEventListener('loadedmetadata', restoreTime, { once: true });
+      // Cleanly reset and reload media element for iOS Safari
+      audioPlayer.pause();
+      audioPlayer.removeAttribute('src');
+      audioPlayer.innerHTML = "";
+      const source = document.createElement('source');
+      source.src = currentAudioUrl;
+      source.type = mimeType;
+      audioPlayer.appendChild(source);
+      audioPlayer.src = currentAudioUrl;
+      audioPlayer.load();
+
+      // 3. Restore Playback Position
+      const restoreTime = () => {
+        const savedTime = parseFloat(localStorage.getItem('listening_last_time'));
+        if (!isNaN(savedTime) && savedTime > 0 && savedTime < (audioPlayer.duration || Infinity)) {
+          audioPlayer.currentTime = savedTime;
+          updateTimelineProgress();
+          syncSubtitleHighlight(savedTime);
+        }
+      };
+
+      if (audioPlayer.readyState >= 1) {
+        restoreTime();
+      } else {
+        audioPlayer.addEventListener('loadedmetadata', restoreTime, { once: true });
+      }
     }
   } else if (savedSubText) {
     if (btnClearStorage) btnClearStorage.style.display = 'inline-block';
