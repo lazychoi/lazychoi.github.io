@@ -8,6 +8,7 @@ let subtitles = [];              // Array of { id, index, start, end, duration, 
 let activeIndex = -1;            // Currently active / playing segment index
 let targetIndex = 0;             // Target segment for 'from-prev' and 'from-start' modes
 let audioBlob = null;
+let currentAudioUrl = null;
 let audioName = "";
 let srtName = "";
 
@@ -284,6 +285,54 @@ function ensureAudioBlob(fileOrBlob, fileName) {
     console.warn('ensureAudioBlob conversion fallback:', e);
   }
   return fileOrBlob;
+}
+
+// iOS Safari WebKitBlobResource Error 1 방지:
+// IndexedDB에서 복원된 Blob을 렌더러 메모리로 직접 읽어 순수 in-memory Blob으로 재생성합니다.
+async function createFreshAudioBlob(storedBlob, fileName) {
+  if (!storedBlob) return null;
+  const mimeType = getAudioMimeType(fileName || storedBlob.name, storedBlob.type);
+
+  try {
+    let buffer = null;
+    if (storedBlob instanceof ArrayBuffer) {
+      buffer = storedBlob;
+    } else if (typeof storedBlob.arrayBuffer === 'function') {
+      buffer = await storedBlob.arrayBuffer();
+    } else {
+      buffer = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsArrayBuffer(storedBlob);
+      });
+    }
+
+    if (!buffer || buffer.byteLength === 0) {
+      console.warn('Stored audio blob has 0 bytes or is corrupted');
+      return null;
+    }
+
+    return new Blob([buffer], { type: mimeType });
+  } catch (err) {
+    console.warn('Failed to create fresh audio blob from storage:', err);
+    return null;
+  }
+}
+
+// iOS Safari Audio Unlock: 사용자의 첫 터치(목록 클릭 등)에서 audioPlayer를 미리 언락
+function unlockAudioElement() {
+  if (audioPlayer) {
+    try {
+      const p = audioPlayer.play();
+      if (p !== undefined) {
+        p.then(() => audioPlayer.pause()).catch(() => {});
+      }
+    } catch {}
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    try { audioCtx.resume(); } catch {}
+  }
 }
 
 // ── IndexedDB Storage for Dialogue Sets ──
@@ -795,25 +844,43 @@ async function openDialogueItem(itemId) {
       if (fallbackAudio && fallbackAudio.blob) {
         rawBlob = fallbackAudio.blob;
         if (!audioName) audioName = fallbackAudio.name || "저장된 음원";
-        item.audioBlob = ensureAudioBlob(rawBlob, audioName);
+        item.audioBlob = rawBlob;
         item.audioName = audioName;
         await saveDialogueItemToDB(item);
       }
     }
 
+    let freshBlob = null;
     if (rawBlob) {
-      audioName = item.audioName || audioName || "저장된 음원";
-      audioBlob = ensureAudioBlob(rawBlob, audioName);
-      const mimeType = getAudioMimeType(audioName, audioBlob.type);
-      const audioUrl = URL.createObjectURL(audioBlob);
+      freshBlob = await createFreshAudioBlob(rawBlob, audioName || item.audioName);
+      // 만약 원본이 변환되었거나 손상 복구되었으면 DB의 audioBlob도 갱신
+      if (freshBlob && freshBlob !== rawBlob) {
+        item.audioBlob = freshBlob;
+        saveDialogueItemToDB(item);
+      }
+    }
 
-      // Clean up previous audio source and load new media
-      audioPlayer.src = audioUrl;
+    if (freshBlob) {
+      audioName = item.audioName || audioName || "저장된 음원";
+      audioBlob = freshBlob;
+      const mimeType = getAudioMimeType(audioName, audioBlob.type);
+
+      // Revoke previous object URL to prevent memory leaks and detached handles
+      if (currentAudioUrl) {
+        try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+        currentAudioUrl = null;
+      }
+      currentAudioUrl = URL.createObjectURL(audioBlob);
+
+      // Reset and configure audio element cleanly for iOS Safari
+      audioPlayer.pause();
+      audioPlayer.removeAttribute('src');
       audioPlayer.innerHTML = '';
       const source = document.createElement('source');
-      source.src = audioUrl;
+      source.src = currentAudioUrl;
       source.type = mimeType;
       audioPlayer.appendChild(source);
+      audioPlayer.src = currentAudioUrl;
       audioPlayer.load();
 
       updateStatusBanner(`음원: ${audioName} (${subtitles.length}개 구간)`);
@@ -833,7 +900,12 @@ async function openDialogueItem(itemId) {
       }
     } else {
       audioBlob = null;
-      audioPlayer.src = "";
+      if (currentAudioUrl) {
+        try { URL.revokeObjectURL(currentAudioUrl); } catch {}
+        currentAudioUrl = null;
+      }
+      audioPlayer.pause();
+      audioPlayer.removeAttribute('src');
       audioPlayer.innerHTML = "";
       if (subtitles.length > 0) {
         updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간, 음원 선택 필요)`);
@@ -854,6 +926,7 @@ async function openDialogueItem(itemId) {
 
 // Global functions for template callbacks
 window.openDialogueItemFromList = function(id) {
+  unlockAudioElement();
   openDialogueItem(id);
 };
 
