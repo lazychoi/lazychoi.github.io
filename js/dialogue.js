@@ -257,6 +257,35 @@ function setSpeedSelectValue(speed) {
   }
 }
 
+// ── Audio MIME Type & Blob Normalization Helpers ──
+function getAudioMimeType(fileName, fileType) {
+  if (fileType && fileType.startsWith('audio/')) return fileType;
+  const name = (fileName || '').toLowerCase();
+  if (name.endsWith('.mp3')) return 'audio/mpeg';
+  if (name.endsWith('.m4a') || name.endsWith('.mp4') || name.endsWith('.aac')) return 'audio/mp4';
+  if (name.endsWith('.wav')) return 'audio/wav';
+  if (name.endsWith('.ogg')) return 'audio/ogg';
+  if (name.endsWith('.webm')) return 'audio/webm';
+  return 'audio/mpeg';
+}
+
+function ensureAudioBlob(fileOrBlob, fileName) {
+  if (!fileOrBlob) return null;
+  const mimeType = getAudioMimeType(fileName || fileOrBlob.name, fileOrBlob.type);
+  // Safely ensure pure Blob with explicit MIME type to prevent WebKit/Safari File storage bugs
+  try {
+    if (fileOrBlob instanceof Blob) {
+      if (!fileOrBlob.type || fileOrBlob.type === '' || fileOrBlob instanceof File) {
+        return new Blob([fileOrBlob], { type: mimeType });
+      }
+      return fileOrBlob;
+    }
+  } catch (e) {
+    console.warn('ensureAudioBlob conversion fallback:', e);
+  }
+  return fileOrBlob;
+}
+
 // ── IndexedDB Storage for Dialogue Sets ──
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -319,23 +348,41 @@ async function getDialogueItemFromDB(id) {
 async function saveDialogueItemToDB(item) {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_ITEMS, 'readwrite');
-    const store = tx.objectStore(STORE_ITEMS);
-    item.updatedAt = Date.now();
-    store.put(item);
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_ITEMS, 'readwrite');
+      const store = tx.objectStore(STORE_ITEMS);
+      item.updatedAt = Date.now();
+      store.put(item);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => {
+        console.warn('Transaction error saving dialogue item:', e);
+        reject(e.target.error);
+      };
+      tx.onabort = (e) => {
+        console.warn('Transaction aborted saving dialogue item:', e);
+        reject(e.target.error);
+      };
+    });
   } catch (err) {
     console.warn('Failed to save dialogue item:', err);
+    return false;
   }
 }
 
 async function deleteDialogueItemFromDB(id) {
   try {
     const db = await openDB();
-    const tx = db.transaction(STORE_ITEMS, 'readwrite');
-    const store = tx.objectStore(STORE_ITEMS);
-    store.delete(id);
+    return new Promise((resolve, reject) => {
+      const tx = db.transaction(STORE_ITEMS, 'readwrite');
+      const store = tx.objectStore(STORE_ITEMS);
+      store.delete(id);
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+      tx.onabort = (e) => reject(e.target.error);
+    });
   } catch (err) {
     console.warn('Failed to delete dialogue item:', err);
+    return false;
   }
 }
 
@@ -401,52 +448,52 @@ async function migrateLegacyDialogueData(db) {
 
 async function saveAudioToDB(blob, name) {
   try {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onsuccess = (e) => {
-      const db = e.target.result;
+    const db = await openDB();
+    const safeBlob = ensureAudioBlob(blob, name);
+    return new Promise((resolve, reject) => {
       const tx = db.transaction(STORE_AUDIO, 'readwrite');
-      tx.objectStore(STORE_AUDIO).put({ blob, name }, 'currentAudio');
-    };
+      const store = tx.objectStore(STORE_AUDIO);
+      store.put({ blob: safeBlob, name }, 'currentAudio');
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = (e) => reject(e.target.error);
+      tx.onabort = (e) => reject(e.target.error);
+    });
   } catch (err) {
     console.warn('Failed to save audio to DB:', err);
+    return false;
   }
 }
 
 async function getAudioFromDB() {
-  return new Promise((resolve) => {
-    try {
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onsuccess = (e) => {
-        const db = e.target.result;
-        const tx = db.transaction(STORE_AUDIO, 'readonly');
-        const getReq = tx.objectStore(STORE_AUDIO).get('currentAudio');
-        getReq.onsuccess = () => resolve(getReq.result || null);
-        getReq.onerror = () => resolve(null);
-      };
-      req.onerror = () => resolve(null);
-    } catch {
-      resolve(null);
-    }
-  });
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_AUDIO, 'readonly');
+      const store = tx.objectStore(STORE_AUDIO);
+      const getReq = store.get('currentAudio');
+      getReq.onsuccess = () => resolve(getReq.result || null);
+      getReq.onerror = () => resolve(null);
+    });
+  } catch {
+    return null;
+  }
 }
 
 async function clearAudioFromDB() {
-  return new Promise((resolve) => {
-    try {
-      const req = indexedDB.open(DB_NAME, DB_VERSION);
-      req.onsuccess = (e) => {
-        const db = e.target.result;
-        const tx = db.transaction(STORE_AUDIO, 'readwrite');
-        tx.objectStore(STORE_AUDIO).delete('currentAudio');
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => resolve();
-      };
-      req.onerror = () => resolve();
-    } catch (err) {
-      console.warn('Failed to clear audio DB:', err);
-      resolve();
-    }
-  });
+  try {
+    const db = await openDB();
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE_AUDIO, 'readwrite');
+      const store = tx.objectStore(STORE_AUDIO);
+      store.delete('currentAudio');
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => resolve(false);
+      tx.onabort = () => resolve(false);
+    });
+  } catch (err) {
+    console.warn('Failed to clear audio DB:', err);
+    return false;
+  }
 }
 
 // ── Filename Comparison Helpers ──
@@ -464,30 +511,46 @@ function isSampleFile(name) {
   return !name || name.includes('샘플') || name === '대화 자막';
 }
 
-async function saveCurrentDialogueItemState() {
-  if (!currentDialogueItemId) return;
-  try {
-    const item = await getDialogueItemFromDB(currentDialogueItemId);
-    if (!item) return;
+let saveItemDebounceTimer = null;
 
-    item.subtitles = subtitles;
-    item.audioName = audioName;
-    item.srtName = srtName;
-    item.currentMode = currentMode;
-    item.activeRole = activeRole;
-    item.currentSubtitleLang = currentSubtitleLang;
-    item.isRepeatEnabled = isRepeatEnabled;
-    item.playbackSpeed = playbackSpeed;
-    item.activeIndex = activeIndex;
-    item.targetIndex = targetIndex;
-    item.rangeStartIdx = rangeStartIdx;
-    if (audioBlob) {
-      item.audioBlob = audioBlob;
+async function saveCurrentDialogueItemState(immediate = false) {
+  if (!currentDialogueItemId) return;
+
+  const performSave = async () => {
+    try {
+      const item = await getDialogueItemFromDB(currentDialogueItemId);
+      if (!item) return;
+
+      item.subtitles = subtitles;
+      item.audioName = audioName;
+      item.srtName = srtName;
+      item.currentMode = currentMode;
+      item.activeRole = activeRole;
+      item.currentSubtitleLang = currentSubtitleLang;
+      item.isRepeatEnabled = isRepeatEnabled;
+      item.playbackSpeed = playbackSpeed;
+      item.activeIndex = activeIndex;
+      item.targetIndex = targetIndex;
+      item.rangeStartIdx = rangeStartIdx;
+      if (audioBlob) {
+        item.audioBlob = ensureAudioBlob(audioBlob, audioName);
+      }
+      item.updatedAt = Date.now();
+      await saveDialogueItemToDB(item);
+    } catch (err) {
+      console.warn('Error saving current dialogue state:', err);
     }
-    item.updatedAt = Date.now();
-    await saveDialogueItemToDB(item);
-  } catch (err) {
-    console.warn('Error saving current dialogue state:', err);
+  };
+
+  if (immediate) {
+    if (saveItemDebounceTimer) {
+      clearTimeout(saveItemDebounceTimer);
+      saveItemDebounceTimer = null;
+    }
+    await performSave();
+  } else {
+    if (saveItemDebounceTimer) clearTimeout(saveItemDebounceTimer);
+    saveItemDebounceTimer = setTimeout(performSave, 500);
   }
 }
 
@@ -560,10 +623,17 @@ async function restoreSavedState() {
   // Restore Audio from IndexedDB
   const savedAudio = await getAudioFromDB();
   if (savedAudio && savedAudio.blob) {
-    audioBlob = savedAudio.blob;
-    audioName = savedAudio.name;
+    audioName = savedAudio.name || "저장된 음원";
+    audioBlob = ensureAudioBlob(savedAudio.blob, audioName);
+    const mimeType = getAudioMimeType(audioName, audioBlob.type);
     const audioUrl = URL.createObjectURL(audioBlob);
     audioPlayer.src = audioUrl;
+    audioPlayer.innerHTML = '';
+    const source = document.createElement('source');
+    source.src = audioUrl;
+    source.type = mimeType;
+    audioPlayer.appendChild(source);
+    audioPlayer.load();
     updateStatusBanner(`음원: ${audioName} (${subtitles.length}개 구간)`);
   } else if (subtitles.length > 0) {
     updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간, 음원 선택 필요)`);
@@ -586,7 +656,7 @@ async function showDialogueFileList() {
   cancelCueCountdown();
   clearSTTFeedback();
 
-  await saveCurrentDialogueItemState();
+  await saveCurrentDialogueItemState(true);
 
   const fileListView = document.getElementById('file-list-view');
   const memorizeView = document.getElementById('memorize-view');
@@ -717,16 +787,54 @@ async function openDialogueItem(itemId) {
     updateModeSelectorUI(currentMode);
     renderDialogueList();
 
-    // 3. Restore Audio
-    if (item.audioBlob) {
-      audioBlob = item.audioBlob;
-      audioName = item.audioName || "저장된 음원";
+    // 3. Restore Audio with Full Safari/Mobile Compatibility & Self-Healing
+    let rawBlob = item.audioBlob;
+    // Self-healing: 만약 item.audioBlob이 누락되어 있다면 STORE_AUDIO(audioStore)에서 복구 시도
+    if (!rawBlob) {
+      const fallbackAudio = await getAudioFromDB();
+      if (fallbackAudio && fallbackAudio.blob) {
+        rawBlob = fallbackAudio.blob;
+        if (!audioName) audioName = fallbackAudio.name || "저장된 음원";
+        item.audioBlob = ensureAudioBlob(rawBlob, audioName);
+        item.audioName = audioName;
+        await saveDialogueItemToDB(item);
+      }
+    }
+
+    if (rawBlob) {
+      audioName = item.audioName || audioName || "저장된 음원";
+      audioBlob = ensureAudioBlob(rawBlob, audioName);
+      const mimeType = getAudioMimeType(audioName, audioBlob.type);
       const audioUrl = URL.createObjectURL(audioBlob);
+
+      // Clean up previous audio source and load new media
       audioPlayer.src = audioUrl;
+      audioPlayer.innerHTML = '';
+      const source = document.createElement('source');
+      source.src = audioUrl;
+      source.type = mimeType;
+      audioPlayer.appendChild(source);
+      audioPlayer.load();
+
       updateStatusBanner(`음원: ${audioName} (${subtitles.length}개 구간)`);
+
+      // Safely seek once metadata is loaded
+      const targetTime = (subtitles.length > 0 && subtitles[activeIndex]) ? subtitles[activeIndex].start : 0;
+      const restorePosition = () => {
+        if (!isNaN(audioPlayer.duration) && audioPlayer.duration > 0 && targetTime < audioPlayer.duration) {
+          audioPlayer.currentTime = targetTime;
+        }
+      };
+
+      if (audioPlayer.readyState >= 1) {
+        restorePosition();
+      } else {
+        audioPlayer.addEventListener('loadedmetadata', restorePosition, { once: true });
+      }
     } else {
       audioBlob = null;
       audioPlayer.src = "";
+      audioPlayer.innerHTML = "";
       if (subtitles.length > 0) {
         updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간, 음원 선택 필요)`);
       } else {
@@ -841,10 +949,11 @@ async function startDialogueWithSelectedFiles() {
     itemTitle = tempDialogueAudio.name;
   }
 
+  const safeBlob = tempDialogueAudio ? ensureAudioBlob(tempDialogueAudio.file, tempDialogueAudio.name) : null;
   const newItem = {
     id: 'dialogue_' + Date.now(),
     title: itemTitle || '새 대화 세트',
-    audioBlob: tempDialogueAudio ? tempDialogueAudio.file : null,
+    audioBlob: safeBlob,
     audioName: tempDialogueAudio ? tempDialogueAudio.name : '',
     srtName: tempDialogueSrt ? tempDialogueSrt.name : '',
     subtitles: tempDialogueSrt ? tempDialogueSrt.parsed : [],
@@ -860,6 +969,9 @@ async function startDialogueWithSelectedFiles() {
   };
 
   await saveDialogueItemToDB(newItem);
+  if (safeBlob) {
+    await saveAudioToDB(safeBlob, newItem.audioName);
+  }
 
   // Reset picker
   tempDialogueAudio = null;
@@ -1443,7 +1555,13 @@ function handleSegmentTouch(index) {
     if (!audioPlayer.paused) {
       audioPlayer.pause();
     } else {
-      audioPlayer.play().catch(e => console.warn(e));
+      const seg = subtitles[index];
+      if (seg) {
+        if (isNaN(audioPlayer.currentTime) || audioPlayer.currentTime < seg.start || audioPlayer.currentTime >= seg.end) {
+          audioPlayer.currentTime = seg.start;
+        }
+      }
+      audioPlayer.play().catch(e => console.warn('Play prevented:', e));
     }
     return;
   }
@@ -1495,8 +1613,24 @@ function jumpToSegment(index, autoPlay = true) {
   activeIndex = index;
   const seg = subtitles[index];
 
-  // Set audio time
-  audioPlayer.currentTime = seg.start;
+  // Set audio time safely (wait for metadata if not ready)
+  const applySeek = () => {
+    try {
+      if (!isNaN(audioPlayer.duration) && audioPlayer.duration > 0) {
+        audioPlayer.currentTime = Math.min(seg.start, Math.max(0, audioPlayer.duration - 0.1));
+      } else {
+        audioPlayer.currentTime = seg.start;
+      }
+    } catch (e) {
+      console.warn('Seek error in jumpToSegment:', e);
+    }
+  };
+
+  if (audioPlayer.readyState >= 1 || (audioPlayer.duration && !isNaN(audioPlayer.duration))) {
+    applySeek();
+  } else {
+    audioPlayer.addEventListener('loadedmetadata', applySeek, { once: true });
+  }
 
   // Check if role-play user speaking turn
   const isUserTurnInRoleplay = (currentMode === 'role-a' && seg.speaker === 'A') || 
@@ -2970,20 +3104,31 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
+    const safeBlob = ensureAudioBlob(file, file.name);
+    const mimeType = getAudioMimeType(file.name, file.type);
+
     if (itemToAttachAudio) {
       const targetId = itemToAttachAudio;
       itemToAttachAudio = null;
       const item = await getDialogueItemFromDB(targetId);
       if (item) {
-        item.audioBlob = file;
+        item.audioBlob = safeBlob;
         item.audioName = file.name;
         item.updatedAt = Date.now();
         await saveDialogueItemToDB(item);
+        await saveAudioToDB(safeBlob, file.name);
+
         if (currentDialogueItemId === targetId) {
-          audioBlob = file;
+          audioBlob = safeBlob;
           audioName = file.name;
-          const url = URL.createObjectURL(file);
+          const url = URL.createObjectURL(safeBlob);
           audioPlayer.src = url;
+          audioPlayer.innerHTML = '';
+          const source = document.createElement('source');
+          source.src = url;
+          source.type = mimeType;
+          audioPlayer.appendChild(source);
+          audioPlayer.load();
           updateStatusBanner(`자막: ${srtName} (${subtitles.length}개 구간) / 음원: ${file.name}`);
         }
         await renderDialogueFileList();
@@ -2999,12 +3144,49 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
     await resetDialogueAppState({ keepSubtitles: shouldKeepSubtitles });
 
     // 2. 새 음원 등록
-    audioBlob = file;
+    audioBlob = safeBlob;
     audioName = file.name;
-    const url = URL.createObjectURL(file);
+    const url = URL.createObjectURL(safeBlob);
     audioPlayer.src = url;
+    audioPlayer.innerHTML = '';
+    const source = document.createElement('source');
+    source.src = url;
+    source.type = mimeType;
+    audioPlayer.appendChild(source);
+    audioPlayer.load();
 
-    await saveAudioToDB(file, file.name);
+    await saveAudioToDB(safeBlob, file.name);
+
+    // 3. 현재 열려있는 대화 아이템이 있으면 동기화, 없는데 자막이 있으면 새 세트 생성
+    if (currentDialogueItemId) {
+      const curItem = await getDialogueItemFromDB(currentDialogueItemId);
+      if (curItem) {
+        curItem.audioBlob = safeBlob;
+        curItem.audioName = file.name;
+        await saveDialogueItemToDB(curItem);
+      }
+    } else if (subtitles.length > 0) {
+      const newItem = {
+        id: 'dialogue_' + Date.now(),
+        title: srtName || file.name,
+        audioBlob: safeBlob,
+        audioName: file.name,
+        srtName: srtName,
+        subtitles: subtitles,
+        currentMode: currentMode || 'shadowing',
+        activeRole: activeRole || 'B',
+        currentSubtitleLang: currentSubtitleLang || 'ko',
+        isRepeatEnabled: isRepeatEnabled,
+        playbackSpeed: playbackSpeed,
+        activeIndex: activeIndex >= 0 ? activeIndex : 0,
+        targetIndex: targetIndex,
+        rangeStartIdx: rangeStartIdx,
+        updatedAt: Date.now()
+      };
+      currentDialogueItemId = newItem.id;
+      await saveDialogueItemToDB(newItem);
+    }
+
     saveStateToStorage();
 
     if (subtitles.length > 0) {
@@ -3087,6 +3269,38 @@ async function resetDialogueAppState({ keepAudio = false, keepSubtitles = false 
       srtName = file.name;
       activeIndex = 0;
       targetIndex = Math.min(1, subtitles.length - 1);
+
+      // 3. 현재 열려있는 대화 아이템이 있으면 동기화, 없으면 새 세트 생성
+      if (currentDialogueItemId) {
+        const curItem = await getDialogueItemFromDB(currentDialogueItemId);
+        if (curItem) {
+          curItem.subtitles = parsed;
+          curItem.srtName = file.name;
+          if (audioBlob) curItem.audioBlob = ensureAudioBlob(audioBlob, audioName);
+          curItem.audioName = audioName;
+          await saveDialogueItemToDB(curItem);
+        }
+      } else {
+        const newItem = {
+          id: 'dialogue_' + Date.now(),
+          title: file.name,
+          audioBlob: audioBlob ? ensureAudioBlob(audioBlob, audioName) : null,
+          audioName: audioName || '',
+          srtName: file.name,
+          subtitles: parsed,
+          currentMode: currentMode || 'shadowing',
+          activeRole: activeRole || 'B',
+          currentSubtitleLang: currentSubtitleLang || 'ko',
+          isRepeatEnabled: isRepeatEnabled,
+          playbackSpeed: playbackSpeed,
+          activeIndex: 0,
+          targetIndex: Math.min(1, parsed.length - 1),
+          rangeStartIdx: 0,
+          updatedAt: Date.now()
+        };
+        currentDialogueItemId = newItem.id;
+        await saveDialogueItemToDB(newItem);
+      }
 
       saveStateToStorage();
       renderDialogueList();
