@@ -1940,6 +1940,9 @@ function switchSyncTab(tab = 'export') {
     if (elements.btnSyncTabImport) elements.btnSyncTabImport.classList.add('active');
     if (elements.syncPanelExport) elements.syncPanelExport.style.display = 'none';
     if (elements.syncPanelImport) elements.syncPanelImport.style.display = 'block';
+    if (elements.syncImportCode) {
+      setTimeout(() => elements.syncImportCode.focus(), 60);
+    }
   }
 }
 
@@ -2136,36 +2139,110 @@ async function applySyncData(syncObj) {
   return true;
 }
 
-async function handleSyncQuickPaste() {
-  let text = '';
+// ── 진도 동기화 데이터 JSON 파싱 및 정제 헬퍼 ──
+function parseSyncDataFromText(rawText) {
+  if (!rawText || typeof rawText !== 'string') return null;
+  let text = rawText.trim();
+  if (!text) return null;
+
+  // 1. 마크다운 코드 블록(```json ... ```) 제거
+  text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+
+  // 2. 스마트 따옴표 및 유니코드 따옴표 교정 (“ ” ‘ ’ -> " ')
+  text = text.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
+
+  // 3. 표준 JSON 파싱 시도
   try {
-    if (navigator.clipboard && navigator.clipboard.readText) {
-      text = await navigator.clipboard.readText();
+    const parsed = JSON.parse(text);
+    if (parsed && typeof parsed === 'object') return parsed;
+  } catch (e1) {
+    // 4. 앞뒤 설명 텍스트나 공백이 섞여 있는 경우 중괄호({}) 블록 추출 시도
+    const firstBrace = text.indexOf('{');
+    const lastBrace = text.lastIndexOf('}');
+    if (firstBrace !== -1 && lastBrace > firstBrace) {
+      const subText = text.substring(firstBrace, lastBrace + 1);
+      const parsed = JSON.parse(subText);
+      if (parsed && typeof parsed === 'object') return parsed;
+    }
+    throw e1;
+  }
+  return null;
+}
+
+// ── 클립보드 바로 가져와 적용 (지능형 폴백 & 스마트 자동 적용 지원) ──
+async function handleSyncQuickPaste() {
+  try { window.focus(); } catch (e) {}
+
+  let clipboardText = '';
+  let readError = null;
+
+  // 1단계: 브라우저 비동기 클립보드 API 시도
+  try {
+    if (navigator.clipboard && typeof navigator.clipboard.readText === 'function') {
+      clipboardText = await navigator.clipboard.readText();
+    } else {
+      readError = new Error('NOT_SUPPORTED');
     }
   } catch (err) {
+    readError = err;
     console.warn('navigator.clipboard.readText failed or permission denied:', err);
   }
 
-  if (!text || !text.trim()) {
-    showToast('클립보드에서 텍스트를 읽을 수 없습니다. 아래 입력창에 직접 붙여넣어주세요.');
-    if (elements.syncImportCode) {
-      elements.syncImportCode.focus();
+  // 2단계: 클립보드에서 텍스트를 읽어온 경우 유효성 검사 및 즉시 적용
+  if (clipboardText && clipboardText.trim()) {
+    const trimmed = clipboardText.trim();
+    try {
+      const syncObj = parseSyncDataFromText(trimmed);
+      if (syncObj) {
+        if (elements.syncImportCode) {
+          elements.syncImportCode.value = trimmed;
+        }
+        await applySyncData(syncObj);
+        return;
+      }
+    } catch (parseErr) {
+      console.warn('Clipboard text is not valid sync JSON, checking textarea fallback:', parseErr);
     }
-    return;
   }
 
-  try {
-    const syncObj = JSON.parse(text.trim());
-    if (elements.syncImportCode) {
-      elements.syncImportCode.value = text.trim();
+  // 3단계 [지능형 폴백 1]: 이미 입력창에 진도 코드가 입력되어 있는 경우
+  const textareaVal = elements.syncImportCode ? elements.syncImportCode.value.trim() : '';
+  if (textareaVal) {
+    try {
+      const syncObj = parseSyncDataFromText(textareaVal);
+      if (syncObj) {
+        showToast('ℹ️ 입력창에 입력된 진도 코드를 확인하여 적용합니다.');
+        await applySyncData(syncObj);
+        return;
+      }
+    } catch (e) {
+      // 입력창 내용도 유효한 JSON이 아님
     }
-    await applySyncData(syncObj);
-  } catch (err) {
-    showToast('클립보드의 내용이 유효한 진도 데이터(JSON)가 아닙니다.');
-    if (elements.syncImportCode) {
-      elements.syncImportCode.value = text.trim();
-      elements.syncImportCode.focus();
+  }
+
+  // 4단계 [지능형 폴백 2]: 클립보드 접근이 제한되었거나 유효한 코드가 없는 경우
+  // 입력창으로 즉시 포커스 이동 & 강조 효과 제공 (붙여넣기 시 paste 이벤트로 자동 적용)
+  if (elements.syncImportCode) {
+    elements.syncImportCode.focus();
+    elements.syncImportCode.select();
+    elements.syncImportCode.classList.add('pulse-focus');
+    setTimeout(() => {
+      if (elements.syncImportCode) elements.syncImportCode.classList.remove('pulse-focus');
+    }, 1500);
+  }
+
+  if (readError) {
+    if (readError.name === 'NotAllowedError') {
+      showToast('🔒 브라우저 클립보드 읽기 권한이 차단되어 있습니다. 아래 입력창에 [⌘+V 또는 붙여넣기]를 하시면 자동으로 즉시 적용됩니다!');
+    } else if (readError.message === 'NOT_SUPPORTED') {
+      showToast('ℹ️ 현재 브라우저는 클립보드 자동 읽기를 지원하지 않습니다. 아래 입력창에 [⌘+V 또는 붙여넣기]를 하시면 자동으로 즉시 적용됩니다!');
+    } else {
+      showToast('클립보드에서 직접 읽지 못했습니다. 아래 입력창에 [⌘+V 또는 붙여넣기]를 하시면 자동으로 즉시 적용됩니다!');
     }
+  } else if (!clipboardText || !clipboardText.trim()) {
+    showToast('클립보드가 비어있습니다. 다른 기기에서 [진도 복사] 후 다시 시도하거나 아래 입력창에 붙여넣어주세요.');
+  } else {
+    showToast('클립보드의 내용이 독서 진도 데이터(JSON) 형식이 아닙니다. 아래 입력창에 올바른 코드를 붙여넣어주세요.');
   }
 }
 
@@ -2175,11 +2252,18 @@ async function handleSyncManualApply() {
     showToast('붙여넣은 진도 코드가 없습니다. 텍스트를 입력하거나 파일을 선택해주세요.');
     return;
   }
+  let syncObj = null;
   try {
-    const syncObj = JSON.parse(text);
-    await applySyncData(syncObj);
+    syncObj = parseSyncDataFromText(text);
   } catch (err) {
     showToast('올바른 진도 데이터(JSON) 형식이 아닙니다: ' + (err.message || ''));
+    return;
+  }
+
+  try {
+    await applySyncData(syncObj);
+  } catch (err) {
+    showToast('진도 적용 중 오류가 발생했습니다: ' + (err.message || ''));
   }
 }
 
@@ -2192,7 +2276,7 @@ function handleSyncFileImport(file) {
       if (elements.syncImportCode) {
         elements.syncImportCode.value = text;
       }
-      const syncObj = JSON.parse(text);
+      const syncObj = parseSyncDataFromText(text);
       await applySyncData(syncObj);
     } catch (err) {
       showToast('파일을 불러오거나 적용하는 중 오류가 발생했습니다: ' + (err.message || ''));
@@ -2202,6 +2286,52 @@ function handleSyncFileImport(file) {
     showToast('파일을 읽지 못했습니다.');
   };
   reader.readAsText(file);
+}
+
+// ── 스마트 붙여넣기 자동 감지 리스너 (사용자가 Cmd+V / 붙여넣기 실행 시 즉시 자동 적용) ──
+function setupSyncPasteListeners() {
+  // 1. 입력창(textarea) 붙여넣기 시 즉시 감지하여 원클릭 적용
+  if (elements.syncImportCode) {
+    elements.syncImportCode.addEventListener('paste', async (e) => {
+      const pastedText = (e.clipboardData || window.clipboardData)?.getData('text');
+      if (!pastedText || !pastedText.trim()) return;
+
+      try {
+        const syncObj = parseSyncDataFromText(pastedText.trim());
+        if (syncObj && (syncObj.app === 'lazychoi-reader' || syncObj.readingPosition !== undefined || syncObj.highlights !== undefined || syncObj.book)) {
+          e.preventDefault();
+          elements.syncImportCode.value = pastedText.trim();
+          showToast('📋 진도 코드가 감지되었습니다. 즉시 적용합니다...');
+          await applySyncData(syncObj);
+        }
+      } catch (err) {
+        // 일반 텍스트나 무관한 내용은 기본 브라우저 붙여넣기 유지
+      }
+    });
+  }
+
+  // 2. 진도 모달 열린 상태에서 전역 붙여넣기(Cmd+V) 시 자동 감지 및 적용
+  if (elements.syncModal) {
+    elements.syncModal.addEventListener('paste', async (e) => {
+      if (e.target === elements.syncImportCode) return; // 위 핸들러에서 처리됨
+      if (elements.syncPanelImport && elements.syncPanelImport.style.display !== 'none') {
+        const pastedText = (e.clipboardData || window.clipboardData)?.getData('text');
+        if (!pastedText || !pastedText.trim()) return;
+
+        try {
+          const syncObj = parseSyncDataFromText(pastedText.trim());
+          if (syncObj && (syncObj.app === 'lazychoi-reader' || syncObj.readingPosition !== undefined || syncObj.highlights !== undefined || syncObj.book)) {
+            e.preventDefault();
+            if (elements.syncImportCode) {
+              elements.syncImportCode.value = pastedText.trim();
+            }
+            showToast('📋 진도 코드가 감지되었습니다. 즉시 적용합니다...');
+            await applySyncData(syncObj);
+          }
+        } catch (err) {}
+      }
+    });
+  }
 }
 
 function openExportModal() {
@@ -10635,6 +10765,7 @@ function setupEventListeners() {
   if (elements.btnSyncQuickPaste) {
     elements.btnSyncQuickPaste.addEventListener('click', handleSyncQuickPaste);
   }
+  setupSyncPasteListeners();
   if (elements.inputSyncFile) {
     elements.inputSyncFile.addEventListener('change', (e) => {
       if (e.target.files && e.target.files[0]) {

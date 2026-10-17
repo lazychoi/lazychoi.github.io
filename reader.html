@@ -697,11 +697,11 @@
 
         <div class="meta-input-group" style="margin-bottom:12px;">
           <label for="sync-import-code">진도 코드 직접 붙여넣기</label>
-          <textarea id="sync-import-code" rows="5" placeholder="다른 기기에서 복사한 진도 코드를 여기에 붙여넣거나, 상단 [클립보드에서 바로 가져와 적용]을 누르세요." style="font-family:monospace; font-size:11px; line-height:1.4; resize:vertical;"></textarea>
+          <textarea id="sync-import-code" rows="5" placeholder="다른 기기에서 복사한 진도 코드를 여기에 붙여넣으면 자동으로 즉시 적용됩니다. (⌘+V 또는 Ctrl+V)" style="font-family:monospace; font-size:11px; line-height:1.4; resize:vertical;"></textarea>
         </div>
 
         <div style="background:var(--reader-bg-secondary, rgba(0,0,0,0.03)); border:1px solid var(--reader-border); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--reader-text-secondary); line-height:1.45; margin-bottom:14px;">
-          ℹ️ <strong>동기화 안내</strong>: 가져오기를 실행하면 형광펜과 읽던 위치가 복사해 온 시점의 상태로 완전히 맞춰집니다. (다른 기기에서 삭제한 형광펜도 깔끔하게 반영됩니다)
+          ℹ️ <strong>동기화 안내</strong>: 상단 버튼 클릭 시 브라우저에서 '클립보드 허용'이 필요할 수 있습니다. Safari 등 보안상 자동 읽기가 차단되는 환경에서는 이 창에서 바로 <strong>⌘+V (붙여넣기)</strong>를 누르시면 자동으로 즉시 적용됩니다.
         </div>
 
         <div style="display:flex; justify-content:flex-end; gap:8px;">
@@ -1040,7 +1040,7 @@
   <div class="reader-toast" id="reader-toast">알림 메시지</div>
 
   <!-- 리더기 핵심 로직 스크립트 -->
-  <script src="js/reader.js?v=20261006"></script>
+  <script src="js/reader.js?v=20261013"></script>
 </body>
 
 </html>

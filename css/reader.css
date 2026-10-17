@@ -3473,6 +3473,25 @@ body.theme-dark .sync-summary-chip {
   color: #e2e8f0;
 }
 
+@keyframes pulseFocusGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.4);
+    border-color: var(--primary, #2563eb);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.25);
+    border-color: var(--primary, #2563eb);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+.pulse-focus {
+  animation: pulseFocusGlow 1.2s ease-in-out;
+  border-color: var(--primary, #2563eb) !important;
+}
+
 .meta-input-group {
   display: flex;
   flex-direction: column;

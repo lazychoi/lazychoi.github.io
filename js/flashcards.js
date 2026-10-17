@@ -1,13 +1,6 @@
-// Supabase Client Initialization
-const supabaseUrl = 'https://tpwwwpcbinxdhxqvcvqc.supabase.co';
-const supabaseKey = 'sb_publishable_A1sd3hvbeQx9-gVoFXL0qA_G923SWm9';
-const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-
 // State Management
-let allTerms = [];        // All parsed terms from CSV
-let displayTerms = [];    // 100 most recent terms
-let selectedIndices = new Set(); // Indices from displayTerms
-let studyList = [];       // Array of selected term objects for current study session
+let parsedCards = [];     // Parsed { question, answer } objects from textarea
+let studyList = [];       // Array of card objects for current study session
 let currentIndex = 0;     // Current card index in studyList
 let stats = {
     known: 0,
@@ -16,54 +9,101 @@ let stats = {
 let cardStates = [];      // 'unseen', 'known', or 'unknown' for each card in studyList
 let isAnimating = false;  // Prevent actions during slide animations
 
+const STORAGE_KEYS = {
+    DATA: 'flashcards_pasted_data',
+    DELIMITER_TYPE: 'flashcards_delimiter_type',
+    CUSTOM_DELIMITER: 'flashcards_custom_delimiter'
+};
+
 // 1. Initial Setup on Page Load
 window.addEventListener('DOMContentLoaded', () => {
     console.log("[Diagnostics] flashcards.js loaded successfully!");
-    
-    // Set default filter date (1 week ago)
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    const dateInput = document.getElementById('filterStartDate');
-    if (dateInput) {
-        dateInput.value = oneWeekAgo.toISOString().split('T')[0];
-        // 클릭 시 곧바로 브라우저 달력 선택창 띄우기
-        dateInput.addEventListener('click', () => {
-            try {
-                dateInput.showPicker();
-            } catch (err) {
-                console.warn('Native picker not supported', err);
+
+    const delimiterSelect = document.getElementById('delimiterSelect');
+    const customDelimiterInput = document.getElementById('customDelimiter');
+    const dataInput = document.getElementById('dataInput');
+    const btnClearData = document.getElementById('btnClearData');
+    const btnLoadHighlights = document.getElementById('btnLoadHighlights');
+    const highlightFileInput = document.getElementById('highlightFileInput');
+
+    // Restore saved settings & data from localStorage
+    const savedDelimiterType = localStorage.getItem(STORAGE_KEYS.DELIMITER_TYPE);
+    const savedCustomDelimiter = localStorage.getItem(STORAGE_KEYS.CUSTOM_DELIMITER);
+    const savedData = localStorage.getItem(STORAGE_KEYS.DATA);
+
+    if (savedDelimiterType && delimiterSelect) {
+        delimiterSelect.value = savedDelimiterType;
+    }
+    if (savedCustomDelimiter !== null && customDelimiterInput) {
+        customDelimiterInput.value = savedCustomDelimiter;
+    }
+    if (savedData !== null && dataInput) {
+        dataInput.value = savedData;
+    }
+
+    updateCustomDelimiterVisibility();
+    parsePastedData();
+
+    // Delimiter & Textarea Event Listeners
+    if (delimiterSelect) {
+        delimiterSelect.addEventListener('change', () => {
+            localStorage.setItem(STORAGE_KEYS.DELIMITER_TYPE, delimiterSelect.value);
+            updateCustomDelimiterVisibility();
+            if (delimiterSelect.value === 'custom' && customDelimiterInput) {
+                customDelimiterInput.focus();
+            }
+            parsePastedData();
+        });
+    }
+
+    if (customDelimiterInput) {
+        customDelimiterInput.addEventListener('input', () => {
+            localStorage.setItem(STORAGE_KEYS.CUSTOM_DELIMITER, customDelimiterInput.value);
+            parsePastedData();
+        });
+    }
+
+    if (dataInput) {
+        dataInput.addEventListener('input', () => {
+            localStorage.setItem(STORAGE_KEYS.DATA, dataInput.value);
+            parsePastedData();
+        });
+
+        // Allow inserting Tab character in textarea when Tab delimiter is selected
+        dataInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && delimiterSelect && delimiterSelect.value === 'tab') {
+                e.preventDefault();
+                const start = dataInput.selectionStart;
+                const end = dataInput.selectionEnd;
+                dataInput.value = dataInput.value.substring(0, start) + '\t' + dataInput.value.substring(end);
+                dataInput.selectionStart = dataInput.selectionEnd = start + 1;
+                localStorage.setItem(STORAGE_KEYS.DATA, dataInput.value);
+                parsePastedData();
             }
         });
     }
 
-    // Load data from Supabase
-    loadDataFromSupabase();
+    if (btnLoadHighlights && highlightFileInput) {
+        btnLoadHighlights.addEventListener('click', () => {
+            highlightFileInput.value = '';
+            highlightFileInput.click();
+        });
 
-    // Filter UI event listeners
-    const filterType = document.getElementById('filterType');
-    const recentFilterContainer = document.getElementById('recentFilterContainer');
-    const dateFilterContainer = document.getElementById('dateFilterContainer');
-    
-    if (filterType) {
-        filterType.addEventListener('change', () => {
-            if (filterType.value === 'recent') {
-                recentFilterContainer.style.display = 'flex';
-                dateFilterContainer.style.display = 'none';
-            } else {
-                recentFilterContainer.style.display = 'none';
-                dateFilterContainer.style.display = 'flex';
+        highlightFileInput.addEventListener('change', handleHighlightJsonFile);
+    }
+
+    if (btnClearData) {
+        btnClearData.addEventListener('click', () => {
+            if (dataInput) {
+                dataInput.value = '';
+                localStorage.removeItem(STORAGE_KEYS.DATA);
+                parsePastedData();
+                dataInput.focus();
             }
         });
     }
 
-    const btnReload = document.getElementById('btnReload');
-    if (btnReload) {
-        btnReload.addEventListener('click', loadDataFromSupabase);
-    }
-
-    // Event Listeners for controls
-    document.getElementById('btnSelectAll').addEventListener('click', selectAll);
-    document.getElementById('btnSelectNone').addEventListener('click', selectNone);
+    // Event Listeners for study controls
     document.getElementById('btnStartStudy').addEventListener('click', startStudy);
     document.getElementById('btnBackToList').addEventListener('click', backToList);
     document.getElementById('btnPrev').addEventListener('click', prevCard);
@@ -83,243 +123,199 @@ window.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('keydown', handleKeyboardShortcuts);
 });
 
-// Load data from Supabase DB with filter conditions (bypassing 1000 rows limit via pagination)
-async function loadDataFromSupabase() {
-    const loadingMessage = document.getElementById('loadingMessage');
-    if (loadingMessage) {
-        loadingMessage.style.display = 'block';
-        loadingMessage.textContent = '데이터를 로드하는 중입니다...';
-        loadingMessage.style.color = 'var(--text-muted)';
-    }
-    
-    const typeElement = document.getElementById('filterType');
-    const type = typeElement ? typeElement.value : 'recent';
-    
-    try {
-        let allData = [];
-        let page = 0;
-        const pageSize = 1000;
-        let keepFetching = true;
+// 2. Delimiter & Data Parsing Helpers
+function updateCustomDelimiterVisibility() {
+    const delimiterSelect = document.getElementById('delimiterSelect');
+    const customDelimiterInput = document.getElementById('customDelimiter');
+    if (!delimiterSelect || !customDelimiterInput) return;
 
-        if (type === 'recent') {
-            const limitInput = document.getElementById('recentLimit');
-            const targetLimit = limitInput ? (parseInt(limitInput.value) || 100) : 100;
-            
-            // 최신 N개 가져오기 루프
-            while (keepFetching && allData.length < targetLimit) {
-                const fetchCount = Math.min(pageSize, targetLimit - allData.length);
-                const { data, error } = await supabaseClient
-                    .from('terms')
-                    .select('*')
-                    .range(page * pageSize, page * pageSize + fetchCount - 1)
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-                allData = allData.concat(data);
-                
-                if (data.length < fetchCount) {
-                    keepFetching = false;
-                } else {
-                    page++;
-                }
-            }
-        } else {
-            const startDateInput = document.getElementById('filterStartDate');
-            const startDateStr = startDateInput ? startDateInput.value : '';
-            if (!startDateStr) {
-                alert('날짜를 선택해 주세요.');
-                if (loadingMessage) loadingMessage.style.display = 'none';
-                return;
-            }
-            const startDate = new Date(startDateStr + 'T00:00:00Z').toISOString();
-            
-            // 특정 날짜 이후 모든 데이터 가져오기 루프 (1000개 초과 데이터 대응)
-            while (keepFetching) {
-                const { data, error } = await supabaseClient
-                    .from('terms')
-                    .select('*')
-                    .gte('created_at', startDate)
-                    .range(page * pageSize, (page + 1) * pageSize - 1)
-                    .order('created_at', { ascending: false });
-
-                if (error) throw error;
-                allData = allData.concat(data);
-
-                if (data.length < pageSize) {
-                    keepFetching = false;
-                } else {
-                    page++;
-                }
-            }
-        }
-
-        displayTerms = allData.map(row => ({
-            id: row.id,
-            term: row.term || '',
-            foreignTerm: row.foreign_term || '',
-            easyTerm: row.easy_term || '',
-            meaning: row.meaning || ''
-        }));
-
-        if (loadingMessage) {
-            loadingMessage.style.display = 'none';
-        }
-
-        renderSelectionTable();
-    } catch (err) {
-        console.error('Error fetching cards from Supabase:', err);
-        if (loadingMessage) {
-            loadingMessage.textContent = '데이터 로딩 중 오류가 발생했습니다: ' + err.message;
-            loadingMessage.style.color = '#ef4444';
-        }
-    }
-}
-
-// 2. Render Selection Screen
-function renderSelectionTable() {
-    const tbody = document.getElementById('selectionTableBody');
-    tbody.innerHTML = '';
-
-    if (displayTerms.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 30px;">
-                    등록된 용어가 없습니다.
-                </td>
-            </tr>
-        `;
-        return;
-    }
-
-    selectedIndices.clear();
-
-    displayTerms.forEach((t, index) => {
-        const tr = document.createElement('tr');
-        
-        // Select only the top 10 most recent terms by default
-        const isChecked = index < 10;
-        if (isChecked) {
-            selectedIndices.add(index);
-        }
-        
-        tr.innerHTML = `
-            <td class="checkbox-cell">
-                <input type="checkbox" class="custom-checkbox term-checkbox" data-index="${index}" ${isChecked ? 'checked' : ''}>
-            </td>
-            <td class="term-cell">
-                ${t.term}
-                ${t.foreignTerm ? `<span style="font-weight: normal; font-size: 13px; color: var(--text-muted); margin-left: 6px;">(${t.foreignTerm})</span>` : ''}
-            </td>
-            <td class="info-cell">
-                ${t.easyTerm ? `<span style="color: var(--accent-green); font-weight: 600;">${t.easyTerm}</span>` : '<span style="color: var(--text-muted); font-style: italic;">쉬운용어 없음</span>'}
-            </td>
-        `;
-
-        // Click row to toggle checkbox
-        tr.addEventListener('click', (e) => {
-            if (e.target.tagName !== 'INPUT') {
-                const checkbox = tr.querySelector('.term-checkbox');
-                checkbox.checked = !checkbox.checked;
-                toggleIndexSelection(index, checkbox.checked);
-            }
-        });
-
-        // Checkbox change listener
-        const checkbox = tr.querySelector('.term-checkbox');
-        checkbox.addEventListener('change', (e) => {
-            toggleIndexSelection(index, e.target.checked);
-        });
-
-        tbody.appendChild(tr);
-    });
-
-    updateStartButtonCount();
-}
-
-function toggleIndexSelection(index, isChecked) {
-    if (isChecked) {
-        selectedIndices.add(index);
+    if (delimiterSelect.value === 'custom') {
+        customDelimiterInput.style.display = 'inline-block';
     } else {
-        selectedIndices.delete(index);
+        customDelimiterInput.style.display = 'none';
     }
+}
+
+function getActiveDelimiter() {
+    const delimiterSelect = document.getElementById('delimiterSelect');
+    const customDelimiterInput = document.getElementById('customDelimiter');
+    if (!delimiterSelect) return '|';
+
+    const type = delimiterSelect.value;
+    if (type === 'tab') return '\t';
+    if (type === 'custom') return customDelimiterInput ? customDelimiterInput.value : '';
+    return type; // '|' or ';'
+}
+
+async function handleHighlightJsonFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    try {
+        const textContent = await file.text();
+        const jsonData = JSON.parse(textContent);
+
+        let highlights = null;
+        if (Array.isArray(jsonData)) {
+            highlights = jsonData;
+        } else if (jsonData && Array.isArray(jsonData.highlights)) {
+            highlights = jsonData.highlights;
+        }
+
+        if (!highlights) {
+            alert('형광펜 데이터(highlights)를 찾을 수 없는 JSON 파일입니다.');
+            return;
+        }
+
+        let delimiter = getActiveDelimiter();
+        if (!delimiter) {
+            const delimiterSelect = document.getElementById('delimiterSelect');
+            if (delimiterSelect) {
+                delimiterSelect.value = '|';
+                localStorage.setItem(STORAGE_KEYS.DELIMITER_TYPE, '|');
+                updateCustomDelimiterVisibility();
+            }
+            delimiter = '|';
+        }
+
+        const safeReplaceDelimiter = (str) => {
+            if (!delimiter) return str;
+            return str.split(delimiter).join(' ');
+        };
+
+        const lines = [];
+        highlights.forEach((hl) => {
+            if (!hl || typeof hl !== 'object') return;
+
+            const rawText = safeReplaceDelimiter(String(hl.text || '').trim().replace(/\r?\n+/g, ' '));
+            const rawSentence = safeReplaceDelimiter(String(hl.targetSentence || '').trim().replace(/\r?\n+/g, ' '));
+            const rawMeaning = String(hl.targetMeaning || '').trim().replace(/\r?\n+/g, ' ');
+            const rawTranslation = String(hl.sentenceTranslation || '').trim().replace(/\r?\n/g, '\\n');
+
+            if (!rawText && !rawSentence) return;
+
+            // 1면: text와 targetSentence
+            let frontPart = '';
+            if (rawText && rawSentence) {
+                frontPart = `${rawText}\\n${rawSentence}`;
+            } else {
+                frontPart = rawText || rawSentence;
+            }
+
+            // 2면: targetMeaning와 sentenceTranslation
+            let backPart = '';
+            if (rawMeaning && rawTranslation) {
+                backPart = `${rawMeaning}\\n${rawTranslation}`;
+            } else if (rawMeaning) {
+                backPart = rawMeaning;
+            } else if (rawTranslation) {
+                backPart = `(뜻 미등록)\\n${rawTranslation}`;
+            } else {
+                backPart = '(뜻/해석 미등록)';
+            }
+
+            lines.push(`${frontPart}${delimiter}${backPart}`);
+        });
+
+        if (lines.length === 0) {
+            alert('불러올 수 있는 형광펜 항목이 없습니다.');
+            return;
+        }
+
+        const dataInput = document.getElementById('dataInput');
+        if (dataInput) {
+            dataInput.value = lines.join('\n');
+            localStorage.setItem(STORAGE_KEYS.DATA, dataInput.value);
+            parsePastedData();
+        }
+    } catch (err) {
+        console.error('Failed to parse highlight JSON:', err);
+        alert('JSON 파일을 읽는 중 오류가 발생했습니다: ' + err.message);
+    }
+}
+
+function parsePastedData() {
+    const dataInput = document.getElementById('dataInput');
+    const rawText = dataInput ? dataInput.value : '';
+    const delimiter = getActiveDelimiter();
+
+    parsedCards = [];
+
+    if (rawText.trim() && delimiter.length > 0) {
+        const lines = rawText.split(/\r?\n/);
+        lines.forEach((line) => {
+            const trimmedLine = line.trim();
+            if (!trimmedLine) return;
+
+            const sepIndex = line.indexOf(delimiter);
+            if (sepIndex !== -1) {
+                const question = line.slice(0, sepIndex).trim().replace(/\\n/g, '\n');
+                const answer = line.slice(sepIndex + delimiter.length).trim().replace(/\\n/g, '\n');
+                if (question || answer) {
+                    parsedCards.push({
+                        question: question || '(질문 없음)',
+                        answer: answer || '(답변 없음)'
+                    });
+                }
+            }
+        });
+    }
+
     updateStartButtonCount();
 }
 
 function updateStartButtonCount() {
+    const count = parsedCards.length;
+    const badge = document.getElementById('parsedCountBadge');
+    if (badge) {
+        badge.textContent = `${count}개 카드`;
+    }
+
     const btn = document.getElementById('btnStartStudy');
-    btn.textContent = `⚡ 학습 시작하기 (${selectedIndices.size}개 선택됨)`;
-    btn.disabled = selectedIndices.size === 0;
-    
-    // Style check: disable state visual
-    if (selectedIndices.size === 0) {
-        btn.style.opacity = '0.5';
-        btn.style.cursor = 'not-allowed';
-    } else {
-        btn.style.opacity = '1';
-        btn.style.cursor = 'pointer';
+    if (btn) {
+        btn.textContent = `⚡ 학습 시작하기 (${count}개)`;
+        btn.disabled = count === 0;
+
+        if (count === 0) {
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        }
     }
 }
 
-// Select All / Deselect All
-function selectAll() {
-    const checkboxes = document.querySelectorAll('.term-checkbox');
-    checkboxes.forEach((cb) => {
-        cb.checked = true;
-        const idx = parseInt(cb.getAttribute('data-index'));
-        selectedIndices.add(idx);
-    });
-    updateStartButtonCount();
+function escapeHtml(str) {
+    return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }
 
-function selectNone() {
-    const checkboxes = document.querySelectorAll('.term-checkbox');
-    checkboxes.forEach((cb) => {
-        cb.checked = false;
-        const idx = parseInt(cb.getAttribute('data-index'));
-        selectedIndices.delete(idx);
-    });
-    updateStartButtonCount();
+function highlightTargetInSentence(sentence, target) {
+    const safeSentence = escapeHtml(sentence);
+    const safeTarget = escapeHtml(target);
+    if (!safeTarget) return safeSentence;
+
+    const escapedRegex = safeTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    try {
+        const regex = new RegExp(`(${escapedRegex})`, 'gi');
+        return safeSentence.replace(regex, '<span class="hl-target">$1</span>');
+    } catch (e) {
+        return safeSentence;
+    }
 }
 
-// 3. Smart English / Hanja Parser for Card Side 1
-function getFrontValue(t) {
-    if (!t.foreignTerm) {
-        return { value: t.term, type: '표제어' };
-    }
-
-    // Split by comma, semicolon, or slash
-    const parts = t.foreignTerm.split(/[,;\/]/).map(p => p.trim());
-    
-    // 1. Look for English part (contains latin alphabetic characters)
-    const englishParts = parts.filter(p => /[a-zA-Z]/.test(p));
-    if (englishParts.length > 0) {
-        return { value: englishParts.join(', '), type: '영어' };
-    }
-
-    // 2. Look for Hanja part (contains Chinese characters)
-    // Unicode ranges for Hanja: \u4e00-\u9fff, \u3400-\u4dbf, \uf900-\ufaff
-    const hanjaParts = parts.filter(p => /[\u4e00-\u9fff\u3400-\u4dbf\uf900-\ufaff]/.test(p));
-    if (hanjaParts.length > 0) {
-        return { value: hanjaParts.join(', '), type: '한자' };
-    }
-
-    // 3. Fallback to foreignTerm itself or the Term
-    return { value: t.foreignTerm || t.term, type: '외래어' };
-}
-
-// 4. Study Mode Control Flow
+// 3. Study Mode Control Flow
 function startStudy() {
-    if (selectedIndices.size === 0) return;
+    parsePastedData();
+    if (parsedCards.length === 0) return;
 
-    // Build the studyList from selected displayTerms
-    studyList = [];
-    selectedIndices.forEach((idx) => {
-        studyList.push(displayTerms[idx]);
-    });
+    studyList = parsedCards.map(card => ({ ...card }));
 
-    // Shuffle the studyList for better learning (optional, but let's keep the order or shuffle?)
-    // Let's keep the order (recent first) as requested, but users can re-study.
-    
     // Reset study state
     currentIndex = 0;
     stats.known = 0;
@@ -347,7 +343,7 @@ function backToList() {
     document.getElementById('statsView').style.display = 'none';
 }
 
-// 5. Render Current Flashcard
+// 4. Render Current Flashcard
 function renderCurrentCard() {
     if (studyList.length === 0 || currentIndex >= studyList.length) {
         showStats();
@@ -365,26 +361,69 @@ function renderCurrentCard() {
     const cardInner = document.getElementById('cardInner');
     cardInner.classList.remove('flipped');
 
-    // Populate Side 1 (Front): English, Hanja, or Term
-    const frontObj = getFrontValue(t);
-    document.getElementById('cardFrontTitle').textContent = frontObj.value;
-    //document.getElementById('cardFrontHint').textContent = `힌트: ${frontObj.type} (클릭하여 뒤집기)`;
-
-    // Populate Side 2 (Back): Headword, Easy Term, Meaning/Markdown/LaTeX
-    document.getElementById('cardBackTerm').innerHTML = `${t.term} ${t.foreignTerm ? `<span style="font-size: 14px; font-weight: normal; color: var(--text-muted); margin-left: 6px;">(${t.foreignTerm})</span>` : ''}`;
-    
-    const easyRow = document.getElementById('cardBackEasy');
-    if (t.easyTerm) {
-        easyRow.style.display = 'block';
-        easyRow.textContent = t.easyTerm;
-    } else {
-        easyRow.style.display = 'none';
-    }
-
-    // Meaning with markdown, images, formulas
+    // Populate Side 1 (Front): Question (or text + targetSentence)
+    const frontTitle = document.getElementById('cardFrontTitle');
+    const frontSentence = document.getElementById('cardFrontSentence');
+    const backHeader = document.getElementById('cardBackHeader');
+    const backTerm = document.getElementById('cardBackTerm');
+    const backSentence = document.getElementById('cardBackSentence');
     const meaningDiv = document.getElementById('cardBackMeaning');
-    meaningDiv.innerHTML = renderMarkdownAndMath(t.meaning);
-// Render KaTeX formulas in the back card
+
+    const qLines = t.question.split('\n');
+
+    if (backHeader) backHeader.style.display = 'block';
+
+    if (qLines.length > 1) {
+        const mainText = qLines[0].trim();
+        const sentenceText = qLines.slice(1).join('\n').trim();
+        const highlightedSentenceHtml = highlightTargetInSentence(sentenceText, mainText);
+
+        // Front (1면)
+        frontTitle.textContent = mainText;
+        if (frontSentence) {
+            frontSentence.style.display = 'block';
+            frontSentence.innerHTML = highlightedSentenceHtml;
+            renderKaTeXInElement(frontSentence);
+        }
+
+        // Back Header (뒷면 상단 1면 표시)
+        backTerm.textContent = mainText;
+        if (backSentence) {
+            backSentence.style.display = 'block';
+            backSentence.innerHTML = highlightedSentenceHtml;
+            renderKaTeXInElement(backSentence);
+        }
+    } else {
+        // Front (1면)
+        frontTitle.textContent = t.question;
+        if (frontSentence) {
+            frontSentence.style.display = 'none';
+            frontSentence.innerHTML = '';
+        }
+
+        // Back Header (뒷면 상단 1면 표시)
+        backTerm.textContent = t.question;
+        if (backSentence) {
+            backSentence.style.display = 'none';
+            backSentence.innerHTML = '';
+        }
+    }
+    renderKaTeXInElement(frontTitle);
+    renderKaTeXInElement(backTerm);
+
+    // Populate Side 2 on Back (뒷면 하단 2면 표시: targetMeaning + sentenceTranslation 또는 답변)
+    const aLines = t.answer.split('\n');
+
+    if (aLines.length > 1) {
+        const meaningHeader = aLines[0].trim();
+        const translationBody = aLines.slice(1).join('\n').trim();
+        meaningDiv.innerHTML = `
+            <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
+            <div class="card-back-translation-body">${renderMarkdownAndMath(translationBody)}</div>
+        `;
+    } else {
+        meaningDiv.innerHTML = renderMarkdownAndMath(t.answer);
+    }
     renderKaTeXInElement(meaningDiv);
 
     // Disable/Enable Nav buttons
