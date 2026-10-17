@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/flashcards.css?v=7">
+  <link rel="stylesheet" href="css/flashcards.css?v=8">
   <!-- KaTeX for rendering LaTeX math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -78,6 +78,24 @@
           placeholder="여기에 학습할 데이터를 붙여넣으세요. (한 줄에 카드 1개)&#10;&#10;예시:&#10;광합성|식물이 빛에너지를 이용해 양분을 스스로 만드는 과정&#10;미토콘드리아|세포 호흡을 통해 에너지를 생산하는 세포 소기관&#10;기회비용|하나를 선택함으로써 포기해야 하는 다른 대안의 최대 가치"
           rows="12"
         ></textarea>
+      </div>
+
+      <!-- 학습 방법 설정 영역 -->
+      <div class="study-method-bar">
+        <span class="study-method-label">학습 방법</span>
+        <div class="study-order-group" role="group" aria-label="학습 순서">
+          <button type="button" id="btnOrderSequential" class="study-order-btn active" data-order="sequential">순서대로</button>
+          <button type="button" id="btnOrderRandom" class="study-order-btn" data-order="random">무작위로</button>
+        </div>
+        <div class="study-chunk-group">
+          <label for="chunkSizeSelect" class="study-chunk-label">n개씩</label>
+          <select id="chunkSizeSelect" class="delimiter-select study-chunk-select">
+            <option value="all" selected>전체</option>
+            <option value="5">5</option>
+            <option value="7">7</option>
+            <option value="10">10</option>
+          </select>
+        </div>
       </div>
 
       <div class="start-action-container">
@@ -153,8 +171,8 @@
     <!-- 3단계: 학습 결과 통계 화면 -->
     <div id="statsView" class="glass-panel" style="display: none;">
       <div class="result-panel">
-        <h2>🎉 학습을 완료했습니다!</h2>
-        <p style="color: var(--text-muted);">학습 통계를 보여줍니다.</p>
+        <h2 id="statsTitle">🎉 학습을 완료했습니다!</h2>
+        <p id="statsSubtitle" class="stats-subtitle">학습 통계를 보여줍니다.</p>
 
         <div class="stats-grid">
           <div class="stat-card">
@@ -172,6 +190,7 @@
         </div>
 
         <div class="result-actions">
+          <button id="btnNextChunk" class="btn btn-primary" style="display: none;">➡️ 다음 학습하기</button>
           <button id="btnRestart" class="btn btn-primary">🔄 다시 학습하기</button>
           <button id="btnStudyFailed" class="btn btn-danger" style="display: none;">❌ 틀린 것만 복습</button>
           <button id="btnBackFromStats" class="btn btn-secondary">데이터 입력으로 돌아가기</button>
@@ -181,7 +200,7 @@
 
   </div>
 
-  <script src="js/flashcards.js?v=7"></script>
+  <script src="js/flashcards.js?v=8"></script>
 </body>
 
 </html>

@@ -238,10 +238,81 @@
   opacity: 0.7;
 }
 
+/* 학습 방법 설정 바 (순서대로 / 무작위로 / n개씩) */
+.study-method-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+}
+
+.study-method-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.study-order-group {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid var(--glass-border);
+  gap: 3px;
+}
+
+.study-order-btn {
+  padding: 6px 14px;
+  border-radius: 7px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.study-order-btn:hover {
+  color: var(--text-main);
+}
+
+.study-order-btn.active {
+  background: #ffffff;
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.study-chunk-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding-left: 10px;
+  border-left: 1px solid var(--glass-border);
+}
+
+.study-chunk-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.study-chunk-select {
+  min-width: 82px;
+  font-weight: 600;
+}
+
 .start-action-container {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 4px;
 }
 
 /* 2단계: 플래시카드 실행 화면 */
@@ -514,6 +585,27 @@
   margin-bottom: 12px;
 }
 
+.stats-subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.stats-subtitle.is-warning {
+  color: #dc2626;
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.08);
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.stats-subtitle.is-success {
+  color: #059669;
+  font-weight: 600;
+}
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -546,7 +638,15 @@
 .result-actions {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 12px;
+}
+
+.result-actions .btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 /* 이미지 및 Image Occlusion 학습 카드 확대 레이아웃 */

@@ -1,6 +1,11 @@
 // State Management
 let parsedCards = [];     // Parsed { question, answer, occlusion } objects from textarea or JSON
-let studyList = [];       // Array of card objects for current study session
+let studyList = [];       // Array of card objects for current study pass
+let studyChunks = [];     // Array of card chunks when studying n cards at a time
+let currentChunkIndex = 0; // Active chunk index in studyChunks
+let currentChunkCards = []; // Full cards of the active chunk
+let studyOrder = 'sequential'; // 'sequential' or 'random'
+let chunkSize = 'all';    // 'all', '5', '7', or '10'
 let currentDeckName = ''; // Deck title to show in study header
 let currentImagesMap = {}; // Global or card-level image map (key -> { name, mimeType, data })
 let currentOcclusionsMap = {}; // Card occlusion coordinate map (occKey -> occlusion object)
@@ -35,6 +40,9 @@ window.addEventListener('DOMContentLoaded', () => {
     const deckJsonFileInput = document.getElementById('deckJsonFileInput');
     const btnLoadImageJson = document.getElementById('btnLoadImageJson');
     const imageJsonFileInput = document.getElementById('imageJsonFileInput');
+    const btnOrderSequential = document.getElementById('btnOrderSequential');
+    const btnOrderRandom = document.getElementById('btnOrderRandom');
+    const chunkSizeSelect = document.getElementById('chunkSizeSelect');
 
     // Restore saved settings & data from localStorage
     const savedDelimiterType = localStorage.getItem(STORAGE_KEYS.DELIMITER_TYPE);
@@ -73,6 +81,20 @@ window.addEventListener('DOMContentLoaded', () => {
 
     updateCustomDelimiterVisibility();
     parsePastedData();
+
+    // Study Order & Chunk Size Event Listeners
+    if (btnOrderSequential && btnOrderRandom) {
+        btnOrderSequential.addEventListener('click', () => setStudyOrder('sequential'));
+        btnOrderRandom.addEventListener('click', () => setStudyOrder('random'));
+    }
+
+    if (chunkSizeSelect) {
+        chunkSizeSelect.value = 'all';
+        chunkSize = 'all';
+        chunkSizeSelect.addEventListener('change', () => {
+            chunkSize = chunkSizeSelect.value || 'all';
+        });
+    }
 
     // Delimiter & Textarea Event Listeners
     if (delimiterSelect) {
@@ -166,6 +188,10 @@ window.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btnUnknown').addEventListener('click', () => markCard('unknown'));
     document.getElementById('btnKnown').addEventListener('click', () => markCard('known'));
     
+    const btnNextChunk = document.getElementById('btnNextChunk');
+    if (btnNextChunk) {
+        btnNextChunk.addEventListener('click', startNextChunk);
+    }
     document.getElementById('btnRestart').addEventListener('click', restartStudy);
     document.getElementById('btnStudyFailed').addEventListener('click', studyFailedOnly);
     document.getElementById('btnBackFromStats').addEventListener('click', backToList);
@@ -605,18 +631,54 @@ function highlightTargetInSentence(sentence, target) {
 }
 
 // 3. Study Mode Control Flow
+function setStudyOrder(order) {
+    studyOrder = order === 'random' ? 'random' : 'sequential';
+    const btnSeq = document.getElementById('btnOrderSequential');
+    const btnRand = document.getElementById('btnOrderRandom');
+    if (btnSeq) btnSeq.classList.toggle('active', studyOrder === 'sequential');
+    if (btnRand) btnRand.classList.toggle('active', studyOrder === 'random');
+}
+
+function shuffleArray(arr) {
+    const copy = arr.map(item => ({ ...item }));
+    for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+    }
+    return copy;
+}
+
+function isChunkStudyMode() {
+    return chunkSize !== 'all' && Number(chunkSize) > 0;
+}
+
 function startStudy() {
     parsePastedData();
     if (parsedCards.length === 0) return;
 
-    studyList = parsedCards.map(card => ({ ...card }));
+    const chunkSizeSelect = document.getElementById('chunkSizeSelect');
+    if (chunkSizeSelect) {
+        chunkSize = chunkSizeSelect.value || 'all';
+    }
 
-    // Reset study state
-    currentIndex = 0;
-    stats.known = 0;
-    stats.unknown = 0;
-    cardStates = new Array(studyList.length).fill('unseen');
-    isAnimating = false;
+    let orderedDeck = parsedCards.map(card => ({ ...card }));
+    if (studyOrder === 'random') {
+        orderedDeck = shuffleArray(orderedDeck);
+    }
+
+    studyChunks = [];
+    if (isChunkStudyMode()) {
+        const size = parseInt(chunkSize, 10);
+        for (let i = 0; i < orderedDeck.length; i += size) {
+            studyChunks.push(orderedDeck.slice(i, i + size));
+        }
+    } else {
+        studyChunks.push(orderedDeck);
+    }
+
+    currentChunkIndex = 0;
 
     // Update deck title in header
     const deckTitleEl = document.getElementById('studyDeckTitle');
@@ -624,6 +686,23 @@ function startStudy() {
         deckTitleEl.textContent = currentDeckName || '';
         deckTitleEl.style.display = currentDeckName ? 'block' : 'none';
     }
+
+    loadChunk(0);
+}
+
+function loadChunk(chunkIdx) {
+    if (!studyChunks.length || chunkIdx < 0 || chunkIdx >= studyChunks.length) return;
+
+    currentChunkIndex = chunkIdx;
+    currentChunkCards = studyChunks[currentChunkIndex].map(card => ({ ...card }));
+    studyList = currentChunkCards.map(card => ({ ...card }));
+
+    // Reset study state for this chunk
+    currentIndex = 0;
+    stats.known = 0;
+    stats.unknown = 0;
+    cardStates = new Array(studyList.length).fill('unseen');
+    isAnimating = false;
 
     // Reset slide animation classes if any
     const flashcard = document.getElementById('flashcard');
@@ -637,6 +716,17 @@ function startStudy() {
     document.getElementById('statsView').style.display = 'none';
 
     renderCurrentCard();
+}
+
+function startNextChunk() {
+    if (!isChunkStudyMode()) return;
+    if (currentChunkIndex >= studyChunks.length - 1) return;
+
+    // Enforce mastery gate: all cards in current pass must be marked 'known'
+    const allCorrect = cardStates.length > 0 && cardStates.every(state => state === 'known');
+    if (!allCorrect) return;
+
+    loadChunk(currentChunkIndex + 1);
 }
 
 function backToList() {
@@ -655,7 +745,14 @@ function renderCurrentCard() {
     const t = studyList[currentIndex];
     
     // Update progress text & progress bar
-    document.getElementById('progressText').textContent = `${currentIndex + 1} / ${studyList.length}`;
+    const progressEl = document.getElementById('progressText');
+    if (progressEl) {
+        if (isChunkStudyMode() && studyChunks.length > 1) {
+            progressEl.textContent = `묶음 ${currentChunkIndex + 1}/${studyChunks.length} · ${currentIndex + 1} / ${studyList.length}`;
+        } else {
+            progressEl.textContent = `${currentIndex + 1} / ${studyList.length}`;
+        }
+    }
     const progressPercent = ((currentIndex + 1) / studyList.length) * 100;
     document.getElementById('progressBarFill').style.width = `${progressPercent}%`;
 
@@ -891,8 +988,6 @@ function showStats() {
     document.getElementById('statsView').style.display = 'block';
 
     const total = studyList.length;
-    // Calculate unseen cards as unknown or ignore?
-    // Let's count unseen cards as unknown or count actual clicks
     let knownCount = 0;
     let unknownCount = 0;
     cardStates.forEach(state => {
@@ -904,18 +999,131 @@ function showStats() {
     document.getElementById('statKnown').textContent = knownCount;
     document.getElementById('statUnknown').textContent = unknownCount;
 
-    // Show button to study only failed/unknown items if they exist
+    const statsTitle = document.getElementById('statsTitle');
+    const statsSubtitle = document.getElementById('statsSubtitle');
+    const btnNextChunk = document.getElementById('btnNextChunk');
+    const btnRestart = document.getElementById('btnRestart');
     const btnFailed = document.getElementById('btnStudyFailed');
-    if (unknownCount > 0) {
-        btnFailed.style.display = 'inline-flex';
-        btnFailed.textContent = `❌ 틀린 ${unknownCount}개만 다시 학습`;
+
+    const chunkMode = isChunkStudyMode();
+    const hasNextChunk = chunkMode && currentChunkIndex < studyChunks.length - 1;
+    const allCorrect = total > 0 && unknownCount === 0;
+
+    if (chunkMode) {
+        if (allCorrect) {
+            if (hasNextChunk) {
+                const nextCount = studyChunks[currentChunkIndex + 1].length;
+                if (statsTitle) {
+                    statsTitle.textContent = `🎉 ${currentChunkIndex + 1} / ${studyChunks.length} 묶음 학습 완료!`;
+                }
+                if (statsSubtitle) {
+                    statsSubtitle.textContent = `현재 묶음을 모두 맞췄습니다! 다음 ${nextCount}개 학습으로 넘어갈 수 있습니다.`;
+                    statsSubtitle.className = 'stats-subtitle is-success';
+                }
+                if (btnNextChunk) {
+                    btnNextChunk.style.display = 'inline-flex';
+                    btnNextChunk.disabled = false;
+                    btnNextChunk.textContent = `➡️ 다음 ${nextCount}개 학습하기 (${currentChunkIndex + 2}/${studyChunks.length})`;
+                }
+                if (btnRestart) {
+                    btnRestart.className = 'btn btn-secondary';
+                    btnRestart.textContent = '🔄 현재 묶음 다시 학습';
+                }
+            } else {
+                if (statsTitle) {
+                    statsTitle.textContent = '🎉 모든 학습을 완료했습니다!';
+                }
+                if (statsSubtitle) {
+                    statsSubtitle.textContent = studyChunks.length > 1
+                        ? `전체 ${studyChunks.length}개 묶음(${parsedCards.length}개 카드)을 모두 마스터했습니다!`
+                        : '모든 카드를 완벽하게 맞췄습니다!';
+                    statsSubtitle.className = 'stats-subtitle is-success';
+                }
+                if (btnNextChunk) {
+                    btnNextChunk.style.display = 'none';
+                }
+                if (btnRestart) {
+                    btnRestart.className = 'btn btn-primary';
+                    btnRestart.textContent = '🔄 처음부터 다시 학습하기';
+                }
+            }
+        } else {
+            if (statsTitle) {
+                statsTitle.textContent = studyChunks.length > 1
+                    ? `📝 ${currentChunkIndex + 1} / ${studyChunks.length} 묶음 학습 결과`
+                    : '📝 학습 결과';
+            }
+            if (statsSubtitle) {
+                statsSubtitle.textContent = hasNextChunk
+                    ? `⚠️ 현재 묶음의 카드를 모두 맞춰야 다음 학습으로 넘어갈 수 있습니다.`
+                    : `⚠️ 현재 묶음의 카드를 모두 맞춰야 학습을 완료할 수 있습니다.`;
+                statsSubtitle.className = 'stats-subtitle is-warning';
+            }
+            if (btnNextChunk) {
+                if (hasNextChunk) {
+                    const nextCount = studyChunks[currentChunkIndex + 1].length;
+                    btnNextChunk.style.display = 'inline-flex';
+                    btnNextChunk.disabled = true;
+                    btnNextChunk.textContent = `🔒 다음 ${nextCount}개 학습하기 (모두 맞춤 필요)`;
+                } else {
+                    btnNextChunk.style.display = 'none';
+                }
+            }
+            if (btnRestart) {
+                btnRestart.className = 'btn btn-primary';
+                btnRestart.textContent = '🔄 현재 묶음 다시 학습';
+            }
+        }
     } else {
-        btnFailed.style.display = 'none';
+        if (statsTitle) {
+            statsTitle.textContent = '🎉 학습을 완료했습니다!';
+        }
+        if (statsSubtitle) {
+            statsSubtitle.textContent = '학습 통계를 보여줍니다.';
+            statsSubtitle.className = 'stats-subtitle';
+        }
+        if (btnNextChunk) {
+            btnNextChunk.style.display = 'none';
+        }
+        if (btnRestart) {
+            btnRestart.className = 'btn btn-primary';
+            btnRestart.textContent = '🔄 다시 학습하기';
+        }
+    }
+
+    // Show button to study only failed/unknown items if they exist
+    if (btnFailed) {
+        if (unknownCount > 0) {
+            btnFailed.style.display = 'inline-flex';
+            btnFailed.textContent = `❌ 틀린 ${unknownCount}개만 다시 학습`;
+        } else {
+            btnFailed.style.display = 'none';
+        }
     }
 }
 
 // Stats actions: Restart
 function restartStudy() {
+    if (isChunkStudyMode()) {
+        const allCorrect = cardStates.length > 0 && cardStates.every(state => state === 'known');
+        const isLastChunk = currentChunkIndex >= studyChunks.length - 1;
+        // If all chunks are completely finished, restart from the very first chunk
+        if (allCorrect && isLastChunk) {
+            startStudy();
+            return;
+        }
+        // Otherwise, restart the current chunk with all n cards of this chunk
+        loadChunk(currentChunkIndex);
+        return;
+    }
+
+    // Non-chunk ('all') mode: restore full currentChunkCards (and re-shuffle if random)
+    if (currentChunkCards.length > 0) {
+        studyList = studyOrder === 'random'
+            ? shuffleArray(currentChunkCards)
+            : currentChunkCards.map(card => ({ ...card }));
+    }
+
     currentIndex = 0;
     stats.known = 0;
     stats.unknown = 0;
@@ -942,7 +1150,7 @@ function studyFailedOnly() {
         }
     });
 
-    studyList = failedList;
+    studyList = studyOrder === 'random' ? shuffleArray(failedList) : failedList;
     currentIndex = 0;
     stats.known = 0;
     stats.unknown = 0;
