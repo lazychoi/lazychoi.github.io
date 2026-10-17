@@ -5,7 +5,7 @@
 
 .flashcard-container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1040px;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -249,6 +249,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
   margin-bottom: 16px;
 }
 
@@ -260,16 +261,30 @@
   gap: 6px;
   cursor: pointer;
   transition: color 0.2s;
+  flex-shrink: 0;
 }
 
 .back-link:hover {
   color: var(--text-main);
 }
 
+.study-deck-title {
+  flex: 1;
+  text-align: center;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.3px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .study-progress-text {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-muted);
+  flex-shrink: 0;
 }
 
 /* 프로그레스바 */
@@ -534,12 +549,99 @@
   gap: 12px;
 }
 
+/* 이미지 및 Image Occlusion 학습 카드 확대 레이아웃 */
+#studyView.study-has-image,
+#studyView.study-has-occlusion {
+  padding: 20px 24px;
+}
+
+#studyView.study-has-image .study-header,
+#studyView.study-has-occlusion .study-header {
+  margin-bottom: 10px;
+}
+
+#studyView.study-has-image .progress-bar-container,
+#studyView.study-has-occlusion .progress-bar-container {
+  margin-bottom: 14px;
+}
+
+.card-perspective.has-image-card {
+  height: min(70dvh, 660px);
+  min-height: 440px;
+  margin-bottom: 18px;
+}
+
+.card-perspective.has-occlusion-card {
+  height: min(74dvh, 720px);
+  min-height: 480px;
+  margin-bottom: 16px;
+}
+
+.card-perspective.has-image-card .card-face {
+  padding: 18px 22px;
+}
+
+.card-perspective.has-occlusion-card .card-face {
+  padding: 12px 16px;
+}
+
+.card-perspective.has-image-card .card-front-title,
+.card-perspective.has-occlusion-card .card-front-title {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-back.card-back-image-only {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.card-back.card-back-image-only .card-back-header {
+  width: 100%;
+  height: 100%;
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-back.card-back-image-only .card-back-term {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 /* 이미지 및 수식 렌더링용 스타일 */
-.meaning img {
+.meaning img,
+.card-front-title img,
+.card-back-term img {
   display: block;
-  width: 80%;
+  max-width: 100%;
+  max-height: min(56dvh, 500px);
+  width: auto;
   height: auto;
+  margin: 0 auto;
   border-radius: 8px;
+  object-fit: contain;
+}
+
+.card-back-term .image-container {
+  margin: 0.25rem 0;
+}
+
+.card-back:not(.card-back-image-only) .card-back-term img {
+  max-height: min(38dvh, 340px);
 }
 
 /* ── Image Containers ── */
@@ -547,20 +649,115 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 1rem 0;
+  align-items: center;
+  margin: 0.4rem 0;
 }
 
 .term-image {
-  width: 70%;
+  max-width: 96%;
+  max-height: min(56dvh, 500px);
+  width: auto;
   height: auto;
   object-fit: contain;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
 }
 
 .term-image:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: box-shadow 0.3s ease;
+}
+
+/* ── Image Occlusion Stage & Coordinate Overlays ── */
+.image-occlusion-container {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.occlusion-stage {
+  --max-stage-h: calc(min(74dvh, 720px) - 28px);
+  position: relative;
+  width: min(100%, calc(var(--max-stage-h) * var(--img-aspect, 1.08)));
+  aspect-ratio: var(--img-aspect, auto);
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+  line-height: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+  background: #ffffff;
+}
+
+.card-back:not(.card-back-image-only) .occlusion-stage {
+  --max-stage-h: calc(min(50dvh, 460px) - 24px);
+}
+
+.occlusion-stage img.occlusion-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.occlusion-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.occlusion-rect {
+  position: absolute;
+  box-sizing: border-box;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* 가릴 곳 (현재 맞춰야 할 타겟 영역 - 앞면) */
+.occlusion-rect.is-target.is-masked {
+  background: #ef4444;
+  border: 1.5px solid #991b1b;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.38), 0 2px 6px rgba(0, 0, 0, 0.22);
+  z-index: 3;
+}
+
+.occlusion-target-mark {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+/* 가릴 곳 (다른 문제 영역 - 앞면/뒷면) */
+.occlusion-rect.is-other.is-masked {
+  background: #fde047;
+  border: 1px solid #ca8a04;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  z-index: 2;
+}
+
+/* 보여질 곳 (정답 공개된 타겟 영역 - 뒷면) */
+.occlusion-rect.is-target.is-revealed {
+  background: transparent;
+  border: none;
+  box-shadow: 0 0 0 2.5px #16a34a, 0 0 10px rgba(22, 163, 74, 0.45);
+  z-index: 4;
 }
 
 /* ──────────────────────────────────────────────────────
@@ -743,8 +940,19 @@
     height: 340px;
   }
 
+  .card-perspective.has-image-card,
+  .card-perspective.has-occlusion-card {
+    height: min(64dvh, 520px);
+    min-height: 360px;
+  }
+
   .card-face {
     padding: 24px;
+  }
+
+  .card-perspective.has-image-card .card-face,
+  .card-perspective.has-occlusion-card .card-face {
+    padding: 10px;
   }
 
   .card-front-title {

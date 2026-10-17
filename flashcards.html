@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/flashcards.css?v=4">
+  <link rel="stylesheet" href="css/flashcards.css?v=7">
   <!-- KaTeX for rendering LaTeX math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -60,8 +60,12 @@
 
         <div class="paste-actions">
           <span id="parsedCountBadge" class="parsed-count-badge">0개 카드</span>
-          <button type="button" id="btnLoadHighlights" class="btn btn-secondary btn-mini">📂 영어읽기앱 형광펜 불러오기</button>
+          <button type="button" id="btnLoadHighlights" class="btn btn-secondary btn-mini">📂 영어읽기앱 형광펜</button>
           <input type="file" id="highlightFileInput" accept=".json,application/json" style="display: none;">
+          <button type="button" id="btnLoadDeckJson" class="btn btn-secondary btn-mini">📄 json 파일</button>
+          <input type="file" id="deckJsonFileInput" accept=".json,application/json" style="display: none;">
+          <button type="button" id="btnLoadImageJson" class="btn btn-secondary btn-mini">🖼️ 이미지 json</button>
+          <input type="file" id="imageJsonFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnClearData" class="btn btn-secondary btn-mini">초기화</button>
         </div>
       </div>
@@ -89,6 +93,7 @@
         <span id="btnBackToList" class="back-link">
           ⬅ 데이터 입력으로 돌아가기
         </span>
+        <span id="studyDeckTitle" class="study-deck-title"></span>
         <span id="progressText" class="study-progress-text">1 / 10</span>
       </div>
 
@@ -176,7 +181,7 @@
 
   </div>
 
-  <script src="js/flashcards.js?v=4"></script>
+  <script src="js/flashcards.js?v=7"></script>
 </body>
 
 </html>
