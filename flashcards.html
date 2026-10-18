@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/flashcards.css?v=8">
+  <link rel="stylesheet" href="css/flashcards.css?v=9">
   <!-- KaTeX for rendering LaTeX math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -64,8 +64,6 @@
           <input type="file" id="highlightFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnLoadDeckJson" class="btn btn-secondary btn-mini">📄 json 파일</button>
           <input type="file" id="deckJsonFileInput" accept=".json,application/json" style="display: none;">
-          <button type="button" id="btnLoadImageJson" class="btn btn-secondary btn-mini">🖼️ 이미지 json</button>
-          <input type="file" id="imageJsonFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnClearData" class="btn btn-secondary btn-mini">초기화</button>
         </div>
       </div>
@@ -95,6 +93,12 @@
             <option value="7">7</option>
             <option value="10">10</option>
           </select>
+        </div>
+        <div class="study-back-group">
+          <div class="study-order-group" role="group" aria-label="뒷면 표시 방식">
+            <button type="button" id="btnBackBoth" class="study-order-btn active" data-back-mode="both">back-1면, 2면</button>
+            <button type="button" id="btnBackOnly2" class="study-order-btn" data-back-mode="only2">back-2면</button>
+          </div>
         </div>
       </div>
 
@@ -200,7 +204,7 @@
 
   </div>
 
-  <script src="js/flashcards.js?v=8"></script>
+  <script src="js/flashcards.js?v=9"></script>
 </body>
 
 </html>

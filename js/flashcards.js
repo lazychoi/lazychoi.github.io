@@ -1,14 +1,14 @@
 // State Management
-let parsedCards = [];     // Parsed { question, answer, occlusion } objects from textarea or JSON
+let parsedCards = [];     // Parsed { question, answer } objects from textarea or JSON
 let studyList = [];       // Array of card objects for current study pass
 let studyChunks = [];     // Array of card chunks when studying n cards at a time
 let currentChunkIndex = 0; // Active chunk index in studyChunks
 let currentChunkCards = []; // Full cards of the active chunk
 let studyOrder = 'sequential'; // 'sequential' or 'random'
 let chunkSize = 'all';    // 'all', '5', '7', or '10'
+let backDisplayMode = 'both'; // 'both' ("back-1면, 2면") or 'only2' ("back-2면")
 let currentDeckName = ''; // Deck title to show in study header
 let currentImagesMap = {}; // Global or card-level image map (key -> { name, mimeType, data })
-let currentOcclusionsMap = {}; // Card occlusion coordinate map (occKey -> occlusion object)
 let currentIndex = 0;     // Current card index in studyList
 let stats = {
     known: 0,
@@ -23,7 +23,7 @@ const STORAGE_KEYS = {
     CUSTOM_DELIMITER: 'flashcards_custom_delimiter',
     DECK_NAME: 'flashcards_deck_name',
     IMAGES_MAP: 'flashcards_images_map',
-    OCCLUSIONS_MAP: 'flashcards_occlusions_map'
+    BACK_DISPLAY_MODE: 'flashcards_back_display_mode'
 };
 
 // 1. Initial Setup on Page Load
@@ -38,11 +38,14 @@ window.addEventListener('DOMContentLoaded', () => {
     const highlightFileInput = document.getElementById('highlightFileInput');
     const btnLoadDeckJson = document.getElementById('btnLoadDeckJson');
     const deckJsonFileInput = document.getElementById('deckJsonFileInput');
-    const btnLoadImageJson = document.getElementById('btnLoadImageJson');
-    const imageJsonFileInput = document.getElementById('imageJsonFileInput');
     const btnOrderSequential = document.getElementById('btnOrderSequential');
     const btnOrderRandom = document.getElementById('btnOrderRandom');
     const chunkSizeSelect = document.getElementById('chunkSizeSelect');
+    const btnBackBoth = document.getElementById('btnBackBoth');
+    const btnBackOnly2 = document.getElementById('btnBackOnly2');
+
+    // Clean up legacy occlusion storage key if present
+    localStorage.removeItem('flashcards_occlusions_map');
 
     // Restore saved settings & data from localStorage
     const savedDelimiterType = localStorage.getItem(STORAGE_KEYS.DELIMITER_TYPE);
@@ -50,7 +53,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const savedData = localStorage.getItem(STORAGE_KEYS.DATA);
     const savedDeckName = localStorage.getItem(STORAGE_KEYS.DECK_NAME);
     const savedImagesMap = localStorage.getItem(STORAGE_KEYS.IMAGES_MAP);
-    const savedOcclusionsMap = localStorage.getItem(STORAGE_KEYS.OCCLUSIONS_MAP);
+    const savedBackDisplayMode = localStorage.getItem(STORAGE_KEYS.BACK_DISPLAY_MODE);
 
     if (savedDelimiterType && delimiterSelect) {
         delimiterSelect.value = savedDelimiterType;
@@ -68,12 +71,8 @@ window.addEventListener('DOMContentLoaded', () => {
             currentImagesMap = {};
         }
     }
-    if (savedOcclusionsMap) {
-        try {
-            currentOcclusionsMap = JSON.parse(savedOcclusionsMap) || {};
-        } catch (e) {
-            currentOcclusionsMap = {};
-        }
+    if (savedBackDisplayMode === 'only2' || savedBackDisplayMode === 'both') {
+        setBackDisplayMode(savedBackDisplayMode);
     }
     if (savedData !== null && dataInput) {
         dataInput.value = savedData;
@@ -82,7 +81,7 @@ window.addEventListener('DOMContentLoaded', () => {
     updateCustomDelimiterVisibility();
     parsePastedData();
 
-    // Study Order & Chunk Size Event Listeners
+    // Study Order, Chunk Size & Back Display Mode Event Listeners
     if (btnOrderSequential && btnOrderRandom) {
         btnOrderSequential.addEventListener('click', () => setStudyOrder('sequential'));
         btnOrderRandom.addEventListener('click', () => setStudyOrder('random'));
@@ -94,6 +93,11 @@ window.addEventListener('DOMContentLoaded', () => {
         chunkSizeSelect.addEventListener('change', () => {
             chunkSize = chunkSizeSelect.value || 'all';
         });
+    }
+
+    if (btnBackBoth && btnBackOnly2) {
+        btnBackBoth.addEventListener('click', () => setBackDisplayMode('both'));
+        btnBackOnly2.addEventListener('click', () => setBackDisplayMode('only2'));
     }
 
     // Delimiter & Textarea Event Listeners
@@ -150,16 +154,7 @@ window.addEventListener('DOMContentLoaded', () => {
             deckJsonFileInput.click();
         });
 
-        deckJsonFileInput.addEventListener('change', (e) => handleDeckJsonFile(e, false));
-    }
-
-    if (btnLoadImageJson && imageJsonFileInput) {
-        btnLoadImageJson.addEventListener('click', () => {
-            imageJsonFileInput.value = '';
-            imageJsonFileInput.click();
-        });
-
-        imageJsonFileInput.addEventListener('change', (e) => handleDeckJsonFile(e, true));
+        deckJsonFileInput.addEventListener('change', handleDeckJsonFile);
     }
 
     if (btnClearData) {
@@ -168,11 +163,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 dataInput.value = '';
                 currentDeckName = '';
                 currentImagesMap = {};
-                currentOcclusionsMap = {};
                 localStorage.removeItem(STORAGE_KEYS.DATA);
                 localStorage.removeItem(STORAGE_KEYS.DECK_NAME);
                 localStorage.removeItem(STORAGE_KEYS.IMAGES_MAP);
-                localStorage.removeItem(STORAGE_KEYS.OCCLUSIONS_MAP);
                 parsePastedData();
                 dataInput.focus();
             }
@@ -312,10 +305,8 @@ async function handleHighlightJsonFile(e) {
 
         currentDeckName = (jsonData && (jsonData.deckName || jsonData.bookTitle || (jsonData.book && jsonData.book.title))) ? String(jsonData.deckName || jsonData.bookTitle || jsonData.book.title).trim() : '';
         currentImagesMap = {};
-        currentOcclusionsMap = {};
         safeSaveStorage(STORAGE_KEYS.DECK_NAME, currentDeckName);
         localStorage.removeItem(STORAGE_KEYS.IMAGES_MAP);
-        localStorage.removeItem(STORAGE_KEYS.OCCLUSIONS_MAP);
 
         const dataInput = document.getElementById('dataInput');
         if (dataInput) {
@@ -329,29 +320,7 @@ async function handleHighlightJsonFile(e) {
     }
 }
 
-function extractImageLabel(card, frontStr) {
-    let rawName = '';
-    if (card && card.images && typeof card.images === 'object') {
-        const firstKey = Object.keys(card.images)[0];
-        if (firstKey && card.images[firstKey] && card.images[firstKey].name) {
-            rawName = String(card.images[firstKey].name);
-        }
-    }
-    if (!rawName && frontStr) {
-        const match = frontStr.match(/!\[([^\]]+)\]\([^)]+\)/);
-        if (match && match[1]) {
-            rawName = match[1];
-        }
-    }
-    if (!rawName) return '';
-    // Normalize Unicode (macOS NFD Korean -> NFC) and strip image file extension
-    try {
-        rawName = rawName.normalize('NFC');
-    } catch (e) {}
-    return rawName.replace(/\.(png|jpe?g|gif|webp|svg|bmp)$/i, '').trim();
-}
-
-async function handleDeckJsonFile(e, isImageDeckMode = false) {
+async function handleDeckJsonFile(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
@@ -388,7 +357,6 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
         };
 
         const mergedImagesMap = {};
-        const mergedOcclusionsMap = {};
         const lines = [];
 
         // Support root-level images map if present
@@ -404,7 +372,7 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
         cards.forEach((card, cardIdx) => {
             if (!card || typeof card !== 'object') return;
 
-            let frontStr = String(card.front !== undefined ? card.front : (card.question || '')).trim();
+            let frontStr = String(card.front !== undefined ? card.front : (card.font !== undefined ? card.font : (card.question || ''))).trim();
             let backStr = String(card.back !== undefined ? card.back : (card.answer || '')).trim();
 
             try {
@@ -421,7 +389,7 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
                 }
             }
 
-            if (!frontStr && !backStr && !card.occlusion) return;
+            if (!frontStr && !backStr) return;
 
             // Process card.images if present
             if (card.images && typeof card.images === 'object') {
@@ -437,30 +405,12 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
                         if (uniqueKey !== imgKey) {
                             // Replace markdown reference ![...](imgKey) with uniqueKey
                             const escapedKey = imgKey.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const imgRegex = new RegExp(`(!\\[[^\\]]*\\]\\()${escapedKey}(\\))`, 'g');
+                            const imgRegex = new RegExp(`(!\\[[^\\]]*\\]\\(\\s*(?:image:)?)${escapedKey}(\\s*\\))`, 'g');
                             frontStr = frontStr.replace(imgRegex, `$1${uniqueKey}$2`);
                             backStr = backStr.replace(imgRegex, `$1${uniqueKey}$2`);
                         }
                     }
                 });
-            }
-
-            // Process card.occlusion if present (Image Occlusion JSON)
-            const hasOcclusion = Boolean(card.occlusion && typeof card.occlusion === 'object' && Array.isArray(card.occlusion.rects));
-            if (hasOcclusion) {
-                const rawId = card.id ? String(card.id).trim().replace(/[^a-zA-Z0-9_-]/g, '_') : '';
-                const occKey = (rawId && !mergedOcclusionsMap[rawId]) ? rawId : `occ_${cardIdx + 1}`;
-                mergedOcclusionsMap[occKey] = card.occlusion;
-
-                if (/!\[[^\]]*\]\([^)]+\)/.test(frontStr)) {
-                    frontStr = frontStr.replace(/(!\[[^\]]*\]\()([^)#\s]+)(\))/, `$1$2#${occKey}$3`);
-                } else {
-                    const fallbackImgKey = card.occlusion.imageKey || Object.keys(mergedImagesMap)[0] || 'img_1';
-                    frontStr = `![${fallbackImgKey}](${fallbackImgKey}#${occKey})`;
-                }
-            } else if (!backStr && isImageDeckMode) {
-                // Only fallback to image filename when there is no occlusion data and back is empty
-                backStr = extractImageLabel(card, frontStr);
             }
 
             const serializedFront = safeReplaceDelimiter(frontStr.replace(/\r?\n/g, '\\n'));
@@ -480,11 +430,9 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
         } catch (e) {}
         currentDeckName = rawDeckName;
         currentImagesMap = mergedImagesMap;
-        currentOcclusionsMap = mergedOcclusionsMap;
 
         safeSaveStorage(STORAGE_KEYS.DECK_NAME, currentDeckName);
         safeSaveStorage(STORAGE_KEYS.IMAGES_MAP, JSON.stringify(currentImagesMap));
-        safeSaveStorage(STORAGE_KEYS.OCCLUSIONS_MAP, JSON.stringify(currentOcclusionsMap));
 
         const dataInput = document.getElementById('dataInput');
         if (dataInput) {
@@ -496,52 +444,6 @@ async function handleDeckJsonFile(e, isImageDeckMode = false) {
         console.error('Failed to parse deck JSON:', err);
         alert('JSON 파일을 읽는 중 오류가 발생했습니다: ' + err.message);
     }
-}
-
-function buildOcclusionImageHtml(imgObj, altText, occ, side = 'front') {
-    const safeAlt = escapeHtml(altText);
-    const imgW = Number(occ.imageWidth) || 0;
-    const imgH = Number(occ.imageHeight) || 0;
-    const aspectRatio = (imgW > 0 && imgH > 0) ? (imgW / imgH) : null;
-    const stageStyle = aspectRatio
-        ? `--img-aspect: ${aspectRatio}; aspect-ratio: ${imgW} / ${imgH};`
-        : '';
-
-    const mode = String(occ.mode || 'hide-all-guess-one').toLowerCase();
-    const hideOthers = mode !== 'hide-one-guess-one' && mode !== 'hide-one';
-
-    const rectsHtml = (occ.rects || []).map((rect) => {
-        if (!rect || typeof rect !== 'object') return '';
-
-        const isTarget = Boolean(
-            rect.isTarget ||
-            (Array.isArray(occ.activeRectIds) && occ.activeRectIds.includes(rect.id)) ||
-            (occ.activeGroupId && rect.groupId && rect.groupId === occ.activeGroupId)
-        );
-
-        if (!isTarget && !hideOthers) {
-            return '';
-        }
-
-        const leftPct = (typeof rect.normX === 'number' ? rect.normX : (imgW ? rect.x / imgW : 0)) * 100;
-        const topPct = (typeof rect.normY === 'number' ? rect.normY : (imgH ? rect.y / imgH : 0)) * 100;
-        const widthPct = (typeof rect.normWidth === 'number' ? rect.normWidth : (imgW ? rect.width / imgW : 0)) * 100;
-        const heightPct = (typeof rect.normHeight === 'number' ? rect.normHeight : (imgH ? rect.height / imgH : 0)) * 100;
-
-        const posStyle = `left:${leftPct.toFixed(4)}%;top:${topPct.toFixed(4)}%;width:${widthPct.toFixed(4)}%;height:${heightPct.toFixed(4)}%;`;
-
-        if (isTarget) {
-            if (side === 'front') {
-                return `<div class="occlusion-rect is-target is-masked" style="${posStyle}" title="맞춰야 할 영역"><span class="occlusion-target-mark">?</span></div>`;
-            } else {
-                return `<div class="occlusion-rect is-target is-revealed" style="${posStyle}" title="정답 영역"></div>`;
-            }
-        } else {
-            return `<div class="occlusion-rect is-other is-masked" style="${posStyle}"></div>`;
-        }
-    }).join('');
-
-    return `<div class="image-container image-occlusion-container"><div class="occlusion-stage" style="${stageStyle}"><img src="${imgObj.data}" alt="${safeAlt}" class="term-image occlusion-image" onload="if(!this.parentElement.style.getPropertyValue('--img-aspect')&&this.naturalWidth&&this.naturalHeight){this.parentElement.style.setProperty('--img-aspect',this.naturalWidth/this.naturalHeight);this.parentElement.style.aspectRatio=this.naturalWidth+'/'+this.naturalHeight;}"><div class="occlusion-layer">${rectsHtml}</div></div></div>`;
 }
 
 function hasRichContent(text) {
@@ -567,15 +469,9 @@ function parsePastedData() {
                 const question = line.slice(0, sepIndex).trim().replace(/\\n/g, '\n');
                 const answer = line.slice(sepIndex + delimiter.length).trim().replace(/\\n/g, '\n');
                 if (question || answer) {
-                    let occlusion = null;
-                    const occMatch = question.match(/!\[[^\]]*\]\([^)#]+#([^)]+)\)/);
-                    if (occMatch && occMatch[1] && currentOcclusionsMap[occMatch[1].trim()]) {
-                        occlusion = currentOcclusionsMap[occMatch[1].trim()];
-                    }
                     parsedCards.push({
                         question: question || '(질문 없음)',
-                        answer: answer,
-                        occlusion: occlusion
+                        answer: answer
                     });
                 }
             }
@@ -637,6 +533,15 @@ function setStudyOrder(order) {
     const btnRand = document.getElementById('btnOrderRandom');
     if (btnSeq) btnSeq.classList.toggle('active', studyOrder === 'sequential');
     if (btnRand) btnRand.classList.toggle('active', studyOrder === 'random');
+}
+
+function setBackDisplayMode(mode) {
+    backDisplayMode = mode === 'only2' ? 'only2' : 'both';
+    safeSaveStorage(STORAGE_KEYS.BACK_DISPLAY_MODE, backDisplayMode);
+    const btnBoth = document.getElementById('btnBackBoth');
+    const btnOnly2 = document.getElementById('btnBackOnly2');
+    if (btnBoth) btnBoth.classList.toggle('active', backDisplayMode === 'both');
+    if (btnOnly2) btnOnly2.classList.toggle('active', backDisplayMode === 'only2');
 }
 
 function shuffleArray(arr) {
@@ -769,40 +674,42 @@ function renderCurrentCard() {
     const meaningDiv = document.getElementById('cardBackMeaning');
 
     const qLines = t.question.split('\n');
-    const isOcclusionCard = Boolean(t.occlusion && Array.isArray(t.occlusion.rects));
-    const questionHasRich = isOcclusionCard || hasRichContent(t.question);
+    const questionHasRich = hasRichContent(t.question);
     const answerText = (t.answer || '').trim();
     const answerHasRich = hasRichContent(answerText);
-    const isImageCard = isOcclusionCard || questionHasRich || answerHasRich;
+    const isImageCard = questionHasRich || answerHasRich;
+    const isBackOnly2 = backDisplayMode === 'only2';
 
     const flashcardEl = document.getElementById('flashcard');
     const studyViewEl = document.getElementById('studyView');
     const cardBackEl = document.querySelector('#cardInner .card-back');
     if (flashcardEl) {
         flashcardEl.classList.toggle('has-image-card', isImageCard);
-        flashcardEl.classList.toggle('has-occlusion-card', isOcclusionCard);
-        flashcardEl.classList.toggle('no-back-answer', !answerText);
+        flashcardEl.classList.toggle('no-back-answer', !answerText && !isBackOnly2);
     }
     if (studyViewEl) {
         studyViewEl.classList.toggle('study-has-image', isImageCard);
-        studyViewEl.classList.toggle('study-has-occlusion', isOcclusionCard);
     }
     if (cardBackEl) {
-        cardBackEl.classList.toggle('card-back-image-only', isImageCard && !answerText);
+        cardBackEl.classList.toggle('card-back-only-2', isBackOnly2);
+        cardBackEl.classList.toggle('card-back-image-only',
+            isBackOnly2 ? answerHasRich : (isImageCard && !answerText)
+        );
     }
 
-    if (backHeader) backHeader.style.display = 'block';
+    if (backHeader) {
+        backHeader.style.display = isBackOnly2 ? 'none' : 'block';
+    }
 
     if (questionHasRich) {
-        const richFrontHtml = renderMarkdownAndMath(t.question, { side: 'front', occlusion: t.occlusion });
-        const richBackHtml = renderMarkdownAndMath(t.question, { side: 'back', occlusion: t.occlusion });
+        const richFrontHtml = renderMarkdownAndMath(t.question);
         frontTitle.innerHTML = richFrontHtml;
         if (frontSentence) {
             frontSentence.style.display = 'none';
             frontSentence.innerHTML = '';
         }
 
-        backTerm.innerHTML = richBackHtml;
+        backTerm.innerHTML = richFrontHtml;
         if (backSentence) {
             backSentence.style.display = 'none';
             backSentence.innerHTML = '';
@@ -851,20 +758,25 @@ function renderCurrentCard() {
 
     if (!answerText) {
         if (backHeader) backHeader.style.borderBottom = 'none';
-        meaningDiv.style.display = 'none';
-        meaningDiv.innerHTML = '';
+        if (isBackOnly2) {
+            meaningDiv.style.display = '';
+            meaningDiv.innerHTML = renderMarkdownAndMath('');
+        } else {
+            meaningDiv.style.display = 'none';
+            meaningDiv.innerHTML = '';
+        }
     } else {
-        if (backHeader) backHeader.style.borderBottom = '';
-        meaningDiv.style.display = 'block';
+        if (backHeader) backHeader.style.borderBottom = isBackOnly2 ? 'none' : '';
+        meaningDiv.style.display = '';
         if (aLines.length > 1 && !firstLineRich) {
             const meaningHeader = aLines[0].trim();
             const translationBody = aLines.slice(1).join('\n').trim();
             meaningDiv.innerHTML = `
                 <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
-                <div class="card-back-translation-body">${renderMarkdownAndMath(translationBody, { side: 'back' })}</div>
+                <div class="card-back-translation-body">${renderMarkdownAndMath(translationBody)}</div>
             `;
         } else {
-            meaningDiv.innerHTML = renderMarkdownAndMath(answerText, { side: 'back' });
+            meaningDiv.innerHTML = renderMarkdownAndMath(answerText);
         }
         renderKaTeXInElement(meaningDiv);
     }
@@ -1169,7 +1081,7 @@ function studyFailedOnly() {
 }
 
 // 7. Markdown and KaTeX Helpers
-function renderMarkdownAndMath(text, options = {}) {
+function renderMarkdownAndMath(text) {
     if (!text) return '<span style="color: var(--text-muted); font-style: italic;">설명 없음</span>';
 
     const mathBlocks = [];
@@ -1203,22 +1115,16 @@ function renderMarkdownAndMath(text, options = {}) {
         }
     );
 
-    // 2-1. Resolve embedded JSON markdown images ![alt](img_key) or ![alt](img_key#occ_key)
+    // 2-1. Resolve embedded JSON markdown images ![alt](img_key)
     const map = currentImagesMap || {};
-    const side = options.side || 'front';
     processed = processed.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, (match, alt, rawKey) => {
-        const trimmedTarget = rawKey.trim();
+        const trimmedTarget = rawKey.trim().replace(/^image:/i, '').trim();
         const hashIdx = trimmedTarget.indexOf('#');
         const imgKey = hashIdx !== -1 ? trimmedTarget.slice(0, hashIdx).trim() : trimmedTarget;
-        const occKey = hashIdx !== -1 ? trimmedTarget.slice(hashIdx + 1).trim() : '';
 
         const imgObj = map[imgKey];
         if (imgObj && imgObj.data) {
-            const occ = options.occlusion || (occKey && currentOcclusionsMap[occKey]) || null;
-            const imgHtml = (occ && Array.isArray(occ.rects))
-                ? buildOcclusionImageHtml(imgObj, alt || imgObj.name || imgKey, occ, side)
-                : `<div class="image-container"><img src="${imgObj.data}" alt="${escapeHtml(alt || imgObj.name || imgKey)}" class="term-image"></div>`;
-
+            const imgHtml = `<div class="image-container"><img src="${imgObj.data}" alt="${escapeHtml(alt || imgObj.name || imgKey)}" class="term-image"></div>`;
             const placeholder = `%%IMG_${imageBlocks.length}%%`;
             imageBlocks.push({ placeholder, html: imgHtml });
             return placeholder;
