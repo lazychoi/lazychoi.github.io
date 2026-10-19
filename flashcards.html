@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/flashcards.css?v=9">
+  <link rel="stylesheet" href="css/flashcards.css?v=12">
   <!-- KaTeX for rendering LaTeX math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -48,22 +48,26 @@
       <!-- 구분자 설정 및 파일 불러오기 영역 -->
       <div class="filter-section delimiter-bar">
         <div class="delimiter-control-group">
-          <label for="delimiterSelect" class="delimiter-label">구분자</label>
-          <select id="delimiterSelect" class="delimiter-select">
-            <option value="|" selected>| (파이프)</option>
-            <option value=";">; (세미콜론)</option>
-            <option value="tab">Tab (탭)</option>
-            <option value="custom">기타 (직접 입력)</option>
-          </select>
-          <input type="text" id="customDelimiter" class="custom-delimiter-input" placeholder="구분자 입력" style="display: none;">
+          <div class="delimiter-left">
+            <label for="delimiterSelect" class="delimiter-label">구분자</label>
+            <select id="delimiterSelect" class="delimiter-select">
+              <option value="|" selected>| (파이프)</option>
+              <option value=";">; (세미콜론)</option>
+              <option value="tab">Tab (탭)</option>
+              <option value="custom">기타 (직접 입력)</option>
+            </select>
+            <input type="text" id="customDelimiter" class="custom-delimiter-input" placeholder="구분자 입력" style="display: none;">
+          </div>
+          <span id="parsedCountBadge" class="parsed-count-badge">0개 카드</span>
         </div>
 
         <div class="paste-actions">
-          <span id="parsedCountBadge" class="parsed-count-badge">0개 카드</span>
           <button type="button" id="btnLoadHighlights" class="btn btn-secondary btn-mini">📂 영어읽기앱 형광펜</button>
           <input type="file" id="highlightFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnLoadDeckJson" class="btn btn-secondary btn-mini">📄 json 파일</button>
           <input type="file" id="deckJsonFileInput" accept=".json,application/json" style="display: none;">
+          <button type="button" id="btnLoadCsv" class="btn btn-secondary btn-mini">📄 csv 파일</button>
+          <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display: none;">
           <button type="button" id="btnClearData" class="btn btn-secondary btn-mini">초기화</button>
         </div>
       </div>
@@ -80,24 +84,36 @@
 
       <!-- 학습 방법 설정 영역 -->
       <div class="study-method-bar">
-        <span class="study-method-label">학습 방법</span>
-        <div class="study-order-group" role="group" aria-label="학습 순서">
-          <button type="button" id="btnOrderSequential" class="study-order-btn active" data-order="sequential">순서대로</button>
-          <button type="button" id="btnOrderRandom" class="study-order-btn" data-order="random">무작위로</button>
+        <div class="study-method-row">
+          <div class="study-order-wrap">
+            <span class="study-method-label">학습 방법</span>
+            <div class="study-order-group" role="group" aria-label="학습 순서">
+              <button type="button" id="btnOrderSequential" class="study-order-btn active" data-order="sequential">순서대로</button>
+              <button type="button" id="btnOrderRandom" class="study-order-btn" data-order="random">무작위로</button>
+            </div>
+          </div>
+          <div class="study-chunk-group">
+            <label for="chunkSizeSelect" class="study-chunk-label">n개씩</label>
+            <select id="chunkSizeSelect" class="delimiter-select study-chunk-select">
+              <option value="all" selected>전체</option>
+              <option value="5">5</option>
+              <option value="7">7</option>
+              <option value="10">10</option>
+            </select>
+          </div>
         </div>
-        <div class="study-chunk-group">
-          <label for="chunkSizeSelect" class="study-chunk-label">n개씩</label>
-          <select id="chunkSizeSelect" class="delimiter-select study-chunk-select">
-            <option value="all" selected>전체</option>
-            <option value="5">5</option>
-            <option value="7">7</option>
-            <option value="10">10</option>
-          </select>
-        </div>
-        <div class="study-back-group">
-          <div class="study-order-group" role="group" aria-label="뒷면 표시 방식">
-            <button type="button" id="btnBackBoth" class="study-order-btn active" data-back-mode="both">back-1면, 2면</button>
-            <button type="button" id="btnBackOnly2" class="study-order-btn" data-back-mode="only2">back-2면</button>
+        <div class="study-face-row">
+          <div class="study-front-group">
+            <div class="study-order-group" role="group" aria-label="앞면(질문) 선택">
+              <button type="button" id="btnFront1" class="study-order-btn active" data-front-side="1">front-1면</button>
+              <button type="button" id="btnFront2" class="study-order-btn" data-front-side="2">front-2면</button>
+            </div>
+          </div>
+          <div class="study-back-group">
+            <div class="study-order-group" role="group" aria-label="뒷면 표시 방식">
+              <button type="button" id="btnBackBoth" class="study-order-btn active" data-back-mode="both">back-1면, 2면</button>
+              <button type="button" id="btnBackOnly2" class="study-order-btn" data-back-mode="only2">back-2면</button>
+            </div>
           </div>
         </div>
       </div>
@@ -204,7 +220,7 @@
 
   </div>
 
-  <script src="js/flashcards.js?v=9"></script>
+  <script src="js/flashcards.js?v=12"></script>
 </body>
 
 </html>

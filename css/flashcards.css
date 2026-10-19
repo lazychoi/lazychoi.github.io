@@ -124,9 +124,12 @@
 }
 
 .btn-mini {
-  padding: 5px 10px;
-  font-size: 12px;
-  border-radius: 6px;
+  height: 34px;
+  padding: 0 11px;
+  font-size: 13px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 /* 1단계: 데이터 붙여넣기 및 구분자 설정 영역 */
@@ -134,7 +137,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 10px 14px;
   margin-bottom: 16px;
   flex-wrap: wrap;
   background: rgba(0, 0, 0, 0.02);
@@ -146,26 +149,38 @@
 .delimiter-control-group {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
-  flex-wrap: wrap;
+  flex: 1 1 auto;
+}
+
+.delimiter-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .delimiter-label {
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
 .delimiter-select {
-  padding: 7px 12px;
+  height: 34px;
+  padding: 0 10px;
   border-radius: 8px;
   border: 1px solid var(--glass-border);
   background: #ffffff;
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   font-family: inherit;
   outline: none;
   cursor: pointer;
+  white-space: nowrap;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -175,13 +190,14 @@
 }
 
 .custom-delimiter-input {
-  width: 140px;
-  padding: 7px 12px;
+  width: 110px;
+  height: 34px;
+  padding: 0 10px;
   border-radius: 8px;
   border: 1px solid var(--glass-border);
   background: #ffffff;
   color: var(--text-main);
-  font-size: 14px;
+  font-size: 13px;
   font-family: inherit;
   outline: none;
   transition: border-color 0.2s, box-shadow 0.2s;
@@ -195,16 +211,37 @@
 .paste-actions {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.paste-actions .btn {
+  background: #ffffff;
+  color: var(--text-main);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  white-space: nowrap;
+}
+
+.paste-actions .btn:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.3);
+  color: var(--accent);
 }
 
 .parsed-count-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--accent);
   background: rgba(37, 99, 235, 0.08);
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 0 12px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .paste-wrapper {
@@ -238,37 +275,56 @@
   opacity: 0.7;
 }
 
-/* 학습 방법 설정 바 (순서대로 / 무작위로 / n개씩) */
+/* 학습 방법 설정 바 (순서대로 / 무작위로 / n개씩 / front / back) */
 .study-method-bar {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
+  gap: 10px 16px;
   flex-wrap: wrap;
   margin-top: 16px;
-  padding: 12px 18px;
+  padding: 12px 16px;
   background: rgba(0, 0, 0, 0.02);
   border: 1px solid var(--glass-border);
   border-radius: 14px;
+}
+
+.study-method-row,
+.study-face-row {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+}
+
+.study-order-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
 }
 
 .study-method-label {
   font-size: 14px;
   font-weight: 700;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
 .study-order-group {
   display: inline-flex;
+  align-items: center;
   background: rgba(0, 0, 0, 0.05);
   padding: 3px;
   border-radius: 10px;
   border: 1px solid var(--glass-border);
-  gap: 3px;
+  gap: 2px;
+  flex-wrap: nowrap;
 }
 
 .study-order-btn {
-  padding: 6px 14px;
+  padding: 5px 12px;
   border-radius: 7px;
   border: none;
   background: transparent;
@@ -277,6 +333,7 @@
   font-weight: 600;
   font-family: inherit;
   cursor: pointer;
+  white-space: nowrap;
   transition: all 0.2s ease;
 }
 
@@ -290,6 +347,13 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
+.study-front-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
 .study-chunk-group,
 .study-back-group {
   display: inline-flex;
@@ -297,16 +361,18 @@
   gap: 8px;
   padding-left: 10px;
   border-left: 1px solid var(--glass-border);
+  flex-wrap: nowrap;
 }
 
 .study-chunk-label {
   font-size: 14px;
   font-weight: 600;
   color: var(--text-main);
+  white-space: nowrap;
 }
 
 .study-chunk-select {
-  min-width: 82px;
+  min-width: 72px;
   font-weight: 600;
 }
 
@@ -497,7 +563,8 @@
   word-break: break-word;
 }
 
-.card-back-sentence .hl-target {
+.card-back-sentence .hl-target,
+.card-back-translation-body .hl-target {
   color: #dc2626;
   font-weight: 700;
   background: rgba(254, 240, 138, 0.7);
@@ -932,13 +999,124 @@
 }
 
 /* 애니메이션 및 반응형 스타일 */
-@media (max-width: 600px) {
+@media (max-width: 680px) {
   .flashcard-container {
-    padding: 10px;
+    padding: 8px;
   }
 
   .glass-panel {
-    padding: 20px 16px;
+    padding: 16px 12px;
+  }
+
+  /* 상단 구분자 및 파일 불러오기 바: 1행(구분자 + n개 카드), 2행(나머지 버튼들) */
+  .delimiter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .delimiter-control-group {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .delimiter-left {
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .delimiter-label {
+    font-size: 13px;
+  }
+
+  .delimiter-select {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 12.5px;
+  }
+
+  .custom-delimiter-input {
+    width: 90px;
+    height: 32px;
+    padding: 0 8px;
+    font-size: 12.5px;
+  }
+
+  .parsed-count-badge {
+    height: 28px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+
+  .paste-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 5px;
+    flex-wrap: nowrap;
+  }
+
+  .paste-actions .btn-mini {
+    flex: 1 1 auto;
+    height: 32px;
+    padding: 0 6px;
+    font-size: 11.5px;
+    letter-spacing: -0.3px;
+    gap: 3px;
+    border-radius: 8px;
+  }
+
+  /* 하단 학습 방법 바: 1행(학습 방법 + n개씩), 2행(front + back) */
+  .study-method-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .study-method-row,
+  .study-face-row {
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .study-order-wrap {
+    gap: 6px;
+  }
+
+  .study-method-label,
+  .study-chunk-label {
+    font-size: 12.5px;
+  }
+
+  .study-order-group {
+    padding: 2px;
+    border-radius: 8px;
+    gap: 2px;
+  }
+
+  .study-order-btn {
+    padding: 5px 8px;
+    font-size: 11.5px;
+    letter-spacing: -0.2px;
+    border-radius: 6px;
+  }
+
+  .study-chunk-group,
+  .study-back-group {
+    gap: 5px;
+    padding-left: 8px;
+  }
+
+  .study-chunk-select {
+    min-width: 60px;
+    height: 30px;
+    padding: 0 6px;
+    font-size: 12px;
   }
 
   .card-perspective {

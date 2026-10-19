@@ -6,7 +6,8 @@ let currentChunkIndex = 0; // Active chunk index in studyChunks
 let currentChunkCards = []; // Full cards of the active chunk
 let studyOrder = 'sequential'; // 'sequential' or 'random'
 let chunkSize = 'all';    // 'all', '5', '7', or '10'
-let backDisplayMode = 'both'; // 'both' ("back-1면, 2면") or 'only2' ("back-2면")
+let frontSideMode = '1';  // '1' ("front-1면": 1면=질문, 2면=답변) or '2' ("front-2면": 2면=질문, 1면=답변)
+let backDisplayMode = 'both'; // 'both' ("back-1면, 2면" / "back-2면, 1면") or 'only2' ("back-2면" / "back-1면")
 let currentDeckName = ''; // Deck title to show in study header
 let currentImagesMap = {}; // Global or card-level image map (key -> { name, mimeType, data })
 let currentIndex = 0;     // Current card index in studyList
@@ -23,6 +24,7 @@ const STORAGE_KEYS = {
     CUSTOM_DELIMITER: 'flashcards_custom_delimiter',
     DECK_NAME: 'flashcards_deck_name',
     IMAGES_MAP: 'flashcards_images_map',
+    FRONT_SIDE_MODE: 'flashcards_front_side_mode',
     BACK_DISPLAY_MODE: 'flashcards_back_display_mode'
 };
 
@@ -38,9 +40,13 @@ window.addEventListener('DOMContentLoaded', () => {
     const highlightFileInput = document.getElementById('highlightFileInput');
     const btnLoadDeckJson = document.getElementById('btnLoadDeckJson');
     const deckJsonFileInput = document.getElementById('deckJsonFileInput');
+    const btnLoadCsv = document.getElementById('btnLoadCsv');
+    const csvFileInput = document.getElementById('csvFileInput');
     const btnOrderSequential = document.getElementById('btnOrderSequential');
     const btnOrderRandom = document.getElementById('btnOrderRandom');
     const chunkSizeSelect = document.getElementById('chunkSizeSelect');
+    const btnFront1 = document.getElementById('btnFront1');
+    const btnFront2 = document.getElementById('btnFront2');
     const btnBackBoth = document.getElementById('btnBackBoth');
     const btnBackOnly2 = document.getElementById('btnBackOnly2');
 
@@ -53,6 +59,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const savedData = localStorage.getItem(STORAGE_KEYS.DATA);
     const savedDeckName = localStorage.getItem(STORAGE_KEYS.DECK_NAME);
     const savedImagesMap = localStorage.getItem(STORAGE_KEYS.IMAGES_MAP);
+    const savedFrontSideMode = localStorage.getItem(STORAGE_KEYS.FRONT_SIDE_MODE);
     const savedBackDisplayMode = localStorage.getItem(STORAGE_KEYS.BACK_DISPLAY_MODE);
 
     if (savedDelimiterType && delimiterSelect) {
@@ -71,6 +78,11 @@ window.addEventListener('DOMContentLoaded', () => {
             currentImagesMap = {};
         }
     }
+    if (savedFrontSideMode === '2' || savedFrontSideMode === '1') {
+        setFrontSideMode(savedFrontSideMode);
+    } else {
+        updateBackModeButtonLabels();
+    }
     if (savedBackDisplayMode === 'only2' || savedBackDisplayMode === 'both') {
         setBackDisplayMode(savedBackDisplayMode);
     }
@@ -81,7 +93,7 @@ window.addEventListener('DOMContentLoaded', () => {
     updateCustomDelimiterVisibility();
     parsePastedData();
 
-    // Study Order, Chunk Size & Back Display Mode Event Listeners
+    // Study Order, Chunk Size, Front Side & Back Display Mode Event Listeners
     if (btnOrderSequential && btnOrderRandom) {
         btnOrderSequential.addEventListener('click', () => setStudyOrder('sequential'));
         btnOrderRandom.addEventListener('click', () => setStudyOrder('random'));
@@ -93,6 +105,11 @@ window.addEventListener('DOMContentLoaded', () => {
         chunkSizeSelect.addEventListener('change', () => {
             chunkSize = chunkSizeSelect.value || 'all';
         });
+    }
+
+    if (btnFront1 && btnFront2) {
+        btnFront1.addEventListener('click', () => setFrontSideMode('1'));
+        btnFront2.addEventListener('click', () => setFrontSideMode('2'));
     }
 
     if (btnBackBoth && btnBackOnly2) {
@@ -155,6 +172,15 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         deckJsonFileInput.addEventListener('change', handleDeckJsonFile);
+    }
+
+    if (btnLoadCsv && csvFileInput) {
+        btnLoadCsv.addEventListener('click', () => {
+            csvFileInput.value = '';
+            csvFileInput.click();
+        });
+
+        csvFileInput.addEventListener('change', handleCsvFile);
     }
 
     if (btnClearData) {
@@ -446,6 +472,46 @@ async function handleDeckJsonFile(e) {
     }
 }
 
+async function handleCsvFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    try {
+        const buffer = await file.arrayBuffer();
+        let textContent = '';
+        try {
+            textContent = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
+        } catch (decodeErr) {
+            textContent = new TextDecoder('euc-kr').decode(buffer);
+        }
+
+        textContent = textContent.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
+        try {
+            textContent = textContent.normalize('NFC');
+        } catch (e) {}
+
+        let rawDeckName = file.name.replace(/\.csv$/i, '').trim();
+        try {
+            rawDeckName = rawDeckName.normalize('NFC');
+        } catch (e) {}
+        currentDeckName = rawDeckName;
+        currentImagesMap = {};
+
+        safeSaveStorage(STORAGE_KEYS.DECK_NAME, currentDeckName);
+        localStorage.removeItem(STORAGE_KEYS.IMAGES_MAP);
+
+        const dataInput = document.getElementById('dataInput');
+        if (dataInput) {
+            dataInput.value = textContent;
+            safeSaveStorage(STORAGE_KEYS.DATA, dataInput.value);
+            parsePastedData();
+        }
+    } catch (err) {
+        console.error('Failed to read CSV file:', err);
+        alert('CSV 파일을 읽는 중 오류가 발생했습니다: ' + err.message);
+    }
+}
+
 function hasRichContent(text) {
     if (!text) return false;
     return /!\[([^\]]*)\]\(([^)]+)\)|\[\[(.*?)\]\]|<img\b/i.test(text);
@@ -470,7 +536,7 @@ function parsePastedData() {
                 const answer = line.slice(sepIndex + delimiter.length).trim().replace(/\\n/g, '\n');
                 if (question || answer) {
                     parsedCards.push({
-                        question: question || '(질문 없음)',
+                        question: question,
                         answer: answer
                     });
                 }
@@ -533,6 +599,28 @@ function setStudyOrder(order) {
     const btnRand = document.getElementById('btnOrderRandom');
     if (btnSeq) btnSeq.classList.toggle('active', studyOrder === 'sequential');
     if (btnRand) btnRand.classList.toggle('active', studyOrder === 'random');
+}
+
+function setFrontSideMode(side) {
+    frontSideMode = side === '2' ? '2' : '1';
+    safeSaveStorage(STORAGE_KEYS.FRONT_SIDE_MODE, frontSideMode);
+    const btnFront1 = document.getElementById('btnFront1');
+    const btnFront2 = document.getElementById('btnFront2');
+    if (btnFront1) btnFront1.classList.toggle('active', frontSideMode === '1');
+    if (btnFront2) btnFront2.classList.toggle('active', frontSideMode === '2');
+    updateBackModeButtonLabels();
+}
+
+function updateBackModeButtonLabels() {
+    const btnBoth = document.getElementById('btnBackBoth');
+    const btnOnly2 = document.getElementById('btnBackOnly2');
+    if (frontSideMode === '2') {
+        if (btnBoth) btnBoth.textContent = 'back-2면, 1면';
+        if (btnOnly2) btnOnly2.textContent = 'back-1면';
+    } else {
+        if (btnBoth) btnBoth.textContent = 'back-1면, 2면';
+        if (btnOnly2) btnOnly2.textContent = 'back-2면';
+    }
 }
 
 function setBackDisplayMode(mode) {
@@ -665,7 +753,7 @@ function renderCurrentCard() {
     const cardInner = document.getElementById('cardInner');
     cardInner.classList.remove('flipped');
 
-    // Populate Side 1 (Front): Question (or text + targetSentence)
+    // Populate Front (질문) and Back (답변) according to frontSideMode ('1' or '2')
     const frontTitle = document.getElementById('cardFrontTitle');
     const frontSentence = document.getElementById('cardFrontSentence');
     const backHeader = document.getElementById('cardBackHeader');
@@ -673,9 +761,14 @@ function renderCurrentCard() {
     const backSentence = document.getElementById('cardBackSentence');
     const meaningDiv = document.getElementById('cardBackMeaning');
 
-    const qLines = t.question.split('\n');
-    const questionHasRich = hasRichContent(t.question);
-    const answerText = (t.answer || '').trim();
+    const isReversed = frontSideMode === '2';
+    const rawFront = isReversed ? (t.answer || '').trim() : (t.question || '').trim();
+    const rawBack = isReversed ? (t.question || '').trim() : (t.answer || '').trim();
+    const questionText = rawFront || '(질문 없음)';
+    const answerText = rawBack;
+
+    const qLines = questionText.split('\n');
+    const questionHasRich = hasRichContent(questionText);
     const answerHasRich = hasRichContent(answerText);
     const isImageCard = questionHasRich || answerHasRich;
     const isBackOnly2 = backDisplayMode === 'only2';
@@ -702,7 +795,7 @@ function renderCurrentCard() {
     }
 
     if (questionHasRich) {
-        const richFrontHtml = renderMarkdownAndMath(t.question);
+        const richFrontHtml = renderMarkdownAndMath(questionText);
         frontTitle.innerHTML = richFrontHtml;
         if (frontSentence) {
             frontSentence.style.display = 'none';
@@ -719,7 +812,7 @@ function renderCurrentCard() {
         const sentenceText = qLines.slice(1).join('\n').trim();
         const highlightedSentenceHtml = highlightTargetInSentence(sentenceText, mainText);
 
-        // Front (1면)
+        // Front (질문 면)
         frontTitle.textContent = mainText;
         if (frontSentence) {
             frontSentence.style.display = 'block';
@@ -727,7 +820,7 @@ function renderCurrentCard() {
             renderKaTeXInElement(frontSentence);
         }
 
-        // Back Header (뒷면 상단 1면 표시)
+        // Back Header (뒷면 상단 질문 면 표시)
         backTerm.textContent = mainText;
         if (backSentence) {
             backSentence.style.display = 'block';
@@ -735,15 +828,15 @@ function renderCurrentCard() {
             renderKaTeXInElement(backSentence);
         }
     } else {
-        // Front (1면)
-        frontTitle.textContent = t.question;
+        // Front (질문 면)
+        frontTitle.textContent = questionText;
         if (frontSentence) {
             frontSentence.style.display = 'none';
             frontSentence.innerHTML = '';
         }
 
-        // Back Header (뒷면 상단 1면 표시)
-        backTerm.textContent = t.question;
+        // Back Header (뒷면 상단 질문 면 표시)
+        backTerm.textContent = questionText;
         if (backSentence) {
             backSentence.style.display = 'none';
             backSentence.innerHTML = '';
@@ -752,7 +845,7 @@ function renderCurrentCard() {
     renderKaTeXInElement(frontTitle);
     renderKaTeXInElement(backTerm);
 
-    // Populate Side 2 on Back (뒷면 하단 2면 표시: targetMeaning + sentenceTranslation 또는 답변)
+    // Populate Answer Side on Back (뒷면 하단 답변 면 표시)
     const aLines = answerText ? answerText.split('\n') : [];
     const firstLineRich = aLines.length > 0 && hasRichContent(aLines[0]);
 
@@ -771,9 +864,12 @@ function renderCurrentCard() {
         if (aLines.length > 1 && !firstLineRich) {
             const meaningHeader = aLines[0].trim();
             const translationBody = aLines.slice(1).join('\n').trim();
+            const bodyHtml = isReversed && !hasRichContent(translationBody)
+                ? highlightTargetInSentence(translationBody, meaningHeader).replace(/\n/g, '<br>')
+                : renderMarkdownAndMath(translationBody);
             meaningDiv.innerHTML = `
                 <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
-                <div class="card-back-translation-body">${renderMarkdownAndMath(translationBody)}</div>
+                <div class="card-back-translation-body">${bodyHtml}</div>
             `;
         } else {
             meaningDiv.innerHTML = renderMarkdownAndMath(answerText);
