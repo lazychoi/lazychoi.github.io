@@ -42,6 +42,11 @@ window.addEventListener('DOMContentLoaded', () => {
     const deckJsonFileInput = document.getElementById('deckJsonFileInput');
     const btnLoadCsv = document.getElementById('btnLoadCsv');
     const csvFileInput = document.getElementById('csvFileInput');
+    const btnLoadVocabJson = document.getElementById('btnLoadVocabJson');
+    const vocabJsonFileInput = document.getElementById('vocabJsonFileInput');
+    const btnGuide = document.getElementById('btnGuide');
+    const btnCloseGuide = document.getElementById('btnCloseGuide');
+    const guideModal = document.getElementById('guideModal');
     const btnOrderSequential = document.getElementById('btnOrderSequential');
     const btnOrderRandom = document.getElementById('btnOrderRandom');
     const chunkSizeSelect = document.getElementById('chunkSizeSelect');
@@ -181,6 +186,52 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
         csvFileInput.addEventListener('change', handleCsvFile);
+    }
+
+    if (btnLoadVocabJson && vocabJsonFileInput) {
+        btnLoadVocabJson.addEventListener('click', () => {
+            vocabJsonFileInput.value = '';
+            vocabJsonFileInput.click();
+        });
+
+        vocabJsonFileInput.addEventListener('change', handleVocabJsonFile);
+    }
+
+    if (btnGuide && guideModal) {
+        btnGuide.addEventListener('click', () => {
+            if (typeof guideModal.showModal === 'function') {
+                guideModal.showModal();
+            } else {
+                guideModal.setAttribute('open', '');
+            }
+        });
+    }
+
+    if (btnCloseGuide && guideModal) {
+        btnCloseGuide.addEventListener('click', () => {
+            if (typeof guideModal.close === 'function') {
+                guideModal.close();
+            } else {
+                guideModal.removeAttribute('open');
+            }
+        });
+    }
+
+    // Fallback for browsers without <dialog closedby="any"> support
+    if (guideModal && typeof HTMLDialogElement !== 'undefined' && !('closedBy' in HTMLDialogElement.prototype)) {
+        guideModal.addEventListener('click', (event) => {
+            if (event.target !== guideModal) return;
+            const rect = guideModal.getBoundingClientRect();
+            const isDialogContent = (
+                rect.top <= event.clientY &&
+                event.clientY <= rect.top + rect.height &&
+                rect.left <= event.clientX &&
+                event.clientX <= rect.left + rect.width
+            );
+            if (!isDialogContent) {
+                guideModal.close();
+            }
+        });
     }
 
     if (btnClearData) {
@@ -512,6 +563,121 @@ async function handleCsvFile(e) {
     }
 }
 
+async function handleVocabJsonFile(e) {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    try {
+        let textContent = await file.text();
+        textContent = textContent.replace(/^\uFEFF/, '').trim();
+        if (textContent.startsWith('```')) {
+            textContent = textContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+        }
+
+        const jsonData = JSON.parse(textContent);
+
+        let items = null;
+        if (Array.isArray(jsonData)) {
+            items = jsonData;
+        } else if (jsonData && typeof jsonData === 'object') {
+            const arrayKey = ['words', 'vocab', 'vocabulary', 'items', 'highlights', 'cards', 'data'].find(
+                key => Array.isArray(jsonData[key])
+            );
+            if (arrayKey) {
+                items = jsonData[arrayKey];
+            } else if (jsonData.text !== undefined || jsonData.targetSentence !== undefined) {
+                items = [jsonData];
+            }
+        }
+
+        if (!items) {
+            alert('영단어 데이터를 찾을 수 없는 JSON 파일입니다.');
+            return;
+        }
+
+        let delimiter = getActiveDelimiter();
+        if (!delimiter) {
+            const delimiterSelect = document.getElementById('delimiterSelect');
+            if (delimiterSelect) {
+                delimiterSelect.value = '|';
+                localStorage.setItem(STORAGE_KEYS.DELIMITER_TYPE, '|');
+                updateCustomDelimiterVisibility();
+            }
+            delimiter = '|';
+        }
+
+        const safeReplaceDelimiter = (str) => {
+            if (!delimiter) return str;
+            return str.split(delimiter).join(' ');
+        };
+
+        const lines = [];
+        items.forEach((item) => {
+            if (!item || typeof item !== 'object') return;
+
+            const rawText = safeReplaceDelimiter(String(item.text || '').trim().replace(/\r?\n+/g, ' '));
+            const rawSentence = safeReplaceDelimiter(String(item.targetSentence || '').trim().replace(/\r?\n+/g, ' '));
+            const rawMeaning = String(item.targetMeaning || '').trim().replace(/\r?\n+/g, ' ');
+            const rawSyntax = String(item.syntaxBreakdown || '').trim().replace(/\r?\n+/g, ' ');
+            const rawTranslation = String(item.sentenceTranslation || '').trim().replace(/\r?\n+/g, ' ');
+
+            if (!rawText && !rawSentence) return;
+
+            // 1면: text, targetSentence
+            let frontPart = '';
+            if (rawText && rawSentence) {
+                frontPart = `${rawText}\\n${rawSentence}`;
+            } else {
+                frontPart = rawText || rawSentence;
+            }
+
+            // 2면: targetMeaning, syntaxBreakdown, sentenceTranslation
+            const backParts = [];
+            if (rawMeaning) {
+                backParts.push(rawMeaning);
+            } else if (rawSyntax || rawTranslation) {
+                backParts.push('(뜻 미등록)');
+            }
+            if (rawSyntax) {
+                backParts.push(rawSyntax);
+            }
+            if (rawTranslation) {
+                backParts.push(rawTranslation);
+            }
+            const backPart = backParts.length > 0 ? backParts.join('\\n') : '(뜻/해석 미등록)';
+
+            lines.push(`${frontPart}${delimiter}${backPart}`);
+        });
+
+        if (lines.length === 0) {
+            alert('불러올 수 있는 영단어 항목이 없습니다.');
+            return;
+        }
+
+        let rawDeckName = (jsonData && (jsonData.deckName || jsonData.bookTitle || (jsonData.book && jsonData.book.title)))
+            ? String(jsonData.deckName || jsonData.bookTitle || jsonData.book.title).trim()
+            : file.name.replace(/\.json$/i, '').trim();
+        try {
+            rawDeckName = rawDeckName.normalize('NFC');
+        } catch (e) {}
+        currentDeckName = rawDeckName;
+        currentImagesMap = {};
+
+        safeSaveStorage(STORAGE_KEYS.DECK_NAME, currentDeckName);
+        localStorage.removeItem(STORAGE_KEYS.IMAGES_MAP);
+
+        const dataInput = document.getElementById('dataInput');
+        if (dataInput) {
+            dataInput.value = lines.join('\n');
+            safeSaveStorage(STORAGE_KEYS.DATA, dataInput.value);
+            parsePastedData();
+        }
+    } catch (err) {
+        console.error('Failed to parse vocab JSON:', err);
+        alert('영단어 JSON 파일을 읽는 중 오류가 발생했습니다: ' + err.message);
+    }
+}
+
 function hasRichContent(text) {
     if (!text) return false;
     return /!\[([^\]]*)\]\(([^)]+)\)|\[\[(.*?)\]\]|<img\b/i.test(text);
@@ -810,7 +976,9 @@ function renderCurrentCard() {
     } else if (qLines.length > 1) {
         const mainText = qLines[0].trim();
         const sentenceText = qLines.slice(1).join('\n').trim();
-        const highlightedSentenceHtml = highlightTargetInSentence(sentenceText, mainText);
+        const highlightedSentenceHtml = (isReversed && qLines.length === 3)
+            ? `<div class="card-front-syntax">${highlightTargetInSentence(qLines[1].trim(), mainText)}</div><div class="card-front-translation">${highlightTargetInSentence(qLines[2].trim(), mainText)}</div>`
+            : highlightTargetInSentence(sentenceText, mainText).replace(/\n/g, '<br>');
 
         // Front (질문 면)
         frontTitle.textContent = mainText;
@@ -863,14 +1031,24 @@ function renderCurrentCard() {
         meaningDiv.style.display = '';
         if (aLines.length > 1 && !firstLineRich) {
             const meaningHeader = aLines[0].trim();
-            const translationBody = aLines.slice(1).join('\n').trim();
-            const bodyHtml = isReversed && !hasRichContent(translationBody)
-                ? highlightTargetInSentence(translationBody, meaningHeader).replace(/\n/g, '<br>')
-                : renderMarkdownAndMath(translationBody);
-            meaningDiv.innerHTML = `
-                <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
-                <div class="card-back-translation-body">${bodyHtml}</div>
-            `;
+            if (!isReversed && aLines.length === 3 && !/^\s*(?:[|\-*+>#]|\d+\.)/.test(aLines[1])) {
+                const syntaxText = aLines[1].trim();
+                const translationText = aLines[2].trim();
+                meaningDiv.innerHTML = `
+                    <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
+                    <div class="card-back-syntax">${renderMarkdownAndMath(syntaxText)}</div>
+                    <div class="card-back-translation-body">${renderMarkdownAndMath(translationText)}</div>
+                `;
+            } else {
+                const translationBody = aLines.slice(1).join('\n').trim();
+                const bodyHtml = isReversed && !hasRichContent(translationBody)
+                    ? highlightTargetInSentence(translationBody, meaningHeader).replace(/\n/g, '<br>')
+                    : renderMarkdownAndMath(translationBody);
+                meaningDiv.innerHTML = `
+                    <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
+                    <div class="card-back-translation-body">${bodyHtml}</div>
+                `;
+            }
         } else {
             meaningDiv.innerHTML = renderMarkdownAndMath(answerText);
         }
@@ -1231,7 +1409,7 @@ function renderMarkdownAndMath(text) {
     // 3. Render Markdown using marked.js if available
     let html = '';
     if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
-        html = marked.parse(processed);
+        html = marked.parse(processed, { breaks: true });
     } else {
         html = processed.replace(/\n/g, '<br>');
     }
@@ -1298,6 +1476,8 @@ function renderKaTeXInElement(element) {
 // 8. Keyboard Shortcut navigation Handler
 function handleKeyboardShortcuts(e) {
     if (isAnimating) return;
+    const guideModal = document.getElementById('guideModal');
+    if (guideModal && guideModal.open) return;
     // Only capture shortcuts when Study View is actively displayed
     const studyView = document.getElementById('studyView');
     if (studyView && studyView.style.display === 'block') {
