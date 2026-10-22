@@ -305,13 +305,246 @@ function getActiveDelimiter() {
     return type; // '|' or ';'
 }
 
+// Lenient JSON parser that automatically repairs unescaped double quotes inside string values,
+// raw newlines/tabs inside strings, invalid backslash escapes, and trailing commas.
+const KNOWN_JSON_KEYS = new Set([
+    'text', 'targetSentence', 'targetMeaning', 'syntaxBreakdown', 'sentenceTranslation',
+    'front', 'font', 'back', 'question', 'answer', 'id', 'color', 'note', 'pIdx',
+    'cfiRange', 'createdAt', 'updatedAt', 'chapter', 'bookTitle', 'deckName',
+    'images', 'name', 'mimeType', 'data', 'cards', 'highlights', 'words', 'vocab',
+    'vocabulary', 'items', 'book', 'title', 'author'
+]);
+
+function skipJsonWhitespace(str, idx) {
+    while (idx < str.length && /\s/.test(str[idx])) idx++;
+    return idx;
+}
+
+function isValidJsonValueStart(str, idx) {
+    if (idx >= str.length) return false;
+    const ch = str[idx];
+    if (ch === '"' || ch === '{' || ch === '[' || ch === '-' || (ch >= '0' && ch <= '9')) return true;
+    if (str.startsWith('true', idx) || str.startsWith('false', idx) || str.startsWith('null', idx)) return true;
+    return false;
+}
+
+function matchNextObjectKey(str, quoteStartIdx) {
+    if (str[quoteStartIdx] !== '"') return null;
+    let i = quoteStartIdx + 1;
+    let key = '';
+    while (i < str.length) {
+        const ch = str[i];
+        if (ch === '\\') {
+            key += str.slice(i, i + 2);
+            i += 2;
+            continue;
+        }
+        if (ch === '"') {
+            const colonIdx = skipJsonWhitespace(str, i + 1);
+            if (str[colonIdx] === ':') {
+                const valIdx = skipJsonWhitespace(str, colonIdx + 1);
+                if (isValidJsonValueStart(str, valIdx)) {
+                    return { key, keyEnd: i, colonIdx, valIdx };
+                }
+            }
+            return null;
+        }
+        if (ch === '\n' || ch === '\r') return null;
+        key += ch;
+        i++;
+    }
+    return null;
+}
+
+function isClosingValueQuote(str, quoteIdx, stack) {
+    const j = skipJsonWhitespace(str, quoteIdx + 1);
+    if (j >= str.length) return true;
+
+    const nextCh = str[j];
+    const container = stack[stack.length - 1];
+
+    if (nextCh !== ',' && nextCh !== '}' && nextCh !== ']') {
+        return false;
+    }
+
+    if (nextCh === '}') {
+        if (container !== '{') return false;
+        const k = skipJsonWhitespace(str, j + 1);
+        if (k >= str.length) return true;
+        const afterBrace = str[k];
+        if (afterBrace === ']' || afterBrace === '}') return true;
+        if (afterBrace === ',') {
+            const m = skipJsonWhitespace(str, k + 1);
+            if (m >= str.length || str[m] === '{' || str[m] === ']' || str[m] === '"') return true;
+        }
+        return false;
+    }
+
+    if (nextCh === ']') {
+        if (container !== '[') return false;
+        const k = skipJsonWhitespace(str, j + 1);
+        if (k >= str.length) return true;
+        const afterBracket = str[k];
+        return afterBracket === ',' || afterBracket === ']' || afterBracket === '}';
+    }
+
+    if (nextCh === ',') {
+        const k = skipJsonWhitespace(str, j + 1);
+        if (k >= str.length) return true;
+
+        if (container === '{') {
+            if (str[k] === '}') return true; // trailing comma before '}'
+            const keyMatch = matchNextObjectKey(str, k);
+            if (!keyMatch) return false;
+            const between = str.slice(quoteIdx + 1, k);
+            const hasNewline = /[\r\n]/.test(between);
+            if (hasNewline) return true;
+            return KNOWN_JSON_KEYS.has(keyMatch.key);
+        } else if (container === '[') {
+            if (str[k] === ']') return true; // trailing comma before ']'
+            return isValidJsonValueStart(str, k);
+        }
+    }
+
+    return false;
+}
+
+function repairMalformedJson(input) {
+    let out = '';
+    const stack = [];
+    let inString = false;
+    let stringRole = null;
+    let expecting = null;
+
+    for (let i = 0; i < input.length; i++) {
+        const ch = input[i];
+
+        if (!inString) {
+            if (ch === '{') {
+                stack.push('{');
+                expecting = 'key_or_end';
+                out += ch;
+            } else if (ch === '[') {
+                stack.push('[');
+                expecting = 'value_or_end';
+                out += ch;
+            } else if (ch === '}' || ch === ']') {
+                stack.pop();
+                expecting = 'comma_or_end';
+                out += ch;
+            } else if (ch === ':') {
+                expecting = 'value';
+                out += ch;
+            } else if (ch === ',') {
+                const nextIdx = skipJsonWhitespace(input, i + 1);
+                if (nextIdx < input.length && (input[nextIdx] === '}' || input[nextIdx] === ']')) {
+                    // Omit trailing comma before closing brace/bracket
+                    continue;
+                }
+                const top = stack[stack.length - 1];
+                expecting = top === '{' ? 'key_or_end' : 'value_or_end';
+                out += ch;
+            } else if (ch === '"') {
+                inString = true;
+                const top = stack[stack.length - 1];
+                stringRole = (top === '{' && expecting === 'key_or_end') ? 'key' : 'value';
+                out += '"';
+            } else {
+                out += ch;
+            }
+        } else {
+            if (ch === '\\') {
+                const nextCh = input[i + 1];
+                if (nextCh === undefined) {
+                    out += '\\\\';
+                } else if ('"\\/bfnrt'.includes(nextCh)) {
+                    out += '\\' + nextCh;
+                    i++;
+                } else if (nextCh === 'u' && /^[0-9a-fA-F]{4}/.test(input.slice(i + 2, i + 6))) {
+                    out += input.slice(i, i + 6);
+                    i += 5;
+                } else {
+                    out += '\\\\';
+                }
+            } else if (ch === '\n') {
+                out += '\\n';
+            } else if (ch === '\r') {
+                if (input[i + 1] === '\n') i++;
+                out += '\\n';
+            } else if (ch === '\t') {
+                out += '\\t';
+            } else if (ch === '"') {
+                if (stringRole === 'key') {
+                    const colonIdx = skipJsonWhitespace(input, i + 1);
+                    if (input[colonIdx] === ':') {
+                        inString = false;
+                        stringRole = null;
+                        expecting = ':';
+                        out += '"';
+                    } else {
+                        out += '\\"';
+                    }
+                } else {
+                    if (isClosingValueQuote(input, i, stack)) {
+                        inString = false;
+                        stringRole = null;
+                        expecting = 'comma_or_end';
+                        out += '"';
+                    } else {
+                        out += '\\"';
+                    }
+                }
+            } else {
+                out += ch;
+            }
+        }
+    }
+
+    return out;
+}
+
+function parseJsonLenient(rawText) {
+    let cleaned = String(rawText || '').replace(/^\uFEFF/, '').trim();
+    if (cleaned.startsWith('```')) {
+        cleaned = cleaned.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+    }
+
+    try {
+        return JSON.parse(cleaned);
+    } catch (firstErr) {
+        const firstBracket = cleaned.indexOf('[');
+        const firstBrace = cleaned.indexOf('{');
+        let startIdx = -1;
+        let endChar = '';
+
+        if (firstBracket !== -1 && (firstBrace === -1 || firstBracket < firstBrace)) {
+            startIdx = firstBracket;
+            endChar = ']';
+        } else if (firstBrace !== -1) {
+            startIdx = firstBrace;
+            endChar = '}';
+        }
+
+        let candidate = cleaned;
+        if (startIdx !== -1) {
+            const lastIdx = cleaned.lastIndexOf(endChar);
+            if (lastIdx > startIdx) {
+                candidate = cleaned.slice(startIdx, lastIdx + 1);
+            }
+        }
+
+        const repaired = repairMalformedJson(candidate);
+        return JSON.parse(repaired);
+    }
+}
+
 async function handleHighlightJsonFile(e) {
     const file = e.target.files && e.target.files[0];
     if (!file) return;
 
     try {
         const textContent = await file.text();
-        const jsonData = JSON.parse(textContent);
+        const jsonData = parseJsonLenient(textContent);
 
         let highlights = null;
         if (Array.isArray(jsonData)) {
@@ -403,7 +636,7 @@ async function handleDeckJsonFile(e) {
 
     try {
         const textContent = await file.text();
-        const jsonData = JSON.parse(textContent);
+        const jsonData = parseJsonLenient(textContent);
 
         let cards = null;
         if (jsonData && Array.isArray(jsonData.cards)) {
@@ -568,13 +801,8 @@ async function handleVocabJsonFile(e) {
     if (!file) return;
 
     try {
-        let textContent = await file.text();
-        textContent = textContent.replace(/^\uFEFF/, '').trim();
-        if (textContent.startsWith('```')) {
-            textContent = textContent.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-        }
-
-        const jsonData = JSON.parse(textContent);
+        const textContent = await file.text();
+        const jsonData = parseJsonLenient(textContent);
 
         let items = null;
         if (Array.isArray(jsonData)) {
@@ -745,16 +973,31 @@ function escapeHtml(str) {
 }
 
 function highlightTargetInSentence(sentence, target) {
-    const safeSentence = escapeHtml(sentence);
-    const safeTarget = escapeHtml(target);
-    if (!safeTarget) return safeSentence;
+    const rawSentence = String(sentence || '');
+    const rawTarget = String(target || '').trim();
+    if (!rawTarget) return escapeHtml(rawSentence);
 
-    const escapedRegex = safeTarget.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const escapedRegex = rawTarget
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/['’‘`"]/g, '[\'’‘`"“”]');
     try {
-        const regex = new RegExp(`(${escapedRegex})`, 'gi');
-        return safeSentence.replace(regex, '<span class="hl-target">$1</span>');
+        const regex = new RegExp(escapedRegex, 'gi');
+        let result = '';
+        let lastIndex = 0;
+        let match;
+        while ((match = regex.exec(rawSentence)) !== null) {
+            if (match[0].length === 0) {
+                regex.lastIndex++;
+                continue;
+            }
+            result += escapeHtml(rawSentence.slice(lastIndex, match.index));
+            result += `<span class="hl-target">${escapeHtml(match[0])}</span>`;
+            lastIndex = match.index + match[0].length;
+        }
+        result += escapeHtml(rawSentence.slice(lastIndex));
+        return result;
     } catch (e) {
-        return safeSentence;
+        return escapeHtml(rawSentence);
     }
 }
 

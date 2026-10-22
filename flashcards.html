@@ -65,12 +65,12 @@
         </div>
 
         <div class="paste-actions">
-          <button type="button" id="btnLoadHighlights" class="btn btn-secondary btn-mini">📂 영어읽기앱 형광펜</button>
-          <input type="file" id="highlightFileInput" accept=".json,application/json" style="display: none;">
-          <button type="button" id="btnLoadDeckJson" class="btn btn-secondary btn-mini">📄 json 파일</button>
-          <input type="file" id="deckJsonFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnLoadCsv" class="btn btn-secondary btn-mini">📄 csv 파일</button>
           <input type="file" id="csvFileInput" accept=".csv,text/csv" style="display: none;">
+          <button type="button" id="btnLoadHighlights" class="btn btn-secondary btn-mini">📂 영어읽기앱 형광펜</button>
+          <input type="file" id="highlightFileInput" accept=".json,application/json" style="display: none;">
+          <button type="button" id="btnLoadDeckJson" class="btn btn-secondary btn-mini">📄 이미지 포함 json 파일</button>
+          <input type="file" id="deckJsonFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnLoadVocabJson" class="btn btn-secondary btn-mini">📄 영단어 json</button>
           <input type="file" id="vocabJsonFileInput" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnClearData" class="btn btn-secondary btn-mini">초기화</button>
@@ -274,7 +274,7 @@
                 </tr>
                 <tr>
                   <td><b>📄 영단어 json</b></td>
-                  <td>원서 읽기 `<mark>` 본문 내보내기 등으로 생성한 <b>구문 분석 포함 심화 영단어장</b></td>
+                  <td>원서 읽기 본문 내보내기 등으로 생성한 <b>구문 분석 포함 심화 영단어장</b></td>
                   <td><code>text</code>, <code>targetSentence</code>,<br><code>targetMeaning</code>, <b><code>syntaxBreakdown</code></b>,<br><code>sentenceTranslation</code></td>
                   <td>1줄: <code>text</code> (단어/숙어)<br>2줄: <code>targetSentence</code> (원문 문장)</td>
                   <td>1줄: <code>targetMeaning</code> (단어 뜻)<br>2줄: <b><code>syntaxBreakdown</code> (구문 해설)</b><br>3줄: <code>sentenceTranslation</code> (문장 번역)</td>
@@ -369,7 +369,7 @@
     </div>
   </dialog>
 
-  <script src="js/flashcards.js?v=13"></script>
+  <script src="js/flashcards.js?v=14"></script>
 </body>
 
 </html>
