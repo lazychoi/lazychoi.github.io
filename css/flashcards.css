@@ -6,10 +6,11 @@
 .flashcard-container {
   width: 100%;
   max-width: 1040px;
-  margin-top: 20px;
+  margin-top: 14px;
+  margin-bottom: 14px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 16px;
 }
 
 /* 헤더 및 기본 레이아웃 */
@@ -467,8 +468,8 @@
 .card-perspective {
   perspective: 1200px;
   width: 100%;
-  height: 380px;
-  margin: 0 auto 24px;
+  height: clamp(380px, calc(100dvh - 320px), 520px);
+  margin: 0 auto 16px;
   cursor: pointer;
 }
 
@@ -786,34 +787,84 @@
 
 /* 이미지 학습 카드 확대 레이아웃 */
 #studyView.study-has-image {
-  padding: 20px 24px;
+  padding: 16px 20px;
 }
 
 #studyView.study-has-image .study-header {
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 #studyView.study-has-image .progress-bar-container {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+}
+
+#studyView.study-has-image .study-controls {
+  margin-bottom: 8px;
+}
+
+#studyView.study-has-image .study-feedback-controls {
+  margin-top: 0;
+  padding: 6px 12px;
+}
+
+#studyView.study-has-image .shortcut-tips {
+  margin-top: 6px;
+  padding: 6px 10px;
 }
 
 .card-perspective.has-image-card {
-  height: min(70dvh, 660px);
-  min-height: 440px;
-  margin-bottom: 18px;
+  height: clamp(520px, calc(100dvh - 230px), 900px);
+  margin-bottom: 12px;
 }
 
 .card-perspective.has-image-card .card-face {
-  padding: 18px 22px;
+  padding: 8px 12px;
+  overflow: hidden;
 }
 
-.card-perspective.has-image-card .card-front-title {
+.card-perspective.has-image-card .card-front-title,
+.card-perspective.has-image-card .card-back-image-only .card-back-header,
+.card-perspective.has-image-card .card-back-image-only .card-back-term,
+.card-perspective.has-image-card .card-back-only-2.card-back-image-only .card-back-meaning {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.card-perspective.has-image-card .image-container {
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1 1 auto;
+}
+
+.card-perspective.has-image-card .term-image,
+.card-perspective.has-image-card .card-front-title img,
+.card-perspective.has-image-card .card-back-image-only img,
+.card-perspective.has-image-card .card-back-only-2.card-back-image-only .card-back-meaning img {
+  height: 100%;
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  display: block;
+  margin: 0 auto;
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .card-back.card-back-only-2 {
@@ -853,13 +904,58 @@
   align-items: center;
 }
 
+/* 뒷면에 질문(이미지)과 정답(텍스트)이 함께 나오는 경우 */
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) {
+  overflow-y: auto;
+}
+
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) .card-back-header {
+  flex-shrink: 0;
+  max-height: 48%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) .card-back-term {
+  max-height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) .card-back-term .image-container {
+  max-height: 100%;
+  height: 100%;
+}
+
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) .card-back-term img {
+  max-height: min(42dvh, 380px);
+  height: 100%;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.card-perspective.has-image-card .card-back:not(.card-back-image-only) .card-back-meaning {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  width: 100%;
+}
+
 /* 이미지 및 수식 렌더링용 스타일 */
 .meaning img,
 .card-front-title img,
 .card-back-term img {
   display: block;
   max-width: 100%;
-  max-height: min(56dvh, 500px);
+  max-height: min(65dvh, 600px);
   width: auto;
   height: auto;
   margin: 0 auto;
@@ -872,7 +968,7 @@
 }
 
 .card-back:not(.card-back-image-only) .card-back-term img {
-  max-height: min(38dvh, 340px);
+  max-height: min(42dvh, 380px);
 }
 
 /* ── Image Containers ── */
@@ -881,17 +977,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0.4rem 0;
+  margin: 0.25rem 0;
 }
 
 .term-image {
-  max-width: 96%;
-  max-height: min(56dvh, 500px);
+  max-width: 100%;
+  max-height: min(65dvh, 600px);
   width: auto;
   height: auto;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
+  -webkit-user-drag: none;
+  user-select: none;
 }
 
 .term-image:hover {
@@ -1197,20 +1295,26 @@
   }
 
   .card-perspective {
-    height: 340px;
+    height: clamp(320px, calc(100dvh - 300px), 440px);
+    margin-bottom: 10px;
   }
 
   .card-perspective.has-image-card {
-    height: min(64dvh, 520px);
-    min-height: 360px;
+    height: clamp(380px, calc(100dvh - 250px), 640px);
+    min-height: 380px;
+    margin-bottom: 10px;
   }
 
   .card-face {
-    padding: 24px;
+    padding: 20px;
   }
 
   .card-perspective.has-image-card .card-face {
-    padding: 10px;
+    padding: 6px 8px;
+  }
+
+  #studyView.study-has-image {
+    padding: 12px 14px;
   }
 
   .card-front-title {
