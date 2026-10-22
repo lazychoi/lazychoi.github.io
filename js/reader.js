@@ -342,6 +342,7 @@ const elements = {
   exportModal: document.getElementById('export-modal'),
   btnChooseExportEpub: document.getElementById('btn-choose-export-epub'),
   btnChooseExportMd: document.getElementById('btn-choose-export-md'),
+  btnChooseExportChapterTxt: document.getElementById('btn-choose-export-chapter-txt'),
   btnCloseExportModal: document.getElementById('btn-close-export-modal'),
   btnCancelExport: document.getElementById('btn-cancel-export'),
   btnCopySyncCode: document.getElementById('btn-copy-sync-code'),
@@ -2718,6 +2719,844 @@ async function exportBookAsMarkdownZip() {
 }
 
 const exportBookAsMarkdown = exportBookAsMarkdownZip;
+
+// ── Current Chapter Text with Highlight (.txt) Export ──
+const CHAPTER_HIGHLIGHT_EXPORT_HEADER = `1. 기능: 
+  - 아래 본문에서 <mark> 태그된 어휘의 문맥적 의미 해설
+  - 문장 내 도치, 생략, 복합 관계사, 까다로운 수식 구조, 비정형 절 등 독해를 방해하는 문법·구문 요소가 있는 경우 구문 분석 해설 제공
+
+2. 형태: json 파일 형식
+  1. "text": <mark> 태그 부분
+  2. "targetSentence": <mark> 태그 부분을 포함한 문장 전체
+  3. "targetMeaning": <mark> 태그된 단어의 뜻. 연어(collocation)나 숙어(idiom)를 이루는 경우 결합된 표현 전체의 뜻을 제시
+  4. "syntaxBreakdown": 문장 구조 해설. 
+     - 도치, 생략, 병렬 구조, 특수 구문, 복잡한 수식 관계 등 문맥 파악에 걸림돌이 되는 핵심 문법/구문 요소를 명시하고 작동 원리를 간결하게 설명.
+     - 단순 평서문이거나 구조가 명확하여 별도 해설이 불필요한 경우 "N/A" 처리.
+  5. "sentenceTranslation": <mark> 태그 부분을 포함한 문장 번역. 직역(의역)`;
+
+function getTextNodesInDoc(doc, rootEl) {
+  const textNodes = [];
+  if (!doc || !rootEl) return textNodes;
+  const showTextFilter = (typeof NodeFilter !== 'undefined' && NodeFilter.SHOW_TEXT) ? NodeFilter.SHOW_TEXT : 4;
+  const walker = doc.createTreeWalker(rootEl, showTextFilter, {
+    acceptNode(node) {
+      if (!node.nodeValue) return 2; // FILTER_REJECT
+      const pEl = node.parentElement;
+      if (pEl && pEl.closest && pEl.closest('script, style, noscript, .reader-footnote-badge, .fn-badge, .reader-note-badge, #markdown-footnotes-section, .markdown-footnotes-section')) {
+        return 2; // FILTER_REJECT
+      }
+      return 1; // FILTER_ACCEPT
+    }
+  });
+  let n;
+  while ((n = walker.nextNode())) {
+    textNodes.push(n);
+  }
+  return textNodes;
+}
+
+function findContainingBlockInDoc(node, doc) {
+  if (!node) return doc ? (doc.body || doc.documentElement) : null;
+  const el = node.nodeType === 1 ? node : node.parentElement;
+  if (!el || !el.closest) return doc ? (doc.body || doc.documentElement) : null;
+  return (
+    el.closest('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, pre') ||
+    el.closest('div, section, article, body') ||
+    (doc ? (doc.body || doc.documentElement) : el)
+  );
+}
+
+function getDomRangeOffsetsInTextNodes(doc, blockElem, domRange) {
+  if (!doc || !blockElem || !domRange) return null;
+  const textNodes = getTextNodesInDoc(doc, blockElem);
+  if (textNodes.length === 0) return null;
+
+  const rangeText = domRange.toString();
+  if (!rangeText) return null;
+
+  let currentOffset = 0;
+  let startPos = -1;
+  let endPos = -1;
+
+  for (const tNode of textNodes) {
+    const len = tNode.nodeValue.length;
+    if (domRange.startContainer === tNode) {
+      startPos = currentOffset + Math.max(0, Math.min(len, domRange.startOffset));
+    }
+    if (domRange.endContainer === tNode) {
+      endPos = currentOffset + Math.max(0, Math.min(len, domRange.endOffset));
+    }
+    currentOffset += len;
+  }
+
+  if (startPos !== -1 && endPos !== -1 && endPos > startPos) {
+    return { start: startPos, end: endPos };
+  }
+
+  try {
+    const preRange = doc.createRange();
+    preRange.selectNodeContents(blockElem);
+    preRange.setEnd(domRange.startContainer, domRange.startOffset);
+    const approxStart = preRange.toString().length;
+    if (approxStart >= 0) {
+      return { start: approxStart, end: approxStart + rangeText.length };
+    }
+  } catch (e) {}
+
+  return null;
+}
+
+function applyHighlightRangeInBlockInDoc(doc, blockElem, start, end, hl) {
+  const textNodes = getTextNodesInDoc(doc, blockElem);
+  let currentOffset = 0;
+  const nodesToWrap = [];
+
+  for (const node of textNodes) {
+    const nodeLen = node.nodeValue.length;
+    const nodeStart = currentOffset;
+    const nodeEnd = nodeStart + nodeLen;
+    currentOffset = nodeEnd;
+
+    if (nodeEnd > start && nodeStart < end) {
+      if (node.parentElement && node.parentElement.closest && node.parentElement.closest('mark, .reader-highlight')) {
+        continue;
+      }
+      const from = Math.max(0, start - nodeStart);
+      const to = Math.min(nodeLen, end - nodeStart);
+      if (from < to) {
+        nodesToWrap.push({ node, from, to });
+      }
+    }
+  }
+
+  for (let i = nodesToWrap.length - 1; i >= 0; i--) {
+    const { node, from, to } = nodesToWrap[i];
+    let target = node;
+    if (from > 0) {
+      target = node.splitText(from);
+    }
+    const len = to - from;
+    if (len < target.nodeValue.length) {
+      target.splitText(len);
+    }
+    const mark = doc.createElement('mark');
+    mark.className = `reader-highlight hl-${hl.color || 'yellow'}`;
+    if (hl.id) mark.setAttribute('data-hl-id', hl.id);
+    if (target.parentNode) {
+      target.parentNode.replaceChild(mark, target);
+      mark.appendChild(target);
+    }
+  }
+}
+
+function findSubstringRangeInBlockText(blockText, hl) {
+  if (!blockText || !hl || !hl.text) return null;
+  const direct = findSubstringRangeInText(blockText, hl);
+  if (direct) return direct;
+
+  if (hl.targetSentence) {
+    const flexSentRe = buildFlexibleRegex(hl.targetSentence);
+    if (flexSentRe) {
+      const m = flexSentRe.exec(blockText);
+      if (m) {
+        const subText = blockText.substring(m.index, m.index + m[0].length);
+        const subRange = findSubstringRangeInText(subText, { text: hl.text });
+        if (subRange) {
+          return {
+            start: m.index + subRange.start,
+            end: m.index + subRange.end
+          };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+function injectMarksInChapterDoc(doc, chapterHls, rootContainer = null) {
+  if (!doc || !Array.isArray(chapterHls) || chapterHls.length === 0) return;
+  const root = rootContainer || doc.body || doc.documentElement;
+  if (!root) return;
+
+  const candidateBlocks = Array.from(root.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, td, th, pre'));
+  if (candidateBlocks.length === 0) {
+    const divBlocks = Array.from(root.querySelectorAll('div'));
+    if (divBlocks.length > 0) {
+      candidateBlocks.push(...divBlocks);
+    } else {
+      candidateBlocks.push(root);
+    }
+  }
+
+  const blockTextCache = new Map();
+  const getBlockConcatText = (block) => {
+    if (!blockTextCache.has(block)) {
+      const tNodes = getTextNodesInDoc(doc, block);
+      blockTextCache.set(block, tNodes.map(n => n.nodeValue).join(''));
+    }
+    return blockTextCache.get(block);
+  };
+
+  const blockMap = new Map();
+
+  chapterHls.forEach(hl => {
+    if (!hl || !hl.text || !hl.text.trim()) return;
+    if (hl.id && root.querySelector(`[data-hl-id="${hl.id}"]`)) return;
+
+    let targetBlock = null;
+    let range = null;
+
+    // 1. Try ePub.CFI range resolution on clean doc
+    if (hl.cfiRange && typeof ePub !== 'undefined' && ePub.CFI) {
+      try {
+        const cfi = new ePub.CFI(hl.cfiRange);
+        const domRange = cfi.toRange(doc);
+        if (domRange && !domRange.collapsed) {
+          const rNorm = normalizeSearchText(domRange.toString());
+          const hNorm = normalizeSearchText(hl.text);
+          if (rNorm && hNorm && (rNorm === hNorm || rNorm.includes(hNorm) || hNorm.includes(rNorm))) {
+            const blk = findContainingBlockInDoc(domRange.commonAncestorContainer, doc);
+            if (blk && root.contains(blk)) {
+              const r = getDomRangeOffsetsInTextNodes(doc, blk, domRange);
+              if (r) {
+                targetBlock = blk;
+                range = r;
+              }
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 2. Try matching by hl.pIdx
+    if (!targetBlock && typeof hl.pIdx === 'number' && !isNaN(hl.pIdx)) {
+      const pBlock = root.querySelector(`#p-${hl.pIdx}, [data-p-idx="${hl.pIdx}"]`);
+      if (pBlock) {
+        const r = findSubstringRangeInBlockText(getBlockConcatText(pBlock), hl);
+        if (r) {
+          targetBlock = pBlock;
+          range = r;
+        }
+      }
+    }
+
+    // 3. Try matching by hl.targetSentence across candidate blocks
+    if (!targetBlock && hl.targetSentence) {
+      const targetSentence = String(hl.targetSentence).trim();
+      const flexSentRe = buildFlexibleRegex(targetSentence);
+      for (const blk of candidateBlocks) {
+        const bText = getBlockConcatText(blk);
+        if (!bText) continue;
+        if (bText.includes(targetSentence) || (flexSentRe && flexSentRe.test(bText))) {
+          const r = findSubstringRangeInBlockText(bText, hl);
+          if (r) {
+            targetBlock = blk;
+            range = r;
+            break;
+          }
+        }
+      }
+    }
+
+    // 4. Try findHighlightRangeInDoc (Smart Text Anchoring)
+    if (!targetBlock) {
+      try {
+        const domRange = findHighlightRangeInDoc(doc, hl);
+        if (domRange && !domRange.collapsed) {
+          const blk = findContainingBlockInDoc(domRange.commonAncestorContainer, doc);
+          if (blk && root.contains(blk)) {
+            const r = getDomRangeOffsetsInTextNodes(doc, blk, domRange);
+            if (r) {
+              targetBlock = blk;
+              range = r;
+            }
+          }
+        }
+      } catch (e) {}
+    }
+
+    // 5. Fallback search across candidate blocks
+    if (!targetBlock) {
+      for (const blk of candidateBlocks) {
+        const bText = getBlockConcatText(blk);
+        if (!bText) continue;
+        const r = findSubstringRangeInBlockText(bText, hl);
+        if (r) {
+          targetBlock = blk;
+          range = r;
+          break;
+        }
+      }
+    }
+
+    if (targetBlock && range && range.end > range.start) {
+      if (!blockMap.has(targetBlock)) {
+        blockMap.set(targetBlock, []);
+      }
+      blockMap.get(targetBlock).push({ hl, range });
+    }
+  });
+
+  blockMap.forEach((items, block) => {
+    items.sort((a, b) => {
+      if (b.range.start !== a.range.start) return b.range.start - a.range.start;
+      return (b.range.end - b.range.start) - (a.range.end - a.range.start);
+    });
+
+    const nonOverlapping = [];
+    let lastStart = Infinity;
+    for (const item of items) {
+      if (item.range.end <= lastStart) {
+        nonOverlapping.push(item);
+        lastStart = item.range.start;
+      }
+    }
+
+    for (const item of nonOverlapping) {
+      applyHighlightRangeInBlockInDoc(doc, block, item.range.start, item.range.end, item.hl);
+    }
+  });
+}
+
+function domNodeToPlainTextWithMarks(node) {
+  if (!node) return '';
+  if (node.nodeType === Node.TEXT_NODE) {
+    return (node.nodeValue || '').replace(/[\r\n\t]+/g, ' ');
+  }
+  if (node.nodeType !== Node.ELEMENT_NODE) return '';
+
+  const tag = node.tagName.toLowerCase();
+  if (
+    tag === 'script' || tag === 'style' || tag === 'meta' ||
+    tag === 'link' || tag === 'noscript' || tag === 'svg' ||
+    tag === 'img' || tag === 'image'
+  ) {
+    return '';
+  }
+
+  if (node.id === 'markdown-footnotes-section') return '';
+  if (node.classList && (
+    node.classList.contains('reader-footnote-badge') ||
+    node.classList.contains('fn-badge') ||
+    node.classList.contains('reader-note-badge') ||
+    node.classList.contains('markdown-footnotes-section') ||
+    node.classList.contains('footnotes-title') ||
+    node.classList.contains('footnotes-list')
+  )) {
+    return '';
+  }
+
+  let children = '';
+  node.childNodes.forEach(child => {
+    children += domNodeToPlainTextWithMarks(child);
+  });
+
+  if (tag === 'mark' || (node.classList && node.classList.contains('reader-highlight'))) {
+    if (!children.trim()) return children;
+    const hlId = (node.dataset && node.dataset.hlId) || node.getAttribute('data-hl-id') || '';
+    return `<mark data-hl-id="${hlId}">${children}</mark>`;
+  }
+
+  const clean = children.trim();
+
+  switch (tag) {
+    case 'h1':
+    case 'h2':
+    case 'h3':
+    case 'h4':
+    case 'h5':
+    case 'h6':
+    case 'p':
+    case 'blockquote':
+    case 'pre':
+    case 'tr':
+    case 'div':
+    case 'section':
+    case 'article':
+      return clean ? `\n\n${clean}\n\n` : '';
+    case 'ul':
+    case 'ol':
+      return clean ? `\n\n${clean}\n\n` : '';
+    case 'li':
+      return clean ? `\n- ${clean}` : '';
+    case 'hr':
+      return `\n\n---\n\n`;
+    case 'br':
+      return `\n`;
+    default:
+      return children;
+  }
+}
+
+function finalizePlainTextWithMarks(rawText) {
+  if (!rawText) return '';
+  let text = rawText;
+
+  // 1. Merge adjacent <mark> tags belonging to the same highlight ID
+  let prev;
+  do {
+    prev = text;
+    text = text.replace(
+      /<mark data-hl-id="([^"]+)">([\s\S]*?)<\/mark>([ \t]*)<mark data-hl-id="\1">([\s\S]*?)<\/mark>/g,
+      '<mark data-hl-id="$1">$2$3$4</mark>'
+    );
+  } while (text !== prev);
+
+  // 2. Convert <mark ...>...</mark> to clean <mark>...</mark> keeping surrounding whitespace outside
+  text = text.replace(/<mark(?:\s+[^>]*)?>([\s\S]*?)<\/mark>/gi, (match, inner) => {
+    const leadMatch = inner.match(/^\s+/);
+    const trailMatch = inner.match(/\s+$/);
+    const trimmed = inner.trim();
+    if (!trimmed) return inner;
+    const lead = leadMatch ? leadMatch[0] : '';
+    const trail = trailMatch ? trailMatch[0] : '';
+    return `${lead}<mark>${trimmed}</mark>${trail}`;
+  });
+
+  // 3. Normalize per-line whitespace and collapse excessive blank lines
+  text = text
+    .split('\n')
+    .map(line => line.replace(/[ \t]{2,}/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+  return text;
+}
+
+function extractCurrentChapterFromTxtOrMdDom() {
+  if (!elements.txtContent) return { text: '', chapterTitle: '' };
+  if (elements.txtContent.children.length === 0) {
+    if (state.currentBook.type === 'md' || state.currentBook.type === 'markdown') {
+      renderMdContent('preserve');
+    } else {
+      renderTxtContent('preserve');
+    }
+  }
+
+  const children = Array.from(elements.txtContent.children).filter(
+    el => el.id !== 'markdown-footnotes-section' && !el.classList.contains('markdown-footnotes-section')
+  );
+  if (children.length === 0) return { text: '', chapterTitle: '' };
+
+  let chapIndices = [];
+  const isMd = state.currentBook.type === 'md' || state.currentBook.type === 'markdown';
+
+  if (isMd) {
+    const allHeadingIndices = [];
+    children.forEach((el, idx) => {
+      if (el.classList.contains('md-heading') || /^H[1-6]$/i.test(el.tagName)) {
+        allHeadingIndices.push(idx);
+      }
+    });
+
+    if (allHeadingIndices.length > 1) {
+      let candidates = allHeadingIndices;
+      const firstIdx = allHeadingIndices[0];
+      const secondIdx = allHeadingIndices[1];
+      const firstEl = children[firstIdx];
+      const secondEl = children[secondIdx];
+      const firstLvl = parseInt((firstEl.tagName || '').substring(1), 10) || 2;
+      const secondLvl = parseInt((secondEl.tagName || '').substring(1), 10) || 2;
+
+      if (firstLvl === 1 && secondLvl >= 2) {
+        const betweenText = children.slice(firstIdx + 1, secondIdx).map(el => el.textContent || '').join('').trim();
+        if (betweenText.length <= 200) {
+          candidates = allHeadingIndices.slice(1);
+        }
+      }
+
+      if (candidates.length > 1) {
+        const levels = candidates.map(i => parseInt((children[i].tagName || '').substring(1), 10) || 2);
+        const minLvl = Math.min(...levels);
+        const minCount = levels.filter(l => l === minLvl).length;
+        const maxAllowedLvl = minCount >= 2 ? minLvl : minLvl + 1;
+        chapIndices = candidates.filter(i => {
+          const lvl = parseInt((children[i].tagName || '').substring(1), 10) || 2;
+          return lvl <= maxAllowedLvl;
+        });
+      } else {
+        chapIndices = candidates;
+      }
+    }
+  } else {
+    children.forEach((el, idx) => {
+      if (el.classList.contains('txt-heading')) {
+        chapIndices.push(idx);
+      }
+    });
+  }
+
+  let selectedElements = children;
+  let chapterTitle = (elements.currentChapterTitle ? elements.currentChapterTitle.textContent.trim() : '') || state.currentBook.title || '';
+
+  if (chapIndices.length > 0) {
+    const scrollThreshold = (elements.txtViewer ? elements.txtViewer.scrollTop : 0) + 120;
+    let activeK = -1;
+    chapIndices.forEach((cIdx, k) => {
+      if (children[cIdx].offsetTop <= scrollThreshold) {
+        activeK = k;
+      }
+    });
+
+    if (activeK === -1) {
+      const preText = children.slice(0, chapIndices[0]).map(el => el.textContent || '').join('').trim();
+      if (preText.length <= 400) {
+        activeK = 0;
+      }
+    }
+
+    if (activeK >= 0) {
+      const startIdx = chapIndices[activeK];
+      const endIdx = (activeK + 1 < chapIndices.length) ? chapIndices[activeK + 1] : children.length;
+      selectedElements = children.slice(startIdx, endIdx);
+      chapterTitle = (children[startIdx].textContent || '').trim() || chapterTitle;
+    } else {
+      selectedElements = children.slice(0, chapIndices[0]);
+    }
+  }
+
+  const rawOut = selectedElements.map(el => domNodeToPlainTextWithMarks(el)).join('');
+  return {
+    text: finalizePlainTextWithMarks(rawOut),
+    chapterTitle
+  };
+}
+
+function flattenEpubToc(tocItems, out = []) {
+  if (!Array.isArray(tocItems)) return out;
+  tocItems.forEach(item => {
+    if (item && item.href) {
+      const [filePart, hashPart] = item.href.split('#');
+      out.push({
+        label: (item.label || '').trim(),
+        href: item.href,
+        fileHref: (filePart || '').replace(/^.*[\\\/]/, ''),
+        hash: hashPart || ''
+      });
+    }
+    if (Array.isArray(item.subitems) && item.subitems.length > 0) {
+      flattenEpubToc(item.subitems, out);
+    }
+  });
+  return out;
+}
+
+async function extractCurrentChapterFromEpub() {
+  if (typeof JSZip === 'undefined') {
+    throw new Error('ZIP 라이브러리를 불러오지 못했습니다.');
+  }
+  const epubZip = await JSZip.loadAsync(state.currentBook.content);
+
+  let opfPath = 'OEBPS/content.opf';
+  try {
+    const containerFile = epubZip.file('META-INF/container.xml');
+    if (containerFile) {
+      const containerXml = await containerFile.async('text');
+      const match = containerXml.match(/full-path\s*=\s*["']([^"']+)["']/i);
+      if (match) opfPath = match[1];
+    }
+  } catch (e) {}
+  const opfDir = opfPath.includes('/') ? opfPath.substring(0, opfPath.lastIndexOf('/') + 1) : '';
+
+  const opfFile = epubZip.file(opfPath);
+  if (!opfFile) throw new Error('EPUB OPF 메타데이터 파일을 찾을 수 없습니다.');
+  const opfText = await opfFile.async('text');
+  const opfDoc = new DOMParser().parseFromString(opfText, 'application/xml');
+
+  const manifestItems = {};
+  opfDoc.querySelectorAll('manifest > item, item').forEach(item => {
+    const id = item.getAttribute('id');
+    const href = item.getAttribute('href');
+    if (id && href) manifestItems[id] = href;
+  });
+
+  const allSpineItems = [];
+  opfDoc.querySelectorAll('spine > itemref, itemref').forEach((ref, idx) => {
+    const idref = ref.getAttribute('idref');
+    const href = manifestItems[idref] || '';
+    allSpineItems.push({
+      spineIndex: idx,
+      idref: idref || '',
+      href: href || ''
+    });
+  });
+
+  const exportSpineItems = allSpineItems.filter(item => {
+    return item.href && !item.href.includes('highlights.xhtml') && !item.href.includes('highlights_appendix') && !item.href.includes('nav.xhtml');
+  });
+
+  if (exportSpineItems.length === 0) {
+    throw new Error('내보낼 EPUB 챕터를 찾을 수 없습니다.');
+  }
+
+  const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+  const currentCfi = (!state.epub.isResizing && loc && loc.start && loc.start.cfi)
+    ? loc.start.cfi
+    : (state.epub.pendingRestoreCfi || state.epub.currentCfi || localStorage.getItem(`reader_pos_${state.currentBook.id}`));
+  const currentHref = (loc && loc.start && loc.start.href) ? loc.start.href : '';
+
+  let currentSpineItem = null;
+
+  // 1. Match by loc.start.index
+  if (loc && loc.start && typeof loc.start.index === 'number') {
+    currentSpineItem = exportSpineItems.find(s => s.spineIndex === loc.start.index) || null;
+  }
+
+  // 2. Match by loc.start.href
+  if (!currentSpineItem && currentHref) {
+    const cleanCur = currentHref.split('#')[0];
+    const baseCur = cleanCur.replace(/^.*[\\\/]/, '');
+    currentSpineItem = exportSpineItems.find(s => {
+      const cleanS = s.href.split('#')[0];
+      const baseS = cleanS.replace(/^.*[\\\/]/, '');
+      return cleanS === cleanCur || baseS === baseCur || cleanS.endsWith(cleanCur) || cleanCur.endsWith(cleanS);
+    }) || null;
+  }
+
+  // 3. Match by currentCfi
+  if (!currentSpineItem && currentCfi) {
+    currentSpineItem = findSpineItemForHighlight({ cfiRange: currentCfi }, allSpineItems, exportSpineItems);
+  }
+
+  // 4. Match by live contents sectionIndex
+  if (!currentSpineItem && state.epub.rendition && typeof state.epub.rendition.getContents === 'function') {
+    const contentsList = state.epub.rendition.getContents();
+    if (contentsList && contentsList.length > 0 && typeof contentsList[0].sectionIndex === 'number') {
+      currentSpineItem = exportSpineItems.find(s => s.spineIndex === contentsList[0].sectionIndex) || null;
+    }
+  }
+
+  if (!currentSpineItem) {
+    currentSpineItem = exportSpineItems[0];
+  }
+
+  // Determine if chapter spans multiple Calibre-split continuation spine items
+  let targetSpineItems = [currentSpineItem];
+  const flatToc = flattenEpubToc(state.epub.toc);
+  if (exportSpineItems.length > 1 && flatToc.length > 0) {
+    const hasTocEntry = (spItem) => Boolean(findTocItemForHref(spItem.href, state.epub.toc));
+    const anySpineHasToc = exportSpineItems.some(hasTocEntry);
+    if (anySpineHasToc) {
+      const curIdx = exportSpineItems.indexOf(currentSpineItem);
+      if (curIdx !== -1) {
+        let startIdx = curIdx;
+        while (startIdx > 0 && !hasTocEntry(exportSpineItems[startIdx])) {
+          startIdx--;
+        }
+        if (hasTocEntry(exportSpineItems[startIdx])) {
+          let endIdx = startIdx + 1;
+          while (endIdx < exportSpineItems.length && !hasTocEntry(exportSpineItems[endIdx])) {
+            endIdx++;
+          }
+          if (curIdx >= startIdx && curIdx < endIdx) {
+            targetSpineItems = exportSpineItems.slice(startIdx, endIdx);
+          }
+        }
+      }
+    }
+  }
+
+  // Group highlights by spine item
+  const sortedHls = [...state.highlights].sort(compareHighlights);
+  const chapterHlsMap = new Map();
+  exportSpineItems.forEach(item => chapterHlsMap.set(item, []));
+  const unassignedHls = [];
+
+  sortedHls.forEach(hl => {
+    if (!hl || !hl.text) return;
+    const matchedItem = findSpineItemForHighlight(hl, allSpineItems, exportSpineItems);
+    if (matchedItem && chapterHlsMap.has(matchedItem)) {
+      chapterHlsMap.get(matchedItem).push(hl);
+    } else {
+      unassignedHls.push(hl);
+    }
+  });
+
+  let combinedChapterText = '';
+  let resolvedChapterTitle = (elements.currentChapterTitle ? elements.currentChapterTitle.textContent.trim() : '') || '';
+
+  for (const spineItem of targetSpineItems) {
+    let cleanPath = opfDir + spineItem.href.split('#')[0];
+    const parts = cleanPath.split('/');
+    const resolvedParts = [];
+    for (const part of parts) {
+      if (part === '..') resolvedParts.pop();
+      else if (part !== '.' && part !== '') resolvedParts.push(part);
+    }
+    const resolvedPath = resolvedParts.join('/');
+
+    const chapterFile = epubZip.file(resolvedPath) || epubZip.file(cleanPath) || epubZip.file(spineItem.href.split('#')[0]);
+    if (!chapterFile) continue;
+
+    const chapterHtml = await chapterFile.async('text');
+    let doc = new DOMParser().parseFromString(chapterHtml, 'application/xhtml+xml');
+    if (doc.querySelector('parsererror')) {
+      doc = new DOMParser().parseFromString(chapterHtml, 'text/html');
+    }
+
+    // Clean any old footnote badges or <mark> tags so text nodes are normalized
+    cleanDocHighlightsAndFootnotes(doc);
+
+    const chapterHls = [...(chapterHlsMap.get(spineItem) || [])];
+    const bodyTextContent = (doc.body || doc.documentElement).textContent || '';
+
+    for (let i = unassignedHls.length - 1; i >= 0; i--) {
+      const uHl = unassignedHls[i];
+      const tSent = (uHl.targetSentence || '').trim();
+      const flexSentRe = tSent ? buildFlexibleRegex(tSent) : null;
+      if (
+        (tSent && (bodyTextContent.includes(tSent) || (flexSentRe && flexSentRe.test(bodyTextContent)))) ||
+        (!tSent && uHl.text && bodyTextContent.includes(uHl.text.trim()))
+      ) {
+        chapterHls.push(uHl);
+        unassignedHls.splice(i, 1);
+      }
+    }
+
+    // Inject <mark> tags on the full untouched chapter DOM first (so CFI resolution is 100% exact)
+    injectMarksInChapterDoc(doc, chapterHls);
+
+    const body = doc.body || doc.documentElement;
+
+    // Handle single-spine multi-chapter EPUBs (e.g. book.xhtml#toc-h-1, book.xhtml#toc-h-2)
+    const baseSpineFile = spineItem.href.split('#')[0].replace(/^.*[\\\/]/, '');
+    const sameFileTocHashes = flatToc.filter(
+      t => t.fileHref === baseSpineFile && t.hash && t.hash !== 'highlights-notes' && t.hash !== 'book-start'
+    );
+
+    let targetRoot = body;
+    if (targetSpineItems.length === 1 && sameFileTocHashes.length >= 2) {
+      const anchorEls = [];
+      sameFileTocHashes.forEach(t => {
+        const el = doc.getElementById(t.hash) || body.querySelector(`[id="${t.hash}"]`);
+        if (el && !anchorEls.some(a => a.el === el)) {
+          anchorEls.push({ el, label: t.label, hash: t.hash });
+        }
+      });
+
+      if (anchorEls.length >= 2) {
+        let activeAnchorIdx = -1;
+
+        // 1) Try resolving currentCfi position in doc
+        if (currentCfi && typeof ePub !== 'undefined' && ePub.CFI) {
+          try {
+            const cfiRange = new ePub.CFI(currentCfi).toRange(doc);
+            if (cfiRange && cfiRange.startContainer) {
+              const refNode = cfiRange.startContainer;
+              anchorEls.forEach((item, idx) => {
+                const cmp = item.el.compareDocumentPosition(refNode);
+                if (item.el === refNode || item.el.contains(refNode) || (cmp & Node.DOCUMENT_POSITION_FOLLOWING)) {
+                  activeAnchorIdx = idx;
+                }
+              });
+            }
+          } catch (e) {}
+        }
+
+        // 2) Fallback: match currentChapterTitle
+        if (activeAnchorIdx === -1 && resolvedChapterTitle) {
+          const idxByTitle = anchorEls.findIndex(a => a.label.toLowerCase() === resolvedChapterTitle.toLowerCase());
+          if (idxByTitle !== -1) activeAnchorIdx = idxByTitle;
+        }
+
+        if (activeAnchorIdx === -1) activeAnchorIdx = 0;
+
+        const startAnchor = anchorEls[activeAnchorIdx].el;
+        const endAnchor = (activeAnchorIdx + 1 < anchorEls.length) ? anchorEls[activeAnchorIdx + 1].el : null;
+        if (anchorEls[activeAnchorIdx].label) {
+          resolvedChapterTitle = anchorEls[activeAnchorIdx].label;
+        }
+
+        const sliceWrapper = doc.createElement('div');
+        const bodyChildren = Array.from(body.children);
+        const startChildIdx = bodyChildren.findIndex(c => c === startAnchor || c.contains(startAnchor));
+        const endChildIdx = endAnchor ? bodyChildren.findIndex(c => c === endAnchor || c.contains(endAnchor)) : bodyChildren.length;
+
+        if (startChildIdx !== -1) {
+          const finalEnd = endChildIdx !== -1 && endChildIdx > startChildIdx ? endChildIdx : bodyChildren.length;
+          bodyChildren.slice(startChildIdx, finalEnd).forEach(c => {
+            sliceWrapper.appendChild(c.cloneNode(true));
+          });
+          targetRoot = sliceWrapper;
+        }
+      }
+    }
+
+    const hasHeading = Boolean(targetRoot.querySelector && targetRoot.querySelector('h1, h2, h3, h4, h5, h6'));
+    let chapText = finalizePlainTextWithMarks(domNodeToPlainTextWithMarks(targetRoot));
+
+    const tocItem = findTocItemForHref(spineItem.href, state.epub.toc);
+    if (tocItem && tocItem.label && tocItem.label.trim()) {
+      const tocTitle = tocItem.label.trim();
+      if (!resolvedChapterTitle) resolvedChapterTitle = tocTitle;
+      if (!hasHeading && chapText) {
+        const firstLine = chapText.split('\n')[0].trim();
+        if (firstLine.toLowerCase() !== tocTitle.toLowerCase()) {
+          chapText = `${tocTitle}\n\n${chapText}`;
+        }
+      }
+    }
+
+    if (chapText) {
+      combinedChapterText += (combinedChapterText ? '\n\n' : '') + chapText;
+    }
+  }
+
+  return {
+    text: combinedChapterText.trim(),
+    chapterTitle: resolvedChapterTitle || state.currentBook.title || 'chapter'
+  };
+}
+
+async function exportCurrentChapterWithHighlightsTxt() {
+  closeExportModal();
+  if (!state.currentBook) {
+    showToast('내보낼 도서가 없습니다. 먼저 도서를 열어주세요.');
+    return;
+  }
+
+  showToast('현재 챕터 텍스트(.txt) 생성 중...');
+
+  try {
+    let chapterData = { text: '', chapterTitle: '' };
+
+    if (state.currentBook.type === 'epub') {
+      chapterData = await extractCurrentChapterFromEpub();
+    } else {
+      chapterData = extractCurrentChapterFromTxtOrMdDom();
+    }
+
+    if (!chapterData.text) {
+      showToast('내보낼 현재 챕터 텍스트를 찾을 수 없습니다.');
+      return;
+    }
+
+    const fullContent = `${CHAPTER_HIGHLIGHT_EXPORT_HEADER}\n\n---\n\n${chapterData.text.trim()}\n`;
+
+    const bookTitle = (state.currentBook.title || 'book').replace(/[/\\?%*:|"<>]/g, '_').trim() || 'book';
+    const chapTitle = (chapterData.chapterTitle || '').replace(/[/\\?%*:|"<>]/g, '_').trim();
+    const fileName = (chapTitle && chapTitle.toLowerCase() !== bookTitle.toLowerCase())
+      ? `${bookTitle}_${chapTitle}_highlight.txt`
+      : `${bookTitle}_highlight.txt`;
+
+    const blob = new Blob([fullContent], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+    showToast('현재 챕터 텍스트(.txt) 내보내기가 완료되었습니다.');
+  } catch (err) {
+    console.error('Chapter TXT Export Error:', err);
+    showToast('챕터 텍스트 내보내기 중 오류가 발생했습니다: ' + (err.message || ''));
+  }
+}
 
 // ── Text Search & Match Normalization Helpers ──
 function escapeRegex(s) {
@@ -10724,6 +11563,12 @@ function setupEventListeners() {
     elements.btnChooseExportMd.addEventListener('click', () => {
       closeExportModal();
       exportBookAsMarkdownZip();
+    });
+  }
+  if (elements.btnChooseExportChapterTxt) {
+    elements.btnChooseExportChapterTxt.addEventListener('click', () => {
+      closeExportModal();
+      exportCurrentChapterWithHighlightsTxt();
     });
   }
   if (elements.btnCloseExportModal) {
