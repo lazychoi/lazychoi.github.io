@@ -1917,7 +1917,7 @@ body.drawer-open {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 300px;
+  width: 310px;
   max-width: calc(100vw - 24px);
   box-sizing: border-box;
   background: var(--reader-card-bg);
@@ -1925,13 +1925,23 @@ body.drawer-open {
   border: 1px solid var(--reader-border);
   border-radius: 16px;
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2), 0 4px 12px rgba(0, 0, 0, 0.08);
-  padding: 20px;
+  padding: 18px 18px 24px 18px;
   z-index: 2500;
   display: none;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   max-height: calc(100vh - 100px);
   overflow-y: auto;
+  scroll-padding-top: 18px;
+  scroll-padding-bottom: 24px;
+}
+
+.settings-popover > .setting-group:first-child {
+  margin-top: 2px;
+}
+
+.settings-popover > .setting-group:last-child {
+  margin-bottom: 6px;
 }
 
 .settings-popover.open {
@@ -2033,7 +2043,7 @@ body.theme-dark .btn-font-size:hover {
 .setting-divider {
   height: 1px;
   background: var(--reader-border);
-  margin: 4px 0;
+  margin: -4px 0 -2px 0;
 }
 
 .setting-label-row {
@@ -2168,6 +2178,23 @@ body.theme-dark .btn-font-size:hover {
 .book-manage-btn-row {
   display: flex;
   gap: 8px;
+}
+
+.sync-action-btn-row {
+  display: flex;
+  gap: 6px;
+}
+
+.sync-action-btn-row .btn-setting-action {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 7px 2px;
+  font-size: 11.5px;
+  letter-spacing: -0.4px;
+  white-space: nowrap;
+  justify-content: center;
+  text-align: center;
+  gap: 0;
 }
 
 .btn-setting-action {
@@ -3382,15 +3409,17 @@ body.theme-dark .quiz-phonetic-badge {
 /* ── 독서 진도 동기화 모달 (Sync Modal) ── */
 .sync-tab-bar {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 16px;
   border-bottom: 1px solid var(--reader-border);
   padding-bottom: 8px;
+  flex-wrap: wrap;
 }
 
 .sync-tab-btn {
-  flex: 1;
-  padding: 8px 12px;
+  flex: 1 1 0;
+  min-width: 105px;
+  padding: 8px 8px;
   border-radius: 8px;
   border: 1px solid transparent;
   background: transparent;
@@ -3400,6 +3429,7 @@ body.theme-dark .quiz-phonetic-badge {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
+  white-space: nowrap;
 }
 
 .sync-tab-btn:hover {
@@ -4266,26 +4296,34 @@ body.theme-dark .color-dot-btn.active {
     width: auto;
     max-width: 350px;
     margin: 0 auto;
-    padding: 16px 18px max(44px, calc(28px + env(safe-area-inset-bottom, 24px)));
+    padding: 18px 18px max(28px, calc(18px + env(safe-area-inset-bottom, 20px)));
     gap: 12px;
     box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
-    max-height: calc(100dvh - 84px - max(30px, calc(16px + env(safe-area-inset-bottom, 20px))));
+    max-height: calc(100dvh - 84px - max(24px, calc(12px + env(safe-area-inset-bottom, 20px))));
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
     touch-action: pan-y !important;
     overscroll-behavior: contain !important;
+    scroll-padding-top: 18px;
+    scroll-padding-bottom: 24px;
   }
   .settings-popover .book-manage-btn-row {
-    margin-bottom: 8px;
+    margin-bottom: 6px;
   }
   .settings-popover .book-manage-btn-row .btn-setting-action {
-    min-height: 38px;
+    min-height: 36px;
+  }
+  .settings-popover .sync-action-btn-row .btn-setting-action {
+    min-height: 34px;
+    font-size: 11.5px;
+    letter-spacing: -0.4px;
+    padding: 6px 2px;
   }
   .settings-popover .setting-group {
     gap: 6px;
   }
   .settings-popover .setting-divider {
-    margin: 2px 0;
+    margin: -4px 0 -2px 0;
   }
   .selection-menu-bar {
     width: 100% !important;

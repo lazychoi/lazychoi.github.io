@@ -199,7 +199,7 @@
 
               <div class="setting-group">
                 <div class="setting-toggle-row">
-                  <span class="setting-label">복사 시 형광펜 자동 검색</span>
+                  <span class="setting-label">복사 시 형광펜 목록 자동 검색</span>
                   <label class="toggle-switch" title="구문 복사 시 형광펜 목록 창을 열고 자동으로 검색합니다">
                     <input type="checkbox" id="toggle-copy-search-highlights" checked>
                     <span class="toggle-slider"></span>
@@ -244,20 +244,16 @@
               <div class="setting-group">
                 <div class="setting-label-row">
                   <span class="setting-label">📲 기기간 독서 진도 동기화</span>
-                  <span class="api-status-badge configured" id="sync-status-badge" style="background:#e0f2fe; color:#0369a1; border-color:#bae6fd;">원클릭 연동</span>
                 </div>
-                <div class="book-manage-btn-row">
-                  <button type="button" class="btn-setting-action primary" id="btn-copy-sync-code" title="현재 도서의 읽은 위치, 형광펜, 책갈피를 클립보드로 복사 (Apple 유니버설 클립보드 연동)">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
-                    </svg>
-                    진도 복사
+                <div class="book-manage-btn-row sync-action-btn-row">
+                  <button type="button" class="btn-setting-action" id="btn-copy-sync-code" title="현재 도서의 읽은 위치, 형광펜, 책갈피를 클립보드로 복사 (Apple 유니버설 클립보드 연동)">
+                    진도 내보내기
                   </button>
                   <button type="button" class="btn-setting-action" id="btn-paste-sync-code" title="다른 기기에서 복사한 진도 코드를 가져와 즉시 적용합니다">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
-                    </svg>
                     진도 가져오기
+                  </button>
+                  <button type="button" class="btn-setting-action" id="btn-open-vocab-sync" title="단어 뜻 채우기 (JSON 데이터를 불러와 형광펜의 단어 뜻과 문장 해석 채우기)">
+                    단어뜻 가져오기
                   </button>
                 </div>
                 <span class="setting-subtext">
@@ -644,7 +640,7 @@
 
   <!-- 독서 진도 동기화 (기기간 연동) 모달 -->
   <div class="meta-edit-modal" id="sync-modal">
-    <div class="meta-edit-card sync-modal-card" style="max-width: 520px;">
+    <div class="meta-edit-card sync-modal-card" style="max-width: 540px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
         <h3 style="font-size: 19px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
           <span>📲</span> 기기간 독서 진도 동기화
@@ -662,6 +658,9 @@
         </button>
         <button type="button" class="sync-tab-btn" id="btn-sync-tab-import" data-tab="import">
           📥 진도 가져오기 (적용)
+        </button>
+        <button type="button" class="sync-tab-btn" id="btn-sync-tab-vocab" data-tab="vocab">
+          📖 단어 뜻 채우기
         </button>
       </div>
 
@@ -719,6 +718,53 @@
         <div style="display:flex; justify-content:flex-end; gap:8px;">
           <button type="button" class="btn-reader primary" id="btn-sync-apply" style="min-width:110px;">
             🚀 진도 적용하기
+          </button>
+        </div>
+      </div>
+
+      <!-- TAB 3: 단어 뜻 채우기 -->
+      <div class="sync-tab-panel" id="sync-panel-vocab" style="display:none;">
+        <!-- 요약 상태 카드 -->
+        <div class="sync-summary-box" id="sync-vocab-summary">
+          <div class="sync-summary-title" id="sync-vocab-book-title">현재 도서: -</div>
+          <div class="sync-summary-items">
+            <span class="sync-summary-chip" id="sync-vocab-hl-total">🖍️ 형광펜 0개</span>
+            <span class="sync-summary-chip" id="sync-vocab-hl-empty" style="color:var(--primary, #2563eb); font-weight:600;">💡 뜻/해석 비어있음: 0개</span>
+          </div>
+        </div>
+
+        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px; line-height:1.45;">
+          JSON 파일 또는 텍스트를 불러오면 <code>text</code>와 <code>targetSentence</code>를 이용해 현재 도서의 형광펜을 찾아 비어있는 단어 뜻(<code>targetMeaning</code>)과 문장 해석(<code>sentenceTranslation</code>)을 채워넣습니다.
+        </p>
+
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <button type="button" class="btn-reader primary" id="btn-vocab-sync-quick-paste" style="flex:1; justify-content:center; padding:10px;" title="클립보드의 단어 뜻 JSON 데이터를 읽어와 입력창에 붙여넣습니다">
+            📋 클립보드 붙여넣기
+          </button>
+          <label class="btn-reader" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="단어 뜻 JSON 파일 불러오기">
+            📂 파일 불러오기
+            <input type="file" id="input-vocab-sync-file" accept=".json,application/json,text/plain" style="display:none;">
+          </label>
+        </div>
+
+        <div class="meta-input-group" style="margin-bottom:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label for="vocab-sync-input-code" style="margin-bottom:0;">단어 뜻 JSON 데이터 직접 붙여넣기</label>
+            <button type="button" id="btn-vocab-sync-sample" style="background:none; border:none; color:var(--primary, #2563eb); font-size:11px; cursor:pointer; text-decoration:underline; padding:0;">예시 양식 입력</button>
+          </div>
+          <textarea id="vocab-sync-input-code" rows="6" placeholder='[&#10;  {&#10;    "text": "namesake",&#10;    "targetSentence": "In short, I couldn’t have asked for a better namesake.",&#10;    "targetMeaning": "이름이 같은 사람 (동명이인). 본문에서는 &#39;자신과 이름이 같은 사람(조상/선대)&#39;을 뜻함.",&#10;    "sentenceTranslation": "요컨대, 나는 더 나은 동명이인(같은 이름을 가진 인물)을 바랄 수조차 없었다."&#10;  }&#10;]' style="font-family:monospace; font-size:11px; line-height:1.4; resize:vertical;"></textarea>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; font-size:12px; color:var(--reader-text);">
+          <input type="checkbox" id="vocab-sync-overwrite" style="cursor:pointer;">
+          <label for="vocab-sync-overwrite" style="cursor:pointer; user-select:none;">
+            기존에 이미 등록된 뜻/해석도 덮어쓰기 (체크 해제 시 비어있는 항목만 채움)
+          </label>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px;">
+          <button type="button" class="btn-reader primary" id="btn-vocab-sync-apply" style="min-width:110px;">
+            ✨ 단어 뜻 채우기 적용
           </button>
         </div>
       </div>
