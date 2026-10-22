@@ -252,25 +252,80 @@ function buildAISearchPrompt({ targetSentence, prevSentence, nextSentence, autho
 }
 
 /**
- * 영문 문장 단위 분할 (Regex 기반 정교한 분할)
+ * 영문/한글 문장 단위 분할 (약어, 시간, 호칭, 소수점, 대화 등을 고려한 정교한 분할)
  */
 function splitIntoSentences(text) {
   if (!text) return [];
-  // 줄바꿈 정리
-  const normalized = text.replace(/\r\n/g, '\n').trim();
+  // 줄바꿈 정리 및 단락 내 연속 공백 정규화
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\s*\n\s*/g, ' ').trim();
   if (!normalized) return [];
 
-  // 문장 분리 정규식 (마침표, 물음표, 느낌표 뒤의 공백과 대문자/따옴표)
-  const tokens = normalized.match(/[^.!?]+[.!?]+["'’”]?|\S+$/g);
-  if (!tokens) return [normalized];
+  // 1. 소수점 및 숫자 사이의 마침표 보호 (예: 3.14, $3.50, 10.5)
+  let processed = normalized.replace(/(?<=\d)\.(?=\d)/g, '__DOT__');
 
-  return tokens.map(s => s.trim()).filter(s => s.length > 0);
+  // 2. 호칭 및 직함 약어 보호 (뒤에 단어가 오는 경우: Mr., Mrs., Ms., Dr., Prof., Rev., St., etc.)
+  processed = processed.replace(/\b(Mr|Mrs|Ms|Dr|Prof|Rev|Gen|Col|Capt|Lt|Sgt|Rep|Sen|Gov|Pres|Hon|St)\./gi, '$1__DOT__');
+
+  // 3. 인명 이니셜 보호 (예: R. J. Palacio, J. K. Rowling, George W. Bush)
+  processed = processed.replace(/(?<=\b[A-Z])\.(?=\s+[A-Z])/g, '__DOT__');
+
+  // 4. a.m. / p.m. 공백 포함 형태 보호 (예: 3:10 p.m., 3:10 p. m., 8:00 a.m., 8:00 a. m.)
+  processed = processed.replace(/\b([ap])\.\s*(m)\./gi, (match, p1, p2, offset, str) => {
+    const after = str.slice(offset + match.length);
+    const dotsProtected = match.slice(0, -1).replace(/\./g, '__DOT__');
+    if (/^[,;:—\-]/.test(after) || /^\s+[a-z]/.test(after)) {
+      return dotsProtected + '__DOT__';
+    }
+    return dotsProtected + '.';
+  });
+
+  // 5. 연속된 마침표 약어 보호 (예: p.m., a.m., U.S., U.K., U.S.A., Ph.D., e.g., i.e.)
+  // 약어 내부의 마침표는 항상 보호하고, 마지막 마침표는 뒤에 쉼표/대시/소문자가 오면 보호
+  processed = processed.replace(/\b(?:[a-zA-Z]\.){2,}/g, (match, offset, str) => {
+    const after = str.slice(offset + match.length);
+    const dotsProtected = match.slice(0, -1).replace(/\./g, '__DOT__');
+    if (/^[,;:—\-]/.test(after) || /^\s+[a-z]/.test(after)) {
+      return dotsProtected + '__DOT__';
+    }
+    return dotsProtected + '.';
+  });
+
+  // 6. 문장 부호(쉼표, 세미콜론, 콜론, 대시 등) 바로 앞에 오는 단어의 마침표 보호 (예: "etc.,", "e.g.,", "i.e.,")
+  processed = processed.replace(/\b([a-zA-Z]+)\.(?=[,;:—\-])/g, '$1__DOT__');
+
+  // 7. e.g. 및 i.e.는 문장 끝으로 쓰이는 경우가 거의 없으므로 마침표 전체 보호
+  processed = processed.replace(/\b(e\.g|i\.e)\./gi, (m) => m.replace(/\./g, '__DOT__'));
+
+  // 8. 대화문 태그 또는 문장 중간의 마침표/느낌표/물음표 뒤에 소문자가 오는 경우 보호
+  // 예: "\"Look out!\" cried Jack" or "5 lbs. of flour" or "Wait... what happened?"
+  processed = processed.replace(/([.!?]+["'”’)]?)\s+(?=[a-z])/g, (match, p1) => {
+    return p1.replace(/\./g, '__DOT__').replace(/!/g, '__EXCL__').replace(/\?/g, '__QUES__') + ' ';
+  });
+
+  let rawSegments = [];
+  if (typeof Intl !== 'undefined' && Intl.Segmenter) {
+    const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
+    rawSegments = Array.from(segmenter.segment(processed)).map(s => s.segment);
+  } else {
+    // Intl.Segmenter 미지원 브라우저용 Regex 폴백
+    const matches = processed.match(/[^.!?]+(?:[.!?]+(?:["'”’)]+)?(?=\s+|$)|$)/g);
+    rawSegments = matches || [processed];
+  }
+
+  return rawSegments
+    .map(s => s
+      .replace(/__DOT__/g, '.')
+      .replace(/__EXCL__/g, '!')
+      .replace(/__QUES__/g, '?')
+      .trim()
+    )
+    .filter(s => s.length > 0);
 }
 
 /**
  * 특정 텍스트 및 그 주변 문맥(이전/다음 문장) 추출
  */
-function extractContextFromText(fullParagraph, selectedText) {
+function extractContextFromText(fullParagraph, selectedText, charOffset = -1) {
   const sentences = splitIntoSentences(fullParagraph);
   if (sentences.length === 0) {
     return {
@@ -280,19 +335,53 @@ function extractContextFromText(fullParagraph, selectedText) {
     };
   }
 
-  const cleanSel = selectedText.trim().toLowerCase();
+  const cleanSel = selectedText.trim();
+  const cleanSelLower = cleanSel.toLowerCase();
 
-  // 선택된 텍스트가 포함된 문장 인덱스 찾기
   let targetIdx = -1;
-  for (let i = 0; i < sentences.length; i++) {
-    if (sentences[i].toLowerCase().includes(cleanSel)) {
-      targetIdx = i;
-      break;
+
+  // 1. charOffset이 주어진 경우: 전체 단락 내 해당 오프셋 위치가 포함된 문장 탐색
+  if (charOffset >= 0) {
+    let searchFrom = 0;
+    for (let i = 0; i < sentences.length; i++) {
+      const sentText = sentences[i];
+      const prefix = sentText.slice(0, Math.min(35, sentText.length));
+      const sPos = fullParagraph.indexOf(prefix, searchFrom);
+      const start = sPos >= 0 ? sPos : searchFrom;
+      const end = start + sentText.length;
+      searchFrom = end;
+
+      if (charOffset >= start && charOffset <= end + 15) {
+        if (sentences[i].toLowerCase().includes(cleanSelLower)) {
+          targetIdx = i;
+          break;
+        }
+      }
     }
   }
 
+  // 2. 정확한 대소문자 일치 문장 탐색
+  if (targetIdx === -1 && cleanSel) {
+    for (let i = 0; i < sentences.length; i++) {
+      if (sentences[i].includes(cleanSel)) {
+        targetIdx = i;
+        break;
+      }
+    }
+  }
+
+  // 3. 대소문자 무시 일치 문장 탐색
+  if (targetIdx === -1 && cleanSelLower) {
+    for (let i = 0; i < sentences.length; i++) {
+      if (sentences[i].toLowerCase().includes(cleanSelLower)) {
+        targetIdx = i;
+        break;
+      }
+    }
+  }
+
+  // 4. 문장에 걸쳐 선택되었거나 찾지 못한 경우
   if (targetIdx === -1) {
-    // 문장에 걸쳐 선택된 경우 또는 못 찾았을 때는 선택된 텍스트 자체를 대상 문장으로
     return {
       targetSentence: selectedText,
       prevSentence: sentences[0] !== selectedText ? sentences[0] : '',
@@ -8388,9 +8477,9 @@ function handleTxtSelection() {
       fullParagraph = selectedText;
     }
 
-    const context = extractContextFromText(fullParagraph, selectedText);
     const exactOffset = pElem ? getSelectionCharacterOffsetWithin(pElem, range) : -1;
     const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(selectedText);
+    const context = extractContextFromText(fullParagraph, selectedText, startOffset);
 
     state.activeSelection = {
       text: selectedText,
@@ -8450,11 +8539,23 @@ function getActiveSelection() {
               console.warn('cfiFromRange error in getActiveSelection:', ce);
             }
           }
+
+          let context = { targetSentence: iText, prevSentence: '', nextSentence: '' };
+          if (range) {
+            const parentP = range.commonAncestorContainer.nodeType === 1
+              ? range.commonAncestorContainer.closest('p, div, section')
+              : (range.commonAncestorContainer.parentElement ? range.commonAncestorContainer.parentElement.closest('p, div, section') : null);
+            const fullParagraph = parentP ? parentP.textContent : iText;
+            const exactOffset = parentP ? getSelectionCharacterOffsetWithin(parentP, range) : -1;
+            const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(iText);
+            context = extractContextFromText(fullParagraph, iText, startOffset);
+          }
+
           state.activeSelection = {
             text: iText,
-            targetSentence: iText,
-            prevSentence: '',
-            nextSentence: '',
+            targetSentence: context.targetSentence,
+            prevSentence: context.prevSentence,
+            nextSentence: context.nextSentence,
             cfiRange: cfi,
             contents: contentsObj,
             range: range
@@ -8485,7 +8586,9 @@ function handleEpubSelection(cfiRange, contents) {
     : (range.commonAncestorContainer.parentElement ? range.commonAncestorContainer.parentElement.closest('p, div, section') : null);
 
   const fullParagraph = parentP ? parentP.textContent : selectedText;
-  const context = extractContextFromText(fullParagraph, selectedText);
+  const exactOffset = parentP ? getSelectionCharacterOffsetWithin(parentP, range) : -1;
+  const startOffset = exactOffset >= 0 ? exactOffset : fullParagraph.indexOf(selectedText);
+  const context = extractContextFromText(fullParagraph, selectedText, startOffset);
 
   state.activeSelection = {
     text: selectedText,
