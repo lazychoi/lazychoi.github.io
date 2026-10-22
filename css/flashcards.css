@@ -610,10 +610,21 @@
   border-radius: 6px;
   margin-bottom: 10px;
   line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.card-back-syntax p:first-child,
+.card-back-translation-body p:first-child,
+.card-front-syntax p:first-child,
+.card-front-translation p:first-child {
+  margin-top: 0;
 }
 
 .card-back-syntax p:last-child,
-.card-back-translation-body p:last-child {
+.card-back-translation-body p:last-child,
+.card-front-syntax p:last-child,
+.card-front-translation p:last-child {
   margin-bottom: 0;
 }
 
@@ -626,10 +637,14 @@
   border-radius: 6px;
   margin-bottom: 8px;
   line-height: 1.55;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-front-translation {
   line-height: 1.6;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .card-back-meaning {

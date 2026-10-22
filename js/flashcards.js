@@ -574,33 +574,39 @@ async function handleHighlightJsonFile(e) {
             return str.split(delimiter).join(' ');
         };
 
+        const normalizeField = (val) => String(val || '')
+            .replace(/\r\n?/g, '\n')
+            .replace(/\\n/g, '\n')
+            .replace(/^\n+|\s+$/g, '')
+            .replace(/\n/g, '\\n');
+
         const lines = [];
         highlights.forEach((hl) => {
             if (!hl || typeof hl !== 'object') return;
 
-            const rawText = safeReplaceDelimiter(String(hl.text || '').trim().replace(/\r?\n+/g, ' '));
-            const rawSentence = safeReplaceDelimiter(String(hl.targetSentence || '').trim().replace(/\r?\n+/g, ' '));
-            const rawMeaning = String(hl.targetMeaning || '').trim().replace(/\r?\n+/g, ' ');
-            const rawTranslation = String(hl.sentenceTranslation || '').trim().replace(/\r?\n/g, '\\n');
+            const rawText = safeReplaceDelimiter(normalizeField(hl.text));
+            const rawSentence = safeReplaceDelimiter(normalizeField(hl.targetSentence));
+            const rawMeaning = normalizeField(hl.targetMeaning);
+            const rawTranslation = normalizeField(hl.sentenceTranslation);
 
-            if (!rawText && !rawSentence) return;
+            if (!rawText.trim() && !rawSentence.trim()) return;
 
             // 1면: text와 targetSentence
             let frontPart = '';
-            if (rawText && rawSentence) {
+            if (rawText.trim() && rawSentence.trim()) {
                 frontPart = `${rawText}\\n${rawSentence}`;
             } else {
-                frontPart = rawText || rawSentence;
+                frontPart = rawText.trim() ? rawText : rawSentence;
             }
 
             // 2면: targetMeaning와 sentenceTranslation
             let backPart = '';
-            if (rawMeaning && rawTranslation) {
-                backPart = `${rawMeaning}\\n${rawTranslation}`;
-            } else if (rawMeaning) {
+            if (rawMeaning.trim() && rawTranslation.trim()) {
+                backPart = `${rawMeaning}\u200B\\n${rawTranslation}`;
+            } else if (rawMeaning.trim()) {
                 backPart = rawMeaning;
-            } else if (rawTranslation) {
-                backPart = `(뜻 미등록)\\n${rawTranslation}`;
+            } else if (rawTranslation.trim()) {
+                backPart = `(뜻 미등록)\u200B\\n${rawTranslation}`;
             } else {
                 backPart = '(뜻/해석 미등록)';
             }
@@ -839,40 +845,42 @@ async function handleVocabJsonFile(e) {
             return str.split(delimiter).join(' ');
         };
 
+        const normalizeField = (val) => String(val || '')
+            .replace(/\r\n?/g, '\n')
+            .replace(/\\n/g, '\n')
+            .replace(/^\n+|\s+$/g, '')
+            .replace(/\n/g, '\\n');
+
         const lines = [];
         items.forEach((item) => {
             if (!item || typeof item !== 'object') return;
 
-            const rawText = safeReplaceDelimiter(String(item.text || '').trim().replace(/\r?\n+/g, ' '));
-            const rawSentence = safeReplaceDelimiter(String(item.targetSentence || '').trim().replace(/\r?\n+/g, ' '));
-            const rawMeaning = String(item.targetMeaning || '').trim().replace(/\r?\n+/g, ' ');
-            const rawSyntax = String(item.syntaxBreakdown || '').trim().replace(/\r?\n+/g, ' ');
-            const rawTranslation = String(item.sentenceTranslation || '').trim().replace(/\r?\n+/g, ' ');
+            const rawText = safeReplaceDelimiter(normalizeField(item.text));
+            const rawSentence = safeReplaceDelimiter(normalizeField(item.targetSentence));
+            const rawMeaning = normalizeField(item.targetMeaning);
+            const rawTranslation = normalizeField(item.sentenceTranslation);
 
-            if (!rawText && !rawSentence) return;
+            if (!rawText.trim() && !rawSentence.trim()) return;
 
             // 1면: text, targetSentence
             let frontPart = '';
-            if (rawText && rawSentence) {
+            if (rawText.trim() && rawSentence.trim()) {
                 frontPart = `${rawText}\\n${rawSentence}`;
             } else {
-                frontPart = rawText || rawSentence;
+                frontPart = rawText.trim() ? rawText : rawSentence;
             }
 
-            // 2면: targetMeaning, syntaxBreakdown, sentenceTranslation
-            const backParts = [];
-            if (rawMeaning) {
-                backParts.push(rawMeaning);
-            } else if (rawSyntax || rawTranslation) {
-                backParts.push('(뜻 미등록)');
+            // 2면: targetMeaning, sentenceTranslation
+            let backPart = '';
+            if (rawMeaning.trim() && rawTranslation.trim()) {
+                backPart = `${rawMeaning}\u200B\\n${rawTranslation}`;
+            } else if (rawMeaning.trim()) {
+                backPart = rawMeaning;
+            } else if (rawTranslation.trim()) {
+                backPart = `(뜻 미등록)\u200B\\n${rawTranslation}`;
+            } else {
+                backPart = '(뜻/해석 미등록)';
             }
-            if (rawSyntax) {
-                backParts.push(rawSyntax);
-            }
-            if (rawTranslation) {
-                backParts.push(rawTranslation);
-            }
-            const backPart = backParts.length > 0 ? backParts.join('\\n') : '(뜻/해석 미등록)';
 
             lines.push(`${frontPart}${delimiter}${backPart}`);
         });
@@ -921,14 +929,13 @@ function parsePastedData() {
     if (rawText.trim() && delimiter.length > 0) {
         const lines = rawText.split(/\r?\n/);
         lines.forEach((line) => {
-            const trimmedLine = line.trim();
-            if (!trimmedLine) return;
+            if (!line.trim()) return;
 
             const sepIndex = line.indexOf(delimiter);
             if (sepIndex !== -1) {
-                const question = line.slice(0, sepIndex).trim().replace(/\\n/g, '\n');
-                const answer = line.slice(sepIndex + delimiter.length).trim().replace(/\\n/g, '\n');
-                if (question || answer) {
+                const question = line.slice(0, sepIndex).replace(/^[\r\n]+|\s+$/g, '').replace(/\\n/g, '\n');
+                const answer = line.slice(sepIndex + delimiter.length).replace(/^[\r\n]+|\s+$/g, '').replace(/\\n/g, '\n');
+                if (question.trim() || answer.trim()) {
                     parsedCards.push({
                         question: question,
                         answer: answer
@@ -973,32 +980,44 @@ function escapeHtml(str) {
 }
 
 function highlightTargetInSentence(sentence, target) {
-    const rawSentence = String(sentence || '');
-    const rawTarget = String(target || '').trim();
-    if (!rawTarget) return escapeHtml(rawSentence);
+    const rawSentence = String(sentence || '').replace(/\r\n?/g, '\n').replace(/\\n/g, '\n').replace(/\u200B/g, '');
+    const rawTarget = String(target || '').replace(/\u200B/g, '').replace(/<[^>]+>/g, '').trim();
+    if (!rawTarget) return renderInlineMarkdownAndHtml(rawSentence);
 
     const escapedRegex = rawTarget
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         .replace(/['’‘`"]/g, '[\'’‘`"“”]');
     try {
-        const regex = new RegExp(escapedRegex, 'gi');
-        let result = '';
-        let lastIndex = 0;
-        let match;
-        while ((match = regex.exec(rawSentence)) !== null) {
-            if (match[0].length === 0) {
-                regex.lastIndex++;
-                continue;
-            }
-            result += escapeHtml(rawSentence.slice(lastIndex, match.index));
-            result += `<span class="hl-target">${escapeHtml(match[0])}</span>`;
-            lastIndex = match.index + match[0].length;
-        }
-        result += escapeHtml(rawSentence.slice(lastIndex));
-        return result;
+        // Match target outside HTML tags <...>
+        const tokenRegex = new RegExp(`(<[^>]+>)|(${escapedRegex})`, 'gi');
+        const highlighted = rawSentence.replace(tokenRegex, (match, htmlTag, targetMatch) => {
+            if (htmlTag) return htmlTag;
+            return `<span class="hl-target">${targetMatch}</span>`;
+        });
+        return renderInlineMarkdownAndHtml(highlighted);
     } catch (e) {
-        return escapeHtml(rawSentence);
+        return renderInlineMarkdownAndHtml(rawSentence);
     }
+}
+
+function splitStructuredFace(faceText) {
+    const raw = String(faceText || '').replace(/\r\n?/g, '\n');
+
+    if (raw.includes('\u200B\n')) {
+        const parts = raw.split('\u200B\n').map(p => p.replace(/\u200B/g, '').replace(/^[\r\n]+|\s+$/g, ''));
+        return {
+            header: (parts[0] || '').trim(),
+            body: parts.slice(1).join('\n').replace(/^[\r\n]+|\s+$/g, '')
+        };
+    }
+
+    const clean = raw.replace(/\u200B/g, '');
+    const lines = clean.split('\n');
+
+    return {
+        header: (lines[0] || '').trim(),
+        body: lines.slice(1).join('\n').replace(/^[\r\n]+|\s+$/g, '')
+    };
 }
 
 // 3. Study Mode Control Flow
@@ -1171,12 +1190,16 @@ function renderCurrentCard() {
     const meaningDiv = document.getElementById('cardBackMeaning');
 
     const isReversed = frontSideMode === '2';
-    const rawFront = isReversed ? (t.answer || '').trim() : (t.question || '').trim();
-    const rawBack = isReversed ? (t.question || '').trim() : (t.answer || '').trim();
+    const rawFront = isReversed
+        ? String(t.answer || '').replace(/^[\r\n]+|\s+$/g, '')
+        : String(t.question || '').replace(/^[\r\n]+|\s+$/g, '');
+    const rawBack = isReversed
+        ? String(t.question || '').replace(/^[\r\n]+|\s+$/g, '')
+        : String(t.answer || '').replace(/^[\r\n]+|\s+$/g, '');
     const questionText = rawFront || '(질문 없음)';
     const answerText = rawBack;
 
-    const qLines = questionText.split('\n');
+    const qLines = questionText.replace(/\u200B/g, '').split('\n');
     const questionHasRich = hasRichContent(questionText);
     const answerHasRich = hasRichContent(answerText);
     const isImageCard = questionHasRich || answerHasRich;
@@ -1217,14 +1240,20 @@ function renderCurrentCard() {
             backSentence.innerHTML = '';
         }
     } else if (qLines.length > 1) {
-        const mainText = qLines[0].trim();
-        const sentenceText = qLines.slice(1).join('\n').trim();
-        const highlightedSentenceHtml = (isReversed && qLines.length === 3)
-            ? `<div class="card-front-syntax">${highlightTargetInSentence(qLines[1].trim(), mainText)}</div><div class="card-front-translation">${highlightTargetInSentence(qLines[2].trim(), mainText)}</div>`
-            : highlightTargetInSentence(sentenceText, mainText).replace(/\n/g, '<br>');
+        const parsedFront = splitStructuredFace(questionText);
+        const mainText = parsedFront.header;
+        const mainTitleHtml = renderInlineMarkdownAndHtml(mainText);
+
+        let highlightedSentenceHtml = '';
+        if (isReversed) {
+            highlightedSentenceHtml = renderMarkdownAndMath(parsedFront.body);
+        } else {
+            const sentenceText = qLines.slice(1).join('\n').replace(/^[\r\n]+|\s+$/g, '');
+            highlightedSentenceHtml = highlightTargetInSentence(sentenceText, mainText);
+        }
 
         // Front (질문 면)
-        frontTitle.textContent = mainText;
+        frontTitle.innerHTML = mainTitleHtml;
         if (frontSentence) {
             frontSentence.style.display = 'block';
             frontSentence.innerHTML = highlightedSentenceHtml;
@@ -1232,22 +1261,23 @@ function renderCurrentCard() {
         }
 
         // Back Header (뒷면 상단 질문 면 표시)
-        backTerm.textContent = mainText;
+        backTerm.innerHTML = mainTitleHtml;
         if (backSentence) {
             backSentence.style.display = 'block';
             backSentence.innerHTML = highlightedSentenceHtml;
             renderKaTeXInElement(backSentence);
         }
     } else {
+        const singleTitleHtml = renderInlineMarkdownAndHtml(questionText);
         // Front (질문 면)
-        frontTitle.textContent = questionText;
+        frontTitle.innerHTML = singleTitleHtml;
         if (frontSentence) {
             frontSentence.style.display = 'none';
             frontSentence.innerHTML = '';
         }
 
         // Back Header (뒷면 상단 질문 면 표시)
-        backTerm.textContent = questionText;
+        backTerm.innerHTML = singleTitleHtml;
         if (backSentence) {
             backSentence.style.display = 'none';
             backSentence.innerHTML = '';
@@ -1257,7 +1287,7 @@ function renderCurrentCard() {
     renderKaTeXInElement(backTerm);
 
     // Populate Answer Side on Back (뒷면 하단 답변 면 표시)
-    const aLines = answerText ? answerText.split('\n') : [];
+    const aLines = answerText ? answerText.replace(/\u200B/g, '').split('\n') : [];
     const firstLineRich = aLines.length > 0 && hasRichContent(aLines[0]);
 
     if (!answerText) {
@@ -1273,25 +1303,17 @@ function renderCurrentCard() {
         if (backHeader) backHeader.style.borderBottom = isBackOnly2 ? 'none' : '';
         meaningDiv.style.display = '';
         if (aLines.length > 1 && !firstLineRich) {
-            const meaningHeader = aLines[0].trim();
-            if (!isReversed && aLines.length === 3 && !/^\s*(?:[|\-*+>#]|\d+\.)/.test(aLines[1])) {
-                const syntaxText = aLines[1].trim();
-                const translationText = aLines[2].trim();
-                meaningDiv.innerHTML = `
-                    <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
-                    <div class="card-back-syntax">${renderMarkdownAndMath(syntaxText)}</div>
-                    <div class="card-back-translation-body">${renderMarkdownAndMath(translationText)}</div>
-                `;
-            } else {
-                const translationBody = aLines.slice(1).join('\n').trim();
-                const bodyHtml = isReversed && !hasRichContent(translationBody)
-                    ? highlightTargetInSentence(translationBody, meaningHeader).replace(/\n/g, '<br>')
-                    : renderMarkdownAndMath(translationBody);
-                meaningDiv.innerHTML = `
-                    <div class="card-back-target-meaning">${escapeHtml(meaningHeader)}</div>
-                    <div class="card-back-translation-body">${bodyHtml}</div>
-                `;
-            }
+            const parsedBack = splitStructuredFace(answerText);
+            const meaningHeader = parsedBack.header;
+            const meaningHeaderHtml = renderInlineMarkdownAndHtml(meaningHeader);
+            const translationBody = parsedBack.body;
+            const bodyHtml = isReversed && !hasRichContent(translationBody)
+                ? highlightTargetInSentence(translationBody, meaningHeader)
+                : renderMarkdownAndMath(translationBody);
+            meaningDiv.innerHTML = `
+                <div class="card-back-target-meaning">${meaningHeaderHtml}</div>
+                <div class="card-back-translation-body">${bodyHtml}</div>
+            `;
         } else {
             meaningDiv.innerHTML = renderMarkdownAndMath(answerText);
         }
@@ -1598,14 +1620,60 @@ function studyFailedOnly() {
 }
 
 // 7. Markdown and KaTeX Helpers
+function preserveSpacesAndSyntaxForMarkdown(str) {
+    const lines = str.split('\n');
+    let inFence = false;
+
+    return lines.map((line) => {
+        if (/^\s*```/.test(line)) {
+            inFence = !inFence;
+            return line;
+        }
+        if (inFence) return line;
+
+        // Convert tabs to 4 non-breaking spaces
+        let processedLine = line.replace(/\t/g, '\u00A0\u00A0\u00A0\u00A0');
+
+        // Preserve leading spaces unless line is a nested markdown list item ("  - ", "  1. ")
+        const leadingMatch = processedLine.match(/^( +)([\s\S]*)$/);
+        if (leadingMatch) {
+            const leadingSpaces = leadingMatch[1];
+            const rest = leadingMatch[2];
+            const isListMarker = /^(?:[-*+]|\d+\.)\s/.test(rest);
+            const preservedLeading = isListMarker ? leadingSpaces : '\u00A0'.repeat(leadingSpaces.length);
+            const preservedRest = rest.replace(/(<[^>]+>)|( {2,})/g, (m, tag, sp) => tag ? tag : '\u00A0'.repeat(sp.length));
+            processedLine = preservedLeading + preservedRest;
+        } else {
+            processedLine = processedLine.replace(/(<[^>]+>)|( {2,})/g, (m, tag, sp) => tag ? tag : '\u00A0'.repeat(sp.length));
+        }
+
+        // Prevent [phrase](grammar note) from being parsed as a broken markdown link when target is not a URL/image
+        processedLine = processedLine.replace(/(?<!!)\[([^\]]+)\]\(([^)]+)\)/g, (match, label, target) => {
+            const t = target.trim();
+            if (/^(?:https?:|mailto:|tel:|#|\/|\.\/|\.\.\/|image:)/i.test(t)) {
+                return match;
+            }
+            return `\\[${label}](${target})`;
+        });
+
+        return processedLine;
+    }).join('\n');
+}
+
 function renderMarkdownAndMath(text) {
     if (!text) return '<span style="color: var(--text-muted); font-style: italic;">설명 없음</span>';
 
     const mathBlocks = [];
     const imageBlocks = [];
-    let processed = text;
+    const codeBlocks = [];
+    const htmlTagBlocks = [];
 
-    // Match $$ ... $$ (block math)
+    let processed = String(text)
+        .replace(/\r\n?/g, '\n')
+        .replace(/\\n/g, '\n')
+        .replace(/\u200B/g, '');
+
+    // 1. Match $$ ... $$ (block math)
     processed = processed.replace(/\$\$([\s\S]*?)\$\$/g, (match, formula) => {
         const placeholder = `%%BLOCKMATH_${mathBlocks.length}%%`;
         mathBlocks.push({ placeholder, formula, isBlock: true });
@@ -1616,6 +1684,18 @@ function renderMarkdownAndMath(text) {
     processed = processed.replace(/\$([^\$]+?)\$/g, (match, formula) => {
         const placeholder = `%%INLINEMATH_${mathBlocks.length}%%`;
         mathBlocks.push({ placeholder, formula, isBlock: false });
+        return placeholder;
+    });
+
+    // 1-1. Protect fenced code blocks ```...``` and inline code `...` before space/HTML processing
+    processed = processed.replace(/```[\s\S]*?```/g, (match) => {
+        const placeholder = `%%CODEBLOCK_${codeBlocks.length}%%`;
+        codeBlocks.push({ placeholder, content: match });
+        return placeholder;
+    });
+    processed = processed.replace(/`[^`\n]+`/g, (match) => {
+        const placeholder = `%%INLINECODE_${codeBlocks.length}%%`;
+        codeBlocks.push({ placeholder, content: match });
         return placeholder;
     });
 
@@ -1649,6 +1729,25 @@ function renderMarkdownAndMath(text) {
         return match;
     });
 
+    // 2-2. Preserve spaces (\u00A0) and grammar bracket notations [phrase](note)
+    processed = preserveSpacesAndSyntaxForMarkdown(processed);
+
+    // 2-3. Protect inline/formatting HTML tags so marked never treats lines starting with HTML tags
+    // as raw unparsed CommonMark HTML blocks (allowing Markdown + \n + HTML to render together)
+    processed = processed.replace(
+        /<\/?(?!(?:table|thead|tbody|tfoot|tr|th|td|pre|code|ul|ol|li|blockquote)\b)[a-zA-Z][a-zA-Z0-9-]*(?:\s+[^<>]*?)?>/gi,
+        (match) => {
+            const placeholder = `%%HTMLTAG_${htmlTagBlocks.length}%%`;
+            htmlTagBlocks.push({ placeholder, tag: match });
+            return placeholder;
+        }
+    );
+
+    // Restore code blocks before marked.parse
+    codeBlocks.forEach(item => {
+        processed = processed.split(item.placeholder).join(item.content);
+    });
+
     // 3. Render Markdown using marked.js if available
     let html = '';
     if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
@@ -1656,6 +1755,14 @@ function renderMarkdownAndMath(text) {
     } else {
         html = processed.replace(/\n/g, '<br>');
     }
+
+    // 3-0. Restore protected HTML tags and unwrap <p> around block-level <div>
+    htmlTagBlocks.forEach(item => {
+        html = html.split(item.placeholder).join(item.tag);
+    });
+    html = html
+        .replace(/<p>\s*(<div\b[^>]*>)/gi, '$1')
+        .replace(/(<\/div>)\s*<\/p>/gi, '$1');
 
     // 3-1. Restore image blocks (unwrap surrounding <p> if sole element in paragraph)
     imageBlocks.forEach(item => {
@@ -1676,6 +1783,16 @@ function renderMarkdownAndMath(text) {
     // Wrap tables in responsive container for overflow handling
     html = html.replace(/<table>/g, '<div class="table-responsive"><table>').replace(/<\/table>/g, '</table></div>');
 
+    return html;
+}
+
+function renderInlineMarkdownAndHtml(text) {
+    if (!text) return '';
+    const html = renderMarkdownAndMath(text).trim();
+    const singlePMatch = html.match(/^<p>([\s\S]*?)<\/p>$/i);
+    if (singlePMatch && !/<\/p>\s*<p>/i.test(singlePMatch[1])) {
+        return singlePMatch[1];
+    }
     return html;
 }
 

@@ -2723,16 +2723,12 @@ const exportBookAsMarkdown = exportBookAsMarkdownZip;
 // ── Current Chapter Text with Highlight (.txt) Export ──
 const CHAPTER_HIGHLIGHT_EXPORT_HEADER = `1. 기능: 
   - 아래 본문에서 <mark> 태그된 어휘의 문맥적 의미 해설
-  - 문장 내 도치, 생략, 복합 관계사, 까다로운 수식 구조, 비정형 절 등 독해를 방해하는 문법·구문 요소가 있는 경우 구문 분석 해설 제공
 
 2. 형태: json 파일 형식
   1. "text": <mark> 태그 부분
   2. "targetSentence": <mark> 태그 부분을 포함한 문장 전체
   3. "targetMeaning": <mark> 태그된 단어의 뜻. 연어(collocation)나 숙어(idiom)를 이루는 경우 결합된 표현 전체의 뜻을 제시
-  4. "syntaxBreakdown": 문장 구조 해설. 
-     - 도치, 생략, 병렬 구조, 특수 구문, 복잡한 수식 관계 등 문맥 파악에 걸림돌이 되는 핵심 문법/구문 요소를 명시하고 작동 원리를 간결하게 설명.
-     - 단순 평서문이거나 구조가 명확하여 별도 해설이 불필요한 경우 "N/A" 처리.
-  5. "sentenceTranslation": <mark> 태그 부분을 포함한 문장 번역. 직역(의역)
+  4. "sentenceTranslation": <mark> 태그 부분을 포함한 문장 번역. 직역(의역)
 
 3. 주의사항 (JSON 문법 오류 방지):
   - 모든 key의 value(값) 문자열 내부에는 쌍따옴표(")를 직접 사용하지 말고, 대사나 인용 표기가 필요한 경우 반드시 홑따옴표(')로 대체하거나 이스케이프(\\") 처리하여 유효한 JSON 형식을 유지할 것.`;

@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/flashcards.css?v=13">
+  <link rel="stylesheet" href="css/flashcards.css?v=15">
   <!-- KaTeX for rendering LaTeX math formulas -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
@@ -274,10 +274,10 @@
                 </tr>
                 <tr>
                   <td><b>📄 영단어 json</b></td>
-                  <td>원서 읽기 본문 내보내기 등으로 생성한 <b>구문 분석 포함 심화 영단어장</b></td>
-                  <td><code>text</code>, <code>targetSentence</code>,<br><code>targetMeaning</code>, <b><code>syntaxBreakdown</code></b>,<br><code>sentenceTranslation</code></td>
+                  <td>원서 읽기 본문 내보내기 등으로 생성한 <b>영단어장 JSON</b></td>
+                  <td><code>text</code>, <code>targetSentence</code>,<br><code>targetMeaning</code>, <code>sentenceTranslation</code></td>
                   <td>1줄: <code>text</code> (단어/숙어)<br>2줄: <code>targetSentence</code> (원문 문장)</td>
-                  <td>1줄: <code>targetMeaning</code> (단어 뜻)<br>2줄: <b><code>syntaxBreakdown</code> (구문 해설)</b><br>3줄: <code>sentenceTranslation</code> (문장 번역)</td>
+                  <td>1줄: <code>targetMeaning</code> (단어 뜻)<br>2줄: <code>sentenceTranslation</code> (문장 번역)</td>
                 </tr>
                 <tr>
                   <td><b>📄 csv 파일</b></td>
@@ -333,21 +333,19 @@
             <div class="guide-compare-card is-highlight">
               <div class="guide-card-title">📄 영단어 json</div>
               <ul>
-                <li><b>언제 쓰나요?</b> 원서 읽기 앱에서 <code>&lt;mark&gt;</code> 태그 본문을 내보내 AI로 생성한 <b>구문 해설 포함 영단어장 JSON</b>을 불러올 때 사용합니다.</li>
+                <li><b>언제 쓰나요?</b> 원서 읽기 앱에서 <code>&lt;mark&gt;</code> 태그 본문을 내보내 AI로 생성한 <b>영단어장 JSON</b>을 불러올 때 사용합니다.</li>
                 <li><b>배치 특징:</b>
                   <ul>
                     <li><b>1면:</b> <code>text</code>(단어/숙어) + <code>targetSentence</code>(포함된 원문 문장)</li>
-                    <li><b>2면:</b> <code>targetMeaning</code>(단어 뜻) + <b><code>syntaxBreakdown</code>(문장 구조·구문 분석 해설)</b> + <code>sentenceTranslation</code>(문장 번역) <b>3가지 항목</b>이 순서대로 배치됩니다.</li>
+                    <li><b>2면:</b> <code>targetMeaning</code>(단어 뜻) + <code>sentenceTranslation</code>(문장 번역) <b>2가지 항목</b>이 순서대로 배치됩니다.</li>
                   </ul>
                 </li>
-                <li><b>핵심 차이:</b> <code>📂 영어읽기앱 형광펜</code>에는 없는 <b><code>syntaxBreakdown</code>(도치·생략·병렬·수식 구조 등 문법/구문 해설)</b>을 2면 중앙 박스에 함께 표시하여 심화 독해 복습이 가능합니다.</li>
               </ul>
               <pre class="guide-code">[
   {
     "text": "Fortune cookies",
     "targetSentence": "Fortune cookies.",
     "targetMeaning": "포춘 쿠키 (운세나 격언이 적힌 종이가 들어 있는 과자)",
-    "syntaxBreakdown": "주어와 동사가 생략된 명사구 단편(Sentence Fragment)...",
     "sentenceTranslation": "포춘 쿠키들. (포춘 쿠키에서 나온 문구들.)"
   }
 ]</pre>
@@ -369,7 +367,7 @@
     </div>
   </dialog>
 
-  <script src="js/flashcards.js?v=14"></script>
+  <script src="js/flashcards.js?v=16"></script>
 </body>
 
 </html>
