@@ -606,6 +606,9 @@ const elements = {
   // Quiz Modal Elements
   quizModalBackdrop: document.getElementById('quiz-modal-backdrop'),
   btnCloseQuizModal: document.getElementById('btn-close-quiz-modal'),
+  quizChunkGroup: document.getElementById('quiz-chunk-group'),
+  quizChunkSelect: document.getElementById('quiz-chunk-select'),
+  quizChunkLabel: document.getElementById('quiz-chunk-label'),
   quizCriteriaDesc: document.getElementById('quiz-criteria-desc'),
   quizProgressText: document.getElementById('quiz-progress-text'),
   quizCardStats: document.getElementById('quiz-card-stats'),
@@ -622,6 +625,9 @@ const elements = {
   quizEmptyState: document.getElementById('quiz-empty-state'),
   quizActiveView: document.getElementById('quiz-active-view'),
   quizResultView: document.getElementById('quiz-result-view'),
+  quizResultTitle: document.getElementById('quiz-result-title'),
+  quizResultSubtitle: document.getElementById('quiz-result-subtitle'),
+  btnQuizNextChunk: document.getElementById('btn-quiz-next-chunk'),
   btnQuizRetryWrong: document.getElementById('btn-quiz-retry-wrong'),
   btnQuizRestart: document.getElementById('btn-quiz-restart'),
   btnQuizFinish: document.getElementById('btn-quiz-finish'),
@@ -11841,7 +11847,11 @@ async function batchGenerateVocab() {
 }
 
 // ── 퀴즈 시스템 (Quiz System) ──
-let currentQuizList = [];
+let quizChunkSize = 'all'; // 'all', '5', '7', '10'
+let quizChunks = [];       // Array of card chunks
+let currentChunkIndex = 0; // Active chunk index in quizChunks
+let currentChunkCards = []; // Full cards of the active chunk
+let currentQuizList = [];  // Array of cards for current quiz pass
 let currentQuizIndex = 0;
 let quizStats = { correct: 0, wrong: 0, wrongItems: [] };
 let currentCriteria = 'all';
@@ -11852,7 +11862,10 @@ function openQuizModal() {
     elements.quizModalBackdrop.classList.add('open');
     document.body.classList.add('drawer-open');
   }
-  initQuizSession(currentCriteria);
+  if (elements.quizChunkSelect) {
+    elements.quizChunkSelect.value = quizChunkSize || 'all';
+  }
+  initQuizSession(currentCriteria, quizChunkSize);
 }
 
 function closeQuizModal() {
@@ -11862,11 +11875,28 @@ function closeQuizModal() {
   }
 }
 
-function initQuizSession(criteria) {
+function initQuizSession(criteria, chunkSize) {
   currentCriteria = criteria || 'all';
+  if (chunkSize !== undefined) {
+    quizChunkSize = chunkSize || 'all';
+  } else if (elements.quizChunkSelect) {
+    quizChunkSize = elements.quizChunkSelect.value || 'all';
+  }
+
+  if (elements.quizChunkSelect && elements.quizChunkSelect.value !== quizChunkSize) {
+    elements.quizChunkSelect.value = quizChunkSize;
+  }
+
   document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.criteria === currentCriteria);
+    const c = btn.dataset.criteria;
+    const isActive = (c === currentCriteria) ||
+      ((c === 'new-only' || c === 'study-asc') && (currentCriteria === 'new-only' || currentCriteria === 'study-asc'));
+    btn.classList.toggle('active', isActive);
   });
+
+  if (elements.quizChunkGroup) {
+    elements.quizChunkGroup.classList.toggle('active', currentCriteria === 'all');
+  }
 
   const pool = (state.highlights || []).filter(h => h.targetMeaning || h.text);
   if (pool.length === 0) {
@@ -11882,23 +11912,30 @@ function initQuizSession(criteria) {
 
   let list = [...pool];
   const totalCount = pool.length;
-  const wrongCount = pool.filter(h => (h.wrongCount || 0) > 0).length;
 
   if (currentCriteria === 'wrong-desc') {
     // 취약 단어 우선 (전체 단어를 출제하되 오답 많은 순)
     list.sort((a, b) => (b.wrongCount || 0) - (a.wrongCount || 0));
-  } else if (currentCriteria === 'study-asc') {
-    // 신규 단어 우선 (전체 단어를 출제하되 공부 적은 순)
-    list.sort((a, b) => (a.studyCount || 0) - (b.studyCount || 0));
+  } else if (currentCriteria === 'new-only' || currentCriteria === 'study-asc') {
+    // 새카드만: 한 번도 학습한 적이 없는 카드만 공부하도록 설정
+    list = list.filter(h => (Number(h.studyCount) || 0) === 0);
+    if (list.length === 0) {
+      showToast('한 번도 학습하지 않은 새 카드가 없습니다! 전체 카드로 출제합니다.');
+      currentCriteria = 'all';
+      document.querySelectorAll('.quiz-criteria-btn').forEach(btn => btn.classList.remove('active'));
+      if (elements.quizChunkGroup) elements.quizChunkGroup.classList.add('active');
+      list = [...pool].sort(() => Math.random() - 0.5);
+    } else {
+      list.sort(() => Math.random() - 0.5);
+    }
   } else if (currentCriteria === 'wrong-only') {
-    // 틀린 단어만 복습 (오답 1회 이상인 단어만 필터링)
+    // 틀린 단어만: 오답 1회 이상인 단어만 필터링
     list = list.filter(h => (h.wrongCount || 0) > 0);
     if (list.length === 0) {
-      showToast('오답 기록이 없습니다! 전체 단어로 출제합니다.');
+      showToast('오답 기록이 없습니다! 전체 카드로 출제합니다.');
       currentCriteria = 'all';
-      document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.criteria === 'all');
-      });
+      document.querySelectorAll('.quiz-criteria-btn').forEach(btn => btn.classList.remove('active'));
+      if (elements.quizChunkGroup) elements.quizChunkGroup.classList.add('active');
       list = [...pool].sort(() => Math.random() - 0.5);
     } else {
       list.sort((a, b) => (b.wrongCount || 0) - (a.wrongCount || 0));
@@ -11911,20 +11948,50 @@ function initQuizSession(criteria) {
   // 출제 기준 상세 설명 문구 실시간 갱신
   const descEl = elements.quizCriteriaDesc || document.getElementById('quiz-criteria-desc');
   if (descEl) {
+    const chunkSuffix = quizChunkSize !== 'all' ? ` (${quizChunkSize}개씩 세트 학습)` : '';
     if (currentCriteria === 'wrong-desc') {
-      descEl.textContent = `🔥 [취약 단어 우선 (전체)]: 등록된 모든 단어(${totalCount}개)를 출제하되, 오답 횟수가 많은 취약 단어부터 먼저 학습합니다.`;
-    } else if (currentCriteria === 'study-asc') {
-      descEl.textContent = `🆕 [신규 단어 우선 (전체)]: 등록된 모든 단어(${totalCount}개)를 출제하되, 공부 횟수가 적은 낯선 단어부터 먼저 학습합니다.`;
+      descEl.textContent = `🔥 [취약 단어 우선]: 등록된 모든 단어(${totalCount}개)를 출제하되, 오답 횟수가 많은 단어부터 먼저 학습합니다.${chunkSuffix}`;
+    } else if (currentCriteria === 'new-only' || currentCriteria === 'study-asc') {
+      descEl.textContent = `🆕 [새카드만]: 한 번도 학습한 적이 없는 새로운 단어(${list.length}개)만 골라서 학습합니다.${chunkSuffix}`;
     } else if (currentCriteria === 'wrong-only') {
-      descEl.textContent = `❌ [틀린 단어만 복습]: 1회 이상 틀렸던 오답 단어(${wrongCount}개)만 골라서 집중 복습합니다. (정답 단어 제외)`;
+      descEl.textContent = `❌ [틀린 단어만]: 1회 이상 틀렸던 오답 단어(${list.length}개)만 골라서 집중 복습합니다.${chunkSuffix}`;
     } else {
-      descEl.textContent = `🎲 [전체 (무작위)]: 등록된 모든 단어(${totalCount}개)를 무작위 순서로 골고루 출제합니다.`;
+      if (quizChunkSize !== 'all') {
+        descEl.textContent = `🎲 [${quizChunkSize}개씩 학습]: 등록된 단어(${totalCount}개)를 ${quizChunkSize}개씩 묶어서 출제합니다. (현재 세트 오답 0개 시 다음 단계 이동)`;
+      } else {
+        descEl.textContent = `🎲 [전체]: 등록된 모든 단어(${totalCount}개)를 무작위 순서로 출제합니다.`;
+      }
     }
   }
 
-  currentQuizList = list;
+  // 청크(n개씩 묶음) 분할
+  quizChunks = [];
+  if (quizChunkSize !== 'all') {
+    const size = parseInt(quizChunkSize, 10);
+    for (let i = 0; i < list.length; i += size) {
+      quizChunks.push(list.slice(i, i + size));
+    }
+  } else {
+    quizChunks.push(list);
+  }
+
+  currentChunkIndex = 0;
+  loadQuizChunk(0);
+}
+
+function loadQuizChunk(chunkIdx) {
+  if (!quizChunks.length || chunkIdx < 0 || chunkIdx >= quizChunks.length) return;
+
+  currentChunkIndex = chunkIdx;
+  currentChunkCards = quizChunks[chunkIdx].map(item => ({ ...item }));
+  currentQuizList = [...currentChunkCards];
   currentQuizIndex = 0;
   quizStats = { correct: 0, wrong: 0, wrongItems: [] };
+
+  if (elements.quizActiveView) elements.quizActiveView.style.display = 'block';
+  if (elements.quizResultView) elements.quizResultView.style.display = 'none';
+  if (elements.quizEmptyState) elements.quizEmptyState.style.display = 'none';
+
   renderCurrentQuizCard();
 }
 
@@ -11936,7 +12003,15 @@ function renderCurrentQuizCard() {
 
   const hl = currentQuizList[currentQuizIndex];
   if (elements.quizProgressText) {
-    elements.quizProgressText.textContent = `${currentQuizIndex + 1} / ${currentQuizList.length}`;
+    const isRetryPass = currentQuizList.length !== currentChunkCards.length;
+    if (quizChunkSize !== 'all' && quizChunks.length > 1) {
+      const retryTag = isRetryPass ? ' (오답 재도전)' : '';
+      elements.quizProgressText.textContent = `세트 ${currentChunkIndex + 1}/${quizChunks.length}${retryTag} · ${currentQuizIndex + 1} / ${currentQuizList.length}`;
+    } else if (isRetryPass) {
+      elements.quizProgressText.textContent = `오답 재도전 · ${currentQuizIndex + 1} / ${currentQuizList.length}`;
+    } else {
+      elements.quizProgressText.textContent = `${currentQuizIndex + 1} / ${currentQuizList.length}`;
+    }
   }
   if (elements.quizCardStats) {
     elements.quizCardStats.textContent = `학습: ${hl.studyCount || 0}회 | 오답: ${hl.wrongCount || 0}회`;
@@ -12033,9 +12108,118 @@ function showQuizResult() {
   if (correctCount) correctCount.textContent = quizStats.correct;
   if (wrongCount) wrongCount.textContent = quizStats.wrong;
 
-  if (elements.btnQuizRetryWrong) {
-    elements.btnQuizRetryWrong.style.display = quizStats.wrongItems.length > 0 ? 'inline-block' : 'none';
+  const isChunkMode = quizChunkSize !== 'all';
+  const hasNextChunk = isChunkMode && currentChunkIndex < quizChunks.length - 1;
+  const allCorrect = quizStats.wrong === 0;
+
+  const titleEl = elements.quizResultTitle || document.getElementById('quiz-result-title');
+  const subtitleEl = elements.quizResultSubtitle || document.getElementById('quiz-result-subtitle');
+  const btnNext = elements.btnQuizNextChunk || document.getElementById('btn-quiz-next-chunk');
+  const btnRestart = elements.btnQuizRestart || document.getElementById('btn-quiz-restart');
+  const btnRetryWrong = elements.btnQuizRetryWrong || document.getElementById('btn-quiz-retry-wrong');
+
+  if (isChunkMode) {
+    if (allCorrect) {
+      if (hasNextChunk) {
+        const nextCount = quizChunks[currentChunkIndex + 1].length;
+        if (titleEl) titleEl.textContent = `🎉 ${currentChunkIndex + 1} / ${quizChunks.length} 세트 학습 완료!`;
+        if (subtitleEl) {
+          subtitleEl.style.display = 'block';
+          subtitleEl.className = 'quiz-result-subtitle success';
+          subtitleEl.textContent = `현재 세트를 모두 맞췄습니다! 다음 ${nextCount}개 학습으로 넘어갈 수 있습니다.`;
+        }
+        if (btnNext) {
+          btnNext.style.display = 'inline-flex';
+          btnNext.disabled = false;
+          btnNext.className = 'btn-reader primary';
+          btnNext.textContent = `➡️ 다음 ${nextCount}개 풀기 (${currentChunkIndex + 2}/${quizChunks.length} 세트)`;
+        }
+        if (btnRestart) {
+          btnRestart.className = 'btn-reader';
+          btnRestart.textContent = '🔄 현재 세트 다시 풀기';
+        }
+        if (btnRetryWrong) btnRetryWrong.style.display = 'none';
+      } else {
+        if (titleEl) titleEl.textContent = '🎉 모든 학습을 완료했습니다!';
+        if (subtitleEl) {
+          subtitleEl.style.display = 'block';
+          subtitleEl.className = 'quiz-result-subtitle success';
+          subtitleEl.textContent = quizChunks.length > 1
+            ? `전체 ${quizChunks.length}개 세트 학습을 모두 완벽하게 마스터했습니다!`
+            : '모든 카드를 완벽하게 맞췄습니다!';
+        }
+        if (btnNext) btnNext.style.display = 'none';
+        if (btnRestart) {
+          btnRestart.className = 'btn-reader primary';
+          btnRestart.textContent = '🔄 처음부터 다시 풀기';
+        }
+        if (btnRetryWrong) btnRetryWrong.style.display = 'none';
+      }
+    } else {
+      // 오답이 있는 경우: 마스터리 게이트 잠금 (다음 단계로 넘어갈 수 없음)
+      if (titleEl) {
+        titleEl.textContent = quizChunks.length > 1
+          ? `📝 ${currentChunkIndex + 1} / ${quizChunks.length} 세트 결과`
+          : '📝 세트 결과';
+      }
+      if (subtitleEl) {
+        subtitleEl.style.display = 'block';
+        subtitleEl.className = 'quiz-result-subtitle warning';
+        subtitleEl.textContent = hasNextChunk
+          ? '⚠️ 현재 세트의 카드를 모두 맞춰야 다음 단계로 넘어갈 수 있습니다.'
+          : '⚠️ 현재 세트의 카드를 모두 맞춰야 학습을 완료할 수 있습니다.';
+      }
+      if (btnNext) {
+        if (hasNextChunk) {
+          const nextCount = quizChunks[currentChunkIndex + 1].length;
+          btnNext.style.display = 'inline-flex';
+          btnNext.disabled = true;
+          btnNext.className = 'btn-reader disabled';
+          btnNext.textContent = `🔒 다음 ${nextCount}개 풀기 (모두 맞춤 필요)`;
+        } else {
+          btnNext.style.display = 'none';
+        }
+      }
+      if (btnRetryWrong) {
+        btnRetryWrong.style.display = 'inline-flex';
+        btnRetryWrong.className = 'btn-reader primary';
+        btnRetryWrong.textContent = `❌ 오답 ${quizStats.wrongItems.length}개만 다시 풀기`;
+      }
+      if (btnRestart) {
+        btnRestart.className = 'btn-reader';
+        btnRestart.textContent = '🔄 현재 세트 다시 풀기';
+      }
+    }
+  } else {
+    // n개씩 = 'all' (전체 모드)
+    if (titleEl) titleEl.textContent = '🎉 퀴즈 완료!';
+    if (subtitleEl) {
+      subtitleEl.style.display = 'none';
+      subtitleEl.textContent = '';
+    }
+    if (btnNext) btnNext.style.display = 'none';
+    if (btnRetryWrong) {
+      btnRetryWrong.style.display = quizStats.wrongItems.length > 0 ? 'inline-block' : 'none';
+      btnRetryWrong.className = 'btn-reader';
+      btnRetryWrong.textContent = `❌ 오답 ${quizStats.wrongItems.length}개만 다시 풀기`;
+    }
+    if (btnRestart) {
+      btnRestart.className = 'btn-reader primary';
+      btnRestart.textContent = '🔄 처음부터 다시 풀기';
+    }
   }
+}
+
+function startNextQuizChunk() {
+  if (quizChunkSize === 'all') return;
+  if (currentChunkIndex >= quizChunks.length - 1) return;
+
+  if (quizStats.wrong > 0) {
+    showToast('⚠️ 현재 세트의 오답을 모두 맞춰야 다음 단계로 넘어갈 수 있습니다.');
+    return;
+  }
+
+  loadQuizChunk(currentChunkIndex + 1);
 }
 
 function openApiGuideModal() {
@@ -12820,9 +13004,28 @@ function setupEventListeners() {
     });
   }
 
+  if (elements.quizChunkSelect) {
+    elements.quizChunkSelect.addEventListener('change', (e) => {
+      quizChunkSize = e.target.value || 'all';
+      initQuizSession(currentCriteria, quizChunkSize);
+    });
+  }
+
+  if (elements.quizChunkLabel) {
+    elements.quizChunkLabel.addEventListener('click', () => {
+      initQuizSession('all', quizChunkSize);
+    });
+  }
+
   document.querySelectorAll('.quiz-criteria-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
-      initQuizSession(e.currentTarget.dataset.criteria);
+      const selectedCriteria = e.currentTarget.dataset.criteria;
+      // 이미 활성화된 기준 버튼을 다시 누르면 기본(all)으로 토글
+      if (currentCriteria === selectedCriteria) {
+        initQuizSession('all', quizChunkSize);
+      } else {
+        initQuizSession(selectedCriteria, quizChunkSize);
+      }
     });
   });
 
@@ -12842,11 +13045,36 @@ function setupEventListeners() {
   if (elements.btnQuizCorrect) {
     elements.btnQuizCorrect.addEventListener('click', () => recordQuizAnswer(true));
   }
+  if (elements.btnQuizNextChunk) {
+    elements.btnQuizNextChunk.addEventListener('click', startNextQuizChunk);
+  }
   if (elements.btnQuizRetryWrong) {
-    elements.btnQuizRetryWrong.addEventListener('click', () => initQuizSession('wrong-only'));
+    elements.btnQuizRetryWrong.addEventListener('click', () => {
+      if (!quizStats.wrongItems || quizStats.wrongItems.length === 0) return;
+      currentQuizList = [...quizStats.wrongItems];
+      currentQuizIndex = 0;
+      quizStats = { correct: 0, wrong: 0, wrongItems: [] };
+      if (elements.quizActiveView) elements.quizActiveView.style.display = 'block';
+      if (elements.quizResultView) elements.quizResultView.style.display = 'none';
+      renderCurrentQuizCard();
+    });
   }
   if (elements.btnQuizRestart) {
-    elements.btnQuizRestart.addEventListener('click', () => initQuizSession(currentCriteria));
+    elements.btnQuizRestart.addEventListener('click', () => {
+      if (quizChunkSize !== 'all') {
+        const allCorrect = quizStats.wrong === 0;
+        const isLastChunk = currentChunkIndex >= quizChunks.length - 1;
+        // 모든 청크를 완벽히 마스터한 상태에서 다시 풀기를 누르면 처음부터 다시 시작
+        if (allCorrect && isLastChunk) {
+          initQuizSession(currentCriteria, quizChunkSize);
+          return;
+        }
+        // 그 외에는 현재 묶음(세트) 다시 풀기
+        loadQuizChunk(currentChunkIndex);
+        return;
+      }
+      initQuizSession(currentCriteria, quizChunkSize);
+    });
   }
   if (elements.btnQuizFinish) {
     elements.btnQuizFinish.addEventListener('click', closeQuizModal);
@@ -12933,6 +13161,16 @@ function setupEventListeners() {
     if (!elements.quizModalBackdrop || !elements.quizModalBackdrop.classList.contains('open')) return;
     if (e.key === 'Escape') {
       closeQuizModal();
+    } else if (elements.quizResultView && elements.quizResultView.style.display !== 'none') {
+      if (e.key === 'Enter') {
+        if (elements.btnQuizNextChunk && elements.btnQuizNextChunk.style.display !== 'none' && !elements.btnQuizNextChunk.disabled) {
+          e.preventDefault();
+          startNextQuizChunk();
+        } else if (elements.btnQuizRetryWrong && elements.btnQuizRetryWrong.style.display !== 'none') {
+          e.preventDefault();
+          elements.btnQuizRetryWrong.click();
+        }
+      }
     } else if (e.key === ' ' || e.code === 'Space') {
       if (elements.quizActionsUnrevealed && elements.quizActionsUnrevealed.style.display !== 'none') {
         e.preventDefault();

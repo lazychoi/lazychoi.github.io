@@ -927,15 +927,23 @@
       <div class="quiz-criteria-bar">
         <!-- <span class="quiz-criteria-label">출제 기준:</span> -->
         <div class="quiz-criteria-options">
-          <button type="button" class="quiz-criteria-btn active" data-criteria="all">🎲 전체 (무작위)</button>
-          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-desc">🔥 취약 단어 우선 (전체)</button>
-          <button type="button" class="quiz-criteria-btn" data-criteria="study-asc">🆕 신규 단어 우선 (전체)</button>
-          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-only">❌ 틀린 단어만 복습</button>
+          <div class="quiz-chunk-group active" id="quiz-chunk-group" title="n개씩 묶어서 학습 (클릭 시 전체로 전환)">
+            <label for="quiz-chunk-select" class="quiz-chunk-label" id="quiz-chunk-label">n개씩</label>
+            <select id="quiz-chunk-select" class="quiz-chunk-select">
+              <option value="all" selected>전체</option>
+              <option value="5">5</option>
+              <option value="7">7</option>
+              <option value="10">10</option>
+            </select>
+          </div>
+          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-desc">🔥 취약 단어 우선</button>
+          <button type="button" class="quiz-criteria-btn" data-criteria="new-only">🆕 새카드만</button>
+          <button type="button" class="quiz-criteria-btn" data-criteria="wrong-only">❌ 틀린 단어만</button>
         </div>
       </div>
       <!-- 출제 기준 상세 안내 -->
       <div class="quiz-criteria-desc" id="quiz-criteria-desc">
-        🎲 [전체 (무작위)]: 등록된 모든 단어를 무작위 순서로 골고루 출제합니다.
+        🎲 [전체]: 등록된 모든 단어를 무작위 순서로 출제합니다.
       </div>
 
       <div class="quiz-modal-body">
@@ -997,7 +1005,8 @@
         <!-- 퀴즈 결과 요약 뷰 -->
         <div class="quiz-result-view" id="quiz-result-view" style="display:none;">
           <div class="quiz-result-trophy">🎉</div>
-          <h3 class="quiz-result-title">퀴즈 완료!</h3>
+          <h3 class="quiz-result-title" id="quiz-result-title">퀴즈 완료!</h3>
+          <p class="quiz-result-subtitle" id="quiz-result-subtitle" style="display:none;"></p>
           <div class="quiz-result-stats-box">
             <div class="result-stat-item">
               <span class="stat-label">총 학습 카드</span>
@@ -1013,10 +1022,13 @@
             </div>
           </div>
           <div class="quiz-result-actions">
+            <button type="button" class="btn-reader primary" id="btn-quiz-next-chunk" style="display:none;">
+              ➡️ 다음 세트 풀기
+            </button>
             <button type="button" class="btn-reader" id="btn-quiz-retry-wrong" style="display:none;">
               ❌ 오답만 다시 풀기
             </button>
-            <button type="button" class="btn-reader primary" id="btn-quiz-restart">
+            <button type="button" class="btn-reader" id="btn-quiz-restart">
               🔄 처음부터 다시 풀기
             </button>
             <button type="button" class="btn-reader" id="btn-quiz-finish">
