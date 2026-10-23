@@ -1195,12 +1195,14 @@ function attachSwipeGesture(targetElement, getIframeSelection = null) {
   }, { passive: true });
 }
 
-// 설정 팝오버 위치 보정 (아이패드는 영향 없도록 640px 이하 모바일만 동적 보정 및 스크롤 적용)
+// 설정 팝오버 위치 및 최대 높이 동적 보정 (화면 높이가 부족해도 하단이 잘리지 않고 스크롤 가능하도록 보장)
 function positionSettingsPopover() {
   if (!elements.settingsPopover || !elements.settingsPopover.classList.contains('open')) return;
-  if (window.innerWidth <= 640) {
-    const btnRect = elements.btnToggleSettings ? elements.btnToggleSettings.getBoundingClientRect() : null;
 
+  const btnRect = elements.btnToggleSettings ? elements.btnToggleSettings.getBoundingClientRect() : null;
+  const isMobile = window.innerWidth <= 640;
+
+  if (isMobile) {
     elements.settingsPopover.style.position = 'fixed';
     elements.settingsPopover.style.zIndex = '3500';
     elements.settingsPopover.style.left = '12px';
@@ -1211,31 +1213,39 @@ function positionSettingsPopover() {
 
     // 기본 위치: 설정 버튼 바로 아래
     const popoverTop = (btnRect && btnRect.bottom > 0) ? Math.round(btnRect.bottom + 6) : 74;
+    const maxH = Math.max(160, Math.floor(window.innerHeight - popoverTop - 16));
 
     elements.settingsPopover.style.top = `${popoverTop}px`;
-    elements.settingsPopover.style.maxHeight = `calc(100dvh - ${popoverTop}px - max(24px, calc(12px + env(safe-area-inset-bottom, 20px))))`;
+    elements.settingsPopover.style.bottom = 'auto';
+    elements.settingsPopover.style.maxHeight = `${maxH}px`;
     elements.settingsPopover.style.overflowY = 'auto';
     elements.settingsPopover.style.webkitOverflowScrolling = 'touch';
     elements.settingsPopover.style.touchAction = 'pan-y';
     elements.settingsPopover.style.paddingTop = '18px';
-    elements.settingsPopover.style.paddingBottom = 'max(28px, calc(18px + env(safe-area-inset-bottom, 20px)))';
+    elements.settingsPopover.style.paddingBottom = 'max(24px, calc(16px + env(safe-area-inset-bottom, 20px)))';
   } else {
-    // 아이패드, 태블릿, 데스크톱 (641px 이상): CSS 원본 스타일 유지
-    elements.settingsPopover.style.position = '';
-    elements.settingsPopover.style.zIndex = '';
-    elements.settingsPopover.style.top = '';
-    elements.settingsPopover.style.bottom = '';
-    elements.settingsPopover.style.left = '';
-    elements.settingsPopover.style.right = '';
-    elements.settingsPopover.style.width = '';
-    elements.settingsPopover.style.maxWidth = '';
-    elements.settingsPopover.style.margin = '';
-    elements.settingsPopover.style.maxHeight = '';
-    elements.settingsPopover.style.overflowY = '';
-    elements.settingsPopover.style.webkitOverflowScrolling = '';
-    elements.settingsPopover.style.touchAction = '';
-    elements.settingsPopover.style.paddingTop = '';
-    elements.settingsPopover.style.paddingBottom = '';
+    // 데스크톱 / 태블릿 (641px 이상)
+    elements.settingsPopover.style.position = 'absolute';
+    elements.settingsPopover.style.top = 'calc(100% + 8px)';
+    elements.settingsPopover.style.right = '0';
+    elements.settingsPopover.style.left = 'auto';
+    elements.settingsPopover.style.bottom = 'auto';
+    elements.settingsPopover.style.width = '310px';
+    elements.settingsPopover.style.maxWidth = 'calc(100vw - 24px)';
+    elements.settingsPopover.style.margin = '0';
+    elements.settingsPopover.style.zIndex = '2500';
+
+    // 설정 버튼 하단부터 브라우저 뷰포트 하단까지의 여유 공간을 정확히 계산 (16px 하단 안전 여백 보장)
+    const btnBottom = (btnRect && btnRect.bottom > 0) ? btnRect.bottom : 90;
+    const availableHeight = window.innerHeight - btnBottom - 24; // 8px 간격 + 16px 뷰포트 하단 안전 여백
+    const maxH = Math.max(180, Math.floor(availableHeight));
+
+    elements.settingsPopover.style.maxHeight = `${maxH}px`;
+    elements.settingsPopover.style.overflowY = 'auto';
+    elements.settingsPopover.style.webkitOverflowScrolling = 'touch';
+    elements.settingsPopover.style.touchAction = 'pan-y';
+    elements.settingsPopover.style.paddingTop = '18px';
+    elements.settingsPopover.style.paddingBottom = '24px';
   }
 }
 
@@ -13191,6 +13201,9 @@ function setupEventListeners() {
 
   // 윈도우 리사이즈, 오리엔테이션 회전, 화면 복귀 시 뷰어 영역 안전 재계산 및 독서 위치(CFI/스크롤) 100% 보존
   const onViewerResize = () => {
+    if (elements.settingsPopover && elements.settingsPopover.classList.contains('open')) {
+      positionSettingsPopover();
+    }
     if (state.currentBook) {
       if (state.currentBook.type === 'epub') {
         triggerEpubResizeSafe();
@@ -13204,6 +13217,10 @@ function setupEventListeners() {
 
   // iPadOS 기기 회전(세로 ↔ 가로) 시 독서 위치(57%) 100% 보존 특화 핸들러
   window.addEventListener('orientationchange', () => {
+    if (elements.settingsPopover && elements.settingsPopover.classList.contains('open')) {
+      setTimeout(positionSettingsPopover, 100);
+      setTimeout(positionSettingsPopover, 350);
+    }
     if (state.currentBook) {
       if (state.currentBook.type === 'epub') {
         const targetCfi = state.epub.currentCfi

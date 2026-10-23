@@ -1930,10 +1930,36 @@ body.drawer-open {
   display: none;
   flex-direction: column;
   gap: 12px;
-  max-height: calc(100vh - 100px);
-  overflow-y: auto;
+  max-height: calc(100dvh - 140px);
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  touch-action: pan-y !important;
+  overscroll-behavior: contain !important;
   scroll-padding-top: 18px;
   scroll-padding-bottom: 24px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--reader-border) transparent;
+}
+
+.settings-popover::-webkit-scrollbar {
+  width: 6px;
+}
+
+.settings-popover::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.settings-popover::-webkit-scrollbar-thumb {
+  background: var(--reader-border);
+  border-radius: 4px;
+}
+
+.settings-popover::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.settings-popover > * {
+  flex-shrink: 0 !important;
 }
 
 .settings-popover > .setting-group:first-child {
