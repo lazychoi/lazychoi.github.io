@@ -527,7 +527,7 @@ const elements = {
   btnVocabSyncQuickPaste: document.getElementById('btn-vocab-sync-quick-paste'),
   inputVocabSyncFile: document.getElementById('input-vocab-sync-file'),
   vocabSyncInputCode: document.getElementById('vocab-sync-input-code'),
-  btnVocabSyncSample: document.getElementById('btn-vocab-sync-sample'),
+  btnVocabSyncClear: document.getElementById('btn-vocab-sync-clear'),
   vocabSyncOverwrite: document.getElementById('vocab-sync-overwrite'),
   btnVocabSyncApply: document.getElementById('btn-vocab-sync-apply'),
   syncSummaryBookTitle: document.getElementById('sync-summary-book-title'),
@@ -1773,6 +1773,48 @@ function getBookStorageKey(bookId) {
   return `reader_highlights_${bookId}`;
 }
 
+function getHighlightDeduplicationKey(item) {
+  if (!item || !item.text || !String(item.text).trim()) return null;
+  const cleanWord = stripWordPunctuation(normalizeCompareText(item.text).toLowerCase());
+  const cleanSent = stripSentencePunctuation(item.targetSentence || '');
+  if (item.cfiRange) {
+    return `cfi:${item.cfiRange}`;
+  }
+  if (item.pIdx !== undefined && item.pIdx !== null) {
+    return `pidx:${item.pIdx}:${cleanWord}:${cleanSent}`;
+  }
+  if (cleanSent) {
+    return `sent:${cleanWord}:${cleanSent}`;
+  }
+  return `text:${cleanWord}`;
+}
+
+function deduplicateHighlights(hls) {
+  if (!Array.isArray(hls)) return [];
+  const map = new Map();
+  hls.forEach(h => {
+    if (!h || !h.text || !String(h.text).trim()) return;
+    const key = getHighlightDeduplicationKey(h);
+    if (!key) return;
+    if (!map.has(key)) {
+      map.set(key, { ...h });
+    } else {
+      const existing = map.get(key);
+      if (!existing.targetMeaning && h.targetMeaning) existing.targetMeaning = h.targetMeaning;
+      if (!existing.sentenceTranslation && h.sentenceTranslation) existing.sentenceTranslation = h.sentenceTranslation;
+      if (!existing.phonetic && h.phonetic) existing.phonetic = h.phonetic;
+      if (!existing.note && h.note) existing.note = h.note;
+      if (!existing.targetSentence && h.targetSentence) existing.targetSentence = h.targetSentence;
+      if (existing.pIdx === undefined && h.pIdx !== undefined) existing.pIdx = h.pIdx;
+      if (!existing.cfiRange && h.cfiRange) existing.cfiRange = h.cfiRange;
+      existing.studyCount = Math.max(Number(existing.studyCount) || 0, Number(h.studyCount) || 0);
+      existing.wrongCount = Math.max(Number(existing.wrongCount) || 0, Number(h.wrongCount) || 0);
+      if (!existing.lastStudiedAt && h.lastStudiedAt) existing.lastStudiedAt = h.lastStudiedAt;
+    }
+  });
+  return Array.from(map.values());
+}
+
 function loadHighlights(bookId, fallbackList = null) {
   if (!bookId) return [];
   let raw = null;
@@ -1800,23 +1842,34 @@ function loadHighlights(bookId, fallbackList = null) {
 
   if (Array.isArray(list)) {
     // Clean and deduplicate existing records
-    const uniqueList = [];
-    const seen = new Set();
+    const uniqueMap = new Map();
     list.forEach(item => {
-      if (!item || !item.text) return;
-      const key = item.id || (item.cfiRange ? item.cfiRange : `${item.pIdx}_${item.text.trim()}_${(item.targetSentence || '').trim()}`);
-      if (!seen.has(key)) {
-        seen.add(key);
-        // 단어장 및 퀴즈 필드 보정 (마이그레이션)
+      if (!item || !item.text || !String(item.text).trim()) return;
+      const key = getHighlightDeduplicationKey(item);
+      if (!key) return;
+      if (!uniqueMap.has(key)) {
         item.targetMeaning = item.targetMeaning || '';
         item.phonetic = item.phonetic || '';
         item.sentenceTranslation = item.sentenceTranslation || '';
         item.studyCount = Number(item.studyCount) || 0;
         item.wrongCount = Number(item.wrongCount) || 0;
         item.lastStudiedAt = item.lastStudiedAt || null;
-        uniqueList.push(item);
+        uniqueMap.set(key, item);
+      } else {
+        const existing = uniqueMap.get(key);
+        if (!existing.targetMeaning && item.targetMeaning) existing.targetMeaning = item.targetMeaning;
+        if (!existing.sentenceTranslation && item.sentenceTranslation) existing.sentenceTranslation = item.sentenceTranslation;
+        if (!existing.phonetic && item.phonetic) existing.phonetic = item.phonetic;
+        if (!existing.note && item.note) existing.note = item.note;
+        if (!existing.targetSentence && item.targetSentence) existing.targetSentence = item.targetSentence;
+        if (existing.pIdx === undefined && item.pIdx !== undefined) existing.pIdx = item.pIdx;
+        if (!existing.cfiRange && item.cfiRange) existing.cfiRange = item.cfiRange;
+        existing.studyCount = Math.max(Number(existing.studyCount) || 0, Number(item.studyCount) || 0);
+        existing.wrongCount = Math.max(Number(existing.wrongCount) || 0, Number(item.wrongCount) || 0);
+        if (!existing.lastStudiedAt && item.lastStudiedAt) existing.lastStudiedAt = item.lastStudiedAt;
       }
     });
+    const uniqueList = Array.from(uniqueMap.values());
     uniqueList.sort(compareHighlights);
     try {
       localStorage.setItem(getBookStorageKey(bookId), JSON.stringify(uniqueList));
@@ -1832,11 +1885,13 @@ async function saveActiveBookHighlightsToDB() {
     if (!db || !state.currentBook) return;
     const tx = db.transaction(READER_STORE_NAME, 'readwrite');
     const store = tx.objectStore(READER_STORE_NAME);
-    const req = store.get('current_reading_book');
+    const bookId = state.currentBook.id;
+    const req = store.get(bookId);
     req.onsuccess = () => {
       const record = req.result;
-      if (record && record.bookId === state.currentBook.id) {
+      if (record) {
         record.highlights = state.highlights;
+        record.timestamp = Date.now();
         store.put(record);
       }
     };
@@ -2083,6 +2138,16 @@ function openSyncModal(initialTab = 'export') {
 
   // 내보내기 요약 및 코드 갱신
   if (state.currentBook) {
+    if (!Array.isArray(state.highlights) || state.highlights.length === 0) {
+      state.highlights = loadHighlights(state.currentBook.id);
+    }
+    const clean = deduplicateHighlights(state.highlights);
+    if (clean.length !== state.highlights.length) {
+      state.highlights = clean;
+      sortHighlights();
+      saveHighlights();
+    }
+
     const syncObj = generateSyncData();
     if (syncObj) {
       if (elements.syncSummaryBookTitle) {
@@ -2101,7 +2166,7 @@ function openSyncModal(initialTab = 'export') {
         elements.syncSummaryPos.textContent = `📍 읽던 위치: ${posText}`;
       }
       if (elements.syncSummaryHlCount) {
-        elements.syncSummaryHlCount.textContent = `🖍️ 형광펜 ${(state.highlights || []).length}개`;
+        elements.syncSummaryHlCount.textContent = `🖍️ 형광펜 ${state.highlights.length}개`;
       }
       if (elements.syncSummaryBmCount) {
         elements.syncSummaryBmCount.textContent = `🔖 책갈피 ${(state.bookmarks || []).length}개`;
@@ -2152,20 +2217,35 @@ function updateSyncVocabSummary() {
   if (!elements.syncVocabSummary) return;
   if (!state.currentBook) {
     if (elements.syncVocabBookTitle) elements.syncVocabBookTitle.textContent = '현재 도서: (열린 도서 없음)';
-    if (elements.syncVocabHlTotal) elements.syncVocabHlTotal.textContent = '🖍️ 형광펜 0개';
+    if (elements.syncVocabHlTotal) elements.syncVocabHlTotal.textContent = '🖍️ 전체 형광펜 0개';
     if (elements.syncVocabHlEmpty) {
       elements.syncVocabHlEmpty.textContent = '💡 뜻/해석 비어있음: 0개';
       elements.syncVocabHlEmpty.style.color = 'var(--text-muted, #64748b)';
     }
     return;
   }
-  const hls = state.highlights || [];
-  const emptyCount = hls.filter(h => (!h.targetMeaning || !h.targetMeaning.trim()) || (!h.sentenceTranslation || !h.sentenceTranslation.trim())).length;
+
+  if (!Array.isArray(state.highlights) || state.highlights.length === 0) {
+    state.highlights = loadHighlights(state.currentBook.id);
+  }
+  const cleanHls = deduplicateHighlights(state.highlights);
+  if (cleanHls.length !== state.highlights.length) {
+    state.highlights = cleanHls;
+    sortHighlights();
+    saveHighlights();
+    updateHighlightBadge();
+    if (elements.readerDrawer && elements.readerDrawer.classList.contains('open')) {
+      renderHighlightDrawer();
+    }
+  }
+
+  const emptyCount = cleanHls.filter(h => !h.targetMeaning || !String(h.targetMeaning).trim()).length;
+
   if (elements.syncVocabBookTitle) {
     elements.syncVocabBookTitle.textContent = `현재 도서: ${state.currentBook.title || 'Untitled'}`;
   }
   if (elements.syncVocabHlTotal) {
-    elements.syncVocabHlTotal.textContent = `🖍️ 전체 형광펜 ${hls.length}개`;
+    elements.syncVocabHlTotal.textContent = `🖍️ 전체 형광펜 ${cleanHls.length}개`;
   }
   if (elements.syncVocabHlEmpty) {
     elements.syncVocabHlEmpty.textContent = `💡 뜻/해석 비어있음: ${emptyCount}개`;
@@ -2801,7 +2881,11 @@ function applyVocabFillData(items, overwrite = false) {
       } else {
         const curMeaning = (hl.targetMeaning || '').trim();
         const curTrans = (hl.sentenceTranslation || '').trim();
-        if (curMeaning && curTrans && !overwrite) {
+        const itemHasMeaning = !!(item.targetMeaning && String(item.targetMeaning).trim());
+        const itemHasTrans = !!(item.sentenceTranslation && String(item.sentenceTranslation).trim());
+        const isMeaningSatisfied = !itemHasMeaning || (curMeaning && curMeaning === String(item.targetMeaning).trim()) || curMeaning;
+        const isTransSatisfied = !itemHasTrans || (curTrans && curTrans === String(item.sentenceTranslation).trim()) || curTrans;
+        if (isMeaningSatisfied && isTransSatisfied && !overwrite) {
           alreadyCompleteCount++;
         }
       }
@@ -2936,18 +3020,11 @@ function handleVocabSyncFileImport(file) {
   reader.readAsText(file);
 }
 
-function fillVocabSyncSample() {
-  const sample = [
-    {
-      "text": "namesake",
-      "targetSentence": "In short, I couldn’t have asked for a better namesake.",
-      "targetMeaning": "이름이 같은 사람 (동명이인). 본문에서는 '자신과 이름이 같은 사람(조상/선대)'을 뜻함.",
-      "sentenceTranslation": "요컨대, 나는 더 나은 동명이인(같은 이름을 가진 인물)을 바랄 수조차 없었다. (한마디로, 나와 이름이 같은 사람으로서 그보다 더 훌륭한 인물을 찾기란 불가능했을 것이다.)"
-    }
-  ];
+function clearVocabSyncInput() {
   if (elements.vocabSyncInputCode) {
-    elements.vocabSyncInputCode.value = JSON.stringify(sample, null, 2);
-    showToast('예시 데이터가 입력창에 채워졌습니다.');
+    elements.vocabSyncInputCode.value = '';
+    elements.vocabSyncInputCode.focus();
+    showToast('입력창 내용이 지워졌습니다.');
   }
 }
 
@@ -5631,7 +5708,7 @@ a.reader-highlight-link {
 
     // Sync any parsed footnotes to state.highlights
     parsedHls.forEach(fnHl => {
-      const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && h.fnTag === fnHl.fnTag));
+      const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && (h.fnTag === fnHl.fnTag || !h.fnTag)));
       if (idx === -1) {
         state.highlights.push(fnHl);
       } else {
@@ -7200,7 +7277,7 @@ function renderMdContent(fallbackPosition = null) {
 
   let hlChanged = false;
   parsedHls.forEach(fnHl => {
-    const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && h.fnTag === fnHl.fnTag));
+    const idx = state.highlights.findIndex(h => h.id === fnHl.id || (h.text === fnHl.text && (h.fnTag === fnHl.fnTag || !h.fnTag)));
     if (idx === -1) {
       state.highlights.push(fnHl);
       hlChanged = true;
@@ -12443,8 +12520,8 @@ function setupEventListeners() {
   if (elements.btnVocabSyncQuickPaste) {
     elements.btnVocabSyncQuickPaste.addEventListener('click', handleVocabSyncQuickPaste);
   }
-  if (elements.btnVocabSyncSample) {
-    elements.btnVocabSyncSample.addEventListener('click', fillVocabSyncSample);
+  if (elements.btnVocabSyncClear) {
+    elements.btnVocabSyncClear.addEventListener('click', clearVocabSyncInput);
   }
   if (elements.inputVocabSyncFile) {
     elements.inputVocabSyncFile.addEventListener('change', (e) => {
