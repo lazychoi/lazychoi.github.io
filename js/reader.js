@@ -252,7 +252,31 @@ function buildAISearchPrompt({ targetSentence, prevSentence, nextSentence, autho
 }
 
 /**
- * 영문/한글 문장 단위 분할 (약어, 시간, 호칭, 소수점, 대화 등을 고려한 정교한 분할)
+ * 대시(Em dash, En dash 등), 따옴표, 공백 정규화 헬퍼
+ */
+function normalizeDashesAndQuotes(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/[\u2018\u2019\u02BC`]/g, "'")
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[\u2011\u2012\u2013\u2014\u2015\u2212]|--/g, '-')
+    .replace(/\s*-\s*/g, '-')
+    .replace(/\u2026/g, '...')
+    .replace(/[\u00A0\u2007\u202F\uFEFF]/g, ' ')
+    .replace(/\u200B/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * 단어/구문 양 끝의 문장부호 제거 헬퍼
+ */
+function stripWordPunctuation(str) {
+  return str.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').trim();
+}
+
+/**
+ * 영문/한글 문장 단위 분할 (약어, 시간, 호칭, 소수점, 대화, 대시/콜론 등을 고려한 정교한 분할)
  */
 function splitIntoSentences(text) {
   if (!text) return [];
@@ -269,37 +293,41 @@ function splitIntoSentences(text) {
   // 3. 인명 이니셜 보호 (예: R. J. Palacio, J. K. Rowling, George W. Bush)
   processed = processed.replace(/(?<=\b[A-Z])\.(?=\s+[A-Z])/g, '__DOT__');
 
-  // 4. a.m. / p.m. 공백 포함 형태 보호 (예: 3:10 p.m., 3:10 p. m., 8:00 a.m., 8:00 a. m.)
+  // 대시(Em dash, En dash, double hyphen 등), 콜론, 세미콜론, 쉼표 또는 소문자 연결 여부 검사
+  const isDashOrPunctOrLower = (after) => /^(?:\s*[,;:—–\u2013\u2014\u2015\u2212]|\s*--|\s+[a-z])/.test(after);
+
+  // 4. a.m. / p.m. 공백 및 대시/콜론 포함 형태 보호 (예: 3:10 p.m., 3:10 p. m., 8:00 a.m., 8:00 a. m.)
   processed = processed.replace(/\b([ap])\.\s*(m)\./gi, (match, p1, p2, offset, str) => {
     const after = str.slice(offset + match.length);
     const dotsProtected = match.slice(0, -1).replace(/\./g, '__DOT__');
-    if (/^[,;:—\-]/.test(after) || /^\s+[a-z]/.test(after)) {
+    if (isDashOrPunctOrLower(after)) {
       return dotsProtected + '__DOT__';
     }
     return dotsProtected + '.';
   });
 
   // 5. 연속된 마침표 약어 보호 (예: p.m., a.m., U.S., U.K., U.S.A., Ph.D., e.g., i.e.)
-  // 약어 내부의 마침표는 항상 보호하고, 마지막 마침표는 뒤에 쉼표/대시/소문자가 오면 보호
+  // 약어 내부의 마침표는 항상 보호하고, 마지막 마침표는 뒤에 대시/콜론/쉼표/소문자가 오면 보호
   processed = processed.replace(/\b(?:[a-zA-Z]\.){2,}/g, (match, offset, str) => {
     const after = str.slice(offset + match.length);
     const dotsProtected = match.slice(0, -1).replace(/\./g, '__DOT__');
-    if (/^[,;:—\-]/.test(after) || /^\s+[a-z]/.test(after)) {
+    if (isDashOrPunctOrLower(after)) {
       return dotsProtected + '__DOT__';
     }
     return dotsProtected + '.';
   });
 
-  // 6. 문장 부호(쉼표, 세미콜론, 콜론, 대시 등) 바로 앞에 오는 단어의 마침표 보호 (예: "etc.,", "e.g.,", "i.e.,")
-  processed = processed.replace(/\b([a-zA-Z]+)\.(?=[,;:—\-])/g, '$1__DOT__');
+  // 6. 문장 부호(쉼표, 세미콜론, 콜론, Em dash, En dash 등) 바로 앞 또는 공백 뒤 대시 앞 마침표 보호 (예: "etc.,", "e.g.,", "i.e.,", "p.m. —")
+  processed = processed.replace(/\b([a-zA-Z]+)\.(?=\s*[,;:—–\u2013\u2014\u2015\u2212]|\s*--)/g, '$1__DOT__');
 
   // 7. e.g. 및 i.e.는 문장 끝으로 쓰이는 경우가 거의 없으므로 마침표 전체 보호
   processed = processed.replace(/\b(e\.g|i\.e)\./gi, (m) => m.replace(/\./g, '__DOT__'));
 
-  // 8. 대화문 태그 또는 문장 중간의 마침표/느낌표/물음표 뒤에 소문자가 오는 경우 보호
-  // 예: "\"Look out!\" cried Jack" or "5 lbs. of flour" or "Wait... what happened?"
-  processed = processed.replace(/([.!?]+["'”’)]?)\s+(?=[a-z])/g, (match, p1) => {
-    return p1.replace(/\./g, '__DOT__').replace(/!/g, '__EXCL__').replace(/\?/g, '__QUES__') + ' ';
+  // 8. 대화문 태그 또는 대시/소문자 연결 보호 (예: "\"Look out!\" cried Jack", "\"Wait!\"—she whispered", "\"Wait!\" Jack said")
+  const SPEECH_VERBS = 'said|asked|shouted|cried|whispered|screamed|replied|yelled|muttered|murmured|began|added|continued|answered|explained|warned|called|gasped|stammered|stuttered|snapped|laughed|sighed|demanded|agreed|interrupted';
+  const dialoguePattern = new RegExp(`([.!?]+["'”’)]?)\\s*(?:[—–\\u2013\\u2014\\u2015\\u2212]|--)?\\s*(?=[a-z]|(?:[A-Z][a-z]+\\s+)?(?:${SPEECH_VERBS})\\b)`, 'g');
+  processed = processed.replace(dialoguePattern, (match) => {
+    return match.replace(/\./g, '__DOT__').replace(/!/g, '__EXCL__').replace(/\?/g, '__QUES__');
   });
 
   let rawSegments = [];
@@ -337,6 +365,10 @@ function extractContextFromText(fullParagraph, selectedText, charOffset = -1) {
 
   const cleanSel = selectedText.trim();
   const cleanSelLower = cleanSel.toLowerCase();
+  const normSelLower = normalizeDashesAndQuotes(cleanSel).toLowerCase();
+  const strippedSel = stripWordPunctuation(normSelLower);
+
+  const normSentences = sentences.map(s => normalizeDashesAndQuotes(s).toLowerCase());
 
   let targetIdx = -1;
 
@@ -352,7 +384,11 @@ function extractContextFromText(fullParagraph, selectedText, charOffset = -1) {
       searchFrom = end;
 
       if (charOffset >= start && charOffset <= end + 15) {
-        if (sentences[i].toLowerCase().includes(cleanSelLower)) {
+        if (
+          sentences[i].toLowerCase().includes(cleanSelLower) ||
+          normSentences[i].includes(normSelLower) ||
+          (strippedSel && normSentences[i].includes(strippedSel))
+        ) {
           targetIdx = i;
           break;
         }
@@ -380,7 +416,45 @@ function extractContextFromText(fullParagraph, selectedText, charOffset = -1) {
     }
   }
 
-  // 4. 문장에 걸쳐 선택되었거나 찾지 못한 경우
+  // 4. 대시/따옴표/공백 정규화 후 일치 문장 탐색 (Em dash, En dash, 따옴표 변형 등 완벽 대응)
+  if (targetIdx === -1 && normSelLower) {
+    for (let i = 0; i < sentences.length; i++) {
+      if (normSentences[i].includes(normSelLower)) {
+        targetIdx = i;
+        break;
+      }
+    }
+  }
+
+  // 5. 문장부호 제거 후 핵심 단어 일치 탐색 (대시나 콜론 등 부호가 선택 영역 끝에 걸쳐 선택된 경우)
+  if (targetIdx === -1 && strippedSel) {
+    for (let i = 0; i < sentences.length; i++) {
+      if (normSentences[i].includes(strippedSel)) {
+        targetIdx = i;
+        break;
+      }
+    }
+  }
+
+  // 6. charOffset 오프셋 범위 기반 안전 폴백
+  if (targetIdx === -1 && charOffset >= 0) {
+    let searchFrom = 0;
+    for (let i = 0; i < sentences.length; i++) {
+      const sentText = sentences[i];
+      const prefix = sentText.slice(0, Math.min(35, sentText.length));
+      const sPos = fullParagraph.indexOf(prefix, searchFrom);
+      const start = sPos >= 0 ? sPos : searchFrom;
+      const end = start + sentText.length;
+      searchFrom = end;
+
+      if (charOffset >= start && charOffset <= end) {
+        targetIdx = i;
+        break;
+      }
+    }
+  }
+
+  // 7. 문장에 걸쳐 선택되었거나 찾지 못한 경우
   if (targetIdx === -1) {
     return {
       targetSentence: selectedText,
