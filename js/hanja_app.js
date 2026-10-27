@@ -1,3 +1,20 @@
+// Supabase Client Initialization (용어노트, 가계도앱과 동일)
+const supabaseUrl = 'https://tpwwwpcbinxdhxqvcvqc.supabase.co';
+const supabaseKey = 'sb_publishable_A1sd3hvbeQx9-gVoFXL0qA_G923SWm9';
+const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUrl, supabaseKey) : null;
+
+let isLoggedIn = false;
+
+// 인증 관련 DOM 요소
+const authStatusText = document.getElementById('authStatusText');
+const btnLogin = document.getElementById('btnLogin');
+const btnLogout = document.getElementById('btnLogout');
+const loginDialog = document.getElementById('loginDialog');
+const loginForm = document.getElementById('loginForm');
+const btnCancelLogin = document.getElementById('btnCancelLogin');
+const btnSubmitLogin = document.getElementById('btnSubmitLogin');
+const loginError = document.getElementById('loginError');
+
 const input = document.getElementById('koreanInput');
 const resultList = document.getElementById('resultList');
 const statusText = document.getElementById('status');
@@ -120,6 +137,9 @@ async function initApp() {
     // 부수 검색 데이터 구축 완료 시 UI 렌더링 호출
     initRadicalSearch();
 
+    // ── 1단계 완료 시점에 이미 저장된 커스텀 뜻 오버라이드 1차 적용 ──
+    loadHanjaOverridesFromSupabase();
+
     // ── 입력창 즉시 활성화 ──
     input.disabled = false;
     input.focus();
@@ -132,6 +152,8 @@ async function initApp() {
     Promise.all(remainingPromises)
       .then(() => {
         statusText.textContent = '입력 대기 중...';
+        // 전체 텍스트 파일 로드 완료 후 최종적으로 Supabase 오버라이드 재적용
+        loadHanjaOverridesFromSupabase();
       })
       .catch(err => {
         console.error('일부 사전 파일 로딩 실패:', err);
@@ -228,12 +250,11 @@ function showDetailView(itemObj, customWord) {
   // 현재 아이템 저장 (수정 시 참조)
   currentDetailItem = { ...itemObj, korean: soundText };
 
-  // 로컬 여부에 따른 편집 버튼 및 폼 초기화
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  // 로그인 상태에 따른 편집 버튼 및 폼 초기화 (로그인한 사용자만 수정 가능)
   const startEditBtn = document.getElementById('startEditBtn');
   const editArea = document.getElementById('editArea');
   if (startEditBtn) {
-    if (isLocal && itemObj.file) {
+    if (isLoggedIn) {
       startEditBtn.style.display = 'flex';
     } else {
       startEditBtn.style.display = 'none';
@@ -476,6 +497,12 @@ function showAddForm(word) {
   submitBtn.style.flex = '2';
   submitBtn.textContent = '💾 사전 등록하기';
   submitBtn.addEventListener('click', async () => {
+    if (!isLoggedIn) {
+      alert('새 한자 등록은 로그인한 사용자만 가능합니다. 먼저 로그인해 주세요.');
+      if (loginDialog) loginDialog.showModal();
+      return;
+    }
+
     const addedHanja = charInput.value.trim();
     const addedKorean = korInput.value.trim();
     const addedMeaning = meaningInput.value.trim();
@@ -488,49 +515,100 @@ function showAddForm(word) {
     submitBtn.disabled = true;
     submitBtn.textContent = '등록 중...';
     
-    try {
-      const response = await fetch('/api/add_hanja', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          korean: addedKorean,
+    const processedMeaning = addedMeaning.replace(/\n/g, '</br>');
+    let saveOk = false;
+    let errorMessage = '';
+
+    // 1. Supabase hanja_dict 테이블에 저장
+    if (supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('hanja_dict').upsert({
           hanja: addedHanja,
-          meaning: addedMeaning
-        })
-      });
-      
-      const resData = await response.json();
-      if (!response.ok || !resData.success) {
-        throw new Error(resData.error || '등록에 실패했습니다.');
-      }
-      
-      // 메모리 데이터 동기화
-      const file = 'h15.txt';
-      if (!hanjaMap.has(addedKorean)) {
-        hanjaMap.set(addedKorean, new Map());
-      }
-      const processedMeaning = addedMeaning.replace(/\n/g, '</br>');
-      hanjaMap.get(addedKorean).set(addedHanja, { meaning: processedMeaning, file });
-      
-      if (addedHanja.length === 1) {
-        const exists = hanjaList.some(item => item.korean === addedKorean && item.hanja === addedHanja);
-        if (!exists) {
-          hanjaList.push({ korean: addedKorean, hanja: addedHanja, meaning: processedMeaning, file });
+          korean: addedKorean,
+          meaning: processedMeaning,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'hanja,korean' });
+
+        if (error) {
+          console.warn('Supabase add error:', error);
+          errorMessage = error.message;
+        } else {
+          saveOk = true;
         }
+      } catch (dbErr) {
+        console.warn('Supabase DB error:', dbErr);
+        errorMessage = dbErr.message;
       }
-      
-      showToast('새 한자가 사전에 등록되었습니다!');
-      
-      input.value = addedKorean;
-      input.dispatchEvent(new Event('input'));
-      
-    } catch (err) {
-      alert('에러 발생: ' + err.message);
-      submitBtn.disabled = false;
-      submitBtn.textContent = '💾 사전 등록하기';
     }
+
+    // 2. 로컬 개발 서버가 있는 경우 로컬 파일 동기화 시도
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal) {
+      try {
+        const response = await fetch('/api/add_hanja', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            korean: addedKorean,
+            hanja: addedHanja,
+            meaning: addedMeaning
+          })
+        });
+        const resData = await response.json();
+        if (resData.success) {
+          saveOk = true;
+        }
+      } catch (localErr) {
+        // 로컬 파이썬 서버 오프라인 가능
+      }
+    }
+
+    // 3. 브라우저 localStorage 캐시 백업
+    try {
+      const overrides = JSON.parse(localStorage.getItem('hanja_dict_overrides') || '{}');
+      overrides[`${addedHanja}_${addedKorean}`] = {
+        hanja: addedHanja,
+        korean: addedKorean,
+        meaning: processedMeaning,
+        updated_at: new Date().toISOString()
+      };
+      localStorage.setItem('hanja_dict_overrides', JSON.stringify(overrides));
+      if (!saveOk && !errorMessage) saveOk = true;
+    } catch (lsErr) {
+      console.warn('localStorage save warning:', lsErr);
+    }
+
+    if (!saveOk && errorMessage) {
+      if (errorMessage.includes('relation "hanja_dict" does not exist') || errorMessage.includes('404')) {
+        alert('Supabase에 "hanja_dict" 테이블이 아직 생성되지 않아 현재 브라우저에 임시 저장되었습니다.\nSQL Editor에서 scripts/create_hanja_dict_table.sql 을 실행해주세요.');
+      } else {
+        alert('저장 중 경고: ' + errorMessage + '\n(현재 브라우저에는 정상 반영되었습니다)');
+      }
+    }
+
+    // 메모리 데이터 동기화
+    const file = 'h15.txt';
+    if (!hanjaMap.has(addedKorean)) {
+      hanjaMap.set(addedKorean, new Map());
+    }
+    hanjaMap.get(addedKorean).set(addedHanja, { meaning: processedMeaning, file });
+    
+    if (addedHanja.length === 1) {
+      const exists = hanjaList.some(item => item.korean === addedKorean && item.hanja === addedHanja);
+      if (!exists) {
+        hanjaList.push({ korean: addedKorean, hanja: addedHanja, meaning: processedMeaning, file });
+      } else {
+        const idx = hanjaList.findIndex(item => item.korean === addedKorean && item.hanja === addedHanja);
+        if (idx !== -1) hanjaList[idx].meaning = processedMeaning;
+      }
+    }
+    
+    showToast('새 한자가 사전에 등록되었습니다!');
+    
+    input.value = addedKorean;
+    input.dispatchEvent(new Event('input'));
   });
   
   btnGroup.appendChild(cancelBtn);
@@ -1111,6 +1189,220 @@ if (backToSearchBtn) {
   backToSearchBtn.addEventListener('click', hideDetailView);
 }
 
+// ── 인증 및 뜻 수정 관련 로직 ──
+
+// 상세 화면에서 수정 버튼 표시 여부 갱신
+function updateEditButtonVisibility() {
+  const startEditBtn = document.getElementById('startEditBtn');
+  const editArea = document.getElementById('editArea');
+  if (!startEditBtn) return;
+
+  if (panelDetail && panelDetail.classList.contains('active')) {
+    if (isLoggedIn) {
+      if (editArea && editArea.style.display === 'flex') {
+        startEditBtn.style.display = 'none';
+      } else {
+        startEditBtn.style.display = 'flex';
+      }
+    } else {
+      startEditBtn.style.display = 'none';
+      if (editArea && editArea.style.display === 'flex') {
+        editArea.style.display = 'none';
+        detailMeaning.style.display = 'block';
+      }
+    }
+  }
+}
+
+// Supabase Auth 초기화 및 이벤트 바인딩
+function initAuth() {
+  if (!supabaseClient) {
+    console.warn('Supabase client not available.');
+    return;
+  }
+
+  // 로그인 상태 변화 리스너
+  supabaseClient.auth.onAuthStateChange((event, session) => {
+    const user = session?.user;
+    isLoggedIn = !!user;
+
+    if (user) {
+      const adminNick = user.email ? user.email.split('@')[0] : 'admin';
+      if (authStatusText) authStatusText.innerHTML = `🟢 ${adminNick}`;
+      if (btnLogin) btnLogin.style.display = 'none';
+      if (btnLogout) btnLogout.style.display = 'inline-flex';
+    } else {
+      if (authStatusText) authStatusText.innerHTML = '';
+      if (btnLogin) btnLogin.style.display = 'inline-flex';
+      if (btnLogout) btnLogout.style.display = 'none';
+    }
+
+    updateEditButtonVisibility();
+  });
+
+  // 로그인 모달 열기
+  if (btnLogin && loginDialog) {
+    btnLogin.addEventListener('click', () => {
+      if (loginError) {
+        loginError.style.display = 'none';
+        loginError.textContent = '';
+      }
+      loginDialog.showModal();
+    });
+  }
+
+  // 로그인 모달 취소/닫기
+  if (btnCancelLogin && loginDialog) {
+    btnCancelLogin.addEventListener('click', () => {
+      loginDialog.close();
+    });
+  }
+
+  // 로그인 폼 제출
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail')?.value.trim();
+      const password = document.getElementById('loginPassword')?.value;
+
+      if (!email || !password) return;
+
+      if (btnSubmitLogin) {
+        btnSubmitLogin.disabled = true;
+        btnSubmitLogin.textContent = '로그인 중...';
+      }
+      if (loginError) {
+        loginError.style.display = 'none';
+        loginError.textContent = '';
+      }
+
+      try {
+        const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        if (error) {
+          if (loginError) {
+            loginError.textContent = '로그인 실패: ' + error.message;
+            loginError.style.display = 'block';
+          } else {
+            alert('로그인 실패: ' + error.message);
+          }
+        } else {
+          loginForm.reset();
+          loginDialog?.close();
+          showToast('성공적으로 로그인되었습니다.');
+        }
+      } catch (err) {
+        alert('로그인 오류: ' + err.message);
+      } finally {
+        if (btnSubmitLogin) {
+          btnSubmitLogin.disabled = false;
+          btnSubmitLogin.textContent = '로그인';
+        }
+      }
+    });
+  }
+
+  // 로그아웃 처리
+  if (btnLogout) {
+    btnLogout.addEventListener('click', async () => {
+      try {
+        const { error } = await supabaseClient.auth.signOut();
+        if (error) {
+          alert('로그아웃 실패: ' + error.message);
+        } else {
+          showToast('로그아웃되었습니다.');
+        }
+      } catch (err) {
+        alert('로그아웃 오류: ' + err.message);
+      }
+    });
+  }
+}
+
+// Supabase 및 로컬 스토리지에서 커스텀/수정된 뜻 정보를 가져와 메모리에 반영
+async function loadHanjaOverridesFromSupabase() {
+  // 1) 로컬 스토리지 캐시 우선 적용 (빠른 로딩 및 오프라인 대응)
+  try {
+    const cachedOverrides = JSON.parse(localStorage.getItem('hanja_dict_overrides') || '{}');
+    applyOverridesToMemory(Object.values(cachedOverrides));
+  } catch (e) {
+    console.warn('Failed to parse cached hanja overrides:', e);
+  }
+
+  // 2) Supabase hanja_dict 테이블에서 최신 데이터 조회 (페이징 적용)
+  if (!supabaseClient) return;
+
+  try {
+    let allOverrides = [];
+    let page = 0;
+    const pageSize = 1000;
+    let keepFetching = true;
+
+    while (keepFetching) {
+      const { data, error } = await supabaseClient
+        .from('hanja_dict')
+        .select('*')
+        .neq('meaning', '')
+        .range(page * pageSize, (page + 1) * pageSize - 1)
+        .order('id', { ascending: true });
+
+      if (error) {
+        // 테이블이 아직 없거나 권한 제한 시 조용히 넘김
+        keepFetching = false;
+        break;
+      }
+
+      if (data && data.length > 0) {
+        allOverrides.push(...data);
+        if (data.length < pageSize) {
+          keepFetching = false;
+        } else {
+          page++;
+        }
+      } else {
+        keepFetching = false;
+      }
+    }
+
+    if (allOverrides.length > 0) {
+      applyOverridesToMemory(allOverrides);
+      // 로컬 스토리지 캐시 동기화
+      const mapObj = {};
+      allOverrides.forEach(item => {
+        mapObj[`${item.hanja}_${item.korean}`] = item;
+      });
+      localStorage.setItem('hanja_dict_overrides', JSON.stringify(mapObj));
+    }
+  } catch (err) {
+    console.warn('Error fetching hanja_dict overrides from Supabase:', err);
+  }
+}
+
+// 오버라이드 데이터를 hanjaMap과 hanjaList에 적용하는 헬퍼 함수
+function applyOverridesToMemory(items) {
+  if (!Array.isArray(items)) return;
+
+  for (const item of items) {
+    const { hanja, korean, meaning } = item;
+    if (!hanja || !korean || meaning === undefined) continue;
+
+    // hanjaMap 반영
+    if (!hanjaMap.has(korean)) {
+      hanjaMap.set(korean, new Map());
+    }
+    const inner = hanjaMap.get(korean);
+    const existing = inner.get(hanja) || {};
+    inner.set(hanja, { ...existing, meaning });
+
+    // hanjaList 반영
+    const idx = hanjaList.findIndex(h => h.hanja === hanja && h.korean === korean);
+    if (idx !== -1) {
+      hanjaList[idx].meaning = meaning;
+    } else if (hanja.length === 1) {
+      hanjaList.push({ hanja, korean, meaning, file: existing.file || '' });
+    }
+  }
+}
+
 // 한자 뜻 편집 관련 이벤트 바인딩
 const startEditBtn = document.getElementById('startEditBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
@@ -1120,6 +1412,11 @@ const editMeaningInput = document.getElementById('editMeaningInput');
 
 if (startEditBtn) {
   startEditBtn.addEventListener('click', () => {
+    if (!isLoggedIn) {
+      alert('뜻 정보 편집은 로그인한 사용자만 가능합니다. 먼저 로그인해 주세요.');
+      if (loginDialog) loginDialog.showModal();
+      return;
+    }
     if (!currentDetailItem) return;
     // </br> 및 <br> 태그를 줄바꿈(\n)으로 복원해서 편집 창에 채워 넣음
     const rawMeaning = (currentDetailItem.meaning || '')
@@ -1137,72 +1434,136 @@ if (cancelEditBtn) {
   cancelEditBtn.addEventListener('click', () => {
     editArea.style.display = 'none';
     detailMeaning.style.display = 'block';
-    startEditBtn.style.display = 'flex';
+    if (isLoggedIn) {
+      startEditBtn.style.display = 'flex';
+    }
   });
 }
 
 if (saveEditBtn) {
   saveEditBtn.addEventListener('click', async () => {
     if (!currentDetailItem) return;
+
+    if (!isLoggedIn) {
+      alert('뜻 정보 편집은 로그인한 사용자만 가능합니다. 먼저 로그인해 주세요.');
+      if (loginDialog) loginDialog.showModal();
+      return;
+    }
+
     const rawInput = editMeaningInput.value.trim();
     // 줄바꿈을 </br>로 치환하여 저장
     const processedMeaning = rawInput.replace(/\n/g, '</br>');
-    
+
     saveEditBtn.disabled = true;
     saveEditBtn.textContent = '저장 중...';
-    
-    try {
-      const response = await fetch('/api/save_hanja', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          file: currentDetailItem.file,
-          korean: currentDetailItem.korean,
-          hanja: currentDetailItem.hanja,
-          meaning: processedMeaning
-        })
-      });
-      
-      const resData = await response.json();
-      if (!response.ok || !resData.success) {
-        throw new Error(resData.error || '저장에 실패했습니다.');
-      }
-      
-      // 메모리 데이터 동기화
-      currentDetailItem.meaning = processedMeaning;
-      
-      // hanjaMap 업데이트
-      if (hanjaMap.has(currentDetailItem.korean)) {
-        const innerMap = hanjaMap.get(currentDetailItem.korean);
-        if (innerMap.has(currentDetailItem.hanja)) {
-          innerMap.get(currentDetailItem.hanja).meaning = processedMeaning;
+
+    const hanjaChar = currentDetailItem.hanja;
+    const koreanSound = currentDetailItem.korean || '';
+    let saveOk = false;
+    let errorMessage = '';
+
+    // 1. Supabase hanja_dict 테이블에 저장
+    if (supabaseClient) {
+      try {
+        const { error } = await supabaseClient.from('hanja_dict').upsert({
+          hanja: hanjaChar,
+          korean: koreanSound,
+          meaning: processedMeaning,
+          updated_at: new Date().toISOString()
+        }, { onConflict: 'hanja,korean' });
+
+        if (error) {
+          console.warn('Supabase hanja_dict upsert error:', error);
+          errorMessage = error.message;
+        } else {
+          saveOk = true;
         }
+      } catch (dbErr) {
+        console.warn('Supabase connection error:', dbErr);
+        errorMessage = dbErr.message;
       }
-      
-      // hanjaList 업데이트
-      const listIndex = hanjaList.findIndex(item => 
-        item.korean === currentDetailItem.korean && 
-        item.hanja === currentDetailItem.hanja
-      );
-      if (listIndex !== -1) {
-        hanjaList[listIndex].meaning = processedMeaning;
-      }
-      
-      // 뷰 갱신 및 상태 복구
-      detailMeaning.innerHTML = processedMeaning.replace(/<\/br>/g, '<br>');
-      editArea.style.display = 'none';
-      detailMeaning.style.display = 'block';
-      startEditBtn.style.display = 'flex';
-      
-      showToast('뜻 설명이 성공적으로 저장되었습니다!');
-    } catch (err) {
-      alert('에러 발생: ' + err.message);
-    } finally {
-      saveEditBtn.disabled = false;
-      saveEditBtn.textContent = '저장';
     }
+
+    // 2. 로컬 개발 서버(/api/save_hanja)가 켜져 있는 경우 로컬 파일 동기화도 시도
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (isLocal && currentDetailItem.file) {
+      try {
+        const response = await fetch('/api/save_hanja', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            file: currentDetailItem.file,
+            korean: koreanSound,
+            hanja: hanjaChar,
+            meaning: processedMeaning
+          })
+        });
+        const resData = await response.json();
+        if (resData.success) {
+          saveOk = true;
+        }
+      } catch (localErr) {
+        // 로컬 파이썬 서버가 꺼져 있을 수 있으므로 조용히 무시
+      }
+    }
+
+    // 3. 브라우저 localStorage 캐시 백업
+    try {
+      const overrides = JSON.parse(localStorage.getItem('hanja_dict_overrides') || '{}');
+      overrides[`${hanjaChar}_${koreanSound}`] = {
+        hanja: hanjaChar,
+        korean: koreanSound,
+        meaning: processedMeaning,
+        updated_at: new Date().toISOString()
+      };
+      localStorage.setItem('hanja_dict_overrides', JSON.stringify(overrides));
+      if (!saveOk && !errorMessage) saveOk = true;
+    } catch (lsErr) {
+      console.warn('localStorage save warning:', lsErr);
+    }
+
+    saveEditBtn.disabled = false;
+    saveEditBtn.textContent = '저장';
+
+    if (!saveOk && errorMessage) {
+      if (errorMessage.includes('relation "hanja_dict" does not exist') || errorMessage.includes('404')) {
+        alert('Supabase에 "hanja_dict" 테이블이 아직 생성되지 않아 현재 브라우저에 임시 저장되었습니다.\nSQL Editor에서 scripts/create_hanja_dict_table.sql 을 실행해주세요.');
+      } else {
+        alert('저장 중 경고: ' + errorMessage + '\n(현재 브라우저에는 정상 반영되었습니다)');
+      }
+    }
+
+    // 메모리 데이터 동기화
+    currentDetailItem.meaning = processedMeaning;
+
+    // hanjaMap 업데이트
+    if (hanjaMap.has(currentDetailItem.korean)) {
+      const innerMap = hanjaMap.get(currentDetailItem.korean);
+      if (innerMap.has(currentDetailItem.hanja)) {
+        innerMap.get(currentDetailItem.hanja).meaning = processedMeaning;
+      }
+    }
+
+    // hanjaList 업데이트
+    const listIndex = hanjaList.findIndex(item => 
+      item.korean === currentDetailItem.korean && 
+      item.hanja === currentDetailItem.hanja
+    );
+    if (listIndex !== -1) {
+      hanjaList[listIndex].meaning = processedMeaning;
+    }
+
+    // 뷰 갱신 및 상태 복구
+    detailMeaning.innerHTML = processedMeaning.replace(/<\/br>/g, '<br>');
+    editArea.style.display = 'none';
+    detailMeaning.style.display = 'block';
+    if (isLoggedIn) {
+      startEditBtn.style.display = 'flex';
+    }
+
+    showToast('뜻 설명이 성공적으로 저장되었습니다!');
   });
 }
 
@@ -1230,4 +1591,5 @@ window.addEventListener('DOMContentLoaded', () => {
   input.disabled = true; // Disable input until 1단계 완료
   initApp();
   initCanvas();
+  initAuth();
 });

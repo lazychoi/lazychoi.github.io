@@ -18,6 +18,8 @@
   <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
   <script src="js/pwa.js" defer></script>
   <script src="js/nav.js" defer></script>
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <link rel="stylesheet" href="css/common.css">
   <style>
@@ -1031,6 +1033,11 @@
       </button>
     </div>
     <div class="nav-menu" id="nav-menu"></div>
+    <div class="auth-status-container">
+      <span id="authStatusText" style="font-size: 13px; color: var(--text-muted); margin-right: 8px;"></span>
+      <button id="btnLogin" class="btn btn-secondary btn-mini" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+      <button id="btnLogout" class="btn btn-danger btn-mini" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+    </div>
   </nav>
 
   <div class="container">
@@ -1135,6 +1142,26 @@
     <div id="status" class="status">입력 대기 중...</div>
     <div id="meaningDisplay" class="meaning-display"></div>
   </div>
+
+  <!-- 로그인 다이얼로그 모달 -->
+  <dialog id="loginDialog" class="auth-dialog">
+    <form id="loginForm">
+      <h3>🔒 관리자 로그인</h3>
+      <div class="form-group">
+        <label for="loginEmail">이메일 주소</label>
+        <input type="email" id="loginEmail" autocomplete="username" placeholder="admin@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">비밀번호</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <div id="loginError" style="color: #ef4444; font-size: 12px; margin-bottom: 12px; display: none;"></div>
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitLogin" class="btn btn-primary">로그인</button>
+        <button type="button" id="btnCancelLogin" class="btn btn-secondary">취소</button>
+      </div>
+    </form>
+  </dialog>
 
   <script src="js/hanja_app.js"></script>
 </body>

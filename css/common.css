@@ -118,8 +118,131 @@ a {
   z-index: 10;
 }
 
+.btn {
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+  box-sizing: border-box;
+}
+
+.btn-mini {
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+
 .btn-primary {
+  background: var(--accent);
+  border-color: rgba(37, 99, 235, 0.3);
   color: #ffffff !important;
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: var(--glass-border);
+  color: var(--text-main);
+}
+
+.btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.btn-danger {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: #ef4444;
+  color: #dc2626;
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Auth Dialog Styling */
+.auth-dialog {
+  border: 1px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 28px 24px;
+  color: var(--text-main);
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.18);
+  margin: auto;
+}
+
+.auth-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.auth-dialog > form > h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+  color: var(--text-main);
+}
+
+.auth-dialog .form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.auth-dialog .form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.auth-dialog .form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 10px;
+  font-size: 15px;
+  color: var(--text-main);
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.auth-dialog .form-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+}
+
+.auth-dialog .dialog-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
 }
 
 /* Mobile & Tablet Hamburger Menu styles (iPhone & iPad / Tablets <= 1024px) */

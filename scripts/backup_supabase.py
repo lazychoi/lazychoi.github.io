@@ -11,7 +11,8 @@ TABLES_TO_BACKUP = [
     ('terms', 'backup-terms.json'),
     ('history_timeline', 'backup-history.json'),
     ('genealogy_nodes', 'backup-genealogy_nodes.json'),
-    ('genealogy_datasets', 'backup-genealogy_datasets.json')
+    ('genealogy_datasets', 'backup-genealogy_datasets.json'),
+    ('hanja_dict', 'backup-hanja_dict.json')
 ]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -46,8 +47,9 @@ def fetch_table_data(supabase_url, supabase_key, table_name):
     keep_fetching = True
     
     while keep_fetching:
-        # Build PostgREST paginated URL ordered by id
-        url = f"{supabase_url}/rest/v1/{table_name}?select=*&order=id.asc&limit={page_size}&offset={page * page_size}"
+        # Build PostgREST paginated URL ordered by id (hanja_dict는 뜻이 채워진 핵심 데이터만 백업하여 GitHub 100MB 제한 방지)
+        filter_param = "&meaning=neq." if table_name == 'hanja_dict' else ""
+        url = f"{supabase_url}/rest/v1/{table_name}?select=*&order=id.asc{filter_param}&limit={page_size}&offset={page * page_size}"
         req = urllib.request.Request(
             url,
             headers={
@@ -70,6 +72,9 @@ def fetch_table_data(supabase_url, supabase_key, table_name):
                         page += 1
         except urllib.error.HTTPError as e:
             error_body = e.read().decode('utf-8')
+            if e.code == 404:
+                print(f"[-] Warning: Table '{table_name}' does not exist on Supabase yet (404 Not Found). Skipping backup.")
+                return None
             print(f"[-] HTTP Error {e.code}: {e.reason}")
             print(f"[-] Response details: {error_body}")
             sys.exit(1)
