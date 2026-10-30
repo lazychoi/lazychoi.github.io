@@ -2172,7 +2172,7 @@ function openSyncModal(initialTab = 'export') {
         elements.syncSummaryBmCount.textContent = `🔖 책갈피 ${(state.bookmarks || []).length}개`;
       }
       if (elements.syncExportCode) {
-        elements.syncExportCode.value = JSON.stringify(syncObj, null, 2);
+        elements.syncExportCode.value = JSON.stringify(syncObj);
       }
     }
     updateSyncVocabSummary();
@@ -2260,7 +2260,7 @@ async function copySyncCodeToClipboard() {
   }
   const syncObj = generateSyncData();
   if (!syncObj) return;
-  const jsonStr = JSON.stringify(syncObj, null, 2);
+  const jsonStr = JSON.stringify(syncObj);
   if (elements.syncExportCode) {
     elements.syncExportCode.value = jsonStr;
   }
@@ -2442,11 +2442,15 @@ async function applySyncData(syncObj) {
   }
 
   closeSyncModal();
-  showToast(`✅ 진도 동기화 완료! (형광펜 ${state.highlights.length}개, 책갈피 ${state.bookmarks.length}개)`);
+  if (syncObj && syncObj._wasRepaired) {
+    showToast(`⚠️ 진도 코드 끝부분이 일부 잘려있었으나, 읽던 위치와 형광펜 ${state.highlights.length}개를 자동 복구하여 적용했습니다!`, 5500);
+  } else {
+    showToast(`✅ 진도 동기화 완료! (형광펜 ${state.highlights.length}개, 책갈피 ${state.bookmarks.length}개)`);
+  }
   return true;
 }
 
-// ── 진도 동기화 데이터 JSON 파싱 및 정제 헬퍼 ──
+// ── 진도 동기화 데이터 JSON 파싱 및 지능형 자동 복구 헬퍼 ──
 function parseSyncDataFromText(rawText) {
   if (!rawText || typeof rawText !== 'string') return null;
   let text = rawText.trim();
@@ -2456,24 +2460,98 @@ function parseSyncDataFromText(rawText) {
   text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
 
   // 2. 스마트 따옴표 및 유니코드 따옴표 교정 (“ ” ‘ ’ -> " ')
-  text = text.replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'");
+  const cleanQuotes = text
+    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+    .replace(/[\u2018\u2019\u02BC`]/g, "'");
 
   // 3. 표준 JSON 파싱 시도
   try {
-    const parsed = JSON.parse(text);
+    const parsed = JSON.parse(cleanQuotes);
     if (parsed && typeof parsed === 'object') return parsed;
   } catch (e1) {
-    // 4. 앞뒤 설명 텍스트나 공백이 섞여 있는 경우 중괄호({}) 블록 추출 시도
-    const firstBrace = text.indexOf('{');
-    const lastBrace = text.lastIndexOf('}');
-    if (firstBrace !== -1 && lastBrace > firstBrace) {
-      const subText = text.substring(firstBrace, lastBrace + 1);
+    // 표준 파싱 실패 시 아래 자동 복구 시도
+  }
+
+  // 4. 후행 쉼표(trailing commas) 정리 후 파싱 시도
+  const noTrailingCommas = cleanQuotes.replace(/,\s*([\]}])/g, '$1');
+  try {
+    const parsed = JSON.parse(noTrailingCommas);
+    if (parsed && typeof parsed === 'object') return parsed;
+  } catch (e2) {}
+
+  // 5. [자동 복구 단계 1]: 단순 괄호 누락 복구 (복사 시 맨 끝의 '}' 또는 ']}' 등이 잘린 경우)
+  const simpleSuffixes = ['}', ']}', '\n  ]\n}', '\n  ],\n  "bookmarks": []\n}'];
+  for (const suffix of simpleSuffixes) {
+    try {
+      const candidate = cleanQuotes.replace(/,\s*$/, '') + suffix;
+      const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
+      if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition || parsed.highlights)) {
+        parsed._wasRepaired = true;
+        return parsed;
+      }
+    } catch (e) {}
+  }
+
+  // 6. [자동 복구 단계 2]: 형광펜(highlights) 배열 도중 텍스트가 잘린 경우
+  // 마지막 온전하게 닫힌 형광펜 객체(닫는 '}' 기준)까지만 유지하고 안전하게 닫기
+  const hlIdx = cleanQuotes.indexOf('"highlights"');
+  if (hlIdx !== -1) {
+    let pos = cleanQuotes.length;
+    while ((pos = cleanQuotes.lastIndexOf('}', pos - 1)) > hlIdx) {
+      const candidate = cleanQuotes.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ],\n  "bookmarks": []\n}';
+      try {
+        const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
+        if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition)) {
+          parsed._wasRepaired = true;
+          return parsed;
+        }
+      } catch (e) {}
+    }
+
+    // 형광펜 배열 내에 온전한 객체가 하나도 없는 경우 -> 도서 정보 및 읽던 위치(진도)만이라도 온전히 복구
+    let beforeHlPos = hlIdx;
+    while ((beforeHlPos = cleanQuotes.lastIndexOf('}', beforeHlPos - 1)) !== -1) {
+      const candidate = cleanQuotes.substring(0, beforeHlPos + 1).replace(/,\s*$/, '') + '\n}';
+      try {
+        const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
+        if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition)) {
+          parsed.highlights = [];
+          parsed.bookmarks = [];
+          parsed._wasRepaired = true;
+          return parsed;
+        }
+      } catch (e) {}
+    }
+  }
+
+  // 7. [자동 복구 단계 3]: 책갈피(bookmarks) 도중 잘린 경우
+  const bmIdx = cleanQuotes.indexOf('"bookmarks"');
+  if (bmIdx !== -1) {
+    let pos = cleanQuotes.length;
+    while ((pos = cleanQuotes.lastIndexOf('}', pos - 1)) > bmIdx) {
+      const candidate = cleanQuotes.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ]\n}';
+      try {
+        const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
+        if (parsed && typeof parsed === 'object') {
+          parsed._wasRepaired = true;
+          return parsed;
+        }
+      } catch (e) {}
+    }
+  }
+
+  // 8. [자동 복구 단계 4]: 앞뒤에 설명 텍스트나 공백이 섞여 있는 경우 중괄호({}) 블록 추출
+  const firstBrace = cleanQuotes.indexOf('{');
+  const lastBrace = cleanQuotes.lastIndexOf('}');
+  if (firstBrace !== -1 && lastBrace > firstBrace) {
+    try {
+      const subText = cleanQuotes.substring(firstBrace, lastBrace + 1).replace(/,\s*([\]}])/g, '$1');
       const parsed = JSON.parse(subText);
       if (parsed && typeof parsed === 'object') return parsed;
-    }
-    throw e1;
+    } catch (e) {}
   }
-  return null;
+
+  throw new Error("JSON_PARSE_TRUNCATED_OR_INVALID");
 }
 
 // ── 클립보드 바로 가져와 적용 (지능형 폴백 & 스마트 자동 적용 지원) ──
@@ -2563,7 +2641,14 @@ async function handleSyncManualApply() {
   try {
     syncObj = parseSyncDataFromText(text);
   } catch (err) {
-    showToast('올바른 진도 데이터(JSON) 형식이 아닙니다: ' + (err.message || ''));
+    const msg = String(err.message || '');
+    const isTruncated = msg.includes('JSON_PARSE_TRUNCATED') ||
+      /expected\s+['"]?\}['"]?|expected\s+['"]?\]['"]?|unexpected end|unterminated/i.test(msg);
+    if (isTruncated) {
+      showToast('⚠️ 진도 코드가 중간에서 잘렸습니다! 데스크톱에서 [클립보드에 복사하기]를 다시 누르거나, 안전한 [파일 다운로드/불러오기] 기능을 이용해주세요.', 6500);
+    } else {
+      showToast('올바른 진도 데이터(JSON) 형식이 아닙니다: ' + msg);
+    }
     return;
   }
 
@@ -9657,11 +9742,21 @@ function isMobileOrTabletDevice() {
   return isMobileUA || isIPadOS || (isTouch && window.innerWidth <= 1024);
 }
 
-// ── 클립보드 복사 유틸리티 (iOS Safari 및 구형 모바일 100% 호환 보장) ──
-function copyTextToClipboard(text) {
-  if (!text) return Promise.resolve(false);
+// ── 클립보드 복사 유틸리티 (대용량 진도 데이터 및 iOS Safari 100% 호환 보장) ──
+async function copyTextToClipboard(text) {
+  if (!text) return false;
 
-  let execSuccess = false;
+  // 1. 표준 비동기 Clipboard API 우선 시도 (대용량 텍스트도 잘림 없이 정확히 복사)
+  if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      console.warn('navigator.clipboard.writeText failed, falling back to execCommand:', err);
+    }
+  }
+
+  // 2. 레거시 execCommand 폴백 (구형 브라우저 및 권한 제한 환경)
   try {
     const textArea = document.createElement('textarea');
     textArea.value = text;
@@ -9676,19 +9771,12 @@ function copyTextToClipboard(text) {
     textArea.focus();
     textArea.select();
     textArea.setSelectionRange(0, text.length);
-    execSuccess = document.execCommand('copy');
+    const execSuccess = document.execCommand('copy');
     document.body.removeChild(textArea);
+    return !!execSuccess;
   } catch (e) {
-    execSuccess = false;
+    return false;
   }
-
-  if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
-    return navigator.clipboard.writeText(text)
-      .then(() => true)
-      .catch(() => execSuccess);
-  }
-
-  return Promise.resolve(execSuccess);
 }
 
 // ── 복사 및 형광펜 목록 자동 검색 공통 처리 함수 ──
@@ -12495,6 +12583,15 @@ function setupEventListeners() {
   }
   if (elements.btnSyncCopyCode) {
     elements.btnSyncCopyCode.addEventListener('click', copySyncCodeToClipboard);
+  }
+  if (elements.syncExportCode) {
+    elements.syncExportCode.addEventListener('focus', () => {
+      elements.syncExportCode.select();
+    });
+    elements.syncExportCode.addEventListener('click', () => {
+      elements.syncExportCode.select();
+      showToast('💡 진도 코드 전체가 선택되었습니다. (⌘+C 또는 Ctrl+C로 복사)');
+    });
   }
   if (elements.btnSyncDownloadFile) {
     elements.btnSyncDownloadFile.addEventListener('click', downloadSyncJsonFile);
