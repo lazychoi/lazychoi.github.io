@@ -700,10 +700,10 @@
           <button type="button" class="btn-reader primary" id="btn-sync-quick-paste" style="flex:1; justify-content:center; padding:10px;" title="클립보드의 진도 코드를 자동으로 읽어와 적용합니다">
             📋 클립보드에서 바로 가져와 적용
           </button>
-          <label class="btn-reader" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="저장된 JSON 백업 파일 불러오기">
+          <button type="button" class="btn-reader" id="btn-trigger-sync-file" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="저장된 JSON 백업 파일 불러오기">
             📂 파일 불러오기
-            <input type="file" id="input-sync-file" accept=".json,application/json" style="display:none;">
-          </label>
+          </button>
+          <input type="file" id="input-sync-file" accept=".json,application/json,text/plain,text/json,application/octet-stream,*/*" style="position:fixed; top:-9999px; left:-9999px; opacity:0; pointer-events:none;">
         </div>
 
         <div class="meta-input-group" style="margin-bottom:12px;">
@@ -745,10 +745,10 @@
           <button type="button" class="btn-reader primary" id="btn-vocab-sync-quick-paste" style="flex:1; justify-content:center; padding:10px;" title="클립보드의 단어 뜻 JSON 데이터를 읽어와 입력창에 붙여넣습니다">
             📋 클립보드 붙여넣기
           </button>
-          <label class="btn-reader" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="단어 뜻 JSON 파일 불러오기">
+          <button type="button" class="btn-reader" id="btn-trigger-vocab-sync-file" style="cursor:pointer; display:inline-flex; align-items:center; justify-content:center; padding:10px; margin:0;" title="단어 뜻 JSON 파일 불러오기">
             📂 파일 불러오기
-            <input type="file" id="input-vocab-sync-file" accept=".json,application/json,text/plain" style="display:none;">
-          </label>
+          </button>
+          <input type="file" id="input-vocab-sync-file" accept=".json,application/json,text/plain,text/json,application/octet-stream,*/*" style="position:fixed; top:-9999px; left:-9999px; opacity:0; pointer-events:none;">
         </div>
 
         <div class="meta-input-group" style="margin-bottom:10px;">
@@ -1114,7 +1114,7 @@
   <div class="reader-toast" id="reader-toast">알림 메시지</div>
 
   <!-- 리더기 핵심 로직 스크립트 -->
-  <script src="js/reader.js?v=20261030_1"></script>
+  <script src="js/reader.js?v=20261031_1"></script>
 </body>
 
 </html>
