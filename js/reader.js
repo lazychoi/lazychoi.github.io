@@ -2624,59 +2624,55 @@ function parseSyncDataFromText(rawText) {
   // 1. 마크다운 코드 블록(```json ... ```) 제거
   text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
 
-  // 2. 스마트 따옴표 및 유니코드 따옴표 교정 (“ ” ‘ ’ -> " ')
-  const cleanQuotes = text
-    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
-    .replace(/[\u2018\u2019\u02BC`]/g, "'");
-
-  // 3. 표준 JSON 파싱 시도
+  // 2. [최우선] 원본 텍스트 표준 JSON 파싱 시도
+  // 하이라이트 원문 문장, 단어 뜻, 번역문에 포함된 스마트 따옴표(“ ” ‘ ’)를 훼손하지 않기 위해 무조건 원본 먼저 파싱
   try {
-    const parsed = JSON.parse(cleanQuotes);
+    const parsed = JSON.parse(text);
     if (parsed && typeof parsed === 'object') return parsed;
-  } catch (e1) {
-    // 표준 파싱 실패 시 아래 자동 복구 시도
+  } catch (e0) {
+    // 원본 파싱 실패 시 아래 단계별 복구 시도
   }
 
-  // 4. 후행 쉼표(trailing commas) 정리 후 파싱 시도
-  const noTrailingCommas = cleanQuotes.replace(/,\s*([\]}])/g, '$1');
+  // 3. 후행 쉼표(trailing commas) 정리 후 파싱 시도
+  const noTrailingCommas = text.replace(/,\s*([\]}])/g, '$1');
   try {
     const parsed = JSON.parse(noTrailingCommas);
     if (parsed && typeof parsed === 'object') return parsed;
-  } catch (e2) {}
+  } catch (e1) {}
 
-  // 5. [자동 복구 단계 1]: 단순 괄호 누락 복구 (복사 시 맨 끝의 '}' 또는 ']}' 등이 잘린 경우)
+  // 4. [자동 복구 단계 1]: 단순 괄호 누락 복구 (복사 시 맨 끝의 '}' 또는 ']}' 등이 잘린 경우)
   const simpleSuffixes = ['}', ']}', '\n  ]\n}', '\n  ],\n  "bookmarks": []\n}'];
   for (const suffix of simpleSuffixes) {
     try {
-      const candidate = cleanQuotes.replace(/,\s*$/, '') + suffix;
+      const candidate = text.replace(/,\s*$/, '') + suffix;
       const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
       if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition || parsed.highlights)) {
         parsed._wasRepaired = true;
         return parsed;
       }
-    } catch (e) {}
+    } catch (e2) {}
   }
 
-  // 6. [자동 복구 단계 2]: 형광펜(highlights) 배열 도중 텍스트가 잘린 경우
+  // 5. [자동 복구 단계 2]: 형광펜(highlights) 배열 도중 텍스트가 잘린 경우
   // 마지막 온전하게 닫힌 형광펜 객체(닫는 '}' 기준)까지만 유지하고 안전하게 닫기
-  const hlIdx = cleanQuotes.indexOf('"highlights"');
+  const hlIdx = text.indexOf('"highlights"');
   if (hlIdx !== -1) {
-    let pos = cleanQuotes.length;
-    while ((pos = cleanQuotes.lastIndexOf('}', pos - 1)) > hlIdx) {
-      const candidate = cleanQuotes.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ],\n  "bookmarks": []\n}';
+    let pos = text.length;
+    while ((pos = text.lastIndexOf('}', pos - 1)) > hlIdx) {
+      const candidate = text.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ],\n  "bookmarks": []\n}';
       try {
         const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
         if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition)) {
           parsed._wasRepaired = true;
           return parsed;
         }
-      } catch (e) {}
+      } catch (e3) {}
     }
 
     // 형광펜 배열 내에 온전한 객체가 하나도 없는 경우 -> 도서 정보 및 읽던 위치(진도)만이라도 온전히 복구
     let beforeHlPos = hlIdx;
-    while ((beforeHlPos = cleanQuotes.lastIndexOf('}', beforeHlPos - 1)) !== -1) {
-      const candidate = cleanQuotes.substring(0, beforeHlPos + 1).replace(/,\s*$/, '') + '\n}';
+    while ((beforeHlPos = text.lastIndexOf('}', beforeHlPos - 1)) !== -1) {
+      const candidate = text.substring(0, beforeHlPos + 1).replace(/,\s*$/, '') + '\n}';
       try {
         const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
         if (parsed && typeof parsed === 'object' && (parsed.app === 'lazychoi-reader' || parsed.book || parsed.readingPosition)) {
@@ -2685,36 +2681,46 @@ function parseSyncDataFromText(rawText) {
           parsed._wasRepaired = true;
           return parsed;
         }
-      } catch (e) {}
+      } catch (e4) {}
     }
   }
 
-  // 7. [자동 복구 단계 3]: 책갈피(bookmarks) 도중 잘린 경우
-  const bmIdx = cleanQuotes.indexOf('"bookmarks"');
+  // 6. [자동 복구 단계 3]: 책갈피(bookmarks) 도중 잘린 경우
+  const bmIdx = text.indexOf('"bookmarks"');
   if (bmIdx !== -1) {
-    let pos = cleanQuotes.length;
-    while ((pos = cleanQuotes.lastIndexOf('}', pos - 1)) > bmIdx) {
-      const candidate = cleanQuotes.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ]\n}';
+    let pos = text.length;
+    while ((pos = text.lastIndexOf('}', pos - 1)) > bmIdx) {
+      const candidate = text.substring(0, pos + 1).replace(/,\s*$/, '') + '\n  ]\n}';
       try {
         const parsed = JSON.parse(candidate.replace(/,\s*([\]}])/g, '$1'));
         if (parsed && typeof parsed === 'object') {
           parsed._wasRepaired = true;
           return parsed;
         }
-      } catch (e) {}
+      } catch (e5) {}
     }
   }
 
-  // 8. [자동 복구 단계 4]: 앞뒤에 설명 텍스트나 공백이 섞여 있는 경우 중괄호({}) 블록 추출
-  const firstBrace = cleanQuotes.indexOf('{');
-  const lastBrace = cleanQuotes.lastIndexOf('}');
+  // 7. [자동 복구 단계 4]: 앞뒤에 설명 텍스트나 공백이 섞여 있는 경우 중괄호({}) 블록 추출
+  const firstBrace = text.indexOf('{');
+  const lastBrace = text.lastIndexOf('}');
   if (firstBrace !== -1 && lastBrace > firstBrace) {
     try {
-      const subText = cleanQuotes.substring(firstBrace, lastBrace + 1).replace(/,\s*([\]}])/g, '$1');
+      const subText = text.substring(firstBrace, lastBrace + 1).replace(/,\s*([\]}])/g, '$1');
       const parsed = JSON.parse(subText);
       if (parsed && typeof parsed === 'object') return parsed;
-    } catch (e) {}
+    } catch (e6) {}
   }
+
+  // 8. [최후의 수단]: 외부 메모 앱에서 복사하여 JSON 키/구문 따옴표 자체가 스마트 따옴표(“ ”)로 변형된 경우에만 교정 시도
+  try {
+    const cleanQuotes = text
+      .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+      .replace(/[\u2018\u2019\u02BC`]/g, "'")
+      .replace(/,\s*([\]}])/g, '$1');
+    const parsed = JSON.parse(cleanQuotes);
+    if (parsed && typeof parsed === 'object') return parsed;
+  } catch (e7) {}
 
   throw new Error("JSON_PARSE_TRUNCATED_OR_INVALID");
 }
@@ -2919,25 +2925,25 @@ function setupSyncPasteListeners() {
 
 function parseVocabFillData(rawText) {
   if (!rawText || typeof rawText !== 'string') return [];
-  let text = rawText.trim();
+  let text = rawText.replace(/^\uFEFF/, '').trim();
   if (!text) return [];
 
   // 1. 마크다운 코드 블록(```json ... ```) 제거
   text = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
 
-  // 2. 스마트 따옴표 및 유니코드 따옴표 교정 (“ ” ‘ ’ -> " ')
-  const smartQuoteNormalized = text
-    .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
-    .replace(/[\u2018\u2019\u02BC`]/g, "'");
-
+  // 2. [최우선] 원본 텍스트 그대로 표준 JSON 파싱 시도
   let parsed = null;
   try {
     parsed = JSON.parse(text);
   } catch (e1) {
+    // 3. 스마트 따옴표 및 유니코드 따옴표 교정 (“ ” ‘ ’ -> " ')
+    const smartQuoteNormalized = text
+      .replace(/[\u201C\u201D\u201E\u201F]/g, '"')
+      .replace(/[\u2018\u2019\u02BC`]/g, "'");
     try {
       parsed = JSON.parse(smartQuoteNormalized);
     } catch (e2) {
-      // 3. 후행 쉼표(trailing commas) 정리 후 재시도
+      // 4. 후행 쉼표(trailing commas) 정리 후 재시도
       const noTrailing = smartQuoteNormalized.replace(/,\s*([\]}])/g, '$1');
       try {
         parsed = JSON.parse(noTrailing);
