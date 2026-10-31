@@ -210,6 +210,34 @@
 
               <div class="setting-divider"></div>
 
+              <!-- 문장 읽기 (AI TTS) 설정 -->
+              <div class="setting-group">
+                <div class="setting-label-row">
+                  <span class="setting-label">🔊 문장 읽기 (AI TTS)</span>
+                </div>
+                <select class="font-family-select" id="tts-engine-select" title="문장 읽기 AI/TTS 엔진 선택" style="margin-bottom: 6px;">
+                  <option value="piper" selected>🤖 Piper AI (무료 신경망 TTS · 권장)</option>
+                  <option value="gemini">✨ Gemini AI 음성 (Google AI Studio)</option>
+                  <option value="browser">⚡ 기기 내장 고품질 음성 (즉시 재생)</option>
+                </select>
+                <div id="tts-voice-row" style="margin-bottom: 6px;">
+                  <select class="font-family-select" id="tts-voice-select" title="AI 음성(목소리) 선택">
+                    <option value="en_US-lessac-medium" selected>🇺🇸 Lessac (미국 여성 · 자연스러운 낭독)</option>
+                    <option value="en_US-hfc_female-medium">🇺🇸 HFC Female (미국 여성 · 또렷한 발음)</option>
+                    <option value="en_US-ryan-medium">🇺🇸 Ryan (미국 남성 · 중저음 내레이션)</option>
+                    <option value="en_GB-alba-medium">🇬🇧 Alba (영국 여성 · 브리티시 발음)</option>
+                  </select>
+                </div>
+                <div class="font-size-controls" style="margin-top: 2px;">
+                  <button type="button" class="btn-font-size" id="btn-tts-speed-decrease" title="읽기 속도 느리게">-</button>
+                  <span id="tts-speed-indicator" style="font-weight:600; font-size:13px;">1.0x</span>
+                  <button type="button" class="btn-font-size" id="btn-tts-speed-increase" title="읽기 속도 빠르게">+</button>
+                </div>
+                <span class="setting-subtext">하이라이트 창의 [문장읽기] 클릭 시 대상 문장(targetSentence)을 읽어줍니다.</span>
+              </div>
+
+              <div class="setting-divider"></div>
+
               <!-- AI 설정 (Google Gemini API) -->
               <div class="setting-group">
                 <div class="setting-label-row">
@@ -417,6 +445,14 @@
       <div class="color-dot pink" data-color="pink" title="분홍색으로 변경"></div>
     </div>
     <div class="highlight-toolbar-buttons">
+      <button type="button" class="toolbar-btn tts-btn" id="btn-hl-speak" title="대상 문장(targetSentence) 읽기">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+          <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+        </svg>
+        <span id="btn-hl-speak-label">문장읽기</span>
+      </button>
       <button type="button" class="toolbar-btn ai-btn" id="btn-hl-ai" title="AI 문맥 검색">
         <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -1114,7 +1150,7 @@
   <div class="reader-toast" id="reader-toast">알림 메시지</div>
 
   <!-- 리더기 핵심 로직 스크립트 -->
-  <script src="js/reader.js?v=20261031_2"></script>
+  <script src="js/reader.js?v=20261031_3"></script>
 </body>
 
 </html>

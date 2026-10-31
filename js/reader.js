@@ -156,6 +156,9 @@ const state = {
     epubFlow: 'paginated',
     copySearchHighlights: true,
     aiAutoAnalysis: true,
+    ttsEngine: 'piper',
+    ttsVoice: 'en_US-lessac-medium',
+    ttsSpeed: 1.0,
   },
   epub: {
     book: null,
@@ -573,6 +576,8 @@ const elements = {
   btnMenuAi: document.getElementById('btn-menu-ai'),
   btnMenuCopy: document.getElementById('btn-menu-copy'),
   highlightToolbar: document.getElementById('highlight-toolbar'),
+  btnHlSpeak: document.getElementById('btn-hl-speak'),
+  btnHlSpeakLabel: document.getElementById('btn-hl-speak-label'),
   btnHlAi: document.getElementById('btn-hl-ai'),
   btnHlCopy: document.getElementById('btn-hl-copy'),
   btnHlEdit: document.getElementById('btn-hl-edit'),
@@ -645,6 +650,12 @@ const elements = {
   lhIndicator: document.getElementById('lh-indicator'),
   fontFamilySelect: document.getElementById('font-family-select'),
   toggleCopySearchHighlights: document.getElementById('toggle-copy-search-highlights'),
+  ttsEngineSelect: document.getElementById('tts-engine-select'),
+  ttsVoiceRow: document.getElementById('tts-voice-row'),
+  ttsVoiceSelect: document.getElementById('tts-voice-select'),
+  btnTtsSpeedDecrease: document.getElementById('btn-tts-speed-decrease'),
+  btnTtsSpeedIncrease: document.getElementById('btn-tts-speed-increase'),
+  ttsSpeedIndicator: document.getElementById('tts-speed-indicator'),
 
   // Quiz & Vocab Elements
   btnOpenQuiz: document.getElementById('btn-open-quiz'),
@@ -1355,6 +1366,15 @@ function loadSettings() {
   if (state.settings.aiAutoAnalysis === undefined) {
     state.settings.aiAutoAnalysis = true;
   }
+  if (!state.settings.ttsEngine) {
+    state.settings.ttsEngine = 'piper';
+  }
+  if (!state.settings.ttsVoice) {
+    state.settings.ttsVoice = 'en_US-lessac-medium';
+  }
+  if (typeof state.settings.ttsSpeed !== 'number' || isNaN(state.settings.ttsSpeed)) {
+    state.settings.ttsSpeed = 1.0;
+  }
   if (!state.settings.geminiApiKey) {
     state.settings.geminiApiKey = localStorage.getItem('gemini_api_key') || '';
   }
@@ -1433,6 +1453,21 @@ function applySettings() {
   // Copy auto-search highlights toggle
   if (elements.toggleCopySearchHighlights) {
     elements.toggleCopySearchHighlights.checked = state.settings.copySearchHighlights !== false;
+  }
+
+  // TTS Settings UI
+  if (elements.ttsEngineSelect) {
+    elements.ttsEngineSelect.value = state.settings.ttsEngine || 'piper';
+  }
+  if (elements.ttsVoiceSelect) {
+    elements.ttsVoiceSelect.value = state.settings.ttsVoice || 'en_US-lessac-medium';
+  }
+  if (elements.ttsVoiceRow) {
+    elements.ttsVoiceRow.style.display = (state.settings.ttsEngine || 'piper') === 'piper' ? 'block' : 'none';
+  }
+  if (elements.ttsSpeedIndicator) {
+    const spd = typeof state.settings.ttsSpeed === 'number' ? state.settings.ttsSpeed : 1.0;
+    elements.ttsSpeedIndicator.textContent = `${spd.toFixed(1)}x`;
   }
 
   // AI API toggle button state
@@ -9366,9 +9401,582 @@ function changeHighlightColor(hlId, newColor, showToastMsg = true) {
   }
 }
 
+// ── AI & Neural TTS (Text-to-Speech) Engine ──
+const SILENT_WAV_DATA_URI = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+let ttsAudioPlayer = null;
+let ttsAudioUnlocked = false;
+let ttsCurrentObjectUrl = null;
+let ttsSessionToken = 0;
+let activeSpeechUtterance = null;
+let piperModulePromise = null;
+let piperSession = null;
+let piperCurrentVoiceId = null;
+const ttsAudioCache = new Map(); // key: `${engine}:${voice}:${sentence}` -> Blob
+
+const ttsState = {
+  isPlaying: false,
+  isLoading: false,
+  activeHighlightId: null,
+  activeSentence: '',
+  activeTriggerBtn: null,
+};
+
+function ensureTtsAudioPlayer() {
+  if (!ttsAudioPlayer) {
+    ttsAudioPlayer = new Audio();
+    ttsAudioPlayer.preload = 'auto';
+    ttsAudioPlayer.playsInline = true;
+  }
+  return ttsAudioPlayer;
+}
+
+function unlockTtsAudio() {
+  const player = ensureTtsAudioPlayer();
+  if (ttsAudioUnlocked) return;
+  try {
+    player.src = SILENT_WAV_DATA_URI;
+    const p = player.play();
+    if (p && typeof p.then === 'function') {
+      p.then(() => {
+        if (player.src === SILENT_WAV_DATA_URI) {
+          player.pause();
+          player.currentTime = 0;
+        }
+        ttsAudioUnlocked = true;
+      }).catch(() => {});
+    }
+  } catch (e) {}
+}
+
+function cleanSentenceForTts(rawText) {
+  if (!rawText) return '';
+  let text = String(rawText);
+  // Strip HTML tags (e.g., <mark>, <sup>)
+  text = text.replace(/<sup\b[^>]*>[\s\S]*?<\/sup>/gi, ' ');
+  text = text.replace(/<[^>]+>/g, ' ');
+  // Strip bracketed footnote numbers like [1], [12]
+  text = text.replace(/\[\d+\]/g, ' ');
+  // Normalize smart apostrophes and quotes for accurate TTS phonemization
+  text = text.replace(/[\u2018\u2019\u02BC`]/g, "'");
+  text = text.replace(/[\u201C\u201D]/g, '"');
+  // Replace em-dash and en-dash with comma pause so words aren't slurred together
+  text = text.replace(/\s*[\u2014\u2013]\s*/g, ', ');
+  // Collapse whitespace
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
+}
+
+function resolveHighlightTargetSentence(hl) {
+  if (!hl) return '';
+  if (hl.targetSentence && String(hl.targetSentence).trim()) {
+    return cleanSentenceForTts(hl.targetSentence);
+  }
+  // Look up in state.highlights in case state.activeHighlight is a stale reference
+  if (hl.id && Array.isArray(state.highlights)) {
+    const matched = state.highlights.find(item => item.id === hl.id);
+    if (matched && matched.targetSentence && String(matched.targetSentence).trim()) {
+      hl.targetSentence = matched.targetSentence;
+      return cleanSentenceForTts(matched.targetSentence);
+    }
+  }
+  // Dynamic fallback extraction from DOM if available
+  if (hl.id && (state.currentBook?.type === 'txt' || state.currentBook?.type === 'md') && elements.txtContent) {
+    const markEl = elements.txtContent.querySelector(`[data-hl-id="${hl.id}"]`);
+    const blockEl = markEl ? (markEl.closest('p, li, blockquote, h1, h2, h3, h4, h5, h6, div') || markEl.parentElement) : null;
+    if (blockEl && blockEl.textContent) {
+      const ctx = extractContextFromText(blockEl.textContent, hl.text || '');
+      if (ctx && ctx.targetSentence) {
+        hl.targetSentence = ctx.targetSentence;
+        return cleanSentenceForTts(ctx.targetSentence);
+      }
+    }
+  }
+  if (hl.id && state.currentBook?.type === 'epub' && elements.epubArea) {
+    const iframe = elements.epubArea.querySelector('iframe');
+    const iframeDoc = iframe ? (iframe.contentDocument || iframe.contentWindow?.document) : null;
+    if (iframeDoc) {
+      const markEl = iframeDoc.querySelector(`[data-hl-id="${hl.id}"]`);
+      const blockEl = markEl ? (markEl.closest('p, li, blockquote, h1, h2, h3, h4, h5, h6, div') || markEl.parentElement) : null;
+      if (blockEl && blockEl.textContent) {
+        const ctx = extractContextFromText(blockEl.textContent, hl.text || '');
+        if (ctx && ctx.targetSentence) {
+          hl.targetSentence = ctx.targetSentence;
+          return cleanSentenceForTts(ctx.targetSentence);
+        }
+      }
+    }
+  }
+  return cleanSentenceForTts(hl.text || '');
+}
+
+function updateTtsButtonsUI() {
+  const isActiveHlInToolbar = state.activeHighlight &&
+    ttsState.activeHighlightId &&
+    state.activeHighlight.id === ttsState.activeHighlightId &&
+    (ttsState.isPlaying || ttsState.isLoading);
+
+  if (elements.btnHlSpeak) {
+    elements.btnHlSpeak.classList.toggle('speaking', !!(isActiveHlInToolbar && ttsState.isPlaying));
+    elements.btnHlSpeak.classList.toggle('loading', !!(isActiveHlInToolbar && ttsState.isLoading));
+    if (elements.btnHlSpeakLabel) {
+      if (isActiveHlInToolbar && ttsState.isLoading) {
+        elements.btnHlSpeakLabel.textContent = '준비중...';
+      } else if (isActiveHlInToolbar && ttsState.isPlaying) {
+        elements.btnHlSpeakLabel.textContent = '읽는중 (정지)';
+      } else {
+        elements.btnHlSpeakLabel.textContent = '문장읽기';
+      }
+    }
+  }
+
+  document.querySelectorAll('.btn-card-speak').forEach(btn => {
+    const cardHlId = btn.dataset.hlId;
+    const isCardActive = cardHlId && cardHlId === ttsState.activeHighlightId && (ttsState.isPlaying || ttsState.isLoading);
+    btn.classList.toggle('speaking', !!(isCardActive && ttsState.isPlaying));
+    btn.classList.toggle('loading', !!(isCardActive && ttsState.isLoading));
+    if (isCardActive && ttsState.isLoading) {
+      btn.textContent = '⏳ 준비중';
+    } else if (isCardActive && ttsState.isPlaying) {
+      btn.textContent = '⏹️ 정지';
+    } else {
+      btn.textContent = '🔊 문장읽기';
+    }
+  });
+}
+
+function stopTtsPlayback(showStoppedToast = false) {
+  ttsSessionToken++;
+  ttsState.isPlaying = false;
+  ttsState.isLoading = false;
+  ttsState.activeHighlightId = null;
+  ttsState.activeSentence = '';
+  ttsState.activeTriggerBtn = null;
+
+  if (ttsAudioPlayer) {
+    try {
+      ttsAudioPlayer.onended = null;
+      ttsAudioPlayer.onerror = null;
+      ttsAudioPlayer.pause();
+      ttsAudioPlayer.currentTime = 0;
+    } catch (e) {}
+  }
+  if (ttsCurrentObjectUrl) {
+    try {
+      URL.revokeObjectURL(ttsCurrentObjectUrl);
+    } catch (e) {}
+    ttsCurrentObjectUrl = null;
+  }
+  if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (e) {}
+  }
+  activeSpeechUtterance = null;
+  updateTtsButtonsUI();
+
+  if (showStoppedToast) {
+    showToast('⏹️ 문장 읽기를 중지했습니다.');
+  }
+}
+
+function cacheTtsBlob(key, blob) {
+  if (!key || !blob) return;
+  if (ttsAudioCache.size >= 40) {
+    const oldestKey = ttsAudioCache.keys().next().value;
+    if (oldestKey) ttsAudioCache.delete(oldestKey);
+  }
+  ttsAudioCache.set(key, blob);
+}
+
+function pcm16ToWavBlob(pcmBytes, sampleRate = 24000, numChannels = 1) {
+  const headerLength = 44;
+  const dataLength = pcmBytes.byteLength;
+  const buffer = new ArrayBuffer(headerLength + dataLength);
+  const view = new DataView(buffer);
+
+  const writeString = (offset, str) => {
+    for (let i = 0; i < str.length; i++) {
+      view.setUint8(offset + i, str.charCodeAt(i));
+    }
+  };
+
+  writeString(0, 'RIFF');
+  view.setUint32(4, 36 + dataLength, true);
+  writeString(8, 'WAVE');
+  writeString(12, 'fmt ');
+  view.setUint32(16, 16, true); // PCM chunk size
+  view.setUint16(20, 1, true);  // PCM format = 1
+  view.setUint16(22, numChannels, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * numChannels * 2, true); // byte rate
+  view.setUint16(32, numChannels * 2, true); // block align
+  view.setUint16(34, 16, true); // bits per sample
+  writeString(36, 'data');
+  view.setUint32(40, dataLength, true);
+
+  new Uint8Array(buffer, headerLength).set(pcmBytes);
+  return new Blob([buffer], { type: 'audio/wav' });
+}
+
+async function synthesizeWithPiper(text, voiceId, token, onDownloadProgress) {
+  const targetVoice = voiceId || 'en_US-lessac-medium';
+  const cacheKey = `piper:${targetVoice}:${text}`;
+  if (ttsAudioCache.has(cacheKey)) {
+    return ttsAudioCache.get(cacheKey);
+  }
+
+  if (!piperModulePromise) {
+    piperModulePromise = import('https://cdn.jsdelivr.net/npm/@mintplex-labs/piper-tts-web@1.0.5/+esm')
+      .catch(err => {
+        piperModulePromise = null;
+        throw err;
+      });
+  }
+  const piperMod = await piperModulePromise;
+  if (token !== ttsSessionToken) return null;
+
+  const wasmPaths = {
+    onnxWasm: 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/',
+    piperData: 'https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.data',
+    piperWasm: 'https://cdn.jsdelivr.net/npm/@diffusionstudio/piper-wasm@1.0.0/build/piper_phonemize.wasm'
+  };
+
+  if (piperMod.TtsSession && piperMod.TtsSession.WASM_LOCATIONS) {
+    Object.assign(piperMod.TtsSession.WASM_LOCATIONS, wasmPaths);
+  }
+
+  if (!piperSession || piperCurrentVoiceId !== targetVoice) {
+    if (piperMod.TtsSession) {
+      piperMod.TtsSession._instance = null;
+    }
+    piperCurrentVoiceId = targetVoice;
+    piperSession = new piperMod.TtsSession({
+      voiceId: targetVoice,
+      wasmPaths,
+      progress: (prog) => {
+        if (token !== ttsSessionToken) return;
+        if (onDownloadProgress && prog && prog.total > 0 && !String(prog.url || '').startsWith('tts://')) {
+          const pct = Math.min(100, Math.round((prog.loaded / prog.total) * 100));
+          onDownloadProgress(pct);
+        }
+      }
+    });
+  }
+
+  try {
+    const wavBlob = await piperSession.predict(text);
+    if (wavBlob && wavBlob.size > 44) {
+      cacheTtsBlob(cacheKey, wavBlob);
+    }
+    return wavBlob;
+  } catch (err) {
+    piperSession = null;
+    if (piperMod && piperMod.TtsSession) {
+      piperMod.TtsSession._instance = null;
+    }
+    throw err;
+  }
+}
+
+async function synthesizeWithGeminiTts(text, voiceName = 'Kore') {
+  const apiKey = getGeminiApiKey();
+  if (!apiKey) {
+    throw new Error('API_KEY_MISSING');
+  }
+  const cacheKey = `gemini:${voiceName}:${text}`;
+  if (ttsAudioCache.has(cacheKey)) {
+    return ttsAudioCache.get(cacheKey);
+  }
+
+  const modelName = 'gemini-2.5-flash-preview-tts';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-goog-api-key': apiKey
+    },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: `Read the following English sentence clearly and naturally:\n${text}` }] }],
+      generationConfig: {
+        responseModalities: ['AUDIO'],
+        speechConfig: {
+          voiceConfig: {
+            prebuiltVoiceConfig: {
+              voiceName: voiceName || 'Kore'
+            }
+          }
+        }
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const errBody = await response.json().catch(() => ({}));
+    throw new Error(errBody.error?.message || `Gemini TTS HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const part = data.candidates?.[0]?.content?.parts?.[0];
+  const inlineData = part?.inlineData || part?.fileData;
+  if (!inlineData || !inlineData.data) {
+    throw new Error('Gemini TTS 오디오 응답이 비어 있습니다.');
+  }
+
+  const mimeType = String(inlineData.mimeType || '');
+  const rateMatch = mimeType.match(/rate=(\d+)/i);
+  const sampleRate = rateMatch ? parseInt(rateMatch[1], 10) : 24000;
+
+  const binaryStr = atob(inlineData.data);
+  const bytes = new Uint8Array(binaryStr.length);
+  for (let i = 0; i < binaryStr.length; i++) {
+    bytes[i] = binaryStr.charCodeAt(i);
+  }
+
+  const wavBlob = (mimeType.includes('wav') || mimeType.includes('mp3') || mimeType.includes('ogg'))
+    ? new Blob([bytes], { type: mimeType })
+    : pcm16ToWavBlob(bytes, sampleRate, 1);
+
+  cacheTtsBlob(cacheKey, wavBlob);
+  return wavBlob;
+}
+
+function selectBestBrowserEnglishVoice() {
+  if (typeof window === 'undefined' || !('speechSynthesis' in window)) return null;
+  const voices = window.speechSynthesis.getVoices() || [];
+  const enVoices = voices.filter(v => /^en([_-]|$)/i.test(v.lang || ''));
+  if (enVoices.length === 0) return null;
+
+  const scoreVoice = (v) => {
+    const name = `${v.name || ''} ${v.voiceURI || ''}`;
+    let score = 0;
+    if (/Online\s*\(Natural\)|Natural/i.test(name)) score += 110;
+    if (/Premium|Enhanced|Siri|Neural/i.test(name)) score += 95;
+    if (/Google US English|Google UK English/i.test(name)) score += 85;
+    if (/\b(Ava|Allison|Samantha|Alex|Aria|Jenny|Guy|Andrew|Emma|Brian|Daniel|Karen|Moira|Nicky|Aaron)\b/i.test(name)) score += 60;
+    if (/^en[-_]US/i.test(v.lang || '')) score += 25;
+    else if (/^en[-_]GB/i.test(v.lang || '')) score += 20;
+    if (v.default) score += 5;
+    return score;
+  };
+
+  const sorted = [...enVoices].sort((a, b) => scoreVoice(b) - scoreVoice(a));
+  return sorted[0] || enVoices[0];
+}
+
+function playAudioBlobWithPlayer(blob, speed, token) {
+  return new Promise((resolve, reject) => {
+    if (token !== ttsSessionToken) {
+      resolve(false);
+      return;
+    }
+    const player = ensureTtsAudioPlayer();
+    if (ttsCurrentObjectUrl) {
+      try {
+        URL.revokeObjectURL(ttsCurrentObjectUrl);
+      } catch (e) {}
+    }
+    ttsCurrentObjectUrl = URL.createObjectURL(blob);
+    player.src = ttsCurrentObjectUrl;
+    const rate = typeof speed === 'number' && !isNaN(speed) ? speed : 1.0;
+    player.playbackRate = rate;
+    player.defaultPlaybackRate = rate;
+    if ('preservesPitch' in player) player.preservesPitch = true;
+    else if ('webkitPreservesPitch' in player) player.webkitPreservesPitch = true;
+
+    player.onended = () => {
+      if (token === ttsSessionToken) {
+        ttsState.isPlaying = false;
+        ttsState.isLoading = false;
+        ttsState.activeHighlightId = null;
+        updateTtsButtonsUI();
+      }
+      resolve(true);
+    };
+    player.onerror = (err) => {
+      reject(err || new Error('Audio playback failed'));
+    };
+
+    ttsState.isLoading = false;
+    ttsState.isPlaying = true;
+    updateTtsButtonsUI();
+
+    const playPromise = player.play();
+    if (playPromise && typeof playPromise.then === 'function') {
+      playPromise.catch(err => reject(err));
+    }
+  });
+}
+
+function speakWithBrowserNeuralTts(text, speed, token) {
+  return new Promise((resolve, reject) => {
+    if (token !== ttsSessionToken) {
+      resolve(false);
+      return;
+    }
+    if (typeof window === 'undefined' || !('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+      reject(new Error('Web Speech API not supported'));
+      return;
+    }
+
+    try {
+      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+    } catch (e) {}
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    activeSpeechUtterance = utterance;
+    const bestVoice = selectBestBrowserEnglishVoice();
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+      utterance.lang = bestVoice.lang || 'en-US';
+    } else {
+      utterance.lang = 'en-US';
+    }
+
+    const rate = typeof speed === 'number' && !isNaN(speed) ? speed : 1.0;
+    utterance.rate = Math.max(0.5, Math.min(2.0, rate * 0.96));
+    utterance.pitch = 1.0;
+
+    utterance.onstart = () => {
+      if (token === ttsSessionToken) {
+        ttsState.isLoading = false;
+        ttsState.isPlaying = true;
+        updateTtsButtonsUI();
+      }
+    };
+    utterance.onend = () => {
+      if (activeSpeechUtterance === utterance) activeSpeechUtterance = null;
+      if (token === ttsSessionToken) {
+        ttsState.isPlaying = false;
+        ttsState.isLoading = false;
+        ttsState.activeHighlightId = null;
+        updateTtsButtonsUI();
+      }
+      resolve(true);
+    };
+    utterance.onerror = (ev) => {
+      if (activeSpeechUtterance === utterance) activeSpeechUtterance = null;
+      if (ev && (ev.error === 'interrupted' || ev.error === 'canceled')) {
+        resolve(false);
+        return;
+      }
+      reject(new Error(ev?.error || 'SpeechSynthesis error'));
+    };
+
+    ttsState.isLoading = false;
+    ttsState.isPlaying = true;
+    updateTtsButtonsUI();
+    window.speechSynthesis.speak(utterance);
+  });
+}
+
+async function speakHighlightSentence(hl, triggerBtn = null) {
+  if (!hl) {
+    showToast('선택된 형광펜 문장이 없습니다.');
+    return;
+  }
+
+  // 이미 같은 형광펜 문장을 읽고 있거나 준비 중이면 즉시 중지 (토글 동작)
+  if ((ttsState.isPlaying || ttsState.isLoading) && ttsState.activeHighlightId && hl.id === ttsState.activeHighlightId) {
+    stopTtsPlayback(true);
+    return;
+  }
+
+  const sentence = resolveHighlightTargetSentence(hl);
+  if (!sentence) {
+    showToast('읽을 대상 문장(targetSentence)이 없습니다.');
+    return;
+  }
+
+  // 이전 재생 중지 및 iOS/Safari 오디오 언락
+  stopTtsPlayback(false);
+  unlockTtsAudio();
+
+  const currentToken = ++ttsSessionToken;
+  ttsState.isLoading = true;
+  ttsState.isPlaying = false;
+  ttsState.activeHighlightId = hl.id || '__active_hl__';
+  ttsState.activeSentence = sentence;
+  ttsState.activeTriggerBtn = triggerBtn;
+  updateTtsButtonsUI();
+
+  const preferredEngine = state.settings.ttsEngine || 'piper';
+  const voiceId = state.settings.ttsVoice || 'en_US-lessac-medium';
+  const speed = typeof state.settings.ttsSpeed === 'number' ? state.settings.ttsSpeed : 1.0;
+
+  let lastProgressStep = -1;
+  const handleDownloadProgress = (pct) => {
+    const step = Math.floor(pct / 20) * 20;
+    if (step !== lastProgressStep && pct < 100) {
+      lastProgressStep = step;
+      showToast(`🔊 AI 음성 모델 준비 중... (${pct}% · 최초 1회)`, 3000);
+    }
+  };
+
+  try {
+    if (preferredEngine === 'piper') {
+      try {
+        const wavBlob = await synthesizeWithPiper(sentence, voiceId, currentToken, handleDownloadProgress);
+        if (currentToken !== ttsSessionToken || !wavBlob) return;
+        await playAudioBlobWithPlayer(wavBlob, speed, currentToken);
+        return;
+      } catch (piperErr) {
+        console.warn('Piper AI TTS fallback to Browser Neural TTS:', piperErr);
+        if (currentToken !== ttsSessionToken) return;
+      }
+    } else if (preferredEngine === 'gemini') {
+      try {
+        const wavBlob = await synthesizeWithGeminiTts(sentence, 'Kore');
+        if (currentToken !== ttsSessionToken || !wavBlob) return;
+        await playAudioBlobWithPlayer(wavBlob, speed, currentToken);
+        return;
+      } catch (geminiErr) {
+        console.warn('Gemini AI TTS fallback:', geminiErr);
+        if (currentToken !== ttsSessionToken) return;
+        if (geminiErr.message === 'API_KEY_MISSING') {
+          showToast('ℹ️ Gemini API 키가 없어 Piper AI / 기기 음성으로 읽습니다.');
+        }
+        try {
+          const wavBlob = await synthesizeWithPiper(sentence, voiceId, currentToken, handleDownloadProgress);
+          if (currentToken !== ttsSessionToken || !wavBlob) return;
+          await playAudioBlobWithPlayer(wavBlob, speed, currentToken);
+          return;
+        } catch (piperFallbackErr) {
+          console.warn('Piper fallback also failed, using Browser TTS:', piperFallbackErr);
+        }
+      }
+    }
+
+    // 기기 내장 신경망 음성 (또는 폴백)
+    if (currentToken !== ttsSessionToken) return;
+    await speakWithBrowserNeuralTts(sentence, speed, currentToken);
+  } catch (err) {
+    console.error('TTS playback error:', err);
+    if (currentToken === ttsSessionToken) {
+      stopTtsPlayback(false);
+      showToast('⚠️ 음성 재생에 실패했습니다.');
+    }
+  }
+}
+
+// Preload browser speechSynthesis voices list asynchronously
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+  try {
+    window.speechSynthesis.getVoices();
+    window.speechSynthesis.addEventListener('voiceschanged', () => {
+      window.speechSynthesis.getVoices();
+    });
+  } catch (e) {}
+}
+
 function showHighlightToolbar(rect) {
   closeAllToolbars();
   const tb = elements.highlightToolbar;
+  updateTtsButtonsUI();
 
   // Update active color dot in #highlight-toolbar
   const currentColor = (state.activeHighlight && state.activeHighlight.color) || 'yellow';
@@ -9904,6 +10512,9 @@ function removeHighlight(hlId) {
   saveHighlights();
   updateHighlightBadge();
 
+  if (ttsState.activeHighlightId === hlId) {
+    stopTtsPlayback(false);
+  }
   if (state.activeHighlight && state.activeHighlight.id === hlId) {
     state.activeHighlight = null;
   }
@@ -10712,6 +11323,7 @@ function renderHighlightDrawer() {
       `}
       ${hl.note ? `<div class="highlight-card-note">💬 ${noteHtml}</div>` : ''}
       <div class="highlight-card-actions">
+        <button type="button" class="btn-card-action btn-card-speak" data-hl-id="${escapeHtml(hl.id || '')}" title="대상 문장(targetSentence) 읽기">🔊 문장읽기</button>
         ${hl.targetMeaning ? `<button type="button" class="btn-card-action btn-card-gen-vocab" title="AI Q&A 다시 생성">🔄 Q&A</button>` : ''}
         <button type="button" class="btn-card-action btn-card-edit-vocab" title="뜻/해석 수정">✏️ 편집</button>
         <button type="button" class="btn-card-action btn-card-ai" title="AI 문맥 검색">🤖 검색</button>
@@ -10822,6 +11434,15 @@ function renderHighlightDrawer() {
       });
     }
 
+    // Speak targetSentence button in card
+    const speakBtn = card.querySelector('.btn-card-speak');
+    if (speakBtn) {
+      speakBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speakHighlightSentence(hl, speakBtn);
+      });
+    }
+
     // Edit Vocab button
     const editVocabBtn = card.querySelector('.btn-card-edit-vocab');
     if (editVocabBtn) {
@@ -10847,6 +11468,7 @@ function renderHighlightDrawer() {
 
     elements.drawerBody.appendChild(card);
   });
+  updateTtsButtonsUI();
 }
 
 // ── Bookmarks Drawer & Interaction ──
@@ -13119,6 +13741,49 @@ function setupEventListeners() {
     });
   }
 
+  // TTS Engine & Voice & Speed settings
+  if (elements.ttsEngineSelect) {
+    elements.ttsEngineSelect.addEventListener('change', (e) => {
+      state.settings.ttsEngine = e.target.value;
+      applySettings();
+      saveSettings();
+      const labels = {
+        piper: '🤖 Piper AI 신경망 TTS 엔진으로 설정되었습니다.',
+        gemini: '✨ Gemini AI 음성 엔진으로 설정되었습니다.',
+        browser: '⚡ 기기 내장 음성 엔진으로 설정되었습니다.'
+      };
+      showToast(labels[state.settings.ttsEngine] || '문장 읽기 엔진이 변경되었습니다.');
+    });
+  }
+  if (elements.ttsVoiceSelect) {
+    elements.ttsVoiceSelect.addEventListener('change', (e) => {
+      state.settings.ttsVoice = e.target.value;
+      applySettings();
+      saveSettings();
+      showToast('🔊 AI 음성(목소리)이 변경되었습니다.');
+    });
+  }
+  if (elements.btnTtsSpeedDecrease) {
+    elements.btnTtsSpeedDecrease.addEventListener('click', () => {
+      const cur = typeof state.settings.ttsSpeed === 'number' ? state.settings.ttsSpeed : 1.0;
+      if (cur > 0.65) {
+        state.settings.ttsSpeed = Math.round((cur - 0.1) * 10) / 10;
+        applySettings();
+        saveSettings();
+      }
+    });
+  }
+  if (elements.btnTtsSpeedIncrease) {
+    elements.btnTtsSpeedIncrease.addEventListener('click', () => {
+      const cur = typeof state.settings.ttsSpeed === 'number' ? state.settings.ttsSpeed : 1.0;
+      if (cur < 1.55) {
+        state.settings.ttsSpeed = Math.round((cur + 0.1) * 10) / 10;
+        applySettings();
+        saveSettings();
+      }
+    });
+  }
+
   // EPUB Nav arrows
   elements.btnEpubPrev.addEventListener('click', () => {
     if (state.epub.rendition) {
@@ -13305,6 +13970,17 @@ function setupEventListeners() {
   });
 
   // Highlight Popover Toolbar Buttons
+  if (elements.btnHlSpeak) {
+    elements.btnHlSpeak.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (state.activeHighlight) {
+        speakHighlightSentence(state.activeHighlight, elements.btnHlSpeak);
+      } else {
+        showToast('선택된 형광펜 문장이 없습니다.');
+      }
+    });
+  }
+
   elements.btnHlAi.addEventListener('click', () => {
     if (state.activeHighlight) {
       triggerGoogleAISearch(state.activeHighlight);

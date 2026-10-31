@@ -55,8 +55,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (!url.protocol.startsWith('http')) return;
 
-  // For Supabase API or external dynamic APIs, bypass service worker cache
-  if (url.hostname.includes('supabase.co')) {
+  // For Supabase API, Gemini API, or HuggingFace AI model streams, bypass service worker cache
+  if (
+    url.hostname.includes('supabase.co') ||
+    url.hostname.includes('huggingface.co') ||
+    url.hostname.includes('generativelanguage.googleapis.com')
+  ) {
     return;
   }
 
