@@ -20,7 +20,7 @@
   <script src="js/nav.js" defer></script>
 
   <link rel="stylesheet" href="css/common.css">
-  <link rel="stylesheet" href="css/reader.css">
+  <link rel="stylesheet" href="css/reader.css?v=20261104_5">
 
   <!-- EPUB Parsing & Rendering Libraries -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -137,6 +137,16 @@
               <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
             </svg>
             퀴즈
+          </button>
+
+          <!-- 챕터 오디오 (MP3 + 타임스탬프 싱크) 버튼 -->
+          <button class="btn-reader" id="btn-toggle-audio" title="챕터별 MP3 오디오 및 타임스탬프 재생/관리">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 18v-6a9 9 0 0118 0v6"></path>
+              <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path>
+            </svg>
+            <span>오디오</span>
+            <span class="audio-loaded-dot" id="audio-loaded-dot" style="display: none;"></span>
           </button>
 
           <!-- 설정 버튼 -->
@@ -315,8 +325,15 @@
         </div>
       </div>
 
-      <!-- 2단: 6개 색상 도트, AI분석, 복사, 수정 순서로 정렬 -->
+      <!-- 2단: 오디오 모드 ON/OFF 버튼, 6개 색상 도트, AI분석, 복사, 수정 순서로 정렬 -->
       <div class="selection-menu-bar" id="selection-menu-bar">
+        <button type="button" class="btn-selection-menu mode-toggle-btn" id="btn-toggle-audio-mode" aria-pressed="false" title="오디오 모드 켜기/끄기">
+          <span id="audio-mode-toggle-icon">🎧</span>
+          <span id="audio-mode-toggle-label">오디오 모드</span>
+        </button>
+
+        <div class="menu-separator"></div>
+
         <div class="menu-color-dots">
           <button type="button" class="color-dot yellow active" data-color="yellow" title="노란색 형광펜"></button>
           <button type="button" class="color-dot orange" data-color="orange" title="주황색 형광펜"></button>
@@ -351,6 +368,58 @@
           </svg>
           <span>수정</span>
         </button>
+      </div>
+
+      <!-- 3단: 챕터 오디오 컨트롤 바 (MP3 + 타임스탬프 싱크 재생) -->
+      <div class="reader-audio-bar" id="reader-audio-bar" style="display: none;">
+        <div class="audio-bar-controls">
+          <button type="button" class="btn-audio-ctrl" id="btn-audio-prev-sent" title="이전 문장 (◀)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path>
+            </svg>
+          </button>
+          <button type="button" class="btn-audio-ctrl play-btn" id="btn-audio-play" title="오디오 재생 / 일시정지">
+            <span id="audio-play-icon">▶</span>
+          </button>
+          <button type="button" class="btn-audio-ctrl" id="btn-audio-next-sent" title="다음 문장 (▶)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path>
+            </svg>
+          </button>
+        </div>
+
+        <div class="audio-bar-progress">
+          <span class="audio-chapter-badge" id="audio-bar-chapter-label" title="현재 연결된 챕터 오디오">Ch.1</span>
+          <input type="range" id="audio-seek-slider" class="audio-seek-slider" min="0" max="100" step="0.1" value="0" aria-label="오디오 재생 위치">
+          <span class="audio-time-text" id="audio-time-display">00:00 / 00:00</span>
+        </div>
+
+        <div class="audio-bar-options">
+          <!-- 클릭한 단어 및 발음기호 표시 칩 (클릭 시 다시 듣기) -->
+          <button type="button" class="audio-word-chip" id="audio-word-chip" style="display: none;" title="클릭하여 다시 듣기">
+            <span class="audio-word-chip-text" id="audio-word-chip-text">word</span>
+          </button>
+
+          <!-- 오디오 모드에서 본문 단어 클릭 동작 선택 -->
+          <label class="audio-click-mode-wrap" title="오디오 모드에서 본문 단어(형광펜 포함)를 클릭했을 때의 재생 단위를 선택합니다.">
+            <span class="audio-mode-label">👆 클릭:</span>
+            <select id="audio-click-mode-select" class="audio-click-mode-select">
+              <option value="sentence" selected>문장 읽기</option>
+              <option value="word">단어 읽기</option>
+              <option value="continue">이어 재생</option>
+            </select>
+          </label>
+
+          <!-- 재생 속도 -->
+          <button type="button" class="btn-audio-chip" id="btn-audio-speed" title="오디오 재생 속도 변경">1.0x</button>
+
+          <!-- 반복 재생 토글 버튼 (단어 · 문장 · 챕터) -->
+          <button type="button" class="btn-audio-chip repeat-btn" id="btn-audio-repeat" aria-pressed="false" title="반복 재생 켜기/끄기 (단어 · 문장 · 챕터)">
+            🔁 반복
+          </button>
+
+          <button type="button" class="btn-audio-close" id="btn-close-audio-bar" title="오디오 바 접기">✕</button>
+        </div>
       </div>
     </header>
 
@@ -1146,11 +1215,79 @@
     </div>
   </div>
 
+  <!-- 챕터별 MP3 오디오 & 타임스탬프 JSON 관리 모달 -->
+  <div class="meta-edit-modal" id="audio-manager-modal">
+    <div class="meta-edit-card audio-manager-card" style="max-width: 540px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <h3 style="font-size: 18px; font-weight:700; margin:0; display:flex; align-items:center; gap:8px;">
+          <span>🎧</span> 챕터별 오디오 &amp; 타임스탬프 관리
+        </h3>
+        <button type="button" class="btn-drawer-close" id="btn-close-audio-modal" aria-label="닫기" style="background:none; border:none; cursor:pointer; font-size:18px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px;">✕</button>
+      </div>
+      <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45;">
+        현재 챕터(또는 선택한 챕터)에 <strong>MP3 오디오 파일</strong>과 <strong>타임스탬프 JSON 파일</strong>(echogarden, stable-ts 등)을 연결합니다. 원문 EPUB/텍스트는 전혀 변형되지 않습니다.
+      </p>
+
+      <!-- 1. 대상 챕터 선택 -->
+      <div class="meta-input-group" style="margin-bottom: 12px;">
+        <label for="audio-chapter-select" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>📚 대상 챕터 선택</span>
+          <span id="audio-current-chapter-hint" style="font-size:11px; color:var(--primary, #2563eb); font-weight:500;">현재 읽는 챕터 자동 선택됨</span>
+        </label>
+        <select id="audio-chapter-select" class="font-family-select" style="width:100%; padding:8px 10px; font-size:13px;"></select>
+      </div>
+
+      <!-- 2. 파일 업로드 박스 -->
+      <div class="audio-upload-box">
+        <div class="audio-upload-row">
+          <label class="btn-reader primary" style="cursor:pointer; flex:1; justify-content:center; padding:9px 12px;">
+            <span>⚡ MP3 + JSON 동시 선택</span>
+            <input type="file" id="input-chapter-audio-both" multiple accept=".mp3,.m4a,.wav,.ogg,.aac,.flac,.json,audio/*,application/json" style="display:none;">
+          </label>
+          <label class="btn-reader" style="cursor:pointer; justify-content:center; padding:9px 10px;" title="오디오 파일(.mp3 등)만 따로 선택">
+            <span>🎵 MP3 선택</span>
+            <input type="file" id="input-chapter-audio-mp3" accept=".mp3,.m4a,.wav,.ogg,.aac,.flac,audio/*" style="display:none;">
+          </label>
+          <label class="btn-reader" style="cursor:pointer; justify-content:center; padding:9px 10px;" title="타임스탬프 파일(.json)만 따로 선택">
+            <span>⏱️ JSON 선택</span>
+            <input type="file" id="input-chapter-audio-json" accept=".json,application/json,text/plain" style="display:none;">
+          </label>
+        </div>
+
+        <div class="audio-selected-files-status" id="audio-selected-files-status">
+          <div class="audio-status-line" id="audio-status-mp3">🎵 오디오 파일: <span class="muted">선택 안 됨</span></div>
+          <div class="audio-status-line" id="audio-status-json">⏱️ 타임스탬프 JSON: <span class="muted">선택 안 됨</span></div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:10px;">
+          <button type="button" class="btn-reader primary" id="btn-save-chapter-audio" disabled>
+            💾 선택한 챕터에 저장 및 적용
+          </button>
+        </div>
+      </div>
+
+      <!-- 3. 이 도서에 등록된 챕터 오디오 목록 -->
+      <div class="audio-registered-section" style="margin-top: 14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="font-size:13px; font-weight:600; color:var(--reader-text);">🗂️ 등록된 챕터 오디오 목록</span>
+          <span id="audio-registered-count" style="font-size:11.5px; color:var(--text-muted);">0개 챕터</span>
+        </div>
+        <div class="audio-registered-list" id="audio-registered-list">
+          <div class="audio-empty-msg">아직 등록된 챕터 오디오가 없습니다.</div>
+        </div>
+      </div>
+
+      <div style="display:flex; justify-content:flex-end; border-top:1px solid var(--reader-border); padding-top:10px; margin-top:12px;">
+        <button type="button" class="btn-reader" id="btn-cancel-audio-modal">닫기</button>
+      </div>
+    </div>
+  </div>
+
   <!-- 토스트 알림 메시지 -->
   <div class="reader-toast" id="reader-toast">알림 메시지</div>
 
   <!-- 리더기 핵심 로직 스크립트 -->
-  <script src="js/reader.js?v=20261031_3"></script>
+  <script src="js/reader.js?v=20261104_5"></script>
 </body>
 
 </html>

@@ -719,6 +719,40 @@ const elements = {
   btnQuizRestart: document.getElementById('btn-quiz-restart'),
   btnQuizFinish: document.getElementById('btn-quiz-finish'),
   btnQuizGoBatch: document.getElementById('btn-quiz-go-batch'),
+
+  // Chapter Audio (MP3 + Timestamp JSON) Elements
+  btnToggleAudio: document.getElementById('btn-toggle-audio'),
+  btnToggleAudioMode: document.getElementById('btn-toggle-audio-mode'),
+  audioModeToggleIcon: document.getElementById('audio-mode-toggle-icon'),
+  audioModeToggleLabel: document.getElementById('audio-mode-toggle-label'),
+  audioLoadedDot: document.getElementById('audio-loaded-dot'),
+  readerAudioBar: document.getElementById('reader-audio-bar'),
+  btnAudioPrevSent: document.getElementById('btn-audio-prev-sent'),
+  btnAudioPlay: document.getElementById('btn-audio-play'),
+  audioPlayIcon: document.getElementById('audio-play-icon'),
+  btnAudioNextSent: document.getElementById('btn-audio-next-sent'),
+  audioBarChapterLabel: document.getElementById('audio-bar-chapter-label'),
+  audioSeekSlider: document.getElementById('audio-seek-slider'),
+  audioTimeDisplay: document.getElementById('audio-time-display'),
+  audioWordChip: document.getElementById('audio-word-chip'),
+  audioWordChipText: document.getElementById('audio-word-chip-text'),
+  audioClickModeSelect: document.getElementById('audio-click-mode-select'),
+  btnAudioSpeed: document.getElementById('btn-audio-speed'),
+  btnAudioRepeat: document.getElementById('btn-audio-repeat'),
+  btnCloseAudioBar: document.getElementById('btn-close-audio-bar'),
+  audioManagerModal: document.getElementById('audio-manager-modal'),
+  btnCloseAudioModal: document.getElementById('btn-close-audio-modal'),
+  btnCancelAudioModal: document.getElementById('btn-cancel-audio-modal'),
+  audioChapterSelect: document.getElementById('audio-chapter-select'),
+  audioCurrentChapterHint: document.getElementById('audio-current-chapter-hint'),
+  inputChapterAudioBoth: document.getElementById('input-chapter-audio-both'),
+  inputChapterAudioMp3: document.getElementById('input-chapter-audio-mp3'),
+  inputChapterAudioJson: document.getElementById('input-chapter-audio-json'),
+  audioStatusMp3: document.getElementById('audio-status-mp3'),
+  audioStatusJson: document.getElementById('audio-status-json'),
+  btnSaveChapterAudio: document.getElementById('btn-save-chapter-audio'),
+  audioRegisteredCount: document.getElementById('audio-registered-count'),
+  audioRegisteredList: document.getElementById('audio-registered-list'),
 };
 
 // 모듈 수준 전역 제어 변수
@@ -729,8 +763,9 @@ let navButtonsTimer = null;
 
 // ── IndexedDB 도서 지속성(Persistence) 관리 ──
 const READER_DB_NAME = 'EnglishReaderDB';
-const READER_DB_VERSION = 1;
+const READER_DB_VERSION = 2;
 const READER_STORE_NAME = 'active_book';
+const READER_AUDIO_STORE_NAME = 'chapter_audio';
 
 function openReaderDB() {
   return new Promise((resolve) => {
@@ -743,6 +778,10 @@ function openReaderDB() {
       const db = e.target.result;
       if (!db.objectStoreNames.contains(READER_STORE_NAME)) {
         db.createObjectStore(READER_STORE_NAME, { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) {
+        const audioStore = db.createObjectStore(READER_AUDIO_STORE_NAME, { keyPath: 'id' });
+        audioStore.createIndex('bookId', 'bookId', { unique: false });
       }
     };
     req.onsuccess = () => resolve(req.result);
@@ -904,6 +943,22 @@ async function deleteBookFromStorage(bookId) {
         store.delete('current_reading_book');
       }
     };
+
+    if (db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) {
+      try {
+        const audioTx = db.transaction(READER_AUDIO_STORE_NAME, 'readwrite');
+        const audioStore = audioTx.objectStore(READER_AUDIO_STORE_NAME);
+        const allReq = audioStore.getAll();
+        allReq.onsuccess = () => {
+          const list = allReq.result || [];
+          list.forEach(item => {
+            if (item && item.bookId === bookId) {
+              audioStore.delete(item.id);
+            }
+          });
+        };
+      } catch (ae) {}
+    }
 
     localStorage.removeItem(`reader_highlights_${bookId}`);
     localStorage.removeItem(`reader_bookmarks_${bookId}`);
@@ -1543,7 +1598,15 @@ function applyEpubThemes() {
     '.epubjs-hl.hl-blue':   { 'fill': '#38bdf8 !important' },
     '.epubjs-hl.hl-pink':   { 'fill': '#f472b6 !important' },
     '.reader-footnote-badge': { 'display': 'none !important' },
-    'sup.reader-footnote-badge': { 'display': 'none !important' }
+    'sup.reader-footnote-badge': { 'display': 'none !important' },
+    '::highlight(audio-active-sentence)': {
+      'background-color': isDark ? 'rgba(96, 165, 250, 0.18) !important' : 'rgba(59, 130, 246, 0.13) !important'
+    },
+    '::highlight(audio-active-word)': {
+      'background-color': isDark ? 'rgba(59, 130, 246, 0.45) !important' : 'rgba(37, 99, 235, 0.28) !important',
+      'color': isDark ? '#f8fafc !important' : '#0f172a !important',
+      'text-decoration': `underline 2px solid ${isDark ? '#60a5fa' : '#2563eb'} !important`
+    }
   });
 
   // 테마/폰트 크기/줄간격 변경 시 현재 읽던 위치(CFI) 및 형광펜 유지
@@ -6787,7 +6850,11 @@ function renderTxtContent(fallbackPosition = null) {
           currentHeadingText = h.textContent.trim();
         }
       });
+      const prevTitle = elements.currentChapterTitle.textContent;
       elements.currentChapterTitle.textContent = currentHeadingText;
+      if (prevTitle !== currentHeadingText && typeof onChapterOrViewChangedForAudio === 'function') {
+        onChapterOrViewChangedForAudio();
+      }
     }
   };
 
@@ -6855,6 +6922,9 @@ function renderTxtContent(fallbackPosition = null) {
 
   // Bind click on marks
   bindHighlightClickEvents();
+  if (typeof onChapterOrViewChangedForAudio === 'function') {
+    onChapterOrViewChangedForAudio(true);
+  }
 }
 
 function extractTxtToc() {
@@ -6955,6 +7025,9 @@ function bindHighlightClickEvents(container = elements.txtContent) {
     if (mark.dataset.hlBound) return;
     mark.dataset.hlBound = 'true';
     mark.addEventListener('click', (e) => {
+      if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       const hlId = mark.dataset.hlId;
@@ -7591,6 +7664,9 @@ function bindFootnoteBadgeEvents() {
   const badges = elements.txtContent.querySelectorAll('.fn-badge');
   badges.forEach(badge => {
     badge.addEventListener('click', (e) => {
+      if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+        return;
+      }
       e.stopPropagation();
       const hlId = badge.dataset.hlId;
       const hl = state.highlights.find(h => h.id === hlId);
@@ -7714,7 +7790,11 @@ function renderMdContent(fallbackPosition = null) {
           currentHeadingText = h.textContent.trim();
         }
       });
+      const prevTitle = elements.currentChapterTitle.textContent;
       elements.currentChapterTitle.textContent = currentHeadingText;
+      if (prevTitle !== currentHeadingText && typeof onChapterOrViewChangedForAudio === 'function') {
+        onChapterOrViewChangedForAudio();
+      }
     }
   };
 
@@ -7783,6 +7863,9 @@ function renderMdContent(fallbackPosition = null) {
 
   bindHighlightClickEvents();
   bindFootnoteBadgeEvents();
+  if (typeof onChapterOrViewChangedForAudio === 'function') {
+    onChapterOrViewChangedForAudio(true);
+  }
 }
 
 // ── EPUB Book Viewer (epub.js) ──
@@ -7790,6 +7873,9 @@ let epubResizeDebounceTimer = null;
 let txtResizeDebounceTimer = null;
 
 function cleanupEpub() {
+  if (typeof resetChapterAudioPlayerOnBookChange === 'function') {
+    resetChapterAudioPlayerOnBookChange();
+  }
   if (state.epub.resizeObserver) {
     try {
       state.epub.resizeObserver.disconnect();
@@ -8330,6 +8416,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       showNavButtonsTemporarily(1800);
       setTimeout(() => {
         restoreEpubHighlights();
+        if (typeof onChapterOrViewChangedForAudio === 'function') {
+          onChapterOrViewChangedForAudio();
+        }
       }, 50);
       setTimeout(() => {
         restoreEpubHighlights();
@@ -8346,6 +8435,9 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
       }
       setTimeout(() => {
         restoreEpubHighlights();
+        if (typeof onChapterOrViewChangedForAudio === 'function') {
+          onChapterOrViewChangedForAudio();
+        }
       }, 50);
       setTimeout(() => {
         restoreEpubHighlights();
@@ -8403,8 +8495,31 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
           sup.reader-footnote-badge {
             display: none !important;
           }
+
+          /* 챕터 오디오 싱크 하이라이트 (CSS Custom Highlight API - DOM 무변형) */
+          ::highlight(audio-active-sentence) {
+            background-color: ${isDark ? 'rgba(96, 165, 250, 0.18)' : 'rgba(59, 130, 246, 0.13)'};
+          }
+          ::highlight(audio-active-word) {
+            background-color: ${isDark ? 'rgba(59, 130, 246, 0.45)' : 'rgba(37, 99, 235, 0.28)'};
+            color: ${isDark ? '#f8fafc' : '#0f172a'};
+            text-decoration: underline 2px solid ${isDark ? '#60a5fa' : '#2563eb'};
+          }
+          body.audio-mode-active .epubjs-hl,
+          body.audio-mode-active .epubjs-hl rect,
+          body.audio-mode-active .epubjs-hl g {
+            pointer-events: none !important;
+          }
         `;
         doc.head.appendChild(style);
+      }
+
+      if (doc && doc.body && typeof chapterAudioState !== 'undefined') {
+        doc.body.classList.toggle('audio-mode-active', Boolean(chapterAudioState.audioMode));
+      }
+
+      if (doc && typeof bindAudioClickInEpubDoc === 'function') {
+        bindAudioClickInEpubDoc(doc, contents.window);
       }
 
       if (doc) {
@@ -8444,6 +8559,10 @@ function openEpubBook(initialTitle, initialAuthor, arrayBuffer, bookId, skipSave
           if (isHighlightFootnote) {
             // EPUB 3 각주 페이지(highlights.xhtml)로 이동하는 브라우저 및 epub.js 기본 동작 차단
             e.preventDefault();
+            // 오디오 모드일 때는 형광펜 설명창을 띄우지 않고 단어 클릭 오디오 재생으로 통과
+            if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+              return;
+            }
             e.stopPropagation();
             if (typeof e.stopImmediatePropagation === 'function') {
               e.stopImmediatePropagation();
@@ -8643,6 +8762,12 @@ function bindAllMarksInEpub() {
     const onMarkClick = (e) => {
       // 본문 복귀용 backlink는 통과
       if (elem.closest && elem.closest('[role="doc-backlink"], .footnote-backlink')) {
+        return;
+      }
+
+      // 오디오 모드일 때는 형광펜 설명창을 띄우지 않고 단어 클릭 오디오 재생으로 통과
+      if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+        e.preventDefault();
         return;
       }
 
@@ -9552,6 +9677,10 @@ function stopTtsPlayback(showStoppedToast = false) {
   ttsState.activeSentence = '';
   ttsState.activeTriggerBtn = null;
 
+  if (typeof stopChapterAudioSegmentForTts === 'function') {
+    stopChapterAudioSegmentForTts();
+  }
+
   if (ttsAudioPlayer) {
     try {
       ttsAudioPlayer.onended = null;
@@ -9896,6 +10025,12 @@ async function speakHighlightSentence(hl, triggerBtn = null) {
   stopTtsPlayback(false);
   unlockTtsAudio();
 
+  // 현재 챕터에 MP3 + 타임스탬프가 등록되어 있고 대상 문장이 존재하면 성우 MP3 구간으로 우선 재생
+  if (typeof tryPlayHighlightSentenceWithChapterAudio === 'function') {
+    const playedWithMp3 = await tryPlayHighlightSentenceWithChapterAudio(hl, sentence);
+    if (playedWithMp3) return;
+  }
+
   const currentToken = ++ttsSessionToken;
   ttsState.isLoading = true;
   ttsState.isPlaying = false;
@@ -10096,15 +10231,32 @@ function showHighlightToolbar(rect) {
 }
 
 function openHighlightToolbar(hl, elem) {
+  if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+    return;
+  }
   state.activeHighlight = hl;
+  justClickedHighlight = true;
+  setTimeout(() => { justClickedHighlight = false; }, 400);
+  if (typeof cancelPendingAudioClickTimer === 'function') {
+    cancelPendingAudioClickTimer();
+  }
   const rect = elem.getBoundingClientRect();
   showHighlightToolbar(rect);
 }
 
 function openHighlightToolbarFromEpub(hl, e, markTarget = null) {
+  if (typeof chapterAudioState !== 'undefined' && chapterAudioState.audioMode) {
+    if (typeof triggerAudioWordClickFromEvent === 'function' && e) {
+      triggerAudioWordClickFromEvent(e);
+    }
+    return;
+  }
   state.activeHighlight = hl;
   justClickedHighlight = true;
   setTimeout(() => { justClickedHighlight = false; }, 400);
+  if (typeof cancelPendingAudioClickTimer === 'function') {
+    cancelPendingAudioClickTimer();
+  }
 
   const iframe = elements.epubArea.querySelector('iframe');
   if (!iframe) return;
@@ -14566,9 +14718,2087 @@ async function restoreActiveBook() {
   }
 }
 
+// ══════════════════════════════════════════════════════════════════════════
+// ── 챕터별 MP3 오디오 & 타임스탬프 싱크 재생 (Read-Along & Click-to-Play) ──
+// ══════════════════════════════════════════════════════════════════════════
+
+const NUMBER_WORD_EQUIV = {
+  zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5',
+  six: '6', seven: '7', eight: '8', nine: '9', ten: '10',
+  eleven: '11', twelve: '12', thirteen: '13', fourteen: '14', fifteen: '15',
+  sixteen: '16', seventeen: '17', eighteen: '18', nineteen: '19', twenty: '20',
+  i: '1', ii: '2', iii: '3', iv: '4', v: '5', vi: '6', vii: '7', viii: '8', ix: '9', x: '10'
+};
+
+const AUDIO_SPEED_STEPS = [0.75, 0.85, 0.9, 1.0, 1.1, 1.25, 1.5];
+
+const chapterAudioState = {
+  bookId: null,
+  chapterKey: null,
+  chapterTitle: '',
+  hasAudio: false,
+  audioUrl: null,
+  syncData: null, // { version: 1, sentences: [...], words: [...] }
+  isPlaying: false,
+  audioMode: false, // false = 읽기 모드 (형광펜/설명창), true = 오디오 모드 (클릭 재생 ON + 오디오바 표시)
+  speed: (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function' && parseFloat(localStorage.getItem('reader_audio_speed'))) || 1.0,
+  clickMode: (() => {
+    const saved = (typeof localStorage !== 'undefined' && typeof localStorage.getItem === 'function')
+      ? localStorage.getItem('reader_audio_click_mode')
+      : 'sentence';
+    return (saved && saved !== 'off') ? saved : 'sentence';
+  })(), // 'sentence' | 'word' | 'continue'
+  repeatEnabled: false,
+  segmentStartTime: null,
+  segmentEndTime: null,
+  lastPlayedUnit: null, // 'word' | 'sentence' | 'chapter' | null
+  repeatDelayTimer: null,
+  isRepeatGap: false,
+  activeWordIdx: -1,
+  activeSentIdx: -1,
+  clickedWordObj: null,
+  rafId: null,
+  lastAutoTurnTime: 0,
+  userHiddenBar: false,
+  activeHighlightTtsId: null,
+  // Modal temp selection state
+  pendingMp3File: null,
+  pendingJsonFile: null,
+  pendingParsedSync: null,
+  registeredMap: new Map(), // chapterKey -> meta
+};
+
+function cancelAudioRepeatDelayTimer() {
+  if (chapterAudioState.repeatDelayTimer) {
+    clearTimeout(chapterAudioState.repeatDelayTimer);
+    chapterAudioState.repeatDelayTimer = null;
+  }
+  chapterAudioState.isRepeatGap = false;
+}
+
+function syncAudioModeToDocs() {
+  const isAudio = Boolean(chapterAudioState.audioMode);
+  if (typeof document !== 'undefined' && document.body) {
+    document.body.classList.toggle('audio-mode-active', isAudio);
+  }
+  const { doc } = getActiveReaderDocAndRoot();
+  if (doc && doc.body) {
+    doc.body.classList.toggle('audio-mode-active', isAudio);
+  }
+}
+
+function updateAudioModeToggleUI() {
+  const isAudio = Boolean(chapterAudioState.audioMode);
+  if (elements.btnToggleAudioMode) {
+    elements.btnToggleAudioMode.classList.toggle('audio-active', isAudio);
+    elements.btnToggleAudioMode.setAttribute('aria-pressed', isAudio ? 'true' : 'false');
+  }
+  if (elements.audioModeToggleIcon) {
+    elements.audioModeToggleIcon.textContent = '🎧';
+  }
+  if (elements.audioModeToggleLabel) {
+    elements.audioModeToggleLabel.textContent = '오디오 모드';
+  }
+  syncAudioModeToDocs();
+}
+
+function setReaderAudioMode(enabled, showToastMsg = true) {
+  chapterAudioState.audioMode = Boolean(enabled);
+  updateAudioModeToggleUI();
+
+  if (chapterAudioState.audioMode) {
+    if (typeof closeAllToolbars === 'function') {
+      closeAllToolbars();
+    }
+    chapterAudioState.userHiddenBar = false;
+    if (elements.readerAudioBar) {
+      elements.readerAudioBar.style.display = 'flex';
+    }
+    if (showToastMsg) {
+      if (chapterAudioState.hasAudio) {
+        showToast('🎧 오디오 모드 ON: 본문 단어(형광펜 포함)를 클릭하면 오디오가 재생됩니다.');
+      } else {
+        showToast('🎧 오디오 모드 ON: 상단 [🎧 오디오] 버튼에서 챕터 MP3와 JSON을 등록해주세요.');
+      }
+    }
+  } else {
+    cancelPendingAudioClickTimer();
+    cancelAudioRepeatDelayTimer();
+    stopChapterAudioRaf();
+    chapterAudioState.segmentStartTime = null;
+    chapterAudioState.segmentEndTime = null;
+    if (chapterAudioPlayer) {
+      try {
+        chapterAudioPlayer.pause();
+      } catch (e) {}
+    }
+    chapterAudioState.isPlaying = false;
+    if (chapterAudioState.activeHighlightTtsId) {
+      chapterAudioState.activeHighlightTtsId = null;
+      ttsState.isPlaying = false;
+      ttsState.activeHighlightId = null;
+      updateTtsButtonsUI();
+    }
+    clearAudioVisualHighlights();
+    if (elements.audioWordChip) {
+      elements.audioWordChip.style.display = 'none';
+    }
+    if (elements.readerAudioBar) {
+      elements.readerAudioBar.style.display = 'none';
+    }
+    updateAudioBarControlsUI();
+    if (showToastMsg) {
+      showToast('오디오 모드가 꺼졌습니다.');
+    }
+  }
+}
+
+let chapterAudioPlayer = null;
+let pendingAudioClickTimer = null;
+let docAudioAlignmentCache = new WeakMap();
+
+function cancelPendingAudioClickTimer() {
+  if (pendingAudioClickTimer) {
+    clearTimeout(pendingAudioClickTimer);
+    pendingAudioClickTimer = null;
+  }
+}
+
+function ensureChapterAudioPlayer() {
+  if (!chapterAudioPlayer) {
+    chapterAudioPlayer = new Audio();
+    chapterAudioPlayer.preload = 'metadata';
+
+    chapterAudioPlayer.addEventListener('loadedmetadata', () => {
+      updateAudioBarTimeUI();
+    });
+
+    chapterAudioPlayer.addEventListener('timeupdate', () => {
+      handleChapterAudioTimeTick();
+    });
+
+    chapterAudioPlayer.addEventListener('play', () => {
+      chapterAudioState.isRepeatGap = false;
+      chapterAudioState.isPlaying = true;
+      updateAudioBarControlsUI();
+      startChapterAudioRaf();
+    });
+
+    chapterAudioPlayer.addEventListener('pause', () => {
+      if (chapterAudioState.isRepeatGap) return;
+      chapterAudioState.isPlaying = false;
+      stopChapterAudioRaf();
+      if (chapterAudioState.activeHighlightTtsId) {
+        chapterAudioState.activeHighlightTtsId = null;
+        ttsState.isPlaying = false;
+        ttsState.activeHighlightId = null;
+        updateTtsButtonsUI();
+      }
+      updateAudioBarControlsUI();
+    });
+
+    chapterAudioPlayer.addEventListener('ended', () => {
+      if (chapterAudioState.repeatEnabled && chapterAudioState.audioMode && chapterAudioState.hasAudio) {
+        const restartTime = chapterAudioState.segmentStartTime !== null ? chapterAudioState.segmentStartTime : 0;
+        chapterAudioPlayer.currentTime = Math.max(0, restartTime);
+        chapterAudioPlayer.playbackRate = chapterAudioState.speed;
+        chapterAudioPlayer.play().catch(e => console.warn(e));
+        return;
+      }
+      chapterAudioState.isPlaying = false;
+      chapterAudioState.segmentStartTime = null;
+      chapterAudioState.segmentEndTime = null;
+      stopChapterAudioRaf();
+      if (chapterAudioState.activeHighlightTtsId) {
+        chapterAudioState.activeHighlightTtsId = null;
+        ttsState.isPlaying = false;
+        ttsState.activeHighlightId = null;
+        updateTtsButtonsUI();
+      }
+      updateAudioBarControlsUI();
+    });
+  }
+  return chapterAudioPlayer;
+}
+
+function startChapterAudioRaf() {
+  stopChapterAudioRaf();
+  const loop = () => {
+    if (!chapterAudioState.isPlaying) return;
+    handleChapterAudioTimeTick();
+    chapterAudioState.rafId = requestAnimationFrame(loop);
+  };
+  chapterAudioState.rafId = requestAnimationFrame(loop);
+}
+
+function stopChapterAudioRaf() {
+  if (chapterAudioState.rafId) {
+    cancelAnimationFrame(chapterAudioState.rafId);
+    chapterAudioState.rafId = null;
+  }
+}
+
+function normAudioWord(str) {
+  if (!str) return '';
+  return String(str)
+    .toLowerCase()
+    .replace(/[\u2018\u2019\u02BC`]/g, "'")
+    .replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '');
+}
+
+function audioTokensEquivalent(a, b) {
+  if (!a || !b) return false;
+  if (a === b) return true;
+  if (NUMBER_WORD_EQUIV[a] && NUMBER_WORD_EQUIV[a] === b) return true;
+  if (NUMBER_WORD_EQUIV[b] && NUMBER_WORD_EQUIV[b] === a) return true;
+  // Strip internal apostrophes comparison (e.g. o'grady vs ogrady)
+  const aClean = a.replace(/'/g, '');
+  const bClean = b.replace(/'/g, '');
+  return aClean.length > 1 && aClean === bClean;
+}
+
+/**
+ * echogarden 또는 stable-ts / Whisper 타임스탬프 JSON을 파싱하고
+ * 불필요한 음소(phone) 및 Utf32 데이터를 제거하여 용량을 약 90% 압축합니다.
+ */
+function parseAndCompactTimestampJson(rawText) {
+  if (!rawText || typeof rawText !== 'string') {
+    throw new Error('비어 있는 JSON 파일입니다.');
+  }
+  const cleanText = rawText.replace(/^\uFEFF/, '').trim();
+  const data = JSON.parse(cleanText);
+
+  const sentences = [];
+  const words = [];
+
+  const pushSentenceWithWords = (sentText, sStart, sEnd, rawWordNodes) => {
+    const sentIdx = sentences.length;
+    const sentWords = [];
+    const cleanSentText = String(sentText || '').replace(/\s+/g, ' ').trim();
+
+    for (const wNode of rawWordNodes) {
+      const wText = String(wNode.text ?? wNode.word ?? '').trim();
+      if (!wText) continue;
+
+      // 하이픈 복합어(예: sword-hilt)가 한 단어로 묶여있어도 하위 단어 및 정규화 토큰 보존
+      const start = Number(wNode.startTime ?? wNode.start ?? sStart ?? 0);
+      const end = Number(wNode.endTime ?? wNode.end ?? start);
+
+      let ipa = '';
+      if (Array.isArray(wNode.timeline) && wNode.timeline.length > 0) {
+        ipa = wNode.timeline
+          .map(t => (t && typeof t.text === 'string' ? t.text.trim() : ''))
+          .filter(Boolean)
+          .join('');
+      } else if (typeof wNode.ipa === 'string') {
+        ipa = wNode.ipa;
+      }
+
+      // 하이픈으로 연결된 단어는 DOM 토큰과의 정확한 매칭을 위해 하이픈 단위로 분할하되 시간 비례 배분
+      const subParts = wText.includes('-') && wText.length > 2
+        ? wText.split('-').map(p => p.trim()).filter(Boolean)
+        : [wText];
+
+      const totalChars = subParts.reduce((acc, p) => acc + p.length, 0) || 1;
+      let curStart = start;
+
+      subParts.forEach((partText, pIdx) => {
+        const norm = normAudioWord(partText);
+        if (!norm) return;
+        const dur = Math.max(0, end - start);
+        const partDur = dur * (partText.length / totalChars);
+        const partStart = Number(curStart.toFixed(3));
+        const partEnd = Number((pIdx === subParts.length - 1 ? end : curStart + partDur).toFixed(3));
+        curStart = partEnd;
+
+        const wordIdx = words.length;
+        const wordObj = {
+          idx: wordIdx,
+          sentIdx,
+          text: pIdx === 0 ? wText : partText,
+          norm,
+          start: partStart,
+          end: partEnd,
+          playStart: partStart,
+          playEnd: partEnd,
+          ipa: pIdx === 0 ? ipa : '',
+          utf16Start: typeof wNode.startOffsetUtf16 === 'number' ? wNode.startOffsetUtf16 : null,
+          utf16End: typeof wNode.endOffsetUtf16 === 'number' ? wNode.endOffsetUtf16 : null
+        };
+        words.push(wordObj);
+        sentWords.push(wordObj);
+      });
+    }
+
+    if (sentWords.length > 0) {
+      const actualStart = Number((sStart ?? sentWords[0].start).toFixed(3));
+      const actualEnd = Number((sEnd ?? sentWords[sentWords.length - 1].end).toFixed(3));
+      sentences.push({
+        idx: sentIdx,
+        text: cleanSentText || sentWords.map(w => w.text).join(' '),
+        start: actualStart,
+        end: Math.max(actualStart, actualEnd),
+        firstWordIdx: sentWords[0].idx,
+        lastWordIdx: sentWords[sentWords.length - 1].idx
+      });
+    }
+  };
+
+  // Recursive walker for echogarden timeline format
+  const collectWordNodesFromTimeline = (timelineArr, out = []) => {
+    if (!Array.isArray(timelineArr)) return out;
+    for (const item of timelineArr) {
+      if (!item || typeof item !== 'object') continue;
+      if (item.type === 'word') {
+        out.push(item);
+      } else if (Array.isArray(item.timeline)) {
+        collectWordNodesFromTimeline(item.timeline, out);
+      }
+    }
+    return out;
+  };
+
+  const walkEchogardenNodes = (nodes) => {
+    if (!Array.isArray(nodes)) return;
+    for (const node of nodes) {
+      if (!node || typeof node !== 'object') continue;
+      if (node.type === 'sentence') {
+        const wordNodes = collectWordNodesFromTimeline(node.timeline);
+        pushSentenceWithWords(node.text, node.startTime, node.endTime, wordNodes);
+      } else if (Array.isArray(node.timeline)) {
+        // Check if timeline directly contains words without sentence wrapper
+        const hasSentenceChild = node.timeline.some(c => c && (c.type === 'sentence' || c.type === 'segment' || c.type === 'paragraph'));
+        if (hasSentenceChild) {
+          walkEchogardenNodes(node.timeline);
+        } else {
+          const wordNodes = collectWordNodesFromTimeline(node.timeline);
+          if (wordNodes.length > 0) {
+            pushSentenceWithWords(node.text, node.startTime, node.endTime, wordNodes);
+          }
+        }
+      }
+    }
+  };
+
+  if (Array.isArray(data)) {
+    // echogarden root array format
+    walkEchogardenNodes(data);
+  } else if (data && typeof data === 'object') {
+    if (data.version === 1 && Array.isArray(data.sentences) && Array.isArray(data.words)) {
+      // Already compacted format
+      return data;
+    } else if (Array.isArray(data.timeline)) {
+      walkEchogardenNodes(data.timeline);
+    } else if (Array.isArray(data.segments)) {
+      // stable-ts / Whisper format: { segments: [ { start, end, text, words: [...] } ] }
+      for (const seg of data.segments) {
+        if (!seg) continue;
+        const wList = Array.isArray(seg.words) ? seg.words : [];
+        if (wList.length > 0) {
+          pushSentenceWithWords(seg.text, seg.start, seg.end, wList);
+        } else if (seg.text) {
+          pushSentenceWithWords(seg.text, seg.start, seg.end, [{
+            word: seg.text,
+            start: seg.start,
+            end: seg.end
+          }]);
+        }
+      }
+    }
+  }
+
+  if (words.length === 0) {
+    throw new Error('유효한 단어 타임스탬프(words/timeline)를 찾을 수 없습니다.');
+  }
+
+  // 연음으로 인해 길이가 0초(또는 0.06초 미만)로 기록된 단어(예: "may have"의 "have")의 단독 재생 구간 보정
+  for (let i = 0; i < words.length; i++) {
+    const w = words[i];
+    const dur = w.end - w.start;
+    if (dur < 0.06) {
+      const prev = i > 0 ? words[i - 1] : null;
+      const next = i + 1 < words.length ? words[i + 1] : null;
+      if (prev && prev.sentIdx === w.sentIdx && Math.abs(prev.end - w.start) < 0.08) {
+        w.playStart = Math.max(0, Number((prev.start - 0.03).toFixed(3)));
+        w.playEnd = Number((Math.max(w.end, prev.end) + 0.08).toFixed(3));
+      } else if (next && next.sentIdx === w.sentIdx && Math.abs(next.start - w.end) < 0.08) {
+        w.playStart = Math.max(0, Number((w.start - 0.03).toFixed(3)));
+        w.playEnd = Number((next.end + 0.06).toFixed(3));
+      } else {
+        w.playStart = Math.max(0, Number((w.start - 0.08).toFixed(3)));
+        w.playEnd = Number((w.end + 0.18).toFixed(3));
+      }
+    } else {
+      w.playStart = Math.max(0, Number((w.start - 0.03).toFixed(3)));
+      w.playEnd = Number((w.end + 0.06).toFixed(3));
+    }
+  }
+
+  return {
+    version: 1,
+    sentences,
+    words
+  };
+}
+
+// ── 도서 챕터 목록 및 현재 챕터 식별 헬퍼 ──
+function getBookChapterList() {
+  if (!state.currentBook) return [];
+  const chapters = [];
+
+  if (state.currentBook.type === 'epub') {
+    const flatToc = flattenEpubToc(state.epub.toc || []).filter(item => {
+      const h = (item.href || '').toLowerCase();
+      return !h.includes('highlights.xhtml') && !h.includes('highlights_appendix') && !h.includes('nav.xhtml');
+    });
+
+    if (flatToc.length > 0) {
+      flatToc.forEach((item, idx) => {
+        const cleanHref = (item.href || '').trim();
+        chapters.push({
+          key: `epub_toc_${cleanHref || idx}`,
+          title: item.label || `Chapter ${idx + 1}`,
+          href: cleanHref,
+          fileHref: item.fileHref || '',
+          hash: item.hash || '',
+          index: idx
+        });
+      });
+      return chapters;
+    }
+
+    // Fallback to spine items if TOC is empty
+    const spineItems = state.epub.book?.spine?.spineItems || [];
+    spineItems.forEach((sp, idx) => {
+      const h = (sp.href || '').toLowerCase();
+      if (h.includes('highlights.xhtml') || h.includes('nav.xhtml')) return;
+      chapters.push({
+        key: `epub_spine_${sp.href || idx}`,
+        title: `Section ${idx + 1} (${sp.href || ''})`,
+        href: sp.href || '',
+        fileHref: (sp.href || '').split('#')[0].replace(/^.*[\\\/]/, ''),
+        hash: '',
+        index: idx
+      });
+    });
+
+    if (chapters.length === 0) {
+      chapters.push({
+        key: 'chapter_default',
+        title: state.currentBook.title || '기본 챕터',
+        href: '',
+        index: 0
+      });
+    }
+    return chapters;
+  }
+
+  // TXT or MD book
+  if (Array.isArray(state.toc) && state.toc.length > 0) {
+    state.toc.forEach((item, idx) => {
+      chapters.push({
+        key: `txt_toc_${item.id || idx}`,
+        title: (item.label || `Chapter ${idx + 1}`).trim(),
+        headingId: item.id,
+        index: idx
+      });
+    });
+  } else {
+    chapters.push({
+      key: 'chapter_default',
+      title: state.currentBook.title || '본문 전체',
+      headingId: null,
+      index: 0
+    });
+  }
+
+  return chapters;
+}
+
+function getCurrentActiveChapterInfo() {
+  const list = getBookChapterList();
+  if (list.length === 0) {
+    return { key: 'chapter_default', title: state.currentBook?.title || 'Chapter 1', index: 0 };
+  }
+  if (list.length === 1) return list[0];
+
+  const displayedTitle = (elements.currentChapterTitle ? elements.currentChapterTitle.textContent.trim() : '');
+
+  if (state.currentBook && state.currentBook.type === 'epub') {
+    const loc = state.epub.rendition ? state.epub.rendition.currentLocation() : null;
+    const currentHref = (loc && loc.start && loc.start.href) ? loc.start.href : '';
+
+    // 1. Exact href match
+    if (currentHref) {
+      const exact = list.find(c => c.href && (c.href === currentHref || currentHref.endsWith(c.href) || c.href.endsWith(currentHref)));
+      if (exact) return exact;
+    }
+
+    // 2. Match by displayed chapter title in bottom bar
+    if (displayedTitle) {
+      const byTitle = list.find(c => c.title.toLowerCase() === displayedTitle.toLowerCase());
+      if (byTitle) return byTitle;
+    }
+
+    // 3. Match by fileHref (including Calibre-split continuation spine files)
+    if (currentHref) {
+      const baseCur = currentHref.split('#')[0].replace(/^.*[\\\/]/, '');
+      const byFile = list.find(c => c.fileHref === baseCur);
+      if (byFile) return byFile;
+
+      // Continuation spine fallback
+      const spineItems = state.epub.book?.spine?.spineItems || [];
+      const curSpineIdx = spineItems.findIndex(s => (s.href || '').split('#')[0].replace(/^.*[\\\/]/, '') === baseCur);
+      if (curSpineIdx > 0) {
+        for (let i = curSpineIdx - 1; i >= 0; i--) {
+          const prevFile = (spineItems[i].href || '').split('#')[0].replace(/^.*[\\\/]/, '');
+          const matchedPrev = list.filter(c => c.fileHref === prevFile);
+          if (matchedPrev.length > 0) {
+            return matchedPrev[matchedPrev.length - 1];
+          }
+        }
+      }
+    }
+  } else {
+    // TXT / MD
+    if (displayedTitle) {
+      const byTitle = list.find(c => c.title.toLowerCase() === displayedTitle.toLowerCase());
+      if (byTitle) return byTitle;
+    }
+  }
+
+  return list[0];
+}
+
+// ── IndexedDB 챕터 오디오 CRUD ──
+function makeChapterAudioRecordId(bookId, chapterKey) {
+  return `${bookId}__${chapterKey}`;
+}
+
+async function saveChapterAudioToDB({ bookId, chapterKey, chapterTitle, audioBlob, audioName, jsonName, syncData }) {
+  const db = await openReaderDB();
+  if (!db || !db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) {
+    throw new Error('오디오 저장소(IndexedDB)를 열 수 없습니다.');
+  }
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(READER_AUDIO_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_AUDIO_STORE_NAME);
+    const id = makeChapterAudioRecordId(bookId, chapterKey);
+    const record = {
+      id,
+      bookId,
+      chapterKey,
+      chapterTitle: chapterTitle || chapterKey,
+      audioBlob,
+      audioName: audioName || 'audio.mp3',
+      jsonName: jsonName || 'timestamps.json',
+      syncData,
+      sentenceCount: syncData?.sentences?.length || 0,
+      wordCount: syncData?.words?.length || 0,
+      updatedAt: Date.now()
+    };
+    const req = store.put(record);
+    req.onsuccess = () => resolve(record);
+    req.onerror = () => reject(req.error || new Error('IndexedDB 저장 실패'));
+  });
+}
+
+async function getChapterAudioFromDB(bookId, chapterKey) {
+  if (!bookId || !chapterKey) return null;
+  try {
+    const db = await openReaderDB();
+    if (!db || !db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) return null;
+    return new Promise((resolve) => {
+      const tx = db.transaction(READER_AUDIO_STORE_NAME, 'readonly');
+      const store = tx.objectStore(READER_AUDIO_STORE_NAME);
+      const id = makeChapterAudioRecordId(bookId, chapterKey);
+      const req = store.get(id);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => resolve(null);
+    });
+  } catch (e) {
+    return null;
+  }
+}
+
+async function getAllChapterAudioListForBook(bookId) {
+  if (!bookId) return [];
+  try {
+    const db = await openReaderDB();
+    if (!db || !db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) return [];
+    return new Promise((resolve) => {
+      const tx = db.transaction(READER_AUDIO_STORE_NAME, 'readonly');
+      const store = tx.objectStore(READER_AUDIO_STORE_NAME);
+      const req = store.getAll();
+      req.onsuccess = () => {
+        const all = req.result || [];
+        const filtered = all
+          .filter(item => item && item.bookId === bookId)
+          .map(item => ({
+            id: item.id,
+            bookId: item.bookId,
+            chapterKey: item.chapterKey,
+            chapterTitle: item.chapterTitle,
+            audioName: item.audioName,
+            jsonName: item.jsonName,
+            sentenceCount: item.sentenceCount || item.syncData?.sentences?.length || 0,
+            wordCount: item.wordCount || item.syncData?.words?.length || 0,
+            updatedAt: item.updatedAt || 0
+          }));
+        resolve(filtered);
+      };
+      req.onerror = () => resolve([]);
+    });
+  } catch (e) {
+    return [];
+  }
+}
+
+async function deleteChapterAudioFromDB(recordId) {
+  const db = await openReaderDB();
+  if (!db || !db.objectStoreNames.contains(READER_AUDIO_STORE_NAME)) return;
+  return new Promise((resolve) => {
+    const tx = db.transaction(READER_AUDIO_STORE_NAME, 'readwrite');
+    const store = tx.objectStore(READER_AUDIO_STORE_NAME);
+    store.delete(recordId);
+    tx.oncomplete = () => resolve(true);
+    tx.onerror = () => resolve(false);
+  });
+}
+
+// ── Zero-DOM-Mutation 본문 텍스트 노드 ↔ 타임스탬프 단어 시퀀스 정렬 엔진 ──
+function getActiveReaderDocAndRoot() {
+  if (!state.currentBook) return { doc: null, win: null, rootEl: null };
+  if (state.currentBook.type === 'epub') {
+    const iframe = elements.epubArea ? elements.epubArea.querySelector('iframe') : null;
+    if (!iframe) return { doc: null, win: null, rootEl: null };
+    const win = iframe.contentWindow;
+    const doc = iframe.contentDocument || (win ? win.document : null);
+    return { doc, win, rootEl: doc ? doc.body : null, iframe };
+  }
+  return {
+    doc: document,
+    win: window,
+    rootEl: elements.txtContent,
+    iframe: null
+  };
+}
+
+function getOrBuildDocAudioAlignment(doc, rootEl) {
+  if (!doc || !rootEl || !chapterAudioState.hasAudio || !chapterAudioState.syncData) return null;
+  const syncData = chapterAudioState.syncData;
+  const bodyTextLen = (rootEl.textContent || '').length;
+  const markCount = rootEl.querySelectorAll ? rootEl.querySelectorAll('mark, .reader-highlight').length : 0;
+  const cacheKey = `${chapterAudioState.bookId}__${chapterAudioState.chapterKey}__${bodyTextLen}__${markCount}`;
+
+  const cached = docAudioAlignmentCache.get(doc);
+  if (cached && cached.cacheKey === cacheKey) {
+    // 첫 토큰 노드가 여전히 DOM에 연결되어 있는지 확인 (형광펜 추가/삭제로 텍스트 노드 분할 시 자동 재정렬)
+    if (!cached.domTokens.length || rootEl.contains(cached.domTokens[0].node)) {
+      return cached;
+    }
+  }
+
+  // 1. Collect all visible text nodes using TreeWalker (without modifying DOM)
+  const showTextFilter = (typeof NodeFilter !== 'undefined' && NodeFilter.SHOW_TEXT) ? NodeFilter.SHOW_TEXT : 4;
+  const walker = doc.createTreeWalker(rootEl, showTextFilter, {
+    acceptNode(node) {
+      if (!node.nodeValue) return 2;
+      const pEl = node.parentElement;
+      if (pEl && pEl.closest && pEl.closest('script, style, noscript, .reader-footnote-badge, .fn-badge, .reader-note-badge, #markdown-footnotes-section, .markdown-footnotes-section')) {
+        return 2;
+      }
+      return 1;
+    }
+  });
+
+  const domTokens = [];
+  const wordRegex = /[\p{L}\p{N}]+(?:['’\u2019][\p{L}\p{N}]+)*/gu;
+  let currentNode = walker.nextNode();
+  while (currentNode) {
+    const text = currentNode.nodeValue;
+    wordRegex.lastIndex = 0;
+    let m;
+    while ((m = wordRegex.exec(text)) !== null) {
+      const norm = normAudioWord(m[0]);
+      if (!norm) continue;
+      domTokens.push({
+        domIdx: domTokens.length,
+        raw: m[0],
+        norm,
+        node: currentNode,
+        startOffset: m.index,
+        endOffset: m.index + m[0].length
+      });
+    }
+    currentNode = walker.nextNode();
+  }
+
+  const W = syncData.words || [];
+  const S = syncData.sentences || [];
+  const M = W.length;
+  const N = domTokens.length;
+
+  const wordRanges = new Array(M).fill(null);
+  const sentenceRanges = new Array(S.length).fill(null);
+  const domTokenToWordIdx = new Map();
+
+  if (M === 0 || N === 0) {
+    const emptyResult = { cacheKey, domTokens, wordRanges, sentenceRanges, domTokenToWordIdx };
+    docAudioAlignmentCache.set(doc, emptyResult);
+    return emptyResult;
+  }
+
+  // 2. Build 3-gram index on W for instant anchor locking (even if DOM starts mid-chapter or MP3 has narrator intro)
+  const wTrigramMap = new Map();
+  for (let i = 0; i + 2 < M; i++) {
+    const key = `${W[i].norm}|${W[i + 1].norm}|${W[i + 2].norm}`;
+    if (!wTrigramMap.has(key)) {
+      wTrigramMap.set(key, i);
+    }
+  }
+
+  let wi = 0;
+  let di = 0;
+
+  // Initial sync if start of W doesn't match start of D (e.g., narrator intro "Penguin presents...")
+  if (!audioTokensEquivalent(W[0].norm, domTokens[0].norm)) {
+    let locked = false;
+    const maxInitD = Math.min(N - 3, 60);
+    for (let dProbe = 0; dProbe <= maxInitD; dProbe++) {
+      const triKey = `${domTokens[dProbe].norm}|${domTokens[dProbe + 1].norm}|${domTokens[dProbe + 2].norm}`;
+      if (wTrigramMap.has(triKey)) {
+        wi = wTrigramMap.get(triKey);
+        di = dProbe;
+        locked = true;
+        break;
+      }
+    }
+    if (!locked) {
+      // Try 2-gram with number equivalence
+      for (let dProbe = 0; dProbe < Math.min(N - 1, 30) && !locked; dProbe++) {
+        for (let wProbe = 0; wProbe < Math.min(M - 1, 80); wProbe++) {
+          if (audioTokensEquivalent(W[wProbe].norm, domTokens[dProbe].norm) &&
+              audioTokensEquivalent(W[wProbe + 1].norm, domTokens[dProbe + 1].norm)) {
+            wi = wProbe;
+            di = dProbe;
+            locked = true;
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  const recordPair = (wIndex, dIndex) => {
+    const dt = domTokens[dIndex];
+    wordRanges[wIndex] = {
+      startNode: dt.node,
+      startOffset: dt.startOffset,
+      endNode: dt.node,
+      endOffset: dt.endOffset
+    };
+    domTokenToWordIdx.set(dIndex, wIndex);
+  };
+
+  // 3. Linear two-pointer alignment with local lookahead recovery
+  while (wi < M && di < N) {
+    if (audioTokensEquivalent(W[wi].norm, domTokens[di].norm)) {
+      recordPair(wi, di);
+      wi++;
+      di++;
+      continue;
+    }
+
+    // Check 1-to-1 substitution when the very next words match (e.g., "Chapter one" vs "Chapter 1" or minor OCR diff)
+    if (wi + 1 < M && di + 1 < N && audioTokensEquivalent(W[wi + 1].norm, domTokens[di + 1].norm)) {
+      recordPair(wi, di);
+      wi++;
+      di++;
+      continue;
+    }
+
+    // Local lookahead window (up to 30 tokens) for 2-gram resync
+    let foundDw = -1;
+    let foundDd = -1;
+    let bestDist = 9999;
+    const maxLookW = Math.min(35, M - wi);
+    const maxLookD = Math.min(35, N - di);
+
+    for (let dw = 0; dw < maxLookW; dw++) {
+      for (let dd = 0; dd < maxLookD; dd++) {
+        if (dw === 0 && dd === 0) continue;
+        if (dw + dd >= bestDist) continue;
+        if (audioTokensEquivalent(W[wi + dw].norm, domTokens[di + dd].norm)) {
+          const nextW = wi + dw + 1;
+          const nextD = di + dd + 1;
+          if (nextW < M && nextD < N && audioTokensEquivalent(W[nextW].norm, domTokens[nextD].norm)) {
+            bestDist = dw + dd;
+            foundDw = dw;
+            foundDd = dd;
+          }
+        }
+      }
+    }
+
+    if (foundDw !== -1) {
+      wi += foundDw;
+      di += foundDd;
+      continue;
+    }
+
+    // Wide resync via 3-gram map if a whole paragraph/heading differed
+    if (di + 2 < N) {
+      const triKey = `${domTokens[di].norm}|${domTokens[di + 1].norm}|${domTokens[di + 2].norm}`;
+      const jumpW = wTrigramMap.get(triKey);
+      if (jumpW !== undefined && jumpW > wi && jumpW - wi < 250) {
+        wi = jumpW;
+        continue;
+      }
+    }
+
+    wi++;
+    di++;
+  }
+
+  // 4. Compute sentence ranges from matched words
+  for (let sIdx = 0; sIdx < S.length; sIdx++) {
+    const sent = S[sIdx];
+    let firstRange = null;
+    let lastRange = null;
+    for (let wIdx = sent.firstWordIdx; wIdx <= sent.lastWordIdx; wIdx++) {
+      if (wordRanges[wIdx]) {
+        if (!firstRange) firstRange = wordRanges[wIdx];
+        lastRange = wordRanges[wIdx];
+      }
+    }
+    if (firstRange && lastRange) {
+      sentenceRanges[sIdx] = {
+        startNode: firstRange.startNode,
+        startOffset: firstRange.startOffset,
+        endNode: lastRange.endNode,
+        endOffset: lastRange.endOffset
+      };
+    }
+  }
+
+  const alignment = { cacheKey, domTokens, wordRanges, sentenceRanges, domTokenToWordIdx };
+  docAudioAlignmentCache.set(doc, alignment);
+  return alignment;
+}
+
+// ── 이진 탐색(Binary Search)으로 현재 재생 시각의 단어/문장 찾기 ──
+function findWordIndexAtTime(words, timeSec) {
+  if (!Array.isArray(words) || words.length === 0) return -1;
+  let lo = 0;
+  let hi = words.length - 1;
+  let candidate = -1;
+
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    const w = words[mid];
+    if (timeSec >= w.start && timeSec <= w.end) {
+      return mid;
+    }
+    if (w.start <= timeSec) {
+      candidate = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  // 단어와 다음 단어 사이의 짧은 호흡 구간(0.28초 이내)에서는 직전 단어 강조를 유지해 깜빡임 방지
+  if (candidate !== -1) {
+    const w = words[candidate];
+    if (timeSec >= w.start && timeSec - w.end <= 0.28) {
+      return candidate;
+    }
+  }
+  return -1;
+}
+
+function findSentenceIndexAtTime(sentences, timeSec) {
+  if (!Array.isArray(sentences) || sentences.length === 0) return -1;
+  let lo = 0;
+  let hi = sentences.length - 1;
+  let candidate = -1;
+
+  while (lo <= hi) {
+    const mid = (lo + hi) >>> 1;
+    const s = sentences[mid];
+    if (timeSec >= s.start && timeSec <= s.end) {
+      return mid;
+    }
+    if (s.start <= timeSec) {
+      candidate = mid;
+      lo = mid + 1;
+    } else {
+      hi = mid - 1;
+    }
+  }
+
+  if (candidate !== -1 && timeSec - sentences[candidate].end <= 0.35) {
+    return candidate;
+  }
+  return -1;
+}
+
+// ── CSS Custom Highlight API 및 무변형 오버레이 렌더링 ──
+function createLiveDomRange(doc, rangeInfo) {
+  if (!doc || !rangeInfo || !rangeInfo.startNode || !rangeInfo.endNode) return null;
+  try {
+    if (!doc.body || !doc.body.contains(rangeInfo.startNode)) return null;
+    const r = doc.createRange();
+    r.setStart(rangeInfo.startNode, rangeInfo.startOffset);
+    r.setEnd(rangeInfo.endNode, rangeInfo.endOffset);
+    return r;
+  } catch (e) {
+    return null;
+  }
+}
+
+function clearAudioVisualHighlights() {
+  chapterAudioState.activeWordIdx = -1;
+  chapterAudioState.activeSentIdx = -1;
+
+  if (typeof window !== 'undefined' && window.CSS && window.CSS.highlights) {
+    window.CSS.highlights.delete('audio-active-word');
+    window.CSS.highlights.delete('audio-active-sentence');
+  }
+  const { doc, win } = getActiveReaderDocAndRoot();
+  if (win && win.CSS && win.CSS.highlights) {
+    win.CSS.highlights.delete('audio-active-word');
+    win.CSS.highlights.delete('audio-active-sentence');
+  }
+  if (doc) {
+    const fallbackLayer = doc.getElementById('audio-highlight-overlay-layer');
+    if (fallbackLayer) fallbackLayer.innerHTML = '';
+  }
+  const mainFallbackLayer = document.getElementById('audio-highlight-overlay-layer');
+  if (mainFallbackLayer) mainFallbackLayer.innerHTML = '';
+}
+
+function renderAudioHighlightRanges(wordIdx, sentIdx) {
+  const { doc, win, rootEl } = getActiveReaderDocAndRoot();
+  if (!doc || !win || !rootEl) return;
+
+  const alignment = getOrBuildDocAudioAlignment(doc, rootEl);
+  if (!alignment) return;
+
+  const wordRangeInfo = wordIdx >= 0 ? alignment.wordRanges[wordIdx] : null;
+  const sentRangeInfo = sentIdx >= 0 ? alignment.sentenceRanges[sentIdx] : null;
+
+  const wordRange = createLiveDomRange(doc, wordRangeInfo);
+  const sentRange = createLiveDomRange(doc, sentRangeInfo);
+
+  // Use CSS Custom Highlight API (modern-web-guidance: highlight-text-ranges)
+  if (win.CSS && win.CSS.highlights && typeof win.Highlight !== 'undefined') {
+    if (sentRange) {
+      const sh = new win.Highlight(sentRange);
+      sh.priority = 1;
+      win.CSS.highlights.set('audio-active-sentence', sh);
+    } else {
+      win.CSS.highlights.delete('audio-active-sentence');
+    }
+
+    if (wordRange) {
+      const wh = new win.Highlight(wordRange);
+      wh.priority = 2;
+      win.CSS.highlights.set('audio-active-word', wh);
+    } else {
+      win.CSS.highlights.delete('audio-active-word');
+    }
+  } else {
+    renderAudioOverlayRectFallback(doc, win, wordRange, sentRange);
+  }
+
+  // Keep active word in viewport (auto-scroll or auto-page-turn when playing)
+  if (wordRange && chapterAudioState.isPlaying) {
+    keepAudioRangeInView(wordRange, doc, win);
+  }
+}
+
+function renderAudioOverlayRectFallback(doc, win, wordRange, sentRange) {
+  if (!doc || !doc.body) return;
+  let layer = doc.getElementById('audio-highlight-overlay-layer');
+  if (!layer) {
+    layer = doc.createElement('div');
+    layer.id = 'audio-highlight-overlay-layer';
+    layer.className = 'audio-highlight-overlay-layer';
+    layer.setAttribute('aria-hidden', 'true');
+    doc.body.appendChild(layer);
+  }
+  layer.innerHTML = '';
+  const scrollX = win.scrollX || doc.documentElement.scrollLeft || 0;
+  const scrollY = win.scrollY || doc.documentElement.scrollTop || 0;
+
+  const appendRects = (range, cls) => {
+    if (!range) return;
+    const rects = range.getClientRects();
+    for (const r of rects) {
+      if (r.width <= 0 || r.height <= 0) continue;
+      const box = doc.createElement('div');
+      box.className = cls;
+      box.style.left = `${r.left + scrollX}px`;
+      box.style.top = `${r.top + scrollY}px`;
+      box.style.width = `${r.width}px`;
+      box.style.height = `${r.height}px`;
+      layer.appendChild(box);
+    }
+  };
+  appendRects(sentRange, 'audio-overlay-rect-sentence');
+  appendRects(wordRange, 'audio-overlay-rect-word');
+}
+
+function keepAudioRangeInView(wordRange, doc, win) {
+  try {
+    const rect = wordRange.getBoundingClientRect();
+    if (!rect || (rect.width === 0 && rect.height === 0)) return;
+
+    const now = Date.now();
+    if (now - chapterAudioState.lastAutoTurnTime < 750) return;
+
+    if (state.currentBook && state.currentBook.type === 'epub') {
+      const container = elements.epubArea ? (elements.epubArea.querySelector('.epub-container') || elements.epubArea) : null;
+      const iframe = (win && win.frameElement) || (elements.epubArea ? elements.epubArea.querySelector('iframe') : null);
+      if (!container || !iframe) return;
+
+      const cRect = container.getBoundingClientRect();
+      const iRect = iframe.getBoundingClientRect();
+      const viewW = cRect.width || container.clientWidth || 0;
+      const viewH = cRect.height || container.clientHeight || 0;
+      if (viewW <= 0 || viewH <= 0) return;
+
+      // iframe 내부 좌표를 실제 화면에 보이는 .epub-container 뷰포트 상대 좌표로 변환
+      const relLeft = (iRect.left - cRect.left) + rect.left;
+      const relRight = (iRect.left - cRect.left) + rect.right;
+      const relTop = (iRect.top - cRect.top) + rect.top;
+      const relBottom = (iRect.top - cRect.top) + rect.bottom;
+
+      const flow = state.settings.epubFlow || 'paginated';
+      if (flow === 'paginated') {
+        if (relLeft >= viewW - 10) {
+          chapterAudioState.lastAutoTurnTime = now;
+          if (relLeft < viewW * 1.85) {
+            if (state.epub.rendition) state.epub.rendition.next();
+          } else {
+            jumpEpubPaginatedToWordRange(wordRange);
+          }
+        } else if (relRight <= 10) {
+          chapterAudioState.lastAutoTurnTime = now;
+          if (relRight > -viewW * 0.85) {
+            if (state.epub.rendition) state.epub.rendition.prev();
+          } else {
+            jumpEpubPaginatedToWordRange(wordRange);
+          }
+        }
+      } else {
+        // 세로 스크롤 모드 (scrolled-doc): 화면 하단(여백 75px) 아래로 내려가거나 상단 위로 벗어날 때만 1회 부드럽게 스크롤
+        if (relBottom > viewH - 75 || relTop < 45) {
+          chapterAudioState.lastAutoTurnTime = now;
+          const targetScrollTop = Math.max(0, container.scrollTop + relTop - (viewH * 0.28));
+          container.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        }
+      }
+    } else if (elements.txtViewer) {
+      const vRect = elements.txtViewer.getBoundingClientRect();
+      const viewH = vRect.height || elements.txtViewer.clientHeight || 0;
+      const relTop = rect.top - vRect.top;
+      const relBottom = rect.bottom - vRect.top;
+      if (viewH > 0 && (relBottom > viewH - 75 || relTop < 45)) {
+        chapterAudioState.lastAutoTurnTime = now;
+        const targetScrollTop = Math.max(0, elements.txtViewer.scrollTop + relTop - (viewH * 0.28));
+        elements.txtViewer.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+      }
+    }
+  } catch (e) {}
+}
+
+function jumpEpubPaginatedToWordRange(wordRange) {
+  if (!state.epub || !state.epub.rendition || !wordRange) return;
+  try {
+    const contentsList = state.epub.rendition.getContents ? state.epub.rendition.getContents() : [];
+    if (contentsList && contentsList.length > 0 && typeof contentsList[0].cfiFromRange === 'function') {
+      const cfi = contentsList[0].cfiFromRange(wordRange);
+      if (cfi) {
+        state.epub.rendition.display(cfi);
+        return;
+      }
+    }
+    state.epub.rendition.next();
+  } catch (e) {
+    try { state.epub.rendition.next(); } catch (e2) {}
+  }
+}
+
+// ── 오디오 재생 시간 업데이트 및 구간 정지 제어 ──
+function formatAudioSeconds(sec) {
+  if (!sec || isNaN(sec) || sec < 0) return '00:00';
+  const total = Math.floor(sec);
+  const mins = Math.floor(total / 60);
+  const secs = total % 60;
+  return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+function updateAudioBarTimeUI() {
+  if (!chapterAudioPlayer) return;
+  const cur = chapterAudioPlayer.currentTime || 0;
+  const dur = chapterAudioPlayer.duration || 0;
+  if (elements.audioTimeDisplay) {
+    elements.audioTimeDisplay.textContent = `${formatAudioSeconds(cur)} / ${formatAudioSeconds(dur)}`;
+  }
+  if (elements.audioSeekSlider && dur > 0) {
+    elements.audioSeekSlider.value = ((cur / dur) * 100).toFixed(2);
+  }
+}
+
+function updateAudioBarControlsUI() {
+  if (elements.audioPlayIcon) {
+    elements.audioPlayIcon.textContent = chapterAudioState.isPlaying ? '⏸' : '▶';
+  }
+  if (elements.btnToggleAudio) {
+    elements.btnToggleAudio.classList.toggle('playing', chapterAudioState.isPlaying);
+  }
+  if (elements.audioLoadedDot) {
+    elements.audioLoadedDot.style.display = chapterAudioState.hasAudio ? 'inline-block' : 'none';
+  }
+  if (elements.btnAudioSpeed) {
+    elements.btnAudioSpeed.textContent = `${chapterAudioState.speed}x`;
+  }
+  if (elements.btnAudioRepeat) {
+    elements.btnAudioRepeat.classList.toggle('active', Boolean(chapterAudioState.repeatEnabled));
+    elements.btnAudioRepeat.setAttribute('aria-pressed', chapterAudioState.repeatEnabled ? 'true' : 'false');
+  }
+  if (elements.audioClickModeSelect && elements.audioClickModeSelect.value !== chapterAudioState.clickMode) {
+    elements.audioClickModeSelect.value = chapterAudioState.clickMode;
+  }
+}
+
+function handleChapterAudioTimeTick() {
+  if (!chapterAudioPlayer || !chapterAudioState.hasAudio || !chapterAudioState.syncData) return;
+  if (chapterAudioState.isRepeatGap) return;
+  const curTime = chapterAudioPlayer.currentTime || 0;
+
+  // 구간 재생(특정 단어 또는 문장 클릭 재생) 종료 시각 도달 시 자동 일시정지 또는 반복 재생
+  if (chapterAudioState.segmentEndTime !== null && curTime >= chapterAudioState.segmentEndTime) {
+    if (chapterAudioState.repeatEnabled && chapterAudioState.segmentStartTime !== null && !chapterAudioState.activeHighlightTtsId) {
+      if (!chapterAudioState.repeatDelayTimer) {
+        chapterAudioState.isRepeatGap = true;
+        try {
+          chapterAudioPlayer.pause();
+        } catch (e) {}
+        chapterAudioState.repeatDelayTimer = setTimeout(() => {
+          chapterAudioState.repeatDelayTimer = null;
+          if (!chapterAudioState.audioMode || !chapterAudioState.repeatEnabled || chapterAudioState.segmentStartTime === null) {
+            chapterAudioState.isRepeatGap = false;
+            chapterAudioState.isPlaying = false;
+            stopChapterAudioRaf();
+            updateAudioBarControlsUI();
+            return;
+          }
+          chapterAudioPlayer.currentTime = Math.max(0, chapterAudioState.segmentStartTime);
+          chapterAudioPlayer.playbackRate = chapterAudioState.speed;
+          chapterAudioPlayer.play().catch(e => {
+            chapterAudioState.isRepeatGap = false;
+            console.warn(e);
+          });
+        }, 220);
+      }
+      updateAudioBarTimeUI();
+      return;
+    }
+
+    chapterAudioState.segmentStartTime = null;
+    chapterAudioState.segmentEndTime = null;
+    chapterAudioPlayer.pause();
+    updateAudioBarTimeUI();
+    return;
+  }
+
+  updateAudioBarTimeUI();
+
+  const words = chapterAudioState.syncData.words;
+  const sentences = chapterAudioState.syncData.sentences;
+  const wIdx = findWordIndexAtTime(words, curTime);
+  const sIdx = wIdx >= 0 ? words[wIdx].sentIdx : findSentenceIndexAtTime(sentences, curTime);
+
+  if (wIdx !== chapterAudioState.activeWordIdx || sIdx !== chapterAudioState.activeSentIdx) {
+    chapterAudioState.activeWordIdx = wIdx;
+    chapterAudioState.activeSentIdx = sIdx;
+    renderAudioHighlightRanges(wIdx, sIdx);
+  }
+}
+
+// ── 오디오 재생 컨트롤 (단어 / 문장 / 이어듣기) ──
+function playChapterAudioSegment(startTime, endTime = null, highlightWordIdx = -1, highlightSentIdx = -1) {
+  if (!chapterAudioState.hasAudio) return;
+  cancelAudioRepeatDelayTimer();
+  // 기존 TTS 재생 중이면 중지하여 음성이 겹치지 않게 함
+  if (ttsState && (ttsState.isPlaying || ttsState.isLoading)) {
+    stopTtsPlayback(false);
+  }
+
+  const player = ensureChapterAudioPlayer();
+  const safeStart = Math.max(0, startTime);
+  chapterAudioState.segmentStartTime = typeof endTime === 'number' ? safeStart : null;
+  chapterAudioState.segmentEndTime = typeof endTime === 'number' ? endTime : null;
+  player.playbackRate = chapterAudioState.speed;
+  player.defaultPlaybackRate = chapterAudioState.speed;
+  player.currentTime = safeStart;
+
+  if (highlightWordIdx >= 0 || highlightSentIdx >= 0) {
+    chapterAudioState.activeWordIdx = highlightWordIdx;
+    chapterAudioState.activeSentIdx = highlightSentIdx;
+    renderAudioHighlightRanges(highlightWordIdx, highlightSentIdx);
+  }
+
+  if (elements.readerAudioBar && !chapterAudioState.userHiddenBar) {
+    elements.readerAudioBar.style.display = 'flex';
+  }
+
+  const p = player.play();
+  if (p && typeof p.catch === 'function') {
+    p.catch(err => {
+      console.warn('Chapter audio play error:', err);
+    });
+  }
+}
+
+function showClickedWordChipInBar(wordObj) {
+  if (!wordObj || !elements.audioWordChip || !elements.audioWordChipText) return;
+  chapterAudioState.clickedWordObj = wordObj;
+  const ipaStr = wordObj.ipa ? ` [${wordObj.ipa}]` : '';
+  elements.audioWordChipText.textContent = `🔊 ${wordObj.text}${ipaStr}`;
+  elements.audioWordChip.style.display = 'inline-flex';
+}
+
+function playWordOrSentenceFromWordObj(wordObj, mode) {
+  if (!wordObj || !chapterAudioState.syncData) return;
+  showClickedWordChipInBar(wordObj);
+
+  const sent = chapterAudioState.syncData.sentences[wordObj.sentIdx];
+  if (mode === 'word') {
+    chapterAudioState.lastPlayedUnit = 'word';
+    playChapterAudioSegment(wordObj.playStart, wordObj.playEnd, wordObj.idx, wordObj.sentIdx);
+  } else if (mode === 'sentence' && sent) {
+    chapterAudioState.lastPlayedUnit = 'sentence';
+    playChapterAudioSegment(sent.start, sent.end + 0.06, wordObj.idx, wordObj.sentIdx);
+  } else {
+    // 'continue' mode
+    chapterAudioState.lastPlayedUnit = 'chapter';
+    playChapterAudioSegment(wordObj.start, null, wordObj.idx, wordObj.sentIdx);
+  }
+}
+
+// ── 형광펜 툴바의 [문장읽기] 버튼과 챕터 MP3 연동 ──
+function stopChapterAudioSegmentForTts() {
+  if (chapterAudioPlayer && chapterAudioState.isPlaying && chapterAudioState.activeHighlightTtsId) {
+    cancelAudioRepeatDelayTimer();
+    chapterAudioState.activeHighlightTtsId = null;
+    chapterAudioState.segmentStartTime = null;
+    chapterAudioState.segmentEndTime = null;
+    chapterAudioPlayer.pause();
+  }
+}
+
+async function tryPlayHighlightSentenceWithChapterAudio(hl, targetSentence) {
+  if (!chapterAudioState.hasAudio || !chapterAudioState.syncData || !targetSentence) return false;
+  const normTarget = normalizeSearchText(targetSentence);
+  if (!normTarget || normTarget.length < 3) return false;
+
+  const sentences = chapterAudioState.syncData.sentences || [];
+  let matchedSent = sentences.find(s => {
+    const normS = normalizeSearchText(s.text);
+    return normS && (normS === normTarget || normS.includes(normTarget) || normTarget.includes(normS));
+  });
+
+  if (!matchedSent && hl && hl.text) {
+    const normHl = normalizeSearchText(hl.text);
+    if (normHl && normHl.length >= 3) {
+      matchedSent = sentences.find(s => normalizeSearchText(s.text).includes(normHl));
+    }
+  }
+
+  if (!matchedSent) return false;
+
+  chapterAudioState.activeHighlightTtsId = hl.id || '__active_hl__';
+  ttsState.isLoading = false;
+  ttsState.isPlaying = true;
+  ttsState.activeHighlightId = hl.id || '__active_hl__';
+  ttsState.activeSentence = targetSentence;
+  updateTtsButtonsUI();
+
+  playChapterAudioSegment(matchedSent.start, matchedSent.end + 0.08, matchedSent.firstWordIdx, matchedSent.idx);
+  return true;
+}
+
+// ── 본문 단어 클릭 감지 (형광펜 클릭 및 드래그 선택과 100% 충돌 방지) ──
+function getCaretPointNodeAndOffset(doc, clientX, clientY) {
+  if (!doc) return null;
+  if (typeof doc.caretRangeFromPoint === 'function') {
+    const r = doc.caretRangeFromPoint(clientX, clientY);
+    if (r && r.startContainer) {
+      return { node: r.startContainer, offset: r.startOffset };
+    }
+  }
+  if (typeof doc.caretPositionFromPoint === 'function') {
+    const pos = doc.caretPositionFromPoint(clientX, clientY);
+    if (pos && pos.offsetNode) {
+      return { node: pos.offsetNode, offset: pos.offset };
+    }
+  }
+  return null;
+}
+
+function isPointInsideHighlightInDoc(doc, clientX, clientY, targetEl) {
+  if (isHighlightTarget(targetEl)) return true;
+  if (targetEl && targetEl.closest && targetEl.closest('mark, .reader-highlight, .fn-badge, .reader-footnote-badge, .epubjs-hl, a, button, input, select, textarea')) {
+    return true;
+  }
+  if (!doc) return false;
+  try {
+    const hlRects = doc.querySelectorAll('.epubjs-hl rect, .epubjs-hl, mark.reader-highlight, .reader-highlight');
+    for (const el of hlRects) {
+      const r = el.getBoundingClientRect();
+      if (clientX >= r.left - 4 && clientX <= r.right + 4 && clientY >= r.top - 4 && clientY <= r.bottom + 4) {
+        return true;
+      }
+    }
+  } catch (e) {}
+  return false;
+}
+
+function resolveClickedAudioWordAtPoint(doc, rootEl, clientX, clientY) {
+  const alignment = getOrBuildDocAudioAlignment(doc, rootEl);
+  if (!alignment || !alignment.domTokens || alignment.domTokens.length === 0) return null;
+
+  let bestToken = null;
+
+  // 1. Fast path: caretRangeFromPoint / caretPositionFromPoint
+  const caret = getCaretPointNodeAndOffset(doc, clientX, clientY);
+  if (caret && caret.node && caret.node.nodeType === 3) {
+    for (const tok of alignment.domTokens) {
+      if (tok.node !== caret.node) continue;
+      if (caret.offset >= tok.startOffset - 1 && caret.offset <= tok.endOffset + 1) {
+        try {
+          const range = doc.createRange();
+          range.setStart(tok.node, tok.startOffset);
+          range.setEnd(tok.node, tok.endOffset);
+          const rects = range.getClientRects();
+          for (const r of rects) {
+            if (clientX >= r.left - 8 && clientX <= r.right + 8 &&
+                clientY >= r.top - 6 && clientY <= r.bottom + 6) {
+              bestToken = tok;
+              break;
+            }
+          }
+        } catch (e) {}
+        if (bestToken) break;
+      }
+    }
+  }
+
+  // 2. Fallback: bounding-box hit-test across tokens (handles <mark>, <a>, and EPUB SVG highlight overlays 100%)
+  if (!bestToken) {
+    try {
+      const range = doc.createRange();
+      let lastParent = null;
+      let parentOverlapsY = false;
+
+      for (const tok of alignment.domTokens) {
+        const pEl = tok.node.parentElement;
+        if (pEl !== lastParent) {
+          lastParent = pEl;
+          if (pEl && typeof pEl.getBoundingClientRect === 'function') {
+            const pRect = pEl.getBoundingClientRect();
+            parentOverlapsY = (clientY >= pRect.top - 12 && clientY <= pRect.bottom + 12 &&
+                               clientX >= pRect.left - 16 && clientX <= pRect.right + 16);
+          } else {
+            parentOverlapsY = true;
+          }
+        }
+        if (!parentOverlapsY) continue;
+
+        range.setStart(tok.node, tok.startOffset);
+        range.setEnd(tok.node, tok.endOffset);
+        const rects = range.getClientRects();
+        for (const r of rects) {
+          if (clientX >= r.left - 6 && clientX <= r.right + 6 &&
+              clientY >= r.top - 5 && clientY <= r.bottom + 5) {
+            bestToken = tok;
+            break;
+          }
+        }
+        if (bestToken) break;
+      }
+    } catch (e) {}
+  }
+
+  if (!bestToken) return null;
+
+  const wIdx = alignment.domTokenToWordIdx.get(bestToken.domIdx);
+  if (wIdx === undefined || !chapterAudioState.syncData) return null;
+  return chapterAudioState.syncData.words[wIdx] || null;
+}
+
+function triggerAudioWordClickFromEvent(e) {
+  if (!chapterAudioState.audioMode || !chapterAudioState.hasAudio || !chapterAudioState.syncData) return;
+  const { doc, rootEl } = getActiveReaderDocAndRoot();
+  if (!doc || !rootEl) return;
+  const clientX = getEventCoord(e, 'clientX') ?? (lastIframeClick ? lastIframeClick.clientX : undefined);
+  const clientY = getEventCoord(e, 'clientY') ?? (lastIframeClick ? lastIframeClick.clientY : undefined);
+  if (clientX === undefined || clientY === undefined) return;
+  const clickedWord = resolveClickedAudioWordAtPoint(doc, rootEl, clientX, clientY);
+  if (clickedWord) {
+    playWordOrSentenceFromWordObj(clickedWord, chapterAudioState.clickMode);
+  }
+}
+
+function attachConflictFreeAudioWordClick(doc, getWin, getRootEl) {
+  if (!doc || doc._audioClickBound) return;
+  doc._audioClickBound = true;
+
+  let pointerDownInfo = null;
+
+  const onDown = (e) => {
+    const x = getEventCoord(e, 'clientX');
+    const y = getEventCoord(e, 'clientY');
+    const wasToolbarOpen = Boolean(
+      (elements.highlightToolbar && elements.highlightToolbar.style.display !== 'none') ||
+      (elements.settingsPopover && elements.settingsPopover.classList.contains('open')) ||
+      (elements.readerDrawer && elements.readerDrawer.classList.contains('open'))
+    );
+    pointerDownInfo = {
+      x: x ?? 0,
+      y: y ?? 0,
+      time: Date.now(),
+      wasToolbarOpen
+    };
+  };
+
+  doc.addEventListener('pointerdown', onDown, true);
+  doc.addEventListener('touchstart', onDown, { passive: true, capture: true });
+  doc.addEventListener('mousedown', onDown, true);
+
+  doc.addEventListener('click', (e) => {
+    // 오디오 모드(클릭 재생 ON)일 때만 본문 단어(형광펜 포함) 클릭 재생 작동
+    if (!chapterAudioState.audioMode) return;
+    if (!chapterAudioState.hasAudio || !chapterAudioState.syncData) return;
+    if (justSelectedInEpub) return;
+
+    // 1. 팝업/설정창이 열려있는 상태에서 닫기 위해 본문을 클릭한 경우 오디오 재생 차단
+    if (pointerDownInfo && pointerDownInfo.wasToolbarOpen) return;
+
+    const clientX = getEventCoord(e, 'clientX') ?? (pointerDownInfo ? pointerDownInfo.x : undefined);
+    const clientY = getEventCoord(e, 'clientY') ?? (pointerDownInfo ? pointerDownInfo.y : undefined);
+    if (clientX === undefined || clientY === undefined) return;
+
+    // 2. 드래그 선택, 스와이프, 롱프레스(380ms 이상) 필터링
+    if (pointerDownInfo) {
+      const dx = Math.abs(clientX - pointerDownInfo.x);
+      const dy = Math.abs(clientY - pointerDownInfo.y);
+      const dt = Date.now() - pointerDownInfo.time;
+      if (dx > 6 || dy > 6 || dt > 380) return;
+    }
+
+    const win = getWin();
+    const sel = win && typeof win.getSelection === 'function' ? win.getSelection() : null;
+    if (sel && sel.toString().trim().length > 0) return;
+
+    // 3. 오디오 모드에서는 형광펜 내부 단어를 포함한 모든 단어 클릭 시 즉시 오디오 재생
+    cancelPendingAudioClickTimer();
+    pendingAudioClickTimer = setTimeout(() => {
+      pendingAudioClickTimer = null;
+      if (!chapterAudioState.audioMode || justSelectedInEpub) return;
+      const curSel = win && typeof win.getSelection === 'function' ? win.getSelection() : null;
+      if (curSel && curSel.toString().trim().length > 0) return;
+
+      const rootEl = getRootEl();
+      const clickedWord = resolveClickedAudioWordAtPoint(doc, rootEl, clientX, clientY);
+      if (clickedWord) {
+        playWordOrSentenceFromWordObj(clickedWord, chapterAudioState.clickMode);
+      }
+    }, 35);
+  }, false);
+}
+
+function bindAudioClickInEpubDoc(doc, win) {
+  attachConflictFreeAudioWordClick(
+    doc,
+    () => win || doc.defaultView,
+    () => doc.body
+  );
+}
+
+// ── 현재 챕터에 맞춰 오디오 자동 로드 및 UI 동기화 ──
+async function onChapterOrViewChangedForAudio(forceReload = false) {
+  if (!state.currentBook) return;
+  const bookId = state.currentBook.id;
+  const activeChap = getCurrentActiveChapterInfo();
+
+  // 등록된 챕터 목록 갱신
+  const regList = await getAllChapterAudioListForBook(bookId);
+  chapterAudioState.registeredMap.clear();
+  regList.forEach(item => {
+    chapterAudioState.registeredMap.set(item.chapterKey, item);
+  });
+
+  // 현재 챕터 키로 먼저 찾고, 없으면 제목 일치 또는 단일 기본 오디오 폴백
+  let targetKey = activeChap.key;
+  if (!chapterAudioState.registeredMap.has(targetKey)) {
+    for (const [k, meta] of chapterAudioState.registeredMap.entries()) {
+      if (meta.chapterTitle && activeChap.title && meta.chapterTitle.toLowerCase() === activeChap.title.toLowerCase()) {
+        targetKey = k;
+        break;
+      }
+    }
+    if (!chapterAudioState.registeredMap.has(targetKey) && regList.length === 1 && regList[0].chapterKey === 'chapter_default') {
+      targetKey = 'chapter_default';
+    }
+  }
+
+  // 이미 같은 챕터 오디오가 로드되어 있으면 정렬/하이라이트만 갱신
+  if (!forceReload && chapterAudioState.bookId === bookId && chapterAudioState.chapterKey === targetKey && chapterAudioState.hasAudio) {
+    if (chapterAudioState.activeWordIdx >= 0 || chapterAudioState.activeSentIdx >= 0) {
+      renderAudioHighlightRanges(chapterAudioState.activeWordIdx, chapterAudioState.activeSentIdx);
+    }
+    updateAudioBarControlsUI();
+    return;
+  }
+
+  // 다른 챕터의 오디오가 현재 재생 중이면 강제로 끊지 않고 유지 (사용자가 페이지만 넘겨보는 경우 배려)
+  if (!forceReload && chapterAudioState.isPlaying && chapterAudioState.bookId === bookId) {
+    return;
+  }
+
+  const record = await getChapterAudioFromDB(bookId, targetKey);
+  if (record && record.audioBlob && record.syncData) {
+    loadChapterAudioRecordIntoPlayer(record);
+  } else {
+    unloadCurrentChapterAudio();
+  }
+}
+
+function loadChapterAudioRecordIntoPlayer(record) {
+  unloadCurrentChapterAudio(true);
+
+  chapterAudioState.bookId = record.bookId;
+  chapterAudioState.chapterKey = record.chapterKey;
+  chapterAudioState.chapterTitle = record.chapterTitle || 'Chapter';
+  chapterAudioState.syncData = record.syncData;
+  chapterAudioState.hasAudio = true;
+  chapterAudioState.audioUrl = URL.createObjectURL(record.audioBlob);
+
+  const player = ensureChapterAudioPlayer();
+  player.src = chapterAudioState.audioUrl;
+  player.playbackRate = chapterAudioState.speed;
+
+  if (elements.audioBarChapterLabel) {
+    elements.audioBarChapterLabel.textContent = chapterAudioState.chapterTitle;
+    elements.audioBarChapterLabel.title = `${chapterAudioState.chapterTitle} (${record.audioName || ''})`;
+  }
+  if (elements.readerAudioBar && chapterAudioState.audioMode && !chapterAudioState.userHiddenBar) {
+    elements.readerAudioBar.style.display = 'flex';
+  }
+  updateAudioModeToggleUI();
+  updateAudioBarControlsUI();
+  updateAudioBarTimeUI();
+}
+
+function unloadCurrentChapterAudio(keepBarVisibility = false) {
+  cancelAudioRepeatDelayTimer();
+  if (chapterAudioPlayer) {
+    try {
+      chapterAudioPlayer.pause();
+      chapterAudioPlayer.removeAttribute('src');
+      chapterAudioPlayer.load();
+    } catch (e) {}
+  }
+  if (chapterAudioState.audioUrl) {
+    try {
+      URL.revokeObjectURL(chapterAudioState.audioUrl);
+    } catch (e) {}
+    chapterAudioState.audioUrl = null;
+  }
+  clearAudioVisualHighlights();
+  chapterAudioState.hasAudio = false;
+  chapterAudioState.syncData = null;
+  chapterAudioState.isPlaying = false;
+  chapterAudioState.segmentStartTime = null;
+  chapterAudioState.segmentEndTime = null;
+  chapterAudioState.lastPlayedUnit = null;
+  chapterAudioState.clickedWordObj = null;
+
+  if (elements.audioBarChapterLabel) {
+    elements.audioBarChapterLabel.textContent = '음원 없음';
+    elements.audioBarChapterLabel.title = '이 챕터에 등록된 음원이 없습니다';
+  }
+  if (elements.audioTimeDisplay) {
+    elements.audioTimeDisplay.textContent = '00:00 / 00:00';
+  }
+  if (elements.audioSeekSlider) {
+    elements.audioSeekSlider.value = 0;
+  }
+  if (elements.audioWordChip) {
+    elements.audioWordChip.style.display = 'none';
+  }
+  if (!keepBarVisibility && !chapterAudioState.audioMode && elements.readerAudioBar) {
+    elements.readerAudioBar.style.display = 'none';
+  }
+  updateAudioBarControlsUI();
+}
+
+function resetChapterAudioPlayerOnBookChange() {
+  chapterAudioState.bookId = null;
+  chapterAudioState.chapterKey = null;
+  chapterAudioState.userHiddenBar = false;
+  chapterAudioState.audioMode = false;
+  updateAudioModeToggleUI();
+  unloadCurrentChapterAudio(false);
+}
+
+// ── 챕터 오디오 업로드/관리 모달 UI 로직 ──
+async function openAudioManagerModal() {
+  if (!state.currentBook) {
+    showToast('먼저 도서를 열어주세요.');
+    return;
+  }
+  if (!elements.audioManagerModal) return;
+
+  chapterAudioState.pendingMp3File = null;
+  chapterAudioState.pendingJsonFile = null;
+  chapterAudioState.pendingParsedSync = null;
+  if (elements.inputChapterAudioBoth) elements.inputChapterAudioBoth.value = '';
+  if (elements.inputChapterAudioMp3) elements.inputChapterAudioMp3.value = '';
+  if (elements.inputChapterAudioJson) elements.inputChapterAudioJson.value = '';
+  updatePendingAudioFilesStatusUI();
+
+  await refreshAudioModalChapterListUI();
+  elements.audioManagerModal.classList.add('open');
+}
+
+function closeAudioManagerModal() {
+  if (elements.audioManagerModal) {
+    elements.audioManagerModal.classList.remove('open');
+  }
+}
+
+async function refreshAudioModalChapterListUI() {
+  if (!state.currentBook) return;
+  const bookId = state.currentBook.id;
+  const chapters = getBookChapterList();
+  const activeChap = getCurrentActiveChapterInfo();
+  const regList = await getAllChapterAudioListForBook(bookId);
+
+  chapterAudioState.registeredMap.clear();
+  regList.forEach(item => {
+    chapterAudioState.registeredMap.set(item.chapterKey, item);
+  });
+
+  if (elements.audioChapterSelect) {
+    elements.audioChapterSelect.innerHTML = '';
+    chapters.forEach(ch => {
+      const opt = document.createElement('option');
+      opt.value = ch.key;
+      const isCurrent = ch.key === activeChap.key;
+      const isReg = chapterAudioState.registeredMap.has(ch.key);
+      opt.textContent = `${isReg ? '🎧 ' : ''}${ch.title}${isCurrent ? ' (현재 읽는 챕터)' : ''}${isReg ? ' [등록됨]' : ''}`;
+      if (isCurrent) opt.selected = true;
+      elements.audioChapterSelect.appendChild(opt);
+    });
+  }
+
+  if (elements.audioRegisteredCount) {
+    elements.audioRegisteredCount.textContent = `${regList.length}개 챕터`;
+  }
+
+  if (elements.audioRegisteredList) {
+    if (regList.length === 0) {
+      elements.audioRegisteredList.innerHTML = `<div class="audio-empty-msg">아직 등록된 챕터 오디오가 없습니다. 위에서 MP3와 JSON 파일을 선택해 저장해주세요.</div>`;
+    } else {
+      elements.audioRegisteredList.innerHTML = '';
+      regList.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'audio-reg-item';
+        row.innerHTML = `
+          <div class="audio-reg-info">
+            <div class="audio-reg-title">🎧 ${escapeHtml(item.chapterTitle)}</div>
+            <div class="audio-reg-meta">${escapeHtml(item.audioName)} · 문장 ${item.sentenceCount}개 · 단어 ${item.wordCount}개</div>
+          </div>
+          <div class="audio-reg-actions">
+            <button type="button" class="btn-audio-mini btn-reg-load" data-key="${escapeHtml(item.chapterKey)}">▶ 불러오기</button>
+            <button type="button" class="btn-audio-mini btn-reg-del" data-id="${escapeHtml(item.id)}" style="color:#dc2626; border-color:rgba(220,38,38,0.3);">삭제</button>
+          </div>
+        `;
+        elements.audioRegisteredList.appendChild(row);
+      });
+
+      elements.audioRegisteredList.querySelectorAll('.btn-reg-load').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const chKey = btn.dataset.key;
+          const rec = await getChapterAudioFromDB(bookId, chKey);
+          if (rec) {
+            chapterAudioState.userHiddenBar = false;
+            loadChapterAudioRecordIntoPlayer(rec);
+            setReaderAudioMode(true, false);
+            closeAudioManagerModal();
+            showToast(`🎧 "${rec.chapterTitle}" 오디오가 준비되었습니다.`);
+          }
+        });
+      });
+
+      elements.audioRegisteredList.querySelectorAll('.btn-reg-del').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const recId = btn.dataset.id;
+          await deleteChapterAudioFromDB(recId);
+          if (makeChapterAudioRecordId(chapterAudioState.bookId, chapterAudioState.chapterKey) === recId) {
+            unloadCurrentChapterAudio(false);
+          }
+          await refreshAudioModalChapterListUI();
+          showToast('🗑️ 챕터 오디오를 삭제했습니다.');
+        });
+      });
+    }
+  }
+}
+
+function updatePendingAudioFilesStatusUI() {
+  const mp3 = chapterAudioState.pendingMp3File;
+  const json = chapterAudioState.pendingJsonFile;
+  const sync = chapterAudioState.pendingParsedSync;
+
+  if (elements.audioStatusMp3) {
+    if (mp3) {
+      const sizeMb = (mp3.size / (1024 * 1024)).toFixed(1);
+      elements.audioStatusMp3.innerHTML = `🎵 오디오 파일: <span class="ok">${escapeHtml(mp3.name)} (${sizeMb} MB)</span>`;
+    } else {
+      elements.audioStatusMp3.innerHTML = `🎵 오디오 파일: <span class="muted">선택 안 됨</span>`;
+    }
+  }
+
+  if (elements.audioStatusJson) {
+    if (json && sync) {
+      elements.audioStatusJson.innerHTML = `⏱️ 타임스탬프 JSON: <span class="ok">${escapeHtml(json.name)} (문장 ${sync.sentences.length}개 · 단어 ${sync.words.length}개 · 경량화 완료)</span>`;
+    } else if (json) {
+      elements.audioStatusJson.innerHTML = `⏱️ 타임스탬프 JSON: <span style="color:#dc2626;">${escapeHtml(json.name)} (파싱 실패)</span>`;
+    } else {
+      elements.audioStatusJson.innerHTML = `⏱️ 타임스탬프 JSON: <span class="muted">선택 안 됨</span>`;
+    }
+  }
+
+  if (elements.btnSaveChapterAudio) {
+    elements.btnSaveChapterAudio.disabled = !(mp3 && sync);
+  }
+}
+
+async function handleSelectedJsonFile(file) {
+  if (!file) return;
+  chapterAudioState.pendingJsonFile = file;
+  chapterAudioState.pendingParsedSync = null;
+  try {
+    const rawText = await file.text();
+    const parsed = parseAndCompactTimestampJson(rawText);
+    chapterAudioState.pendingParsedSync = parsed;
+  } catch (err) {
+    console.error('Timestamp JSON parse error:', err);
+    showToast(`⚠️ JSON 파싱 오류: ${err.message || '올바른 타임스탬프 형식이 아닙니다.'}`);
+  }
+  updatePendingAudioFilesStatusUI();
+}
+
+function setupChapterAudioListeners() {
+  // TXT / MD 뷰어에 단어 클릭 리스너 바인딩
+  if (elements.txtContent) {
+    attachConflictFreeAudioWordClick(
+      document,
+      () => window,
+      () => elements.txtContent
+    );
+  }
+
+  // 형광펜 색상 영역 왼쪽의 [오디오 모드 / 읽기 모드] 토글 버튼
+  if (elements.btnToggleAudioMode) {
+    elements.btnToggleAudioMode.addEventListener('click', () => {
+      setReaderAudioMode(!chapterAudioState.audioMode, true);
+    });
+  }
+
+  // 상단 툴바 [오디오] 버튼
+  if (elements.btnToggleAudio) {
+    elements.btnToggleAudio.addEventListener('click', () => {
+      openAudioManagerModal();
+    });
+  }
+
+  // 오디오 컨트롤 바 내부 버튼들
+  if (elements.btnAudioPlay) {
+    elements.btnAudioPlay.addEventListener('click', () => {
+      if (!chapterAudioState.hasAudio) {
+        openAudioManagerModal();
+        return;
+      }
+      const player = ensureChapterAudioPlayer();
+      if (chapterAudioState.isPlaying) {
+        cancelAudioRepeatDelayTimer();
+        chapterAudioState.isPlaying = false;
+        player.pause();
+        stopChapterAudioRaf();
+        updateAudioBarControlsUI();
+      } else {
+        if (
+          chapterAudioState.repeatEnabled &&
+          chapterAudioState.clickedWordObj &&
+          (chapterAudioState.lastPlayedUnit === 'word' || chapterAudioState.lastPlayedUnit === 'sentence') &&
+          chapterAudioState.clickMode !== 'continue'
+        ) {
+          playWordOrSentenceFromWordObj(chapterAudioState.clickedWordObj, chapterAudioState.clickMode);
+          return;
+        }
+        // 일반 챕터 재생: 구간 제한 해제하고 챕터 단위 재생 (반복 ON이면 챕터 끝에서 처음부터 반복)
+        cancelAudioRepeatDelayTimer();
+        chapterAudioState.lastPlayedUnit = 'chapter';
+        chapterAudioState.segmentStartTime = null;
+        chapterAudioState.segmentEndTime = null;
+        if (ttsState && (ttsState.isPlaying || ttsState.isLoading)) {
+          stopTtsPlayback(false);
+        }
+        player.playbackRate = chapterAudioState.speed;
+        player.play().catch(e => console.warn(e));
+      }
+    });
+  }
+
+  if (elements.btnAudioPrevSent) {
+    elements.btnAudioPrevSent.addEventListener('click', () => {
+      if (!chapterAudioState.hasAudio || !chapterAudioState.syncData) return;
+      const sentences = chapterAudioState.syncData.sentences;
+      if (!sentences || sentences.length === 0) return;
+      const curSentIdx = chapterAudioState.activeSentIdx >= 0
+        ? chapterAudioState.activeSentIdx
+        : findSentenceIndexAtTime(sentences, chapterAudioPlayer?.currentTime || 0);
+      const targetIdx = Math.max(0, (curSentIdx > 0 ? curSentIdx - 1 : 0));
+      const sent = sentences[targetIdx];
+      if (sent) {
+        const repeatSent = chapterAudioState.repeatEnabled && chapterAudioState.clickMode === 'sentence';
+        chapterAudioState.lastPlayedUnit = repeatSent ? 'sentence' : 'chapter';
+        playChapterAudioSegment(sent.start, repeatSent ? sent.end + 0.06 : null, sent.firstWordIdx, sent.idx);
+      }
+    });
+  }
+
+  if (elements.btnAudioNextSent) {
+    elements.btnAudioNextSent.addEventListener('click', () => {
+      if (!chapterAudioState.hasAudio || !chapterAudioState.syncData) return;
+      const sentences = chapterAudioState.syncData.sentences;
+      if (!sentences || sentences.length === 0) return;
+      const curSentIdx = chapterAudioState.activeSentIdx >= 0
+        ? chapterAudioState.activeSentIdx
+        : findSentenceIndexAtTime(sentences, chapterAudioPlayer?.currentTime || 0);
+      const targetIdx = Math.min(sentences.length - 1, curSentIdx + 1);
+      const sent = sentences[targetIdx];
+      if (sent) {
+        const repeatSent = chapterAudioState.repeatEnabled && chapterAudioState.clickMode === 'sentence';
+        chapterAudioState.lastPlayedUnit = repeatSent ? 'sentence' : 'chapter';
+        playChapterAudioSegment(sent.start, repeatSent ? sent.end + 0.06 : null, sent.firstWordIdx, sent.idx);
+      }
+    });
+  }
+
+  if (elements.audioSeekSlider) {
+    elements.audioSeekSlider.addEventListener('input', (e) => {
+      if (!chapterAudioPlayer || !chapterAudioState.hasAudio) return;
+      const dur = chapterAudioPlayer.duration || 0;
+      if (dur > 0) {
+        const pct = parseFloat(e.target.value) || 0;
+        cancelAudioRepeatDelayTimer();
+        chapterAudioState.lastPlayedUnit = 'chapter';
+        chapterAudioState.segmentStartTime = null;
+        chapterAudioState.segmentEndTime = null;
+        chapterAudioPlayer.currentTime = (pct / 100) * dur;
+        handleChapterAudioTimeTick();
+      }
+    });
+  }
+
+  if (elements.audioClickModeSelect) {
+    elements.audioClickModeSelect.value = chapterAudioState.clickMode;
+    elements.audioClickModeSelect.addEventListener('change', (e) => {
+      chapterAudioState.clickMode = e.target.value || 'sentence';
+      localStorage.setItem('reader_audio_click_mode', chapterAudioState.clickMode);
+      if (chapterAudioState.isPlaying && chapterAudioState.clickedWordObj && (chapterAudioState.lastPlayedUnit === 'word' || chapterAudioState.lastPlayedUnit === 'sentence')) {
+        playWordOrSentenceFromWordObj(chapterAudioState.clickedWordObj, chapterAudioState.clickMode);
+      }
+    });
+  }
+
+  if (elements.btnAudioSpeed) {
+    elements.btnAudioSpeed.textContent = `${chapterAudioState.speed}x`;
+    elements.btnAudioSpeed.addEventListener('click', () => {
+      const idx = AUDIO_SPEED_STEPS.indexOf(chapterAudioState.speed);
+      const nextSpeed = AUDIO_SPEED_STEPS[(idx + 1) % AUDIO_SPEED_STEPS.length];
+      chapterAudioState.speed = nextSpeed;
+      localStorage.setItem('reader_audio_speed', String(nextSpeed));
+      if (chapterAudioPlayer) {
+        chapterAudioPlayer.playbackRate = nextSpeed;
+        chapterAudioPlayer.defaultPlaybackRate = nextSpeed;
+      }
+      updateAudioBarControlsUI();
+      showToast(`🎧 오디오 배속: ${nextSpeed}x`);
+    });
+  }
+
+  if (elements.audioWordChip) {
+    elements.audioWordChip.addEventListener('click', () => {
+      if (chapterAudioState.clickedWordObj) {
+        playWordOrSentenceFromWordObj(chapterAudioState.clickedWordObj, chapterAudioState.clickMode);
+      }
+    });
+  }
+
+  if (elements.btnAudioRepeat) {
+    elements.btnAudioRepeat.addEventListener('click', () => {
+      chapterAudioState.repeatEnabled = !chapterAudioState.repeatEnabled;
+      updateAudioBarControlsUI();
+
+      if (!chapterAudioState.repeatEnabled) {
+        if (chapterAudioState.isRepeatGap) {
+          cancelAudioRepeatDelayTimer();
+          chapterAudioState.isPlaying = false;
+          chapterAudioState.segmentStartTime = null;
+          chapterAudioState.segmentEndTime = null;
+          stopChapterAudioRaf();
+          updateAudioBarControlsUI();
+        }
+        showToast('반복 재생이 해제되었습니다.');
+      } else {
+        if (
+          !chapterAudioState.isPlaying &&
+          chapterAudioState.hasAudio &&
+          chapterAudioState.clickedWordObj &&
+          (chapterAudioState.lastPlayedUnit === 'word' || chapterAudioState.lastPlayedUnit === 'sentence') &&
+          chapterAudioState.clickMode !== 'continue'
+        ) {
+          playWordOrSentenceFromWordObj(chapterAudioState.clickedWordObj, chapterAudioState.clickMode);
+        }
+        showToast('🔁 반복 재생 ON: 현재 재생 단위(단어 · 문장 · 챕터)를 반복합니다.');
+      }
+    });
+  }
+
+  if (elements.btnCloseAudioBar) {
+    elements.btnCloseAudioBar.addEventListener('click', () => {
+      chapterAudioState.userHiddenBar = true;
+      if (chapterAudioPlayer && chapterAudioState.isPlaying) {
+        chapterAudioPlayer.pause();
+      }
+      clearAudioVisualHighlights();
+      setReaderAudioMode(false, false);
+      if (elements.readerAudioBar) {
+        elements.readerAudioBar.style.display = 'none';
+      }
+    });
+  }
+
+  // 모달 내부 이벤트
+  if (elements.btnCloseAudioModal) {
+    elements.btnCloseAudioModal.addEventListener('click', closeAudioManagerModal);
+  }
+  if (elements.btnCancelAudioModal) {
+    elements.btnCancelAudioModal.addEventListener('click', closeAudioManagerModal);
+  }
+  if (elements.audioManagerModal) {
+    elements.audioManagerModal.addEventListener('click', (e) => {
+      if (e.target === elements.audioManagerModal) {
+        closeAudioManagerModal();
+      }
+    });
+  }
+
+  if (elements.inputChapterAudioBoth) {
+    elements.inputChapterAudioBoth.addEventListener('change', async (e) => {
+      const files = Array.from(e.target.files || []);
+      for (const f of files) {
+        const nameLower = f.name.toLowerCase();
+        if (nameLower.endsWith('.json') || f.type === 'application/json') {
+          await handleSelectedJsonFile(f);
+        } else {
+          chapterAudioState.pendingMp3File = f;
+        }
+      }
+      updatePendingAudioFilesStatusUI();
+    });
+  }
+
+  if (elements.inputChapterAudioMp3) {
+    elements.inputChapterAudioMp3.addEventListener('change', (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) {
+        chapterAudioState.pendingMp3File = f;
+        updatePendingAudioFilesStatusUI();
+      }
+    });
+  }
+
+  if (elements.inputChapterAudioJson) {
+    elements.inputChapterAudioJson.addEventListener('change', async (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (f) {
+        await handleSelectedJsonFile(f);
+      }
+    });
+  }
+
+  if (elements.btnSaveChapterAudio) {
+    elements.btnSaveChapterAudio.addEventListener('click', async () => {
+      if (!state.currentBook) return;
+      const mp3File = chapterAudioState.pendingMp3File;
+      const jsonFile = chapterAudioState.pendingJsonFile;
+      const syncData = chapterAudioState.pendingParsedSync;
+      if (!mp3File || !syncData) {
+        showToast('MP3 오디오 파일과 타임스탬프 JSON 파일을 모두 선택해주세요.');
+        return;
+      }
+
+      const chapters = getBookChapterList();
+      const selectedKey = elements.audioChapterSelect ? elements.audioChapterSelect.value : 'chapter_default';
+      const chObj = chapters.find(c => c.key === selectedKey) || { key: selectedKey, title: selectedKey };
+
+      elements.btnSaveChapterAudio.disabled = true;
+      elements.btnSaveChapterAudio.textContent = '⏳ 저장 중...';
+      try {
+        const savedRecord = await saveChapterAudioToDB({
+          bookId: state.currentBook.id,
+          chapterKey: chObj.key,
+          chapterTitle: chObj.title,
+          audioBlob: mp3File,
+          audioName: mp3File.name,
+          jsonName: jsonFile ? jsonFile.name : 'timestamps.json',
+          syncData
+        });
+
+        docAudioAlignmentCache = new WeakMap();
+        chapterAudioState.userHiddenBar = false;
+        loadChapterAudioRecordIntoPlayer(savedRecord);
+        setReaderAudioMode(true, false);
+        await refreshAudioModalChapterListUI();
+        closeAudioManagerModal();
+        showToast(`✅ "${chObj.title}"에 오디오(문장 ${syncData.sentences.length}개)가 연결되었습니다!`);
+      } catch (err) {
+        console.error('Failed to save chapter audio:', err);
+        showToast(`⚠️ 저장 실패: ${err.message || ''}`);
+      } finally {
+        elements.btnSaveChapterAudio.textContent = '💾 선택한 챕터에 저장 및 적용';
+        updatePendingAudioFilesStatusUI();
+      }
+    });
+  }
+}
+
 // ── Initialization ──
 window.addEventListener('DOMContentLoaded', async () => {
   loadSettings();
   setupEventListeners();
+  setupChapterAudioListeners();
   await showReaderFileList();
 });
