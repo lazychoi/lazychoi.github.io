@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>독서 기록</title>
+
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#2563eb">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="도구상자">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <script src="js/pwa.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+  <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/books.css">
+  <!-- Supabase JS SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="js/books.js"></script>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="nav-header">
+      <a href="index.html" class="nav-logo">📚 독서 기록</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="메뉴 열기">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"></path></svg>
+      </button>
+    </div>
+    <div class="nav-menu" id="nav-menu"></div>
+    <div class="auth-status-container">
+      <span id="authStatusText" style="font-size: 13px; color: var(--text-muted);"></span>
+      <button id="btnLogin" class="btn btn-secondary btn-mini" type="button" style="font-size: 12px; padding: 4px 10px; margin: 0;">로그인</button>
+      <button id="btnLogout" class="btn btn-danger btn-mini" type="button" style="display: none; font-size: 12px; padding: 4px 10px; margin: 0;">로그아웃</button>
+    </div>
+  </nav>
+
+  <!-- 접근성: 동적 정렬 및 순서 변경 알림용 시각적 숨김 상태 영역 -->
+  <p id="reorderStatus" role="status" class="visually-hidden"></p>
+
+  <main class="books-container">
+    <!-- 상단 헤더 카드 -->
+    <section class="books-header-card">
+      <div class="books-header-top">
+        <div class="books-title-group">
+          <h1 class="books-main-title">📚 독서 기록장</h1>
+          <p class="books-subtitle">국내·국외 도서 검색, 읽을 책·읽은 책 관리, 목차·문장 수집 및 독서 메모</p>
+        </div>
+        <div class="books-header-actions">
+          <button type="button" id="btnOpenSearchModal" class="btn btn-primary btn-add-book">
+            <span>＋ 책 검색 / 추가</span>
+          </button>
+          <button type="button" id="btnBackupJson" class="btn btn-secondary" title="현재 도서 테이블을 JSON 파일로 백업 다운로드">
+            💾 JSON 백업
+          </button>
+          <button type="button" id="btnRestoreJson" class="btn btn-secondary" title="JSON 백업 파일에서 도서 데이터 가져오기">
+            📂 복원
+          </button>
+          <input type="file" id="inputRestoreJsonFile" accept=".json,application/json" style="display: none;">
+          <button type="button" id="btnOpenSettings" class="btn btn-secondary btn-icon-only" title="도서 검색 API 설정" aria-label="도서 검색 API 설정">
+            ⚙️
+          </button>
+        </div>
+      </div>
+
+      <!-- 탭 영역: 읽을 책 / 읽은 책 / 전체 -->
+      <div class="books-tabs-row">
+        <div class="books-status-tabs" role="tablist" aria-label="독서 상태별 목록">
+          <button type="button" role="tab" id="tabToRead" class="status-tab active" data-status="to_read" aria-selected="true">
+            📌 읽을 책 <span class="tab-badge" id="countToRead">0</span>
+          </button>
+          <button type="button" role="tab" id="tabRead" class="status-tab" data-status="read" aria-selected="false">
+            ✅ 읽은 책 <span class="tab-badge" id="countRead">0</span>
+          </button>
+          <button type="button" role="tab" id="tabAll" class="status-tab" data-status="all" aria-selected="false">
+            📚 전체 <span class="tab-badge" id="countAll">0</span>
+          </button>
+        </div>
+
+        <!-- 보기 옵션 토글: 책표지 이미지 / 제목 -->
+        <div class="view-mode-group" role="group" aria-label="목록 보기 방식">
+          <button type="button" id="btnViewCover" class="view-toggle-btn active" data-view="cover" aria-pressed="true" title="책표지 이미지로 보기">
+            🖼️ 책표지 보기
+          </button>
+          <button type="button" id="btnViewTitle" class="view-toggle-btn" data-view="title" aria-pressed="false" title="제목 목록으로 보기">
+            ☰ 제목 보기
+          </button>
+        </div>
+      </div>
+
+      <!-- 검색 & 정렬 컨트롤 바 -->
+      <div class="books-controls-bar">
+        <div class="books-search-group">
+          <select id="searchScopeSelect" class="control-select search-scope-select" aria-label="검색 대상 선택">
+            <option value="all">전체 (책+문장+메모)</option>
+            <option value="notes_quotes">문장 수집 + 독서 메모</option>
+            <option value="quotes">문장 수집만</option>
+            <option value="memo">독서 메모만</option>
+            <option value="book">책 정보 (제목·저자·출판사)</option>
+          </select>
+          <div class="search-input-wrapper">
+            <input type="text" id="listSearchInput" placeholder="문장 수집, 독서 메모, 책 제목, 저자 검색..." aria-label="목록 및 문장/메모 검색">
+            <button type="button" id="btnClearListSearch" class="btn-clear-search" aria-label="검색어 지우기" title="검색어 지우기" style="display: none;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"></line><line x1="10" y1="2" x2="2" y2="10"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="books-sort-group">
+          <label for="sortFieldSelect" class="sort-label">정렬</label>
+          <select id="sortFieldSelect" class="control-select sort-field-select" aria-label="정렬 기준">
+            <option value="sort_order">지정 순서 (상하 이동)</option>
+            <option value="title">제목 순</option>
+            <option value="author">저자 순</option>
+            <option value="publisher">출판사 순</option>
+            <option value="pub_date">출간일 순</option>
+            <option value="completed_date">완독일 순</option>
+          </select>
+          <button type="button" id="btnSortDirection" class="btn btn-secondary btn-sort-dir" aria-label="오름차순 정렬 중 (클릭 시 내림차순)" title="정렬 순서 반전">
+            <span id="sortDirIcon">▲</span>
+            <span id="sortDirText">오름차순</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 선택 액션 바 (목록에서 책을 선택해 수정/삭제/이동) -->
+      <div class="selection-action-bar" id="selectionActionBar">
+        <div class="selection-left">
+          <label class="checkbox-label">
+            <input type="checkbox" id="chkSelectAll">
+            <span>전체 선택</span>
+          </label>
+          <span class="selection-count-badge" id="selectionCountText">0권 선택됨</span>
+        </div>
+        <div class="selection-right">
+          <button type="button" id="btnEditSelected" class="btn btn-secondary btn-mini" disabled title="선택한 1권의 책 정보를 수정합니다">
+            ✏️ 선택 수정
+          </button>
+          <button type="button" id="btnMoveSelectedStatus" class="btn btn-secondary btn-mini" disabled title="선택한 책을 읽을 책 / 읽은 책으로 이동합니다">
+            ⇄ 상태 이동
+          </button>
+          <button type="button" id="btnDeleteSelected" class="btn btn-danger btn-mini" disabled title="선택한 책을 삭제합니다">
+            🗑️ 선택 삭제
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 로딩 및 빈 화면 안내 -->
+    <div id="booksLoading" class="books-state-card">
+      <div class="spinner"></div>
+      <p>독서 기록 데이터를 불러오는 중입니다...</p>
+    </div>
+
+    <div id="booksEmptyState" class="books-state-card" style="display: none;">
+      <div class="empty-state-icon">📖</div>
+      <h3 id="emptyStateTitle">등록된 책이 없습니다</h3>
+      <p id="emptyStateDesc">상단의 <strong>'＋ 책 검색 / 추가'</strong> 버튼을 눌러 국내·국외 도서를 검색하고 읽을 책이나 읽은 책에 추가해 보세요.</p>
+      <button type="button" id="btnEmptyAddBook" class="btn btn-primary" style="margin-top: 8px;">＋ 첫 번째 책 추가하기</button>
+    </div>
+
+    <!-- 도서 목록 영역 (표지 그리드 뷰 / 제목 리스트 뷰) -->
+    <section id="booksListSection" class="books-list-section" style="display: none;">
+      <!-- 표지 이미지 그리드 컨테이너 -->
+      <div id="booksCoverGrid" class="books-cover-grid"></div>
+
+      <!-- 제목 보기 리스트 컨테이너 -->
+      <div id="booksTitleList" class="books-title-list" style="display: none;"></div>
+    </section>
+  </main>
+
+  <!-- ============================================================
+       1. 도서 검색 및 책 추가 다이얼로그 (국립중앙도서관 / 국외 도서 검색)
+       ============================================================ -->
+  <dialog id="bookSearchDialog" class="auth-dialog modal-large" closedby="any" aria-labelledby="bookSearchDialogTitle">
+    <div class="modal-header">
+      <h3 id="bookSearchDialogTitle">🔍 도서 검색 및 책 추가</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="bookSearchDialog" aria-label="닫기">✕</button>
+    </div>
+
+    <div class="modal-mode-tabs">
+      <button type="button" id="btnTabApiSearch" class="modal-mode-tab active">🌐 도서 API 검색 (국내·국외)</button>
+      <button type="button" id="btnTabManualAdd" class="modal-mode-tab">✍️ 직접 입력하여 추가</button>
+    </div>
+
+    <!-- 탭 1: API 도서 검색 -->
+    <div id="panelApiSearch" class="modal-body-panel">
+      <!-- 국립중앙도서관 API 키 미설정 시 바로 입력 가능한 인라인 바 -->
+      <div id="inlineNlkKeyBar" class="inline-nlk-key-bar" style="display: none;">
+        <div class="inline-nlk-text">
+          <strong>🏛️ 국립중앙도서관 API 인증키 등록:</strong>
+          <span>국내 도서 검색을 위해 발급받은 국립중앙도서관 Open API 인증키를 입력해 주세요.</span>
+        </div>
+        <div class="inline-nlk-Controls">
+          <input type="text" id="inlineNlkKeyInput" placeholder="국립중앙도서관 인증키 붙여넣기">
+          <button type="button" id="btnSaveInlineNlkKey" class="btn btn-primary btn-mini">저장</button>
+        </div>
+      </div>
+
+      <form id="apiBookSearchForm" class="api-search-form">
+        <div class="api-search-row">
+          <select id="apiRegionSelect" class="control-select" aria-label="국내/국외 도서 구분">
+            <option value="all">🌐 국내 + 국외 통합</option>
+            <option value="kr">🇰🇷 국내 도서 (국립중앙도서관)</option>
+            <option value="en">🔤 국외 도서 (영어/원서)</option>
+          </select>
+          <div class="search-input-wrapper">
+            <input type="text" id="apiSearchQuery" placeholder="책 제목 또는 저자를 입력하세요 (예: 채식주의자, 한강, Atomic Habits)" required>
+            <button type="button" id="btnClearApiSearch" class="btn-clear-search" aria-label="검색어 삭제" style="display: none;">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"></line><line x1="10" y1="2" x2="2" y2="10"></line></svg>
+            </button>
+          </div>
+          <button type="submit" id="btnRunApiSearch" class="btn btn-primary" style="white-space: nowrap;">검색</button>
+        </div>
+        <div class="api-search-hint">
+          <span>✨ 국내 도서는 <strong>국립중앙도서관 Open API</strong>(서지정보·소장자료) 및 Google Books를 통해, 국외 도서는 <strong>Open Library</strong> 및 Google Books를 통해 표지·제목·저자·출판사·출간일을 가져옵니다.</span>
+        </div>
+      </form>
+
+      <div id="apiSearchLoading" class="api-search-status" style="display: none;">
+        <div class="spinner"></div>
+        <span>국내·국외 도서 정보를 검색하는 중입니다...</span>
+      </div>
+
+      <div id="apiSearchResults" class="api-search-results">
+        <div class="api-search-placeholder">
+          검색어를 입력하면 도서 표지, 제목, 저자, 출판사, 출간일 결과가 표시되며,<br>
+          원하는 책을 <strong>'읽을 책'</strong> 또는 <strong>'읽은 책'</strong>으로 바로 이동할 수 있습니다.
+        </div>
+      </div>
+    </div>
+
+    <!-- 탭 2: 직접 입력 (또는 검색 결과 수정 후 추가) -->
+    <div id="panelManualAdd" class="modal-body-panel" style="display: none;">
+      <form id="manualBookForm" class="book-meta-form">
+        <div class="book-form-layout">
+          <div class="book-cover-preview-col">
+            <div class="cover-preview-box" id="manualCoverPreviewBox">
+              <img id="manualCoverPreviewImg" src="" alt="표지 미리보기" style="display: none;">
+              <span id="manualCoverPlaceholder">📚<br>표지 미리보기</span>
+            </div>
+          </div>
+          <div class="book-form-fields-col">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="manualTitle">책이름 (필수)</label>
+                <input type="text" id="manualTitle" placeholder="책 제목을 입력하세요" required>
+              </div>
+              <div class="form-group">
+                <label for="manualAuthor">저자</label>
+                <input type="text" id="manualAuthor" placeholder="예: 한강, James Clear">
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="manualPublisher">출판사</label>
+                <input type="text" id="manualPublisher" placeholder="출판사명">
+              </div>
+              <div class="form-group">
+                <label for="manualPubDate">출간일</label>
+                <input type="text" id="manualPubDate" placeholder="YYYY-MM-DD">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="manualCoverUrl">책표지 이미지 URL</label>
+              <input type="url" id="manualCoverUrl" placeholder="https://...">
+              <input type="hidden" id="manualToc" value="">
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label for="manualCompletedDate">완독일 ('읽은 책' 선택 시)</label>
+                <input type="date" id="manualCompletedDate">
+              </div>
+              <div class="form-group">
+                <label for="manualRating">별점 (0 ~ 5)</label>
+                <input type="number" id="manualRating" min="0" max="5" step="0.5" value="0">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-buttons" style="justify-content: space-between; flex-wrap: wrap;">
+          <button type="button" class="btn btn-secondary" data-close-dialog="bookSearchDialog">취소</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" id="btnAddManualToRead" class="btn btn-secondary btn-status-to-read">📌 읽을 책으로 추가</button>
+            <button type="button" id="btnAddManualRead" class="btn btn-primary">✅ 읽은 책으로 추가</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ============================================================
+       2. 도서 정보 수정 다이얼로그 (목록/상세에서 수정)
+       ============================================================ -->
+  <dialog id="bookEditDialog" class="auth-dialog modal-medium" closedby="any" aria-labelledby="bookEditDialogTitle">
+    <div class="modal-header">
+      <h3 id="bookEditDialogTitle">✏️ 도서 정보 수정</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="bookEditDialog" aria-label="닫기">✕</button>
+    </div>
+
+    <form id="bookEditForm" class="book-meta-form">
+      <input type="hidden" id="editBookId">
+      <div class="book-form-layout">
+        <div class="book-cover-preview-col">
+          <div class="cover-preview-box">
+            <img id="editCoverPreviewImg" src="" alt="표지 미리보기" style="display: none;">
+            <span id="editCoverPlaceholder">📚<br>표지 없음</span>
+          </div>
+        </div>
+
+        <div class="book-form-fields-col">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="editTitle">책이름 (필수)</label>
+              <input type="text" id="editTitle" required>
+            </div>
+            <div class="form-group">
+              <label for="editAuthor">저자</label>
+              <input type="text" id="editAuthor">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="editPublisher">출판사</label>
+              <input type="text" id="editPublisher">
+            </div>
+            <div class="form-group">
+              <label for="editPubDate">출간일</label>
+              <input type="text" id="editPubDate" placeholder="YYYY-MM-DD">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="editCoverUrl">책표지 이미지 URL</label>
+            <input type="url" id="editCoverUrl" placeholder="https://...">
+          </div>
+
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label for="editStatus">목록 구분</label>
+              <select id="editStatus" class="control-select">
+                <option value="to_read">📌 읽을 책</option>
+                <option value="read">✅ 읽은 책</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editCompletedDate">완독일</label>
+              <input type="date" id="editCompletedDate">
+            </div>
+            <div class="form-group">
+              <label for="editRating">별점 (0 ~ 5)</label>
+              <input type="number" id="editRating" min="0" max="5" step="0.5">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dialog-buttons">
+        <button type="button" id="btnDeleteFromEditModal" class="btn btn-danger" style="margin-right: auto;">🗑️ 삭제</button>
+        <button type="button" class="btn btn-secondary" data-close-dialog="bookEditDialog">취소</button>
+        <button type="submit" id="btnSubmitEditBook" class="btn btn-primary">💾 수정 저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ============================================================
+       3. 책 상세 페이지 다이얼로그 (목차, 문장 수집[페이지 추가], 독서 메모, 별점)
+       ============================================================ -->
+  <dialog id="bookDetailDialog" class="auth-dialog modal-xl" closedby="any" aria-labelledby="detailBookTitle">
+    <div class="modal-header detail-modal-header">
+      <div class="detail-header-badges">
+        <span id="detailStatusBadge" class="status-pill to-read">📌 읽을 책</span>
+        <button type="button" id="btnToggleDetailStatus" class="btn btn-secondary btn-mini">✅ 읽은 책으로 이동</button>
+      </div>
+      <div class="detail-header-actions">
+        <button type="button" id="btnEditFromDetail" class="btn btn-secondary btn-mini">✏️ 책 정보 수정</button>
+        <button type="button" id="btnDeleteFromDetail" class="btn btn-danger btn-mini">🗑️ 삭제</button>
+        <button type="button" class="modal-close-btn" data-close-dialog="bookDetailDialog" aria-label="닫기">✕</button>
+      </div>
+    </div>
+
+    <div class="detail-modal-body">
+      <!-- 상단: 도서 메타데이터 & 별점 & 완독일 -->
+      <div class="detail-book-hero">
+        <div class="detail-cover-wrap">
+          <img id="detailCoverImg" src="" alt="책표지" style="display: none;">
+          <div id="detailCoverFallback" class="detail-cover-fallback">📚</div>
+        </div>
+
+        <div class="detail-info-wrap">
+          <h2 id="detailBookTitle" class="detail-book-title">책 제목</h2>
+          <p id="detailBookAuthor" class="detail-book-author">저자</p>
+
+          <div class="detail-meta-grid">
+            <div class="detail-meta-item">
+              <span class="meta-label">출판사</span>
+              <span id="detailBookPublisher" class="meta-value">-</span>
+            </div>
+            <div class="detail-meta-item">
+              <span class="meta-label">출간일</span>
+              <span id="detailBookPubDate" class="meta-value">-</span>
+            </div>
+          </div>
+
+          <div class="detail-interactive-row">
+            <!-- 별점 위젯 -->
+            <div class="detail-rating-box">
+              <span class="interactive-label">⭐ 나의 별점</span>
+              <div class="star-rating-widget" id="detailStarWidget" role="radiogroup" aria-label="별점 선택">
+                <button type="button" class="star-btn" data-star="1" aria-label="1점">★</button>
+                <button type="button" class="star-btn" data-star="2" aria-label="2점">★</button>
+                <button type="button" class="star-btn" data-star="3" aria-label="3점">★</button>
+                <button type="button" class="star-btn" data-star="4" aria-label="4점">★</button>
+                <button type="button" class="star-btn" data-star="5" aria-label="5점">★</button>
+              </div>
+              <span id="detailRatingValue" class="rating-number-badge">0.0</span>
+              <button type="button" id="btnResetRating" class="btn-text-mini" title="별점 초기화">초기화</button>
+            </div>
+
+            <!-- 완독일 위젯 -->
+            <div class="detail-completed-box">
+              <label for="detailCompletedDateInput" class="interactive-label">📅 완독일</label>
+              <input type="date" id="detailCompletedDateInput" class="detail-date-input">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하단 2단 레이아웃: 좌측(목차 + 독서 메모) / 우측(문장 수집) -->
+      <div class="detail-sections-grid">
+        <div class="detail-left-col">
+          <!-- 섹션 1: 목차 (도서검색 API 자동 연동) -->
+          <section class="detail-card-section">
+            <div class="detail-section-header">
+              <h3>📑 목차</h3>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="tocFetchStatus" class="memo-save-status"></span>
+                <button type="button" id="btnFetchTocFromApi" class="btn btn-secondary btn-mini" title="도서 검색 API 및 프록시에서 표지 이미지와 목차 정보를 다시 조회합니다">🔄 표지·목차 가져오기</button>
+              </div>
+            </div>
+            <div id="detailTocView" class="toc-display-box"></div>
+          </section>
+
+          <!-- 섹션 2: 독서 메모 -->
+          <section class="detail-card-section">
+            <div class="detail-section-header">
+              <h3>📝 독서 메모</h3>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <span id="memoSaveStatus" class="memo-save-status"></span>
+                <button type="button" id="btnSaveGeneralMemo" class="btn btn-primary btn-mini">💾 메모 저장</button>
+              </div>
+            </div>
+            <div class="general-memo-box">
+              <textarea id="detailGeneralMemo" rows="8" placeholder="책을 읽으며 느낀 감상, 핵심 요약, 독서 노트를 자유롭게 기록하세요..."></textarea>
+            </div>
+          </section>
+        </div>
+
+        <!-- 섹션 3: 문장 수집 (페이지 추가) -->
+        <section class="detail-card-section">
+          <div class="detail-section-header">
+            <h3>🔖 문장 수집 <span class="section-count" id="detailQuotesCount">0</span></h3>
+            <div class="detail-section-tools">
+              <select id="quoteSortSelect" class="control-select select-mini" aria-label="문장 정렬">
+                <option value="page_asc">페이지 순 (p.1 →)</option>
+                <option value="newest">최신 등록 순</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 문장 수집 추가/수정 폼 -->
+          <form id="quoteAddForm" class="quote-add-form">
+            <input type="hidden" id="editingQuoteId" value="">
+            <div class="quote-form-top">
+              <div class="quote-page-field">
+                <label for="inputQuotePage">페이지 (p.)</label>
+                <input type="text" id="inputQuotePage" placeholder="예: 45" aria-label="페이지 번호">
+              </div>
+              <div class="quote-note-field">
+                <label for="inputQuoteNote">짧은 생각 / 키워드 (선택)</label>
+                <input type="text" id="inputQuoteNote" placeholder="문장에 대한 짧은 코멘트 (선택)">
+              </div>
+            </div>
+            <div class="quote-text-field">
+              <textarea id="inputQuoteText" rows="3" placeholder="기억하고 싶은 책 속 문장을 입력하세요..." required></textarea>
+            </div>
+            <div class="quote-form-actions">
+              <button type="button" id="btnCancelEditQuote" class="btn btn-secondary btn-mini" style="display: none;">취소</button>
+              <button type="submit" id="btnSubmitQuote" class="btn btn-primary btn-mini">＋ 문장 추가</button>
+            </div>
+          </form>
+
+          <!-- 수집된 문장 리스트 -->
+          <div id="detailQuotesList" class="detail-quotes-list"></div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ============================================================
+       4. 도서 검색 API 설정 다이얼로그 (국립중앙도서관 API)
+       ============================================================ -->
+  <dialog id="booksSettingsDialog" class="auth-dialog modal-medium" closedby="any" aria-labelledby="booksSettingsTitle">
+    <div class="modal-header">
+      <h3 id="booksSettingsTitle">⚙️ 도서 검색 API 설정</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="booksSettingsDialog" aria-label="닫기">✕</button>
+    </div>
+
+    <div class="settings-body">
+      <div class="settings-section">
+        <h4>🏛️ 국립중앙도서관 Open API 설정</h4>
+        <p class="settings-desc">
+          국내 도서 검색을 위해 <strong>국립중앙도서관 오픈API 인증키</strong>를 입력해 주세요.<br>
+          국립중앙도서관 서지정보(ISBN) API 및 소장자료 통합검색 API와 연동되어 국내 도서의 표지·제목·저자·출판사·출간일을 정확하게 가져옵니다.
+        </p>
+
+        <div class="form-group">
+          <label for="inputNlkApiKey">국립중앙도서관 Open API 인증키</label>
+          <input type="text" id="inputNlkApiKey" placeholder="국립중앙도서관에서 발급받은 인증키 입력">
+        </div>
+        <div class="form-group">
+          <label for="inputGoogleBooksKey">Google Books API Key (선택 사항)</label>
+          <input type="text" id="inputGoogleBooksKey" placeholder="Google Books API Key (선택)">
+        </div>
+      </div>
+
+      <hr class="settings-divider">
+
+      <div class="settings-section">
+        <div class="sql-header-row">
+          <h4>🚀 Supabase 표지·목차 프록시 함수 (방법 A)</h4>
+          <button type="button" id="btnCopyProxySql" class="btn btn-secondary btn-mini">📋 SQL 복사</button>
+        </div>
+        <p class="settings-desc">
+          국립중앙도서관 API에서 누락되는 <strong>고화질 책표지 이미지</strong>와 <strong>상세 목차(TOC)</strong>를 가져오기 위해, Supabase 대시보드의 <strong>SQL Editor</strong>에서 아래 SQL을 1회 실행해 주세요.
+        </p>
+        <pre id="supabaseProxySqlCode" class="sql-code-block">CREATE EXTENSION IF NOT EXISTS http WITH SCHEMA extensions;
+
+CREATE OR REPLACE FUNCTION public.fetch_yes24_page(p_path text)
+RETURNS text
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public, extensions
+AS $$
+DECLARE
+  v_url text;
+  v_res record;
+BEGIN
+  IF p_path IS NULL OR (
+    p_path NOT LIKE '/Product/Search%' AND
+    p_path NOT LIKE '/Product/Goods/%' AND
+    p_path NOT LIKE '/product/goods/%'
+  ) THEN
+    RAISE EXCEPTION 'Invalid path: %', p_path;
+  END IF;
+
+  v_url := 'https://www.yes24.com' || p_path;
+
+  SELECT status, content
+  INTO v_res
+  FROM extensions.http((
+    'GET',
+    v_url,
+    ARRAY[
+      extensions.http_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'),
+      extensions.http_header('Accept-Language', 'ko-KR,ko;q=0.9')
+    ],
+    NULL,
+    NULL
+  )::extensions.http_request);
+
+  IF v_res.status = 200 THEN
+    RETURN v_res.content;
+  END IF;
+  RETURN '';
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.fetch_yes24_page(text) TO anon, authenticated;</pre>
+      </div>
+    </div>
+
+    <div class="dialog-buttons">
+      <button type="button" class="btn btn-secondary" data-close-dialog="booksSettingsDialog">취소</button>
+      <button type="button" id="btnSaveApiKeys" class="btn btn-primary">💾 API 키 저장</button>
+    </div>
+  </dialog>
+
+  <!-- ============================================================
+       5. 관리자 로그인 다이얼로그
+       ============================================================ -->
+  <dialog id="loginDialog" class="auth-dialog" closedby="any" aria-labelledby="loginDialogTitle">
+    <form id="loginForm">
+      <div class="modal-header" style="margin-bottom: 16px;">
+        <h3 id="loginDialogTitle" style="margin: 0;">🔒 관리자 로그인</h3>
+        <button type="button" class="modal-close-btn" data-close-dialog="loginDialog" aria-label="닫기">✕</button>
+      </div>
+      <div class="form-group">
+        <label for="loginEmail">이메일 주소</label>
+        <input type="email" id="loginEmail" autocomplete="username" placeholder="admin@example.com" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">비밀번호</label>
+        <input type="password" id="loginPassword" autocomplete="current-password" placeholder="••••••••" required>
+      </div>
+      <div class="dialog-buttons">
+        <button type="submit" id="btnSubmitLogin" class="btn btn-primary">로그인</button>
+        <button type="button" id="btnCancelLogin" class="btn btn-secondary" data-close-dialog="loginDialog">취소</button>
+      </div>
+    </form>
+  </dialog>
+</body>
+
+</html>

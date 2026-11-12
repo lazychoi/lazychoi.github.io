@@ -12,7 +12,8 @@ TABLES_TO_BACKUP = [
     ('history_timeline', 'backup-history.json'),
     ('genealogy_nodes', 'backup-genealogy_nodes.json'),
     ('genealogy_datasets', 'backup-genealogy_datasets.json'),
-    ('hanja_dict', 'backup-hanja_dict.json')
+    ('hanja_dict', 'backup-hanja_dict.json'),
+    ('reading_books', 'backup-reading_books.json')
 ]
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

@@ -18,7 +18,8 @@
     { href: 'dialogue.html', icon: '💬', title: '영어 암기' },
     { href: 'reader.html', icon: '📖', title: '영어 읽기' },
     { href: 'timeline.html', icon: '⏳', title: '세계사 연표' },
-    { href: 'genealogy.html', icon: '🌳', title: '가계도' }
+    { href: 'genealogy.html', icon: '🌳', title: '가계도' },
+    { href: 'books.html', icon: '📚', title: '독서 기록' }
   ];
 
   // 외부 참조용 전역 등록
