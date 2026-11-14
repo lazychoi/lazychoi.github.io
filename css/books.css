@@ -69,40 +69,34 @@ dialog::backdrop {
 .books-header-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 14px;
-}
-
-.books-main-title {
-  font-size: 1.55rem;
-  font-weight: 700;
-  color: var(--text-main);
-  letter-spacing: -0.4px;
-  margin-bottom: 4px;
-}
-
-.books-subtitle {
-  font-size: 0.9rem;
-  color: var(--text-muted);
 }
 
 .books-header-actions {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  width: 100%;
+}
+
+.books-header-actions .btn {
+  white-space: nowrap;
 }
 
 .btn-add-book {
   font-weight: 600;
   padding: 9px 16px;
   border-radius: 10px;
+  margin-right: auto;
 }
 
 .btn-icon-only {
   padding: 8px 11px;
   font-size: 16px;
+  min-inline-size: 36px;
+  min-block-size: 36px;
 }
 
 /* 인라인 국립중앙도서관 API 키 등록 바 */
@@ -157,8 +151,14 @@ dialog::backdrop {
 
 .books-status-tabs {
   display: flex;
+  flex-wrap: nowrap;
   gap: 6px;
   overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.books-status-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .status-tab {
@@ -259,7 +259,8 @@ dialog::backdrop {
 .books-search-group {
   display: flex;
   flex: 1;
-  min-width: 280px;
+  min-width: 0;
+  width: 100%;
   gap: 8px;
   align-items: center;
 }
@@ -281,11 +282,6 @@ dialog::backdrop {
 .control-select:focus {
   border-color: var(--accent);
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-}
-
-.search-scope-select {
-  flex-shrink: 0;
-  max-width: 195px;
 }
 
 .books-search-group .search-input-wrapper input {
@@ -1615,21 +1611,370 @@ mark.search-hl {
   margin-bottom: 12px;
 }
 
-.settings-divider {
-  border: none;
-  border-top: 1px solid var(--glass-border);
-  margin: 4px 0;
+.status-tab:focus-visible,
+.view-toggle-btn:focus-visible,
+.notes-filter-btn:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.sql-code-block {
-  background: #0f172a;
-  color: #e2e8f0;
-  padding: 12px;
+/* ══════════════════════════════════════════════════════
+   3. 모든 책의 문장 수집 & 독서 메모 모아보기 (Notes Hub View)
+   ══════════════════════════════════════════════════════ */
+.books-notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+}
+
+.notes-hub-toolbar {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.notes-hub-summary {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.notes-hub-summary strong {
+  color: var(--text-main);
+}
+
+.notes-filter-group {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--glass-border);
   border-radius: 10px;
-  font-size: 11.5px;
-  line-height: 1.45;
+  padding: 3px;
+  gap: 2px;
+}
+
+.notes-filter-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 6px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.notes-filter-btn:hover {
+  color: var(--text-main);
+}
+
+.notes-filter-btn[aria-pressed="true"] {
+  background: #ffffff;
+  color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.notes-book-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notes-book-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.notes-book-thumb {
+  width: 44px;
+  height: 62px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.notes-book-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.notes-book-meta {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.notes-book-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.35;
+}
+
+.notes-book-sub {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.notes-section-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notes-section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.notes-memo-box {
+  background: #f8fafc;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-left: 3px solid var(--accent-green);
+  border-radius: 10px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--text-main);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.detail-memo-rendered {
+  max-height: 320px;
+  overflow-y: auto;
+  background: #ffffff;
+}
+
+/* ── 문장 수집 & 독서 메모 Markdown 렌더링 타이포그래피 ── */
+.markdown-content,
+.quote-card-text.markdown-content,
+.quote-card-note.markdown-content,
+.notes-memo-box.markdown-content {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.markdown-content > *:first-child {
+  margin-top: 0;
+}
+
+.markdown-content > *:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content p {
+  margin: 0 0 0.55em 0;
+}
+
+.markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3,
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-family: inherit;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0.75em 0 0.35em 0;
+}
+
+.markdown-content h1 {
+  font-size: 1.25em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 0.2em;
+}
+
+.markdown-content h2 {
+  font-size: 1.15em;
+}
+
+.markdown-content h3 {
+  font-size: 1.06em;
+}
+
+.markdown-content h4,
+.markdown-content h5,
+.markdown-content h6 {
+  font-size: 1em;
+}
+
+.markdown-content strong,
+.markdown-content b {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.markdown-content em,
+.markdown-content i {
+  font-style: italic;
+}
+
+.markdown-content del,
+.markdown-content s {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 0.4em 0 0.55em;
+  padding-left: 1.35em;
+}
+
+.markdown-content li {
+  margin: 0.2em 0;
+}
+
+.markdown-content li > p {
+  margin-bottom: 0.25em;
+}
+
+.markdown-content blockquote {
+  margin: 0.55em 0;
+  padding: 6px 12px;
+  border-left: 3px solid var(--accent);
+  background: rgba(37, 99, 235, 0.05);
+  color: #334155;
+  border-radius: 0 6px 6px 0;
+}
+
+.markdown-content code,
+.search-match-item code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+  background: rgba(15, 23, 42, 0.07);
+  color: #be123c;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.markdown-content pre {
+  margin: 0.55em 0;
+  padding: 10px 12px;
+  background: #0f172a;
+  color: #f8fafc;
+  border-radius: 8px;
   overflow-x: auto;
-  max-height: 200px;
+  font-size: 12.5px;
+  line-height: 1.5;
+}
+
+.markdown-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.markdown-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.6em 0;
+  font-size: 0.92em;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown-content th,
+.markdown-content td {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  padding: 6px 10px;
+  text-align: left;
+}
+
+.markdown-content th {
+  background: rgba(15, 23, 42, 0.04);
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.markdown-content hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  margin: 0.75em 0;
+}
+
+.markdown-content a,
+.search-match-item a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.markdown-content a:hover,
+.search-match-item a:hover {
+  opacity: 0.8;
+}
+
+.notes-quotes-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notes-empty-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 36px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 /* ── 모바일 반응형 ── */
@@ -1640,8 +1985,146 @@ mark.search-hl {
   }
 
   .books-header-card {
-    padding: 16px;
+    padding: 14px 12px;
     border-radius: 14px;
+    gap: 10px;
+  }
+
+  .books-header-actions {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .books-header-actions .btn {
+    padding: 8px 9px;
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+
+  .btn-add-book {
+    flex: 1;
+    margin-right: 0;
+  }
+
+  .btn-icon-only {
+    padding: 8px 10px;
+    flex-shrink: 0;
+  }
+
+  .books-tabs-row {
+    gap: 8px;
+    padding-bottom: 10px;
+  }
+
+  .books-status-tabs {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .status-tab {
+    flex: 1;
+    justify-content: center;
+    padding: 8px 6px;
+    font-size: 13px;
+    gap: 5px;
+  }
+
+  .view-mode-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .view-toggle-btn {
+    flex: 1;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 6px;
+    font-size: 12.5px;
+  }
+
+  .books-controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .books-search-group {
+    width: 100%;
+  }
+
+  .books-sort-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 6px;
+  }
+
+  .sort-field-select {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    font-size: 13px;
+  }
+
+  .btn-sort-dir {
+    padding: 8px 12px;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  .selection-action-bar {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .selection-left {
+    gap: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  .selection-count-badge {
+    font-size: 11.5px;
+  }
+
+  .selection-right {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .selection-right .btn-mini {
+    padding: 5px 6px;
+    font-size: 11.5px;
+    white-space: nowrap;
+  }
+
+  .notes-hub-toolbar {
+    padding: 10px 12px;
+  }
+
+  .notes-filter-group {
+    width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .notes-filter-btn {
+    flex: 1;
+    text-align: center;
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .notes-book-card {
+    padding: 12px;
   }
 
   .books-cover-grid {
@@ -1693,5 +2176,45 @@ mark.search-hl {
 
   .title-row-actions {
     margin-left: auto;
+  }
+}
+
+@media (max-width: 360px) {
+  .books-container {
+    padding: 0 8px;
+  }
+
+  .books-header-card {
+    padding: 12px 10px;
+  }
+
+  .books-header-actions .btn {
+    padding: 7px 6px;
+    font-size: 11.5px;
+  }
+
+  .status-tab {
+    padding: 7px 4px;
+    font-size: 12px;
+    gap: 4px;
+  }
+
+  .view-toggle-btn {
+    padding: 6px 4px;
+    font-size: 11.5px;
+  }
+
+  .selection-left {
+    font-size: 11px;
+    gap: 4px;
+  }
+
+  .selection-count-badge {
+    font-size: 10.5px;
+  }
+
+  .selection-right .btn-mini {
+    padding: 4px 5px;
+    font-size: 11px;
   }
 }

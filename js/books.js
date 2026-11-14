@@ -17,7 +17,10 @@ const API_KEYS_STORAGE_KEY = 'reading_books_api_keys_v2';
 // 2. 애플리케이션 상태
 let books = [];
 let currentStatusTab = 'to_read'; // 'to_read' | 'read' | 'all'
-let currentViewMode = localStorage.getItem('reading_books_view_mode') || 'cover'; // 'cover' | 'title'
+const savedViewMode = localStorage.getItem('reading_books_view_mode');
+let currentViewMode = (savedViewMode === 'title' || savedViewMode === 'notes') ? savedViewMode : 'cover'; // 'cover' | 'title' | 'notes'
+let lastBookViewMode = currentViewMode === 'title' ? 'title' : 'cover';
+let currentNotesFilter = 'all'; // 'all' | 'quotes' | 'memo'
 let currentSortField = 'sort_order'; // 'sort_order' | 'title' | 'author' | 'publisher' | 'pub_date' | 'completed_date'
 let currentSortAsc = true;
 let selectedBookIds = new Set();
@@ -29,10 +32,15 @@ let hasInitializedTab = false;
 let lastRenderedIds = []; // 동적 정렬 시 기존 DOM 노드 재정렬 판별용
 let apiSearchCandidates = []; // 최근 도서 검색 결과 목록
 
-// HTML 이스케이프 헬퍼
+// 유니코드 NFC 정규화 및 HTML 이스케이프 헬퍼
+function normalizeTextNfc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).normalize('NFC');
+}
+
 function escapeHtml(str) {
   if (str === null || str === undefined) return '';
-  return String(str)
+  return normalizeTextNfc(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -43,7 +51,7 @@ function escapeHtml(str) {
 // HTML 태그 제거 헬퍼 (국립중앙도서관 검색 결과의 <span class="searching_txt"> 등 제거)
 function stripHtmlTags(str) {
   if (!str) return '';
-  return String(str)
+  return normalizeTextNfc(str)
     .replace(/<[^>]*>/g, '')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
@@ -56,7 +64,7 @@ function stripHtmlTags(str) {
 // 도서검색 API 목차(TOC) HTML/텍스트 정규화 헬퍼
 function formatTocText(raw) {
   if (!raw) return '';
-  return String(raw)
+  return normalizeTextNfc(raw)
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/(p|div|li|tr|h[1-6])\s*>/gi, '\n')
     .replace(/<[^>]*>/g, '')
@@ -79,9 +87,218 @@ function escapeRegExp(str) {
 function highlightMatch(text, query) {
   if (!text) return '';
   const safeText = escapeHtml(text);
-  if (!query || !query.trim()) return safeText;
-  const pattern = new RegExp(`(${escapeRegExp(escapeHtml(query.trim()))})`, 'gi');
+  const cleanQuery = query ? normalizeTextNfc(query).trim() : '';
+  if (!cleanQuery) return safeText;
+  const pattern = new RegExp(`(${escapeRegExp(escapeHtml(cleanQuery))})`, 'gi');
   return safeText.replace(pattern, '<mark class="search-hl">$1</mark>');
+}
+
+// ── Markdown 전처리, 안전한 HTML 정화(Sanitizer) 및 검색 하이라이트 ──
+const MARKDOWN_ALLOWED_ELEMENTS = [
+  'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'strong', 'b', 'em', 'i', 'del', 's', 'u', 'mark',
+  'blockquote', 'ul', 'ol', 'li', 'code', 'pre', 'hr', 'a',
+  'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
+  'span', 'div'
+];
+const MARKDOWN_ALLOWED_ELEMENTS_SET = new Set(MARKDOWN_ALLOWED_ELEMENTS);
+const MARKDOWN_ALLOWED_ATTRIBUTES = ['class', 'href', 'title', 'target', 'rel'];
+const MARKDOWN_DROPPED_CONTAINERS = new Set([
+  'script', 'style', 'iframe', 'object', 'embed', 'svg', 'math',
+  'noscript', 'template', 'textarea', 'select', 'form', 'button'
+]);
+
+function isSafeMarkdownHref(rawHref) {
+  if (!rawHref) return false;
+  const cleaned = String(rawHref).replace(/[\u0000-\u001f\u007f\s]+/g, '').trim();
+  if (!cleaned) return false;
+  if (cleaned.startsWith('#') || (cleaned.startsWith('/') && !cleaned.startsWith('//'))) {
+    return true;
+  }
+  return /^(https?:|mailto:)/i.test(cleaned);
+}
+
+function preprocessMarkdownSource(rawText) {
+  if (!rawText) return '';
+  let text = normalizeTextNfc(rawText).replace(/\r\n?/g, '\n');
+
+  // 1. 코드 블록 및 인라인 코드 보호
+  const codeSpans = [];
+  text = text.replace(/```[\s\S]*?```|`[^`\n]+`/g, (match) => {
+    const token = `@@MDSPAN${codeSpans.length}X@@`;
+    codeSpans.push(match);
+    return token;
+  });
+
+  // 2. 유효한 자동 링크(<https://...>, <mailto:...>) 외의 '<' 이스케이프 (<투란도트>, raw HTML 방지)
+  text = text.replace(/<(?!(?:https?:\/\/|mailto:)[^\s<>]+>)/gi, '&lt;');
+
+  // 3. 한국어 문장부호/조사 경계에서의 CJK 강조(**굵게**, *기울임*, ~~취소선~~) 전처리
+  text = text.replace(/\*\*\*(?!\s)((?:(?!\*\*\*|\n).)+?)(?<!\s)\*\*\*/g, '<strong><em>$1</em></strong>');
+  text = text.replace(/(?<!\*)\*\*(?!\s)(?!\*)((?:(?!\*\*|\n).)+?)(?<!\s)\*\*(?!\*)/g, '<strong>$1</strong>');
+  text = text.replace(/(?<!\*)\*(?!\s)(?!\*)([^\n*]+?)(?<!\s)\*(?!\*)/g, '<em>$1</em>');
+  text = text.replace(/~~(?!\s)((?:(?!~~|\n).)+?)(?<!\s)~~/g, '<del>$1</del>');
+
+  // 4. 코드 블록 및 인라인 코드 복원
+  text = text.replace(/@@MDSPAN(\d+)X@@/g, (_, idx) => codeSpans[Number(idx)]);
+  return text;
+}
+
+function highlightDomTextNodes(rootEl, doc, query) {
+  const cleanQuery = query ? normalizeTextNfc(query).trim() : '';
+  if (!rootEl || !cleanQuery) return;
+
+  const pattern = new RegExp(`(${escapeRegExp(cleanQuery)})`, 'gi');
+  const walker = doc.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let cur;
+  while ((cur = walker.nextNode())) {
+    if (cur.nodeValue && cur.parentElement?.tagName.toLowerCase() !== 'mark') {
+      textNodes.push(cur);
+    }
+  }
+
+  for (const textNode of textNodes) {
+    const val = textNode.nodeValue;
+    pattern.lastIndex = 0;
+    if (!pattern.test(val)) continue;
+    pattern.lastIndex = 0;
+
+    const frag = doc.createDocumentFragment();
+    let lastIndex = 0;
+    let m;
+    while ((m = pattern.exec(val)) !== null) {
+      if (m.index > lastIndex) {
+        frag.appendChild(doc.createTextNode(val.slice(lastIndex, m.index)));
+      }
+      const mark = doc.createElement('mark');
+      mark.className = 'search-hl';
+      mark.textContent = m[0];
+      frag.appendChild(mark);
+      lastIndex = m.index + m[0].length;
+    }
+    if (lastIndex < val.length) {
+      frag.appendChild(doc.createTextNode(val.slice(lastIndex)));
+    }
+    textNode.parentNode.replaceChild(frag, textNode);
+  }
+}
+
+function sanitizeMarkdownHtml(dirtyHtml, query = '') {
+  if (!dirtyHtml) return '';
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(`<div>${dirtyHtml}</div>`, 'text/html');
+  const container = doc.body.firstElementChild;
+  if (!container) return '';
+
+  function sanitizeElementTree(parent) {
+    const children = Array.from(parent.childNodes);
+    for (const child of children) {
+      if (child.nodeType === Node.TEXT_NODE) continue;
+      if (child.nodeType !== Node.ELEMENT_NODE) {
+        child.remove();
+        continue;
+      }
+
+      const tag = child.tagName.toLowerCase();
+
+      // GFM 할 일 목록 체크박스(<input type="checkbox" disabled>)는 안전한 텍스트 배지로 치환
+      if (tag === 'input' && (child.getAttribute('type') || '').toLowerCase() === 'checkbox') {
+        const span = doc.createElement('span');
+        span.className = 'md-task-checkbox';
+        span.textContent = child.hasAttribute('checked') ? '☑ ' : '☐ ';
+        parent.replaceChild(span, child);
+        continue;
+      }
+
+      if (MARKDOWN_DROPPED_CONTAINERS.has(tag)) {
+        child.remove();
+        continue;
+      }
+
+      if (!MARKDOWN_ALLOWED_ELEMENTS_SET.has(tag)) {
+        sanitizeElementTree(child);
+        const frag = doc.createDocumentFragment();
+        while (child.firstChild) frag.appendChild(child.firstChild);
+        parent.replaceChild(frag, child);
+        continue;
+      }
+
+      // 허용 속성 외 제거 및 위험한 URL 차단
+      const attrs = Array.from(child.attributes);
+      for (const attr of attrs) {
+        const attrName = attr.name.toLowerCase();
+        if (!MARKDOWN_ALLOWED_ATTRIBUTES.includes(attrName)) {
+          child.removeAttribute(attr.name);
+        }
+      }
+
+      if (tag === 'a') {
+        const rawHref = child.getAttribute('href') || '';
+        if (isSafeMarkdownHref(rawHref)) {
+          const cleanHref = rawHref.trim();
+          child.setAttribute('href', cleanHref);
+          if (/^https?:/i.test(cleanHref)) {
+            child.setAttribute('target', '_blank');
+            child.setAttribute('rel', 'noopener noreferrer');
+          } else {
+            child.removeAttribute('target');
+            child.removeAttribute('rel');
+          }
+        } else {
+          child.removeAttribute('href');
+          child.removeAttribute('target');
+          child.removeAttribute('rel');
+        }
+      } else {
+        child.removeAttribute('href');
+        child.removeAttribute('target');
+        child.removeAttribute('rel');
+      }
+
+      sanitizeElementTree(child);
+    }
+  }
+
+  sanitizeElementTree(container);
+  highlightDomTextNodes(container, doc, query);
+  return container.innerHTML;
+}
+
+function safeSetMarkdownHTML(el, sanitizedHtml) {
+  if (!el) return;
+  if ('setHTML' in Element.prototype) {
+    el.setHTML(sanitizedHtml, {
+      sanitizer: {
+        elements: MARKDOWN_ALLOWED_ELEMENTS,
+        attributes: MARKDOWN_ALLOWED_ATTRIBUTES
+      }
+    });
+  } else {
+    el.innerHTML = sanitizedHtml;
+  }
+}
+
+function renderMarkdownContent(text, query = '', { inline = false } = {}) {
+  if (!text) return '';
+  const preprocessed = preprocessMarkdownSource(text);
+  let rawHtml = '';
+
+  if (typeof marked !== 'undefined') {
+    if (inline && typeof marked.parseInline === 'function') {
+      rawHtml = marked.parseInline(preprocessed, { breaks: true, gfm: true });
+    } else if (typeof marked.parse === 'function') {
+      rawHtml = marked.parse(preprocessed, { breaks: true, gfm: true });
+    }
+  }
+
+  if (!rawHtml) {
+    rawHtml = inline
+      ? escapeHtml(preprocessed)
+      : escapeHtml(preprocessed).replace(/\n/g, '<br>');
+  }
+
+  return sanitizeMarkdownHtml(rawHtml, query);
 }
 
 // 오늘 날짜 YYYY-MM-DD 반환
@@ -110,32 +327,32 @@ function normalizeBookRow(row, fallbackIndex = 0) {
   }
 
   // toc(목차) 추출: row.toc가 있으면 우선 사용하고, 없으면 memos JSONB 안의 { type: 'toc', content }에서 추출
-  let toc = typeof row.toc === 'string' ? row.toc.trim() : '';
+  let toc = typeof row.toc === 'string' ? normalizeTextNfc(row.toc).trim() : '';
   if (!toc && Array.isArray(rawMemos)) {
     const tocEntry = rawMemos.find(m => m && m.type === 'toc' && typeof m.content === 'string');
-    if (tocEntry) toc = tocEntry.content.trim();
+    if (tocEntry) toc = normalizeTextNfc(tocEntry.content).trim();
   }
 
   return {
     id: row.id ?? Date.now() + fallbackIndex,
     status: row.status === 'read' ? 'read' : 'to_read',
     sort_order: typeof row.sort_order === 'number' ? row.sort_order : fallbackIndex,
-    title: (row.title || '').trim(),
-    author: (row.author || '').trim(),
-    publisher: (row.publisher || '').trim(),
-    pub_date: (row.pub_date || '').trim(),
-    cover_url: (row.cover_url || '').trim(),
-    completed_date: (row.completed_date || '').trim(),
+    title: normalizeTextNfc(row.title || '').trim(),
+    author: normalizeTextNfc(row.author || '').trim(),
+    publisher: normalizeTextNfc(row.publisher || '').trim(),
+    pub_date: normalizeTextNfc(row.pub_date || '').trim(),
+    cover_url: normalizeTextNfc(row.cover_url || '').trim(),
+    completed_date: normalizeTextNfc(row.completed_date || '').trim(),
     rating: Math.min(5, Math.max(0, parseFloat(row.rating) || 0)),
     toc,
     quotes: quotes.map((q, idx) => ({
       id: q.id || `q_${Date.now()}_${idx}`,
-      page: q.page !== undefined && q.page !== null ? String(q.page).trim() : '',
-      text: (q.text || '').trim(),
-      note: (q.note || '').trim(),
+      page: q.page !== undefined && q.page !== null ? normalizeTextNfc(q.page).trim() : '',
+      text: normalizeTextNfc(q.text || '').trim(),
+      note: normalizeTextNfc(q.note || '').trim(),
       created_at: q.created_at || new Date().toISOString()
     })),
-    memo: (row.memo || '').trim(),
+    memo: normalizeTextNfc(row.memo || '').trim(),
     created_at: row.created_at || new Date().toISOString(),
     updated_at: row.updated_at || new Date().toISOString()
   };
@@ -703,14 +920,14 @@ function matchBookBySearch(book, query, scope) {
     return { matched: true, matchedQuotes: [], matchedMemos: [] };
   }
 
-  const qLower = query.toLowerCase();
+  const qLower = normalizeTextNfc(query).toLowerCase();
   let bookInfoMatched = false;
   const matchedQuotes = [];
   const matchedMemos = [];
 
   // 1) 책 기본 정보 검색 (제목, 저자, 출판사, 목차)
   if (scope === 'all' || scope === 'book') {
-    const targetStr = `${book.title} ${book.author} ${book.publisher} ${book.toc || ''}`.toLowerCase();
+    const targetStr = normalizeTextNfc(`${book.title} ${book.author} ${book.publisher} ${book.toc || ''}`).toLowerCase();
     if (targetStr.includes(qLower)) {
       bookInfoMatched = true;
     }
@@ -720,7 +937,7 @@ function matchBookBySearch(book, query, scope) {
   if (scope === 'all' || scope === 'notes_quotes' || scope === 'quotes') {
     if (Array.isArray(book.quotes)) {
       for (const qItem of book.quotes) {
-        const hay = `${qItem.text || ''} ${qItem.note || ''} ${qItem.page ? 'p.' + qItem.page : ''}`.toLowerCase();
+        const hay = normalizeTextNfc(`${qItem.text || ''} ${qItem.note || ''} ${qItem.page ? 'p.' + qItem.page : ''}`).toLowerCase();
         if (hay.includes(qLower)) {
           matchedQuotes.push(qItem);
         }
@@ -730,7 +947,7 @@ function matchBookBySearch(book, query, scope) {
 
   // 3) 독서 메모(memo) 검색
   if (scope === 'all' || scope === 'notes_quotes' || scope === 'memo') {
-    if (book.memo && book.memo.toLowerCase().includes(qLower)) {
+    if (book.memo && normalizeTextNfc(book.memo).toLowerCase().includes(qLower)) {
       matchedMemos.push({ content: book.memo });
     }
   }
@@ -762,7 +979,6 @@ function compareBooks(a, b, field, asc) {
 
 function getFilteredAndSortedBooks() {
   const query = (document.getElementById('listSearchInput')?.value || '').trim();
-  const scope = document.getElementById('searchScopeSelect')?.value || 'all';
 
   const results = [];
 
@@ -771,7 +987,7 @@ function getFilteredAndSortedBooks() {
       continue;
     }
 
-    const matchResult = matchBookBySearch(book, query, scope);
+    const matchResult = matchBookBySearch(book, query, 'all');
     if (matchResult.matched) {
       results.push({
         book,
@@ -835,22 +1051,24 @@ function buildSearchMatchSnippetsHtml(bookId, matchedQuotes, matchedMemos, query
 
   for (const q of matchedQuotes.slice(0, 2)) {
     const pageLabel = q.page ? `p.${escapeHtml(q.page)}` : '문장';
-    const snippet = q.text.length > 110 ? q.text.slice(0, 110) + '…' : q.text;
+    const rawSnippet = q.text.length > 110 ? q.text.slice(0, 110) + '…' : q.text;
+    const inlineSnippet = rawSnippet.replace(/\s+/g, ' ');
     itemsHtml.push(`
       <div class="search-match-item">
         <span class="search-match-tag quote">🔖 문장 (${pageLabel})</span>
-        <span>"${highlightMatch(snippet, query)}"</span>
-        ${q.note ? `<span style="color: var(--text-muted);"> — ${highlightMatch(q.note, query)}</span>` : ''}
+        <span>${renderMarkdownContent(inlineSnippet, query, { inline: true })}</span>
+        ${q.note ? `<span style="color: var(--text-muted);"> — ${renderMarkdownContent(q.note.replace(/\s+/g, ' '), query, { inline: true })}</span>` : ''}
       </div>
     `);
   }
 
   for (const m of matchedMemos.slice(0, 2)) {
-    const snippet = m.content.length > 110 ? m.content.slice(0, 110) + '…' : m.content;
+    const rawSnippet = m.content.length > 110 ? m.content.slice(0, 110) + '…' : m.content;
+    const inlineSnippet = rawSnippet.replace(/\s+/g, ' ');
     itemsHtml.push(`
       <div class="search-match-item">
         <span class="search-match-tag memo">📝 독서 메모</span>
-        <span>${highlightMatch(snippet, query)}</span>
+        <span>${renderMarkdownContent(inlineSnippet, query, { inline: true })}</span>
       </div>
     `);
   }
@@ -862,12 +1080,173 @@ function buildSearchMatchSnippetsHtml(bookId, matchedQuotes, matchedMemos, query
   `;
 }
 
+function sortQuotesList(quotes, sortMode = 'page_asc') {
+  const list = Array.isArray(quotes) ? [...quotes] : [];
+  if (sortMode === 'page_asc') {
+    list.sort((a, b) => {
+      const pA = parseInt(String(a.page).replace(/[^0-9]/g, ''), 10) || 999999;
+      const pB = parseInt(String(b.page).replace(/[^0-9]/g, ''), 10) || 999999;
+      if (pA !== pB) return pA - pB;
+      return String(a.created_at).localeCompare(String(b.created_at));
+    });
+  } else {
+    list.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
+  }
+  return list;
+}
+
+function collectAllNotesEntries(query) {
+  const qLower = query ? normalizeTextNfc(query).toLowerCase() : '';
+  const entries = [];
+  let totalQuotesCount = 0;
+  let totalMemosCount = 0;
+
+  for (const book of books) {
+    const rawQuotes = Array.isArray(book.quotes) ? book.quotes : [];
+    const trimmedMemo = normalizeTextNfc(book.memo || '').trim();
+    if (rawQuotes.length === 0 && !trimmedMemo) continue;
+
+    let displayQuotes = rawQuotes;
+    let displayMemo = trimmedMemo;
+
+    if (qLower) {
+      const bookMetaMatch = normalizeTextNfc(`${book.title} ${book.author} ${book.publisher}`).toLowerCase().includes(qLower);
+      const matchingQuotes = rawQuotes.filter(q =>
+        normalizeTextNfc(`${q.text || ''} ${q.note || ''} ${q.page ? 'p.' + q.page : ''}`).toLowerCase().includes(qLower)
+      );
+      const memoMatches = trimmedMemo && trimmedMemo.toLowerCase().includes(qLower);
+
+      if (matchingQuotes.length > 0 || memoMatches) {
+        displayQuotes = matchingQuotes;
+        displayMemo = memoMatches ? trimmedMemo : '';
+      } else if (!bookMetaMatch) {
+        continue;
+      }
+    }
+
+    totalQuotesCount += displayQuotes.length;
+    if (displayMemo) totalMemosCount += 1;
+
+    entries.push({
+      book,
+      quotes: sortQuotesList(displayQuotes, 'page_asc'),
+      memo: displayMemo
+    });
+  }
+
+  entries.sort((x, y) => compareBooks(x.book, y.book, currentSortField, currentSortAsc));
+  return { entries, totalQuotesCount, totalMemosCount };
+}
+
+function renderAllNotesView() {
+  const notesList = document.getElementById('booksNotesList');
+  if (!notesList) return;
+
+  const query = (document.getElementById('listSearchInput')?.value || '').trim();
+  const { entries, totalQuotesCount, totalMemosCount } = collectAllNotesEntries(query);
+  const totalAllCount = totalQuotesCount + totalMemosCount;
+
+  const visibleEntries = entries.filter(item => {
+    if (currentNotesFilter === 'quotes') return item.quotes.length > 0;
+    if (currentNotesFilter === 'memo') return Boolean(item.memo);
+    return item.quotes.length > 0 || Boolean(item.memo);
+  });
+
+  const toolbarHtml = `
+    <div class="notes-hub-toolbar">
+      <div class="notes-hub-summary">
+        총 <strong>${entries.length}</strong>권 · 문장 <strong>${totalQuotesCount}</strong>개 · 독서 메모 <strong>${totalMemosCount}</strong>건
+      </div>
+      <div class="notes-filter-group" role="group" aria-label="문장·메모 유형 필터">
+        <button type="button" class="notes-filter-btn" data-notes-filter="all" aria-pressed="${currentNotesFilter === 'all'}">전체 (${totalAllCount})</button>
+        <button type="button" class="notes-filter-btn" data-notes-filter="quotes" aria-pressed="${currentNotesFilter === 'quotes'}">문장 수집 (${totalQuotesCount})</button>
+        <button type="button" class="notes-filter-btn" data-notes-filter="memo" aria-pressed="${currentNotesFilter === 'memo'}">독서 메모 (${totalMemosCount})</button>
+      </div>
+    </div>
+  `;
+
+  if (visibleEntries.length === 0) {
+    let emptyMsg = '아직 등록된 문장 수집과 독서 메모가 없습니다. 책을 눌러 상세 화면에서 문장과 메모를 기록해 보세요.';
+    if (query) {
+      emptyMsg = `'${escapeHtml(query)}'에 해당하는 문장 수집이나 독서 메모가 없습니다.`;
+    } else if (currentNotesFilter === 'quotes') {
+      emptyMsg = '수집된 문장이 아직 없습니다. 책을 선택해 인상 깊은 문장을 추가해 보세요.';
+    } else if (currentNotesFilter === 'memo') {
+      emptyMsg = '작성된 독서 메모가 아직 없습니다. 책을 선택해 독서 메모를 기록해 보세요.';
+    }
+    notesList.innerHTML = `${toolbarHtml}<div class="notes-empty-card">${emptyMsg}</div>`;
+    return;
+  }
+
+  const cardsHtml = visibleEntries.map(({ book, quotes, memo }) => {
+    const showQuotes = currentNotesFilter !== 'memo' && quotes.length > 0;
+    const showMemo = currentNotesFilter !== 'quotes' && Boolean(memo);
+
+    const quotesHtml = showQuotes ? `
+      <div class="notes-section-block">
+        <div class="notes-section-label">
+          <span>문장 수집 (${quotes.length})</span>
+        </div>
+        <div class="notes-quotes-stack">
+          ${quotes.map(q => `
+            <div class="quote-card-item" data-quote-id="${escapeHtml(q.id)}">
+              <div class="quote-card-header">
+                <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
+                <div class="quote-card-actions">
+                  <button type="button" class="card-icon-btn" data-copy-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 복사">복사</button>
+                  <button type="button" class="card-icon-btn" data-edit-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 수정">수정</button>
+                  <button type="button" class="card-icon-btn danger" data-delete-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 삭제">삭제</button>
+                </div>
+              </div>
+              <div class="quote-card-text markdown-content">${renderMarkdownContent(q.text, query)}</div>
+              ${q.note ? `<div class="quote-card-note markdown-content">${renderMarkdownContent(q.note, query)}</div>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    ` : '';
+
+    const memoHtml = showMemo ? `
+      <div class="notes-section-block">
+        <div class="notes-section-label">
+          <span>독서 메모</span>
+          <button type="button" class="card-icon-btn" data-edit-all-memo="${escapeHtml(book.id)}" title="메모 수정">수정</button>
+        </div>
+        <div class="notes-memo-box markdown-content">${renderMarkdownContent(memo, query)}</div>
+      </div>
+    ` : '';
+
+    return `
+      <article class="notes-book-card" data-book-id="${escapeHtml(book.id)}">
+        <div class="notes-book-header">
+          <div class="notes-book-thumb" data-open-detail="${escapeHtml(book.id)}">
+            ${book.cover_url
+              ? `<img src="${escapeHtml(book.cover_url)}" alt="${escapeHtml(book.title)} 표지" loading="lazy" onerror="this.style.display='none'; this.parentElement.textContent='📘';">`
+              : '📘'}
+          </div>
+          <div class="notes-book-meta" data-open-detail="${escapeHtml(book.id)}">
+            <h3 class="notes-book-title">${highlightMatch(book.title, query)}</h3>
+            <div class="notes-book-sub">
+              <span class="status-chip-mini ${book.status === 'read' ? 'read' : 'to-read'}">${book.status === 'read' ? '읽은 책' : '읽을 책'}</span>
+              <span>${highlightMatch(book.author || '저자 미상', query)}</span>
+              ${book.publisher ? `<span>· ${highlightMatch(book.publisher, query)}</span>` : ''}
+              ${book.completed_date ? `<span style="color: var(--accent-green);">· 완독 ${escapeHtml(book.completed_date)}</span>` : ''}
+              ${book.rating > 0 ? `<span class="rating-stars-inline">★ ${book.rating}</span>` : ''}
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-mini" data-open-detail="${escapeHtml(book.id)}">상세 보기</button>
+        </div>
+        ${quotesHtml}
+        ${memoHtml}
+      </article>
+    `;
+  }).join('');
+
+  notesList.innerHTML = `${toolbarHtml}${cardsHtml}`;
+}
+
 function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
   updateTabCounts();
-
-  const filtered = getFilteredAndSortedBooks();
-  const visibleIds = filtered.map(item => String(item.book.id));
-  const query = (document.getElementById('listSearchInput')?.value || '').trim();
 
   const emptyState = document.getElementById('booksEmptyState');
   const emptyTitle = document.getElementById('emptyStateTitle');
@@ -875,6 +1254,31 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
   const listSection = document.getElementById('booksListSection');
   const coverGrid = document.getElementById('booksCoverGrid');
   const titleList = document.getElementById('booksTitleList');
+  const notesList = document.getElementById('booksNotesList');
+  const selectionBar = document.getElementById('selectionActionBar');
+
+  if (currentViewMode === 'notes') {
+    if (selectionBar) selectionBar.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'none';
+    if (listSection) listSection.style.display = 'block';
+    if (coverGrid) coverGrid.style.display = 'none';
+    if (titleList) titleList.style.display = 'none';
+    if (notesList) notesList.style.display = 'flex';
+    renderAllNotesView();
+    lastRenderedIds = [];
+    if (statusAnnouncement) {
+      const statusEl = document.getElementById('reorderStatus');
+      if (statusEl) statusEl.textContent = statusAnnouncement;
+    }
+    return;
+  }
+
+  if (selectionBar) selectionBar.style.display = 'flex';
+  if (notesList) notesList.style.display = 'none';
+
+  const filtered = getFilteredAndSortedBooks();
+  const visibleIds = filtered.map(item => String(item.book.id));
+  const query = (document.getElementById('listSearchInput')?.value || '').trim();
 
   updateSelectionBarUI(visibleIds);
 
@@ -884,10 +1288,10 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
       emptyState.style.display = 'flex';
       if (query) {
         if (emptyTitle) emptyTitle.textContent = `'${query}' 검색 결과가 없습니다`;
-        if (emptyDesc) emptyDesc.textContent = '다른 검색어를 입력하거나 검색 대상(전체/문장수집/독서메모)을 변경해 보세요.';
+        if (emptyDesc) emptyDesc.textContent = '다른 검색어를 입력해 보세요.';
       } else if (currentStatusTab === 'to_read') {
         if (emptyTitle) emptyTitle.textContent = '읽을 책 목록이 비어 있습니다';
-        if (emptyDesc) emptyDesc.innerHTML = '상단의 <strong>＋ 책 검색 / 추가</strong> 버튼을 눌러 읽고 싶은 국내·국외 도서를 담아 보세요.';
+        if (emptyDesc) emptyDesc.innerHTML = '상단의 <strong>책 검색 / 추가</strong> 버튼을 눌러 읽고 싶은 국내·국외 도서를 담아 보세요.';
       } else if (currentStatusTab === 'read') {
         if (emptyTitle) emptyTitle.textContent = '완독한 책이 아직 없습니다';
         if (emptyDesc) emptyDesc.innerHTML = '읽은 책을 추가하거나 읽을 책 목록에서 <strong>읽은 책으로 이동</strong>해 보세요.';
@@ -985,11 +1389,11 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
 
           <div class="cover-card-footer">
             <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
-              ${book.status === 'to_read' ? '✅ 완독 처리' : '📌 읽을 책으로'}
+              ${book.status === 'to_read' ? '완독 처리' : '읽을 책으로'}
             </button>
             <div style="display: flex; gap: 2px;">
-              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="책 정보 수정" aria-label="수정">✏️</button>
-              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="책 삭제" aria-label="삭제">🗑️</button>
+              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="책 정보 수정" aria-label="수정">수정</button>
+              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="책 삭제" aria-label="삭제">삭제</button>
             </div>
           </div>
         </article>
@@ -1040,10 +1444,10 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
 
             <div class="title-row-actions">
               <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
-                ${book.status === 'to_read' ? '✅ 완독' : '📌 읽을책'}
+                ${book.status === 'to_read' ? '완독' : '읽을책'}
               </button>
-              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="수정">✏️ 수정</button>
-              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="삭제">🗑️ 삭제</button>
+              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="수정">수정</button>
+              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="삭제">삭제</button>
             </div>
           </div>
           ${snippetsHtml}
@@ -1112,38 +1516,77 @@ async function moveBookOrder(bookId, direction) {
 }
 
 function updateViewToggleUI() {
-  const btnCover = document.getElementById('btnViewCover');
-  const btnTitle = document.getElementById('btnViewTitle');
-  if (btnCover && btnTitle) {
-    const isCover = currentViewMode === 'cover';
-    btnCover.classList.toggle('active', isCover);
-    btnCover.setAttribute('aria-pressed', String(isCover));
-    btnTitle.classList.toggle('active', !isCover);
-    btnTitle.setAttribute('aria-pressed', String(!isCover));
+  const buttons = [
+    { el: document.getElementById('btnViewCover'), mode: 'cover' },
+    { el: document.getElementById('btnViewTitle'), mode: 'title' },
+    { el: document.getElementById('btnViewNotes'), mode: 'notes' }
+  ];
+  for (const { el, mode } of buttons) {
+    if (!el) continue;
+    const isActive = currentViewMode === mode;
+    el.classList.toggle('active', isActive);
+    el.setAttribute('aria-pressed', String(isActive));
   }
 }
 
 function updateSortDirectionButtonUI() {
-  const icon = document.getElementById('sortDirIcon');
   const text = document.getElementById('sortDirText');
   const btn = document.getElementById('btnSortDirection');
-  if (icon) icon.textContent = currentSortAsc ? '▲' : '▼';
   if (text) text.textContent = currentSortAsc ? '오름차순' : '내림차순';
   if (btn) {
     btn.setAttribute('aria-label', currentSortAsc ? '오름차순 정렬 중 (클릭 시 내림차순)' : '내림차순 정렬 중 (클릭 시 오름차순)');
   }
 }
 
+function setStatusTabActive(targetStatus) {
+  currentStatusTab = targetStatus || 'to_read';
+  document.querySelectorAll('.status-tab').forEach(t => {
+    const match = t.getAttribute('data-status') === currentStatusTab;
+    t.classList.toggle('active', match);
+    t.setAttribute('aria-selected', String(match));
+    if (match) {
+      t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    }
+  });
+}
+
+async function copyQuoteWithFeedback(book, q, triggerBtn, feedbackText = '복사됨') {
+  if (!book || !q) return;
+  const formatted = `"${q.text}" — 『${book.title}』${q.page ? ` (p.${q.page})` : ''}`;
+  const origLabel = triggerBtn.textContent;
+  try {
+    await navigator.clipboard?.writeText(formatted);
+    triggerBtn.textContent = feedbackText;
+  } catch {
+    triggerBtn.textContent = '복사 실패';
+  }
+  setTimeout(() => { triggerBtn.textContent = origLabel; }, 1200);
+}
+
+function populateQuoteEditForm(q) {
+  if (!q) return;
+  document.getElementById('editingQuoteId').value = q.id;
+  document.getElementById('inputQuotePage').value = q.page || '';
+  document.getElementById('inputQuoteNote').value = q.note || '';
+  document.getElementById('inputQuoteText').value = q.text || '';
+  document.getElementById('btnSubmitQuote').textContent = '문장 수정 저장';
+  document.getElementById('btnCancelEditQuote').style.display = 'inline-flex';
+  const quoteTextEl = document.getElementById('inputQuoteText');
+  if (quoteTextEl) {
+    quoteTextEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    quoteTextEl.focus();
+  }
+}
+
 function bindMainToolbarEvents() {
   document.querySelectorAll('.status-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      document.querySelectorAll('.status-tab').forEach(t => {
-        t.classList.remove('active');
-        t.setAttribute('aria-selected', 'false');
-      });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      currentStatusTab = tab.getAttribute('data-status') || 'to_read';
+      setStatusTabActive(tab.getAttribute('data-status') || 'to_read');
+      if (currentViewMode === 'notes') {
+        currentViewMode = lastBookViewMode;
+        localStorage.setItem('reading_books_view_mode', currentViewMode);
+        updateViewToggleUI();
+      }
       selectedBookIds.clear();
       renderBooksView(false);
     });
@@ -1151,11 +1594,13 @@ function bindMainToolbarEvents() {
 
   const btnViewCover = document.getElementById('btnViewCover');
   const btnViewTitle = document.getElementById('btnViewTitle');
+  const btnViewNotes = document.getElementById('btnViewNotes');
 
   if (btnViewCover) {
     btnViewCover.addEventListener('click', () => {
       if (currentViewMode === 'cover') return;
       currentViewMode = 'cover';
+      lastBookViewMode = 'cover';
       localStorage.setItem('reading_books_view_mode', 'cover');
       updateViewToggleUI();
       lastRenderedIds = [];
@@ -1167,7 +1612,19 @@ function bindMainToolbarEvents() {
     btnViewTitle.addEventListener('click', () => {
       if (currentViewMode === 'title') return;
       currentViewMode = 'title';
+      lastBookViewMode = 'title';
       localStorage.setItem('reading_books_view_mode', 'title');
+      updateViewToggleUI();
+      lastRenderedIds = [];
+      renderBooksView(false);
+    });
+  }
+
+  if (btnViewNotes) {
+    btnViewNotes.addEventListener('click', () => {
+      if (currentViewMode === 'notes') return;
+      currentViewMode = 'notes';
+      localStorage.setItem('reading_books_view_mode', 'notes');
       updateViewToggleUI();
       lastRenderedIds = [];
       renderBooksView(false);
@@ -1176,7 +1633,6 @@ function bindMainToolbarEvents() {
 
   const listSearchInput = document.getElementById('listSearchInput');
   const btnClearListSearch = document.getElementById('btnClearListSearch');
-  const searchScopeSelect = document.getElementById('searchScopeSelect');
 
   if (listSearchInput) {
     listSearchInput.addEventListener('input', () => {
@@ -1192,12 +1648,6 @@ function bindMainToolbarEvents() {
       listSearchInput.value = '';
       btnClearListSearch.style.display = 'none';
       listSearchInput.focus();
-      renderBooksView(false);
-    });
-  }
-
-  if (searchScopeSelect) {
-    searchScopeSelect.addEventListener('change', () => {
       renderBooksView(false);
     });
   }
@@ -1313,6 +1763,71 @@ function bindMainToolbarEvents() {
   const listSection = document.getElementById('booksListSection');
   if (listSection) {
     listSection.addEventListener('click', async (e) => {
+      const notesFilterBtn = e.target.closest('.notes-filter-btn');
+      if (notesFilterBtn) {
+        e.stopPropagation();
+        const nextFilter = notesFilterBtn.getAttribute('data-notes-filter') || 'all';
+        if (currentNotesFilter !== nextFilter) {
+          currentNotesFilter = nextFilter;
+          renderBooksView(false);
+        }
+        return;
+      }
+
+      const copyAllQuoteBtn = e.target.closest('[data-copy-all-quote]');
+      if (copyAllQuoteBtn) {
+        e.stopPropagation();
+        const bid = copyAllQuoteBtn.getAttribute('data-book-id');
+        const qid = copyAllQuoteBtn.getAttribute('data-copy-all-quote');
+        const targetBook = books.find(b => String(b.id) === String(bid));
+        const q = (targetBook?.quotes || []).find(item => String(item.id) === String(qid));
+        if (targetBook && q) {
+          await copyQuoteWithFeedback(targetBook, q, copyAllQuoteBtn);
+        }
+        return;
+      }
+
+      const editAllQuoteBtn = e.target.closest('[data-edit-all-quote]');
+      if (editAllQuoteBtn) {
+        e.stopPropagation();
+        const bid = editAllQuoteBtn.getAttribute('data-book-id');
+        const qid = editAllQuoteBtn.getAttribute('data-edit-all-quote');
+        const targetBook = books.find(b => String(b.id) === String(bid));
+        const q = (targetBook?.quotes || []).find(item => String(item.id) === String(qid));
+        openBookDetailModal(bid, { skipAutoToc: true });
+        if (q) populateQuoteEditForm(q);
+        return;
+      }
+
+      const deleteAllQuoteBtn = e.target.closest('[data-delete-all-quote]');
+      if (deleteAllQuoteBtn) {
+        e.stopPropagation();
+        const bid = deleteAllQuoteBtn.getAttribute('data-book-id');
+        const qid = deleteAllQuoteBtn.getAttribute('data-delete-all-quote');
+        const targetBook = books.find(b => String(b.id) === String(bid));
+        if (!targetBook) return;
+        if (!confirm('이 수집 문장을 삭제하시겠습니까?')) return;
+        const nextQuotes = (targetBook.quotes || []).filter(item => String(item.id) !== String(qid));
+        await updateBookInDb(bid, { quotes: nextQuotes });
+        renderBooksView(false);
+        return;
+      }
+
+      const editAllMemoBtn = e.target.closest('[data-edit-all-memo]');
+      if (editAllMemoBtn) {
+        e.stopPropagation();
+        const bid = editAllMemoBtn.getAttribute('data-edit-all-memo');
+        openBookDetailModal(bid, { skipAutoToc: true });
+        const targetBook = books.find(b => String(b.id) === String(bid));
+        if (targetBook) renderDetailGeneralMemo(targetBook, { forceEdit: true });
+        const memoEl = document.getElementById('detailGeneralMemo');
+        if (memoEl) {
+          memoEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+          memoEl.focus();
+        }
+        return;
+      }
+
       const upBtn = e.target.closest('.btn-move-up');
       if (upBtn) {
         e.stopPropagation();
@@ -1377,6 +1892,8 @@ function bindMainToolbarEvents() {
         updateSelectionBarUI(visibleIds);
         return;
       }
+
+      if (e.target.closest('a')) return;
 
       const detailTrigger = e.target.closest('[data-open-detail]');
       if (detailTrigger) {
@@ -1941,7 +2458,7 @@ function renderApiSearchResults(items) {
     container.innerHTML = `
       <div class="api-search-placeholder">
         검색 결과가 없습니다.${keyHint}<br>
-        검색어를 다르게 입력하시거나 상단의 <strong>'✍️ 직접 입력하여 추가'</strong> 탭을 이용해 보세요.
+        검색어를 다르게 입력하시거나 상단의 <strong>'직접 입력하여 추가'</strong> 탭을 이용해 보세요.
       </div>
     `;
     return;
@@ -1968,13 +2485,13 @@ function renderApiSearchResults(items) {
       </div>
       <div class="api-result-actions">
         <button type="button" class="btn btn-secondary btn-mini btn-status-to-read btn-pick-to-read" data-idx="${idx}">
-          📌 읽을 책으로
+          읽을 책으로
         </button>
         <button type="button" class="btn btn-primary btn-mini btn-pick-read" data-idx="${idx}">
-          ✅ 읽은 책으로
+          읽은 책으로
         </button>
         <button type="button" class="btn btn-secondary btn-mini btn-pick-edit-first" data-idx="${idx}">
-          ✏️ 확인/수정 후 추가
+          확인/수정 후 추가
         </button>
       </div>
     </div>
@@ -2147,12 +2664,12 @@ function bindSearchModalEvents() {
         activeBtn.disabled = false;
         activeBtn.textContent = origLabel;
 
-        currentStatusTab = targetStatus;
-        document.querySelectorAll('.status-tab').forEach(t => {
-          const match = t.getAttribute('data-status') === targetStatus;
-          t.classList.toggle('active', match);
-          t.setAttribute('aria-selected', String(match));
-        });
+        setStatusTabActive(targetStatus);
+        if (currentViewMode === 'notes') {
+          currentViewMode = lastBookViewMode;
+          localStorage.setItem('reading_books_view_mode', currentViewMode);
+          updateViewToggleUI();
+        }
 
         document.getElementById('bookSearchDialog')?.close();
         renderBooksView(false);
@@ -2208,12 +2725,12 @@ function bindSearchModalEvents() {
     if (manualTocEl) manualTocEl.value = '';
     updateManualCoverPreview('');
 
-    currentStatusTab = targetStatus;
-    document.querySelectorAll('.status-tab').forEach(t => {
-      const match = t.getAttribute('data-status') === targetStatus;
-      t.classList.toggle('active', match);
-      t.setAttribute('aria-selected', String(match));
-    });
+    setStatusTabActive(targetStatus);
+    if (currentViewMode === 'notes') {
+      currentViewMode = lastBookViewMode;
+      localStorage.setItem('reading_books_view_mode', currentViewMode);
+      updateViewToggleUI();
+    }
 
     document.getElementById('bookSearchDialog')?.close();
     renderBooksView(false);
@@ -2328,16 +2845,18 @@ function bindEditModalEvents() {
 // ══════════════════════════════════════════════════════
 // 13. 책 상세 페이지 (목차, 문장 수집[페이지 추가], 독서 메모, 별점)
 // ══════════════════════════════════════════════════════
-function openBookDetailModal(bookId) {
+function openBookDetailModal(bookId, { skipAutoToc = false } = {}) {
   activeDetailBookId = bookId;
   renderBookDetailContent(bookId);
   const dlg = document.getElementById('bookDetailDialog');
   if (dlg && !dlg.open) dlg.showModal();
 
   // 표지 이미지나 목차 정보가 비어 있으면 도서검색 API 및 Supabase 프록시에서 자동으로 조회 시도
-  const book = books.find(b => String(b.id) === String(bookId));
-  if (book && (!book.toc || !book.cover_url)) {
-    fetchAndSaveBookToc(bookId, { silentIfEmpty: true });
+  if (!skipAutoToc) {
+    const book = books.find(b => String(b.id) === String(bookId));
+    if (book && (!book.toc || !book.cover_url)) {
+      fetchAndSaveBookToc(bookId, { silentIfEmpty: true });
+    }
   }
 }
 
@@ -2349,7 +2868,7 @@ function renderDetailTocView(book) {
   if (book.toc && book.toc.trim()) {
     tocView.innerHTML = highlightMatch(book.toc.trim(), query);
   } else {
-    tocView.innerHTML = `<div class="toc-empty-msg">목차 정보가 없습니다. 상단 ⚙️ 설정의 Supabase 프록시 SQL 실행 후 <strong>'🔄 표지·목차 가져오기'</strong>를 눌러 보세요.</div>`;
+    tocView.innerHTML = `<div class="toc-empty-msg">목차 정보가 없습니다. 상단의 <strong>'표지·목차 가져오기'</strong> 버튼을 눌러 도서 정보를 다시 조회해 보세요.</div>`;
   }
 }
 
@@ -2415,6 +2934,38 @@ async function fetchAndSaveBookToc(bookId, { silentIfEmpty = false } = {}) {
   }
 }
 
+function renderDetailGeneralMemo(book, { forceEdit = false } = {}) {
+  const memoView = document.getElementById('detailGeneralMemoView');
+  const memoEditorWrap = document.getElementById('detailGeneralMemoEditorWrap');
+  const memoTextarea = document.getElementById('detailGeneralMemo');
+  const btnEdit = document.getElementById('btnEditGeneralMemo');
+  const btnCancel = document.getElementById('btnCancelGeneralMemo');
+  const btnSave = document.getElementById('btnSaveGeneralMemo');
+
+  const memoText = book?.memo ? normalizeTextNfc(book.memo).trim() : '';
+  const hasMemo = memoText.length > 0;
+  const query = (document.getElementById('listSearchInput')?.value || '').trim();
+
+  if (memoTextarea) memoTextarea.value = book?.memo || '';
+
+  if (hasMemo && !forceEdit) {
+    if (memoView) {
+      safeSetMarkdownHTML(memoView, renderMarkdownContent(memoText, query));
+      memoView.style.display = 'block';
+    }
+    if (memoEditorWrap) memoEditorWrap.style.display = 'none';
+    if (btnEdit) btnEdit.style.display = 'inline-flex';
+    if (btnCancel) btnCancel.style.display = 'none';
+    if (btnSave) btnSave.style.display = 'none';
+  } else {
+    if (memoView) memoView.style.display = 'none';
+    if (memoEditorWrap) memoEditorWrap.style.display = 'flex';
+    if (btnEdit) btnEdit.style.display = 'none';
+    if (btnCancel) btnCancel.style.display = hasMemo ? 'inline-flex' : 'none';
+    if (btnSave) btnSave.style.display = 'inline-flex';
+  }
+}
+
 function renderBookDetailContent(bookId) {
   const book = books.find(b => String(b.id) === String(bookId));
   if (!book) return;
@@ -2426,7 +2977,7 @@ function renderBookDetailContent(bookId) {
     statusBadge.textContent = book.status === 'read' ? '✅ 읽은 책' : '📌 읽을 책';
   }
   if (btnToggleStatus) {
-    btnToggleStatus.textContent = book.status === 'read' ? '📌 읽을 책으로 이동' : '✅ 읽은 책으로 이동';
+    btnToggleStatus.textContent = book.status === 'read' ? '읽을 책으로 이동' : '읽은 책으로 이동';
   }
 
   const coverImg = document.getElementById('detailCoverImg');
@@ -2458,8 +3009,8 @@ function renderBookDetailContent(bookId) {
   if (tocStatus) tocStatus.textContent = '';
   renderDetailTocView(book);
 
-  document.getElementById('detailGeneralMemo').value = book.memo || '';
   document.getElementById('memoSaveStatus').textContent = '';
+  renderDetailGeneralMemo(book, { forceEdit: false });
 
   resetQuoteForm();
   renderDetailQuotesList(book);
@@ -2487,7 +3038,7 @@ function renderDetailQuotesList(book) {
   const sortMode = document.getElementById('quoteSortSelect')?.value || 'page_asc';
   const query = (document.getElementById('listSearchInput')?.value || '').trim();
 
-  const quotes = Array.isArray(book.quotes) ? [...book.quotes] : [];
+  const quotes = sortQuotesList(book.quotes, sortMode);
   if (countEl) countEl.textContent = quotes.length;
 
   if (quotes.length === 0) {
@@ -2497,29 +3048,18 @@ function renderDetailQuotesList(book) {
     return;
   }
 
-  if (sortMode === 'page_asc') {
-    quotes.sort((a, b) => {
-      const pA = parseInt(String(a.page).replace(/[^0-9]/g, ''), 10) || 999999;
-      const pB = parseInt(String(b.page).replace(/[^0-9]/g, ''), 10) || 999999;
-      if (pA !== pB) return pA - pB;
-      return String(a.created_at).localeCompare(String(b.created_at));
-    });
-  } else {
-    quotes.sort((a, b) => String(b.created_at).localeCompare(String(a.created_at)));
-  }
-
   listEl.innerHTML = quotes.map(q => `
     <div class="quote-card-item" data-quote-id="${escapeHtml(q.id)}">
       <div class="quote-card-header">
         <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
         <div class="quote-card-actions">
-          <button type="button" class="card-icon-btn btn-copy-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 복사">📋</button>
-          <button type="button" class="card-icon-btn btn-edit-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 수정">✏️</button>
-          <button type="button" class="card-icon-btn danger btn-delete-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 삭제">🗑️</button>
+          <button type="button" class="card-icon-btn btn-copy-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 복사" aria-label="문장 복사">복사</button>
+          <button type="button" class="card-icon-btn btn-edit-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 수정" aria-label="문장 수정">수정</button>
+          <button type="button" class="card-icon-btn danger btn-delete-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 삭제" aria-label="문장 삭제">삭제</button>
         </div>
       </div>
-      <div class="quote-card-text">"${highlightMatch(q.text, query)}"</div>
-      ${q.note ? `<div class="quote-card-note">💡 ${highlightMatch(q.note, query)}</div>` : ''}
+      <div class="quote-card-text markdown-content">${renderMarkdownContent(q.text, query)}</div>
+      ${q.note ? `<div class="quote-card-note markdown-content">${renderMarkdownContent(q.note, query)}</div>` : ''}
     </div>
   `).join('');
 }
@@ -2529,7 +3069,7 @@ function resetQuoteForm() {
   document.getElementById('inputQuotePage').value = '';
   document.getElementById('inputQuoteNote').value = '';
   document.getElementById('inputQuoteText').value = '';
-  document.getElementById('btnSubmitQuote').textContent = '＋ 문장 추가';
+  document.getElementById('btnSubmitQuote').textContent = '문장 추가';
   document.getElementById('btnCancelEditQuote').style.display = 'none';
 }
 
@@ -2545,6 +3085,8 @@ function bindDetailModalEvents() {
   const btnCancelEditQuote = document.getElementById('btnCancelEditQuote');
   const detailQuotesList = document.getElementById('detailQuotesList');
   const btnFetchTocFromApi = document.getElementById('btnFetchTocFromApi');
+  const btnEditGeneralMemo = document.getElementById('btnEditGeneralMemo');
+  const btnCancelGeneralMemo = document.getElementById('btnCancelGeneralMemo');
   const btnSaveGeneralMemo = document.getElementById('btnSaveGeneralMemo');
   const detailGeneralMemo = document.getElementById('detailGeneralMemo');
 
@@ -2684,10 +3226,7 @@ function bindDetailModalEvents() {
         const qid = copyBtn.getAttribute('data-quote-id');
         const q = (book.quotes || []).find(item => String(item.id) === String(qid));
         if (q) {
-          const formatted = `"${q.text}" — 『${book.title}』${q.page ? ` (p.${q.page})` : ''}`;
-          await navigator.clipboard?.writeText(formatted);
-          copyBtn.textContent = '✅';
-          setTimeout(() => { copyBtn.textContent = '📋'; }, 1200);
+          await copyQuoteWithFeedback(book, q, copyBtn);
         }
         return;
       }
@@ -2696,15 +3235,7 @@ function bindDetailModalEvents() {
       if (editBtn) {
         const qid = editBtn.getAttribute('data-quote-id');
         const q = (book.quotes || []).find(item => String(item.id) === String(qid));
-        if (q) {
-          document.getElementById('editingQuoteId').value = q.id;
-          document.getElementById('inputQuotePage').value = q.page || '';
-          document.getElementById('inputQuoteNote').value = q.note || '';
-          document.getElementById('inputQuoteText').value = q.text || '';
-          document.getElementById('btnSubmitQuote').textContent = '💾 문장 수정 저장';
-          document.getElementById('btnCancelEditQuote').style.display = 'inline-flex';
-          document.getElementById('inputQuoteText').focus();
-        }
+        if (q) populateQuoteEditForm(q);
         return;
       }
 
@@ -2729,17 +3260,35 @@ function bindDetailModalEvents() {
     });
   }
 
-  // 독서 메모 저장
+  // 독서 메모 보기/편집 전환 및 저장
   async function saveGeneralMemoNow() {
     if (!activeDetailBookId) return;
     const memoVal = detailGeneralMemo.value.trim();
-    await updateBookInDb(activeDetailBookId, { memo: memoVal });
+    const updatedBook = await updateBookInDb(activeDetailBookId, { memo: memoVal });
     const statusSpan = document.getElementById('memoSaveStatus');
     if (statusSpan) {
       statusSpan.textContent = '✓ 저장됨';
       setTimeout(() => { statusSpan.textContent = ''; }, 2000);
     }
+    renderDetailGeneralMemo(updatedBook || { memo: memoVal }, { forceEdit: false });
     renderBooksView(false);
+  }
+
+  if (btnEditGeneralMemo) {
+    btnEditGeneralMemo.addEventListener('click', () => {
+      if (!activeDetailBookId) return;
+      const book = books.find(b => String(b.id) === String(activeDetailBookId));
+      if (book) renderDetailGeneralMemo(book, { forceEdit: true });
+      detailGeneralMemo?.focus();
+    });
+  }
+
+  if (btnCancelGeneralMemo) {
+    btnCancelGeneralMemo.addEventListener('click', () => {
+      if (!activeDetailBookId) return;
+      const book = books.find(b => String(b.id) === String(activeDetailBookId));
+      if (book) renderDetailGeneralMemo(book, { forceEdit: false });
+    });
   }
 
   if (btnSaveGeneralMemo) {
@@ -2763,7 +3312,6 @@ function bindSettingsModalEvents() {
   const btnOpenSettings = document.getElementById('btnOpenSettings');
   const settingsDialog = document.getElementById('booksSettingsDialog');
   const btnSaveApiKeys = document.getElementById('btnSaveApiKeys');
-  const btnCopyProxySql = document.getElementById('btnCopyProxySql');
 
   function openSettings() {
     const keys = getSavedApiKeys();
@@ -2775,17 +3323,6 @@ function bindSettingsModalEvents() {
   }
 
   if (btnOpenSettings) btnOpenSettings.addEventListener('click', openSettings);
-
-  if (btnCopyProxySql) {
-    btnCopyProxySql.addEventListener('click', async () => {
-      const codeEl = document.getElementById('supabaseProxySqlCode');
-      if (!codeEl) return;
-      await navigator.clipboard?.writeText(codeEl.textContent);
-      const orig = btnCopyProxySql.textContent;
-      btnCopyProxySql.textContent = '✅ 복사 완료!';
-      setTimeout(() => { btnCopyProxySql.textContent = orig; }, 2000);
-    });
-  }
 
   if (btnSaveApiKeys) {
     btnSaveApiKeys.addEventListener('click', () => {

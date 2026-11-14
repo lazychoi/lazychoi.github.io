@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/books.css">
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/lib/marked.min.js"></script>
   <script defer src="js/books.js"></script>
 </head>
 
@@ -48,20 +49,17 @@
   <main class="books-container">
     <!-- 상단 헤더 카드 -->
     <section class="books-header-card">
+      <h1 class="visually-hidden">독서 기록장</h1>
       <div class="books-header-top">
-        <div class="books-title-group">
-          <h1 class="books-main-title">📚 독서 기록장</h1>
-          <p class="books-subtitle">국내·국외 도서 검색, 읽을 책·읽은 책 관리, 목차·문장 수집 및 독서 메모</p>
-        </div>
         <div class="books-header-actions">
           <button type="button" id="btnOpenSearchModal" class="btn btn-primary btn-add-book">
-            <span>＋ 책 검색 / 추가</span>
+            <span>책 검색 / 추가</span>
           </button>
           <button type="button" id="btnBackupJson" class="btn btn-secondary" title="현재 도서 테이블을 JSON 파일로 백업 다운로드">
-            💾 JSON 백업
+            JSON 백업
           </button>
           <button type="button" id="btnRestoreJson" class="btn btn-secondary" title="JSON 백업 파일에서 도서 데이터 가져오기">
-            📂 복원
+            복원
           </button>
           <input type="file" id="inputRestoreJsonFile" accept=".json,application/json" style="display: none;">
           <button type="button" id="btnOpenSettings" class="btn btn-secondary btn-icon-only" title="도서 검색 API 설정" aria-label="도서 검색 API 설정">
@@ -74,23 +72,26 @@
       <div class="books-tabs-row">
         <div class="books-status-tabs" role="tablist" aria-label="독서 상태별 목록">
           <button type="button" role="tab" id="tabToRead" class="status-tab active" data-status="to_read" aria-selected="true">
-            📌 읽을 책 <span class="tab-badge" id="countToRead">0</span>
+            읽을 책 <span class="tab-badge" id="countToRead">0</span>
           </button>
           <button type="button" role="tab" id="tabRead" class="status-tab" data-status="read" aria-selected="false">
-            ✅ 읽은 책 <span class="tab-badge" id="countRead">0</span>
+            읽은 책 <span class="tab-badge" id="countRead">0</span>
           </button>
           <button type="button" role="tab" id="tabAll" class="status-tab" data-status="all" aria-selected="false">
-            📚 전체 <span class="tab-badge" id="countAll">0</span>
+            전체 <span class="tab-badge" id="countAll">0</span>
           </button>
         </div>
 
-        <!-- 보기 옵션 토글: 책표지 이미지 / 제목 -->
+        <!-- 보기 옵션 토글: 책표지 이미지 / 제목 / 문장·메모 -->
         <div class="view-mode-group" role="group" aria-label="목록 보기 방식">
           <button type="button" id="btnViewCover" class="view-toggle-btn active" data-view="cover" aria-pressed="true" title="책표지 이미지로 보기">
-            🖼️ 책표지 보기
+            책표지 보기
           </button>
           <button type="button" id="btnViewTitle" class="view-toggle-btn" data-view="title" aria-pressed="false" title="제목 목록으로 보기">
-            ☰ 제목 보기
+            제목 보기
+          </button>
+          <button type="button" id="btnViewNotes" class="view-toggle-btn" data-view="notes" aria-pressed="false" title="모든 책의 문장 수집과 독서 메모 모아보기">
+            문장·메모 보기
           </button>
         </div>
       </div>
@@ -98,15 +99,8 @@
       <!-- 검색 & 정렬 컨트롤 바 -->
       <div class="books-controls-bar">
         <div class="books-search-group">
-          <select id="searchScopeSelect" class="control-select search-scope-select" aria-label="검색 대상 선택">
-            <option value="all">전체 (책+문장+메모)</option>
-            <option value="notes_quotes">문장 수집 + 독서 메모</option>
-            <option value="quotes">문장 수집만</option>
-            <option value="memo">독서 메모만</option>
-            <option value="book">책 정보 (제목·저자·출판사)</option>
-          </select>
           <div class="search-input-wrapper">
-            <input type="text" id="listSearchInput" placeholder="문장 수집, 독서 메모, 책 제목, 저자 검색..." aria-label="목록 및 문장/메모 검색">
+            <input type="text" id="listSearchInput" placeholder="책 제목, 저자, 출판사, 문장 수집, 독서 메모 전체 검색..." aria-label="목록 및 문장/메모 전체 검색">
             <button type="button" id="btnClearListSearch" class="btn-clear-search" aria-label="검색어 지우기" title="검색어 지우기" style="display: none;">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"></line><line x1="10" y1="2" x2="2" y2="10"></line></svg>
             </button>
@@ -124,7 +118,6 @@
             <option value="completed_date">완독일 순</option>
           </select>
           <button type="button" id="btnSortDirection" class="btn btn-secondary btn-sort-dir" aria-label="오름차순 정렬 중 (클릭 시 내림차순)" title="정렬 순서 반전">
-            <span id="sortDirIcon">▲</span>
             <span id="sortDirText">오름차순</span>
           </button>
         </div>
@@ -141,13 +134,13 @@
         </div>
         <div class="selection-right">
           <button type="button" id="btnEditSelected" class="btn btn-secondary btn-mini" disabled title="선택한 1권의 책 정보를 수정합니다">
-            ✏️ 선택 수정
+            선택 수정
           </button>
           <button type="button" id="btnMoveSelectedStatus" class="btn btn-secondary btn-mini" disabled title="선택한 책을 읽을 책 / 읽은 책으로 이동합니다">
-            ⇄ 상태 이동
+            상태 이동
           </button>
           <button type="button" id="btnDeleteSelected" class="btn btn-danger btn-mini" disabled title="선택한 책을 삭제합니다">
-            🗑️ 선택 삭제
+            선택 삭제
           </button>
         </div>
       </div>
@@ -162,17 +155,20 @@
     <div id="booksEmptyState" class="books-state-card" style="display: none;">
       <div class="empty-state-icon">📖</div>
       <h3 id="emptyStateTitle">등록된 책이 없습니다</h3>
-      <p id="emptyStateDesc">상단의 <strong>'＋ 책 검색 / 추가'</strong> 버튼을 눌러 국내·국외 도서를 검색하고 읽을 책이나 읽은 책에 추가해 보세요.</p>
-      <button type="button" id="btnEmptyAddBook" class="btn btn-primary" style="margin-top: 8px;">＋ 첫 번째 책 추가하기</button>
+      <p id="emptyStateDesc">상단의 <strong>'책 검색 / 추가'</strong> 버튼을 눌러 국내·국외 도서를 검색하고 읽을 책이나 읽은 책에 추가해 보세요.</p>
+      <button type="button" id="btnEmptyAddBook" class="btn btn-primary" style="margin-top: 8px;">첫 번째 책 추가하기</button>
     </div>
 
-    <!-- 도서 목록 영역 (표지 그리드 뷰 / 제목 리스트 뷰) -->
+    <!-- 도서 목록 영역 (표지 그리드 뷰 / 제목 리스트 뷰 / 문장·메모 모아보기) -->
     <section id="booksListSection" class="books-list-section" style="display: none;">
       <!-- 표지 이미지 그리드 컨테이너 -->
       <div id="booksCoverGrid" class="books-cover-grid"></div>
 
       <!-- 제목 보기 리스트 컨테이너 -->
       <div id="booksTitleList" class="books-title-list" style="display: none;"></div>
+
+      <!-- 모든 책의 문장 수집 & 독서 메모 모아보기 컨테이너 -->
+      <div id="booksNotesList" class="books-notes-list" style="display: none;"></div>
     </section>
   </main>
 
@@ -186,8 +182,8 @@
     </div>
 
     <div class="modal-mode-tabs">
-      <button type="button" id="btnTabApiSearch" class="modal-mode-tab active">🌐 도서 API 검색 (국내·국외)</button>
-      <button type="button" id="btnTabManualAdd" class="modal-mode-tab">✍️ 직접 입력하여 추가</button>
+      <button type="button" id="btnTabApiSearch" class="modal-mode-tab active">도서 API 검색 (국내·국외)</button>
+      <button type="button" id="btnTabManualAdd" class="modal-mode-tab">직접 입력하여 추가</button>
     </div>
 
     <!-- 탭 1: API 도서 검색 -->
@@ -292,8 +288,8 @@
         <div class="dialog-buttons" style="justify-content: space-between; flex-wrap: wrap;">
           <button type="button" class="btn btn-secondary" data-close-dialog="bookSearchDialog">취소</button>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button type="button" id="btnAddManualToRead" class="btn btn-secondary btn-status-to-read">📌 읽을 책으로 추가</button>
-            <button type="button" id="btnAddManualRead" class="btn btn-primary">✅ 읽은 책으로 추가</button>
+            <button type="button" id="btnAddManualToRead" class="btn btn-secondary btn-status-to-read">읽을 책으로 추가</button>
+            <button type="button" id="btnAddManualRead" class="btn btn-primary">읽은 책으로 추가</button>
           </div>
         </div>
       </form>
@@ -368,9 +364,9 @@
       </div>
 
       <div class="dialog-buttons">
-        <button type="button" id="btnDeleteFromEditModal" class="btn btn-danger" style="margin-right: auto;">🗑️ 삭제</button>
+        <button type="button" id="btnDeleteFromEditModal" class="btn btn-danger" style="margin-right: auto;">삭제</button>
         <button type="button" class="btn btn-secondary" data-close-dialog="bookEditDialog">취소</button>
-        <button type="submit" id="btnSubmitEditBook" class="btn btn-primary">💾 수정 저장</button>
+        <button type="submit" id="btnSubmitEditBook" class="btn btn-primary">수정 저장</button>
       </div>
     </form>
   </dialog>
@@ -382,11 +378,11 @@
     <div class="modal-header detail-modal-header">
       <div class="detail-header-badges">
         <span id="detailStatusBadge" class="status-pill to-read">📌 읽을 책</span>
-        <button type="button" id="btnToggleDetailStatus" class="btn btn-secondary btn-mini">✅ 읽은 책으로 이동</button>
+        <button type="button" id="btnToggleDetailStatus" class="btn btn-secondary btn-mini">읽은 책으로 이동</button>
       </div>
       <div class="detail-header-actions">
-        <button type="button" id="btnEditFromDetail" class="btn btn-secondary btn-mini">✏️ 책 정보 수정</button>
-        <button type="button" id="btnDeleteFromDetail" class="btn btn-danger btn-mini">🗑️ 삭제</button>
+        <button type="button" id="btnEditFromDetail" class="btn btn-secondary btn-mini">책 정보 수정</button>
+        <button type="button" id="btnDeleteFromDetail" class="btn btn-danger btn-mini">삭제</button>
         <button type="button" class="modal-close-btn" data-close-dialog="bookDetailDialog" aria-label="닫기">✕</button>
       </div>
     </div>
@@ -447,7 +443,7 @@
               <h3>📑 목차</h3>
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span id="tocFetchStatus" class="memo-save-status"></span>
-                <button type="button" id="btnFetchTocFromApi" class="btn btn-secondary btn-mini" title="도서 검색 API 및 프록시에서 표지 이미지와 목차 정보를 다시 조회합니다">🔄 표지·목차 가져오기</button>
+                <button type="button" id="btnFetchTocFromApi" class="btn btn-secondary btn-mini" title="도서 검색 API 및 프록시에서 표지 이미지와 목차 정보를 다시 조회합니다">표지·목차 가져오기</button>
               </div>
             </div>
             <div id="detailTocView" class="toc-display-box"></div>
@@ -457,13 +453,16 @@
           <section class="detail-card-section">
             <div class="detail-section-header">
               <h3>📝 독서 메모</h3>
-              <div style="display: flex; align-items: center; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 6px;">
                 <span id="memoSaveStatus" class="memo-save-status"></span>
-                <button type="button" id="btnSaveGeneralMemo" class="btn btn-primary btn-mini">💾 메모 저장</button>
+                <button type="button" id="btnEditGeneralMemo" class="btn btn-secondary btn-mini" style="display: none;">메모 수정</button>
+                <button type="button" id="btnCancelGeneralMemo" class="btn btn-secondary btn-mini" style="display: none;">취소</button>
+                <button type="button" id="btnSaveGeneralMemo" class="btn btn-primary btn-mini">메모 저장</button>
               </div>
             </div>
-            <div class="general-memo-box">
-              <textarea id="detailGeneralMemo" rows="8" placeholder="책을 읽으며 느낀 감상, 핵심 요약, 독서 노트를 자유롭게 기록하세요..."></textarea>
+            <div id="detailGeneralMemoView" class="notes-memo-box detail-memo-rendered markdown-content" style="display: none;"></div>
+            <div id="detailGeneralMemoEditorWrap" class="general-memo-box">
+              <textarea id="detailGeneralMemo" rows="8" placeholder="책을 읽으며 느낀 감상, 핵심 요약, 독서 노트를 자유롭게 기록하세요... (마크다운 **굵게**, # 제목, - 목록 등 지원)"></textarea>
             </div>
           </section>
         </div>
@@ -494,11 +493,11 @@
               </div>
             </div>
             <div class="quote-text-field">
-              <textarea id="inputQuoteText" rows="3" placeholder="기억하고 싶은 책 속 문장을 입력하세요..." required></textarea>
+              <textarea id="inputQuoteText" rows="3" placeholder="기억하고 싶은 책 속 문장을 입력하세요... (마크다운 **굵게**, *기울임*, 목록 등 지원)" required></textarea>
             </div>
             <div class="quote-form-actions">
               <button type="button" id="btnCancelEditQuote" class="btn btn-secondary btn-mini" style="display: none;">취소</button>
-              <button type="submit" id="btnSubmitQuote" class="btn btn-primary btn-mini">＋ 문장 추가</button>
+              <button type="submit" id="btnSubmitQuote" class="btn btn-primary btn-mini">문장 추가</button>
             </div>
           </form>
 
@@ -535,66 +534,11 @@
           <input type="text" id="inputGoogleBooksKey" placeholder="Google Books API Key (선택)">
         </div>
       </div>
-
-      <hr class="settings-divider">
-
-      <div class="settings-section">
-        <div class="sql-header-row">
-          <h4>🚀 Supabase 표지·목차 프록시 함수 (방법 A)</h4>
-          <button type="button" id="btnCopyProxySql" class="btn btn-secondary btn-mini">📋 SQL 복사</button>
-        </div>
-        <p class="settings-desc">
-          국립중앙도서관 API에서 누락되는 <strong>고화질 책표지 이미지</strong>와 <strong>상세 목차(TOC)</strong>를 가져오기 위해, Supabase 대시보드의 <strong>SQL Editor</strong>에서 아래 SQL을 1회 실행해 주세요.
-        </p>
-        <pre id="supabaseProxySqlCode" class="sql-code-block">CREATE EXTENSION IF NOT EXISTS http WITH SCHEMA extensions;
-
-CREATE OR REPLACE FUNCTION public.fetch_yes24_page(p_path text)
-RETURNS text
-LANGUAGE plpgsql
-SECURITY DEFINER
-SET search_path = public, extensions
-AS $$
-DECLARE
-  v_url text;
-  v_res record;
-BEGIN
-  IF p_path IS NULL OR (
-    p_path NOT LIKE '/Product/Search%' AND
-    p_path NOT LIKE '/Product/Goods/%' AND
-    p_path NOT LIKE '/product/goods/%'
-  ) THEN
-    RAISE EXCEPTION 'Invalid path: %', p_path;
-  END IF;
-
-  v_url := 'https://www.yes24.com' || p_path;
-
-  SELECT status, content
-  INTO v_res
-  FROM extensions.http((
-    'GET',
-    v_url,
-    ARRAY[
-      extensions.http_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'),
-      extensions.http_header('Accept-Language', 'ko-KR,ko;q=0.9')
-    ],
-    NULL,
-    NULL
-  )::extensions.http_request);
-
-  IF v_res.status = 200 THEN
-    RETURN v_res.content;
-  END IF;
-  RETURN '';
-END;
-$$;
-
-GRANT EXECUTE ON FUNCTION public.fetch_yes24_page(text) TO anon, authenticated;</pre>
-      </div>
     </div>
 
     <div class="dialog-buttons">
       <button type="button" class="btn btn-secondary" data-close-dialog="booksSettingsDialog">취소</button>
-      <button type="button" id="btnSaveApiKeys" class="btn btn-primary">💾 API 키 저장</button>
+      <button type="button" id="btnSaveApiKeys" class="btn btn-primary">API 키 저장</button>
     </div>
   </dialog>
 
