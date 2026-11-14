@@ -44,7 +44,27 @@ let toastTimeout;
 const hanjaMap = new Map();
 const strokeMap = new Map();
 const hanjaList = []; // 평탄화된 단일 한자 목록 { korean, hanja, meaning, file }
+const hanjaListIndexMap = new Map(); // `${hanja}_${korean}` -> hanjaList 인덱스
 let currentDetailItem = null; // 현재 상세 보기 중인 한자 아이템
+let allFilesLoaded = false;
+let pendingSupabaseSyncItems = []; // 로컬 사전이 더 상세하거나 Supabase에 아직 미등록된 항목
+let isSyncingPending = false;
+let supabaseSyncCompleted = false;
+
+function upsertSingleCharInList(korean, hanja, meaning, file) {
+  if (!hanja || hanja.length !== 1) return;
+  const key = `${hanja}_${korean}`;
+  if (hanjaListIndexMap.has(key)) {
+    const idx = hanjaListIndexMap.get(key);
+    hanjaList[idx].meaning = meaning;
+    if (file && !hanjaList[idx].file) {
+      hanjaList[idx].file = file;
+    }
+  } else {
+    hanjaListIndexMap.set(key, hanjaList.length);
+    hanjaList.push({ korean, hanja, meaning, file: file || '' });
+  }
+}
 
 // 부수 데이터용 전역 변수
 const radicalsList = []; // 214개 부수 메타데이터
@@ -72,15 +92,18 @@ async function fetchAndParseFile(file) {
       const hanja = parts[1];
       const meaning = parts[2] || '';
       
-      // hanjaMap에 추가
+      // hanjaMap에 추가 (같은 파일/이전 로드에서 이미 채워진 뜻을 빈 뜻이 덮어쓰지 않도록 보호)
       if (!hanjaMap.has(korean)) {
         hanjaMap.set(korean, new Map());
       }
-      hanjaMap.get(korean).set(hanja, { meaning, file });
+      const inner = hanjaMap.get(korean);
+      const prev = inner.get(hanja);
+      const effectiveMeaning = meaning || (prev && prev.meaning) || '';
+      inner.set(hanja, { meaning: effectiveMeaning, file });
 
       // 평탄화된 목록에 추가 (단일 한자만 대상)
       if (hanja.length === 1) {
-        hanjaList.push({ korean, hanja, meaning, file });
+        upsertSingleCharInList(korean, hanja, effectiveMeaning, file);
       }
     }
   });
@@ -151,6 +174,7 @@ async function initApp() {
     // 백그라운드 로딩 — 사용자는 이미 검색 가능
     Promise.all(remainingPromises)
       .then(() => {
+        allFilesLoaded = true;
         statusText.textContent = '입력 대기 중...';
         // 전체 텍스트 파일 로드 완료 후 최종적으로 Supabase 오버라이드 재적용
         loadHanjaOverridesFromSupabase();
@@ -351,25 +375,25 @@ function renderHanjaListToGrid(hanjas, container, customWord) {
     item.appendChild(label);
 
     item.addEventListener('click', async () => {
-      try {
-        const copyWord = customWord || itemObj.korean || '';
-        const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
-        await navigator.clipboard.writeText(copyText);
+      const copyWord = customWord || itemObj.korean || '';
+      const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
 
-        if (itemObj.meaning) {
-          meaningDisplay.innerHTML = `${itemObj.meaning.replace(/<\/br>/g, '<br>')}`;
-          meaningDisplay.classList.add('show');
-        } else {
-          meaningDisplay.innerHTML = '뜻 정보 없음';
-          meaningDisplay.classList.add('show');
-        }
-
-        showToast(`${copyText} → 클립보드로 복사됨`);
-        showDetailView(itemObj, customWord);
-      } catch (err) {
-        console.error('Failed to copy text: ', err);
-        alert('클립보드 복사에 실패했습니다.');
+      if (itemObj.meaning) {
+        meaningDisplay.innerHTML = `${itemObj.meaning.replace(/<\/br>/g, '<br>')}`;
+        meaningDisplay.classList.add('show');
+      } else {
+        meaningDisplay.innerHTML = '뜻 정보 없음';
+        meaningDisplay.classList.add('show');
       }
+
+      try {
+        await navigator.clipboard.writeText(copyText);
+        showToast(`${copyText} → 클립보드로 복사됨`);
+      } catch (err) {
+        console.warn('Failed to copy text:', err);
+      }
+
+      showDetailView(itemObj, customWord);
     });
 
     container.appendChild(item);
@@ -596,13 +620,7 @@ function showAddForm(word) {
     hanjaMap.get(addedKorean).set(addedHanja, { meaning: processedMeaning, file });
     
     if (addedHanja.length === 1) {
-      const exists = hanjaList.some(item => item.korean === addedKorean && item.hanja === addedHanja);
-      if (!exists) {
-        hanjaList.push({ korean: addedKorean, hanja: addedHanja, meaning: processedMeaning, file });
-      } else {
-        const idx = hanjaList.findIndex(item => item.korean === addedKorean && item.hanja === addedHanja);
-        if (idx !== -1) hanjaList[idx].meaning = processedMeaning;
-      }
+      upsertSingleCharInList(addedKorean, addedHanja, processedMeaning, file);
     }
     
     showToast('새 한자가 사전에 등록되었습니다!');
@@ -1231,6 +1249,9 @@ function initAuth() {
       if (authStatusText) authStatusText.innerHTML = `🟢 ${adminNick}`;
       if (btnLogin) btnLogin.style.display = 'none';
       if (btnLogout) btnLogout.style.display = 'inline-flex';
+      if (allFilesLoaded && pendingSupabaseSyncItems.length > 0 && !supabaseSyncCompleted) {
+        syncPendingHanjaToSupabase();
+      }
     } else {
       if (authStatusText) authStatusText.innerHTML = '';
       if (btnLogin) btnLogin.style.display = 'inline-flex';
@@ -1336,6 +1357,7 @@ async function loadHanjaOverridesFromSupabase() {
     let page = 0;
     const pageSize = 1000;
     let keepFetching = true;
+    let fetchFailed = false;
 
     while (keepFetching) {
       const { data, error } = await supabaseClient
@@ -1347,6 +1369,7 @@ async function loadHanjaOverridesFromSupabase() {
 
       if (error) {
         // 테이블이 아직 없거나 권한 제한 시 조용히 넘김
+        fetchFailed = true;
         keepFetching = false;
         break;
       }
@@ -1363,14 +1386,38 @@ async function loadHanjaOverridesFromSupabase() {
       }
     }
 
-    if (allOverrides.length > 0) {
-      applyOverridesToMemory(allOverrides);
-      // 로컬 스토리지 캐시 동기화
+    if (!fetchFailed && allOverrides.length > 0) {
+      const pendingMap = allFilesLoaded ? new Map() : null;
+      applyOverridesToMemory(allOverrides, { trackPendingMap: pendingMap });
+
+      // 로컬 스토리지 캐시 동기화 (초기 임포트 데이터보다 상세한 로컬 뜻은 캐시에도 유지)
       const mapObj = {};
       allOverrides.forEach(item => {
-        mapObj[`${item.hanja}_${item.korean}`] = item;
+        const key = `${item.hanja}_${item.korean}`;
+        const pendingItem = pendingMap ? pendingMap.get(key) : null;
+        mapObj[key] = pendingItem ? { ...item, meaning: pendingItem.meaning } : item;
       });
       localStorage.setItem('hanja_dict_overrides', JSON.stringify(mapObj));
+
+      if (allFilesLoaded) {
+        const supabaseMeaningKeys = new Set(
+          allOverrides.map(item => `${item.hanja}_${item.korean}`)
+        );
+        for (const [korean, innerMap] of hanjaMap.entries()) {
+          for (const [hanja, obj] of innerMap.entries()) {
+            if (!obj || !obj.meaning) continue;
+            const key = `${hanja}_${korean}`;
+            if (!supabaseMeaningKeys.has(key)) {
+              pendingMap.set(key, { hanja, korean, meaning: obj.meaning });
+            }
+          }
+        }
+        pendingSupabaseSyncItems = Array.from(pendingMap.values());
+
+        if (isLoggedIn && pendingSupabaseSyncItems.length > 0 && !supabaseSyncCompleted) {
+          syncPendingHanjaToSupabase();
+        }
+      }
     }
   } catch (err) {
     console.warn('Error fetching hanja_dict overrides from Supabase:', err);
@@ -1378,28 +1425,113 @@ async function loadHanjaOverridesFromSupabase() {
 }
 
 // 오버라이드 데이터를 hanjaMap과 hanjaList에 적용하는 헬퍼 함수
-function applyOverridesToMemory(items) {
+function applyOverridesToMemory(items, options = {}) {
   if (!Array.isArray(items)) return;
+  const trackPendingMap = options.trackPendingMap || null;
 
   for (const item of items) {
     const { hanja, korean, meaning } = item;
     if (!hanja || !korean || meaning === undefined) continue;
 
-    // hanjaMap 반영
+    // hanjaMap 확인 및 반영
     if (!hanjaMap.has(korean)) {
       hanjaMap.set(korean, new Map());
     }
     const inner = hanjaMap.get(korean);
     const existing = inner.get(hanja) || {};
+
+    // Supabase 레코드가 초기 임포트 상태(created_at === updated_at)이면서 로컬 뜻이 더 상세하면 로컬 뜻 유지
+    const isInitialImport = Boolean(
+      item.created_at && item.updated_at && item.created_at === item.updated_at
+    );
+    const localIsRicher = Boolean(
+      existing.meaning &&
+      isInitialImport &&
+      existing.meaning.length > (meaning || '').length
+    );
+
+    if (localIsRicher) {
+      if (trackPendingMap) {
+        trackPendingMap.set(`${hanja}_${korean}`, {
+          hanja,
+          korean,
+          meaning: existing.meaning
+        });
+      }
+      continue;
+    }
+
     inner.set(hanja, { ...existing, meaning });
 
-    // hanjaList 반영
-    const idx = hanjaList.findIndex(h => h.hanja === hanja && h.korean === korean);
-    if (idx !== -1) {
-      hanjaList[idx].meaning = meaning;
-    } else if (hanja.length === 1) {
-      hanjaList.push({ hanja, korean, meaning, file: existing.file || '' });
+    // hanjaList 반영 (단일 한자만 대상)
+    if (hanja.length === 1) {
+      upsertSingleCharInList(korean, hanja, meaning, existing.file || '');
     }
+  }
+}
+
+// 로컬 사전에는 있으나 Supabase에 미반영/구버전인 항목을 로그인 상태에서 자동 동기화
+async function syncPendingHanjaToSupabase() {
+  if (!supabaseClient || !isLoggedIn || isSyncingPending || pendingSupabaseSyncItems.length === 0) {
+    return;
+  }
+
+  isSyncingPending = true;
+  const itemsToSync = [...pendingSupabaseSyncItems];
+  const nowIso = new Date().toISOString();
+  const batchSize = 100;
+  let syncedCount = 0;
+
+  try {
+    for (let i = 0; i < itemsToSync.length; i += batchSize) {
+      const batch = itemsToSync.slice(i, i + batchSize).map(item => ({
+        hanja: item.hanja,
+        korean: item.korean,
+        meaning: item.meaning,
+        updated_at: nowIso
+      }));
+
+      const { error } = await supabaseClient
+        .from('hanja_dict')
+        .upsert(batch, { onConflict: 'hanja,korean' });
+
+      if (error) {
+        console.warn('Supabase pending hanja sync error:', error);
+        return;
+      }
+      syncedCount += batch.length;
+    }
+
+    const syncedKeys = new Set(itemsToSync.map(item => `${item.hanja}_${item.korean}`));
+    pendingSupabaseSyncItems = pendingSupabaseSyncItems.filter(
+      item => !syncedKeys.has(`${item.hanja}_${item.korean}`)
+    );
+    if (pendingSupabaseSyncItems.length === 0) {
+      supabaseSyncCompleted = true;
+    }
+
+    try {
+      const cached = JSON.parse(localStorage.getItem('hanja_dict_overrides') || '{}');
+      itemsToSync.forEach(item => {
+        cached[`${item.hanja}_${item.korean}`] = {
+          hanja: item.hanja,
+          korean: item.korean,
+          meaning: item.meaning,
+          updated_at: nowIso
+        };
+      });
+      localStorage.setItem('hanja_dict_overrides', JSON.stringify(cached));
+    } catch (lsErr) {
+      console.warn('Failed to update cached overrides after sync:', lsErr);
+    }
+
+    if (syncedCount > 0) {
+      showToast(`사전 데이터 ${syncedCount}건 Supabase DB 동기화 완료`);
+    }
+  } catch (err) {
+    console.warn('Supabase auto-sync exception:', err);
+  } finally {
+    isSyncingPending = false;
   }
 }
 
@@ -1547,12 +1679,13 @@ if (saveEditBtn) {
     }
 
     // hanjaList 업데이트
-    const listIndex = hanjaList.findIndex(item => 
-      item.korean === currentDetailItem.korean && 
-      item.hanja === currentDetailItem.hanja
-    );
-    if (listIndex !== -1) {
-      hanjaList[listIndex].meaning = processedMeaning;
+    if (currentDetailItem.hanja && currentDetailItem.hanja.length === 1) {
+      upsertSingleCharInList(
+        currentDetailItem.korean,
+        currentDetailItem.hanja,
+        processedMeaning,
+        currentDetailItem.file
+      );
     }
 
     // 뷰 갱신 및 상태 복구
