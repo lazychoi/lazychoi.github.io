@@ -46,10 +46,14 @@ const strokeMap = new Map();
 const hanjaList = []; // 평탄화된 단일 한자 목록 { korean, hanja, meaning, file }
 const hanjaListIndexMap = new Map(); // `${hanja}_${korean}` -> hanjaList 인덱스
 let currentDetailItem = null; // 현재 상세 보기 중인 한자 아이템
+let firstStageLoaded = false;
 let allFilesLoaded = false;
 let pendingSupabaseSyncItems = []; // 로컬 사전이 더 상세하거나 Supabase에 아직 미등록된 항목
 let isSyncingPending = false;
 let supabaseSyncCompleted = false;
+
+const SEARCH_PLACEHOLDER_LOGGED_IN = '한글 음 또는 한자 뜻 입력 (예: 가관, 하늘)';
+const SEARCH_PLACEHOLDER_LOGGED_OUT = '로그인 후 사용할 수 있습니다';
 
 function upsertSingleCharInList(korean, hanja, meaning, file) {
   if (!hanja || hanja.length !== 1) return;
@@ -111,8 +115,10 @@ async function fetchAndParseFile(file) {
 
 async function initApp() {
   try {
-    statusText.textContent = '사전 데이터 불러오는 중...';
-    statusText.classList.add('show');
+    if (isLoggedIn) {
+      statusText.textContent = '사전 데이터 불러오는 중...';
+      statusText.classList.add('show');
+    }
 
     // manifest.json fetch
     const manifestResponse = await fetch('data/manifest.json');
@@ -156,6 +162,7 @@ async function initApp() {
 
     // 1단계 완료 대기
     await Promise.all([strokesPromise, radicalsListPromise, characterRadicalsPromise, ...priorityPromises]);
+    firstStageLoaded = true;
 
     // 부수 검색 데이터 구축 완료 시 UI 렌더링 호출
     initRadicalSearch();
@@ -163,10 +170,8 @@ async function initApp() {
     // ── 1단계 완료 시점에 이미 저장된 커스텀 뜻 오버라이드 1차 적용 ──
     loadHanjaOverridesFromSupabase();
 
-    // ── 입력창 즉시 활성화 ──
-    input.disabled = false;
-    input.focus();
-    statusText.textContent = `입력 대기 중... (나머지 사전 로딩 중)`;
+    // ── 로그인 상태에 따른 입력창 및 UI 상태 동기화 ──
+    updateAppAuthState();
 
     // 2단계: 나머지 파일들을 모두 병렬로 fetch (백그라운드)
     const remainingPromises = remainingFiles.map(f => fetchAndParseFile(f));
@@ -175,18 +180,29 @@ async function initApp() {
     Promise.all(remainingPromises)
       .then(() => {
         allFilesLoaded = true;
-        statusText.textContent = '입력 대기 중...';
+        if (
+          isLoggedIn &&
+          currentTabMode === 'search' &&
+          !input.value.trim() &&
+          !(panelDetail && panelDetail.classList.contains('active'))
+        ) {
+          statusText.textContent = '입력 대기 중...';
+        }
         // 전체 텍스트 파일 로드 완료 후 최종적으로 Supabase 오버라이드 재적용
         loadHanjaOverridesFromSupabase();
       })
       .catch(err => {
         console.error('일부 사전 파일 로딩 실패:', err);
-        statusText.textContent = '일부 사전 파일 로딩 실패';
+        if (isLoggedIn) {
+          statusText.textContent = '일부 사전 파일 로딩 실패';
+        }
       });
 
   } catch (error) {
     console.error(error);
-    statusText.textContent = '데이터 로딩 실패: ' + error.message;
+    if (isLoggedIn) {
+      statusText.textContent = '데이터 로딩 실패: ' + error.message;
+    }
   }
 }
 
@@ -636,6 +652,11 @@ function showAddForm(word) {
 }
 
 input.addEventListener('input', () => {
+  if (!isLoggedIn) {
+    input.value = '';
+    return;
+  }
+
   const word = input.value.trim();
 
   resultList.innerHTML = '';
@@ -716,6 +737,7 @@ function initCanvas() {
   ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#4f46e5';
 
   canvas.addEventListener('pointerdown', (e) => {
+    if (!isLoggedIn) return;
     isDrawing = true;
     canvas.setPointerCapture(e.pointerId);
 
@@ -810,7 +832,7 @@ function undoStroke() {
 }
 
 async function recognizeHandwriting() {
-  if (strokes.length === 0) return;
+  if (!isLoggedIn || strokes.length === 0) return;
 
   try {
     const response = await fetch('https://www.google.com/inputtools/request?ime=handwriting&app=mobilesearch&cs=1&oe=UTF-8', {
@@ -906,6 +928,7 @@ function renderCandidates(candidates) {
 }
 
 async function searchHanjaCharacter(char) {
+  if (!isLoggedIn) return;
   resultList.innerHTML = '';
   meaningDisplay.textContent = '';
   meaningDisplay.classList.remove('show');
@@ -1026,6 +1049,7 @@ function renderRadicalsInGroup(radicals) {
 }
 
 function selectRadical(radical) {
+  if (!isLoggedIn) return;
   selectedRadicalId = radical.id;
   selectedRemainingStrokes = null; // '전체'가 디폴트
   
@@ -1154,6 +1178,7 @@ function resetRadicalFilters() {
 
 // ── 탭 전환 로직 ──
 function switchTab(mode) {
+  if (!isLoggedIn) return;
   currentTabMode = mode;
 
   // 상세 보기 관련 UI 숨기기 및 원래대로 복구
@@ -1232,6 +1257,113 @@ function updateEditButtonVisibility() {
   }
 }
 
+// 로그인 여부에 따른 전체 한자 앱 UI 활성화/비활성화 동기화
+function updateAppAuthState() {
+  const clearBtn = document.getElementById('clearBtn');
+  const undoBtn = document.getElementById('undoBtn');
+  const canvas = document.getElementById('drawCanvas');
+
+  if (!isLoggedIn) {
+    // 상세 보기 중이었다면 닫고 기본 레이아웃 복원
+    if (panelDetail && panelDetail.classList.contains('active')) {
+      currentDetailItem = null;
+      const editArea = document.getElementById('editArea');
+      if (editArea) editArea.style.display = 'none';
+      panelDetail.classList.remove('active');
+      const container = document.querySelector('.container');
+      if (container) container.classList.remove('detail-mode');
+      const tabsEl = document.querySelector('.search-tabs');
+      if (tabsEl) tabsEl.style.display = '';
+    }
+
+    // 탭 모드를 기본 검색 탭으로 초기화
+    currentTabMode = 'search';
+    if (tabSearchBtn) tabSearchBtn.classList.add('active');
+    if (tabDrawBtn) tabDrawBtn.classList.remove('active');
+    if (tabFilterBtn) tabFilterBtn.classList.remove('active');
+    if (panelSearch) panelSearch.classList.add('active');
+    if (panelDraw) panelDraw.classList.remove('active');
+    if (panelFilter) panelFilter.classList.remove('active');
+    const wrapperEl = document.querySelector('.result-wrapper');
+    if (wrapperEl) wrapperEl.style.display = '';
+
+    // 검색 입력 비활성화 및 초기화
+    if (input) {
+      input.value = '';
+      input.disabled = true;
+      input.placeholder = SEARCH_PLACEHOLDER_LOGGED_OUT;
+    }
+
+    // 결과 및 뜻 표시 초기화
+    if (resultList) resultList.innerHTML = '';
+    if (meaningDisplay) {
+      meaningDisplay.textContent = '';
+      meaningDisplay.classList.remove('show');
+    }
+
+    // 필기 인식 캔버스 및 컨트롤 비활성화/초기화
+    if (canvas) {
+      canvas.classList.add('disabled');
+      const ctx = canvas.getContext('2d');
+      if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    strokes = [];
+    const candList = document.getElementById('candidatesList');
+    if (candList) candList.innerHTML = '<span class="no-candidates">글자를 그려주세요</span>';
+    if (clearBtn) clearBtn.disabled = true;
+    if (undoBtn) undoBtn.disabled = true;
+
+    // 탭 및 부수 필터 버튼 비활성화
+    if (tabSearchBtn) tabSearchBtn.disabled = true;
+    if (tabDrawBtn) tabDrawBtn.disabled = true;
+    if (tabFilterBtn) tabFilterBtn.disabled = true;
+    document.querySelectorAll('#panelFilter button').forEach(btn => {
+      btn.disabled = true;
+    });
+
+    if (statusText) {
+      statusText.textContent = '로그인이 필요합니다. 우측 상단에서 로그인해 주세요.';
+      statusText.classList.add('show');
+    }
+  } else {
+    if (tabSearchBtn) tabSearchBtn.disabled = false;
+    if (tabDrawBtn) tabDrawBtn.disabled = false;
+    if (tabFilterBtn) tabFilterBtn.disabled = false;
+    if (canvas) canvas.classList.remove('disabled');
+    if (clearBtn) clearBtn.disabled = false;
+    if (undoBtn) undoBtn.disabled = false;
+    document.querySelectorAll('#panelFilter button').forEach(btn => {
+      btn.disabled = false;
+    });
+
+    if (input) {
+      input.placeholder = SEARCH_PLACEHOLDER_LOGGED_IN;
+      if (firstStageLoaded) {
+        input.disabled = false;
+        if (currentTabMode === 'search' && !(panelDetail && panelDetail.classList.contains('active'))) {
+          if (!(loginDialog && loginDialog.open)) {
+            input.focus();
+          }
+          if (!input.value.trim() && statusText) {
+            statusText.textContent = allFilesLoaded
+              ? '입력 대기 중...'
+              : '입력 대기 중... (나머지 사전 로딩 중)';
+            statusText.classList.add('show');
+          }
+        }
+      } else {
+        input.disabled = true;
+        if (statusText) {
+          statusText.textContent = '사전 데이터 불러오는 중...';
+          statusText.classList.add('show');
+        }
+      }
+    }
+  }
+
+  updateEditButtonVisibility();
+}
+
 // Supabase Auth 초기화 및 이벤트 바인딩
 function initAuth() {
   if (!supabaseClient) {
@@ -1258,7 +1390,7 @@ function initAuth() {
       if (btnLogout) btnLogout.style.display = 'none';
     }
 
-    updateEditButtonVisibility();
+    updateAppAuthState();
   });
 
   // 로그인 모달 열기
@@ -1310,6 +1442,9 @@ function initAuth() {
           loginForm.reset();
           loginDialog?.close();
           showToast('성공적으로 로그인되었습니다.');
+          if (!input.disabled && currentTabMode === 'search') {
+            input.focus();
+          }
         }
       } catch (err) {
         alert('로그인 오류: ' + err.message);
@@ -1721,7 +1856,7 @@ function showToast(message) {
 
 // 데이터 로드 시작 및 요소 초기화
 window.addEventListener('DOMContentLoaded', () => {
-  input.disabled = true; // Disable input until 1단계 완료
+  updateAppAuthState();
   initApp();
   initCanvas();
   initAuth();

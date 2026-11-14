@@ -141,6 +141,29 @@
       color: var(--text-muted);
     }
 
+    input:disabled {
+      background: rgba(0, 0, 0, 0.06);
+      color: var(--text-muted);
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+
+    .tab-btn:disabled,
+    .control-btn:disabled,
+    .filter-btn:disabled,
+    .radical-tab:disabled,
+    .radical-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    #drawCanvas.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
     /* ── 필기 인식 스타일 ── */
     .draw-container {
       display: flex;
@@ -1044,15 +1067,15 @@
     <!-- <h2>📗 한글 → 한자</h2> -->
 
     <div class="search-tabs">
-      <button class="tab-btn active" id="tabSearchBtn">🔍 음/뜻 검색</button>
-      <button class="tab-btn" id="tabDrawBtn">✏️ 필기 인식</button>
-      <button class="tab-btn" id="tabFilterBtn">📖 부수/획수 검색</button>
+      <button class="tab-btn active" id="tabSearchBtn" disabled>🔍 음/뜻 검색</button>
+      <button class="tab-btn" id="tabDrawBtn" disabled>✏️ 필기 인식</button>
+      <button class="tab-btn" id="tabFilterBtn" disabled>📖 부수/획수 검색</button>
     </div>
 
     <!-- 1. 음/뜻 검색 패널 -->
     <div id="panelSearch" class="search-panel active">
       <div class="input-group">
-        <input type="text" id="koreanInput" placeholder="한글 음 또는 한자 뜻 입력 (예: 가관, 하늘)" autocomplete="off">
+        <input type="text" id="koreanInput" placeholder="로그인 후 사용할 수 있습니다" autocomplete="off" disabled>
       </div>
     </div>
 
@@ -1139,7 +1162,7 @@
 
     <div id="toast" class="toast">클립보드에 복사되었습니다!</div>
 
-    <div id="status" class="status">입력 대기 중...</div>
+    <div id="status" class="status show">로그인이 필요합니다. 우측 상단에서 로그인해 주세요.</div>
     <div id="meaningDisplay" class="meaning-display"></div>
   </div>
 
