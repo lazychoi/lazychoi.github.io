@@ -1,4 +1,4 @@
 .DS_Store
 /__pycache__
 /trash
-/data/hanja_dict.json
+data/hanja_dict.json
