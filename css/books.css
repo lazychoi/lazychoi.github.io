@@ -1315,8 +1315,14 @@ mark.search-hl {
   transition: transform 0.12s ease, color 0.12s ease;
 }
 
-.star-btn:hover {
+.star-btn:hover:not(:disabled) {
   transform: scale(1.15);
+}
+
+.star-btn:disabled {
+  opacity: 1;
+  cursor: default;
+  transform: none;
 }
 
 .star-btn.filled {

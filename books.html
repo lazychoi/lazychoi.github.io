@@ -50,7 +50,7 @@
     <!-- 상단 헤더 카드 -->
     <section class="books-header-card">
       <h1 class="visually-hidden">독서 기록장</h1>
-      <div class="books-header-top">
+      <div class="books-header-top" id="booksHeaderTop" style="display: none;">
         <div class="books-header-actions">
           <button type="button" id="btnOpenSearchModal" class="btn btn-primary btn-add-book">
             <span>책 검색 / 추가</span>
@@ -124,7 +124,7 @@
       </div>
 
       <!-- 선택 액션 바 (목록에서 책을 선택해 수정/삭제/이동) -->
-      <div class="selection-action-bar" id="selectionActionBar">
+      <div class="selection-action-bar" id="selectionActionBar" style="display: none;">
         <div class="selection-left">
           <label class="checkbox-label">
             <input type="checkbox" id="chkSelectAll">
@@ -156,7 +156,7 @@
       <div class="empty-state-icon">📖</div>
       <h3 id="emptyStateTitle">등록된 책이 없습니다</h3>
       <p id="emptyStateDesc">상단의 <strong>'책 검색 / 추가'</strong> 버튼을 눌러 국내·국외 도서를 검색하고 읽을 책이나 읽은 책에 추가해 보세요.</p>
-      <button type="button" id="btnEmptyAddBook" class="btn btn-primary" style="margin-top: 8px;">첫 번째 책 추가하기</button>
+      <button type="button" id="btnEmptyAddBook" class="btn btn-primary" style="display: none; margin-top: 8px;">첫 번째 책 추가하기</button>
     </div>
 
     <!-- 도서 목록 영역 (표지 그리드 뷰 / 제목 리스트 뷰 / 문장·메모 모아보기) -->
@@ -429,6 +429,7 @@
             <div class="detail-completed-box">
               <label for="detailCompletedDateInput" class="interactive-label">📅 완독일</label>
               <input type="date" id="detailCompletedDateInput" class="detail-date-input">
+              <span id="detailCompletedDateText" class="meta-value" style="display: none;">-</span>
             </div>
           </div>
         </div>

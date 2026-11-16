@@ -26,6 +26,7 @@ let currentSortAsc = true;
 let selectedBookIds = new Set();
 let activeDetailBookId = null;
 let isLoggedIn = false;
+let currentUserEmail = '';
 let supabaseTableReady = true;
 let isSeedingToSupabase = false;
 let hasInitializedTab = false;
@@ -478,11 +479,62 @@ window.addEventListener('DOMContentLoaded', () => {
 
   updateViewToggleUI();
   updateInlineNlkKeyBarVisibility();
+  updateAuthUI();
   loadAllBooks();
 });
 
-function bindAuthEvents() {
+function requireLogin(actionLabel = '수정') {
+  if (isLoggedIn) return true;
+  alert(`로그인 후 ${actionLabel}할 수 있습니다.`);
+  const loginDialog = document.getElementById('loginDialog');
+  if (loginDialog && !loginDialog.open) {
+    loginDialog.showModal();
+  }
+  return false;
+}
+
+function updateAuthUI() {
   const authStatusText = document.getElementById('authStatusText');
+  const btnLogin = document.getElementById('btnLogin');
+  const btnLogout = document.getElementById('btnLogout');
+  const booksHeaderTop = document.getElementById('booksHeaderTop');
+  const btnEmptyAddBook = document.getElementById('btnEmptyAddBook');
+
+  if (isLoggedIn) {
+    const adminNick = currentUserEmail ? currentUserEmail.split('@')[0] : 'admin';
+    if (authStatusText) authStatusText.innerHTML = `🟢 ${escapeHtml(adminNick)}`;
+    if (btnLogin) btnLogin.style.display = 'none';
+    if (btnLogout) btnLogout.style.display = 'inline-flex';
+    if (booksHeaderTop) booksHeaderTop.style.display = 'flex';
+    if (btnEmptyAddBook) btnEmptyAddBook.style.display = 'inline-flex';
+  } else {
+    if (authStatusText) authStatusText.innerHTML = '';
+    if (btnLogin) btnLogin.style.display = 'inline-flex';
+    if (btnLogout) btnLogout.style.display = 'none';
+    if (booksHeaderTop) booksHeaderTop.style.display = 'none';
+    if (btnEmptyAddBook) btnEmptyAddBook.style.display = 'none';
+
+    selectedBookIds.clear();
+    ['bookSearchDialog', 'bookEditDialog', 'booksSettingsDialog'].forEach((id) => {
+      const dlg = document.getElementById(id);
+      if (dlg && dlg.open) dlg.close();
+    });
+  }
+
+  const loadingEl = document.getElementById('booksLoading');
+  const isInitialLoading = loadingEl && loadingEl.style.display !== 'none' && books.length === 0;
+  if (!isInitialLoading) {
+    lastRenderedIds = [];
+    renderBooksView(false);
+  }
+
+  const detailDialog = document.getElementById('bookDetailDialog');
+  if (detailDialog && detailDialog.open && activeDetailBookId) {
+    renderBookDetailContent(activeDetailBookId);
+  }
+}
+
+function bindAuthEvents() {
   const btnLogin = document.getElementById('btnLogin');
   const btnLogout = document.getElementById('btnLogout');
   const loginDialog = document.getElementById('loginDialog');
@@ -492,17 +544,12 @@ function bindAuthEvents() {
     supabaseClient.auth.onAuthStateChange((event, session) => {
       const user = session?.user;
       isLoggedIn = !!user;
+      currentUserEmail = user?.email || '';
+
+      updateAuthUI();
 
       if (user) {
-        const adminNick = user.email.split('@')[0];
-        if (authStatusText) authStatusText.innerHTML = `🟢 ${escapeHtml(adminNick)}`;
-        if (btnLogin) btnLogin.style.display = 'none';
-        if (btnLogout) btnLogout.style.display = 'inline-flex';
         seedBackupBooksToSupabaseIfEmpty();
-      } else {
-        if (authStatusText) authStatusText.innerHTML = '';
-        if (btnLogin) btnLogin.style.display = 'inline-flex';
-        if (btnLogout) btnLogout.style.display = 'none';
       }
     });
   }
@@ -627,7 +674,9 @@ async function seedBackupBooksToSupabaseIfEmpty() {
 
 async function loadAllBooks() {
   const loadingEl = document.getElementById('booksLoading');
+  const emptyEl = document.getElementById('booksEmptyState');
   if (loadingEl) loadingEl.style.display = 'flex';
+  if (emptyEl) emptyEl.style.display = 'none';
 
   let loadedFromSupabase = false;
 
@@ -753,6 +802,7 @@ async function loadAllBooks() {
 
 // 단일 도서 DB 추가 (INSERT)
 async function insertBookToDb(bookObj) {
+  if (!requireLogin('책을 추가')) return null;
   const sameStatusBooks = books.filter(b => b.status === bookObj.status);
   const minOrder = sameStatusBooks.length > 0
     ? Math.min(...sameStatusBooks.map(b => b.sort_order || 0))
@@ -782,9 +832,6 @@ async function insertBookToDb(bookObj) {
       return created;
     } else if (error) {
       console.warn('[Books] Supabase insert error, saving to local cache:', error.message);
-      if (!isLoggedIn) {
-        alert('안내: 현재 관리자 로그인이 되어 있지 않아 브라우저 로컬 저장소에 저장되었습니다. (Supabase 클라우드 반영은 상단 로그인 후 가능합니다)');
-      }
     }
   }
 
@@ -800,6 +847,7 @@ async function insertBookToDb(bookObj) {
 
 // 단일 도서 DB 수정 (UPDATE)
 async function updateBookInDb(bookId, updates) {
+  if (!requireLogin('책 내용을 수정')) return null;
   const idx = books.findIndex(b => String(b.id) === String(bookId));
   if (idx === -1) return null;
 
@@ -830,6 +878,7 @@ async function updateBookInDb(bookId, updates) {
 
 // 도서 삭제 (DELETE - 단건 및 다건 지원)
 async function deleteBooksFromDb(idArray) {
+  if (!requireLogin('책을 삭제')) return;
   const idSet = new Set(idArray.map(id => String(id)));
   books = books.filter(b => !idSet.has(String(b.id)));
   idArray.forEach(id => selectedBookIds.delete(String(id)));
@@ -851,6 +900,7 @@ async function deleteBooksFromDb(idArray) {
 // 6. 데이터 백업 (JSON 파일 다운로드 & JSON 복원)
 // ══════════════════════════════════════════════════════
 async function exportTableToJsonFile() {
+  if (!requireLogin('데이터를 백업')) return;
   let dataToExport = books;
 
   if (supabaseClient && supabaseTableReady) {
@@ -880,6 +930,7 @@ async function exportTableToJsonFile() {
 }
 
 async function importTableFromJsonFile(file) {
+  if (!requireLogin('데이터를 복원')) return;
   if (!file) return;
   try {
     const text = await file.text();
@@ -1166,13 +1217,19 @@ function renderAllNotesView() {
   `;
 
   if (visibleEntries.length === 0) {
-    let emptyMsg = '아직 등록된 문장 수집과 독서 메모가 없습니다. 책을 눌러 상세 화면에서 문장과 메모를 기록해 보세요.';
+    let emptyMsg = isLoggedIn
+      ? '아직 등록된 문장 수집과 독서 메모가 없습니다. 책을 눌러 상세 화면에서 문장과 메모를 기록해 보세요.'
+      : '등록된 문장 수집과 독서 메모가 없습니다.';
     if (query) {
       emptyMsg = `'${escapeHtml(query)}'에 해당하는 문장 수집이나 독서 메모가 없습니다.`;
     } else if (currentNotesFilter === 'quotes') {
-      emptyMsg = '수집된 문장이 아직 없습니다. 책을 선택해 인상 깊은 문장을 추가해 보세요.';
+      emptyMsg = isLoggedIn
+        ? '수집된 문장이 아직 없습니다. 책을 선택해 인상 깊은 문장을 추가해 보세요.'
+        : '수집된 문장이 아직 없습니다.';
     } else if (currentNotesFilter === 'memo') {
-      emptyMsg = '작성된 독서 메모가 아직 없습니다. 책을 선택해 독서 메모를 기록해 보세요.';
+      emptyMsg = isLoggedIn
+        ? '작성된 독서 메모가 아직 없습니다. 책을 선택해 독서 메모를 기록해 보세요.'
+        : '작성된 독서 메모가 아직 없습니다.';
     }
     notesList.innerHTML = `${toolbarHtml}<div class="notes-empty-card">${emptyMsg}</div>`;
     return;
@@ -1194,8 +1251,10 @@ function renderAllNotesView() {
                 <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
                 <div class="quote-card-actions">
                   <button type="button" class="card-icon-btn" data-copy-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 복사">복사</button>
-                  <button type="button" class="card-icon-btn" data-edit-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 수정">수정</button>
-                  <button type="button" class="card-icon-btn danger" data-delete-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 삭제">삭제</button>
+                  ${isLoggedIn ? `
+                    <button type="button" class="card-icon-btn" data-edit-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 수정">수정</button>
+                    <button type="button" class="card-icon-btn danger" data-delete-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 삭제">삭제</button>
+                  ` : ''}
                 </div>
               </div>
               <div class="quote-card-text markdown-content">${renderMarkdownContent(q.text, query)}</div>
@@ -1210,7 +1269,7 @@ function renderAllNotesView() {
       <div class="notes-section-block">
         <div class="notes-section-label">
           <span>독서 메모</span>
-          <button type="button" class="card-icon-btn" data-edit-all-memo="${escapeHtml(book.id)}" title="메모 수정">수정</button>
+          ${isLoggedIn ? `<button type="button" class="card-icon-btn" data-edit-all-memo="${escapeHtml(book.id)}" title="메모 수정">수정</button>` : ''}
         </div>
         <div class="notes-memo-box markdown-content">${renderMarkdownContent(memo, query)}</div>
       </div>
@@ -1273,7 +1332,7 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
     return;
   }
 
-  if (selectionBar) selectionBar.style.display = 'flex';
+  if (selectionBar) selectionBar.style.display = isLoggedIn ? 'flex' : 'none';
   if (notesList) notesList.style.display = 'none';
 
   const filtered = getFilteredAndSortedBooks();
@@ -1281,6 +1340,9 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
   const query = (document.getElementById('listSearchInput')?.value || '').trim();
 
   updateSelectionBarUI(visibleIds);
+
+  const btnEmptyAddBook = document.getElementById('btnEmptyAddBook');
+  if (btnEmptyAddBook) btnEmptyAddBook.style.display = isLoggedIn ? 'inline-flex' : 'none';
 
   if (filtered.length === 0) {
     if (listSection) listSection.style.display = 'none';
@@ -1291,12 +1353,25 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
         if (emptyDesc) emptyDesc.textContent = '다른 검색어를 입력해 보세요.';
       } else if (currentStatusTab === 'to_read') {
         if (emptyTitle) emptyTitle.textContent = '읽을 책 목록이 비어 있습니다';
-        if (emptyDesc) emptyDesc.innerHTML = '상단의 <strong>책 검색 / 추가</strong> 버튼을 눌러 읽고 싶은 국내·국외 도서를 담아 보세요.';
+        if (emptyDesc) {
+          emptyDesc.innerHTML = isLoggedIn
+            ? '상단의 <strong>책 검색 / 추가</strong> 버튼을 눌러 읽고 싶은 국내·국외 도서를 담아 보세요.'
+            : '등록된 읽을 책이 없습니다.';
+        }
       } else if (currentStatusTab === 'read') {
         if (emptyTitle) emptyTitle.textContent = '완독한 책이 아직 없습니다';
-        if (emptyDesc) emptyDesc.innerHTML = '읽은 책을 추가하거나 읽을 책 목록에서 <strong>읽은 책으로 이동</strong>해 보세요.';
+        if (emptyDesc) {
+          emptyDesc.innerHTML = isLoggedIn
+            ? '읽은 책을 추가하거나 읽을 책 목록에서 <strong>읽은 책으로 이동</strong>해 보세요.'
+            : '완독한 책이 아직 없습니다.';
+        }
       } else {
         if (emptyTitle) emptyTitle.textContent = '등록된 책이 없습니다';
+        if (emptyDesc) {
+          emptyDesc.innerHTML = isLoggedIn
+            ? '상단의 <strong>책 검색 / 추가</strong> 버튼을 눌러 국내·국외 도서를 검색하고 읽을 책이나 읽은 책에 추가해 보세요.'
+            : '등록된 책이 없습니다.';
+        }
       }
     }
     lastRenderedIds = [];
@@ -1333,11 +1408,11 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
     }
   }
 
-  const showUpDown = currentStatusTab === 'to_read';
+  const showUpDown = isLoggedIn && currentStatusTab === 'to_read';
 
   if (currentViewMode === 'cover') {
     coverGrid.innerHTML = filtered.map(({ book, matchedQuotes, matchedMemos }, idx) => {
-      const isSelected = selectedBookIds.has(String(book.id));
+      const isSelected = isLoggedIn && selectedBookIds.has(String(book.id));
       const totalNotesCount = (book.quotes?.length || 0) + (book.memo ? 1 : 0);
       const isFirst = idx === 0;
       const isLast = idx === filtered.length - 1;
@@ -1345,17 +1420,19 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
 
       return `
         <article class="book-cover-card${isSelected ? ' selected' : ''}" data-book-id="${escapeHtml(book.id)}">
-          <div class="cover-card-top-bar">
-            <label class="cover-select-chk-wrap" title="책 선택">
-              <input type="checkbox" class="chk-select-book" data-book-id="${escapeHtml(book.id)}" ${isSelected ? 'checked' : ''} aria-label="${escapeHtml(book.title)} 선택">
-            </label>
-            ${showUpDown ? `
-              <div class="cover-order-btns">
-                <button type="button" class="btn-move-order btn-move-up" data-book-id="${escapeHtml(book.id)}" ${isFirst ? 'disabled' : ''} title="위로 이동" aria-label="위로 이동">▲</button>
-                <button type="button" class="btn-move-order btn-move-down" data-book-id="${escapeHtml(book.id)}" ${isLast ? 'disabled' : ''} title="아래로 이동" aria-label="아래로 이동">▼</button>
-              </div>
-            ` : ''}
-          </div>
+          ${isLoggedIn ? `
+            <div class="cover-card-top-bar">
+              <label class="cover-select-chk-wrap" title="책 선택">
+                <input type="checkbox" class="chk-select-book" data-book-id="${escapeHtml(book.id)}" ${isSelected ? 'checked' : ''} aria-label="${escapeHtml(book.title)} 선택">
+              </label>
+              ${showUpDown ? `
+                <div class="cover-order-btns">
+                  <button type="button" class="btn-move-order btn-move-up" data-book-id="${escapeHtml(book.id)}" ${isFirst ? 'disabled' : ''} title="위로 이동" aria-label="위로 이동">▲</button>
+                  <button type="button" class="btn-move-order btn-move-down" data-book-id="${escapeHtml(book.id)}" ${isLast ? 'disabled' : ''} title="아래로 이동" aria-label="아래로 이동">▼</button>
+                </div>
+              ` : ''}
+            </div>
+          ` : ''}
 
           <div class="cover-image-area" data-open-detail="${escapeHtml(book.id)}">
             ${book.cover_url ? `
@@ -1387,21 +1464,23 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
             ${snippetsHtml}
           </div>
 
-          <div class="cover-card-footer">
-            <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
-              ${book.status === 'to_read' ? '완독 처리' : '읽을 책으로'}
-            </button>
-            <div style="display: flex; gap: 2px;">
-              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="책 정보 수정" aria-label="수정">수정</button>
-              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="책 삭제" aria-label="삭제">삭제</button>
+          ${isLoggedIn ? `
+            <div class="cover-card-footer">
+              <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
+                ${book.status === 'to_read' ? '완독 처리' : '읽을 책으로'}
+              </button>
+              <div style="display: flex; gap: 2px;">
+                <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="책 정보 수정" aria-label="수정">수정</button>
+                <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="책 삭제" aria-label="삭제">삭제</button>
+              </div>
             </div>
-          </div>
+          ` : ''}
         </article>
       `;
     }).join('');
   } else {
     titleList.innerHTML = filtered.map(({ book, matchedQuotes, matchedMemos }, idx) => {
-      const isSelected = selectedBookIds.has(String(book.id));
+      const isSelected = isLoggedIn && selectedBookIds.has(String(book.id));
       const quotesCount = book.quotes?.length || 0;
       const hasMemo = book.memo && book.memo.trim().length > 0;
       const isFirst = idx === 0;
@@ -1411,15 +1490,17 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
       return `
         <article class="book-title-row${isSelected ? ' selected' : ''}" data-book-id="${escapeHtml(book.id)}">
           <div class="title-row-main">
-            <div class="title-row-left-controls">
-              <input type="checkbox" class="chk-select-book" data-book-id="${escapeHtml(book.id)}" ${isSelected ? 'checked' : ''} aria-label="${escapeHtml(book.title)} 선택">
-              ${showUpDown ? `
-                <div class="title-row-order-btns">
-                  <button type="button" class="btn-move-order btn-move-up" data-book-id="${escapeHtml(book.id)}" ${isFirst ? 'disabled' : ''} title="위로 이동" aria-label="위로 이동">▲</button>
-                  <button type="button" class="btn-move-order btn-move-down" data-book-id="${escapeHtml(book.id)}" ${isLast ? 'disabled' : ''} title="아래로 이동" aria-label="아래로 이동">▼</button>
-                </div>
-              ` : ''}
-            </div>
+            ${isLoggedIn ? `
+              <div class="title-row-left-controls">
+                <input type="checkbox" class="chk-select-book" data-book-id="${escapeHtml(book.id)}" ${isSelected ? 'checked' : ''} aria-label="${escapeHtml(book.title)} 선택">
+                ${showUpDown ? `
+                  <div class="title-row-order-btns">
+                    <button type="button" class="btn-move-order btn-move-up" data-book-id="${escapeHtml(book.id)}" ${isFirst ? 'disabled' : ''} title="위로 이동" aria-label="위로 이동">▲</button>
+                    <button type="button" class="btn-move-order btn-move-down" data-book-id="${escapeHtml(book.id)}" ${isLast ? 'disabled' : ''} title="아래로 이동" aria-label="아래로 이동">▼</button>
+                  </div>
+                ` : ''}
+              </div>
+            ` : ''}
 
             <div class="title-row-content" data-open-detail="${escapeHtml(book.id)}">
               <span class="title-row-book-title">${highlightMatch(book.title, query)}</span>
@@ -1442,13 +1523,15 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
               ${hasMemo ? `<span class="count-chip" title="독서 메모 있음">📝 메모</span>` : ''}
             </div>
 
-            <div class="title-row-actions">
-              <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
-                ${book.status === 'to_read' ? '완독' : '읽을책'}
-              </button>
-              <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="수정">수정</button>
-              <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="삭제">삭제</button>
-            </div>
+            ${isLoggedIn ? `
+              <div class="title-row-actions">
+                <button type="button" class="card-icon-btn btn-quick-status" data-book-id="${escapeHtml(book.id)}" title="${book.status === 'to_read' ? '읽은 책으로 이동' : '읽을 책으로 이동'}">
+                  ${book.status === 'to_read' ? '완독' : '읽을책'}
+                </button>
+                <button type="button" class="card-icon-btn btn-quick-edit" data-book-id="${escapeHtml(book.id)}" title="수정">수정</button>
+                <button type="button" class="card-icon-btn danger btn-quick-delete" data-book-id="${escapeHtml(book.id)}" title="삭제">삭제</button>
+              </div>
+            ` : ''}
           </div>
           ${snippetsHtml}
         </article>
@@ -1479,6 +1562,7 @@ function updateUpDownButtonStates(container, orderedIds) {
 // 9. 읽을 책 상하 이동 (▲ / ▼) 및 툴바 이벤트
 // ══════════════════════════════════════════════════════
 async function moveBookOrder(bookId, direction) {
+  if (!requireLogin('순서를 변경')) return;
   const filtered = getFilteredAndSortedBooks();
   const currentList = filtered.map(item => item.book);
   const idx = currentList.findIndex(b => String(b.id) === String(bookId));
@@ -1564,6 +1648,7 @@ async function copyQuoteWithFeedback(book, q, triggerBtn, feedbackText = '복사
 }
 
 function populateQuoteEditForm(q) {
+  if (!requireLogin('문장을 수정')) return;
   if (!q) return;
   document.getElementById('editingQuoteId').value = q.id;
   document.getElementById('inputQuotePage').value = q.page || '';
@@ -1695,7 +1780,10 @@ function bindMainToolbarEvents() {
     btnBackupJson.addEventListener('click', exportTableToJsonFile);
   }
   if (btnRestoreJson && inputRestoreJsonFile) {
-    btnRestoreJson.addEventListener('click', () => inputRestoreJsonFile.click());
+    btnRestoreJson.addEventListener('click', () => {
+      if (!requireLogin('데이터를 복원')) return;
+      inputRestoreJsonFile.click();
+    });
     inputRestoreJsonFile.addEventListener('change', (e) => {
       const file = e.target.files?.[0];
       if (file) importTableFromJsonFile(file);
@@ -1710,6 +1798,10 @@ function bindMainToolbarEvents() {
 
   if (chkSelectAll) {
     chkSelectAll.addEventListener('change', () => {
+      if (!requireLogin('책을 선택')) {
+        chkSelectAll.checked = false;
+        return;
+      }
       const visibleIds = getFilteredAndSortedBooks().map(item => String(item.book.id));
       if (chkSelectAll.checked) {
         visibleIds.forEach(id => selectedBookIds.add(id));
@@ -1722,6 +1814,7 @@ function bindMainToolbarEvents() {
 
   if (btnEditSelected) {
     btnEditSelected.addEventListener('click', () => {
+      if (!requireLogin('책 정보를 수정')) return;
       if (selectedBookIds.size !== 1) return;
       const onlyId = Array.from(selectedBookIds)[0];
       openEditBookModal(onlyId);
@@ -1730,6 +1823,7 @@ function bindMainToolbarEvents() {
 
   if (btnMoveSelectedStatus) {
     btnMoveSelectedStatus.addEventListener('click', async () => {
+      if (!requireLogin('서가를 이동')) return;
       if (selectedBookIds.size === 0) return;
       const ids = Array.from(selectedBookIds);
       const targetStatus = currentStatusTab === 'read' ? 'to_read' : 'read';
@@ -1752,6 +1846,7 @@ function bindMainToolbarEvents() {
 
   if (btnDeleteSelected) {
     btnDeleteSelected.addEventListener('click', async () => {
+      if (!requireLogin('책을 삭제')) return;
       if (selectedBookIds.size === 0) return;
       const ids = Array.from(selectedBookIds);
       if (!confirm(`선택한 ${ids.length}권의 책을 정말 삭제하시겠습니까?`)) return;
@@ -1790,6 +1885,7 @@ function bindMainToolbarEvents() {
       const editAllQuoteBtn = e.target.closest('[data-edit-all-quote]');
       if (editAllQuoteBtn) {
         e.stopPropagation();
+        if (!requireLogin('문장을 수정')) return;
         const bid = editAllQuoteBtn.getAttribute('data-book-id');
         const qid = editAllQuoteBtn.getAttribute('data-edit-all-quote');
         const targetBook = books.find(b => String(b.id) === String(bid));
@@ -1802,6 +1898,7 @@ function bindMainToolbarEvents() {
       const deleteAllQuoteBtn = e.target.closest('[data-delete-all-quote]');
       if (deleteAllQuoteBtn) {
         e.stopPropagation();
+        if (!requireLogin('문장을 삭제')) return;
         const bid = deleteAllQuoteBtn.getAttribute('data-book-id');
         const qid = deleteAllQuoteBtn.getAttribute('data-delete-all-quote');
         const targetBook = books.find(b => String(b.id) === String(bid));
@@ -1816,6 +1913,7 @@ function bindMainToolbarEvents() {
       const editAllMemoBtn = e.target.closest('[data-edit-all-memo]');
       if (editAllMemoBtn) {
         e.stopPropagation();
+        if (!requireLogin('독서 메모를 수정')) return;
         const bid = editAllMemoBtn.getAttribute('data-edit-all-memo');
         openBookDetailModal(bid, { skipAutoToc: true });
         const targetBook = books.find(b => String(b.id) === String(bid));
@@ -1852,6 +1950,7 @@ function bindMainToolbarEvents() {
       const delBtn = e.target.closest('.btn-quick-delete');
       if (delBtn) {
         e.stopPropagation();
+        if (!requireLogin('책을 삭제')) return;
         const bid = delBtn.getAttribute('data-book-id');
         const targetBook = books.find(b => String(b.id) === String(bid));
         if (targetBook && confirm(`'${targetBook.title}' 도서를 삭제하시겠습니까?`)) {
@@ -1864,6 +1963,7 @@ function bindMainToolbarEvents() {
       const statusBtn = e.target.closest('.btn-quick-status');
       if (statusBtn) {
         e.stopPropagation();
+        if (!requireLogin('서가를 이동')) return;
         const bid = statusBtn.getAttribute('data-book-id');
         const targetBook = books.find(b => String(b.id) === String(bid));
         if (targetBook) {
@@ -1880,6 +1980,10 @@ function bindMainToolbarEvents() {
       const chk = e.target.closest('.chk-select-book');
       if (chk) {
         e.stopPropagation();
+        if (!requireLogin('책을 선택')) {
+          chk.checked = false;
+          return;
+        }
         const bid = String(chk.getAttribute('data-book-id'));
         if (chk.checked) {
           selectedBookIds.add(bid);
@@ -2419,6 +2523,7 @@ async function performCombinedBookSearch(query, region) {
 // 11. 도서 검색 모달 및 직접 입력 이벤트
 // ══════════════════════════════════════════════════════
 function openSearchModal(defaultTab = 'api') {
+  if (!requireLogin('책을 추가')) return;
   const dlg = document.getElementById('bookSearchDialog');
   if (!dlg) return;
   updateInlineNlkKeyBarVisibility();
@@ -2580,6 +2685,7 @@ function bindSearchModalEvents() {
   // 검색 모달 내 인라인 국립중앙도서관 API 키 즉시 저장
   if (btnSaveInlineNlkKey) {
     btnSaveInlineNlkKey.addEventListener('click', () => {
+      if (!requireLogin('API 인증키를 저장')) return;
       const val = document.getElementById('inlineNlkKeyInput')?.value.trim() || '';
       if (!val) {
         alert('국립중앙도서관 Open API 인증키를 입력해 주세요.');
@@ -2633,6 +2739,7 @@ function bindSearchModalEvents() {
       const editFirstBtn = e.target.closest('.btn-pick-edit-first');
 
       if (toReadBtn || readBtn) {
+        if (!requireLogin('책을 추가')) return;
         const activeBtn = toReadBtn || readBtn;
         const idx = parseInt(activeBtn.getAttribute('data-idx'), 10);
         const candidate = apiSearchCandidates[idx];
@@ -2677,6 +2784,7 @@ function bindSearchModalEvents() {
       }
 
       if (editFirstBtn) {
+        if (!requireLogin('책을 추가')) return;
         const idx = parseInt(editFirstBtn.getAttribute('data-idx'), 10);
         const candidate = apiSearchCandidates[idx];
         if (candidate) await fillManualFormWithCandidate(candidate);
@@ -2689,6 +2797,7 @@ function bindSearchModalEvents() {
   }
 
   async function submitManualBook(targetStatus) {
+    if (!requireLogin('책을 추가')) return;
     const titleEl = document.getElementById('manualTitle');
     const title = titleEl?.value.trim();
     if (!title) {
@@ -2748,6 +2857,7 @@ function bindSearchModalEvents() {
 // 12. 도서 정보 수정 모달 이벤트
 // ══════════════════════════════════════════════════════
 function openEditBookModal(bookId) {
+  if (!requireLogin('책 정보를 수정')) return;
   const book = books.find(b => String(b.id) === String(bookId));
   if (!book) return;
 
@@ -2798,6 +2908,7 @@ function bindEditModalEvents() {
   if (editForm) {
     editForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!requireLogin('책 정보를 수정')) return;
       const bookId = document.getElementById('editBookId').value;
       if (!bookId) return;
 
@@ -2829,6 +2940,7 @@ function bindEditModalEvents() {
 
   if (btnDeleteFromEditModal) {
     btnDeleteFromEditModal.addEventListener('click', async () => {
+      if (!requireLogin('책을 삭제')) return;
       const bookId = document.getElementById('editBookId').value;
       const book = books.find(b => String(b.id) === String(bookId));
       if (!book) return;
@@ -2851,8 +2963,8 @@ function openBookDetailModal(bookId, { skipAutoToc = false } = {}) {
   const dlg = document.getElementById('bookDetailDialog');
   if (dlg && !dlg.open) dlg.showModal();
 
-  // 표지 이미지나 목차 정보가 비어 있으면 도서검색 API 및 Supabase 프록시에서 자동으로 조회 시도
-  if (!skipAutoToc) {
+  // 표지 이미지나 목차 정보가 비어 있으면 도서검색 API 및 Supabase 프록시에서 자동으로 조회 시도 (로그인 상태에서만 저장)
+  if (!skipAutoToc && isLoggedIn) {
     const book = books.find(b => String(b.id) === String(bookId));
     if (book && (!book.toc || !book.cover_url)) {
       fetchAndSaveBookToc(bookId, { silentIfEmpty: true });
@@ -2868,11 +2980,14 @@ function renderDetailTocView(book) {
   if (book.toc && book.toc.trim()) {
     tocView.innerHTML = highlightMatch(book.toc.trim(), query);
   } else {
-    tocView.innerHTML = `<div class="toc-empty-msg">목차 정보가 없습니다. 상단의 <strong>'표지·목차 가져오기'</strong> 버튼을 눌러 도서 정보를 다시 조회해 보세요.</div>`;
+    tocView.innerHTML = isLoggedIn
+      ? `<div class="toc-empty-msg">목차 정보가 없습니다. 상단의 <strong>'표지·목차 가져오기'</strong> 버튼을 눌러 도서 정보를 다시 조회해 보세요.</div>`
+      : `<div class="toc-empty-msg">등록된 목차 정보가 없습니다.</div>`;
   }
 }
 
 async function fetchAndSaveBookToc(bookId, { silentIfEmpty = false } = {}) {
+  if (!requireLogin('표지·목차 정보를 저장')) return;
   const book = books.find(b => String(b.id) === String(bookId));
   if (!book) return;
 
@@ -2948,6 +3063,22 @@ function renderDetailGeneralMemo(book, { forceEdit = false } = {}) {
 
   if (memoTextarea) memoTextarea.value = book?.memo || '';
 
+  if (!isLoggedIn) {
+    if (memoView) {
+      if (hasMemo) {
+        safeSetMarkdownHTML(memoView, renderMarkdownContent(memoText, query));
+      } else {
+        memoView.innerHTML = `<div class="toc-empty-msg">작성된 독서 메모가 없습니다.</div>`;
+      }
+      memoView.style.display = 'block';
+    }
+    if (memoEditorWrap) memoEditorWrap.style.display = 'none';
+    if (btnEdit) btnEdit.style.display = 'none';
+    if (btnCancel) btnCancel.style.display = 'none';
+    if (btnSave) btnSave.style.display = 'none';
+    return;
+  }
+
   if (hasMemo && !forceEdit) {
     if (memoView) {
       safeSetMarkdownHTML(memoView, renderMarkdownContent(memoText, query));
@@ -2972,13 +3103,25 @@ function renderBookDetailContent(bookId) {
 
   const statusBadge = document.getElementById('detailStatusBadge');
   const btnToggleStatus = document.getElementById('btnToggleDetailStatus');
+  const btnEditFromDetail = document.getElementById('btnEditFromDetail');
+  const btnDeleteFromDetail = document.getElementById('btnDeleteFromDetail');
+  const btnResetRating = document.getElementById('btnResetRating');
+  const btnFetchTocFromApi = document.getElementById('btnFetchTocFromApi');
+  const quoteAddForm = document.getElementById('quoteAddForm');
+
   if (statusBadge) {
     statusBadge.className = `status-pill ${book.status === 'read' ? 'read' : 'to-read'}`;
     statusBadge.textContent = book.status === 'read' ? '✅ 읽은 책' : '📌 읽을 책';
   }
   if (btnToggleStatus) {
     btnToggleStatus.textContent = book.status === 'read' ? '읽을 책으로 이동' : '읽은 책으로 이동';
+    btnToggleStatus.style.display = isLoggedIn ? 'inline-flex' : 'none';
   }
+  if (btnEditFromDetail) btnEditFromDetail.style.display = isLoggedIn ? 'inline-flex' : 'none';
+  if (btnDeleteFromDetail) btnDeleteFromDetail.style.display = isLoggedIn ? 'inline-flex' : 'none';
+  if (btnResetRating) btnResetRating.style.display = isLoggedIn ? 'inline-block' : 'none';
+  if (btnFetchTocFromApi) btnFetchTocFromApi.style.display = isLoggedIn ? 'inline-flex' : 'none';
+  if (quoteAddForm) quoteAddForm.style.display = isLoggedIn ? 'flex' : 'none';
 
   const coverImg = document.getElementById('detailCoverImg');
   const coverFallback = document.getElementById('detailCoverFallback');
@@ -3000,7 +3143,18 @@ function renderBookDetailContent(bookId) {
   document.getElementById('detailBookAuthor').textContent = book.author || '저자 미상';
   document.getElementById('detailBookPublisher').textContent = book.publisher || '-';
   document.getElementById('detailBookPubDate').textContent = book.pub_date || '-';
-  document.getElementById('detailCompletedDateInput').value = book.completed_date || '';
+
+  const completedDateInput = document.getElementById('detailCompletedDateInput');
+  const completedDateText = document.getElementById('detailCompletedDateText');
+  if (completedDateInput) {
+    completedDateInput.value = book.completed_date || '';
+    completedDateInput.disabled = !isLoggedIn;
+    completedDateInput.style.display = isLoggedIn ? 'inline-block' : 'none';
+  }
+  if (completedDateText) {
+    completedDateText.textContent = book.completed_date || '-';
+    completedDateText.style.display = isLoggedIn ? 'none' : 'inline-block';
+  }
 
   renderDetailStars(book.rating || 0);
 
@@ -3029,6 +3183,7 @@ function renderDetailStars(rating) {
     } else if (numRating >= starVal - 0.5) {
       btn.classList.add('half');
     }
+    btn.disabled = !isLoggedIn;
   });
 }
 
@@ -3043,7 +3198,10 @@ function renderDetailQuotesList(book) {
 
   if (quotes.length === 0) {
     if (listEl) {
-      listEl.innerHTML = `<div class="api-search-placeholder" style="padding: 20px;">수집된 문장이 없습니다. 위 입력창에 페이지 번호와 문장을 추가해 보세요.</div>`;
+      const emptyQuoteMsg = isLoggedIn
+        ? '수집된 문장이 없습니다. 위 입력창에 페이지 번호와 문장을 추가해 보세요.'
+        : '수집된 문장이 없습니다.';
+      listEl.innerHTML = `<div class="api-search-placeholder" style="padding: 20px;">${emptyQuoteMsg}</div>`;
     }
     return;
   }
@@ -3054,8 +3212,10 @@ function renderDetailQuotesList(book) {
         <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
         <div class="quote-card-actions">
           <button type="button" class="card-icon-btn btn-copy-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 복사" aria-label="문장 복사">복사</button>
-          <button type="button" class="card-icon-btn btn-edit-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 수정" aria-label="문장 수정">수정</button>
-          <button type="button" class="card-icon-btn danger btn-delete-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 삭제" aria-label="문장 삭제">삭제</button>
+          ${isLoggedIn ? `
+            <button type="button" class="card-icon-btn btn-edit-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 수정" aria-label="문장 수정">수정</button>
+            <button type="button" class="card-icon-btn danger btn-delete-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 삭제" aria-label="문장 삭제">삭제</button>
+          ` : ''}
         </div>
       </div>
       <div class="quote-card-text markdown-content">${renderMarkdownContent(q.text, query)}</div>
@@ -3092,6 +3252,7 @@ function bindDetailModalEvents() {
 
   if (btnToggleDetailStatus) {
     btnToggleDetailStatus.addEventListener('click', async () => {
+      if (!requireLogin('서가를 이동')) return;
       if (!activeDetailBookId) return;
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (!book) return;
@@ -3115,6 +3276,7 @@ function bindDetailModalEvents() {
 
   if (btnDeleteFromDetail) {
     btnDeleteFromDetail.addEventListener('click', async () => {
+      if (!requireLogin('책을 삭제')) return;
       if (!activeDetailBookId) return;
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (!book) return;
@@ -3130,6 +3292,7 @@ function bindDetailModalEvents() {
     starWidget.addEventListener('click', async (e) => {
       const starBtn = e.target.closest('.star-btn');
       if (!starBtn || !activeDetailBookId) return;
+      if (!requireLogin('별점을 수정')) return;
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (!book) return;
 
@@ -3147,6 +3310,7 @@ function bindDetailModalEvents() {
 
   if (btnResetRating) {
     btnResetRating.addEventListener('click', async () => {
+      if (!requireLogin('별점을 초기화')) return;
       if (!activeDetailBookId) return;
       renderDetailStars(0);
       await updateBookInDb(activeDetailBookId, { rating: 0 });
@@ -3157,6 +3321,11 @@ function bindDetailModalEvents() {
   if (completedDateInput) {
     completedDateInput.addEventListener('change', async () => {
       if (!activeDetailBookId) return;
+      if (!requireLogin('완독일을 수정')) {
+        const book = books.find(b => String(b.id) === String(activeDetailBookId));
+        completedDateInput.value = book?.completed_date || '';
+        return;
+      }
       await updateBookInDb(activeDetailBookId, { completed_date: completedDateInput.value });
       renderBooksView(false);
     });
@@ -3172,6 +3341,7 @@ function bindDetailModalEvents() {
   if (quoteAddForm) {
     quoteAddForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      if (!requireLogin('문장을 저장')) return;
       if (!activeDetailBookId) return;
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (!book) return;
@@ -3233,6 +3403,7 @@ function bindDetailModalEvents() {
 
       const editBtn = e.target.closest('.btn-edit-quote');
       if (editBtn) {
+        if (!requireLogin('문장을 수정')) return;
         const qid = editBtn.getAttribute('data-quote-id');
         const q = (book.quotes || []).find(item => String(item.id) === String(qid));
         if (q) populateQuoteEditForm(q);
@@ -3241,6 +3412,7 @@ function bindDetailModalEvents() {
 
       const delBtn = e.target.closest('.btn-delete-quote');
       if (delBtn) {
+        if (!requireLogin('문장을 삭제')) return;
         const qid = delBtn.getAttribute('data-quote-id');
         if (!confirm('이 수집 문장을 삭제하시겠습니까?')) return;
         const nextQuotes = (book.quotes || []).filter(item => String(item.id) !== String(qid));
@@ -3262,6 +3434,7 @@ function bindDetailModalEvents() {
 
   // 독서 메모 보기/편집 전환 및 저장
   async function saveGeneralMemoNow() {
+    if (!requireLogin('독서 메모를 저장')) return;
     if (!activeDetailBookId) return;
     const memoVal = detailGeneralMemo.value.trim();
     const updatedBook = await updateBookInDb(activeDetailBookId, { memo: memoVal });
@@ -3276,6 +3449,7 @@ function bindDetailModalEvents() {
 
   if (btnEditGeneralMemo) {
     btnEditGeneralMemo.addEventListener('click', () => {
+      if (!requireLogin('독서 메모를 수정')) return;
       if (!activeDetailBookId) return;
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (book) renderDetailGeneralMemo(book, { forceEdit: true });
@@ -3314,6 +3488,7 @@ function bindSettingsModalEvents() {
   const btnSaveApiKeys = document.getElementById('btnSaveApiKeys');
 
   function openSettings() {
+    if (!requireLogin('API 설정을 변경')) return;
     const keys = getSavedApiKeys();
     const nlkInput = document.getElementById('inputNlkApiKey');
     const googleInput = document.getElementById('inputGoogleBooksKey');
@@ -3326,6 +3501,7 @@ function bindSettingsModalEvents() {
 
   if (btnSaveApiKeys) {
     btnSaveApiKeys.addEventListener('click', () => {
+      if (!requireLogin('API 설정을 저장')) return;
       const nlkKey = document.getElementById('inputNlkApiKey')?.value.trim() || '';
       const googleKey = document.getElementById('inputGoogleBooksKey')?.value.trim() || '';
       saveApiKeys({ nlkKey, googleKey });
