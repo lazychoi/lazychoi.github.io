@@ -14,8 +14,10 @@ CREATE TABLE IF NOT EXISTS public.hanja_dict (
   CONSTRAINT hanja_dict_hanja_korean_unique UNIQUE (hanja, korean)
 );
 
--- 인덱스 생성 (조회 속도 최적화)
+-- 인덱스 생성 (조회 및 증분 동기화 속도 최적화)
 CREATE INDEX IF NOT EXISTS idx_hanja_dict_lookup ON public.hanja_dict (hanja, korean);
+CREATE INDEX IF NOT EXISTS idx_hanja_dict_korean ON public.hanja_dict (korean);
+CREATE INDEX IF NOT EXISTS idx_hanja_dict_updated_at ON public.hanja_dict (updated_at DESC, id DESC);
 
 -- 2. Row Level Security(RLS) 활성화
 ALTER TABLE public.hanja_dict ENABLE ROW LEVEL SECURITY;
