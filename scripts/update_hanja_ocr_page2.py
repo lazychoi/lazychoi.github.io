@@ -153,7 +153,7 @@ def update_h08aa(entries):
         if not stripped:
             new_lines.append(line)
             continue
-        parts = stripped.split("|")
+        parts = stripped.split("|", 2)
         if len(parts) >= 2:
             key = (parts[0].strip(), parts[1].strip())
             if key in entry_map:

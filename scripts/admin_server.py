@@ -91,7 +91,7 @@ class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                     if not line.strip():
                         new_lines.append(line)
                         continue
-                    parts = line.split('|')
+                    parts = line.split('|', 2)
                     if len(parts) >= 2 and parts[0] == korean and parts[1] == hanja:
                         new_lines.append(f"{korean}|{hanja}|{meaning}")
                         updated = True
@@ -145,7 +145,7 @@ class AdminHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
                     for line in lines:
                         if not line.strip():
                             continue
-                        parts = line.split('|')
+                        parts = line.split('|', 2)
                         if len(parts) >= 2 and parts[0] == korean and parts[1] == hanja:
                             duplicate = True
                             break

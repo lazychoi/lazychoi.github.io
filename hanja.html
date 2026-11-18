@@ -20,6 +20,7 @@
   <script src="js/nav.js" defer></script>
   <!-- Supabase JS SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/lib/marked.min.js"></script>
 
   <link rel="stylesheet" href="css/common.css">
   <style>
@@ -783,7 +784,7 @@
 
     .detail-container {
       width: 100%;
-      max-width: 500px;
+      max-width: 640px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -864,12 +865,206 @@
       font-weight: 600;
     }
 
+    /* ── Markdown 렌더링 스타일 ── */
+    .markdown-content > *:first-child {
+      margin-top: 0;
+    }
+
+    .markdown-content > *:last-child {
+      margin-bottom: 0;
+    }
+
+    .markdown-content p {
+      margin: 0 0 0.65em;
+    }
+
+    .markdown-content h1,
+    .markdown-content h2,
+    .markdown-content h3,
+    .markdown-content h4,
+    .markdown-content h5,
+    .markdown-content h6 {
+      margin: 0.8em 0 0.4em;
+      font-weight: 700;
+      line-height: 1.35;
+      color: var(--text-main);
+      text-align: left;
+    }
+
+    .markdown-content h1 { font-size: 1.25em; }
+    .markdown-content h2 { font-size: 1.15em; }
+    .markdown-content h3 { font-size: 1.06em; }
+    .markdown-content h4,
+    .markdown-content h5,
+    .markdown-content h6 { font-size: 1em; }
+
+    .markdown-content strong,
+    .markdown-content b {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .markdown-content em,
+    .markdown-content i {
+      font-style: italic;
+    }
+
+    .markdown-content del,
+    .markdown-content s {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .markdown-content ul,
+    .markdown-content ol {
+      margin: 0.4em 0 0.65em;
+      padding-left: 1.4em;
+      text-align: left;
+    }
+
+    .markdown-content li {
+      margin: 0.25em 0;
+    }
+
+    .markdown-content blockquote {
+      margin: 0.6em 0;
+      padding: 6px 12px;
+      border-left: 3px solid var(--accent);
+      background: rgba(37, 99, 235, 0.05);
+      color: #334155;
+      border-radius: 0 6px 6px 0;
+      text-align: left;
+    }
+
+    .markdown-content code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.88em;
+      background: rgba(15, 23, 42, 0.07);
+      color: #be123c;
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .markdown-content pre {
+      margin: 0.6em 0;
+      padding: 10px 12px;
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .markdown-content pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+      border-radius: 0;
+      font-size: inherit;
+    }
+
+    .markdown-content hr {
+      border: none;
+      border-top: 1px solid rgba(0, 0, 0, 0.12);
+      margin: 0.8em 0;
+    }
+
+    .markdown-content a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+
+    .markdown-content img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 12px auto 4px;
+      border-radius: 10px;
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: #ffffff;
+      padding: 6px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
+    }
+
+    .markdown-content .table-wrapper {
+      overflow: auto;
+      max-inline-size: 100%;
+      max-block-size: min(480px, 65vh);
+      container-type: inline-size;
+      margin: 0.75em 0;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+
+    .markdown-content .table-wrapper:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .markdown-content table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.88em;
+      line-height: 1.5;
+      text-align: left;
+    }
+
+    .markdown-content thead {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+    }
+
+    .markdown-content th,
+    .markdown-content td {
+      padding: 7px 10px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      border-right: 1px solid rgba(0, 0, 0, 0.08);
+      vertical-align: top;
+      word-break: keep-all;
+    }
+
+    .markdown-content th:last-child,
+    .markdown-content td:last-child {
+      border-right: none;
+    }
+
+    .markdown-content thead th {
+      background: #f1f5f9;
+      color: #0f172a;
+      font-weight: 700;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.16);
+      white-space: nowrap;
+    }
+
+    .markdown-content tbody tr:nth-child(even) {
+      background: rgba(15, 23, 42, 0.02);
+    }
+
+    .markdown-content tbody tr:last-child td,
+    .markdown-content tbody tr:last-child th {
+      border-bottom: none;
+    }
+
+    @media (max-width: 600px) {
+      .markdown-content th,
+      .markdown-content td {
+        padding: 5px 7px;
+        font-size: 0.84em;
+      }
+    }
+
     /* ── 상세 보기 하단 버튼 레이아웃 ── */
     .detail-action-row {
       display: flex;
       gap: 12px;
       width: 100%;
-      max-width: 500px;
+      max-width: 640px;
       justify-content: center;
       align-items: center;
       flex-shrink: 0;
@@ -1139,7 +1334,7 @@
             <div id="detailStroke" class="detail-stroke"></div>
           </div>
           <div id="detailKorean" class="detail-korean-word"></div>
-          <div id="detailMeaning" class="detail-meaning-content"></div>
+          <div id="detailMeaning" class="detail-meaning-content markdown-content"></div>
           <!-- 뜻 수정 영역 (기본적으로 숨김) -->
           <div id="editArea" class="edit-area" style="display: none; width: 100%; flex-direction: column; gap: 10px; margin-top: 10px; flex: none;">
             <textarea id="editMeaningInput" style="width: 100%; height: 300px; font-size: 16px; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); background: rgba(0, 0, 0, 0.03); color: var(--text-main); outline: none; resize: vertical; box-sizing: border-box; line-height: 1.6;"></textarea>
@@ -1163,7 +1358,7 @@
     <div id="toast" class="toast">클립보드에 복사되었습니다!</div>
 
     <div id="status" class="status show">로그인이 필요합니다. 우측 상단에서 로그인해 주세요.</div>
-    <div id="meaningDisplay" class="meaning-display"></div>
+    <div id="meaningDisplay" class="meaning-display markdown-content"></div>
   </div>
 
   <!-- 로그인 다이얼로그 모달 -->

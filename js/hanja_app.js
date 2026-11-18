@@ -94,7 +94,7 @@ async function fetchAndParseFile(file) {
     if (parts.length >= 2) {
       const korean = parts[0];
       const hanja = parts[1];
-      const meaning = parts[2] || '';
+      const meaning = parts.slice(2).join('|') || '';
       
       // hanjaMap에 추가 (같은 파일/이전 로드에서 이미 채워진 뜻을 빈 뜻이 덮어쓰지 않도록 보호)
       if (!hanjaMap.has(korean)) {
@@ -267,6 +267,248 @@ function getStrokeInfo(hanja) {
   }
 }
 
+// ── Markdown 전처리, 안전한 HTML 정화(Sanitizer) 및 렌더링 ──
+const HANJA_MARKDOWN_ALLOWED_ELEMENTS = [
+  'p', 'br', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'strong', 'b', 'em', 'i', 'del', 's', 'u', 'mark',
+  'blockquote', 'ul', 'ol', 'li', 'code', 'pre', 'hr', 'a',
+  'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'caption',
+  'img', 'figure', 'figcaption', 'span', 'div'
+];
+const HANJA_MARKDOWN_ALLOWED_ELEMENTS_SET = new Set(HANJA_MARKDOWN_ALLOWED_ELEMENTS);
+const HANJA_MARKDOWN_ALLOWED_ATTRIBUTES = [
+  'class', 'href', 'title', 'target', 'rel',
+  'src', 'alt', 'loading', 'decoding', 'width', 'height',
+  'align', 'colspan', 'rowspan', 'tabindex', 'role', 'aria-label'
+];
+const HANJA_MARKDOWN_DROPPED_CONTAINERS = new Set([
+  'script', 'style', 'iframe', 'object', 'embed', 'svg', 'math',
+  'noscript', 'template', 'textarea', 'select', 'form', 'button'
+]);
+
+function escapeHanjaHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isSafeHanjaMarkdownHref(rawHref) {
+  if (!rawHref) return false;
+  const cleaned = String(rawHref).replace(/[\u0000-\u001f\u007f\s]+/g, '').trim();
+  if (!cleaned) return false;
+  if (cleaned.startsWith('#') || (cleaned.startsWith('/') && !cleaned.startsWith('//'))) {
+    return true;
+  }
+  return /^(https?:|mailto:)/i.test(cleaned);
+}
+
+function isSafeHanjaImageSrc(rawSrc) {
+  if (!rawSrc) return false;
+  const trimmed = String(rawSrc).trim();
+  if (!trimmed || /[\u0000-\u001f\u007f]/.test(trimmed)) return false;
+  if (
+    /^(?:\.?\/)?img\/[^?#]+(?:\?[^#]*)?$/i.test(trimmed) &&
+    !trimmed.includes('..') &&
+    !trimmed.startsWith('//')
+  ) {
+    return true;
+  }
+  const compact = trimmed.replace(/\s+/g, '');
+  if (/^https?:\/\//i.test(compact)) {
+    return true;
+  }
+  if (/^data:image\/(?:png|jpeg|jpg|gif|webp|bmp);base64,[a-z0-9+/=]+$/i.test(compact)) {
+    return true;
+  }
+  return false;
+}
+
+function preprocessHanjaMarkdown(rawText) {
+  if (!rawText) return '';
+  let text = String(rawText)
+    .replace(/\r\n?/g, '\n')
+    .replace(/<\/br>/gi, '\n')
+    .replace(/<br\s*\/?>/gi, '\n');
+
+  // 1. [[파일명]] 태그를 표준 Markdown 이미지 문법으로 변환
+  text = text.replace(/\[\[([^\]]+?)\]\]/g, (_, filename) => {
+    const cleanName = filename.trim();
+    if (!cleanName) return '';
+    const src = cleanName.startsWith('img/') ? cleanName : `img/${cleanName}`;
+    return `![${cleanName}](${src.replace(/ /g, '%20')})`;
+  });
+
+  // 2. 코드 블록 및 인라인 코드 보호
+  const codeSpans = [];
+  text = text.replace(/```[\s\S]*?```|`[^`\n]+`/g, (match) => {
+    const token = `@@HMDSPAN${codeSpans.length}X@@`;
+    codeSpans.push(match);
+    return token;
+  });
+
+  // 3. 기존 사전 데이터의 <b>...</b> 및 유효한 자동 링크(<https://...>, <mailto:...>) 외의 '<' 이스케이프
+  text = text.replace(/<(?!(?:\/?b>|(?:https?:\/\/|mailto:)[^\s<>]+>))/gi, '&lt;');
+
+  // 4. 한국어 문장부호/조사 경계에서의 CJK 강조(**굵게**, *기울임*, ~~취소선~~) 전처리
+  text = text.replace(/\*\*\*(?!\s)((?:(?!\*\*\*|\n).)+?)(?<!\s)\*\*\*/g, '<strong><em>$1</em></strong>');
+  text = text.replace(/(?<!\*)\*\*(?!\s)(?!\*)((?:(?!\*\*|\n).)+?)(?<!\s)\*\*(?!\*)/g, '<strong>$1</strong>');
+  text = text.replace(/(?<!\*)\*(?!\s)(?!\*)([^\n*]+?)(?<!\s)\*(?!\*)/g, '<em>$1</em>');
+  text = text.replace(/~~(?!\s)((?:(?!~~|\n).)+?)(?<!\s)~~/g, '<del>$1</del>');
+
+  // 5. 코드 블록 및 인라인 코드 복원
+  text = text.replace(/@@HMDSPAN(\d+)X@@/g, (_, idx) => codeSpans[Number(idx)]);
+  return text;
+}
+
+function sanitizeHanjaMarkdownHtml(dirtyHtml) {
+  if (!dirtyHtml) return '';
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(`<div>${dirtyHtml}</div>`, 'text/html');
+  const container = doc.body.firstElementChild;
+  if (!container) return '';
+
+  function sanitizeElementTree(parent) {
+    const children = Array.from(parent.childNodes);
+    for (const child of children) {
+      if (child.nodeType === Node.TEXT_NODE) continue;
+      if (child.nodeType !== Node.ELEMENT_NODE) {
+        child.remove();
+        continue;
+      }
+
+      const tag = child.tagName.toLowerCase();
+
+      // GFM 할 일 목록 체크박스(<input type="checkbox" disabled>)는 안전한 텍스트 배지로 치환
+      if (tag === 'input' && (child.getAttribute('type') || '').toLowerCase() === 'checkbox') {
+        const span = doc.createElement('span');
+        span.className = 'md-task-checkbox';
+        span.textContent = child.hasAttribute('checked') ? '☑ ' : '☐ ';
+        parent.replaceChild(span, child);
+        continue;
+      }
+
+      if (HANJA_MARKDOWN_DROPPED_CONTAINERS.has(tag)) {
+        child.remove();
+        continue;
+      }
+
+      if (!HANJA_MARKDOWN_ALLOWED_ELEMENTS_SET.has(tag)) {
+        sanitizeElementTree(child);
+        const frag = doc.createDocumentFragment();
+        while (child.firstChild) frag.appendChild(child.firstChild);
+        parent.replaceChild(frag, child);
+        continue;
+      }
+
+      const attrs = Array.from(child.attributes);
+      for (const attr of attrs) {
+        const attrName = attr.name.toLowerCase();
+        if (!HANJA_MARKDOWN_ALLOWED_ATTRIBUTES.includes(attrName)) {
+          child.removeAttribute(attr.name);
+        }
+      }
+
+      if (tag === 'a') {
+        const rawHref = child.getAttribute('href') || '';
+        if (isSafeHanjaMarkdownHref(rawHref)) {
+          const cleanHref = rawHref.trim();
+          child.setAttribute('href', cleanHref);
+          if (/^https?:/i.test(cleanHref)) {
+            child.setAttribute('target', '_blank');
+            child.setAttribute('rel', 'noopener noreferrer');
+          } else {
+            child.removeAttribute('target');
+            child.removeAttribute('rel');
+          }
+        } else {
+          child.removeAttribute('href');
+          child.removeAttribute('target');
+          child.removeAttribute('rel');
+        }
+      } else {
+        child.removeAttribute('href');
+        child.removeAttribute('target');
+        child.removeAttribute('rel');
+      }
+
+      if (tag === 'img') {
+        const rawSrc = child.getAttribute('src') || '';
+        if (!isSafeHanjaImageSrc(rawSrc)) {
+          child.remove();
+          continue;
+        }
+        child.setAttribute('src', rawSrc.trim());
+        if (!child.getAttribute('loading')) child.setAttribute('loading', 'lazy');
+        if (!child.getAttribute('decoding')) child.setAttribute('decoding', 'async');
+      } else {
+        child.removeAttribute('src');
+        child.removeAttribute('alt');
+        child.removeAttribute('loading');
+        child.removeAttribute('decoding');
+      }
+
+      sanitizeElementTree(child);
+    }
+  }
+
+  sanitizeElementTree(container);
+
+  // 표를 반응형 스크롤 래퍼로 감쌈 (키보드 스크롤 및 sticky 헤더 지원)
+  const tables = Array.from(container.querySelectorAll('table'));
+  tables.forEach((table) => {
+    if (table.parentElement && table.parentElement.classList.contains('table-wrapper')) {
+      return;
+    }
+    const wrapper = doc.createElement('div');
+    wrapper.className = 'table-wrapper';
+    wrapper.setAttribute('tabindex', '0');
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', '표 데이터');
+    table.parentNode.insertBefore(wrapper, table);
+    wrapper.appendChild(table);
+  });
+
+  return container.innerHTML;
+}
+
+function renderHanjaMarkdown(rawText) {
+  if (!rawText) return '';
+  const preprocessed = preprocessHanjaMarkdown(rawText);
+  let rawHtml = '';
+
+  if (typeof marked !== 'undefined' && typeof marked.parse === 'function') {
+    rawHtml = marked.parse(preprocessed, { breaks: true, gfm: true });
+  }
+
+  if (!rawHtml) {
+    rawHtml = escapeHanjaHtml(preprocessed).replace(/\n/g, '<br>');
+  }
+
+  return sanitizeHanjaMarkdownHtml(rawHtml);
+}
+
+function safeSetHanjaMarkdownHTML(el, rawText) {
+  if (!el) return;
+  const sanitizedHtml = renderHanjaMarkdown(rawText);
+  if (!sanitizedHtml) {
+    el.textContent = '';
+    return;
+  }
+  if ('setHTML' in Element.prototype) {
+    el.setHTML(sanitizedHtml, {
+      sanitizer: {
+        elements: HANJA_MARKDOWN_ALLOWED_ELEMENTS,
+        attributes: HANJA_MARKDOWN_ALLOWED_ATTRIBUTES
+      }
+    });
+  } else {
+    el.innerHTML = sanitizedHtml;
+  }
+}
+
 // 상세 보기 패널 열기
 function showDetailView(itemObj, customWord) {
   // 1. 상세 보기 패널 내용 채우기
@@ -281,10 +523,9 @@ function showDetailView(itemObj, customWord) {
   }
   
   if (itemObj.meaning) {
-    // HTML 렌더링 지원 및 </br> 태그를 표준 <br> 태그로 치환
-    detailMeaning.innerHTML = itemObj.meaning.replace(/<\/br>/g, '<br>');
+    safeSetHanjaMarkdownHTML(detailMeaning, itemObj.meaning);
   } else {
-    detailMeaning.innerHTML = '뜻 정보 없음';
+    detailMeaning.textContent = '뜻 정보 없음';
   }
   
   // 현재 아이템 저장 (수정 시 참조)
@@ -395,10 +636,10 @@ function renderHanjaListToGrid(hanjas, container, customWord) {
       const copyText = copyWord ? `${copyWord}(${itemObj.hanja})` : itemObj.hanja;
 
       if (itemObj.meaning) {
-        meaningDisplay.innerHTML = `${itemObj.meaning.replace(/<\/br>/g, '<br>')}`;
+        safeSetHanjaMarkdownHTML(meaningDisplay, itemObj.meaning);
         meaningDisplay.classList.add('show');
       } else {
-        meaningDisplay.innerHTML = '뜻 정보 없음';
+        meaningDisplay.textContent = '뜻 정보 없음';
         meaningDisplay.classList.add('show');
       }
 
@@ -947,7 +1188,7 @@ async function searchHanjaCharacter(char) {
         meaning: matches.map((m, idx) => {
           const sound = m.korean ? `[${m.korean}] ` : '';
           return `${idx + 1}. ${sound}${m.meaning}`;
-        }).join('<br>')
+        }).join('\n\n')
       };
     }
   } else {
@@ -1575,13 +1816,9 @@ function applyOverridesToMemory(items, options = {}) {
     const inner = hanjaMap.get(korean);
     const existing = inner.get(hanja) || {};
 
-    // Supabase 레코드가 초기 임포트 상태(created_at === updated_at)이면서 로컬 뜻이 더 상세하면 로컬 뜻 유지
-    const isInitialImport = Boolean(
-      item.created_at && item.updated_at && item.created_at === item.updated_at
-    );
+    // 로컬 사전의 뜻이 구버전 캐시나 DB 레코드보다 더 상세한 경우(새로 추가된 표·그림 포함) 로컬 뜻을 유지하고 DB 동기화 대상에 포함
     const localIsRicher = Boolean(
       existing.meaning &&
-      isInitialImport &&
       existing.meaning.length > (meaning || '').length
     );
 
@@ -1824,7 +2061,11 @@ if (saveEditBtn) {
     }
 
     // 뷰 갱신 및 상태 복구
-    detailMeaning.innerHTML = processedMeaning.replace(/<\/br>/g, '<br>');
+    if (processedMeaning) {
+      safeSetHanjaMarkdownHTML(detailMeaning, processedMeaning);
+    } else {
+      detailMeaning.textContent = '뜻 정보 없음';
+    }
     editArea.style.display = 'none';
     detailMeaning.style.display = 'block';
     if (isLoggedIn) {

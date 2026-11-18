@@ -68,7 +68,7 @@ def load_all_hanja_files(meaning_only=False):
             total_raw_lines += 1
             file_lines += 1
 
-            parts = line_str.split('|')
+            parts = line_str.split('|', 2)
             if len(parts) < 2:
                 continue
 
