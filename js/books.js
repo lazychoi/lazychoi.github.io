@@ -76,6 +76,7 @@ let isSeedingRecommendedToSupabase = false;
 let isEditingRecommended = false;
 let showCheckedRecommended = false;
 let hasLoadedRecommended = false;
+const expandedRecommendedSections = new Set();
 
 // 유니코드 NFC 정규화 및 HTML 이스케이프 헬퍼
 function normalizeTextNfc(str) {
@@ -3868,7 +3869,7 @@ function bindSettingsModalEvents() {
 // ══════════════════════════════════════════════════════
 const RECOMMENDED_CODE_FENCE_RE = /^[ \t]*(`{3,}|~{3,})/;
 const RECOMMENDED_THEMATIC_BREAK_RE = /^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$/;
-const RECOMMENDED_HEADING_RE = /^[ \t]*#{1,6}[ \t]+/;
+const RECOMMENDED_HEADING_RE = /^[ \t]*(#{1,6})[ \t]+(.*)$/;
 const RECOMMENDED_LIST_ITEM_RE = /^([ \t]*)([-*+])[ \t]+(?:\[([ xX])\][ \t]+)?(.*)$/;
 
 let latestRecommendedSaveSeq = 0;
@@ -3994,14 +3995,18 @@ function parseRecommendedMarkdownBlocks(markdownText) {
       continue;
     }
 
-    if (RECOMMENDED_HEADING_RE.test(line)) {
+    const headingMatch = line.match(RECOMMENDED_HEADING_RE);
+    if (headingMatch && headingMatch[2].trim() !== '') {
       flushMarkdown();
       flushList();
+      const level = headingMatch[1].length;
+      const plainText = headingMatch[2].replace(/[ \t]+#+[ \t]*$/, '').trim() || headingMatch[2].trim();
       blocks.push({
         type: 'heading',
         lineIndex: i,
+        level,
         text: line,
-        plainText: line.replace(/^[ \t]*#{1,6}[ \t]+/, '').trim()
+        plainText
       });
       continue;
     }
@@ -4299,26 +4304,63 @@ async function saveRecommendedMarkdown(nextContent, { statusText = '✓ 저장�
   }
 }
 
-function groupRecommendedBlocksIntoSections(blocks) {
-  const sections = [];
-  let current = { heading: null, blocks: [] };
+function buildRecommendedSectionTree(blocks) {
+  const root = {
+    heading: null,
+    level: 0,
+    key: '__root__',
+    blocks: [],
+    children: []
+  };
+  const stack = [root];
+  const seenCounts = new Map();
 
   for (const block of blocks) {
     if (block.type === 'heading') {
-      if (current.heading || current.blocks.length > 0) {
-        sections.push(current);
+      const level = block.level || 2;
+      while (stack.length > 1 && stack[stack.length - 1].level >= level) {
+        stack.pop();
       }
-      current = { heading: block, blocks: [] };
+      const baseKey = `${level}:${block.plainText}`;
+      const occ = seenCounts.get(baseKey) || 0;
+      seenCounts.set(baseKey, occ + 1);
+      const node = {
+        heading: block,
+        level,
+        key: `${baseKey}#${occ}`,
+        blocks: [],
+        children: []
+      };
+      stack[stack.length - 1].children.push(node);
+      stack.push(node);
     } else {
-      current.blocks.push(block);
+      stack[stack.length - 1].blocks.push(block);
     }
   }
 
-  if (current.heading || current.blocks.length > 0) {
-    sections.push(current);
+  return root;
+}
+
+function updateRecommendedToggleAllButton() {
+  const btnToggleAll = document.getElementById('btnToggleAllRecommended');
+  const renderedView = document.getElementById('recommendedRenderedView');
+  if (!btnToggleAll) return;
+
+  const editingActive = isEditingRecommended && isLoggedIn;
+  if (editingActive || !renderedView) {
+    btnToggleAll.style.display = 'none';
+    return;
   }
 
-  return sections;
+  const triggers = Array.from(renderedView.querySelectorAll('.recommended-heading-trigger'));
+  if (triggers.length === 0) {
+    btnToggleAll.style.display = 'none';
+    return;
+  }
+
+  btnToggleAll.style.display = 'inline-flex';
+  const allExpanded = triggers.every(t => t.getAttribute('aria-expanded') === 'true');
+  btnToggleAll.setAttribute('aria-expanded', String(allExpanded));
 }
 
 function buildRecommendedListElement(items, query) {
@@ -4353,10 +4395,180 @@ function buildRecommendedListElement(items, query) {
   return ul;
 }
 
+function renderRecommendedSectionNode(node, { query = '', qLower = '', parentMatched = false } = {}) {
+  const headingMatches = Boolean(
+    qLower && node.heading && normalizeTextNfc(node.heading.plainText).toLowerCase().includes(qLower)
+  );
+  const effectiveMatched = Boolean(parentMatched || headingMatches);
+  const contentNodes = [];
+
+  let totalItems = 0;
+  let uncheckedItems = 0;
+  let visibleItems = 0;
+
+  for (const block of node.blocks) {
+    if (block.type === 'markdown') {
+      if (!qLower || effectiveMatched || normalizeTextNfc(block.text).toLowerCase().includes(qLower)) {
+        const mdBlock = document.createElement('div');
+        mdBlock.className = 'recommended-md-block';
+        safeSetMarkdownHTML(mdBlock, renderMarkdownContent(block.text, query));
+        contentNodes.push(mdBlock);
+      }
+      continue;
+    }
+
+    if (block.type === 'list') {
+      totalItems += block.items.length;
+      for (const item of block.items) {
+        if (!item.checked) uncheckedItems++;
+      }
+
+      const byCheckVisibility = showCheckedRecommended
+        ? block.items
+        : block.items.filter(item => !item.checked);
+
+      if (qLower) {
+        const matchedItems = effectiveMatched
+          ? byCheckVisibility
+          : byCheckVisibility.filter(item => normalizeTextNfc(item.text).toLowerCase().includes(qLower));
+
+        visibleItems += matchedItems.length;
+        if (matchedItems.length > 0) {
+          contentNodes.push(buildRecommendedListElement(matchedItems, query));
+        } else if (effectiveMatched && block.items.length > 0 && !showCheckedRecommended) {
+          const doneNote = document.createElement('p');
+          doneNote.className = 'recommended-section-done-note';
+          doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
+          contentNodes.push(doneNote);
+        }
+      } else {
+        visibleItems += byCheckVisibility.length;
+        if (byCheckVisibility.length > 0) {
+          contentNodes.push(buildRecommendedListElement(byCheckVisibility, ''));
+        } else if (block.items.length > 0 && !showCheckedRecommended) {
+          const doneNote = document.createElement('p');
+          doneNote.className = 'recommended-section-done-note';
+          doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
+          contentNodes.push(doneNote);
+        }
+      }
+    }
+  }
+
+  for (const child of node.children) {
+    const childRes = renderRecommendedSectionNode(child, {
+      query,
+      qLower,
+      parentMatched: effectiveMatched
+    });
+    totalItems += childRes.totalItems;
+    uncheckedItems += childRes.uncheckedItems;
+    visibleItems += childRes.visibleItems;
+    if (childRes.el) {
+      contentNodes.push(childRes.el);
+    }
+  }
+
+  if (!node.heading) {
+    return {
+      el: null,
+      contentNodes,
+      totalItems,
+      uncheckedItems,
+      visibleItems
+    };
+  }
+
+  if (qLower && !effectiveMatched && contentNodes.length === 0) {
+    return {
+      el: null,
+      contentNodes: [],
+      totalItems,
+      uncheckedItems,
+      visibleItems
+    };
+  }
+
+  const groupEl = document.createElement('div');
+  groupEl.className = 'recommended-section-group';
+  groupEl.dataset.level = String(node.level);
+  groupEl.dataset.sectionKey = node.key;
+
+  const headingLevel = Math.min(6, Math.max(1, node.level || 2));
+  const headingEl = document.createElement(`h${headingLevel}`);
+  headingEl.className = 'recommended-heading';
+
+  const triggerBtn = document.createElement('button');
+  triggerBtn.type = 'button';
+  triggerBtn.className = 'recommended-heading-trigger';
+  const isOpen = qLower ? true : expandedRecommendedSections.has(node.key);
+  triggerBtn.setAttribute('aria-expanded', String(isOpen));
+  triggerBtn.dataset.sectionKey = node.key;
+
+  const textSpan = document.createElement('span');
+  textSpan.className = 'recommended-heading-text';
+  safeSetMarkdownHTML(textSpan, renderMarkdownContent(node.heading.plainText, query, { inline: true }));
+  textSpan.querySelectorAll('a').forEach((anchor) => {
+    const frag = document.createDocumentFragment();
+    while (anchor.firstChild) frag.appendChild(anchor.firstChild);
+    anchor.replaceWith(frag);
+  });
+  triggerBtn.appendChild(textSpan);
+
+  if (totalItems > 0) {
+    const countBadge = document.createElement('span');
+    countBadge.className = 'recommended-heading-count';
+    if (qLower) {
+      countBadge.textContent = String(visibleItems);
+    } else if (!showCheckedRecommended && uncheckedItems === 0) {
+      countBadge.textContent = '완료';
+      countBadge.classList.add('is-all-done');
+    } else if (showCheckedRecommended) {
+      countBadge.textContent = `${uncheckedItems}/${totalItems}`;
+    } else {
+      countBadge.textContent = String(uncheckedItems);
+    }
+    triggerBtn.appendChild(countBadge);
+  }
+
+  headingEl.appendChild(triggerBtn);
+
+  const panelEl = document.createElement('div');
+  panelEl.className = 'recommended-section-panel';
+  panelEl.dataset.sectionKey = node.key;
+  panelEl.hidden = isOpen ? false : 'until-found';
+
+  const panelInner = document.createElement('div');
+  panelInner.className = 'recommended-section-panel-inner';
+
+  if (contentNodes.length === 0) {
+    const emptySection = document.createElement('p');
+    emptySection.className = 'recommended-section-empty-note';
+    emptySection.textContent = '등록된 항목이 없습니다.';
+    panelInner.appendChild(emptySection);
+  } else {
+    for (const childNode of contentNodes) {
+      panelInner.appendChild(childNode);
+    }
+  }
+
+  panelEl.appendChild(panelInner);
+  groupEl.append(headingEl, panelEl);
+
+  return {
+    el: groupEl,
+    contentNodes: [groupEl],
+    totalItems,
+    uncheckedItems,
+    visibleItems
+  };
+}
+
 function renderRecommendedView() {
   const renderedView = document.getElementById('recommendedRenderedView');
   const editorWrap = document.getElementById('recommendedEditorWrap');
   const editorEl = document.getElementById('recommendedMarkdownEditor');
+  const btnToggleAll = document.getElementById('btnToggleAllRecommended');
   const btnEdit = document.getElementById('btnEditRecommended');
   const btnCancel = document.getElementById('btnCancelRecommended');
   const btnSave = document.getElementById('btnSaveRecommended');
@@ -4371,6 +4583,7 @@ function renderRecommendedView() {
   if (editingActive) {
     if (renderedView) renderedView.style.display = 'none';
     if (editorWrap) editorWrap.style.display = 'flex';
+    if (btnToggleAll) btnToggleAll.style.display = 'none';
     if (btnEdit) btnEdit.style.display = 'none';
     if (btnCancel) btnCancel.style.display = 'inline-flex';
     if (btnSave) btnSave.style.display = 'inline-flex';
@@ -4393,13 +4606,15 @@ function renderRecommendedView() {
   const rawContent = normalizeTextNfc(recommendedDoc.content || '').replace(/\r\n?/g, '\n');
   if (!rawContent.trim()) {
     renderedView.innerHTML = `<div class="notes-empty-card">등록된 추천 도서가 없습니다. 상단의 <strong>편집</strong> 버튼을 눌러 마크다운 형식으로 추천 도서 목록을 작성해 보세요.</div>`;
+    updateRecommendedToggleAllButton();
     return;
   }
 
   const query = (document.getElementById('listSearchInput')?.value || '').trim();
   const qLower = query ? normalizeTextNfc(query).toLowerCase() : '';
   const blocks = parseRecommendedMarkdownBlocks(rawContent);
-  const sections = groupRecommendedBlocksIntoSections(blocks);
+  const treeRoot = buildRecommendedSectionTree(blocks);
+  const renderedRoot = renderRecommendedSectionNode(treeRoot, { query, qLower, parentMatched: false });
 
   renderedView.innerHTML = '';
   const frag = document.createDocumentFragment();
@@ -4411,72 +4626,9 @@ function renderRecommendedView() {
     frag.appendChild(allDoneBanner);
   }
 
-  let renderedSomething = false;
-
-  for (const sec of sections) {
-    const headingMatches = Boolean(
-      qLower && sec.heading && normalizeTextNfc(sec.heading.plainText).toLowerCase().includes(qLower)
-    );
-    const secNodes = [];
-
-    for (const block of sec.blocks) {
-      if (block.type === 'markdown') {
-        if (!qLower || headingMatches || normalizeTextNfc(block.text).toLowerCase().includes(qLower)) {
-          const mdBlock = document.createElement('div');
-          mdBlock.className = 'recommended-md-block';
-          safeSetMarkdownHTML(mdBlock, renderMarkdownContent(block.text, query));
-          secNodes.push(mdBlock);
-        }
-        continue;
-      }
-
-      if (block.type === 'list') {
-        const byCheckVisibility = showCheckedRecommended
-          ? block.items
-          : block.items.filter(item => !item.checked);
-
-        if (qLower) {
-          const matchedItems = headingMatches
-            ? byCheckVisibility
-            : byCheckVisibility.filter(item => normalizeTextNfc(item.text).toLowerCase().includes(qLower));
-
-          if (matchedItems.length > 0) {
-            secNodes.push(buildRecommendedListElement(matchedItems, query));
-          } else if (headingMatches && block.items.length > 0 && !showCheckedRecommended) {
-            const doneNote = document.createElement('p');
-            doneNote.className = 'recommended-section-done-note';
-            doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
-            secNodes.push(doneNote);
-          }
-        } else {
-          if (byCheckVisibility.length > 0) {
-            secNodes.push(buildRecommendedListElement(byCheckVisibility, ''));
-          } else if (block.items.length > 0 && !showCheckedRecommended) {
-            const doneNote = document.createElement('p');
-            doneNote.className = 'recommended-section-done-note';
-            doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
-            secNodes.push(doneNote);
-          }
-        }
-      }
-    }
-
-    if (qLower && !headingMatches && secNodes.length === 0) {
-      continue;
-    }
-
-    if (sec.heading) {
-      const headingWrap = document.createElement('div');
-      headingWrap.className = 'recommended-heading-block';
-      safeSetMarkdownHTML(headingWrap, renderMarkdownContent(sec.heading.text, query));
-      frag.appendChild(headingWrap);
-      renderedSomething = true;
-    }
-
-    for (const node of secNodes) {
-      frag.appendChild(node);
-      renderedSomething = true;
-    }
+  const renderedSomething = renderedRoot.contentNodes.length > 0;
+  for (const node of renderedRoot.contentNodes) {
+    frag.appendChild(node);
   }
 
   if (!renderedSomething && qLower) {
@@ -4487,10 +4639,12 @@ function renderRecommendedView() {
   }
 
   renderedView.appendChild(frag);
+  updateRecommendedToggleAllButton();
 }
 
 function bindRecommendedEvents() {
   const chkShowChecked = document.getElementById('chkShowCheckedRecommended');
+  const btnToggleAll = document.getElementById('btnToggleAllRecommended');
   const btnEdit = document.getElementById('btnEditRecommended');
   const btnCancel = document.getElementById('btnCancelRecommended');
   const btnSave = document.getElementById('btnSaveRecommended');
@@ -4501,6 +4655,28 @@ function bindRecommendedEvents() {
     chkShowChecked.addEventListener('change', () => {
       showCheckedRecommended = chkShowChecked.checked;
       renderRecommendedView();
+    });
+  }
+
+  if (btnToggleAll) {
+    btnToggleAll.addEventListener('click', () => {
+      if (!renderedView) return;
+      const shouldExpand = btnToggleAll.getAttribute('aria-expanded') !== 'true';
+      renderedView.querySelectorAll('.recommended-section-group').forEach((group) => {
+        const key = group.dataset.sectionKey || '';
+        const trigger = group.querySelector(':scope > .recommended-heading > .recommended-heading-trigger');
+        const panel = group.querySelector(':scope > .recommended-section-panel');
+        if (key) {
+          if (shouldExpand) {
+            expandedRecommendedSections.add(key);
+          } else {
+            expandedRecommendedSections.delete(key);
+          }
+        }
+        if (trigger) trigger.setAttribute('aria-expanded', String(shouldExpand));
+        if (panel) panel.hidden = shouldExpand ? false : 'until-found';
+      });
+      updateRecommendedToggleAllButton();
     });
   }
 
@@ -4550,6 +4726,43 @@ function bindRecommendedEvents() {
   }
 
   if (renderedView) {
+    renderedView.addEventListener('click', (e) => {
+      const trigger = e.target.closest('.recommended-heading-trigger');
+      if (!trigger) return;
+
+      const group = trigger.closest('.recommended-section-group');
+      const panel = group?.querySelector(':scope > .recommended-section-panel');
+      const sectionKey = trigger.dataset.sectionKey || group?.dataset.sectionKey || '';
+      if (!panel) return;
+
+      const willOpen = trigger.getAttribute('aria-expanded') !== 'true';
+      if (sectionKey) {
+        if (willOpen) {
+          expandedRecommendedSections.add(sectionKey);
+        } else {
+          expandedRecommendedSections.delete(sectionKey);
+        }
+      }
+
+      trigger.setAttribute('aria-expanded', String(willOpen));
+      panel.hidden = willOpen ? false : 'until-found';
+      updateRecommendedToggleAllButton();
+    });
+
+    renderedView.addEventListener('beforematch', (e) => {
+      let cur = e.target instanceof Element ? e.target.closest('.recommended-section-panel') : null;
+      while (cur && renderedView.contains(cur)) {
+        const group = cur.closest('.recommended-section-group');
+        const trigger = group?.querySelector(':scope > .recommended-heading > .recommended-heading-trigger');
+        const key = cur.dataset.sectionKey || group?.dataset.sectionKey || '';
+        if (key) expandedRecommendedSections.add(key);
+        cur.hidden = false;
+        if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        cur = group?.parentElement?.closest('.recommended-section-panel') || null;
+      }
+      updateRecommendedToggleAllButton();
+    });
+
     renderedView.addEventListener('change', async (e) => {
       const checkbox = e.target.closest('.recommended-item-checkbox');
       if (!checkbox) return;
