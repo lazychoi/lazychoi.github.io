@@ -1983,6 +1983,243 @@ mark.search-hl {
   line-height: 1.6;
 }
 
+/* ══════════════════════════════════════════════════════
+   4. 추천 도서 목록 (Recommended Books View / Editor)
+   ══════════════════════════════════════════════════════ */
+.recommended-section {
+  width: 100%;
+}
+
+.recommended-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 20px 24px;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.recommended-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.recommended-toolbar-left {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.recommended-summary {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.recommended-toggle-checked {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  min-block-size: 44px;
+}
+
+.recommended-toggle-checked input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.recommended-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memo-save-status.is-error {
+  color: #dc2626;
+}
+
+.recommended-rendered-view {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--text-main);
+}
+
+.recommended-heading-block {
+  margin-top: 1.35em;
+  margin-bottom: 0.4em;
+}
+
+.recommended-heading-block:first-child,
+.recommended-all-done-banner + .recommended-heading-block {
+  margin-top: 0;
+}
+
+.recommended-heading-block h1,
+.recommended-heading-block h2,
+.recommended-heading-block h3,
+.recommended-heading-block h4,
+.recommended-heading-block h5,
+.recommended-heading-block h6 {
+  margin: 0;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.recommended-md-block {
+  margin: 0.45em 0;
+}
+
+.recommended-book-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0.25em 0 0.85em;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.recommended-book-item {
+  border-radius: 10px;
+  padding: 0 10px;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+
+.recommended-book-item:hover {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.recommended-book-item[data-depth="1"] {
+  padding-inline-start: 28px;
+}
+
+.recommended-book-item[data-depth="2"] {
+  padding-inline-start: 46px;
+}
+
+.recommended-book-item[data-depth="3"] {
+  padding-inline-start: 64px;
+}
+
+.recommended-item-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-block-size: 44px;
+  width: 100%;
+  padding: 6px 0;
+  cursor: pointer;
+  color: var(--text-main);
+}
+
+.recommended-item-checkbox {
+  accent-color: var(--accent);
+  inline-size: 1.15em;
+  aspect-ratio: 1;
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.recommended-item-checkbox:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.recommended-item-checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.recommended-item-text {
+  flex: 1;
+  min-width: 0;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.recommended-book-item.is-checked {
+  opacity: 0.65;
+}
+
+.recommended-book-item.is-checked .recommended-item-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.recommended-section-done-note {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 0.35em 0 0.9em;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+}
+
+.recommended-all-done-banner {
+  background: rgba(5, 150, 105, 0.08);
+  border: 1px solid rgba(5, 150, 105, 0.22);
+  color: #065f46;
+  border-radius: 12px;
+  padding: 12px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+
+.recommended-editor-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recommended-editor-hint {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.recommended-editor-hint code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgba(15, 23, 42, 0.07);
+  color: #0f172a;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.recommended-markdown-editor {
+  field-sizing: content;
+  height: auto;
+  width: 100%;
+  min-block-size: 14lh;
+  max-block-size: 65vh;
+  padding: 14px 16px;
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--text-main);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 13.5px;
+  line-height: 1.65;
+  resize: vertical;
+}
+
+.recommended-markdown-editor:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
 /* ── 모바일 반응형 ── */
 @media (max-width: 768px) {
   .books-container {
@@ -2029,14 +2266,16 @@ mark.search-hl {
     display: flex;
     flex-wrap: nowrap;
     gap: 6px;
+    scroll-snap-type: inline proximity;
   }
 
   .status-tab {
-    flex: 1;
+    flex: 1 0 auto;
     justify-content: center;
-    padding: 8px 6px;
+    padding: 8px 10px;
     font-size: 13px;
     gap: 5px;
+    scroll-snap-align: start;
   }
 
   .view-mode-group {
@@ -2133,6 +2372,25 @@ mark.search-hl {
     padding: 12px;
   }
 
+  .recommended-card {
+    padding: 14px 12px;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .recommended-toolbar {
+    padding-bottom: 10px;
+  }
+
+  .recommended-book-item {
+    padding: 0 6px;
+  }
+
+  .recommended-markdown-editor {
+    padding: 12px;
+    font-size: 13px;
+  }
+
   .books-cover-grid {
     grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 12px;
@@ -2200,7 +2458,8 @@ mark.search-hl {
   }
 
   .status-tab {
-    padding: 7px 4px;
+    flex: 1 0 auto;
+    padding: 7px 9px;
     font-size: 12px;
     gap: 4px;
   }

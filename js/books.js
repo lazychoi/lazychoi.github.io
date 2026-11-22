@@ -13,10 +13,38 @@ const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUr
 const TABLE_NAME = 'reading_books';
 const LOCAL_STORAGE_KEY = 'reading_books_local_v1';
 const API_KEYS_STORAGE_KEY = 'reading_books_api_keys_v2';
+const RECOMMENDED_TABLE_NAME = 'reading_recommendations';
+const RECOMMENDED_DEFAULT_SLUG = 'default';
+const RECOMMENDED_LOCAL_STORAGE_KEY = 'reading_recommendations_local_v1';
+
+const DEFAULT_RECOMMENDED_MARKDOWN = `## 첫 도전용으로 좋은, 술술 넘어기는 벽돌책들
+
+- 핑거스미스
+- 재난, 그 이
+- 폭격기의 달이 뜨면
+- 사람을 위한 경제학
+- 눈먼 자들의 경제
+- 꿈꾸는 책들의 도시
+- 끝없는 이야기
+- 메리와 메리
+
+## 사유의 과정을 보여주는 벽돌책
+
+- 우리 본성의 선한 천사
+- 생각에 관한 생각
+- 왜 서양이 지배하는가
+- 도도의 노래
+- 용과 독수리의 제국
+- 사고의 본질
+- 도덕의 궤적
+- 통제 불능
+- 인간 무리, 왜 무리지어 사는가
+- 문명과 전쟁
+- 나이듦에 관하여`;
 
 // 2. 애플리케이션 상태
 let books = [];
-let currentStatusTab = 'to_read'; // 'to_read' | 'read' | 'all'
+let currentStatusTab = 'to_read'; // 'to_read' | 'read' | 'all' | 'recommended'
 const savedViewMode = localStorage.getItem('reading_books_view_mode');
 let currentViewMode = (savedViewMode === 'title' || savedViewMode === 'notes') ? savedViewMode : 'cover'; // 'cover' | 'title' | 'notes'
 let lastBookViewMode = currentViewMode === 'title' ? 'title' : 'cover';
@@ -32,6 +60,18 @@ let isSeedingToSupabase = false;
 let hasInitializedTab = false;
 let lastRenderedIds = []; // 동적 정렬 시 기존 DOM 노드 재정렬 판별용
 let apiSearchCandidates = []; // 최근 도서 검색 결과 목록
+let recommendedDoc = {
+  id: null,
+  slug: RECOMMENDED_DEFAULT_SLUG,
+  title: '추천 도서 목록',
+  content: DEFAULT_RECOMMENDED_MARKDOWN,
+  updated_at: ''
+};
+let supabaseRecommendedTableReady = true;
+let isSeedingRecommendedToSupabase = false;
+let isEditingRecommended = false;
+let showCheckedRecommended = false;
+let hasLoadedRecommended = false;
 
 // 유니코드 NFC 정규화 및 HTML 이스케이프 헬퍼
 function normalizeTextNfc(str) {
@@ -472,6 +512,7 @@ window.addEventListener('DOMContentLoaded', () => {
   setupDialogLightDismissFallbacks();
   bindAuthEvents();
   bindMainToolbarEvents();
+  bindRecommendedEvents();
   bindSearchModalEvents();
   bindEditModalEvents();
   bindDetailModalEvents();
@@ -481,6 +522,7 @@ window.addEventListener('DOMContentLoaded', () => {
   updateInlineNlkKeyBarVisibility();
   updateAuthUI();
   loadAllBooks();
+  loadRecommendedList();
 });
 
 function requireLogin(actionLabel = '수정') {
@@ -515,6 +557,7 @@ function updateAuthUI() {
     if (btnEmptyAddBook) btnEmptyAddBook.style.display = 'none';
 
     selectedBookIds.clear();
+    isEditingRecommended = false;
     ['bookSearchDialog', 'bookEditDialog', 'booksSettingsDialog'].forEach((id) => {
       const dlg = document.getElementById(id);
       if (dlg && dlg.open) dlg.close();
@@ -523,7 +566,7 @@ function updateAuthUI() {
 
   const loadingEl = document.getElementById('booksLoading');
   const isInitialLoading = loadingEl && loadingEl.style.display !== 'none' && books.length === 0;
-  if (!isInitialLoading) {
+  if (!isInitialLoading || currentStatusTab === 'recommended') {
     lastRenderedIds = [];
     renderBooksView(false);
   }
@@ -550,6 +593,7 @@ function bindAuthEvents() {
 
       if (user) {
         seedBackupBooksToSupabaseIfEmpty();
+        seedRecommendedToSupabaseIfEmpty();
       }
     });
   }
@@ -580,6 +624,7 @@ function bindAuthEvents() {
         loginForm.reset();
         loginDialog.close();
         loadAllBooks();
+        loadRecommendedList();
       }
     });
   }
@@ -781,18 +826,20 @@ async function loadAllBooks() {
     }
   } catch (_) {}
 
-  // 최초 로드 시 '읽을 책'이 0권이고 '읽은 책'에 도서가 있으면 '읽은 책' 탭을 기본 활성화
+  // 최초 로드 시 '읽을 책'이 0권이고 '읽은 책'에 도서가 있으면 '읽은 책' 탭을 기본 활성화 (이미 추천 도서 등 다른 탭을 선택한 경우 유지)
   if (!hasInitializedTab && books.length > 0) {
     hasInitializedTab = true;
-    const toReadCnt = books.filter(b => b.status === 'to_read').length;
-    const readCnt = books.filter(b => b.status === 'read').length;
-    if (toReadCnt === 0 && readCnt > 0) {
-      currentStatusTab = 'read';
-      document.querySelectorAll('.status-tab').forEach(t => {
-        const match = t.getAttribute('data-status') === 'read';
-        t.classList.toggle('active', match);
-        t.setAttribute('aria-selected', String(match));
-      });
+    if (currentStatusTab === 'to_read') {
+      const toReadCnt = books.filter(b => b.status === 'to_read').length;
+      const readCnt = books.filter(b => b.status === 'read').length;
+      if (toReadCnt === 0 && readCnt > 0) {
+        currentStatusTab = 'read';
+        document.querySelectorAll('.status-tab').forEach(t => {
+          const match = t.getAttribute('data-status') === 'read';
+          t.classList.toggle('active', match);
+          t.setAttribute('aria-selected', String(match));
+        });
+      }
     }
   }
 
@@ -1067,6 +1114,8 @@ function updateTabCounts() {
   if (elToRead) elToRead.textContent = toReadCount;
   if (elRead) elRead.textContent = readCount;
   if (elAll) elAll.textContent = allCount;
+
+  updateRecommendedCounts();
 }
 
 function updateSelectionBarUI(visibleBookIds) {
@@ -1307,6 +1356,7 @@ function renderAllNotesView() {
 function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
   updateTabCounts();
 
+  const loadingEl = document.getElementById('booksLoading');
   const emptyState = document.getElementById('booksEmptyState');
   const emptyTitle = document.getElementById('emptyStateTitle');
   const emptyDesc = document.getElementById('emptyStateDesc');
@@ -1315,6 +1365,36 @@ function renderBooksView(tryReorderOnly = false, statusAnnouncement = '') {
   const titleList = document.getElementById('booksTitleList');
   const notesList = document.getElementById('booksNotesList');
   const selectionBar = document.getElementById('selectionActionBar');
+  const recommendedSection = document.getElementById('booksRecommendedSection');
+  const viewModeGroup = document.getElementById('viewModeGroup') || document.querySelector('.view-mode-group');
+  const sortGroup = document.getElementById('booksSortGroup') || document.querySelector('.books-sort-group');
+  const listSearchInput = document.getElementById('listSearchInput');
+
+  if (currentStatusTab === 'recommended') {
+    if (loadingEl) loadingEl.style.display = 'none';
+    if (viewModeGroup) viewModeGroup.style.display = 'none';
+    if (sortGroup) sortGroup.style.display = 'none';
+    if (selectionBar) selectionBar.style.display = 'none';
+    if (emptyState) emptyState.style.display = 'none';
+    if (listSection) listSection.style.display = 'none';
+    if (recommendedSection) recommendedSection.style.display = 'block';
+    if (listSearchInput) listSearchInput.placeholder = '추천 도서 제목, 분류 검색...';
+
+    renderRecommendedView();
+    lastRenderedIds = [];
+    if (statusAnnouncement) {
+      const statusEl = document.getElementById('reorderStatus');
+      if (statusEl) statusEl.textContent = statusAnnouncement;
+    }
+    return;
+  }
+
+  if (recommendedSection) recommendedSection.style.display = 'none';
+  if (viewModeGroup) viewModeGroup.style.display = '';
+  if (sortGroup) sortGroup.style.display = '';
+  if (listSearchInput) {
+    listSearchInput.placeholder = '책 제목, 저자, 출판사, 문장 수집, 독서 메모 전체 검색...';
+  }
 
   if (currentViewMode === 'notes') {
     if (selectionBar) selectionBar.style.display = 'none';
@@ -1629,7 +1709,7 @@ function setStatusTabActive(targetStatus) {
     t.classList.toggle('active', match);
     t.setAttribute('aria-selected', String(match));
     if (match) {
-      t.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+      t.scrollIntoView({ block: 'nearest', inline: 'nearest', container: 'nearest' });
     }
   });
 }
@@ -1666,8 +1746,21 @@ function populateQuoteEditForm(q) {
 function bindMainToolbarEvents() {
   document.querySelectorAll('.status-tab').forEach(tab => {
     tab.addEventListener('click', () => {
-      setStatusTabActive(tab.getAttribute('data-status') || 'to_read');
-      if (currentViewMode === 'notes') {
+      const nextStatus = tab.getAttribute('data-status') || 'to_read';
+      if (nextStatus === currentStatusTab) return;
+
+      if (currentStatusTab === 'recommended' && isEditingRecommended) {
+        const editorEl = document.getElementById('recommendedMarkdownEditor');
+        const currentVal = normalizeTextNfc(editorEl?.value || '').replace(/\r\n?/g, '\n');
+        const savedVal = normalizeTextNfc(recommendedDoc.content || '').replace(/\r\n?/g, '\n');
+        if (currentVal !== savedVal && !confirm('저장하지 않은 편집 내용이 있습니다. 다른 탭으로 이동하시겠습니까?')) {
+          return;
+        }
+        isEditingRecommended = false;
+      }
+
+      setStatusTabActive(nextStatus);
+      if (currentStatusTab !== 'recommended' && currentViewMode === 'notes') {
         currentViewMode = lastBookViewMode;
         localStorage.setItem('reading_books_view_mode', currentViewMode);
         updateViewToggleUI();
@@ -3507,6 +3600,729 @@ function bindSettingsModalEvents() {
       saveApiKeys({ nlkKey, googleKey });
       settingsDialog?.close();
       alert('국립중앙도서관 API 설정이 저장되었습니다.');
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// 15. 추천 도서 목록 (Markdown 렌더링 / 편집 / 체크 숨김 / Supabase 동기화)
+// ══════════════════════════════════════════════════════
+const RECOMMENDED_CODE_FENCE_RE = /^[ \t]*(`{3,}|~{3,})/;
+const RECOMMENDED_THEMATIC_BREAK_RE = /^[ \t]*([-*_])(?:[ \t]*\1){2,}[ \t]*$/;
+const RECOMMENDED_HEADING_RE = /^[ \t]*#{1,6}[ \t]+/;
+const RECOMMENDED_LIST_ITEM_RE = /^([ \t]*)([-*+])[ \t]+(?:\[([ xX])\][ \t]+)?(.*)$/;
+
+let latestRecommendedSaveSeq = 0;
+
+function normalizeRecommendedRow(row) {
+  return {
+    id: row?.id ?? null,
+    slug: normalizeTextNfc(row?.slug || RECOMMENDED_DEFAULT_SLUG).trim() || RECOMMENDED_DEFAULT_SLUG,
+    title: normalizeTextNfc(row?.title || '추천 도서 목록').trim() || '추천 도서 목록',
+    content: normalizeTextNfc(row?.content ?? '').replace(/\r\n?/g, '\n'),
+    sort_order: typeof row?.sort_order === 'number' ? row.sort_order : 0,
+    created_at: row?.created_at || '',
+    updated_at: row?.updated_at || ''
+  };
+}
+
+function saveRecommendedToLocalCache() {
+  try {
+    localStorage.setItem(RECOMMENDED_LOCAL_STORAGE_KEY, JSON.stringify(recommendedDoc));
+  } catch (err) {
+    console.warn('[Books] Failed to save recommended local cache:', err);
+  }
+}
+
+function loadRecommendedFromLocalCache() {
+  try {
+    const raw = localStorage.getItem(RECOMMENDED_LOCAL_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed.content === 'string') {
+      return normalizeRecommendedRow(parsed);
+    }
+  } catch (err) {
+    console.warn('[Books] Failed to parse recommended local cache:', err);
+  }
+  return null;
+}
+
+async function fetchBackupJsonRecommended() {
+  try {
+    const res = await fetch('data/backup-reading_recommendations.json?t=' + Date.now());
+    if (res.ok) {
+      const json = await res.json();
+      if (Array.isArray(json) && json.length > 0 && typeof json[0]?.content === 'string') {
+        return normalizeRecommendedRow(json[0]);
+      }
+    }
+  } catch (e) {
+    console.warn('[Books] Fallback recommended JSON load skipped:', e);
+  }
+  return null;
+}
+
+function parseRecommendedMarkdownBlocks(markdownText) {
+  const normalized = normalizeTextNfc(markdownText || '').replace(/\r\n?/g, '\n');
+  const lines = normalized.split('\n');
+  const blocks = [];
+
+  let markdownBuffer = [];
+  let listBuffer = null;
+  let inFence = false;
+  let fenceChar = '';
+  let fenceLen = 0;
+
+  function flushMarkdown() {
+    if (markdownBuffer.length > 0) {
+      blocks.push({
+        type: 'markdown',
+        text: markdownBuffer.join('\n')
+      });
+      markdownBuffer = [];
+    }
+  }
+
+  function flushList() {
+    if (listBuffer && listBuffer.items.length > 0) {
+      blocks.push(listBuffer);
+    }
+    listBuffer = null;
+  }
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    if (inFence) {
+      markdownBuffer.push(line);
+      const closeMatch = line.match(RECOMMENDED_CODE_FENCE_RE);
+      if (
+        closeMatch &&
+        closeMatch[1][0] === fenceChar &&
+        closeMatch[1].length >= fenceLen &&
+        line.slice(closeMatch[0].length).trim() === ''
+      ) {
+        inFence = false;
+        fenceChar = '';
+        fenceLen = 0;
+      }
+      continue;
+    }
+
+    const fenceMatch = line.match(RECOMMENDED_CODE_FENCE_RE);
+    if (fenceMatch) {
+      const ch = fenceMatch[1][0];
+      const rest = line.slice(fenceMatch[0].length);
+      if (ch !== '`' || !rest.includes('`')) {
+        flushList();
+        inFence = true;
+        fenceChar = ch;
+        fenceLen = fenceMatch[1].length;
+        markdownBuffer.push(line);
+        continue;
+      }
+    }
+
+    if (line.trim() === '') {
+      flushMarkdown();
+      continue;
+    }
+
+    if (RECOMMENDED_THEMATIC_BREAK_RE.test(line)) {
+      flushList();
+      markdownBuffer.push(line);
+      continue;
+    }
+
+    if (RECOMMENDED_HEADING_RE.test(line)) {
+      flushMarkdown();
+      flushList();
+      blocks.push({
+        type: 'heading',
+        lineIndex: i,
+        text: line,
+        plainText: line.replace(/^[ \t]*#{1,6}[ \t]+/, '').trim()
+      });
+      continue;
+    }
+
+    const itemMatch = line.match(RECOMMENDED_LIST_ITEM_RE);
+    if (itemMatch && itemMatch[4].trim() !== '') {
+      flushMarkdown();
+      const indent = itemMatch[1];
+      const marker = itemMatch[2];
+      const checkState = itemMatch[3];
+      const text = itemMatch[4].trim();
+      const indentSpaces = indent.replace(/\t/g, '  ').length;
+      const depth = Math.min(3, Math.floor(indentSpaces / 2));
+
+      if (!listBuffer) {
+        listBuffer = { type: 'list', items: [] };
+      }
+      listBuffer.items.push({
+        lineIndex: i,
+        indent,
+        depth,
+        marker,
+        checked: Boolean(checkState && checkState.toLowerCase() === 'x'),
+        text
+      });
+      continue;
+    }
+
+    flushList();
+    markdownBuffer.push(line);
+  }
+
+  flushMarkdown();
+  flushList();
+  return blocks;
+}
+
+function countRecommendedItems(markdownText) {
+  const blocks = parseRecommendedMarkdownBlocks(markdownText);
+  let total = 0;
+  let checked = 0;
+  for (const block of blocks) {
+    if (block.type !== 'list') continue;
+    for (const item of block.items) {
+      total++;
+      if (item.checked) checked++;
+    }
+  }
+  return { total, checked, unchecked: total - checked };
+}
+
+function toggleRecommendedLineCheck(markdownText, lineIndex, shouldCheck) {
+  const lines = normalizeTextNfc(markdownText || '').replace(/\r\n?/g, '\n').split('\n');
+  if (lineIndex < 0 || lineIndex >= lines.length) return lines.join('\n');
+
+  const line = lines[lineIndex];
+  if (RECOMMENDED_THEMATIC_BREAK_RE.test(line)) return lines.join('\n');
+
+  const match = line.match(RECOMMENDED_LIST_ITEM_RE);
+  if (!match || !match[4].trim()) return lines.join('\n');
+
+  const indent = match[1];
+  const marker = match[2];
+  const itemText = match[4];
+  lines[lineIndex] = shouldCheck
+    ? `${indent}${marker} [x] ${itemText}`
+    : `${indent}${marker} ${itemText}`;
+
+  return lines.join('\n');
+}
+
+function updateRecommendedCounts() {
+  const counts = countRecommendedItems(recommendedDoc.content);
+  const badgeEl = document.getElementById('countRecommended');
+  const checkedEl = document.getElementById('countCheckedRecommended');
+  const summaryEl = document.getElementById('recommendedSummary');
+
+  if (badgeEl) badgeEl.textContent = counts.unchecked;
+  if (checkedEl) checkedEl.textContent = counts.checked;
+  if (summaryEl) {
+    summaryEl.textContent = counts.checked > 0
+      ? `남은 추천 도서 ${counts.unchecked}권 · 체크됨 ${counts.checked}권`
+      : `남은 추천 도서 ${counts.unchecked}권`;
+  }
+  return counts;
+}
+
+async function seedRecommendedToSupabaseIfEmpty() {
+  if (!supabaseClient || !supabaseRecommendedTableReady || !isLoggedIn || isSeedingRecommendedToSupabase) return;
+  try {
+    isSeedingRecommendedToSupabase = true;
+    const { count, error: countErr } = await supabaseClient
+      .from(RECOMMENDED_TABLE_NAME)
+      .select('id', { count: 'exact', head: true })
+      .eq('slug', RECOMMENDED_DEFAULT_SLUG);
+
+    if (countErr || (count !== null && count > 0)) {
+      return;
+    }
+
+    const localCached = !hasLoadedRecommended ? loadRecommendedFromLocalCache() : null;
+    if (localCached) {
+      recommendedDoc = localCached;
+    }
+
+    const contentToSeed = typeof recommendedDoc.content === 'string'
+      ? recommendedDoc.content
+      : DEFAULT_RECOMMENDED_MARKDOWN;
+    const nowIso = new Date().toISOString();
+
+    const { data, error } = await supabaseClient
+      .from(RECOMMENDED_TABLE_NAME)
+      .upsert({
+        slug: RECOMMENDED_DEFAULT_SLUG,
+        title: recommendedDoc.title || '추천 도서 목록',
+        content: contentToSeed,
+        sort_order: 0,
+        updated_at: nowIso
+      }, { onConflict: 'slug' })
+      .select()
+      .limit(1);
+
+    if (!error && Array.isArray(data) && data.length > 0) {
+      recommendedDoc = normalizeRecommendedRow(data[0]);
+      saveRecommendedToLocalCache();
+      updateRecommendedCounts();
+      if (currentStatusTab === 'recommended' && !isEditingRecommended) {
+        renderRecommendedView();
+      }
+      console.log('[Books] Seeded default reading_recommendations row to Supabase.');
+    }
+  } catch (err) {
+    console.warn('[Books] Recommended auto-seed warning:', err);
+  } finally {
+    isSeedingRecommendedToSupabase = false;
+  }
+}
+
+async function loadRecommendedList() {
+  const localCached = loadRecommendedFromLocalCache();
+  if (localCached) {
+    recommendedDoc = localCached;
+  }
+
+  let loadedFromSupabase = false;
+
+  if (supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient
+        .from(RECOMMENDED_TABLE_NAME)
+        .select('*')
+        .eq('slug', RECOMMENDED_DEFAULT_SLUG)
+        .limit(1);
+
+      if (error) throw error;
+
+      supabaseRecommendedTableReady = true;
+
+      if (Array.isArray(data) && data.length > 0) {
+        recommendedDoc = normalizeRecommendedRow(data[0]);
+        saveRecommendedToLocalCache();
+        loadedFromSupabase = true;
+      } else {
+        if (!localCached) {
+          const backupDoc = await fetchBackupJsonRecommended();
+          if (backupDoc) {
+            recommendedDoc = backupDoc;
+            saveRecommendedToLocalCache();
+          }
+        }
+        loadedFromSupabase = true;
+        await seedRecommendedToSupabaseIfEmpty();
+      }
+    } catch (err) {
+      const msg = String(err?.message || err || '');
+      const code = String(err?.code || '');
+      console.warn('[Books] Supabase recommended fetch warning:', code, msg);
+      if (code === '42P01' || code === 'PGRST205' || /does not exist|could not find the table/i.test(msg)) {
+        supabaseRecommendedTableReady = false;
+      }
+    }
+  }
+
+  if (!loadedFromSupabase && !localCached) {
+    const backupDoc = await fetchBackupJsonRecommended();
+    if (backupDoc) {
+      recommendedDoc = backupDoc;
+      saveRecommendedToLocalCache();
+    }
+  }
+
+  hasLoadedRecommended = true;
+  updateRecommendedCounts();
+  if (currentStatusTab === 'recommended' && !isEditingRecommended) {
+    renderRecommendedView();
+  }
+}
+
+async function saveRecommendedMarkdown(nextContent, { statusText = '✓ 저장됨' } = {}) {
+  if (!requireLogin('추천도서 목록을 저장')) return false;
+
+  const saveSeq = ++latestRecommendedSaveSeq;
+  const normalizedContent = normalizeTextNfc(nextContent || '').replace(/\r\n?/g, '\n');
+  const updatedAt = new Date().toISOString();
+
+  recommendedDoc = {
+    ...recommendedDoc,
+    slug: RECOMMENDED_DEFAULT_SLUG,
+    title: recommendedDoc.title || '추천 도서 목록',
+    content: normalizedContent,
+    updated_at: updatedAt
+  };
+  saveRecommendedToLocalCache();
+  updateRecommendedCounts();
+
+  const statusEl = document.getElementById('recommendedSaveStatus');
+
+  if (!supabaseClient) {
+    if (statusEl) {
+      statusEl.classList.remove('is-error');
+      statusEl.textContent = statusText;
+      setTimeout(() => {
+        if (saveSeq === latestRecommendedSaveSeq && statusEl.textContent === statusText) {
+          statusEl.textContent = '';
+        }
+      }, 2200);
+    }
+    return true;
+  }
+
+  try {
+    const payload = {
+      slug: RECOMMENDED_DEFAULT_SLUG,
+      title: recommendedDoc.title || '추천 도서 목록',
+      content: normalizedContent,
+      sort_order: 0,
+      updated_at: updatedAt
+    };
+
+    const { data, error } = await supabaseClient
+      .from(RECOMMENDED_TABLE_NAME)
+      .upsert(payload, { onConflict: 'slug' })
+      .select()
+      .limit(1);
+
+    if (error) throw error;
+
+    supabaseRecommendedTableReady = true;
+    if (saveSeq === latestRecommendedSaveSeq && Array.isArray(data) && data.length > 0) {
+      recommendedDoc = normalizeRecommendedRow(data[0]);
+      saveRecommendedToLocalCache();
+    }
+
+    if (statusEl && saveSeq === latestRecommendedSaveSeq) {
+      statusEl.classList.remove('is-error');
+      statusEl.textContent = statusText;
+      setTimeout(() => {
+        if (saveSeq === latestRecommendedSaveSeq && statusEl.textContent === statusText) {
+          statusEl.textContent = '';
+        }
+      }, 2200);
+    }
+    return true;
+  } catch (err) {
+    const msg = String(err?.message || err || '');
+    const code = String(err?.code || '');
+    console.warn('[Books] Supabase recommended save error (saved locally):', code, msg);
+
+    const isMissingTable =
+      code === '42P01' ||
+      code === 'PGRST205' ||
+      /does not exist|could not find the table/i.test(msg);
+    const isRlsError =
+      code === '42501' ||
+      /row-level security|permission denied/i.test(msg);
+
+    if (isMissingTable) {
+      supabaseRecommendedTableReady = false;
+      if (statusEl && saveSeq === latestRecommendedSaveSeq) {
+        statusEl.classList.add('is-error');
+        statusEl.textContent = '⚠ 로컬에만 저장됨 (DB 테이블 미생성)';
+      }
+      alert('Supabase에 reading_recommendations 테이블이 아직 없어 브라우저에 임시 저장되었습니다.\nscripts/create_reading_recommendations_table.sql을 실행해 주세요.');
+    } else if (isRlsError) {
+      if (statusEl && saveSeq === latestRecommendedSaveSeq) {
+        statusEl.classList.add('is-error');
+        statusEl.textContent = '⚠ 로컬에만 저장됨 (RLS 권한 확인 필요)';
+      }
+      alert('Supabase reading_recommendations 테이블의 쓰기 권한(RLS 정책)이 없어 브라우저에 임시 저장되었습니다.\nscripts/create_reading_recommendations_table.sql의 RLS 정책 SQL을 확인해 주세요.');
+    } else if (statusEl && saveSeq === latestRecommendedSaveSeq) {
+      statusEl.classList.add('is-error');
+      statusEl.textContent = '⚠ 로컬에만 저장됨 (동기화 오류)';
+    }
+    return false;
+  }
+}
+
+function groupRecommendedBlocksIntoSections(blocks) {
+  const sections = [];
+  let current = { heading: null, blocks: [] };
+
+  for (const block of blocks) {
+    if (block.type === 'heading') {
+      if (current.heading || current.blocks.length > 0) {
+        sections.push(current);
+      }
+      current = { heading: block, blocks: [] };
+    } else {
+      current.blocks.push(block);
+    }
+  }
+
+  if (current.heading || current.blocks.length > 0) {
+    sections.push(current);
+  }
+
+  return sections;
+}
+
+function buildRecommendedListElement(items, query) {
+  const ul = document.createElement('ul');
+  ul.className = 'recommended-book-list';
+
+  for (const item of items) {
+    const li = document.createElement('li');
+    li.className = `recommended-book-item${item.checked ? ' is-checked' : ''}`;
+    if (item.depth > 0) {
+      li.dataset.depth = String(item.depth);
+    }
+
+    const label = document.createElement('label');
+    label.className = 'recommended-item-label';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'recommended-item-checkbox';
+    checkbox.checked = Boolean(item.checked);
+    checkbox.dataset.lineIndex = String(item.lineIndex);
+
+    const textSpan = document.createElement('span');
+    textSpan.className = 'recommended-item-text';
+    safeSetMarkdownHTML(textSpan, renderMarkdownContent(item.text, query, { inline: true }));
+
+    label.append(checkbox, textSpan);
+    li.appendChild(label);
+    ul.appendChild(li);
+  }
+
+  return ul;
+}
+
+function renderRecommendedView() {
+  const renderedView = document.getElementById('recommendedRenderedView');
+  const editorWrap = document.getElementById('recommendedEditorWrap');
+  const editorEl = document.getElementById('recommendedMarkdownEditor');
+  const btnEdit = document.getElementById('btnEditRecommended');
+  const btnCancel = document.getElementById('btnCancelRecommended');
+  const btnSave = document.getElementById('btnSaveRecommended');
+  const toggleWrap = document.querySelector('.recommended-toggle-checked');
+  const chkShowChecked = document.getElementById('chkShowCheckedRecommended');
+
+  const counts = updateRecommendedCounts();
+  if (chkShowChecked) chkShowChecked.checked = showCheckedRecommended;
+
+  const editingActive = isEditingRecommended && isLoggedIn;
+
+  if (editingActive) {
+    if (renderedView) renderedView.style.display = 'none';
+    if (editorWrap) editorWrap.style.display = 'flex';
+    if (btnEdit) btnEdit.style.display = 'none';
+    if (btnCancel) btnCancel.style.display = 'inline-flex';
+    if (btnSave) btnSave.style.display = 'inline-flex';
+    if (toggleWrap) toggleWrap.style.display = 'none';
+    if (editorEl && document.activeElement !== editorEl && !editorEl.value && recommendedDoc.content) {
+      editorEl.value = recommendedDoc.content;
+    }
+    return;
+  }
+
+  if (editorWrap) editorWrap.style.display = 'none';
+  if (renderedView) renderedView.style.display = 'block';
+  if (btnEdit) btnEdit.style.display = 'inline-flex';
+  if (btnCancel) btnCancel.style.display = 'none';
+  if (btnSave) btnSave.style.display = 'none';
+  if (toggleWrap) toggleWrap.style.display = '';
+
+  if (!renderedView) return;
+
+  const rawContent = normalizeTextNfc(recommendedDoc.content || '').replace(/\r\n?/g, '\n');
+  if (!rawContent.trim()) {
+    renderedView.innerHTML = `<div class="notes-empty-card">등록된 추천 도서가 없습니다. 상단의 <strong>편집</strong> 버튼을 눌러 마크다운 형식으로 추천 도서 목록을 작성해 보세요.</div>`;
+    return;
+  }
+
+  const query = (document.getElementById('listSearchInput')?.value || '').trim();
+  const qLower = query ? normalizeTextNfc(query).toLowerCase() : '';
+  const blocks = parseRecommendedMarkdownBlocks(rawContent);
+  const sections = groupRecommendedBlocksIntoSections(blocks);
+
+  renderedView.innerHTML = '';
+  const frag = document.createDocumentFragment();
+
+  if (!qLower && counts.total > 0 && counts.unchecked === 0 && !showCheckedRecommended) {
+    const allDoneBanner = document.createElement('div');
+    allDoneBanner.className = 'recommended-all-done-banner';
+    allDoneBanner.textContent = "모든 추천 도서를 체크했습니다. '체크한 항목 보기'를 선택하거나 '편집'에서 목록을 수정해 보세요.";
+    frag.appendChild(allDoneBanner);
+  }
+
+  let renderedSomething = false;
+
+  for (const sec of sections) {
+    const headingMatches = Boolean(
+      qLower && sec.heading && normalizeTextNfc(sec.heading.plainText).toLowerCase().includes(qLower)
+    );
+    const secNodes = [];
+
+    for (const block of sec.blocks) {
+      if (block.type === 'markdown') {
+        if (!qLower || headingMatches || normalizeTextNfc(block.text).toLowerCase().includes(qLower)) {
+          const mdBlock = document.createElement('div');
+          mdBlock.className = 'recommended-md-block';
+          safeSetMarkdownHTML(mdBlock, renderMarkdownContent(block.text, query));
+          secNodes.push(mdBlock);
+        }
+        continue;
+      }
+
+      if (block.type === 'list') {
+        const byCheckVisibility = showCheckedRecommended
+          ? block.items
+          : block.items.filter(item => !item.checked);
+
+        if (qLower) {
+          const matchedItems = headingMatches
+            ? byCheckVisibility
+            : byCheckVisibility.filter(item => normalizeTextNfc(item.text).toLowerCase().includes(qLower));
+
+          if (matchedItems.length > 0) {
+            secNodes.push(buildRecommendedListElement(matchedItems, query));
+          } else if (headingMatches && block.items.length > 0 && !showCheckedRecommended) {
+            const doneNote = document.createElement('p');
+            doneNote.className = 'recommended-section-done-note';
+            doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
+            secNodes.push(doneNote);
+          }
+        } else {
+          if (byCheckVisibility.length > 0) {
+            secNodes.push(buildRecommendedListElement(byCheckVisibility, ''));
+          } else if (block.items.length > 0 && !showCheckedRecommended) {
+            const doneNote = document.createElement('p');
+            doneNote.className = 'recommended-section-done-note';
+            doneNote.textContent = `이 분류의 추천 도서 ${block.items.length}권을 모두 체크했습니다.`;
+            secNodes.push(doneNote);
+          }
+        }
+      }
+    }
+
+    if (qLower && !headingMatches && secNodes.length === 0) {
+      continue;
+    }
+
+    if (sec.heading) {
+      const headingWrap = document.createElement('div');
+      headingWrap.className = 'recommended-heading-block';
+      safeSetMarkdownHTML(headingWrap, renderMarkdownContent(sec.heading.text, query));
+      frag.appendChild(headingWrap);
+      renderedSomething = true;
+    }
+
+    for (const node of secNodes) {
+      frag.appendChild(node);
+      renderedSomething = true;
+    }
+  }
+
+  if (!renderedSomething && qLower) {
+    const emptySearch = document.createElement('div');
+    emptySearch.className = 'notes-empty-card';
+    emptySearch.textContent = `'${query}'에 해당하는 추천 도서가 없습니다.`;
+    frag.appendChild(emptySearch);
+  }
+
+  renderedView.appendChild(frag);
+}
+
+function bindRecommendedEvents() {
+  const chkShowChecked = document.getElementById('chkShowCheckedRecommended');
+  const btnEdit = document.getElementById('btnEditRecommended');
+  const btnCancel = document.getElementById('btnCancelRecommended');
+  const btnSave = document.getElementById('btnSaveRecommended');
+  const editorEl = document.getElementById('recommendedMarkdownEditor');
+  const renderedView = document.getElementById('recommendedRenderedView');
+
+  if (chkShowChecked) {
+    chkShowChecked.addEventListener('change', () => {
+      showCheckedRecommended = chkShowChecked.checked;
+      renderRecommendedView();
+    });
+  }
+
+  if (btnEdit) {
+    btnEdit.addEventListener('click', () => {
+      if (!requireLogin('추천도서 목록을 편집')) return;
+      isEditingRecommended = true;
+      if (editorEl) {
+        editorEl.value = recommendedDoc.content || '';
+      }
+      renderRecommendedView();
+      editorEl?.focus();
+    });
+  }
+
+  if (btnCancel) {
+    btnCancel.addEventListener('click', () => {
+      isEditingRecommended = false;
+      renderRecommendedView();
+    });
+  }
+
+  async function saveRecommendedFromEditor() {
+    if (!requireLogin('추천도서 목록을 저장')) return;
+    if (!editorEl) return;
+    if (btnSave) btnSave.disabled = true;
+    try {
+      await saveRecommendedMarkdown(editorEl.value, { statusText: '✓ 저장됨' });
+      isEditingRecommended = false;
+      renderRecommendedView();
+    } finally {
+      if (btnSave) btnSave.disabled = false;
+    }
+  }
+
+  if (btnSave) {
+    btnSave.addEventListener('click', saveRecommendedFromEditor);
+  }
+
+  if (editorEl) {
+    editorEl.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        saveRecommendedFromEditor();
+      }
+    });
+  }
+
+  if (renderedView) {
+    renderedView.addEventListener('change', async (e) => {
+      const checkbox = e.target.closest('.recommended-item-checkbox');
+      if (!checkbox) return;
+
+      if (!isLoggedIn) {
+        checkbox.checked = !checkbox.checked;
+        requireLogin('추천도서 체크 상태를 변경');
+        return;
+      }
+
+      const lineIndex = Number(checkbox.dataset.lineIndex);
+      if (Number.isNaN(lineIndex)) return;
+
+      const shouldCheck = checkbox.checked;
+      const nextContent = toggleRecommendedLineCheck(recommendedDoc.content, lineIndex, shouldCheck);
+      if (nextContent === recommendedDoc.content) return;
+
+      recommendedDoc.content = nextContent;
+      saveRecommendedToLocalCache();
+      updateRecommendedCounts();
+      renderRecommendedView();
+
+      const statusEl = document.getElementById('reorderStatus');
+      if (statusEl) {
+        statusEl.textContent = shouldCheck
+          ? '추천 도서를 체크하여 목록에서 숨겼습니다.'
+          : '추천 도서 체크를 해제하여 목록에 복원했습니다.';
+      }
+
+      await saveRecommendedMarkdown(nextContent, {
+        statusText: shouldCheck ? '✓ 체크 저장됨' : '✓ 복원 저장됨'
+      });
     });
   }
 }
