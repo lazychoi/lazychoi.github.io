@@ -420,9 +420,9 @@
         <button type="button" id="btnToggleDetailStatus" class="btn btn-secondary btn-mini">읽은 책으로 이동</button>
       </div>
       <div class="detail-header-actions">
-        <button type="button" id="btnEditFromDetail" class="btn btn-secondary btn-mini">책 정보 수정</button>
         <button type="button" id="btnDeleteFromDetail" class="btn btn-danger btn-mini">삭제</button>
-        <button type="button" class="modal-close-btn" data-close-dialog="bookDetailDialog" aria-label="닫기">✕</button>
+        <button type="button" id="btnEditFromDetail" class="btn btn-secondary btn-mini">책 정보 수정</button>
+        <button type="button" id="btnCloseDetailDialog" class="btn btn-secondary btn-mini detail-close-btn" data-close-dialog="bookDetailDialog">닫기</button>
       </div>
     </div>
 
@@ -523,13 +523,20 @@
           <form id="quoteAddForm" class="quote-add-form">
             <input type="hidden" id="editingQuoteId" value="">
             <div class="quote-form-top">
-              <div class="quote-page-field">
-                <label for="inputQuotePage">페이지 (p.)</label>
-                <input type="text" id="inputQuotePage" placeholder="예: 45" aria-label="페이지 번호">
+              <div class="quote-page-range-group">
+                <div class="quote-page-field">
+                  <label for="inputQuotePage">시작 페이지</label>
+                  <input type="text" id="inputQuotePage" name="quote_page_start" inputmode="numeric" enterkeyhint="next" placeholder="예: 45">
+                </div>
+                <span class="quote-page-tilde" aria-hidden="true">~</span>
+                <div class="quote-page-field">
+                  <label for="inputQuoteEndPage">끝 페이지 (선택)</label>
+                  <input type="text" id="inputQuoteEndPage" name="quote_page_end" inputmode="numeric" enterkeyhint="next" placeholder="예: 47">
+                </div>
               </div>
               <div class="quote-note-field">
                 <label for="inputQuoteNote">짧은 생각 / 키워드 (선택)</label>
-                <input type="text" id="inputQuoteNote" placeholder="문장에 대한 짧은 코멘트 (선택)">
+                <input type="text" id="inputQuoteNote" name="quote_note" enterkeyhint="next" placeholder="문장에 대한 짧은 코멘트 (선택)">
               </div>
             </div>
             <div class="quote-text-field">

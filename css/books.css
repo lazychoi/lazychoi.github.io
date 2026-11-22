@@ -1173,6 +1173,15 @@ mark.search-hl {
   flex-wrap: wrap;
 }
 
+.detail-header-actions {
+  margin-inline-start: auto;
+}
+
+.detail-close-btn {
+  padding: 4px 12px;
+  font-weight: 600;
+}
+
 .status-pill {
   font-size: 13px;
   font-weight: 700;
@@ -1422,9 +1431,24 @@ mark.search-hl {
 }
 
 .quote-form-top {
-  display: grid;
-  grid-template-columns: 110px 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
+}
+
+.quote-page-range-group {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 8px;
+  align-items: end;
+}
+
+.quote-page-tilde {
+  padding-bottom: 8px;
+  color: var(--text-muted);
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
 }
 
 .quote-page-field label,
@@ -1445,6 +1469,13 @@ mark.search-hl {
   border-radius: 8px;
   font-size: 13px;
   font-family: inherit;
+}
+
+.quote-page-field input:focus-visible,
+.quote-note-field input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
 }
 
 .quote-text-field textarea,

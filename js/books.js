@@ -13,6 +13,8 @@ const supabaseClient = window.supabase ? window.supabase.createClient(supabaseUr
 const TABLE_NAME = 'reading_books';
 const LOCAL_STORAGE_KEY = 'reading_books_local_v1';
 const API_KEYS_STORAGE_KEY = 'reading_books_api_keys_v2';
+const QUOTE_DRAFT_STORAGE_KEY = 'reading_books_quote_drafts_v1';
+const ACTIVE_DETAIL_DRAFT_SESSION_KEY = 'reading_books_active_quote_book_v1';
 const RECOMMENDED_TABLE_NAME = 'reading_recommendations';
 const RECOMMENDED_DEFAULT_SLUG = 'default';
 const RECOMMENDED_LOCAL_STORAGE_KEY = 'reading_recommendations_local_v1';
@@ -55,6 +57,8 @@ let selectedBookIds = new Set();
 let activeDetailBookId = null;
 let isLoggedIn = false;
 let currentUserEmail = '';
+let hasSyncedAuthState = false;
+let hasRestoredInterruptedDraftModal = false;
 let supabaseTableReady = true;
 let isSeedingToSupabase = false;
 let hasInitializedTab = false;
@@ -351,6 +355,33 @@ function getTodayDateString() {
   return `${y}-${m}-${d}`;
 }
 
+// 문장 수집 페이지 범위 정규화 및 포맷 헬퍼
+function normalizeQuotePageRange(rawStart, rawEnd) {
+  const start = rawStart !== undefined && rawStart !== null ? normalizeTextNfc(rawStart).trim() : '';
+  const end = rawEnd !== undefined && rawEnd !== null ? normalizeTextNfc(rawEnd).trim() : '';
+  if (!start && end) {
+    return { page: end, page_end: '' };
+  }
+  if (start && end && start === end) {
+    return { page: start, page_end: '' };
+  }
+  return { page: start, page_end: end };
+}
+
+function formatQuotePageLabel(q, { emptyLabel = '페이지 미지정', compactSingle = false } = {}) {
+  const { page, page_end } = normalizeQuotePageRange(q?.page, q?.page_end);
+  if (!page) return emptyLabel;
+  if (page_end) return `pp. ${page} ~ ${page_end}`;
+  return compactSingle ? `p.${page}` : `p. ${page}`;
+}
+
+function getQuoteSearchPageText(q) {
+  const { page, page_end } = normalizeQuotePageRange(q?.page, q?.page_end);
+  if (!page) return '';
+  if (!page_end) return `${page} p.${page} p. ${page}`;
+  return `${page} ${page_end} p.${page} p. ${page} pp.${page}~${page_end} pp. ${page} ~ ${page_end}`;
+}
+
 // 데이터 정규화 헬퍼 (목차 toc는 DB의 memos JSONB 컬럼에 호환 저장하여 별도 ALTER TABLE 없이 즉시 연동)
 function normalizeBookRow(row, fallbackIndex = 0) {
   let quotes = [];
@@ -386,13 +417,17 @@ function normalizeBookRow(row, fallbackIndex = 0) {
     completed_date: normalizeTextNfc(row.completed_date || '').trim(),
     rating: Math.min(5, Math.max(0, parseFloat(row.rating) || 0)),
     toc,
-    quotes: quotes.map((q, idx) => ({
-      id: q.id || `q_${Date.now()}_${idx}`,
-      page: q.page !== undefined && q.page !== null ? normalizeTextNfc(q.page).trim() : '',
-      text: normalizeTextNfc(q.text || '').trim(),
-      note: normalizeTextNfc(q.note || '').trim(),
-      created_at: q.created_at || new Date().toISOString()
-    })),
+    quotes: quotes.map((q, idx) => {
+      const { page, page_end } = normalizeQuotePageRange(q.page, q.page_end);
+      return {
+        id: q.id || `q_${Date.now()}_${idx}`,
+        page,
+        page_end,
+        text: normalizeTextNfc(q.text || '').trim(),
+        note: normalizeTextNfc(q.note || '').trim(),
+        created_at: q.created_at || new Date().toISOString()
+      };
+    }),
     memo: normalizeTextNfc(row.memo || '').trim(),
     created_at: row.created_at || new Date().toISOString(),
     updated_at: row.updated_at || new Date().toISOString()
@@ -573,7 +608,7 @@ function updateAuthUI() {
 
   const detailDialog = document.getElementById('bookDetailDialog');
   if (detailDialog && detailDialog.open && activeDetailBookId) {
-    renderBookDetailContent(activeDetailBookId);
+    renderBookDetailContent(activeDetailBookId, { preserveDrafts: true });
   }
 }
 
@@ -586,14 +621,22 @@ function bindAuthEvents() {
   if (supabaseClient) {
     supabaseClient.auth.onAuthStateChange((event, session) => {
       const user = session?.user;
-      isLoggedIn = !!user;
-      currentUserEmail = user?.email || '';
+      const nextLoggedIn = !!user;
+      const nextEmail = user?.email || '';
+      const authChanged = !hasSyncedAuthState || nextLoggedIn !== isLoggedIn || nextEmail !== currentUserEmail;
 
-      updateAuthUI();
+      hasSyncedAuthState = true;
+      isLoggedIn = nextLoggedIn;
+      currentUserEmail = nextEmail;
 
-      if (user) {
-        seedBackupBooksToSupabaseIfEmpty();
-        seedRecommendedToSupabaseIfEmpty();
+      if (authChanged) {
+        updateAuthUI();
+
+        if (user) {
+          seedBackupBooksToSupabaseIfEmpty();
+          seedRecommendedToSupabaseIfEmpty();
+          maybeRestoreInterruptedQuoteModal();
+        }
       }
     });
   }
@@ -845,6 +888,7 @@ async function loadAllBooks() {
 
   if (loadingEl) loadingEl.style.display = 'none';
   renderBooksView(false);
+  maybeRestoreInterruptedQuoteModal();
 }
 
 // 단일 도서 DB 추가 (INSERT)
@@ -928,7 +972,10 @@ async function deleteBooksFromDb(idArray) {
   if (!requireLogin('책을 삭제')) return;
   const idSet = new Set(idArray.map(id => String(id)));
   books = books.filter(b => !idSet.has(String(b.id)));
-  idArray.forEach(id => selectedBookIds.delete(String(id)));
+  idArray.forEach(id => {
+    selectedBookIds.delete(String(id));
+    clearQuoteDraft(id);
+  });
   saveBooksToLocalCache();
 
   if (supabaseClient && supabaseTableReady) {
@@ -1035,7 +1082,7 @@ function matchBookBySearch(book, query, scope) {
   if (scope === 'all' || scope === 'notes_quotes' || scope === 'quotes') {
     if (Array.isArray(book.quotes)) {
       for (const qItem of book.quotes) {
-        const hay = normalizeTextNfc(`${qItem.text || ''} ${qItem.note || ''} ${qItem.page ? 'p.' + qItem.page : ''}`).toLowerCase();
+        const hay = normalizeTextNfc(`${qItem.text || ''} ${qItem.note || ''} ${getQuoteSearchPageText(qItem)}`).toLowerCase();
         if (hay.includes(qLower)) {
           matchedQuotes.push(qItem);
         }
@@ -1150,7 +1197,7 @@ function buildSearchMatchSnippetsHtml(bookId, matchedQuotes, matchedMemos, query
   const itemsHtml = [];
 
   for (const q of matchedQuotes.slice(0, 2)) {
-    const pageLabel = q.page ? `p.${escapeHtml(q.page)}` : '문장';
+    const pageLabel = escapeHtml(formatQuotePageLabel(q, { emptyLabel: '문장', compactSingle: true }));
     const rawSnippet = q.text.length > 110 ? q.text.slice(0, 110) + '…' : q.text;
     const inlineSnippet = rawSnippet.replace(/\s+/g, ' ');
     itemsHtml.push(`
@@ -1187,6 +1234,9 @@ function sortQuotesList(quotes, sortMode = 'page_asc') {
       const pA = parseInt(String(a.page).replace(/[^0-9]/g, ''), 10) || 999999;
       const pB = parseInt(String(b.page).replace(/[^0-9]/g, ''), 10) || 999999;
       if (pA !== pB) return pA - pB;
+      const eA = parseInt(String(a.page_end || a.page).replace(/[^0-9]/g, ''), 10) || 999999;
+      const eB = parseInt(String(b.page_end || b.page).replace(/[^0-9]/g, ''), 10) || 999999;
+      if (eA !== eB) return eA - eB;
       return String(a.created_at).localeCompare(String(b.created_at));
     });
   } else {
@@ -1212,7 +1262,7 @@ function collectAllNotesEntries(query) {
     if (qLower) {
       const bookMetaMatch = normalizeTextNfc(`${book.title} ${book.author} ${book.publisher}`).toLowerCase().includes(qLower);
       const matchingQuotes = rawQuotes.filter(q =>
-        normalizeTextNfc(`${q.text || ''} ${q.note || ''} ${q.page ? 'p.' + q.page : ''}`).toLowerCase().includes(qLower)
+        normalizeTextNfc(`${q.text || ''} ${q.note || ''} ${getQuoteSearchPageText(q)}`).toLowerCase().includes(qLower)
       );
       const memoMatches = trimmedMemo && trimmedMemo.toLowerCase().includes(qLower);
 
@@ -1297,7 +1347,7 @@ function renderAllNotesView() {
           ${quotes.map(q => `
             <div class="quote-card-item" data-quote-id="${escapeHtml(q.id)}">
               <div class="quote-card-header">
-                <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
+                <span class="quote-page-badge">${escapeHtml(formatQuotePageLabel(q))}</span>
                 <div class="quote-card-actions">
                   <button type="button" class="card-icon-btn" data-copy-all-quote="${escapeHtml(q.id)}" data-book-id="${escapeHtml(book.id)}" title="문장 복사">복사</button>
                   ${isLoggedIn ? `
@@ -1716,7 +1766,8 @@ function setStatusTabActive(targetStatus) {
 
 async function copyQuoteWithFeedback(book, q, triggerBtn, feedbackText = '복사됨') {
   if (!book || !q) return;
-  const formatted = `"${q.text}" — 『${book.title}』${q.page ? ` (p.${q.page})` : ''}`;
+  const pageText = formatQuotePageLabel(q, { emptyLabel: '', compactSingle: true });
+  const formatted = `"${q.text}" — 『${book.title}』${pageText ? ` (${pageText})` : ''}`;
   const origLabel = triggerBtn.textContent;
   try {
     await navigator.clipboard?.writeText(formatted);
@@ -1730,12 +1781,16 @@ async function copyQuoteWithFeedback(book, q, triggerBtn, feedbackText = '복사
 function populateQuoteEditForm(q) {
   if (!requireLogin('문장을 수정')) return;
   if (!q) return;
+  const { page, page_end } = normalizeQuotePageRange(q.page, q.page_end);
   document.getElementById('editingQuoteId').value = q.id;
-  document.getElementById('inputQuotePage').value = q.page || '';
+  document.getElementById('inputQuotePage').value = page;
+  const endPageInput = document.getElementById('inputQuoteEndPage');
+  if (endPageInput) endPageInput.value = page_end;
   document.getElementById('inputQuoteNote').value = q.note || '';
   document.getElementById('inputQuoteText').value = q.text || '';
   document.getElementById('btnSubmitQuote').textContent = '문장 수정 저장';
   document.getElementById('btnCancelEditQuote').style.display = 'inline-flex';
+  persistCurrentQuoteDraft();
   const quoteTextEl = document.getElementById('inputQuoteText');
   if (quoteTextEl) {
     quoteTextEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
@@ -1983,7 +2038,7 @@ function bindMainToolbarEvents() {
         const qid = editAllQuoteBtn.getAttribute('data-edit-all-quote');
         const targetBook = books.find(b => String(b.id) === String(bid));
         const q = (targetBook?.quotes || []).find(item => String(item.id) === String(qid));
-        openBookDetailModal(bid, { skipAutoToc: true });
+        openBookDetailModal(bid, { skipAutoToc: true, skipDraftRestore: true });
         if (q) populateQuoteEditForm(q);
         return;
       }
@@ -3026,7 +3081,7 @@ function bindEditModalEvents() {
       renderBooksView(false);
 
       if (activeDetailBookId && String(activeDetailBookId) === String(bookId)) {
-        renderBookDetailContent(bookId);
+        renderBookDetailContent(bookId, { preserveDrafts: true });
       }
     });
   }
@@ -3050,11 +3105,175 @@ function bindEditModalEvents() {
 // ══════════════════════════════════════════════════════
 // 13. 책 상세 페이지 (목차, 문장 수집[페이지 추가], 독서 메모, 별점)
 // ══════════════════════════════════════════════════════
-function openBookDetailModal(bookId, { skipAutoToc = false } = {}) {
+function loadAllQuoteDrafts() {
+  try {
+    const raw = localStorage.getItem(QUOTE_DRAFT_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch (_) {
+    return {};
+  }
+}
+
+function saveAllQuoteDrafts(drafts) {
+  try {
+    if (!drafts || Object.keys(drafts).length === 0) {
+      localStorage.removeItem(QUOTE_DRAFT_STORAGE_KEY);
+    } else {
+      localStorage.setItem(QUOTE_DRAFT_STORAGE_KEY, JSON.stringify(drafts));
+    }
+  } catch (err) {
+    console.warn('[Books] Failed to save quote drafts:', err);
+  }
+}
+
+function setActiveQuoteDraftSession(bookId) {
+  if (!bookId) return;
+  try {
+    localStorage.setItem(ACTIVE_DETAIL_DRAFT_SESSION_KEY, JSON.stringify({
+      bookId: String(bookId),
+      updated_at: new Date().toISOString()
+    }));
+  } catch (_) {}
+}
+
+function getActiveQuoteDraftSession() {
+  try {
+    const raw = localStorage.getItem(ACTIVE_DETAIL_DRAFT_SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.bookId ? String(parsed.bookId) : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function clearActiveQuoteDraftSession(expectedBookId = null) {
+  try {
+    if (expectedBookId !== null) {
+      const current = getActiveQuoteDraftSession();
+      if (current && current !== String(expectedBookId)) return;
+    }
+    localStorage.removeItem(ACTIVE_DETAIL_DRAFT_SESSION_KEY);
+  } catch (_) {}
+}
+
+function hasQuoteDraftContent(draft) {
+  if (!draft || typeof draft !== 'object') return false;
+  return Boolean(
+    String(draft.editingQuoteId || '').trim() ||
+    String(draft.page || '').trim() ||
+    String(draft.page_end || '').trim() ||
+    String(draft.note || '').trim() ||
+    String(draft.text || '').trim()
+  );
+}
+
+function getQuoteDraft(bookId) {
+  if (!bookId) return null;
+  const drafts = loadAllQuoteDrafts();
+  const draft = drafts[String(bookId)];
+  return hasQuoteDraftContent(draft) ? draft : null;
+}
+
+function clearQuoteDraft(bookId) {
+  if (!bookId) return;
+  const key = String(bookId);
+  const drafts = loadAllQuoteDrafts();
+  if (Object.hasOwn(drafts, key)) {
+    delete drafts[key];
+    saveAllQuoteDrafts(drafts);
+  }
+  clearActiveQuoteDraftSession(key);
+}
+
+function persistCurrentQuoteDraft() {
+  if (!activeDetailBookId) return;
+  const editingQuoteId = document.getElementById('editingQuoteId')?.value || '';
+  const page = document.getElementById('inputQuotePage')?.value || '';
+  const page_end = document.getElementById('inputQuoteEndPage')?.value || '';
+  const note = document.getElementById('inputQuoteNote')?.value || '';
+  const text = document.getElementById('inputQuoteText')?.value || '';
+
+  const draft = {
+    editingQuoteId,
+    page,
+    page_end,
+    note,
+    text,
+    updated_at: new Date().toISOString()
+  };
+
+  if (!hasQuoteDraftContent(draft)) {
+    clearQuoteDraft(activeDetailBookId);
+    return;
+  }
+
+  const drafts = loadAllQuoteDrafts();
+  drafts[String(activeDetailBookId)] = draft;
+  saveAllQuoteDrafts(drafts);
+
+  const detailDialog = document.getElementById('bookDetailDialog');
+  if (detailDialog && detailDialog.open) {
+    setActiveQuoteDraftSession(activeDetailBookId);
+  }
+}
+
+function restoreQuoteDraft(bookId) {
+  const draft = getQuoteDraft(bookId);
+  if (!draft) return false;
+
+  const editIdEl = document.getElementById('editingQuoteId');
+  const pageEl = document.getElementById('inputQuotePage');
+  const endPageEl = document.getElementById('inputQuoteEndPage');
+  const noteEl = document.getElementById('inputQuoteNote');
+  const textEl = document.getElementById('inputQuoteText');
+  const submitBtn = document.getElementById('btnSubmitQuote');
+  const cancelBtn = document.getElementById('btnCancelEditQuote');
+
+  if (editIdEl) editIdEl.value = draft.editingQuoteId || '';
+  if (pageEl) pageEl.value = draft.page || '';
+  if (endPageEl) endPageEl.value = draft.page_end || '';
+  if (noteEl) noteEl.value = draft.note || '';
+  if (textEl) textEl.value = draft.text || '';
+
+  const isEditingExisting = Boolean(String(draft.editingQuoteId || '').trim());
+  if (submitBtn) submitBtn.textContent = isEditingExisting ? '문장 수정 저장' : '문장 추가';
+  if (cancelBtn) cancelBtn.style.display = isEditingExisting ? 'inline-flex' : 'none';
+
+  return true;
+}
+
+function maybeRestoreInterruptedQuoteModal() {
+  if (hasRestoredInterruptedDraftModal || !isLoggedIn || books.length === 0) return;
+  const savedBookId = getActiveQuoteDraftSession();
+  if (!savedBookId) return;
+
+  const targetBook = books.find(b => String(b.id) === savedBookId);
+  if (!targetBook || !getQuoteDraft(savedBookId)) {
+    clearActiveQuoteDraftSession(savedBookId);
+    return;
+  }
+
+  hasRestoredInterruptedDraftModal = true;
+  const dlg = document.getElementById('bookDetailDialog');
+  if (!dlg || !dlg.open) {
+    openBookDetailModal(targetBook.id, { skipAutoToc: true });
+  }
+}
+
+function openBookDetailModal(bookId, { skipAutoToc = false, skipDraftRestore = false } = {}) {
   activeDetailBookId = bookId;
-  renderBookDetailContent(bookId);
+  renderBookDetailContent(bookId, { preserveDrafts: false });
+  if (!skipDraftRestore) {
+    restoreQuoteDraft(bookId);
+  }
   const dlg = document.getElementById('bookDetailDialog');
   if (dlg && !dlg.open) dlg.showModal();
+  if (getQuoteDraft(bookId)) {
+    setActiveQuoteDraftSession(bookId);
+  }
 
   // 표지 이미지나 목차 정보가 비어 있으면 도서검색 API 및 Supabase 프록시에서 자동으로 조회 시도 (로그인 상태에서만 저장)
   if (!skipAutoToc && isLoggedIn) {
@@ -3113,7 +3332,7 @@ async function fetchAndSaveBookToc(bookId, { silentIfEmpty = false } = {}) {
     if (Object.keys(updates).length > 0) {
       const updated = await updateBookInDb(bookId, updates);
       if (String(activeDetailBookId) === String(bookId) && updated) {
-        renderBookDetailContent(bookId);
+        renderBookDetailContent(bookId, { preserveDrafts: true });
       }
       if (statusSpan) {
         statusSpan.textContent = '✓ 표지·목차 연동 완료';
@@ -3190,7 +3409,7 @@ function renderDetailGeneralMemo(book, { forceEdit = false } = {}) {
   }
 }
 
-function renderBookDetailContent(bookId) {
+function renderBookDetailContent(bookId, { preserveDrafts = false } = {}) {
   const book = books.find(b => String(b.id) === String(bookId));
   if (!book) return;
 
@@ -3257,9 +3476,15 @@ function renderBookDetailContent(bookId) {
   renderDetailTocView(book);
 
   document.getElementById('memoSaveStatus').textContent = '';
-  renderDetailGeneralMemo(book, { forceEdit: false });
+  const memoEditorWrap = document.getElementById('detailGeneralMemoEditorWrap');
+  const isEditingGeneralMemo = Boolean(isLoggedIn && memoEditorWrap && memoEditorWrap.style.display !== 'none');
+  if (!preserveDrafts || !isEditingGeneralMemo) {
+    renderDetailGeneralMemo(book, { forceEdit: false });
+  }
 
-  resetQuoteForm();
+  if (!preserveDrafts) {
+    resetQuoteForm();
+  }
   renderDetailQuotesList(book);
 }
 
@@ -3302,7 +3527,7 @@ function renderDetailQuotesList(book) {
   listEl.innerHTML = quotes.map(q => `
     <div class="quote-card-item" data-quote-id="${escapeHtml(q.id)}">
       <div class="quote-card-header">
-        <span class="quote-page-badge">${q.page ? `p. ${escapeHtml(q.page)}` : '페이지 미지정'}</span>
+        <span class="quote-page-badge">${escapeHtml(formatQuotePageLabel(q))}</span>
         <div class="quote-card-actions">
           <button type="button" class="card-icon-btn btn-copy-quote" data-quote-id="${escapeHtml(q.id)}" title="문장 복사" aria-label="문장 복사">복사</button>
           ${isLoggedIn ? `
@@ -3317,13 +3542,18 @@ function renderDetailQuotesList(book) {
   `).join('');
 }
 
-function resetQuoteForm() {
+function resetQuoteForm({ clearDraft = false } = {}) {
   document.getElementById('editingQuoteId').value = '';
   document.getElementById('inputQuotePage').value = '';
+  const endPageEl = document.getElementById('inputQuoteEndPage');
+  if (endPageEl) endPageEl.value = '';
   document.getElementById('inputQuoteNote').value = '';
   document.getElementById('inputQuoteText').value = '';
   document.getElementById('btnSubmitQuote').textContent = '문장 추가';
   document.getElementById('btnCancelEditQuote').style.display = 'none';
+  if (clearDraft && activeDetailBookId) {
+    clearQuoteDraft(activeDetailBookId);
+  }
 }
 
 function bindDetailModalEvents() {
@@ -3356,7 +3586,7 @@ function bindDetailModalEvents() {
         : book.completed_date;
 
       await updateBookInDb(activeDetailBookId, { status: nextStatus, completed_date: nextCompleted });
-      renderBookDetailContent(activeDetailBookId);
+      renderBookDetailContent(activeDetailBookId, { preserveDrafts: true });
       renderBooksView(false);
     });
   }
@@ -3432,6 +3662,8 @@ function bindDetailModalEvents() {
   }
 
   if (quoteAddForm) {
+    quoteAddForm.addEventListener('input', persistCurrentQuoteDraft);
+
     quoteAddForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!requireLogin('문장을 저장')) return;
@@ -3439,7 +3671,9 @@ function bindDetailModalEvents() {
       const book = books.find(b => String(b.id) === String(activeDetailBookId));
       if (!book) return;
 
-      const pageVal = document.getElementById('inputQuotePage').value.trim();
+      const rawPageVal = document.getElementById('inputQuotePage').value.trim();
+      const rawEndPageVal = document.getElementById('inputQuoteEndPage')?.value.trim() || '';
+      const { page: pageVal, page_end: endPageVal } = normalizeQuotePageRange(rawPageVal, rawEndPageVal);
       const noteVal = document.getElementById('inputQuoteNote').value.trim();
       const textVal = document.getElementById('inputQuoteText').value.trim();
       const editingId = document.getElementById('editingQuoteId').value;
@@ -3453,6 +3687,7 @@ function bindDetailModalEvents() {
           nextQuotes[qIdx] = {
             ...nextQuotes[qIdx],
             page: pageVal,
+            page_end: endPageVal,
             note: noteVal,
             text: textVal
           };
@@ -3461,6 +3696,7 @@ function bindDetailModalEvents() {
         nextQuotes.push({
           id: `q_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
           page: pageVal,
+          page_end: endPageVal,
           text: textVal,
           note: noteVal,
           created_at: new Date().toISOString()
@@ -3468,15 +3704,38 @@ function bindDetailModalEvents() {
       }
 
       const updatedBook = await updateBookInDb(activeDetailBookId, { quotes: nextQuotes });
-      resetQuoteForm();
+      resetQuoteForm({ clearDraft: true });
       if (updatedBook) renderDetailQuotesList(updatedBook);
       renderBooksView(false);
     });
   }
 
   if (btnCancelEditQuote) {
-    btnCancelEditQuote.addEventListener('click', resetQuoteForm);
+    btnCancelEditQuote.addEventListener('click', () => resetQuoteForm({ clearDraft: true }));
   }
+
+  const detailDialog = document.getElementById('bookDetailDialog');
+  if (detailDialog) {
+    detailDialog.addEventListener('close', () => {
+      clearActiveQuoteDraftSession();
+    });
+  }
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') {
+      const dlg = document.getElementById('bookDetailDialog');
+      if (dlg && dlg.open && activeDetailBookId) {
+        persistCurrentQuoteDraft();
+      }
+    }
+  });
+
+  window.addEventListener('pagehide', () => {
+    const dlg = document.getElementById('bookDetailDialog');
+    if (dlg && dlg.open && activeDetailBookId) {
+      persistCurrentQuoteDraft();
+    }
+  });
 
   if (detailQuotesList) {
     detailQuotesList.addEventListener('click', async (e) => {
